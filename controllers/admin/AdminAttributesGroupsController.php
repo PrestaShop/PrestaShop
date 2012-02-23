@@ -375,7 +375,15 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		parent::processAdd($token);
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+		{
+			if ($this->display == 'add')
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+			else
+				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
+		}
+		
+		if (count($this->errors))
+			$this->defineObjectTypeAttribute();
 	}
 
 	/**
@@ -391,7 +399,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.(int)Tools::getValue($this->identifier).'&conf=4&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
 		}
 	}
 
@@ -457,7 +465,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$this->toolbar_btn['save-and-stay'] = array(
 					'short' => 'SaveAndStay',
 					'href' => '#',
-					'desc' => $this->l('Save and stay'),
+					'desc' => $this->l('Save and add'),
+					'force_desc' => true,
 				);
 
 				$back = self::$currentIndex.'&token='.$this->token;
@@ -515,16 +524,24 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		$this->defineObjectTypeAttribute();
+
+		parent::initProcess();
+		if ($this->table == 'attribute')
+			$this->display = 'editAttributes';
+	}
+	
+	protected function defineObjectTypeAttribute()
+	{
 		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
 			$this->identifier = 'id_attribute';
+			
+			if ($this->display == 'edit')
+				$this->display = 'editAttributes';
 		}
-
-		parent::initProcess();
-		if ($this->table == 'attribute')
-			$this->display = 'editAttributes';
 	}
 
 	/**
