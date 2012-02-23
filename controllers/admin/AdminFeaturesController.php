@@ -209,7 +209,8 @@ class AdminFeaturesControllerCore extends AdminController
 				$this->toolbar_btn['save-and-stay'] = array(
 					'short' => 'SaveAndStay',
 					'href' => '#',
-					'desc' => $this->l('Save and stay'),
+					'desc' => $this->l('Save and add'),
+					'force_desc' => true,
 				);
 
 				// Default cancel button - like old back link
