@@ -532,7 +532,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_intersect($eligibleProductsList, $matchingProductsList);
+							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'products':
 							$cartProducts = Db::getInstance()->ExecuteS('
@@ -550,7 +550,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_intersect($eligibleProductsList, $matchingProductsList);
+							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'categories':
 							$cartCategories = Db::getInstance()->ExecuteS('
@@ -569,7 +569,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_intersect($eligibleProductsList, $matchingProductsList);
+							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'manufacturers':
 							$cartManufacturers = Db::getInstance()->ExecuteS('
@@ -588,7 +588,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_intersect($eligibleProductsList, $matchingProductsList);
+							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'suppliers':
 							$cartSuppliers = Db::getInstance()->ExecuteS('
@@ -607,17 +607,17 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_intersect($eligibleProductsList, $matchingProductsList);
+							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 					}
-					
+
 					if (!count($eligibleProductsList))
 						return Tools::displayError('You cannot use this voucher with these products');
 				}
 				$selectedProducts = array_merge($selectedProducts, $eligibleProductsList);
 			}
 		}
-		
+
 		if ($return_products)
 			return $selectedProducts;
 		return false;
@@ -960,4 +960,17 @@ class CartRuleCore extends ObjectModel
 			WHERE name LIKE \'%'.pSQL($name).'%\'
 		');
 	}
+}
+
+function cartrule_products_intersect($a, $b)
+{
+    if ($a == $b)
+        return 0;
+
+	$asplit = explode('-', $a);
+	$bsplit = explode('-', $b);
+    if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1]))
+        return 0;
+
+	return 1;
 }
