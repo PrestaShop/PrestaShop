@@ -95,7 +95,11 @@
 			{elseif isset($params.callback)}
 				{$tr.$key}
 			{elseif isset($tr.$key) && $key == 'color'}
-				<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
+				{if isset($tr.$key['texture']) && $tr.$key['texture']|count_characters > 1}
+					<img src="{$tr.$key.texture}" alt="" />
+				{else}
+					<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
+				{/if}
 			{elseif isset($tr.$key)}
 				{$tr.$key|escape:'htmlall':'UTF-8'}
 			{else}

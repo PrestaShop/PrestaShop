@@ -64,6 +64,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
  		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		$this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
+
 		parent::__construct();
 	}
 
@@ -310,9 +312,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		);
 
 		$this->fields_form['input'][] = array(
-			'type' => 'text',
+			'type' => 'current_texture',
 			'label' => $this->l('Current texture:'),
-			'name' => 'texture'
+			'name' => 'current_texture'
 		);
 
 		$this->fields_form['submit'] = array(
@@ -326,7 +328,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->identifier = 'id_attribute';
 		$this->lang = true;
 		$this->tpl_folder = 'attributes/';
-		$this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
 
 		// Create object Attribute
 		if (!$obj = new Attribute((int)Tools::getValue($this->identifier)))
@@ -336,11 +337,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		foreach ($attributes_groups as $attribute_group)
 			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ).', ';
 
-		$image = _PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg';
+		$image = '../img/'.$this->fieldImageSettings['dir'].'/'.(int)$obj->id.'.jpg';
+
 		$this->tpl_form_vars = array(
 			'strAttributesGroups' => $str_attributes_groups,
 			'colorAttributeProperties' => Validate::isLoadedObject($obj) && $obj->isColorAttribute(),
-			'imageTextureExists' => file_exists($image),
+			'imageTextureExists' => file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)$obj->id.'.jpg'),
 			'imageTexture' => $image,
 			'imageTextureUrl' => Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage=1'
 		);
@@ -651,18 +653,27 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-		$nb_items = count($this->_list);
-		for ($i = 0; $i < $nb_items; ++$i)
+		if ($this->ajax)
 		{
-			$item = &$this->_list[$i];
+			foreach ($this->_list as &$list)
+				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg'))
+					$list['color']['texture'] = '../img/'.$this->fieldImageSettings['dir'].'/'.(int)$list['id_attribute'].'.jpg';
+		}
+		else
+		{
+			$nb_items = count($this->_list);
+			for ($i = 0; $i < $nb_items; ++$i)
+			{
+				$item = &$this->_list[$i];
 
-			$query = new DbQuery();
-			$query->select('COUNT(id_attribute) as count_values');
-			$query->from('attribute', 'a');
-			$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
-			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-			$item['count_values'] = (int)$res;
-			unset($query);
+				$query = new DbQuery();
+				$query->select('COUNT(id_attribute) as count_values');
+				$query->from('attribute', 'a');
+				$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+				$item['count_values'] = (int)$res;
+				unset($query);
+			}
 		}
 	}
 
