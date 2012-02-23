@@ -373,12 +373,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		parent::processAdd($token);
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-		{
-			if ($this->display == 'add')
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
-			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.(int)Tools::getValue($this->identifier).'&conf=3&update'.$this->table.'&token='.$token;
-		}
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 	}
 
 	/**
