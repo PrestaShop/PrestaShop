@@ -135,7 +135,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr.last td{border-bottom:none}
 td.col-left {vertical-align:top; padding-right:10px;}
 #tabPane1 td.col-left { width:200px;}
-#product-tab-content-wait{display:block;background:url('../img/bg_loaderSpace.png');position:absolute;width:100%;z-index:100;min-height:600px;padding:5px 10px 10px;}
+#product-tab-content-wait{display:block;background:url('../img/bg_loaderSpace.png');min-height:420px;position:absolute;width:96.5%;}
 div#loading{height:128px;width:128px;background:url('../img/ajax-loader.gif');display:block;text-indent:-9999px;margin:100px auto;}
 td.col-left label { display:block; width:100%; text-align:right;}
 .alt_row{background-color:#f8f8f8}
