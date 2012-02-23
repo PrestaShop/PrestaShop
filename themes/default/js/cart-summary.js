@@ -258,11 +258,13 @@ function deleteProductFromSummary(id)
 				var errors = '';
 				for(error in jsonData.errors)
 				//IE6 bug fix
-				if(error != 'indexOf')
+				if (error != 'indexOf')
 					errors += jsonData.errors[error] + "\n";
 			}
 			else
 			{
+				if (jsonData.refresh)
+					location.reload();
 				if (parseInt(jsonData.summary.products.length) == 0)
 				{
 					$('#center_column').children().each(function() {
@@ -308,7 +310,7 @@ function deleteProductFromSummary(id)
 
 function upQuantity(id, qty)
 {
-	if(typeof(qty)=='undefined' || !qty)
+	if (typeof(qty) == 'undefined' || !qty)
 		qty = 1;
 	var customizationId = 0;
 	var productId = 0;
@@ -344,6 +346,8 @@ function upQuantity(id, qty)
 			}
 			else
 			{
+				if (jsonData.refresh)
+					location.reload();
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateCartSummary(jsonData.summary);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -403,6 +407,8 @@ function downQuantity(id, qty)
 				}
 				else
 				{
+					if (jsonData.refresh)
+						location.reload();
 					updateCustomizedDatas(jsonData.customizedDatas);
 					updateCartSummary(jsonData.summary);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
