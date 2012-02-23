@@ -100,13 +100,14 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'type' => 'decimal'
 			),
 			'from' => array(
-				'title' => $this->l('From'),
+				'title' => $this->l('Beginning'),
 				'align' => 'center',
-				'type' => 'date'
+				'type' => 'date',
 			),
 			'to' => array(
-				'title' => $this->l('To'),
+				'title' => $this->l('End'),
 				'align' => 'center',
+				'type' => 'date'
 			),
 		);
 
