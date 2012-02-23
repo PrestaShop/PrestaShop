@@ -5,3 +5,5 @@ SET NAMES 'utf8';
 ALTER TABLE `PREFIX_cart_rule` ADD `gift_product_attribute` int(10) unsigned NOT NULL default 0 AFTER `gift_product`;
 
 UPDATE `PREFIX_product` set is_virtual = 1 WHERE id_product IN (SELECT id_product FROM `PREFIX_product_download` WHERE active = 1);
+
+ALTER TABLE `PREFIX_employee` ADD `bo_width` int(10) unsigned NOT NULL DEFAULT 0 AFTER `bo_theme`;
