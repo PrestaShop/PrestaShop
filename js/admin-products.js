@@ -499,12 +499,12 @@ $(document).ready(function() {
 	// Bind to delete specific price link
 	onTabLoad('Prices', function(){
 		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(){
+			e.preventDefault();
 			deleteSpecificPrice(this.href, $(this).parents('tr'));
-			return false;
 		})
 	});
 
-	// Bind action edition on attribute list
+	// Bind attribute list ajax actions (edit, default, delete)
 	onTabLoad('Combinations', function(){
 		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
