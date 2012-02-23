@@ -59,6 +59,9 @@ class EmployeeCore extends ObjectModel
 	/** @var string employee's chosen theme */
 	public $bo_theme;
 
+	/** @var integer employee desired screen width */
+	public $bo_width;
+
 	/** @var bool, true */
 	public $bo_show_screencast;
 
@@ -84,6 +87,7 @@ class EmployeeCore extends ObjectModel
 			'id_profile' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'bo_color' => 			array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
 			'bo_theme' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'bo_width' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'bo_show_screencast' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'stats_date_from' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'stats_date_to' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),

@@ -189,6 +189,13 @@ class AdminEmployeesControllerCore extends AdminController
 					'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Back office width'),
+					'name' => 'bo_width',
+					'size' => 10,
+					'desc' => $this->l('Back office width, in pixels. The value "0" means that the back office width will be flexible.')
+				),
+				array(
 					'type' => 'select',
 					'label' => $this->l('Language:'),
 					'name' => 'id_lang',

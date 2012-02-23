@@ -1282,6 +1282,7 @@ class AdminControllerCore extends Controller
 			'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
 			'lang_iso' => $this->context->language->iso_code,
 			'link' => $this->context->link,
+			'bo_width' => (int)$this->context->employee->bo_width,
 			'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),

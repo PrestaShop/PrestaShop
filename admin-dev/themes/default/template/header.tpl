@@ -92,11 +92,11 @@
 			}
 		</style>
 	</head>
-	<body{if $bo_color} style="background:{$bo_color}"{/if}>
+	<body style="{if $bo_color}background:{$bo_color};{/if}{if $bo_width > 0}text-align:center;{/if}">
 {if $display_header}
 	<div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
 
-	<div id="top_container">
+	<div id="top_container" {if $bo_width > 0}style="margin:auto;width:{$bo_width}px"{/if}>
 		<div id="container">
 			{* begin  HEADER *}
 			<div id="header">
