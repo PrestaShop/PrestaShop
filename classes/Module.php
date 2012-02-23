@@ -307,7 +307,8 @@ abstract class ModuleCore
 		);
 
 		// Need Upgrade will check and load upgrade file to the moduleCache upgrade case detail
-		return Module::isInstalled($module_name) && Module::needUpgrade($module_name, $module_version);
+		$ret = Module::isInstalled($module_name) && Module::needUpgrade($module_name, $module_version);
+		return $ret;
 	}
 
 	/**
@@ -350,15 +351,27 @@ abstract class ModuleCore
 		}
 
 		$upgrade['number_upgrade_left'] = count($upgrade['upgrade_file_left']);
-
 		// Update module version in DB with the last succeed upgrade
 		if ($upgrade['upgraded_to'])
-			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'module` m
-				SET m.version = \''.bqSQL($upgrade['upgraded_to']).'\'
-				WHERE m.name = \''.bqSQL($this->name).'\'');
+			Module::upgradeModuleVersion($this->name, $upgrade['upgraded_to']);
 		$this->setUpgradeMessage($upgrade);
 		return $upgrade;
+	}
+
+	/**
+	 * Upgrade the registered version to a new one
+	 *
+	 * @static
+	 * @param $name
+	 * @param $version
+	 * @return bool
+	 */
+	public static function upgradeModuleVersion($name, $version)
+	{
+		return Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'module` m
+				SET m.version = \''.bqSQL($version).'\'
+				WHERE m.name = \''.bqSQL($name).'\'');
 	}
 
 	/**
@@ -377,6 +390,7 @@ abstract class ModuleCore
 			WHERE m.`name` = \''.bqSQL($module_name).'\'');
 
 		self::$modules_cache[$module_name]['upgrade']['upgraded_from'] = $registered_version;
+		Tools::alignVersionNumber($module_version, $registered_version);
 		// Check the version of the module with the registered one and look if any upgrade file exist
 		return version_compare($module_version, $registered_version, '>')
 				&& Module::loadUpgradeVersionList($module_name, $module_version, $registered_version);
@@ -388,6 +402,7 @@ abstract class ModuleCore
 	 *
 	 * @static
 	 * @param $module_name
+	 * @param $module_version
 	 * @param $registered_version
 	 * @return bool to know directly if any files have been found
 	 */
@@ -402,10 +417,12 @@ abstract class ModuleCore
 		{
 			// Read each file name
 			foreach ($files as $file)
-				if (!in_array($file, array('.', '..', '.svn')))
+				if (!in_array($file, array('.', '..', '.svn', 'index.php')))
 				{
 					$tab = explode('-', $file);
 					$file_version = basename($tab[1], '.php');
+					Tools::alignVersionNumber($file_version, $module_version);
+					Tools::alignVersionNumber($file_version, $registered_version);
 					// Compare version, if minor than actual, we need to upgrade the module
 					if (count($tab) == 2 &&
 						 (version_compare($file_version, $module_version, '<=') &&
@@ -417,12 +434,32 @@ abstract class ModuleCore
 							'upgrade_function' => 'upgrade_module_'.str_replace('.', '_', $file_version));
 					}
 				}
-			}
+		}
+
+		// No files upgrade, then upgrade succeed
+		if (count($list) == 0)
+		{
+			self::$modules_cache[$module_name]['upgrade']['success'] = true;
+			Module::upgradeModuleVersion($module_name, $module_version);
+		}
 
 		// Set the list to module cache
 		self::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
 		self::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
 		return (bool)count($list);
+	}
+
+	/**
+	 * Return the status of the upgraded module
+	 *
+	 * @static
+	 * @param $module_name
+	 * @return bool
+	 */
+	public static function getUpgradeStatus($module_name)
+	{
+		return (isset(self::$modules_cache[$module_name]) &&
+			self::$modules_cache[$module_name]['upgrade']['success']);
 	}
 
 	/**

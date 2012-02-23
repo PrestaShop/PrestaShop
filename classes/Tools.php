@@ -2191,6 +2191,36 @@ FileETag INode MTime Size
 				$filtered_files[] = $dir.'/'.$file;
 		return $filtered_files;
 	}
+
+	/**
+	 * Align 2 version with the same number of sub version
+	 * version_compare will work better for its comparison :)
+	 * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0')
+	 * @static
+	 * @param $v1
+	 * @param $v2
+	 */
+	public static function alignVersionNumber(&$v1, &$v2)
+	{
+		$len1 = count(explode('.', trim($v1, '.')));
+		$len2 = count(explode('.', trim($v2, '.')));
+		$len = 0;
+		$str = '';
+
+		if ($len1 > $len2)
+		{
+			$len = $len1 - $len2;
+			$str = &$v2;
+		}
+		else if ($len2 > $len1)
+		{
+			$len = $len2 - $len1;
+			$str = &$v1;
+		}
+
+		for ($len; $len > 0; $len--)
+			$str .= '.0';
+	}
 }
 
 /**
