@@ -303,7 +303,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .sidebar ul.categorieList li:first-child { border-top:none;}
 .sidebar ul.categorieList li a {color:#3a6ea7; display:block; padding-left:5px;}
 .sidebar ul.categorieList li a:hover { background-color: #EBEDF4;}
-.sidebar ul.categorieList li div.categorieWidth { width:180px; margin-left:5px; overflow:hidden;}
+.sidebar ul.categorieList li div.categorieWidth { overflow:hidden;}
 .sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 .sidebar .categorieStatus { display:none;}
 
