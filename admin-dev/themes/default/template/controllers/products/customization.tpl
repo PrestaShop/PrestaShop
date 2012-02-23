@@ -57,7 +57,7 @@
 				<td colspan="2"><div class="separation"></div></td>
 			</tr>
 			<tr>
-				<td style="width:150px" valign="top">{l s='Files fields:'}</td>
+				<td style="width:200px" valign="top">{l s='Define the label of the file fields:'}</td>
 				<td>
 					{$display_file_labels}
 				</td>
@@ -68,7 +68,7 @@
 				<td colspan="2"><div class="separation"></div></td>
 			</tr>
 			<tr>
-				<td style="width:150px" valign="top">{l s='Text fields:'}</td>
+				<td style="width:200px" valign="top">{l s='Define the label of the text fields:'}</td>
 				<td>
 					{$display_text_labels}
 				</td>
