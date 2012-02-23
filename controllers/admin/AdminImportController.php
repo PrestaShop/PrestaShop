@@ -1139,7 +1139,7 @@ class AdminImportControllerCore extends AdminController
 					$specific_price = new SpecificPrice();
 					$specific_price->id_product = (int)$product->id;
 					// @todo multishop specific price import
-					$specific_price->id_shop = $this->context->shop->getID(true);
+					$specific_price->id_shop = $this->context->shop->id;
 					$specific_price->id_currency = 0;
 					$specific_price->id_country = 0;
 					$specific_price->id_group = 0;

@@ -57,7 +57,7 @@ class BlockLanguages extends Module
 	*/
 	public function hookTop($params)
 	{
-		$languages = Language::getLanguages(true, $this->context->shop->getID());
+		$languages = Language::getLanguages(true, $this->context->shop->id);
 		if (!count($languages))
 			return;
 		$link = new Link();

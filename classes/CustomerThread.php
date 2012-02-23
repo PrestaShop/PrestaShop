@@ -89,7 +89,7 @@ class CustomerThreadCore extends ObjectModel
 			SELECT cm.id_customer_thread
 			FROM '._DB_PREFIX_.'customer_thread cm
 			WHERE cm.email = \''.pSQL($email).'\'
-				AND cm.id_shop = '.(int)Context::getContext()->shop->getId(true).'
+				AND cm.id_shop = '.(int)Context::getContext()->shop->id.'
 				AND cm.id_order = '.(int)$id_order
 		);
 	}

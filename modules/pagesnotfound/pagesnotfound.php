@@ -174,7 +174,7 @@ class Pagesnotfound extends Module
 			if (empty($http_referer) || Validate::isAbsoluteUrl($http_referer))
 				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`)
-					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.$this->context->shop->getID().', '.$this->context->shop->getGroupID().')
+					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_group_shop.')
 				');
 		}
 	}

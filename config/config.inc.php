@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -115,7 +115,7 @@ $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') >
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
 else
-	$cookie = new Cookie('ps'.Context::getContext()->shop->getID(), '', $cookieLifetime);
+	$cookie = new Cookie('ps'.Context::getContext()->shop->id, '', $cookieLifetime);
 Context::getContext()->cookie = $cookie;
 
 /* Create employee if in BO, customer else */

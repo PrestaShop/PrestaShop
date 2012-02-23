@@ -89,7 +89,7 @@ class SEKeywords extends ModuleGraph
 
 		if ($keywords = $this->getKeywords($_SERVER['HTTP_REFERER']))
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'sekeyword` (`keyword`, `date_add`, `id_shop`, `id_group_shop`)
-										VALUES (\''.pSQL(Tools::strtolower(trim($keywords))).'\', NOW(), '.$this->context->shop->getID().', '.$this->context->shop->getGroupID().')');
+										VALUES (\''.pSQL(Tools::strtolower(trim($keywords))).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_group_shop.')');
 	}
 
 	public function hookAdminStatsModules()

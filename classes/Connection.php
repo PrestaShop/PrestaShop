@@ -72,9 +72,9 @@ class ConnectionCore extends ObjectModel
 	public function getFields()
 	{
 		if (!$this->id_shop)
-			$this->id_shop = Context::getContext()->shop->getId(true);
+			$this->id_shop = Context::getContext()->shop->id;
 		if (!$this->id_group_shop)
-			$this->id_group_shop = Context::getContext()->shop->getGroupID();
+			$this->id_group_shop = Context::getContext()->shop->id_group_shop;
 
 		$fields = parent::getFields();
 		return $fields;
@@ -147,8 +147,8 @@ class ConnectionCore extends ObjectModel
 			$connection->id_guest = (int)$cookie->id_guest;
 			$connection->id_page = Page::getCurrentId();
 			$connection->ip_address = Tools::getRemoteAddr() ? ip2long(Tools::getRemoteAddr()) : '';
-			$connection->id_shop = Context::getContext()->shop->getID();
-			$connection->id_group_shop = Context::getContext()->shop->getGroupID();
+			$connection->id_shop = Context::getContext()->shop->id;
+			$connection->id_group_shop = Context::getContext()->shop->id_group_shop;
 			$connection->date_add = $cookie->date_add;
 			if (Validate::isAbsoluteUrl($referer))
 				$connection->http_referer = $referer;

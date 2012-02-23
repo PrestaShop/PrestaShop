@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 * NOTICE OF LICENSE
 *
 *
@@ -1521,7 +1521,7 @@ class AdminProductsControllerCore extends AdminController
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))
 						{
-							$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->getID());
+							$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->id);
 							if (!$object->active)
 							{
 								$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -1909,7 +1909,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($id_category = (int)Tools::getValue('id_category'))
 				self::$currentIndex .= '&id_category='.(int)$id_category;
-			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
+			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->id);
 
 			$id_category = (int)Tools::getValue('id_category', 1);
 			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
@@ -2172,7 +2172,7 @@ class AdminProductsControllerCore extends AdminController
 		$preview_url = $this->context->link->getProductLink(
 			$product,
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
-			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->getID());
+			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->id);
 		if (!$product->active)
 		{
 			$preview_url = $this->context->link->getProductLink($product, $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id));
@@ -2195,7 +2195,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject(($product = new Product((int)Tools::getValue('id_product')))))
 		{
-			$id_shop = $this->context->shop->getID();
+			$id_shop = $this->context->shop->id;
 
 			// If zone still exist, then update the database with the new value
 			if (count($zones = Zone::getZones()))
@@ -2466,7 +2466,7 @@ class AdminProductsControllerCore extends AdminController
 			else
 			{
 				$zones = Zone::getZones();
-				$id_shop = $this->context->shop->getID();
+				$id_shop = $this->context->shop->id;
 
 				// Set default zone value to the shop	and sort it
 				foreach ($zones as $zone)
@@ -3468,7 +3468,7 @@ class AdminProductsControllerCore extends AdminController
 			else
 			{
 				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
-				if ($group_shop->share_stock && $group_shop->getTotalShops() > 1)
+				if ($group_shop->share_stock)
 					$show_quantities = false;
 			}
 
@@ -3830,7 +3830,7 @@ class AdminProductsControllerCore extends AdminController
 	{
  		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
-	}
+	}	
 
 
 

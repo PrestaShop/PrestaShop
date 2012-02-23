@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -260,7 +260,7 @@ class ProductControllerCore extends FrontController
 
 		$id_currency = (int)$this->context->cookie->id_currency;
 		$id_product = (int)$this->product->id;
-		$id_shop = $this->context->shop->getID(true);
+		$id_shop = $this->context->shop->id;
 
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
 		foreach ($quantity_discounts as &$quantity_discount)

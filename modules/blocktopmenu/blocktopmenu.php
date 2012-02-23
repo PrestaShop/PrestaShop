@@ -127,7 +127,7 @@ class blocktopmenu extends Module
 		$this->_html .= '
 		<fieldset>
 			<div class="multishop_info">
-			'.$this->l('The modifications will be applied to').' '.(Context::shop() == Shop::CONTEXT_SHOP ? $this->l('shop:').' '.$this->context->shop->name : $this->l('all shops')).'.
+			'.$this->l('The modifications will be applied to').' '.(Shop::getContext() == Shop::CONTEXT_SHOP ? $this->l('shop:').' '.$this->context->shop->name : $this->l('all shops')).'.
 			</div>
 			<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
@@ -334,7 +334,7 @@ class blocktopmenu extends Module
 			foreach ($items as $item)
 			{
 				$id = (int)substr($item, 3, strlen($item));
-				$disabled = ((Context::shop() == Shop::CONTEXT_SHOP && $type == 'global') ? ' disabled="disabled"': '');
+				$disabled = ((Shop::getContext() == Shop::CONTEXT_SHOP && $type == 'global') ? ' disabled="disabled"': '');
 				switch(substr($item, 0, 3))
 				{
 					case'CAT':

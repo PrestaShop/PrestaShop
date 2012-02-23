@@ -307,7 +307,7 @@ class WarehouseCore extends ObjectModel
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
 		if (Pack::isPack($id_product))
@@ -344,7 +344,7 @@ class WarehouseCore extends ObjectModel
 	{
 		if (!$ignore_shop)
 			if (is_null($id_shop))
-				$id_shop = Context::getContext()->shop->getID(true);
+				$id_shop = Context::getContext()->shop->id;
 
 		$query = new DbQuery();
 		$query->select('w.id_warehouse, CONCAT(reference, \' - \', name) as name');
@@ -497,7 +497,7 @@ class WarehouseCore extends ObjectModel
 			return false;
 
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		// warehouses of the pack
 		$pack_warehouses = WarehouseProductLocation::getCollection((int)$id_product);

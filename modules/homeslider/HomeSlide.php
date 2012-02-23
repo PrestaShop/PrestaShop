@@ -63,7 +63,7 @@ class HomeSlide extends ObjectModel
 	public function add($autodate = true, $null_values = false)
 	{
 		$context = Context::getContext();
-		$id_shop = $context->shop->getID();
+		$id_shop = $context->shop->id;
 
 		$res = parent::add($autodate, $null_values);
 		$res &= Db::getInstance()->execute('
@@ -100,7 +100,7 @@ class HomeSlide extends ObjectModel
 	{
 		$id_slide = $this->id;
 		$context = Context::getContext();
-		$id_shop = $context->shop->getID();
+		$id_shop = $context->shop->id;
 
 		$max = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT MAX(hss.`position`) as position

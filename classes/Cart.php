@@ -758,7 +758,7 @@ class CartCore extends ObjectModel
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
-		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->getID());
+		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
 		/* If we have a product combination, the minimal quantity is set with the one of this combination */
 		if (!empty($id_product_attribute))
@@ -857,7 +857,7 @@ class CartCore extends ObjectModel
 					'id_product_attribute' => 	(int)$id_product_attribute,
 					'id_cart' => 				(int)$this->id,
 					'id_address_delivery' => 	(int)$id_address_delivery,
-					'id_shop' => 				$shop->getID(true),
+					'id_shop' => 				$shop->id,
 					'quantity' => 				(int)$quantity,
 					'date_add' => 				date('Y-m-d H:i:s')
 				));

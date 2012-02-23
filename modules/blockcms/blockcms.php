@@ -55,9 +55,9 @@ class BlockCms extends Module
 		if (!parent::install() ||
 			!$this->registerHooks() ||
 			!BlockCMSModel::createTables() ||
-			!Configuration::updateValue('FOOTER_CMS', '', false, $this->context->shop->getGroupID(), $this->context->shop->getID()) ||
-			!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1, false, $this->context->shop->getGroupID(), $this->context->shop->getID()) ||
-			!Configuration::updateValue('FOOTER_POWEREDBY', 1, false, $this->context->shop->getGroupID(), $this->context->shop->getID()))
+			!Configuration::updateValue('FOOTER_CMS', '') ||
+			!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) ||
+			!Configuration::updateValue('FOOTER_POWEREDBY', 1))
 		return false;
 
 		// Install fixtures for blockcms
@@ -244,19 +244,19 @@ class BlockCms extends Module
 		);
 
 		$this->context->controller->getLanguages();
-		$tmp = Configuration::get('FOOTER_CMS', null, $this->context->shop->getGroupID(), $this->context->shop->getID());
+		$tmp = Configuration::get('FOOTER_CMS');
 		$footer_boxes = explode('|', $tmp);
 
 		if ($footer_boxes && is_array($footer_boxes))
 			foreach ($footer_boxes as $key => $value)
 				$this->fields_value[$value] = true;
 
-		$this->fields_value['cms_footer_on'] = Configuration::get('FOOTER_BLOCK_ACTIVATION', null, $this->context->shop->getGroupID(), $this->context->shop->getID());
-		$this->fields_value['cms_footer_powered_by_on'] = Configuration::get('FOOTER_POWEREDBY', null, $this->context->shop->getGroupID(), $this->context->shop->getID());
+		$this->fields_value['cms_footer_on'] = Configuration::get('FOOTER_BLOCK_ACTIVATION');
+		$this->fields_value['cms_footer_powered_by_on'] = Configuration::get('FOOTER_POWEREDBY');
 
 		foreach ($this->context->controller->_languages as $language)
 		{
-			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.$language['id_lang'], null, $this->context->shop->getGroupID(), $this->context->shop->getID());
+			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.$language['id_lang']);
 			$this->fields_value['footer_text'][$language['id_lang']] = $footer_text;
 		}
 
@@ -556,7 +556,7 @@ class BlockCms extends Module
                     foreach ($this->context->controller->_languages as $language)
                         BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
 
-                    BlockCMSModel::insertCMSBlockShop($id_cms_block, $this->context->shop->getGroupID(), $this->context->shop->getID());
+                    BlockCMSModel::insertCMSBlockShop($id_cms_block, Shop::getContextGroupShopID(), Shop::getContextShopID());
                 }
 
                 $this->_errors[] = $this->l('New block cannot be created !');
@@ -622,9 +622,9 @@ class BlockCms extends Module
 			$footer_boxes = Tools::getValue('footerBox') ? implode('|', Tools::getValue('footerBox')) : '';
             $block_activation = (Tools::getValue('cms_footer_on') == 1) ? 1 : 0;
 
-			Configuration::updateValue('FOOTER_CMS', rtrim($footer_boxes, '|'), false, $this->context->shop->getGroupID(), $this->context->shop->getID());
-			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by, false, $this->context->shop->getGroupID(), $this->context->shop->getID());
-			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation, false, $this->context->shop->getGroupID(), $this->context->shop->getID());
+			Configuration::updateValue('FOOTER_CMS', rtrim($footer_boxes, '|'));
+			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by);
+			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation);
 
 			$this->_html .= $this->displayConfirmation($this->l('Footer\'s informations updated'));
 		}
@@ -688,17 +688,14 @@ class BlockCms extends Module
 
 	public function hookFooter()
 	{
-		$context = Context::getContext();
-		$shop_id = $context->shop->getID();
-		$shop_group_id = $context->shop->getGroupID();
-		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION', null, $shop_group_id, $shop_id);
+		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION');
 
 		if ($block_activation)
 		{
 			$cms_titles = BlockCMSModel::getCMSTitlesFooter();
-			$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER', null, $shop_group_id, $shop_id);
-			$display_poweredby = Configuration::get('FOOTER_POWEREDBY', null, $shop_group_id, $shop_id);
-			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$context->language->id);
+			$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER');
+			$display_poweredby = Configuration::get('FOOTER_POWEREDBY');
+			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id);
 
 			$this->smarty->assign(
 				array(

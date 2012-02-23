@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -46,7 +46,7 @@ class AdminAccountingManagementControllerCore extends AdminController
 			$this->initToolbar();
 
 			$zones = Zone::getZones();
-			$id_shop = $this->context->shop->getID();
+			$id_shop = $this->context->shop->id;
 
 			// Set default zone value to the shop	and sort it
 			foreach ($zones as $zone)
@@ -105,7 +105,7 @@ class AdminAccountingManagementControllerCore extends AdminController
 	 */
 	protected function updateAccountNumber()
 	{
-		$id_shop = $this->context->shop->getID();
+		$id_shop = $this->context->shop->id;
 
 		// Update the current default shop account number
 		Configuration::updateValue(

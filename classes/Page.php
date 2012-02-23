@@ -113,7 +113,7 @@ class PageCore extends ObjectModel
 				SET `counter` = `counter` + 1
 				WHERE `id_date_range` = '.(int)$id_date_range.'
 					AND `id_page` = '.(int)$id_page.'
-					AND `id_shop` = '.(int)$context->shop->getID();
+					AND `id_shop` = '.(int)$context->shop->id;
 		Db::getInstance()->execute($sql);
 
 		// If no one has seen the page in this date range, it is added
@@ -122,8 +122,8 @@ class PageCore extends ObjectModel
 				'id_date_range' =>	(int)$id_date_range,
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
-				'id_shop' =>		(int)$context->shop->getID(),
-				'id_group_shop' =>	(int)$context->shop->getGroupID(),
+				'id_shop' =>		(int)$context->shop->id,
+				'id_group_shop' =>	(int)$context->shop->id_group_shop,
 			));
 	}
 }

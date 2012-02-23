@@ -1327,7 +1327,7 @@ class BlockLayered extends Module
 						}
 					}
 					else
-						$shop_list = array(Context::getContext()->shop->getID(true));
+						$shop_list = array(Context::getContext()->shop->id);
 				}
 				else
 					$shop_list = array(0);
@@ -2221,7 +2221,7 @@ class BlockLayered extends Module
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 					{
 						$queryFiltersWhere .= ' AND sa.quantity '.(!$selectedFilters['quantity'][0] ? '<=' : '>').' 0 ';
-						$queryFiltersFrom .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+						$queryFiltersFrom .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->id.') ';
 					}
 					else
 						$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '<=' : '>').' 0 ';
@@ -2376,7 +2376,7 @@ class BlockLayered extends Module
 		$parent = new Category((int)$id_parent);
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
-			$id_shop = (int) Context::getContext()->shop->getId(true);
+			$id_shop = (int) Context::getContext()->shop->id;
 		else
 			$id_shop = 0;
 		
@@ -2426,7 +2426,7 @@ class BlockLayered extends Module
 					AND c.active = 1) ';
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 						$sqlQuery['join'] .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa
-							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->getID(true).') ';
+							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->id.') ';
 					$sqlQuery['where'] = 'WHERE p.`active` = 1 ';
 					$sqlQuery['group'] = ' GROUP BY p.id_product ';
 					break;
@@ -3176,7 +3176,7 @@ class BlockLayered extends Module
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
 			$queryFilters = ' AND sav.quantity '.(!$filterValue[0] ? '<=' : '>').' 0 ';
-			$queryFiltersJoin = 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+			$queryFiltersJoin = 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->id.') ';
 		}
 		else
 			$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '<=' : '>').' 0 ';
@@ -3543,7 +3543,7 @@ class BlockLayered extends Module
 	
 		if (version_compare(_PS_VERSION_,'1.5','>') && !empty($id_layered_filter))
 		{
-			if (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL)
+			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
 			{
 				$helper = new HelperForm();
 				$helper->id = (int)$id_layered_filter;

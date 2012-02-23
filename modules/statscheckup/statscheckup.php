@@ -96,9 +96,6 @@ class StatsCheckUp extends Module
 		$employee = Context::getContext()->employee;
 		$prop30 = ((strtotime($employee->stats_date_to.' 23:59:59') - strtotime($employee->stats_date_from.' 00:00:00')) / 60 / 60 / 24) / 30;
 
-		$shopID = $this->context->shop->getID();
-		$shopGroupID = $this->context->shop->getGroupID();
-
 		// Get languages
 		$sql = 'SELECT l.*
 				FROM '._DB_PREFIX_.'lang l'

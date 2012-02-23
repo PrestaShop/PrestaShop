@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -400,13 +400,12 @@ function generateShopList()
 	$context = Context::getContext();
 
 	// Get default value
-	list($shopID, $shopGroupID) = Shop::getContext();
-	if ($shopID)
-		$value = 's-'.$shopID;
-	else if ($shopGroupID)
-		$value = 'g-'.$shopGroupID;
-	else
-		$value = '';
+    if (Shop::getContext() == Shop::CONTEXT_ALL)
+        $value = '';
+    else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+        $value = 'g-'.Shop::getContextGroupShopID();
+    else
+        $value = 's-'.Shop::getContextShopID();
 
 	// Generate HTML
 	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
@@ -419,19 +418,10 @@ function generateShopList()
 	foreach ($tree as $gID => $group_data)
 	{
 		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
-
-		if ($context->controller->multishop_context & Shop::CONTEXT_GROUP)
-			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
-		else
-			$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';
-
-		if ($context->controller->multishop_context & Shop::CONTEXT_SHOP)
-			foreach ($group_data['shops'] as $sID => $shopData)
-				if ($shopData['active'])
-					$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID || $context->shop->id == $sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
-
-		if (!($context->controller->multishop_context & Shop::CONTEXT_GROUP))
-			$html .= '</optgroup>';
+		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+		foreach ($group_data['shops'] as $sID => $shopData)
+			if ($shopData['active'])
+				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
 	}
 	$html .= '</select>';
 
@@ -511,12 +501,12 @@ function runAdminTab($tab, $ajaxMode = false)
 				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
 				'.$bread.'</div>';
 
-			if (!$ajaxMode && Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
+			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
 			{
 				echo '<div class="multishop_info">';
-				if (Context::shop() == Shop::CONTEXT_GROUP)
+				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 					printf(translate('You are configuring your store for group shop %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
-				elseif (Context::shop() == Shop::CONTEXT_SHOP)
+				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo '</div>';
 			}

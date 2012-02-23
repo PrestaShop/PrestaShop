@@ -71,12 +71,12 @@ class HelperOptionsCore extends Helper
 				$isDisabled = $isInvisible = false;
 				if (Shop::isFeatureActive())
 				{
-					if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+					if (isset($field['visibility']) && $field['visibility'] > Shop::getContext())
 					{
 						$isDisabled = true;
 						$isInvisible = true;
 					}
-					else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
 				$field['is_disabled'] = $isDisabled;
@@ -126,7 +126,7 @@ class HelperOptionsCore extends Helper
 				}
 
 				// Multishop default value
-				$field['multishop_default'] = (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible);
+				$field['multishop_default'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible);
 
 				// Assign the modifications back to parent array
 				$category_data['fields'][$key] = $field;

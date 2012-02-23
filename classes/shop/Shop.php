@@ -105,6 +105,10 @@ class ShopCore extends ObjectModel
 		),
 	);
 
+    protected static $context;
+    protected static $context_id_shop;
+    protected static $context_id_group_shop;
+
 	/**
 	 * There are 3 kinds of shop context : shop, group shop and general
 	 */
@@ -369,30 +373,8 @@ class ShopCore extends ObjectModel
 	public function getGroup()
 	{
 		if (!$this->group)
-			$this->group = new GroupShop($this->getGroupID());
+			$this->group = new GroupShop($this->id_group_shop);
 		return $this->group;
-	}
-
-	/**
-	 * Get current shop ID
-	 *
-	 * @return int
-	 */
-	public function getID($use_default = false)
-	{
-		return (!$this->id && $use_default) ? (int)Configuration::get('PS_SHOP_DEFAULT') : (int)$this->id;
-	}
-
-	/**
-	 * Get current shop group ID
-	 *
-	 * @return int
-	 */
-	public function getGroupID()
-	{
-		if (defined('_PS_ADMIN_DIR_'))
-			return Shop::getContextGroupID();
-		return (isset($this->id_group_shop)) ? (int)$this->id_group_shop : null;
 	}
 
 	/**
@@ -637,13 +619,10 @@ class ShopCore extends ObjectModel
 	 */
 	public function getListOfID($share = false)
 	{
-		$shop_id = $this->getID();
-		$shop_group_id = $this->getGroupID();
-
-		if ($shop_id)
-			$list = ($share) ? Shop::getSharedShops($shop_id, $share) : array($shop_id);
-		else if ($shop_group_id)
-			$list = Shop::getShops(true, $shop_group_id, true);
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+			$list = Shop::getShops(true, Shop::getContextGroupShopID(), true);
 		else
 			$list = Shop::getShops(true, null, true);
 
@@ -669,46 +648,45 @@ class ShopCore extends ObjectModel
 		return Db::getInstance()->executeS($sql);
 	}
 
-	/**
-	 * Retrieve the current shop context in FO or BO
-	 *
-	 * @param string null|shop|group
-	 * @return array(id_shop, id_group_shop)|int
-	 */
-	public static function getContext($type = null)
+	public static function setContext($type, $id = null)
 	{
-		$context = Context::getContext();
-		if (!isset($context->shop))
-			return ($type == 'shop' || $type == 'group') ? '' : array('', '');
-
-		$shop_id = $context->shop->id;
-		$shop_group_id = $context->shop->id_group_shop;
-		if (defined('_PS_ADMIN_DIR_'))
+		switch ($type)
 		{
-			if (!isset($context->cookie) || !$context->cookie->shopContext)
-				return ($type == 'shop' || $type == 'group') ? '' : array('', '');
+			case self::CONTEXT_ALL :
+				self::$context_id_shop = null;
+				self::$context_id_group_shop = null;
+			break;
 
-			// Parse shopContext cookie value (E.g. s-2, g-4)
-			$split = explode('-', $context->cookie->shopContext);
-			if (count($split) == 2 && $split[0] == 'g')
-				$shop_group_id = (int)$split[1];
+			case self::CONTEXT_GROUP :
+				self::$context_id_shop = null;
+				self::$context_id_group_shop = (int)$id;
+			break;
+
+			case self::CONTEXT_SHOP :
+				self::$context_id_shop = (int)$id;
+				self::$context_id_group_shop = Shop::getGroupFromShop($id);
+			break;
+
+			default :
+				throw new PrestaShopException('Unknown context for shop');
 		}
 
-		if ($type == 'shop')
-			return $shop_id;
-		else if ($type == 'group')
-			return $shop_group_id;
-		return array($shop_id, $shop_group_id);
+		self::$context = $type;
 	}
 
-	/**
-	 * Get ID shop from context
-	 *
-	 * @return int
-	 */
-	public static function getContextID()
+	public static function getContext()
 	{
-		return Shop::getContext('shop');
+		return self::$context;
+	}
+
+	public static function getContextShopID()
+	{
+		return self::$context_id_shop;
+	}
+
+	public static function getContextGroupShopID()
+	{
+		return self::$context_id_group_shop;
 	}
 
 	/**
@@ -719,21 +697,6 @@ class ShopCore extends ObjectModel
 	public static function getContextGroupID()
 	{
 		return Shop::getContext('group');
-	}
-
-	/**
-	 * Check in which type of shop context we are
-	 *
-	 * @return int
-	 */
-	public function getContextType()
-	{
-		list($shop_id, $shop_group_id) = Shop::getContext();
-		if ($shop_id)
-			return Shop::CONTEXT_SHOP;
-		else if ($shop_group_id)
-			return Shop::CONTEXT_GROUP;
-		return Shop::CONTEXT_ALL;
 	}
 
 	/**
@@ -752,19 +715,14 @@ class ShopCore extends ObjectModel
 			$alias .= '.';
 
 		$restriction = '';
-		$shop_id = $this->getID();
-		$shop_group_id = $this->getGroupID();
-
 		if ($type == 'group_shop')
 		{
-			if ($shop_id)
-				$restriction = ' AND '.$alias.'id_group_shop = '.Shop::getGroupFromShop($shop_id).' ';
-			else if ($shop_group_id)
-				$restriction = ' AND '.$alias.'id_group_shop = '.$shop_group_id.' ';
+			if (Shop::getContext() != Shop::CONTEXT_ALL)
+				$restriction = ' AND '.$alias.'id_group_shop = '.Shop::getContextGroupShopID().' ';
 		}
 		else
 		{
-			if ($shop_id || $shop_group_id)
+			if (Shop::getContext() != Shop::CONTEXT_ALL)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
 			//else if ($share == Shop::SHARE_STOCK)
 			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
@@ -807,7 +765,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function addSqlRestrictionOnLang($alias = null)
 	{
-		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$this->getID(true).' ';
+		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$this->id.' ';
 	}
 
 	/**
@@ -888,12 +846,12 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0 Use shop->getID()
+	 * @deprecated 1.5.0 Use shop->id
 	 */
 	public static function getCurrentShop()
 	{
 		Tools::displayAsDeprecated();
-		return Context::getContext()->shop->getID(true);
+		return Context::getContext()->shop->id;
 	}
 
 	/**
@@ -938,7 +896,7 @@ class ShopCore extends ObjectModel
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category_shop`
 		WHERE `id_category` = '.(int)$id_category.'
-		AND `id_shop` = '.(int)Context::getContext()->shop->getID(true));
+		AND `id_shop` = '.(int)Context::getContext()->shop->id);
 	}
 
 	/**
@@ -958,6 +916,6 @@ class ShopCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 			ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 		WHERE p.`id_product` = '.(int)$id_product.'
-		AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true));
+		AND cs.`id_shop` = '.(int)Context::getContext()->shop->id);
 	}
 }

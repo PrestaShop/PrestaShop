@@ -377,11 +377,23 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function deleteFromContext($key)
 	{
-		list($shopID, $shopGroupID) = Shop::getContext();
-		if (!$shopID && !$shopGroupID)
+		if (Shop::getContext() == Shop::CONTEXT_ALL)
+			$id_shop = $id_group_shop = null;
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		{
+			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop = null;
+		}
+		else
+		{
+			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop = Shop::getContextShopID();
+		}
+
+		if (!$id_shop && !$id_group_shop)
 			return;
 
-		$id = Configuration::getIdByName($key, $shopGroupID, $shopID);
+		$id = Configuration::getIdByName($key, $id_group_shop, $id_shop);
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration
 				WHERE id_configuration = '.$id;
 		Db::getInstance()->execute($sql);
@@ -395,17 +407,29 @@ class ConfigurationCore extends ObjectModel
 	 * Check if configuration var is defined in given context
 	 *
 	 * @param string $key
-	 * @param int $langID
+	 * @param int $id_lang
 	 * @param int $context
 	 */
-	public static function hasContext($key, $langID, $context)
+	public static function hasContext($key, $id_lang, $context)
 	{
-		list($shopID, $shopGroupID) = Shop::getContext();
-		if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $langID, null, $shopID))
+		if (Shop::getContext() == Shop::CONTEXT_ALL)
+			$id_shop = $id_group_shop = null;
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		{
+			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop = null;
+		}
+		else
+		{
+			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop = Shop::getContextShopID();
+		}
+
+		if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $id_lang, null, $id_shop))
 			return true;
-		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $langID, $shopGroupID))
+		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_group_shop))
 			return true;
-		else if ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $langID))
+		else if ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang))
 			return true;
 		return false;
 	}
@@ -416,17 +440,17 @@ class ConfigurationCore extends ObjectModel
 		{
 			$testContext = false;
 			foreach (Language::getLanguages(false) as $lang)
-				if ((Context::shop() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
-					|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
+				if ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
+					|| (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
 						$testContext = true;
 		}
 		else
 		{
-			$testContext = ((Context::shop() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
-							|| (Context::shop() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
+			$testContext = ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
+							|| (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
 		}
 
-		return (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $testContext);
+		return (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $testContext);
 	}
 
 	/**
@@ -451,11 +475,23 @@ class ConfigurationCore extends ObjectModel
 		if (!Shop::isFeatureActive())
 			return;
 
-		list($shopID, $shopGroupID) = Shop::getContext();
+		if (Shop::getContext() == Shop::CONTEXT_ALL)
+			$shop_id = $group_shop_id = null;
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		{
+			$group_shop_id = Shop::getContextGroupShopID();
+			$shop_id = null;
+		}
+		else
+		{
+			$group_shop_id = Shop::getContextGroupShopID();
+			$shop_id = Shop::getContextShopID();
+		}
+
 		if (is_null($id_shop))
-			$id_shop = $shopID;
+			$id_shop = $shop_id;
 		if (is_null($id_group_shop))
-			$id_group_shop = $shopGroupID;
+			$id_group_shop = $group_shop_id;
 
 		$id_shop = (int)$id_shop;
 		$id_group_shop = (int)$id_group_shop;
