@@ -51,7 +51,7 @@ class CombinationCore extends ObjectModel
 
 	public $default_on;
 
-	public $available_date;
+	public $available_date = '0000-00-00';
 
 	/**
 	 * @see ObjectModel::$definition
