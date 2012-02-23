@@ -884,7 +884,7 @@ class AdminControllerCore extends Controller
 				foreach ($fields as $field => $values)
 				{
 					// We don't validate fields with no visibility
-					if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Context::getContext()->shop->getContextType()))
+					if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Shop::getContext()))
 						continue;
 
 					// Check if field is required
@@ -919,7 +919,7 @@ class AdminControllerCore extends Controller
 				{
 					foreach ($fields as $key => $options)
 					{
-						if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Context::getContext()->shop->getContextType()))
+						if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Shop::getContext()))
 							continue;
 
 						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
@@ -1201,7 +1201,7 @@ class AdminControllerCore extends Controller
 		$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
 		foreach ($quick_access as $index => $quick)
 		{
-			if ($quick['link'] == '../' && Context::shop() == Shop::CONTEXT_SHOP)
+			if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$quick_access[$index]['link'] = $this->context->shop->getBaseURL();
 			else
 			{
@@ -1312,26 +1312,14 @@ class AdminControllerCore extends Controller
 		// Shop context
 		if ($is_multishop)
 		{
-			if (Context::shop() == Shop::CONTEXT_ALL)
-			{
-				$shop_context = 'all';
-				$shop_name = '';
-			}
-			else if (Context::shop() == Shop::CONTEXT_GROUP)
-			{
-				$shop_context = 'group';
-				$shop_name = $this->context->shop->getGroup()->name;
-			}
-			else
-			{
-				$shop_context = 'shop';
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				$shop_name = $this->context->shop->name;
-			}
+			else
+				$shop_name = 'PrestaShop';
 
 			$this->context->smarty->assign(array(
-					'shop_name' => $shop_name,
-					'shop_context' => $shop_context,
-				));
+				'shop_name' => $shop_name,
+			));
 		}
 	}
 
@@ -1669,12 +1657,22 @@ class AdminControllerCore extends Controller
 		}
 		else if (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-1';
+
 		$shop_id = '';
+		Shop::setContext(Shop::CONTEXT_ALL);
 		if ($this->context->cookie->shopContext)
 		{
 			$split = explode('-', $this->context->cookie->shopContext);
-			if (count($split) == 2 && $split[0] == 's')
-				$shop_id = (int)$split[1];
+			if (count($split) == 2)
+			{
+				if ($split[0] == 'g')
+					Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+				else
+				{
+					Shop::setContext(Shop::CONTEXT_SHOP, $split[1]);
+					$shop_id = $split[1];
+				}
+			}
 		}
 		else if ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
@@ -1688,7 +1686,9 @@ class AdminControllerCore extends Controller
 			Employee::getEmployeeShopAccess((int)$this->context->employee->id);
 
 		// Replace existing shop if necessary
-		if ($this->context->shop->id != $shop_id)
+		if (!$shop_id)
+			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+		else if ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
 
 		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
@@ -1955,7 +1955,7 @@ class AdminControllerCore extends Controller
 			else if (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
 			{
 				$filter_key = $assos_group[$this->table]['type'];
-				$idenfier_shop = array($this->context->shop->getGroupID());
+				$idenfier_shop = array(Shop::getContextGroupShopID());
 			}
 		}
 
@@ -1968,7 +1968,7 @@ class AdminControllerCore extends Controller
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filter_key).'`? *sa#', $this->_join);
-			if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $test_join)
+			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $test_join)
 			{
 				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_'.$filter_key.'` sa ';
 				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filter_key.' IN ('.implode(', ', $idenfier_shop).'))';

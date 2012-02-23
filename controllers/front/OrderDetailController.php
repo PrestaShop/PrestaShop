@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -73,7 +73,7 @@ class OrderDetailControllerCore extends FrontController
 						$ct = new CustomerThread();
 						$ct->id_contact = 0;
 						$ct->id_customer = (int)$order->id_customer;
-						$ct->id_shop = (int)$this->context->shop->getId(true);
+						$ct->id_shop = (int)$this->context->shop->id;
 						if ($id_product = (int)Tools::getValue('id_product') && $order->orderContainProduct((int)$id_product))
 							$ct->id_product = $id_product;
 						$ct->id_order = (int)$order->id;

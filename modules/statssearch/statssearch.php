@@ -87,7 +87,7 @@ class StatsSearch extends ModuleGraph
 	public function hookSearch($params)
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'statssearch` (`id_shop`, `id_group_shop`, `keywords`, `results`, `date_add`)
-				VALUES ('.$this->context->shop->getID(true).', '.$this->context->shop->getGroupID().', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
+				VALUES ('.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_group_shop.', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
 		Db::getInstance()->execute($sql);
 	}
 

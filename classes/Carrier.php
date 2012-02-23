@@ -213,7 +213,7 @@ class CarrierCore extends ObjectModel
 	 * @param integer $id_zone Zone id (for customer delivery address)
 	 * @return float Delivery price
 	 */
-	public function getDeliveryPriceByWeight($total_weight, $id_zone, Shop $shop = null)
+	public function getDeliveryPriceByWeight($total_weight, $id_zone)
 	{
 		$cache_key = $this->id.'_'.$total_weight.'_'.$id_zone;
 		if (!isset(self::$price_by_weight[$cache_key]))
@@ -225,7 +225,7 @@ class CarrierCore extends ObjectModel
 						AND '.(float)$total_weight.' >= w.`delimiter1`
 						AND '.(float)$total_weight.' < w.`delimiter2`
 						AND d.`id_carrier` = '.(int)$this->id.'
-						'.Carrier::sqlDeliveryRangeShop('range_weight', $shop).'
+						'.Carrier::sqlDeliveryRangeShop('range_weight').'
 					ORDER BY w.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if (!isset($result['price']))
@@ -236,7 +236,7 @@ class CarrierCore extends ObjectModel
 		return self::$price_by_weight[$cache_key];
 	}
 
-	public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone, Shop $shop = null)
+	public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
 	{
 		$cache_key = $id_carrier.'_'.$total_weight.'_'.$id_zone;
 		if (!isset(self::$price_by_weight2[$cache_key]))
@@ -248,7 +248,7 @@ class CarrierCore extends ObjectModel
 						AND '.(float)$total_weight.' >= w.`delimiter1`
 						AND '.(float)$total_weight.' < w.`delimiter2`
 						AND d.`id_carrier` = '.(int)$id_carrier.'
-						'.Carrier::sqlDeliveryRangeShop('range_weight', $shop).'
+						'.Carrier::sqlDeliveryRangeShop('range_weight').'
 					ORDER BY w.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			self::$price_by_weight2[$cache_key] = (isset($result['price']));
@@ -256,14 +256,14 @@ class CarrierCore extends ObjectModel
 		return self::$price_by_weight2[$cache_key];
 	}
 
-	public function getMaxDeliveryPriceByWeight($id_zone, Shop $shop = null)
+	public function getMaxDeliveryPriceByWeight($id_zone)
 	{
 		$sql = 'SELECT d.`price`
 				FROM `'._DB_PREFIX_.'delivery` d
 				INNER JOIN `'._DB_PREFIX_.'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
 				WHERE d.`id_zone` = '.(int)$id_zone.'
 					AND d.`id_carrier` = '.(int)$this->id.'
-					'.Carrier::sqlDeliveryRangeShop('range_weight', $shop).'
+					'.Carrier::sqlDeliveryRangeShop('range_weight').'
 				ORDER BY w.`delimiter2` DESC LIMIT 1';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!isset($result[0]['price']))
@@ -278,7 +278,7 @@ class CarrierCore extends ObjectModel
 	 * @param integer $id_zone Zone id (for customer delivery address)
 	 * @return float Delivery price
 	 */
-	public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null, Shop $shop = null)
+	public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
 	{
 		$cache_key = $this->id.'_'.$order_total.'_'.$id_zone.'_'.$id_currency;
 		if (!isset(self::$price_by_price[$cache_key]))
@@ -293,7 +293,7 @@ class CarrierCore extends ObjectModel
 						AND '.(float)$order_total.' >= r.`delimiter1`
 						AND '.(float)$order_total.' < r.`delimiter2`
 						AND d.`id_carrier` = '.(int)$this->id.'
-						'.Carrier::sqlDeliveryRangeShop('range_price', $shop).'
+						'.Carrier::sqlDeliveryRangeShop('range_price').'
 					ORDER BY r.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if (!isset($result['price']))
@@ -313,7 +313,7 @@ class CarrierCore extends ObjectModel
 	 * @param integer $id_currency
 	 * @return float Delivery price
 	 */
-	public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null, Shop $shop = null)
+	public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
 	{
 		$cache_key = $id_carrier.'_'.$order_total.'_'.$id_zone.'_'.$id_currency;
 		if (!isset(self::$price_by_price2[$cache_key]))
@@ -328,7 +328,7 @@ class CarrierCore extends ObjectModel
 						AND '.(float)$order_total.' >= r.`delimiter1`
 						AND '.(float)$order_total.' < r.`delimiter2`
 						AND d.`id_carrier` = '.(int)$id_carrier.'
-						'.Carrier::sqlDeliveryRangeShop('range_price', $shop).'
+						'.Carrier::sqlDeliveryRangeShop('range_price').'
 					ORDER BY r.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			self::$price_by_price2[$cache_key] = (isset($result['price']));
@@ -336,14 +336,14 @@ class CarrierCore extends ObjectModel
 		return self::$price_by_price2[$cache_key];
 	}
 
-	public function getMaxDeliveryPriceByPrice($id_zone, Shop $shop = null)
+	public function getMaxDeliveryPriceByPrice($id_zone)
 	{
 		$sql = 'SELECT d.`price`
 				FROM `'._DB_PREFIX_.'delivery` d
 				INNER JOIN `'._DB_PREFIX_.'range_price` r ON d.`id_range_price` = r.`id_range_price`
 				WHERE d.`id_zone` = '.(int)$id_zone.'
 					AND d.`id_carrier` = '.(int)$this->id.'
-					'.Carrier::sqlDeliveryRangeShop('range_price', $shop).'
+					'.Carrier::sqlDeliveryRangeShop('range_price').'
 				ORDER BY r.`delimiter2` DESC LIMIT 1';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!isset($result[0]['price']))
@@ -357,7 +357,7 @@ class CarrierCore extends ObjectModel
 	 * @param string $rangeTable Table name (price or weight)
 	 * @return array Delivery prices
 	 */
-	public static function getDeliveryPriceByRanges($range_table, $id_carrier, Shop $shop = null)
+	public static function getDeliveryPriceByRanges($range_table, $id_carrier)
 	{
 		$range_table = pSQL($range_table);
 		$sql = 'SELECT d.id_'.$range_table.', d.id_carrier, d.id_zone, d.price
@@ -366,7 +366,7 @@ class CarrierCore extends ObjectModel
 				WHERE d.id_carrier = '.(int)$id_carrier.'
 					AND d.id_'.$range_table.' IS NOT NULL
 					AND d.id_'.$range_table.' != 0
-					'.Carrier::sqlDeliveryRangeShop($range_table, $shop).'
+					'.Carrier::sqlDeliveryRangeShop($range_table).'
 				ORDER BY r.delimiter1';
 		return Db::getInstance()->executeS($sql);
 	}
@@ -695,20 +695,16 @@ class CarrierCore extends ObjectModel
 	 * @param string $rangeTable Table name to clean (weight or price according to shipping method)
 	 * @return boolean Deletion result
 	 */
-	public function deleteDeliveryPrice($range_table, Shop $shop = null)
+	public function deleteDeliveryPrice($range_table)
 	{
 		$where = '`id_carrier` = '.(int)$this->id.' AND (`id_'.$range_table.'` IS NOT NULL OR `id_'.$range_table.'` = 0) ';
 
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-		$shop_id = $shop->getID();
-		$shop_group_id = $shop->getGroupID();
-		if (!$shop_id && !$shop_group_id)
+		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$where .= 'AND id_shop IS NULL AND id_group_shop IS NULL';
-		else if (!$shop_id)
-			$where .= 'AND id_shop IS NULL AND id_group_shop = '.$shop_group_id;
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+			$where .= 'AND id_shop IS NULL AND id_group_shop = '.(int)Shop::getContextGroupShopID();
 		else
-			$where .= 'AND id_shop = '.$shop_id;
+			$where .= 'AND id_shop = '.(int)Shop::getContextShopID();
 
 		return Db::getInstance()->delete('delivery', $where);
 	}
@@ -717,10 +713,9 @@ class CarrierCore extends ObjectModel
 	 * Add new delivery prices
 	 *
 	 * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
-	 * @param Shop $shop Optionnal
 	 * @return boolean Insertion result
 	 */
-	public function addDeliveryPrice($price_list, Shop $shop = null)
+	public function addDeliveryPrice($price_list)
 	{
 		if (!$price_list)
 			return false;
@@ -731,18 +726,13 @@ class CarrierCore extends ObjectModel
 		if (!in_array('id_group_shop', $keys))
 			$keys[] = 'id_group_shop';
 
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-		$shop_id = $shop->getID();
-		$shop_group_id = $shop->getGroupID();
-
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` ('.implode(', ', $keys).') VALUES ';
 		foreach ($price_list as $values)
 		{
 			if (!isset($values['id_shop']))
-				$values['id_shop'] = ($shop_id) ? $shop_id : null;
+				$values['id_shop'] = (Shop::getContext() == Shop::CONTEXT_SHOP) ? Shop::getContextShopID() : null;
 			if (!isset($values['id_group_shop']))
-				$values['id_group_shop'] = ($shop_group_id) ? $shop_group_id : null;
+				$values['id_group_shop'] = (Shop::getContext() != Shop::CONTEXT_ALL) ? Shop::getContextGroupShopID() : null;
 
 			$sql .= '(';
 			foreach ($values as $v)
@@ -951,22 +941,16 @@ class CarrierCore extends ObjectModel
 	 *
 	 * @since 1.5.0
 	 * @param string $rangeTable
-	 * @param Shop $shop
 	 * @return string
 	 */
-	public static function sqlDeliveryRangeShop($range_table, Shop $shop = null, $alias = 'd')
+	public static function sqlDeliveryRangeShop($range_table, $alias = 'd')
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-		$shop_id = $shop->getID();
-		$shop_group_id = $shop->getGroupID();
-		$where = '';
-		if (!$shop_id && !$shop_group_id)
+		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$where = 'AND d2.id_shop IS NULL AND d2.id_group_shop IS NULL';
-		else if (!$shop_id)
-			$where = 'AND ((d2.id_group_shop IS NULL OR d2.id_group_shop = '.$shop_group_id.') AND d2.id_shop IS NULL)';
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+			$where = 'AND ((d2.id_group_shop IS NULL OR d2.id_group_shop = '.Shop::getContextGroupShopID().') AND d2.id_shop IS NULL)';
 		else
-			$where = 'AND (d2.id_shop = '.$shop_id.' OR (d2.id_group_shop = '.$shop_group_id.'
+			$where = 'AND (d2.id_shop = '.Shop::getContextShopID().' OR (d2.id_group_shop = '.Shop::getContextGroupShopID().'
 					AND d2.id_shop IS NULL) OR (d2.id_group_shop IS NULL AND d2.id_shop IS NULL))';
 
 		$sql = 'AND '.$alias.'.id_delivery = (
@@ -1075,7 +1059,7 @@ class CarrierCore extends ObjectModel
 	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 		if (is_null($cart))
 			$cart = Context::getContext()->cart;
 			

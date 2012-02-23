@@ -182,7 +182,7 @@ class StockAvailableCore extends ObjectModel
 	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
 
@@ -223,7 +223,7 @@ class StockAvailableCore extends ObjectModel
 	public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
 
@@ -261,7 +261,7 @@ class StockAvailableCore extends ObjectModel
 	public static function getQuantityAvailableByProduct($id_product = null, $id_product_attribute = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		// if null, it's a product without attributes
 		if (is_null($id_product_attribute))
@@ -381,7 +381,7 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
-			$id_shop = (int)$context->shop->getID(true);
+			$id_shop = (int)$context->shop->id;
 
 		$id_lang = Context::getContext()->language->id;
 		$depends_on_stock = StockAvailable::dependsOnStock($id_product);
@@ -503,7 +503,7 @@ class StockAvailableCore extends ObjectModel
 	public static function dependsOnStock($id_product, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		$query = new DbQuery();
 		$query->select('depends_on_stock');
@@ -526,7 +526,7 @@ class StockAvailableCore extends ObjectModel
 	public static function outOfStock($id_product, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		$query = new DbQuery();
 		$query->select('out_of_stock');
@@ -557,7 +557,7 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
-			$id_shop = $context->shop->getID();
+			$id_shop = $context->shop->id;
 
 		// if we are in group_shop context
 		$group_shop = $context->shop->getGroup();
@@ -610,7 +610,7 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
-			$id_shop = $context->shop->getID(true);
+			$id_shop = $context->shop->id;
 
 		$group_shop = $context->shop->getGroup();
 

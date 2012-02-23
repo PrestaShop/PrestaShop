@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -513,7 +513,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function beforeAdd($customer)
 	{
-		$customer->id_shop = $this->context->shop->getID(true);
+		$customer->id_shop = $this->context->shop->id;
 	}
 
 	public function renderView()

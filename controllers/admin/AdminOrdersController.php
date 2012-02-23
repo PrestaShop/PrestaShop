@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -321,7 +321,7 @@ class AdminOrdersControllerCore extends AdminController
 							$customer_thread = new CustomerThread();
 							$customer_thread->id_contact = 0;
 							$customer_thread->id_customer = (int)$order->id_customer;
-							$customer_thread->id_shop = (int)$this->context->shop->getId(true);
+							$customer_thread->id_shop = (int)$this->context->shop->id;
 							$customer_thread->id_order = (int)$order->id;
 							$customer_thread->id_lang = (int)$this->context->language->id;
 							$customer_thread->email = $customer->email;
@@ -1151,7 +1151,7 @@ class AdminOrdersControllerCore extends AdminController
 				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
 				$combinations = array();
 				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
-				$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], 0, (int)$this->context->shop->getID());
+				$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], 0, (int)$this->context->shop->id);
 				// Tax rate for this customer
 				if (Tools::isSubmit('id_address'))
 					$product['tax_rate'] = $productObj->getTaxesRate(new Address(Tools::getValue('id_address')));
@@ -1174,7 +1174,7 @@ class AdminOrdersControllerCore extends AdminController
 						$combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_incl, $currency), $currency);
 					}
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
-						$combinations[$attribute['id_product_attribute']]['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
+						$combinations[$attribute['id_product_attribute']]['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->id);
 
 					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['advanced_stock_management'] == 1)
 						$product['warehouse_list'][$attribute['id_product_attribute']] = Warehouse::getProductWarehouseList($product['id_product'], $attribute['id_product_attribute']);

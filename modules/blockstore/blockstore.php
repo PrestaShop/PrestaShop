@@ -86,7 +86,7 @@ class BlockStore extends Module
 						return $this->displayError($this->l('an error occurred on uploading file'));
 					else
 					{
-						if (Configuration::hasContext('BLOCKSTORE_IMG', null, $this->context->shop->getContextType()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
+						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
 							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
 						Configuration::updateValue('BLOCKSTORE_IMG', $_FILES['store_img']['name']);
 						return $this->displayConfirmation($this->l('Settings are updated'));

@@ -503,7 +503,7 @@ if (Tools::isSubmit('saveHook'))
 	$hooks_list = explode(',', Tools::getValue('hooks_list'));
 	$id_shop = (int)Tools::getValue('id_shop');
 	if (!$id_shop)
-		$id_shop = Context::getContext()->shop->getId(true);
+		$id_shop = Context::getContext()->shop->id;
 
 	$res = true;
 	$hookableList = array();

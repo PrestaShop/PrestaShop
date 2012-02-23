@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -278,14 +278,14 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'modules' => $module_instances,
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
 			'hook_position' => Tools::getValue('hook_position'),
-			'live_edit' => Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP,
+			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
 			'url_live_edit' => $this->context->link->getPageLink('index', false, null,
 				'live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_)
-				.(Shop::isFeatureActive()?'&id_shop='.Context::getContext()->shop->getID() : '')),
+				.(Shop::isFeatureActive()?'&id_shop='.Context::getContext()->shop->id : '')),
 			'display_key' => $this->display_key,
 			'hooks' => $hooks,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
-			'can_move' => (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true,
+			'can_move' => (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) ? false : true,
 		));
 
 		return $this->createTemplate('list_modules.tpl')->fetch();

@@ -178,7 +178,7 @@ class SearchCore
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
-						AND sw.id_shop = '.$context->shop->getID(true).'
+						AND sw.id_shop = '.$context->shop->id.'
 						AND sw.word LIKE
 					'.($word[0] == '-'
 						? ' \''.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
@@ -201,7 +201,7 @@ class SearchCore
 				FROM '._DB_PREFIX_.'search_word sw
 				LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 				WHERE sw.id_lang = '.(int)$id_lang.'
-					AND sw.id_shop = '.$context->shop->getID(true).'
+					AND sw.id_shop = '.$context->shop->id.'
 					AND si.id_product = p.id_product
 					AND ('.implode(' OR ', $score_array).')
 			) position';
@@ -608,7 +608,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE p.`active` = 1
-						AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID().'
+						AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 						AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
 							SELECT id_group FROM '._DB_PREFIX_.'customer_group
 							WHERE id_customer = '.(int)$id_customer.')').'
@@ -645,7 +645,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE p.`active` = 1
-					AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID().'
+					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'

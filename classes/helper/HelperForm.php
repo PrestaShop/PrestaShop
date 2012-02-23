@@ -209,21 +209,21 @@ class HelperFormCore extends Helper
 		}
 		else
 		{
-			switch (Context::shop())
+			switch (Shop::getContext())
 			{
 				case Shop::CONTEXT_SHOP :
-					$assos[$this->context->shop->id] = $this->context->shop->id;
-					break;
+					$assos[Shop::getContextShopID()] = Shop::getContextShopID();
+				break;
 
 				case Shop::CONTEXT_GROUP :
-					foreach (Shop::getShops(false, $this->context->shop->getGroupID(), true) as $id_shop)
+					foreach (Shop::getShops(false, Shop::getContextGroupShopID(), true) as $id_shop)
 						$assos[$id_shop] = $id_shop;
-					break;
+				break;
 
 				default :
 					foreach (Shop::getShops(false, null, true) as $id_shop)
 						$assos[$id_shop] = $id_shop;
-					break;
+				break;
 			}
 		}
 

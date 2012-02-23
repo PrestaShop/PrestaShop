@@ -229,11 +229,11 @@ class AdminGroupShopControllerCore extends AdminController
 				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
 			);
 
-		$default_group_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+		$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$this->tpl_form_vars = array(
 			'disabled' => $disabled,
 			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
-			'defaultGroup' => $default_group_shop->getGroupID(),
+			'defaultGroup' => $default_shop->id_group_shop,
 		);
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));

@@ -116,14 +116,4 @@ class ContextCore
 	{
 		return clone($this);
 	}
-	
-	/**
-	 * @return int Shop context type (Shop::CONTEXT_ALL, etc.)
-	 */
-	public static function shop()
-	{
-		if (!self::$instance->shop->getContextType())
-			return Shop::CONTEXT_ALL;
-		return self::$instance->shop->getContextType();
-	}
 }

@@ -230,8 +230,8 @@ class FrontControllerCore extends Controller
 			$cart->id_lang = (int)($this->context->cookie->id_lang);
 			$cart->id_currency = (int)($this->context->cookie->id_currency);
 			$cart->id_guest = (int)($this->context->cookie->id_guest);
-			$cart->id_group_shop = (int)$this->context->shop->getGroupID();
-			$cart->id_shop = $this->context->shop->getID(true);
+			$cart->id_group_shop = (int)$this->context->shop->id_group_shop;
+			$cart->id_shop = $this->context->shop->id;
 			if ($this->context->cookie->id_customer)
 			{
 				$cart->id_customer = (int)($this->context->cookie->id_customer);
@@ -308,7 +308,7 @@ class FrontControllerCore extends Controller
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace('\'', '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
-			'languages' => Language::getLanguages(true, $this->context->shop->getID()),
+			'languages' => Language::getLanguages(true, $this->context->shop->id),
 			'priceDisplay' => Product::getTaxCalculationMethod(),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
@@ -694,7 +694,7 @@ class FrontControllerCore extends Controller
 				'ad' => $ad, 
 				'live_edit' => true,
 				'hook_list' => Hook::$executed_hooks,
-				'id_shop' => $this->context->shop->getId(true)
+				'id_shop' => $this->context->shop->id
 			));
 			return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
 		}

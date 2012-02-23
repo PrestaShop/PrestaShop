@@ -633,7 +633,7 @@ class AdminModulesControllerCore extends AdminController
 					else
 					{
 						// If we install a module, force temporary global context for multishop
-						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $method != 'getContent')
+						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent')
 						{
 							Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
 							Context::getContext()->shop = new Shop();
@@ -677,9 +677,9 @@ class AdminModulesControllerCore extends AdminController
 								$toolbar .= '<tr>
 										<th colspan="4">
 											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
-								if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+								if (Shop::getContext() == Shop::CONTEXT_SHOP)
 									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
-								elseif ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP)
+								elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 									$toolbar .= 'all shops of group shop <b>'.$this->context->shop->getGroup()->name.'</b>';
 								else
 									$toolbar .= 'all shops';
@@ -701,7 +701,7 @@ class AdminModulesControllerCore extends AdminController
 							$return = ($method == 'install' ? 12 : 13);
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
-						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
+						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
 							Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 							unset(Context::getContext()->tmpOldShop);

@@ -123,7 +123,7 @@ class StatsBestCategories extends ModuleGrid
 
 		// If a shop is selected, get all children categories for the shop
 		$categories = array();
-		if ($this->context->shop->getContextType() != Shop::CONTEXT_ALL)
+		if (Shop::getContext() != Shop::CONTEXT_ALL)
 		{
 			$sql = 'SELECT c.nleft, c.nright
 					FROM '._DB_PREFIX_.'category c

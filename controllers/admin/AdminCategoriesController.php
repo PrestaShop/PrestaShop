@@ -153,7 +153,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (a.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
 		// we add restriction for shop
 		if (Shop::CONTEXT_SHOP == Context::getContext()->shop() && $is_multishop)
-			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true);
+			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->id;
 
 		$categories_tree = $this->_category->getParentsCategories();
 		if (empty($categories_tree)
@@ -181,7 +181,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, 'cs.position', $order_way, $start, $limit, Context::getContext()->shop->getID(true));
+		parent::getList($id_lang, 'cs.position', $order_way, $start, $limit, Context::getContext()->shop->id);
 		// Check each row to see if there are combinations and get the correct action in consequence
 
 		$nb_items = count($this->_list);
@@ -271,7 +271,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
-		$id_shop = Context::getContext()->shop->getID(true);
+		$id_shop = Context::getContext()->shop->id;
 		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));

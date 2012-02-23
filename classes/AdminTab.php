@@ -995,7 +995,7 @@ abstract class AdminTabCore
 				{
 					foreach ($fields as $key => $options)
 					{
-						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+						if (isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 							continue;
 
 						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
@@ -1315,13 +1315,13 @@ abstract class AdminTabCore
 			$filterKey = $assos[$this->table]['type'];
 			$idenfierShop = $this->context->shop->getListOfID();
 		}
-		else if (Context::shop() == Shop::CONTEXT_GROUP)
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
 			{
 				$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = array($this->context->shop->getGroupID());
+				$idenfierShop = array(Shop::getContextGroupShopID());
 			}
 		}
 
@@ -1333,7 +1333,7 @@ abstract class AdminTabCore
 			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
-			if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
+			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
 				$filterShop = 'JOIN `'._DB_PREFIX_.$this->table.'_'.$filterKey.'` sa ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filterKey.' IN ('.implode(', ', $idenfierShop).'))';
 		}
 		///////////////////////
@@ -1869,12 +1869,12 @@ abstract class AdminTabCore
 				$isDisabled = $isInvisible = false;
 				if (Shop::isFeatureActive())
 				{
-					if (isset($field['visibility']) && $field['visibility'] > $this->context->shop->getContextType())
+					if (isset($field['visibility']) && $field['visibility'] > Shop::getContext())
 					{
 						$isDisabled = true;
 						$isInvisible = true;
 					}
-					else if (Context::shop() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
 
@@ -1903,7 +1903,7 @@ abstract class AdminTabCore
 					$this->$method($key, $field, $value);
 
 				// Multishop default value
-				if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && !$isInvisible)
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible)
 					echo '<div class="preference_default_multishop">
 							<label>
 								<input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
@@ -2166,7 +2166,7 @@ abstract class AdminTabCore
 	public function getFieldValue($obj, $key, $id_lang = NULL, $id_shop = null)
 	{
 		if (!$id_shop && $obj->isLangMultishop())
-			$id_shop = Context::getContext()->shop->getID();
+			$id_shop = Context::getContext()->shop->id;
 
 		if ($id_lang)
 			$defaultValue = ($obj->id && isset($obj->{$key}[$id_lang])) ? $obj->{$key}[$id_lang] : '';
@@ -2332,7 +2332,7 @@ abstract class AdminTabCore
 
 	protected function displayAssoShop($type = 'shop')
 	{
-		if (!Shop::isFeatureActive() || (!$this->_object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Shop::isFeatureActive() || (!$this->_object && Shop::getContext() != Shop::CONTEXT_ALL))
 			return;
 
 		if ($type != 'shop' && $type != 'group_shop')
