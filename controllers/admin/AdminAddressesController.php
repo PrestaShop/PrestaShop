@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -187,36 +187,24 @@ class AdminAddressesControllerCore extends AdminController
 			}
 			else if ($addr_field_item == 'lastname')
 			{
-				if (isset($customer) && !Tools::isSubmit('submit'.strtoupper($this->table)) && Validate::isLoadedObject($customer) && !Validate::isLoadedObject($this->object))
-					$default_value = $customer->lastname;
-				else
-					$default_value = '';
-				
 				$temp_fields[] = array(
 					'type' => 'text',
 					'label' => $this->l('Last name'),
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>',
-					'default_value' => $default_value,
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>'
 				);
 			}
 			else if ($addr_field_item == 'firstname')
 			{
-				if (isset($customer) && !Tools::isSubmit('submit'.strtoupper($this->table)) && Validate::isLoadedObject($customer) && !Validate::isLoadedObject($this->object))
-					$default_value = $customer->firstname;
-				else
-					$default_value = '';
-				
 				$temp_fields[] = array(
 					'type' => 'text',
 					'label' => $this->l('First name'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>',
-					'default_value' => $default_value,
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>'
 				);
 			}
 			else if ($addr_field_item == 'address1')
@@ -266,11 +254,11 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
 					'required' => false,
-					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id),
 						'id' => 'id_country',
 						'name' => 'name',
+						'preselect_country' => true,
 					)
 				);
 				$temp_fields[] = array(
@@ -284,7 +272,15 @@ class AdminAddressesControllerCore extends AdminController
 						'name' => 'name',
 					)
 				);
+
+				$this->fields_value['id_country'] = Configuration::get('PS_COUNTRY_DEFAULT');
 			}
+		}
+
+		if (isset($customer) && !Tools::isSubmit('submit'.strtoupper($this->table)) && Validate::isLoadedObject($customer) && !Validate::isLoadedObject($this->object))
+		{
+			$this->fields_value['lastname'] = $customer->lastname;
+			$this->fields_value['firstname'] = $customer->firstname;
 		}
 
 		// merge address format with the rest of the form

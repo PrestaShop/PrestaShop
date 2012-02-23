@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -160,13 +160,11 @@ class CMSCore extends ObjectModel
 
 	public static function cleanPositions($id_category)
 	{
-        $sql = 'SELECT `id_cms`
-                FROM `'._DB_PREFIX_.'cms`
-                WHERE `id_cms_category` = '.(int)$id_category.'
-                ORDER BY `position`';
-
-		$result = Db::getInstance()->executeS($sql);
-
+		$result = Db::getInstance()->executeS('
+		SELECT `id_cms`
+		FROM `'._DB_PREFIX_.'cms`
+		WHERE `id_cms_category` = '.(int)$id_category.'
+		ORDER BY `position`');
 		for ($i = 0, $total = count($result); $i < $total; ++$i)
 		{
 			$sql = 'UPDATE `'._DB_PREFIX_.'cms`
@@ -175,17 +173,12 @@ class CMSCore extends ObjectModel
 						AND `id_cms` = '.(int)$result[$i]['id_cms'];
 			Db::getInstance()->execute($sql);
 		}
-
 		return true;
 	}
 
 	public static function getLastPosition($id_category)
 	{
-        $sql = 'SELECT MAX(position) + 1
-                FROM `'._DB_PREFIX_.'cms`
-                WHERE `id_cms_category` = '.(int)$id_category;
-
-		return (Db::getInstance()->getValue($sql));
+		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'cms` WHERE `id_cms_category` = '.(int)$id_category));
 	}
 
 	public static function getCMSPages($id_lang = null, $id_cms_category = null, $active = true)
@@ -214,7 +207,6 @@ class CMSCore extends ObjectModel
 				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'
 				AND l.`active` = 1';
-
 		return Db::getInstance()->executeS($sql);
 	}
 }

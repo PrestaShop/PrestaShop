@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 10019 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -44,6 +44,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
 	 	$this->is_template_list = false;
+	 	$this->display_multishop_toolbar = false;
 
 		$this->addRowAction('updatereceipt');
 		$this->addRowAction('changestate');
@@ -113,8 +114,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		array_unshift($this->warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**
@@ -535,17 +534,25 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// overrides parent::initContent();
 		$this->initToolbar();
 
-		$states = SupplyOrderState::getStates();
-		$allowed_states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
+		// given the current state, loads available states
+		$states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
 
+		// gets the state that are not allowed
+		$allowed_states = array();
 		foreach ($states as &$state)
 		{
-			$state['allowed'] = 0;
-			foreach ($allowed_states as $allowed_state)
-			{
-				if ($state['id_supply_order_state'] == $allowed_state['id_supply_order_state'])
-					$state['allowed'] = 1;
-			}
+			$allowed_states[] = $state['id_supply_order_state'];
+			$state['allowed'] = 1;
+		}
+		$not_allowed_states = SupplyOrderState::getStates($allowed_states);
+
+		// generates the final list of states
+		$index = count($allowed_states);
+		foreach ($not_allowed_states as &$not_allowed_state)
+		{
+			$not_allowed_state['allowed'] = 0;
+			$states[$index] = $not_allowed_state;
+			++$index;
 		}
 
 		// loads languages
@@ -799,10 +806,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->toolbar_btn = $this->toolbar_btn;
 
 		$helper->currentIndex = self::$currentIndex.$action;
-
-		$helper->ajax_params = array(
-			'display_product_history' => 1,
-		);
 
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
@@ -1448,7 +1451,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function ajaxProcess()
 	{
 		// tests if an id is submit
-		if (Tools::isSubmit('id') && !Tools::isSubmit('display_product_history'))
+		if (Tools::isSubmit('id'))
 		{
 			// overrides attributes
 			$this->identifier = 'id_supply_order_history';
@@ -1521,14 +1524,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
-		else if (Tools::isSubmit('id') && Tools::isSubmit('display_product_history'))
+		else if (Tools::isSubmit('id_supply_order_detail'))
 		{
 			$this->identifier = 'id_supply_order_receipt_history';
 			$this->table = 'supply_order_receipt_history';
 			$this->display = 'list';
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
-			$id_supply_order_detail = (int)Tools::getValue('id');
+			$id_supply_order_detail = (int)Tools::getValue('id_supply_order_detail');
 
 			unset($this->fieldsDisplay);
 			$this->fieldsDisplay = array(

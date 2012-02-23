@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -27,6 +27,8 @@
 
 class AdminShopUrlControllerCore extends AdminController
 {
+	public $display_multishop_toolbar = false;
+
 	public function __construct()
 	{
 	 	$this->table = 'shop_url';
@@ -88,8 +90,6 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	public function renderList()
