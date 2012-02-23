@@ -235,7 +235,10 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 #moduleContainer .row-actions-module span { padding-right:5px;}
 #moduleContainer .row-actions-module span a { font-size:12px;}
 #moduleContainer .button.uninstalled,
-#moduleContainer .button.installed { float:right; clear:both; margin-top:15px; font-size:12px;}
+#moduleContainer .button.installed { float:right; display: inline-block; margin-top:15px; font-size:12px;}
+#moduleContainer .button.updated {  margin-top:15px; display: inline-block; font-size:12px;}
+#list-action-button{width:175px}
+#list-action-button li{margin-left:10px;display: inline;float: left;}
 
 
 /*FOOTER*/
