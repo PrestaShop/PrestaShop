@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 6758 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -36,38 +36,17 @@
 	var txtProducts = "{l s='products'}";
 	var orderUrl = '{$link->getPageLink("order", true)}';
 
-	var msgCgv = "{l s='You must agree to the terms of service before continuing.' js=1}";
-	var msgCarrier = "{l s='You must select a delivery option before continuing.' js=1}";
-	var msgCarriers = "{l s='You must select deliveries options before continuing.' js=1}";
-	
+	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
 	{literal}
-	function validateCarriers()
+	function acceptCGV()
 	{
 		if ($('#cgv').length && !$('input#cgv:checked').length)
 		{
-			alert(msgCgv);
+			alert(msg);
 			return false;
 		}
-
-		var delivery_option = {};
-		$('.delivery_option_radio').each(function () {
-			if (typeof(delivery_option[$(this).attr('name')]) == 'undefined')
-				delivery_option[$(this).attr('name')] = false;
-			if ($(this).is(':checked'))
-				delivery_option[$(this).attr('name')] = true;
-		});
-
-		$.each(delivery_option, function(i, val) {
-			if (!val) {
-				if (delivery_option.length > 1)
-					alert(msgCarriers);
-				else
-					alert(msgCarrier);
-				return false;
-			}
-		});
-		
-		return true;
+		else
+			return true;
 	}
 	{/literal}
 	//]]>
@@ -104,7 +83,7 @@
 
 {include file="$tpl_dir./errors.tpl"}
 
-<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return validateCarriers();">
+<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();">
 {else}
 <div id="opc_delivery_methods" class="opc-main-block">
 	<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>

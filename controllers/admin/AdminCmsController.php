@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 7300 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -53,7 +53,7 @@ class AdminCmsControllerCore extends AdminController
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
 		$this->_select = 'a.position ';
-		$this->_filter = 'AND c.id_cms_category = '.(int)$this->_category->id;
+		$this->_filter = 'AND c.id_cms_category = '.(int)($this->_category->id);
 
 		parent::__construct();
 	}
@@ -232,7 +232,7 @@ class AdminCmsControllerCore extends AdminController
 				Configuration::updateValue('PS_CONDITIONS', 0);
 				Configuration::updateValue('PS_CONDITIONS_CMS_ID', 0);
 			}
-			$cms = new CMS((int)Tools::getValue('id_cms'));
+			$cms = new CMS((int)(Tools::getValue('id_cms')));
 			$cms->cleanPositions($cms->id_cms_category);
 			if (!$cms->delete())
 				$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
@@ -330,7 +330,7 @@ class AdminCmsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)(Tools::getValue('id_cms_category'))) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier))
+		elseif (Tools::isSubmit('status') && Tools::isSubmit($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{

@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 7307 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -36,6 +36,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
+		$this->display_multishop_toolbar = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -70,8 +71,6 @@ class AdminStockManagementControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 
 		// overrides confirmation messages specifically for this controller
 		$this->_conf = array(

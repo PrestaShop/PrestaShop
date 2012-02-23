@@ -1,4 +1,4 @@
-2007-2011 PrestaShop 
+2007-2012 PrestaShop
 
 NOTICE OF LICENSE
 
@@ -17,7 +17,7 @@ versions in the future. If you wish to customize PrestaShop for your
 needs please refer to http://www.prestashop.com for more information.
 
 @author PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2011 PrestaShop SA
+@copyright 2007-2012 PrestaShop SA
 @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
@@ -30,7 +30,7 @@ PREPARAZIONE
 Per installare PrestaShop, hai bisogno di un server remoto o nel tuo computer (MAMP), con accesso ad un database come MySQL.
 Dovrai accedere a phpMyAdmin per creare un database e per indicare le informazioni nel database all'installatore.
 
-Sei non hai un host e non sai come creare il tuo negozio, ti offriamo un negozio già pronto che ti farà realizzare il tuo negozio online in meno di 10 minuti senza nessun bisogno di competenze tecniche.
+Sei non hai un host e non sai come creare il tuo negozio, ti offriamo un negozio giï¿½ pronto che ti farï¿½ realizzare il tuo negozio online in meno di 10 minuti senza nessun bisogno di competenze tecniche.
 Ti invitiamo a visitare: 
 	http://www.prestabox.com/
 
