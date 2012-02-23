@@ -219,7 +219,7 @@
 				</div>
 			{/foreach}
 			</div>
-			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{$HOOK_EXTRACARRIER_ADDR.$id_address}</div>
+			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{if isset($HOOK_EXTRACARRIER_ADDR)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}</div>
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
 				{if $cart->isMultiAddressDelivery()}
