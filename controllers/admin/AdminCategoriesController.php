@@ -421,7 +421,7 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 		if (Shop::isFeatureActive())
-			$this->fields_form['form'][] = array(
+			$this->fields_form['input'][] = array(
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
