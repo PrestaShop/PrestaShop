@@ -516,7 +516,7 @@ class AdminShopControllerCore extends AdminController
 			foreach ($children as $child)
 				$selected_cat[] = $child['id_category'];
 		}
-		if ($this->context->shop() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
 		else
 			$root_category = new Category($id_root);

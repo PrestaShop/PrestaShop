@@ -81,7 +81,7 @@ class AdminCategoriesControllerCore extends AdminController
 		);
 
 		// if we are not in a shop context, we remove the position column
-		if ($this->context->shop() != Shop::CONTEXT_SHOP)
+		if (Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fieldsDisplay['position']);
 
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected')));
@@ -98,7 +98,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
 			$this->_category = new Category($id_category);
 		else
-			if (Shop::isFeatureActive() && $this->context->shop() == Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
 			else if (count(Category::getCategoriesWithoutParent()) > 1)
 				$this->_category = Category::getTopCategory();
@@ -141,7 +141,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $top_category->id;
 		else if ($is_multishop && $count_categories_without_parent == 1)
 			$id_parent = 2; //TODO need to get the ID category where category = Home
-		else if ($is_multishop && $count_categories_without_parent > 1 && $this->context->shop() != Shop::CONTEXT_SHOP)
+		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$id_parent = $top_category->id;
 		else
 			$id_parent = $this->context->shop->id_category;
