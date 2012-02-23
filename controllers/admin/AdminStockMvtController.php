@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision: 9565 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -37,6 +37,7 @@ class AdminStockMvtControllerCore extends AdminController
 	 	$this->className = 'StockMvt';
 	 	$this->identifier = 'id_stock_mvt';
 	 	$this->lang = false;
+	 	$this->display_multishop_toolbar = false;
 
 		$this->list_no_link = true;
 		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
@@ -115,8 +116,6 @@ class AdminStockMvtControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**

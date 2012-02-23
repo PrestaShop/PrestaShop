@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -40,6 +40,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->className = 'Product';
 		$this->lang = true;
 		$this->colorOnBackground = true;
+		$this->display_multishop_toolbar = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -103,8 +104,6 @@ class AdminStockCoverControllerCore extends AdminController
 		array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**
