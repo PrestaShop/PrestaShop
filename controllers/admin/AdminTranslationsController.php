@@ -29,7 +29,7 @@ define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslationsControllerCore extends AdminController
 {
-	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
+	protected $link_lang_pack = 'http://api.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
 	protected $modules_translations = array();
@@ -42,7 +42,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 *
 	 * @var boolean
 	 */
-	protected $suhosin_limit_exceed = false;
+	protected $post_limit_exceed = false;
 
 	public function __construct()
 	{
@@ -186,7 +186,8 @@ class AdminTranslationsControllerCore extends AdminController
 			foreach ($_POST as $key => $value)
 				if (!empty($value))
 					$to_insert[$key] = $value;
-
+			// translations array is ordered by key (easy merge)
+			ksort($to_insert);
 			$tab = ($fullmark ? Tools::strtoupper($fullmark) : 'LANG').($mark ? Tools::strtoupper($mark) : '');
 			fwrite($fd, "<?php\n\nglobal \$_".$tab.";\n\$_".$tab." = array();\n");
 			foreach ($to_insert as $key => $value)
@@ -313,7 +314,7 @@ class AdminTranslationsControllerCore extends AdminController
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
 			if ($content = Tools::file_get_contents(
-				'http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
+				'http://api.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
@@ -809,21 +810,25 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function displayLimitPostWarning($count)
 	{
-		$str_output = '';
+		$return = array();
 		if ((ini_get('suhosin.post.max_vars') && ini_get('suhosin.post.max_vars') < $count)
-		  || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count))
+		  || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count)
+			)
 		{
-			if (ini_get('suhosin.post.max_vars') < $count || ini_get('suhosin.request.max_vars') < $count)
-			{
-				$this->suhosin_limit_exceed = true;
-				$str_output .= '<div class="warning">'.$this->l('Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:').'<br/>'
-				.'<b>'.ini_get('suhosin.post.max_vars').'</b> '.$this->l('for suhosin.post.max_vars.').'<br/>'
-				.'<b>'.ini_get('suhosin.request.max_vars').'</b> '.$this->l('for suhosin.request.max_vars.').'<br/>'
-				.$this->l('Please ask your hosting provider to increase the suhosin post and request limit to')
-				.' <u><b>'.((int)$count + 100).'</b></u> '.$this->l('at least.').' '.$this->l('or edit the translation file manually.').'</div>';
-			}
+			$this->post_limit_exceed = true;
+			$return['error_type'] = 'suhosin';
+			$return['post.max_vars'] = ini_get('suhosin.post.max_vars');
+			$return['request.max_vars'] = ini_get('suhosin.request.max_vars');
+			$return['needed_limit'] = $count + 100;
 		}
-		return $str_output;
+		elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
+		{
+			$this->post_limit_exceed = true;
+			$return['error_type'] = 'conf';
+			$return['max_input_vars'] = ini_get('max_input_vars');
+			$return['needed_limit'] = $count + 100;
+		}
+		return $return;
 	}
 
 	public function initFormFront($lang)
@@ -882,7 +887,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'missing_translations' => $missing_translations,
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'tabsArray' => $tabs_array,
@@ -1060,7 +1065,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'translation_type' => $this->l('Back-Office translations'),
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'tabsArray' => $tabs_array,
@@ -1121,7 +1126,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'translation_type' => $this->l('Error translations'),
 			'count' => count($stringToTranslate),
 			'limit_warning' => $this->displayLimitPostWarning($count),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsErrors=1&token='.$this->token,
 			'auto_translate' => '',
 			'type' => 'errors',
@@ -1193,7 +1198,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'translation_type' => $this->l('Field name translations'),
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsFields=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => '',
@@ -1534,7 +1539,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('E-mail template translations'),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsMails=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => '',
@@ -1725,7 +1730,7 @@ class AdminTranslationsControllerCore extends AdminController
 				'translation_type' => $this->l('Modules translations'),
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
-				'suoshin_exceeded' => $this->suhosin_limit_exceed,
+				'post_limit_exceeded' => $this->post_limit_exceed,
 				'url_submit' => self::$currentIndex.'&submitTranslationsModules=1&token='.$this->token,
 				'toggle_button' => $this->displayToggleButton(),
 				'textarea_sized' => TEXTAREA_SIZED,
@@ -1820,7 +1825,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'translation_type' => $this->l('PDF translations'),
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
-			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsPdf=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => '',

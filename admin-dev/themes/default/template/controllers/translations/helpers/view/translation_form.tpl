@@ -32,8 +32,22 @@
 	{l s='Expressions to translate'} : <b>{$count}</b>.
 	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
 	<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
-	{$limit_warning}
-	{if !$suoshin_exceeded}
+	{if $post_limit_exceeded == true}
+	<div class="warn">
+		{if $limit_warning['error_type'] == 'suhosin'}
+			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
+
+			<b>{$limit_warning['post.max_vars']}</b>{l s='for suhosin.post.max_vars.'}<br/>
+			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the suhosin post and request limit to'}
+		{else}
+			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
+			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the this limit to'}
+		{/if}
+		<u><b>{$limit_warning['needed_limit']}</b></u> {l s='at least.'} {l s='or edit the translation file manually.'}
+	</div>
+	{else}
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
 		<input type="hidden" name="lang" value="{$lang}" />
