@@ -86,7 +86,7 @@
 				{/block}
 				{if $field['type'] == 'select'}
 					{if $field['list']}
-						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if $field['size']} size="{$field['size']}"{/if}>
+						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if isset($field['size'])} size="{$field['size']}"{/if}>
 							{foreach $field['list'] AS $k => $option}
 								<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
 							{/foreach}
