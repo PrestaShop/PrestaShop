@@ -560,6 +560,10 @@ class HelperListCore extends Helper
 						$value = '';
 					$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
 					$name_id = str_replace('!', '__', $name);
+
+					$params['id_date'] = $name_id;
+					$params['name_date'] = $name;
+
 					$this->context->controller->addJqueryUI('ui.datepicker');
 					break;
 
