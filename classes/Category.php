@@ -703,7 +703,7 @@ class CategoryCore extends ObjectModel
 		if (is_null($id_lang))
 			$id_lang = $context->language->id;
 		if (!$shop)
-			if (Shop::isFeatureActive() && $context->shop() != Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 				$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 			else
 				$shop = $context->shop;
@@ -711,7 +711,7 @@ class CategoryCore extends ObjectModel
 			return new Category($shop->getCategory(), $id_lang);
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
 		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
-			Shop::isFeatureActive() && $is_more_than_one_root_category && $context->shop() != Shop::CONTEXT_SHOP)
+			Shop::isFeatureActive() && $is_more_than_one_root_category && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$category = Category::getTopCategory($id_lang);
 		else
 			$category = new Category($shop->getCategory(), $id_lang);
@@ -975,17 +975,17 @@ class CategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
 				AND `id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').')';
-			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$sql .= '
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
 			$sql .= '
 			WHERE c.`id_category` = '.(int)$id_current;
-			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$sql .= '
 				AND cs.`id_shop` = '.(int)$context->shop->id;
 			$root_category = Category::getRootCategory();
-			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP &&
+			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP &&
 				(!Tools::isSubmit('id_category') ||
 					(int)Tools::getValue('id_category') == (int)$root_category->id_category ||
 					(int)$root_category->id_category == (int)$context->shop->id_category))

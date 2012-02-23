@@ -411,7 +411,7 @@ class StockAvailableCore extends ObjectModel
 				$stock_available->quantity = (int)$quantity;
 
 				// if we are in group_shop context
-				if ($context->shop() == Shop::CONTEXT_GROUP)
+				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
 					$group_shop = $context->shop->getGroup();
 
@@ -577,7 +577,7 @@ class StockAvailableCore extends ObjectModel
 			}
 		}
 		// else if we are in group context
-		else if ($context->shop() == Shop::CONTEXT_GROUP)
+		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
 			if (is_object($sql))
 				$sql->where(pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $group_shop->id, true)).')');
