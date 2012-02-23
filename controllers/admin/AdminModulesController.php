@@ -35,6 +35,7 @@ class AdminModulesControllerCore extends AdminController
 		'install' => 'install',
 		'uninstall' => 'uninstall',
 		'configure' => 'getContent',
+		'update' => 'update',
 		'delete' => 'delete'
 	);
 
@@ -585,6 +586,9 @@ class AdminModulesControllerCore extends AdminController
 			if ($modules)
 				foreach ($modules as $name)
 				{
+					if ($key == 'update')
+						Tools::deleteDirectory('../modules/'.$name.'/');
+
 					// If Addons module, download and unzip it before installing it
 					if (!is_dir('../modules/'.$name.'/'))
 					{
@@ -624,6 +628,8 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
+					else if ($key == 'update' && !Module::isInstalled($module->name))
+						$this->errors[] = Tools::displayError('This module need to be installed to be updated:').' '.$module->name;
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -643,12 +649,16 @@ class AdminModulesControllerCore extends AdminController
 						if (Tools::getValue('controller') != '')
 							$_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
 
+						$echo = '';
+						if ($key != 'update')
+						{
 						// We check if method of module exists
-						if (!method_exists($module, $method))
-							throw new PrestaShopException('Method of module can\'t be found');
-						
-						// Get the return value of current method
-						$echo = $module->{$method}();
+							if (!method_exists($module, $method))
+								throw new PrestaShopException('Method of module can\'t be found');
+
+							// Get the return value of current method
+							$echo = $module->{$method}();
+						}
 						
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
@@ -970,6 +980,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			// Upgrade Module process, init check if a module could be upgraded
 			if (Module::initUpgradeModule($module->name, $module->version))
+			{
 				if ($object = new $module->name())
 				{
 					$object->runUpgradeModule();
@@ -977,7 +988,20 @@ class AdminModulesControllerCore extends AdminController
 						$module_errors[] = array('name' => $module->name, 'message' => $errors_module_list);
 					else if ((count($conf_module_list = $object->getConfirmations())))
 						$module_success[] = array('name' => $module->name, 'message' => $conf_module_list);
+					unset($object);
 				}
+			}
+			// Module can't be upgraded if not file exist but can change the database version...
+			// User has to be prevented
+			else if (Module::getUpgradeStatus($module->name))
+			{
+				$object = new $module->name();
+				$module_success[] = array('name' => $module->name, 'message' => array(
+					0 => $this->l('Current version: ').$object->version,
+					1 => $this->l('No files upgrade applied (none exist)'))
+				);
+				unset($object);
+			}
 
 			// Make modules stats
 			$this->makeModulesStats($module);
@@ -1010,6 +1034,7 @@ class AdminModulesControllerCore extends AdminController
 				$modules[$km]->optionsHtml = $this->displayModuleOptions($module);
 				$modules[$km]->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+				$modules[$km]->options['update_url'] = self::$currentIndex.'&update='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
 				if (Tools::getValue('module_name') == $module->name && (int)Tools::getValue('conf') > 0)

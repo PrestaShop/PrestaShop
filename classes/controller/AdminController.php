@@ -290,6 +290,7 @@ class AdminControllerCore extends Controller
 			26 => $this->l('Cover selection saved'),
 			27 => $this->l('Image shop association modified'),
 			28 => $this->l('Zone affected to the selection successfully'),
+			29 => $this->l('Upgrade succeed')
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
