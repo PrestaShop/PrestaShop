@@ -1715,7 +1715,7 @@ class BlockLayered extends Module
 			// Translations are not automatic for the moment ;)
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 			{
-				if ($this->context->shop() == Shop::CONTEXT_SHOP)
+				if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				{
 					$root_category = Category::getRootCategory();
 					$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);

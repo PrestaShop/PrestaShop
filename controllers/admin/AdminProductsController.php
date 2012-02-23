@@ -3451,7 +3451,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			$show_quantities = true;
-			$shop_context = $this->context->shop();
+			$shop_context = Shop::getContext();
 			$group_shop = $this->context->shop->getGroup();
 
 			// if we are in all shops context, it's not possible to manage quantities at this level
