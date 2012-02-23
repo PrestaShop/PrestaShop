@@ -633,16 +633,10 @@ class AdminModulesControllerCore extends AdminController
 					else
 					{
 						// If we install a module, force temporary global context for multishop
-						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
+						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $method != 'getContent')
 						{
-
-							// If we install a module, force temporary global context for multishop
-							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $method != 'getContent')
-							{
-								Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
-								Context::getContext()->shop = new Shop();
-								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
-							}
+							Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
+							Context::getContext()->shop = new Shop();
 						}
 
 						//retrocompatibility
