@@ -1023,7 +1023,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$content = fread($fd, filesize($tpl));
 
 				/* Search language tags (eg {l s='to translate'}) */
-				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?\}/U';
+				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( slashes=1)?\}/U';
 				preg_match_all($regex, $content, $matches);
 
 				/* Get string translation for each tpl file */

@@ -86,9 +86,9 @@
 		var product_type_simple = {Product::PTYPE_SIMPLE};
 
 		var toload = new Array();
-		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.' slashes=1}';
-		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save it.' slashes=1}';
-		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save it.' slashes=1}';
+		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save the pack.' slashes=1}';
+		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save the product.' slashes=1}';
+		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save the product.' slashes=1}';
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 
