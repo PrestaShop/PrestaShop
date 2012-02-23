@@ -162,7 +162,7 @@ abstract class ObjectModelCore
 		}
 
 		if ($this->isLangMultishop() && !$this->id_shop)
-			$this->id_shop = Context::getContext()->shop->getID(true);
+			$this->id_shop = Context::getContext()->shop->id;
 
 	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
 			throw new PrestaShopException('Identifier or table format not valid for class '.get_class($this));
@@ -423,11 +423,11 @@ abstract class ObjectModelCore
 		if (!Shop::isFeatureActive())
 		{
 			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
-				$result &= $this->associateTo(Context::getContext()->shop->getID(true), 'shop');
+				$result &= $this->associateTo(Context::getContext()->shop->id, 'shop');
 
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
-				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
+				$result &= $this->associateTo(Context::getContext()->shop->id_group_shop, 'group_shop');
 		}
 
 		// @hook actionObject*AddAfter
@@ -954,7 +954,7 @@ abstract class ObjectModelCore
 	public function isAssociatedToShop($id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID();
+			$id_shop = Context::getContext()->shop->id;
 
 		$sql = 'SELECT id_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
@@ -1003,7 +1003,7 @@ abstract class ObjectModelCore
 	public function isAssociatedToGroupShop($id_group_shop = null)
 	{
 		if (is_null($id_group_shop))
-			$id_group_shop = Context::getContext()->shop->getGroupID();
+			$id_group_shop = Context::getContext()->shop->id_group_shop;
 
 		$sql = 'SELECT id_group_shop
 				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_group_shop`

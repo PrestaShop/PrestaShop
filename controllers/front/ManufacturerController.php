@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -105,7 +105,7 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
-			$id_current_group_shop = $this->context->shop->getGroupID();
+			$id_current_group_shop = Shop::getContextGroupShopID();
 			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_group_shop);
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);

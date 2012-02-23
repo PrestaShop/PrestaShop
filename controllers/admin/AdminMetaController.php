@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -216,7 +216,7 @@ class AdminMetaControllerCore extends AdminController
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID(true));
+		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->id);
 	}
 
 	/**

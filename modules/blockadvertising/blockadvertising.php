@@ -67,7 +67,7 @@ class BlockAdvertising extends Module
 		$this->displayName = $this->l('Block advertising');
 		$this->description = $this->l('Adds a block to display an advertisement.');
 		
-		if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 		{	
 			if (defined('_PS_ADMIN_DIR_') || file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-'.(int)$this->context->shop->id.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
 			{

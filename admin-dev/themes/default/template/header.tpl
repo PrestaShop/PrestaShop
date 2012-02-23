@@ -39,9 +39,9 @@
 				var helpboxes = {$help_box};
 				var roundMode = {$round_mode};
 				{if isset($shop_context)}
-					{if $shop_context == 'all'}
+					{if $shop_context == Shop::CONTEXT_ALL}
 						var youEditFieldFor = "{l s='A modification of this field will be applied for all shops' slashes=1 }";
-					{elseif $shop_context == 'group'}
+					{elseif $shop_context == Shop::CONTEXT_GROUP}
 						var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group ' slashes=1 }<b>{$shop_name}</b>";
 					{else}
 						var youEditFieldFor = "{l s='A modification of this field will be applied for the shop ' slashes=1 }<b>{$shop_name}</b>";

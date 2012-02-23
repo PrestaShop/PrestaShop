@@ -258,7 +258,7 @@ class BlockCMSModel extends ObjectModel
 	public static function getCMSTitlesFooter()
 	{
 		$context = Context::getContext();
-		$footerCms = Configuration::get('FOOTER_CMS', null, $context->shop->getGroupID(), $context->shop->getID());
+		$footerCms = Configuration::get('FOOTER_CMS');
 
         if (empty($footerCms))
 			return array();
@@ -339,7 +339,7 @@ class BlockCMSModel extends ObjectModel
 			WHERE bc.`location` = '.(int)($location).'
 			AND ccl.`id_lang` = '.(int)$context->language->id.'
 			AND bcl.`id_lang` = '.(int)$context->language->id.'
-			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->getID()).'
+			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->id).'
 			ORDER BY `position`';
 
 		return Db::getInstance()->executeS($sql);
@@ -347,7 +347,7 @@ class BlockCMSModel extends ObjectModel
 
 	public static function getCMSPages($id_cms_category, $id_shop = false)
 	{
-        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->getID();
+        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->id;
 
 		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 			FROM `'._DB_PREFIX_.'cms` c
@@ -467,7 +467,7 @@ class BlockCMSModel extends ObjectModel
 			WHERE ccl.`id_lang` = '.(int)Context::getContext()->language->id.'
 			AND bcl.`id_lang` = '.(int)Context::getContext()->language->id.'
 			AND bc.`location` = '.(int)$location.'
-			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->getID()).'
+			AND bcs.id_shop = '.($id_shop ? (int)$id_shop : (int)$context->shop->id).'
 			ORDER BY bc.`position`';
 
 		return Db::getInstance()->executeS($sql);
@@ -493,7 +493,7 @@ class BlockCMSModel extends ObjectModel
 	public static function getAllCMSStructure($id_shop = false)
 	{
 		$categories = BlockCMSModel::getCMSCategories();
-        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->getID();
+        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->id;
 
 		foreach ($categories as $key => $value)
 			$categories[$key]['cms_pages'] = BlockCMSModel::getCMSPages($value['id_cms_category'], $id_shop);

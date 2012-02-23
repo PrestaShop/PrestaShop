@@ -128,12 +128,12 @@ class Watermark extends Module
 		Configuration::updateValue('WATERMARK_X_ALIGN', Tools::getValue('xalign'));
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', Tools::getValue('transparency'));
 	   
-		if (Context::getContext()->shop->getContextType() == Shop::CONTEXT_SHOP)
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$str_shop = '-'.(int)$this->context->shop->id;
 		else
 			$str_shop = '';
 		//submited watermark
-		if (isset($_FILES['PS_WATERMARK']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
+		if (isset($_FILES['PS_WATERMARK']) && !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
 			/* Check watermark validity */
 			if ($error = ImageManager::validateUpload($_FILES['PS_WATERMARK']))
@@ -154,7 +154,7 @@ class Watermark extends Module
 	{
 	    $imageTypes = ImageType::getImagesTypes('products');
 	   $str_shop = '-'.(int)$this->context->shop->id;
-		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
+		if (Shop::getContext() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 			$str_shop = '';
 			
 		$this->_html .=
@@ -239,7 +239,7 @@ class Watermark extends Module
 		$file = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-watermark.jpg';
 
 	   $str_shop = '-'.(int)$this->context->shop->id;
-		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
+		if (Shop::getContext() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 			$str_shop = '';
 
 		//first make a watermark image

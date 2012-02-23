@@ -686,7 +686,7 @@ class HomeSlider extends Module
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT MAX(hss.`position`) AS `next_position`
 				FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-				WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->getId()
+				WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->id
 		);
 
 		return (++$row['next_position']);
@@ -695,7 +695,7 @@ class HomeSlider extends Module
 	public function getSlides($active = null)
 	{
 		$this->context = Context::getContext();
-		$id_shop = $this->context->shop->getID();
+		$id_shop = $this->context->shop->id;
 		$id_lang = $this->context->language->id;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('

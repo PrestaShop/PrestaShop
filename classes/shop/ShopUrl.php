@@ -143,7 +143,7 @@ class ShopUrlCore extends ObjectModel
 		if (!self::$main_domain)
 			self::$main_domain = Db::getInstance()->getValue('SELECT domain
 															FROM '._DB_PREFIX_.'shop_url
-															WHERE main=1 AND id_shop = '.Context::getContext()->shop->getID(true));
+															WHERE main=1 AND id_shop = '.Context::getContext()->shop->id);
 		return self::$main_domain;
 	}
 
@@ -154,7 +154,7 @@ class ShopUrlCore extends ObjectModel
 			$sql = 'SELECT domain_ssl
 					FROM '._DB_PREFIX_.'shop_url
 					WHERE main = 1
-						AND id_shop='.Context::getContext()->shop->getID(true);
+						AND id_shop='.Context::getContext()->shop->id;
 			self::$main_domain_ssl = Db::getInstance()->getValue($sql);
 		}
 		return self::$main_domain_ssl;

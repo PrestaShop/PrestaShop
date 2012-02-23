@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -467,7 +467,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogo()
 	{
-		$id_shop = Context::getContext()->shop->getID();
+		$id_shop = Context::getContext()->shop->id;
 		if (isset($_FILES['PS_LOGO']['tmp_name']) && $_FILES['PS_LOGO']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO'], 300000))
@@ -494,7 +494,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogoMail()
 	{
-		$id_shop = Context::getContext()->shop->getID();
+		$id_shop = Context::getContext()->shop->id;
 		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) && $_FILES['PS_LOGO_MAIL']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_MAIL'], 300000))
@@ -520,7 +520,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogoInvoice()
 	{
-		$id_shop = Context::getContext()->shop->getID();
+		$id_shop = Context::getContext()->shop->id;
 		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) && $_FILES['PS_LOGO_INVOICE']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_INVOICE'], 300000))
@@ -546,7 +546,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsStoresIcon()
 	{
-		$id_shop = Context::getContext()->shop->getID();
+		$id_shop = Context::getContext()->shop->id;
 		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) && $_FILES['PS_STORES_ICON']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_STORES_ICON'], 300000))
@@ -572,7 +572,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsFavicon()
 	{
-		$id_shop = Context::getContext()->shop->getID();
+		$id_shop = Context::getContext()->shop->id;
 		if ($id_shop == Configuration::get('PS_SHOP_DEFAULT'))
 			$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
 		if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico'))

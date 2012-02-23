@@ -56,7 +56,7 @@ if (Tools::getValue('action') && Tools::getValue('id_product') && Context::getCo
 		$favorite_product = new FavoriteProduct();
 		$favorite_product->id_product = $product->id;
 		$favorite_product->id_customer = (int)Context::getContext()->cookie->id_customer;
-		$favorite_product->id_shop = (int)Context::getContext()->shop->getID();
+		$favorite_product->id_shop = (int)Context::getContext()->shop->id;
 		if ($favorite_product->add())
 			die('0');
 	}

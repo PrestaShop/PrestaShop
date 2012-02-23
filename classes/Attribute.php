@@ -171,7 +171,7 @@ class AttributeCore extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		$result = StockAvailable::getQuantityAvailableByProduct(null, (int)$id_product_attribute, $shop->getID());
+		$result = StockAvailable::getQuantityAvailableByProduct(null, (int)$id_product_attribute, $shop->id);
 
 		return ($result && $qty <= $result);
 	}

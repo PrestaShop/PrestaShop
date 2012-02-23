@@ -1881,7 +1881,7 @@ class ProductCore extends ObjectModel
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		return SpecificPrice::getProductIdByDate(
-			$context->shop->getID(),
+			$context->shop->id,
 			$context->currency->id,
 			$id_country,
 			$context->customer->id_default_group,
@@ -2293,7 +2293,7 @@ class ProductCore extends ObjectModel
 			$id_customer = $context->customer->id;
 
 		return Product::priceCalculation(
-			$context->shop->getID(),
+			$context->shop->id,
 			$id_product,
 			$id_product_attribute,
 			$id_country,
@@ -2514,7 +2514,7 @@ class ProductCore extends ObjectModel
 		$ids = Address::getCountryAndState((int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
 
-		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->getID(), $id_currency, $id_country, $id_group, $quantity);
+		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity);
 	}
 
 	/**
@@ -2649,7 +2649,7 @@ class ProductCore extends ObjectModel
 				else if (is_string($product_attribute))
 					$sql->where('stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)');
 			}
-			$sql = StockAvailable::addSqlShopRestriction($sql, $shop->getID(true), 'stock');
+			$sql = StockAvailable::addSqlShopRestriction($sql, $shop->id, 'stock');
 		}
 		else
 		{
@@ -2667,7 +2667,7 @@ class ProductCore extends ObjectModel
 					$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)';
 			}
 
-			$sql .= StockAvailable::addSqlShopRestriction(null, $shop->getID(true), 'stock').' )';
+			$sql .= StockAvailable::addSqlShopRestriction(null, $shop->id, 'stock').' )';
 		}
 
 		return $sql;
@@ -4662,7 +4662,7 @@ class ProductCore extends ObjectModel
 			$manager = StockManagerFactory::getManager();
 
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->getID(true);
+			$id_shop = Context::getContext()->shop->id;
 
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&
 			StockAvailable::dependsOnStock($id_product, $id_shop))

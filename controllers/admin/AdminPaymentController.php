@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function __construct()
 	{
-		$shop_id = Context::getContext()->shop->getID(true);
+		$shop_id = Context::getContext()->shop->id;
 
 		/* Get all modules then select only payment ones */
 		$modules = Module::getModulesOnDisk(true);
@@ -108,11 +108,11 @@ class AdminPaymentControllerCore extends AdminController
 
 	protected function saveRestrictions($type)
 	{
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'` WHERE id_shop = '.Context::getContext()->shop->getID(true));
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'` WHERE id_shop = '.Context::getContext()->shop->id);
 		foreach ($this->payment_modules as $module)
 			if ($module->active && isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
-					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID(true).', '.(int)$selected.')';
+					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->id.', '.(int)$selected.')';
 
 		if (count($values))
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
@@ -130,7 +130,7 @@ class AdminPaymentControllerCore extends AdminController
 		$this->toolbar_title = $this->l('Paiement');
 		unset($this->toolbar_btn['back']);
 		
-		$shop_context = (!Shop::isFeatureActive() || $this->context->shop->getContextType() == Shop::CONTEXT_SHOP);
+		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 		if (!$shop_context)
 		{
 			$this->tpl_view_vars = array('shop_context' => $shop_context);

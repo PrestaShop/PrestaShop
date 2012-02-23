@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -147,9 +147,9 @@ echo '
 			';
 			if (Shop::isFeatureActive())
 			{
-				if (Context::shop() == Shop::CONTEXT_ALL)
+				if (Shop::getContext() == Shop::CONTEXT_ALL)
 					$youEditFieldFor = translate('A modification of this field will be applied for all shops');
-				else if (Context::shop() == Shop::CONTEXT_GROUP)
+				else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for all shops of group %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
 				else
 					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');

@@ -87,7 +87,7 @@ class FavoriteProduct extends ObjectModel
 			FROM `'._DB_PREFIX_.'favorite_product`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `id_product` = '.(int)$id_product.'
-			AND `id_shop` = '.(int)$shop->getID(true)
+			AND `id_shop` = '.(int)$shop->id
 		);
 
 		if ($id_favorite_product)
@@ -105,6 +105,6 @@ class FavoriteProduct extends ObjectModel
 			FROM `'._DB_PREFIX_.'favorite_product`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `id_product` = '.(int)$id_product.'
-			AND `id_shop` = '.(int)$shop->getID(true));
+			AND `id_shop` = '.(int)$shop->id);
 	}
 }

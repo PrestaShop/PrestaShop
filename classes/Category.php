@@ -739,7 +739,7 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 		WHERE `id_lang` = '.(int)$id_lang.'
-		AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true).'
+		AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 		AND c.`id_parent` = '.(int)$id_parent.'
 		'.($active ? 'AND `active` = 1' : '').'
 		ORDER BY cs.`position` ASC');
@@ -798,7 +798,7 @@ class CategoryCore extends ObjectModel
 				WHERE `id_lang` = '.(int)$id_lang;
 		if (Context::getContext()->shop() == Shop::CONTEXT_SHOP && $use_shop_context)
 			$sql .= '
-					AND cs.`id_shop` = '.(int)$shop->getID(true);
+					AND cs.`id_shop` = '.(int)$shop->id;
 		$sql .= '
 					AND c.`id_parent` = '.(int)$id_parent.'
 				ORDER BY `position` ASC';
@@ -983,7 +983,7 @@ class CategoryCore extends ObjectModel
 			WHERE c.`id_category` = '.(int)$id_current;
 			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP)
 				$sql .= '
-				AND cs.`id_shop` = '.(int)$context->shop->getID(true);
+				AND cs.`id_shop` = '.(int)$context->shop->id;
 			$root_category = Category::getRootCategory();
 			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP &&
 				(!Tools::isSubmit('id_category') ||

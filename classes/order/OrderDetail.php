@@ -227,7 +227,7 @@ class OrderDetailCore extends ObjectModel
 		$this->context = $context;
 		$id_shop = null;
 		if ($this->context != null && isset($this->context->shop))
-			$id_shop = $this->context->shop->getID();
+			$id_shop = $this->context->shop->id;
 		parent::__construct($id, $id_lang, $id_shop);
 	}
 
@@ -458,7 +458,7 @@ class OrderDetailCore extends ObjectModel
 		$this->group_reduction = (float)(Group::getReduction((int)($order->id_customer)));
 
 		if (isset($this->context->shop))
-			$shop_id = $this->context->shop->getID();
+			$shop_id = $this->context->shop->id;
 		else
 			$shop_id = $cart->id_shop;
 
