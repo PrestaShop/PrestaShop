@@ -88,6 +88,7 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 
 /* Initialize the current Shop */
 Context::getContext()->shop = Shop::initialize();
+Shop::setContext(Shop::CONTEXT_SHOP, Context::getContext()->shop->id);
 define('_THEME_NAME_', Context::getContext()->shop->getTheme());
 define('__PS_BASE_URI__', Context::getContext()->shop->getBaseURI());
 
