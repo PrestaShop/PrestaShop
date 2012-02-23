@@ -1031,8 +1031,8 @@
 			<li><span class="total_cart">{l s='Total products:'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
 			<li><span class="total_cart">{l s='Total vouchers:'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
 			<li><span class="total_cart">{l s='Total shipping:'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total without taxes:'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
 			<li><span class="total_cart">{l s='Total taxes:'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total without taxes:'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
 			<li><span class="total_cart">{l s='Total with taxes:'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
 		</ul>
 	</div>

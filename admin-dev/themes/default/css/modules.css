@@ -213,7 +213,7 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 .sidebar ul.categorieList li { border-top:1px solid #ccc; position:relative; line-height:20px;}
 .sidebar ul.categorieList li:first-child { border-top:none;}
 .sidebar ul.categorieList li a {color:#3a6ea7;}
-.sidebar ul.categorieList li div.categorieWidth { width:180px; margin-left:5px; overflow:hidden;}
+.sidebar ul.categorieList li div.categorieWidth { text-indent:5px; overflow:hidden;}
 .sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 
 /*MODULECONTAINER*/
