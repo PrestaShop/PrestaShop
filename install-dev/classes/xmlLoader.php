@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -660,8 +660,11 @@ class InstallXmlLoader
 			foreach (Db::getInstance()->executeS($sql) as $row)
 			{
 				$table = current($row);
-				if (preg_match('#^'._DB_PREFIX_.'(.+?)(_lang)?$#i', $table, $m) && !preg_match('#(_group_shop|_shop)$#i', $table))
-					$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+				if (preg_match('#^'._DB_PREFIX_.'(.+?)(_lang)?$#i', $table, $m))
+					if (preg_match('#^'._DB_PREFIX_.'(.+?)(_group_shop|_shop)$#i', $table, $m2) && !isset($tables[$m2[1]]))
+						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+					else
+						$tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
 			}
 		}
 
