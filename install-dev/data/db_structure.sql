@@ -692,6 +692,7 @@ CREATE TABLE `PREFIX_employee` (
   `stats_date_to` date default NULL,
   `bo_color` varchar(32) default NULL,
   `bo_theme` varchar(32) default NULL,
+  `bo_width` int(10) unsigned NOT NULL DEFAULT 0,
   `bo_show_screencast` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
   `id_last_order` tinyint(1) unsigned NOT NULL default '0',
