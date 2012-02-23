@@ -36,6 +36,17 @@
 {/block}
 
 
+{block name="start_field_block"}
+	<div class="margin-form">
+		{if $input.name == 'current_texture'}
+			{if isset($imageTextureExists) && $imageTextureExists}
+				<img src="{$imageTexture}" alt="{l s='Texture'}" />
+			{else}
+				{l s='None'}
+			{/if}
+		{/if}
+{/block}
+
 {block name="end_field_block"}
 		{if $input.type == 'text' && $input.name == 'texture'}
 			</div>
