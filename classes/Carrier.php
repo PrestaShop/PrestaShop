@@ -942,7 +942,7 @@ class CarrierCore extends ObjectModel
 		if (!Validate::isInt($id_tax_rules_group))
 			die(Tools::displayError());
 		
-		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP)
+		if (Shop::getContext() != Shop::CONTEXT_SHOP)
 			$all_shops = true;
 		
 		$this->deleteTaxRulesGroup($all_shops);
