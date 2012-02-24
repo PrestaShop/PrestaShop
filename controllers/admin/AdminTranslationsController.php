@@ -1710,11 +1710,14 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->displayWarning(Tools::displayError('There are no modules in your copy of PrestaShop. Use the Modules tab to activate them or go to our Website to download additional Modules.'));
 		else
 		{
-			// Get all module which are installed for to have a minimum of POST
-			$modules = Module::getModulesInstalled();
+			if (!_PS_MODE_DEV_)
+			{
+				// Get all module which are installed for to have a minimum of POST
+				$modules = Module::getModulesInstalled();
 
-			foreach ($modules as &$module)
-				$module = $module['name'];
+				foreach ($modules as &$module)
+					$module = $module['name'];
+			}
 
 			$arr_find_and_fill = array();
 
