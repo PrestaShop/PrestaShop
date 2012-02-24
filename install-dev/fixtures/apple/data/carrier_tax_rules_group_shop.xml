@@ -6,6 +6,6 @@
     <field name="id_shop"/>
   </fields>
   <entities>
-    <carrier_tax_rules_group_shop id="carrier_tax_rules_group_shop_1_1_1" id_carrier="carrier_1" id_tax_rules_group="1" id_shop="1"/>
+    <carrier_tax_rules_group_shop id="carrier_tax_rules_group_shop_2_1_1" id_carrier="My_carrier" id_tax_rules_group="1" id_shop="1"/>
   </entities>
 </entity_carrier_tax_rules_group_shop>
