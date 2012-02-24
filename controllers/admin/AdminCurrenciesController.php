@@ -27,8 +27,6 @@
 
 class AdminCurrenciesControllerCore extends AdminController
 {
-    public $display_multishop_toolbar = false;
-
 	public function __construct()
 	{
 	 	$this->table = 'currency';
@@ -82,6 +80,8 @@ class AdminCurrenciesControllerCore extends AdminController
 			)
 		);
 		parent::__construct();
+
+		$this->multishop_context = Shop::CONTEXT_ALL;
 	}
 
 	public function renderList()
