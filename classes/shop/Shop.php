@@ -690,16 +690,6 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * Get ID shop from context
-	 *
-	 * @return int
-	 */
-	public static function getContextGroupID()
-	{
-		return Shop::getContext('group');
-	}
-
-	/**
 	 * Add an sql restriction for shops fields
 	 *
 	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
