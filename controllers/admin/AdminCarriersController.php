@@ -175,7 +175,9 @@ class AdminCarriersControllerCore extends AdminController
 			</ul>'
 		);
 		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier
+							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` 
+								AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
 
 		return parent::renderList();
@@ -440,7 +442,6 @@ class AdminCarriersControllerCore extends AdminController
 			return;
 
 		$this->getFieldsValues($obj);
-
 		return parent::renderForm();
 	}
 
@@ -484,6 +485,7 @@ class AdminCarriersControllerCore extends AdminController
 
 							$this->postImage($new_carrier->id);
 							$this->changeZones($new_carrier->id);
+							$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
 							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
 						}
 						else
@@ -506,6 +508,7 @@ class AdminCarriersControllerCore extends AdminController
 						{
 							if (($_POST['id_'.$this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect)
 							{
+								$carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
 								$this->changeZones($carrier->id);
 								$this->changeGroups($carrier->id);
 								$this->updateAssoShop($carrier->id);
@@ -565,7 +568,6 @@ class AdminCarriersControllerCore extends AdminController
 
 		if ($this->getFieldValue($obj, 'need_range'))
 			$this->fields_value['need_range'] = 1;
-
 		// Added values of object Zone
 		$carrier_zones = $obj->getZones();
 		$carrier_zones_ids = array();
@@ -588,6 +590,8 @@ class AdminCarriersControllerCore extends AdminController
 
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
+		
+		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
 	}
 
 	protected function beforeDelete($object)
@@ -636,7 +640,6 @@ class AdminCarriersControllerCore extends AdminController
 			if ($list['name'] == '0')
 				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
 	}
-
 }
 
 

@@ -2,7 +2,6 @@
 <entity_carrier>
   <fields id="name" class="Carrier" sql="a.id_carrier &gt; 1">
     <field name="id_reference"/>
-    <field name="id_tax_rules_group"/>
     <field name="name"/>
     <field name="url"/>
     <field name="active"/>
@@ -19,7 +18,7 @@
     <field name="grade"/>
   </fields>
   <entities>
-    <carrier id="My_carrier" id_reference="2" id_tax_rules_group="1" active="1" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="0" max_width="0" max_height="0" max_depth="0" max_weight="0" grade="0">
+    <carrier id="carrier_2" id_reference="2" active="1" shipping_handling="1" range_behavior="0" is_free="0" shipping_external="0" need_range="0" shipping_method="0" max_width="0" max_height="0" max_depth="0" max_weight="0" grade="0">
       <name>My carrier</name>
       <url/>
     </carrier>

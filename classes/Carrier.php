@@ -47,9 +47,6 @@ class CarrierCore extends ObjectModel
 	const SORT_BY_ASC = 0;
 	const SORT_BY_DESC = 1;
 
-	/** @var int Tax id (none = 0) */
-	public $id_tax_rules_group;
-
 	/** @var int common id for carrier historization */
 	public $id_reference;
 
@@ -121,7 +118,6 @@ class CarrierCore extends ObjectModel
 		'fields' => array(
 			/* Classic fields */
 			'id_reference' => 			array('type' => self::TYPE_INT),
-			'id_tax_rules_group' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
 			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'is_free' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -164,6 +160,12 @@ class CarrierCore extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
+		/**
+		 * keep retrocompatibility id_tax_rules_group
+		 * @deprecated 1.5.0
+		 */
+		if ($this->id)
+			$this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
 		if ($this->name == '0')
 			$this->name = Configuration::get('PS_SHOP_NAME');
 	}
@@ -193,7 +195,9 @@ class CarrierCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_rule_carrier WHERE id_carrier = '.(int)$this->id);
+		return (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_rule_carrier WHERE id_carrier = '.(int)$this->id) &&
+					$this->deleteTaxRulesGroup(true));
+		
 	}
 
 	/**
@@ -904,23 +908,56 @@ class CarrierCore extends ObjectModel
 		return $suffix;
 	}
 
-	/**
-	 *
-	 * @param int $id_carrier
-	 */
-	public static function getIdTaxRulesGroupByIdCarrier($id_carrier)
+	public function getIdTaxRulesGroup(Context $context = null)
 	{
-		if (!isset(self::$cache_tax_rule[(int)$id_carrier]))
-		{
-			 self::$cache_tax_rule[$id_carrier] = Db::getInstance()->getValue('
-			 SELECT `id_tax_rules_group`
-			 FROM `'._DB_PREFIX_.'carrier`
-			 WHERE `id_carrier` = '.(int)$id_carrier);
-		}
-
-		return self::$cache_tax_rule[$id_carrier];
+		return Carrier::getIdTaxRulesGroupByIdCarrier((int)$this->id, $context);
+	}
+	
+	public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+		if (!Cache::isStored((int)$id_carrier.'_'.(int)$context->shop->getId(true)))
+			Cache::store((int)$id_carrier.'_'.(int)$context->shop->getId(true), 
+			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_tax_rules_group`
+				FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
+				WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->getId(true)));
+			
+		return Cache::retrieve((int)$id_carrier.'_'.(int)$context->shop->getId(true));
 	}
 
+	
+	public function deleteTaxRulesGroup($all_shops = false)
+	{
+		$shop = '';
+		if (!$all_shops)
+			$shop = ' AND `id_shop`='.(int)Context::getContext()->shop->id;
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_tax_rules_group_shop 
+					WHERE id_carrier='.(int)$this->id.$shop);
+	}	
+		
+	public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
+	{
+		if (!Validate::isInt($id_tax_rules_group))
+			die(Tools::displayError());
+		
+		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP)
+			$all_shops = true;
+		
+		$this->deleteTaxRulesGroup($all_shops);
+		
+		if ($all_shops)
+		{
+			$values = '';
+			$shops = Shop::getShops(false, null, true);
+			foreach ($shops as $id_shop)
+				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
+		}
+		else
+			$values = '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)Context::getContext()->shop->id.')';
+		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_tax_rules_group_shop (`id_carrier`, `id_tax_rules_group`, `id_shop`) VALUES '.rtrim($values, ','));
+	}
 
 	/**
 	 * Returns the taxes rate associated to the carrier
@@ -931,7 +968,7 @@ class CarrierCore extends ObjectModel
 	 */
 	public function getTaxesRate(Address $address)
 	{
-		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
+		$tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
 		$tax_calculator = $tax_manager->getTaxCalculator();
 		return $tax_calculator->getTotalRate();
 	}
