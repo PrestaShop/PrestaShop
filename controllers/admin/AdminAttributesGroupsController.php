@@ -231,7 +231,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'type' => 'group_shop',
 				'label' => $this->l('Group Shop association:'),
 				'name' => 'checkBoxShopAsso',
-				'values' => Shop::getTree()
 			);
 		}
 

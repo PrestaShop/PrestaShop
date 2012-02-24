@@ -238,7 +238,6 @@ class AdminCurrenciesControllerCore extends AdminController
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
-				'values' => Shop::getTree()
 			);
 		}
 
