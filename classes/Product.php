@@ -4057,7 +4057,7 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 		$this->deleteTaxRulesGroup($all_shops);
 
-		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP)
+		if (Shop::getContext() != Shop::CONTEXT_SHOP)
 			$all_shops = true;
 			
 		if ($all_shops)
