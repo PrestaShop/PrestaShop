@@ -318,7 +318,7 @@ jQuery(document).ready(Customer.init);
 					ampm: false,
 					amNames: ['AM', 'A'],
 					pmNames: ['PM', 'P'],
-					timeFormat: 'hh:mm tt',
+					timeFormat: 'hh:mm:ss tt',
 					timeSuffix: '',
 					timeOnlyTitle: '{l s='Choose Time'}',
 					timeText: '{l s='Time'}',
