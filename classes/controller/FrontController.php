@@ -435,8 +435,8 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'HOOK_HEADER' => $hook_header,
 			'HOOK_TOP' => Hook::exec('displayTop'),
-            'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
-            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
+			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
+			'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
 		));
 
 		$this->display_header = $display;
