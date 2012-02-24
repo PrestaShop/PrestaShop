@@ -65,14 +65,19 @@
 				stopInstantSearchQueries();
 				instantSearchQuery = $.ajax({
 				url: '{/literal}{if $search_ssl == 1}{$link->getPageLink('search', true)}{else}{$link->getPageLink('search')}{/if}{literal}',
-				data: 'instantSearch=1&id_lang={/literal}{$cookie->id_lang}{literal}&q='+$(this).val(),
+				data: {
+					instantSearch: 1,
+					id_lang: {/literal}{$cookie->id_lang}{literal},
+					q: $(this).val()
+				},
 				dataType: 'html',
+				type: 'POST',
 				success: function(data){
 					if($("#search_query_top").val().length > 0)
 					{
 						tryToCloseInstantSearch();
 						$('#center_column').attr('id', 'old_center_column');
-						$('#old_center_column').after('<div id="center_column">'+data+'</div>');
+						$('#old_center_column').after('<div id="center_column" class="' + $('#old_center_column').attr('class') + '">'+data+'</div>');
 						$('#old_center_column').hide();
 						$("#instant_search_results a.close").click(function() {
 							$("#search_query_top").val('');

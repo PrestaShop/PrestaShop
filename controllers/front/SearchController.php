@@ -40,7 +40,14 @@ class SearchControllerCore extends FrontController
 		parent::init();
 
 		$this->instant_search = Tools::getValue('instantSearch');
+
 		$this->ajax_search = Tools::getValue('ajaxSearch');
+
+		if ($this->instant_search || $this->ajax_search)
+		{
+			$this->display_header = false;
+			$this->display_footer = false;
+		}
 	}
 
 	/**
