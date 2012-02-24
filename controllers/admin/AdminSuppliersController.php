@@ -308,7 +308,7 @@ class AdminSuppliersControllerCore extends AdminController
 			'supplier' => $this->object,
 			'products' => $products,
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-			'shopContext' => Context::getContext()->shop(),
+			'shopContext' => Shop::getContext(),
 		);
 
 		return parent::renderView();
