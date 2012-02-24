@@ -917,14 +917,14 @@ class CarrierCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (!Cache::isStored((int)$id_carrier.'_'.(int)$context->shop->getId(true)))
-			Cache::store((int)$id_carrier.'_'.(int)$context->shop->getId(true), 
+		if (!Cache::isStored((int)$id_carrier.'_'.(int)$context->shop->id))
+			Cache::store((int)$id_carrier.'_'.(int)$context->shop->id,
 			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_tax_rules_group`
 				FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
-				WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->getId(true)));
+				WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->id));
 			
-		return Cache::retrieve((int)$id_carrier.'_'.(int)$context->shop->getId(true));
+		return Cache::retrieve((int)$id_carrier.'_'.(int)$context->shop->id);
 	}
 
 	
