@@ -281,9 +281,31 @@
 								{foreach $input.options as $key => $select}
 									<select name="{$key}" class="">
 										<option value="">-</option>
-										{foreach $select as $v}
-											<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
-										{/foreach}
+										{if $key == 'months'}
+											{*
+												This comment is useful to the translator tools /!\ do not remove them
+												{l s='January'}
+												{l s='February'}
+												{l s='March'}
+												{l s='April'}
+												{l s='May'}
+												{l s='June'}
+												{l s='July'}
+												{l s='August'}
+												{l s='September'}
+												{l s='October'}
+												{l s='November'}
+												{l s='December'}
+											*}
+											{foreach $select as $k => $v}
+												<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v}</option>
+											{/foreach}
+										{else}
+											{foreach $select as $v}
+												<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
+											{/foreach}
+										{/if}
+
 									</select>
 								{/foreach}
 							{elseif $input.type == 'group'}
