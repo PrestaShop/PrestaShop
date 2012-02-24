@@ -2317,7 +2317,7 @@ class AdminControllerCore extends Controller
 			$check_box = Tools::getValue('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table);
 			foreach ($check_box as $id_asso_object => $row)
 			{
-				if (!(int)$id_asso_object)
+				if ($id_object)
 					$id_asso_object = $id_object;
 				foreach ($row as $id_shop => $value)
 					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);

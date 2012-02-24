@@ -42,9 +42,6 @@ class ProductCore extends ObjectModel
 	/** @var string Tax rate */
 	public $tax_rate;
 
-	/** @var string Tax rules group */
-	public $id_tax_rules_group;
-
 	/** @var integer Manufacturer id */
 	public $id_manufacturer;
 
@@ -232,7 +229,6 @@ class ProductCore extends ObjectModel
 		'multishop' => true,
 		'fields' => array(
 			// Classic fields
-			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_category_default' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -388,16 +384,22 @@ class ProductCore extends ObjectModel
 	{
 		parent::__construct($id_product, $id_lang, $id_shop);
 		if (!$context)
+
 			$context = Context::getContext();
 
+	/**
+	 * keep retrocompatibility id_tax_rules_group
+	 * @deprecated 1.5.0.6
+	 */
+		if ($this->id)
+			$this->id_tax_rules_group = $this->getIdTaxRulesGroup($context);
+			
 		if ($full && $this->id)
 		{
 			$this->isFullyLoaded = $full;
 			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
 			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
 			$this->supplier_name = Supplier::getNameById((int)$this->id_supplier);
-			self::$_tax_rules_group[$this->id] = $this->id_tax_rules_group;
-
 			$address = null;
 			if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null)
 				$address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
@@ -659,7 +661,8 @@ class ProductCore extends ObjectModel
 			!$this->deleteSearchIndexes() ||
 			!$this->deleteAccessories() ||
 			!$this->deleteFromAccessories() ||
-			!$this->deleteFromSupplier())
+			!$this->deleteFromSupplier() ||
+			!$this->deleteTaxRulesGroup(true))
 		return false;
 
 		if ($id = ProductDownload::getIdFromIdProduct($this->id))
@@ -926,7 +929,9 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product` p
 				'.$context->shop->addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.$context->shop->addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+					AND ptrgs.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 		 		  AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 		 		  AND tr.`id_state` = 0)
 	  		 	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
@@ -1819,8 +1824,10 @@ class ProductCore extends ObjectModel
 		);
 		$sql->leftJoin('image', 'i', 'i.`id_product` = p.`id_product` AND i.`cover` = 1');
 		$sql->leftJoin('image_lang', 'il', 'i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang);
+		$sql->leftJoin('product_tax_rules_group_shop', 'ptrgs', 
+			'p.`id_product` = ptrgs.`id_product` AND ptrgs.`id_shop` ='.(int)$context->shop->id);
 		$sql->leftJoin('tax_rule', 'tr', '
-			p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 			AND tr.`id_country` = '.(int)$context->country->id.'
 			AND tr.`id_state` = 0'
 		);
@@ -1935,7 +1942,9 @@ class ProductCore extends ObjectModel
 				)
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+					AND ptrgs.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
@@ -2019,7 +2028,9 @@ class ProductCore extends ObjectModel
 				)
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+					AND ptrgs.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
@@ -2919,7 +2930,9 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+					AND ptrgs.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
@@ -4021,18 +4034,61 @@ class ProductCore extends ObjectModel
 			AND l.`active` = 1
 		');
 	}
-
-	public static function getIdTaxRulesGroupByIdProduct($id_product)
+	
+	public static function duplicateTaxRulesGroup($id_old_product, $id_new_product)
 	{
-		if (!isset(self::$_tax_rules_group[$id_product]))
+		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tax_rules_group_shop (`id_product`, `id_tax_rules_group`, `id_shop`)
+														(SELECT '.(int)$id_new_product.', `id_tax_rules_group`, `id_shop` 
+															FROM '._DB_PREFIX_.'product_tax_rules_group_shop WHERE `id_product`='.(int)$id_old_product.')');
+	}
+	
+	public function deleteTaxRulesGroup($all_shops = false)
+	{
+		$shop = '';
+		if (!$all_shops)
+			$shop = ' AND `id_shop`='.(int)Context::getContext()->shop->id;
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tax_rules_group_shop 
+					WHERE id_product='.(int)$this->id.$shop);
+	}	
+		
+	public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
+	{
+		if (!Validate::isInt($id_tax_rules_group))
+			die(Tools::displayError());
+		$this->deleteTaxRulesGroup($all_shops);
+
+		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP)
+			$all_shops = true;
+			
+		if ($all_shops)
 		{
-			$id_group = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_tax_rules_group`
-			FROM `'._DB_PREFIX_.'product`
-			WHERE `id_product` = '.(int)$id_product);
-			self::$_tax_rules_group[$id_product] = $id_group;
+			$values = '';
+			$shops = Shop::getShops(false, null, true);
+			foreach ($shops as $id_shop)
+				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
 		}
-		return self::$_tax_rules_group[$id_product];
+		else
+			$values = '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)Context::getContext()->shop->id.')';
+		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tax_rules_group_shop (`id_product`, `id_tax_rules_group`, `id_shop`) VALUES '.rtrim($values, ','));
+	}
+	
+	public function getIdTaxRulesGroup(Context $context = null)
+	{
+		return Product::getIdTaxRulesGroupByIdProduct((int)$this->id, $context);
+	}
+	
+	public static function getIdTaxRulesGroupByIdProduct($id_product, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+		if (!Cache::isStored((int)$id_product.'_'.(int)$context->shop->id))
+			Cache::store((int)$id_product.'_'.(int)$context->shop->id, 
+			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_tax_rules_group`
+				FROM `'._DB_PREFIX_.'product_tax_rules_group_shop`
+				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)Context::getContext()->shop->id));
+			
+		return Cache::retrieve((int)$id_product.'_'.(int)$context->shop->id);
 	}
 
 	/**
@@ -4043,7 +4099,7 @@ class ProductCore extends ObjectModel
 		if (!$address || !$address->id_country)
 			$address = Address::initialize();
 
-		$tax_manager = TaxManagerFactory::getManager($address, $this->id_tax_rules_group);
+		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$this->id));
 		$tax_calculator = $tax_manager->getTaxCalculator();
 
 		return $tax_calculator->getTotalRate();

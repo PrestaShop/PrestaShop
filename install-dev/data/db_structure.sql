@@ -1335,7 +1335,6 @@ CREATE TABLE `PREFIX_product` (
   `id_product` int(10) unsigned NOT NULL auto_increment,
   `id_supplier` int(10) unsigned default NULL,
   `id_manufacturer` int(10) unsigned default NULL,
-  `id_tax_rules_group` int(10) unsigned NOT NULL,
   `id_category_default` int(10) unsigned default NULL,
   `on_sale` tinyint(1) unsigned NOT NULL default '0',
   `online_only` tinyint(1) unsigned NOT NULL default '0',
@@ -2402,3 +2401,19 @@ CREATE TABLE `PREFIX_module_preference` (
   PRIMARY KEY (`id_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_product_tax_rules_group_shop` (
+	`id_product` INT(11) UNSIGNED NOT NULL,
+	`id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
+	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+	PRIMARY KEY ( `id_product` , `id_tax_rules_group` , `id_shop` )
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+ CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (
+	`id_carrier` int( 11 ) unsigned NOT NULL,
+	`id_tax_rules_group` int(11) unsigned NOT NULL,
+	`id_shop` int(11) unsigned NOT NULL,
+	PRIMARY KEY (`id_carrier`, `id_tax_rules_group`, `id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+

@@ -392,8 +392,11 @@ class CartCore extends ObjectModel
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl')
 		);
+		$sql->leftJoin('product_tax_rules_group_shop', 'ptrgs', 
+			'p.`id_product` = ptrgs.`id_product` AND cp.`id_shop` = ptrgs.`id_shop`');
+		
 		$sql->leftJoin('tax_rule', 'tr', '
-			p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 			AND tr.`id_country` = '.(int)$id_country.'
 			AND tr.`id_state` = 0
 			AND tr.`zipcode_from` = 0'
