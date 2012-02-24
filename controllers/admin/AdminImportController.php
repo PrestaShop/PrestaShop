@@ -932,6 +932,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject(new TaxRulesGroup($product->id_tax_rules_group)))
 				{
+					$product->setTaxRulesGroup((int)$product->id_tax_rules_group, true);
 					$address = $this->context->shop->getAddress();
 					$tax_manager = TaxManagerFactory::getManager($address, $product->id_tax_rules_group);
                     $product_tax_calculator = $tax_manager->getTaxCalculator();
