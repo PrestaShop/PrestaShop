@@ -28,6 +28,48 @@
 
 {block name="override_tpl"}
 
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$.ajax({
+				type: 'GET',
+				url: '{$link->getAdminLink('AdminInformation')}',
+				data: {
+					'action': 'checkFiles',
+					'ajax': 1
+				},
+				dataType: 'json',
+				success: function(json)
+				{
+					var tab = {
+						'missing': '{l s='Missing files'}',
+						'updated': '{l s='Updated files'}'
+					};
+
+					if (json.missing.length || json.updated.length)
+						$('#changedFiles').html('<div class="warn">{l s='Changed / missing files have been detected'}</div>');
+					else
+						$('#changedFiles').html('<div class="conf">{l s='No change has been detected on your files'}</div>');
+
+					$.each(tab, function(key, lang)
+					{
+						if (json[key].length)
+						{
+							var html = $('<ul>').attr('id', key+'_files');
+							$(json[key]).each(function(key, file)
+							{
+								html.append($('<li>').html(file))
+							});
+							$('#changedFiles')
+								.append($('<h3>').html(lang+' ('+json[key].length+')'))
+								.append(html);
+						}
+					});
+				}
+			});
+		});
+	</script>
+
 	<fieldset>
 		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Information'}</legend>
 		<p>{l s='This information must be indicated when you report a bug on our bug tracker or if you report a problem on our forum.'}</p>
@@ -145,6 +187,12 @@
 			</ul>
 			{/if}
 	
+	</fieldset>
+
+	<br />
+	<fieldset>
+		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='List of changed files'}</legend>
+		<div id="changedFiles"><img src="../img/admin/ajax-loader.gif" /> {l s='Checking files ...'}</div>
 	</fieldset>
 
 {/block}

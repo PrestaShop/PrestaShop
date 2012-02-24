@@ -109,5 +109,41 @@ class AdminInformationControllerCore extends AdminController
 			'testsOptional' => $params_optional_results,
 		);
 	}
+
+	public function displayAjaxCheckFiles()
+	{
+		$this->file_list = array('missing' => array(), 'updated' => array());
+		$xml = @simplexml_load_file('http://api.prestashop.com/xml/md5/'._PS_VERSION_.'.xml');
+		if (!$xml)
+			die(Tools::jsonEncode($this->file_list));
+
+		$this->getListOfUpdatedFiles($xml->ps_root_dir[0]);
+		die(Tools::jsonEncode($this->file_list));
+	}
+
+	public function getListOfUpdatedFiles(SimpleXMLElement $dir, $path = '')
+	{
+		$exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload)';
+		$admin_dir = basename(_PS_ADMIN_DIR_);
+
+		foreach ($dir->md5file as $file)
+		{
+			$filename = preg_replace('#^admin/#', $admin_dir.'/', $path.$file['name']);
+			if (preg_match('#^'.$exclude_regexp.'#', $filename))
+				continue;
+
+			if (!file_exists(_PS_ROOT_DIR_.'/'.$filename))
+				$this->file_list['missing'][] = $filename;
+			else
+			{
+				$md5_local = md5_file(_PS_ROOT_DIR_.'/'.$filename);
+				if ($md5_local != (string)$file)
+					$this->file_list['updated'][] = $filename;
+			}
+		}
+
+		foreach ($dir->dir as $subdir)
+			$this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
+	}
 }
 

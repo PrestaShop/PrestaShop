@@ -485,3 +485,5 @@ ul.listForm li {padding-bottom:3px;}
 .margin-form select.chosen{width: 200px;}
 
 .selected-line {background:#fff1b5;}
+
+#changedFiles ul{list-style-type: square; padding-left: 40px;}
