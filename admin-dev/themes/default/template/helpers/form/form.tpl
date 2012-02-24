@@ -62,9 +62,7 @@
 							<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 						{/if}
 						{block name="label"}
-							{if isset($input.label)}
-								<label>{$input.label} </label>
-							{/if}
+							{if isset($input.label)}<label>{$input.label} </label>{/if}
 						{/block}
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall'}" />
@@ -220,10 +218,7 @@
 								{/if}
 							{elseif $input.type == 'radio'}
 								{foreach $input.values as $value}
-									<input type="radio"
-											name="{$input.name}"
-											id="{$value.id}"
-											value="{$value.value|escape:'htmlall':'UTF-8'}"
+									<input type="radio"	name="{$input.name}"id="{$value.id}" value="{$value.value|escape:'htmlall':'UTF-8'}"
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
@@ -286,29 +281,9 @@
 								{foreach $input.options as $key => $select}
 									<select name="{$key}" class="">
 										<option value="">-</option>
-										{if $key == 'months'}
-                                                {*
-                                                  {l s='January'}
-                                                  {l s='February'}
-                                                  {l s='March'}
-                                                  {l s='April'}
-                                                  {l s='May'}
-                                                  {l s='June'}
-                                                  {l s='July'}
-                                                  {l s='August'}
-                                                  {l s='September'}
-                                                  {l s='October'}
-                                                  {l s='November'}
-                                                  {l s='December'}
-                                              *}
-											{foreach $select as $k => $v}
-												<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v}</option>
-											{/foreach}
-										{else}
-											{foreach $select as $v}
-												<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
-											{/foreach}
-										{/if}
+										{foreach $select as $v}
+											<option value="{$v}" {if $v == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
+										{/foreach}
 									</select>
 								{/foreach}
 							{elseif $input.type == 'group'}
@@ -450,7 +425,7 @@
 				id_lang: {$language.id_lang},
 				iso_code: '{$language.iso_code}',
 				name: '{$language.name}',
-				is_default: "{$language.is_default}"
+				is_default: '{$language.is_default}'
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request
