@@ -2673,6 +2673,7 @@ $_LANGADM['AdminProducts936ccdb97115e9f35a11d35e3d5b5cad'] = 'Cliquez ici';
 $_LANGADM['AdminProducts93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_LANGADM['AdminProducts95b6faa9d75417fe5e7767a733ab6fb4'] = 'À partir de';
 $_LANGADM['AdminProducts961f2247a2070bedff9f9cd8d64e2650'] = 'Choisissez';
+$_LANGADM['AdminProducts9702aa552bdeeedf7fe046493b8c8c94'] = 'Cliquez sur \"Enregister et rester\" après modification des fournisseurs sélectionnés pour afficher les références produits associées.';
 $_LANGADM['AdminProducts98f770b0af18ca763421bac22b4b6805'] = 'Caractéristiques';
 $_LANGADM['AdminProducts998b344cff693ad388a14ba89b1523c7'] = 'n\'est pas valable';
 $_LANGADM['AdminProducts99af56daf9ee280b15e8ed79d75f0255'] = 'Liste des tags';

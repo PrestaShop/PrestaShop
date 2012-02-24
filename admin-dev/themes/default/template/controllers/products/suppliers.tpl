@@ -73,7 +73,7 @@
 	{else}
 		<p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
 	{/if}
-
+	<p>{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}</p>
 	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$associated_suppliers item=supplier}
 		    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
@@ -126,10 +126,6 @@
 				</table>
 			</div>
 		{/foreach}
-	</div>
-	
-	<div style="margin-top: 10px">
-	<input type="button" value="{l s='Save'}" onClick="btn_save_and_stay.click()"/>
 	</div>
 
 	<script type="text/javascript">
