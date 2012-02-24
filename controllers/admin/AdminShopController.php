@@ -237,6 +237,9 @@ class AdminShopControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		if (Shop::getContext() == Shop::CONTEXT_GROUP)
+			$this->_where .= ' AND a.id_group_shop = '.(int)Shop::getContextGroupShopID();
+
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 		$shop_delete_list = array();
 
