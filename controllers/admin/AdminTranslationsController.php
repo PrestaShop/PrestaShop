@@ -87,7 +87,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'back' => $this->l('Back Office translations'),
 			'errors' => $this->l('Error message translations'),
 			'fields' => $this->l('Field name translations'),
-			'modules' => $this->l('Module translations'),
+			'modules' => $this->l('Translations of installed modules'),
 			'pdf' => $this->l('PDF translations'),
 			'mails' => $this->l('E-mail template translations'),
 		);
@@ -1710,6 +1710,12 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->displayWarning(Tools::displayError('There are no modules in your copy of PrestaShop. Use the Modules tab to activate them or go to our Website to download additional Modules.'));
 		else
 		{
+			// Get all module which are installed for to have a minimum of POST
+			$modules = Module::getModulesInstalled();
+
+			foreach ($modules as &$module)
+				$module = $module['name'];
+
 			$arr_find_and_fill = array();
 
 			$arr_files = $this->getAllModuleFiles($modules, _PS_MODULE_DIR_, $lang, true);
@@ -1727,7 +1733,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->tpl_view_vars = array(
 				'default_theme_name' => self::DEFAULT_THEME_NAME,
 				'lang' => Tools::strtoupper($lang),
-				'translation_type' => $this->l('Modules translations'),
+				'translation_type' => $this->l('Translations of installed modules'),
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 				'post_limit_exceeded' => $this->post_limit_exceed,
