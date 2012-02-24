@@ -498,7 +498,7 @@ $(document).ready(function() {
 
 	// Bind to delete specific price link
 	onTabLoad('Prices', function(){
-		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(){
+		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(e){
 			e.preventDefault();
 			deleteSpecificPrice(this.href, $(this).parents('tr'));
 		})
