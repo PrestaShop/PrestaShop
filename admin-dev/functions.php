@@ -418,10 +418,18 @@ function generateShopList()
 	foreach ($tree as $gID => $group_data)
 	{
 		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
-		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
-		foreach ($group_data['shops'] as $sID => $shopData)
-			if ($shopData['active'])
-				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+		if ($context->controller->multishop_context & Shop::CONTEXT_GROUP)
+			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+		else
+			$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';
+
+		if ($context->controller->multishop_context & Shop::CONTEXT_SHOP)
+			foreach ($group_data['shops'] as $sID => $shopData)
+				if ($shopData['active'])
+					$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+
+		if (!($context->controller->multishop_context & Shop::CONTEXT_GROUP))
+			$html .= '</optgroup>';
 	}
 	$html .= '</select>';
 
