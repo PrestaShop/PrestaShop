@@ -2107,6 +2107,9 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['tabs_preloaded'] = $this->available_tabs;
 
 		$this->addJqueryUI('ui.datepicker');
+        $this->addJqueryUI('ui.slider');
+        $this->addJS(_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
+
 		// getLanguages init this->_languages
 		$this->getLanguages();
 		$languages = $this->_languages;
@@ -3895,7 +3898,8 @@ class AdminProductsControllerCore extends AdminController
 			$this->addJqueryUI(array(
 				'ui.core',
 				'ui.widget',
-                'ui.accordion'
+                'ui.accordion',
+                'ui.slider'
 			));
 
 			$this->addJS(array(
@@ -3912,7 +3916,11 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'/jquery/ui/jquery.ui.progressbar.min.js'
 			));
-			$this->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
+
+			$this->addCSS(array(
+                _PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css',
+                _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
+            ));
 
 		}
 	}

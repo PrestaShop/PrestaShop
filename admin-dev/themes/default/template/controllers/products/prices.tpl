@@ -307,10 +307,23 @@ jQuery(document).ready(Customer.init);
 					$('#sp_current_ht_price').html(product_prices[$('#id_product_attribute option:selected').val()]);
 				});
 
-				$('.datepicker').datepicker({
+				$('.datepicker').datetimepicker({
 					prevText: '',
 					nextText: '',
-					dateFormat: 'yy-mm-dd'
+					dateFormat: 'yy-mm-dd',
+
+					// Define a custom regional settings in order to use PrestaShop translation tools
+					currentText: '{l s='Now'}',
+					closeText: '{l s='Done'}',
+					ampm: false,
+					amNames: ['AM', 'A'],
+					pmNames: ['PM', 'P'],
+					timeFormat: 'hh:mm tt',
+					timeSuffix: '',
+					timeOnlyTitle: '{l s='Choose Time'}',
+					timeText: '{l s='Time'}',
+					hourText: '{l s='Hour'}',
+					minuteText: '{l s='Minute'}',
 				});
 			});
 		</script>
