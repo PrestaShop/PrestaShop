@@ -146,7 +146,7 @@ jQuery(document).ready(Customer.init);
 				 <select onChange="javascript:calcPrice(); unitPriceWithTax('unit');" name="id_tax_rules_group" id="id_tax_rules_group" {if $tax_exclude_taxe_option}disabled="disabled"{/if} >
 					<option value="0">{l s='No Tax'}</option>
 					{foreach from=$tax_rules_groups item=tax_rules_group}
-						<option value="{$tax_rules_group.id_tax_rules_group}" {if $product->id_tax_rules_group == $tax_rules_group.id_tax_rules_group}selected="selected"{/if} >
+						<option value="{$tax_rules_group.id_tax_rules_group}" {if $product->getIdTaxRulesGroup() == $tax_rules_group.id_tax_rules_group}selected="selected"{/if} >
 							{$tax_rules_group['name']|htmlentitiesUTF8}
 						</option>
 					{/foreach}

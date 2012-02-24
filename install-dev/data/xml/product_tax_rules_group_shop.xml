@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<entity_product_tax_rules_group_shop>
+  <fields primary="id_product,id_tax_rules_group,id_shop">
+    <field name="id_product" relation="product"/>
+    <field name="id_tax_rules_group" relation="tax_rules_group"/>
+    <field name="id_shop" relation="shop"/>
+  </fields>
+  <entities>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_1_1_1" id_product="product_1" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_2_1_1" id_product="product_2" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_3_1_1" id_product="product_3" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_4_1_1" id_product="product_4" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_5_1_1" id_product="product_5" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_6_1_1" id_product="product_6" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+    <product_tax_rules_group_shop id="product_tax_rules_group_shop_7_1_1" id_product="product_7" id_tax_rules_group="tax_rules_group_1" id_shop="shop_1"/>
+  </entities>
+</entity_product_tax_rules_group_shop>

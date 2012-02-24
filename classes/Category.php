@@ -649,6 +649,8 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il
 					ON (i.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+					AND ptrgs.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr
 					ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)$context->country->id.'
