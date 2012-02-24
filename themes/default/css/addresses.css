@@ -49,11 +49,24 @@ ul.address li.address_delete {
    padding:20px 0
 }
 
-.address_delivery select {
+.address_select {
 	border:1px solid #ccc;
-	width:200px
+	width: 200px;
+	margin-left: 10px;
 }
-
+label[for=id_address_delivery], label[for=id_address_invoice] {
+	float: left;
+	width: 225px;
+}
+.addressesAreEquals label {
+	margin-left: 5px;
+}
+.addressesAreEquals input {
+	float: left;
+}
+p.address_delivery, p.addressesAreEquals {
+	padding-bottom: 14px
+}
 
 /* PAGE ADRESSES ******************************************************************************* */
 .addresses ul.address {
