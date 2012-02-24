@@ -249,6 +249,15 @@ class AdminGroupsControllerCore extends AdminController
 			)
 		);
 
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'group_shop',
+				'label' => $this->l('Group Shop association:'),
+				'name' => 'checkBoxShopAsso',
+			);
+		}
+
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$helper = new Helper();
