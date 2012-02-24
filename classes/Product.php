@@ -321,6 +321,13 @@ class ProductCore extends ObjectModel
 					'resourceName' => 'combinations'
 				)
 			),
+			'id_tax_rules_group' => array(
+				'getter' => 'getIdTaxRulesGroup',
+				'setter' => 'setTaxRulesGroup',
+				'xlink_resource' => array(
+					'resourceName' => 'tax_rules_group'
+				)
+			),
 			'position_in_category' => array(
 				'getter' => 'getWsPositionInCategory',
 				'setter' => false

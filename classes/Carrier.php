@@ -151,9 +151,15 @@ class CarrierCore extends ObjectModel
 
 	protected	$webserviceParameters = array(
 		'fields' => array(
-			'id_tax_rules_group' => array(),
 			'deleted' => array(),
 			'is_module' => array(),
+			'id_tax_rules_group' => array(
+				'getter' => 'getIdTaxRulesGroup',
+				'setter' => 'setTaxRulesGroup',
+				'xlink_resource' => array(
+					'resourceName' => 'tax_rules_group'
+				)
+			),
 		),
 	);
 
