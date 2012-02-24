@@ -152,13 +152,13 @@ class AdminCategoriesControllerCore extends AdminController
 		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (a.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
 		// we add restriction for shop
-		if (Shop::CONTEXT_SHOP == Context::getContext()->shop() && $is_multishop)
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
 			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->id;
 
 		$categories_tree = $this->_category->getParentsCategories();
 		if (empty($categories_tree)
 			&& ($this->_category->id_category != 1 || Tools::isSubmit('id_category'))
-			&& (Shop::CONTEXT_SHOP == Context::getContext()->shop() && !$is_multishop && $count_categories_without_parent > 1))
+			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !$is_multishop && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
 		asort($categories_tree);
