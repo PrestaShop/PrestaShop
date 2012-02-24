@@ -101,14 +101,38 @@ try
 
 	$context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-	$shopID = '';
+	$shop_id = '';
+	Shop::setContext(Shop::CONTEXT_ALL);
 	if ($context->cookie->shopContext)
 	{
 		$split = explode('-', $context->cookie->shopContext);
-		if (count($split) == 2 && $split[0] == 's')
-			$shopID = (int)$split[1];
+		if (count($split) == 2)
+		{
+			if ($split[0] == 'g')
+				Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+			else
+			{
+				Shop::setContext(Shop::CONTEXT_SHOP, $split[1]);
+				$shop_id = $split[1];
+			}
+		}
 	}
-	$context->shop = new Shop($shopID);
+	else if ($context->employee->id_profile == _PS_ADMIN_PROFILE_)
+		$shop_id = '';
+	else if ($context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$context->employee->id))
+	{
+		$shops = Employee::getEmployeeShopById((int)$context->employee->id);
+		if (count($shops))
+			$shop_id = (int)$shops[0];
+	}
+	else
+		Employee::getEmployeeShopAccess((int)$context->employee->id);
+
+	// Replace existing shop if necessary
+	if (!$shop_id)
+		$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+	else if ($context->shop->id != $shop_id)
+		$context->shop = new Shop($shop_id);
 }
 catch(PrestaShopException $e)
 {
