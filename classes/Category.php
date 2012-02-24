@@ -791,12 +791,12 @@ class CategoryCore extends ObjectModel
 					)' : '0').' AS nbSelectedSubCat
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->addSqlRestrictionOnLang('cl');
-		if (Context::getContext()->shop() == Shop::CONTEXT_SHOP && $use_shop_context)
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && $use_shop_context)
 			$sql .= '
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
 		$sql .= '
 				WHERE `id_lang` = '.(int)$id_lang;
-		if (Context::getContext()->shop() == Shop::CONTEXT_SHOP && $use_shop_context)
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && $use_shop_context)
 			$sql .= '
 					AND cs.`id_shop` = '.(int)$shop->id;
 		$sql .= '
