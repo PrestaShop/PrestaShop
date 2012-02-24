@@ -114,7 +114,6 @@ class AdminZonesControllerCore extends AdminController
 				'type' => 'group_shop',
 				'label' => $this->l('Group shop association:'),
 				'name' => 'checkBoxShopAsso',
-				'values' => Shop::getTree()
 			);
 		}
 
