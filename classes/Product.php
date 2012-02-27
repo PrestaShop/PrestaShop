@@ -422,6 +422,10 @@ class ProductCore extends ObjectModel
 			$this->loadStockData();
 		}
 
+		// update id_category_default
+		if ($this->id && !is_null($id_shop))
+			$this->id_category_default = $this->getDefaultCategory($id_shop);
+
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
 	}
@@ -442,6 +446,8 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
+		// add id_category_default to product_shop
+		$this->updateCategoryDefault();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return true;
 	}
@@ -449,6 +455,8 @@ class ProductCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		$return = parent::update($null_values);
+		// add id_category_default to product_shop
+		$this->updateCategoryDefault(Context::getContext()->shop);
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return $return;
 	}
@@ -1941,12 +1949,13 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-					p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`
+					p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`, asso_shop_product.`id_category_default`
 				FROM `'._DB_PREFIX_.'product` p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
@@ -2931,7 +2940,7 @@ class ProductCore extends ObjectModel
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (
-					p.`id_category_default` = cl.`id_category`
+					asso_shop_product.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
@@ -2940,11 +2949,12 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
 					AND ptrgs.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+					AND tr.`id_country` = '.(int)$context->country->id.'
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0).'
-				WHERE `id_product_1` = '.(int)$this->id.
+				WHERE asso_shop_product.`id_shop` = '.(int)$context->shop->id.'
+				AND `id_product_1` = '.(int)$this->id.
 				($active ? ' AND p.`active` = 1' : '');
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
@@ -4035,8 +4045,9 @@ class ProductCore extends ObjectModel
 			SELECT pl.`id_lang`, pl.`link_rewrite`, p.`ean13`, cl.`link_rewrite` AS category_rewrite
 			FROM `'._DB_PREFIX_.'product` p
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
+			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN `'._DB_PREFIX_.'lang` l ON (pl.`id_lang` = l.`id_lang`)
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`'.Shop::addSqlRestrictionOnLang('cl').')
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = asso_shop_product.`id_category_default`  AND cl.`id_lang` = pl.`id_lang`'.Shop::addSqlRestrictionOnLang('cl').')
 			WHERE p.`id_product` = '.(int)$id_product.'
 			AND l.`active` = 1
 		');
@@ -4793,5 +4804,40 @@ class ProductCore extends ObjectModel
 		$this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
 		$this->out_of_stock = StockAvailable::outOfStock($this->id);
 		$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
+	}
+
+	/**
+	 * get the default category according to the shop
+	 */
+	public function getDefaultCategory($id_shop = null)
+	{
+		$context = Context::getContext();
+		if (!$id_shop)
+			$id_shop = Shop::getContext() == Shop::CONTEXT_SHOP ? $context->shop->id : Configuration::get('PS_SHOP_DEFAULT');
+		return Db::getInstance()->getValue('
+			SELECT asso_shop_product.`id_category_default`
+			FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE asso_shop_product.`id_shop` = '.(int)$id_shop);
+
+	}
+
+	public static function getShopsByProduct($id_product)
+	{
+		return Db::getInstance()->executeS('
+			SELECT `id_shop`
+			FROM `'._DB_PREFIX_.'product_shop`
+			WHERE `id_product` = '.(int)$id_product);
+	}
+
+	public function updateCategoryDefault($shop = null)
+	{
+		if (is_null($shop))
+			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+		return Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'product_shop`
+			SET `id_category_default` = '.(int)$this->id_category_default.'
+			WHERE `id_shop` = '.(int)$shop->id.'
+			AND `id_product` = '.(int)$this->id);
 	}
 }

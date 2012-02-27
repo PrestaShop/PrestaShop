@@ -376,7 +376,7 @@ class CartCore extends ObjectModel
 
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
-						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`,
+						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, ps.`id_category_default`, p.`id_supplier`,
 						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
 						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
@@ -406,8 +406,12 @@ class CartCore extends ObjectModel
 			t.`id_tax` = tl.`id_tax`
 			AND tl.`id_lang` = '.(int)$this->id_lang
 		);
+		$sql->leftJoin('product_shop', 'ps', '
+			ps.`id_product` = p.`id_product`
+			AND ps.`id_shop` = '.(int)Context::getContext()->shop->id
+		);
 		$sql->leftJoin('category_lang', 'cl', '
-			p.`id_category_default` = cl.`id_category`
+			ps.`id_category_default` = cl.`id_category`
 			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl')
 		);
 
@@ -419,6 +423,7 @@ class CartCore extends ObjectModel
 		if ($id_product)
 			$sql->where('cp.`id_product` = '.(int)$id_product);
 		$sql->where('p.`id_product` IS NOT NULL');
+		$sql->where('ps.`id_shop` = '.(int)Context::getContext()->shop->id);
 
 		// Build GROUP BY
 		$sql->groupBy('unique_id');

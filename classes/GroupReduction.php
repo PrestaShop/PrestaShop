@@ -59,9 +59,9 @@ class GroupReductionCore extends ObjectModel
 	public function delete()
 	{
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT p.`id_product`
-			FROM `'._DB_PREFIX_.'product` p
-			WHERE p.`id_category_default` = '.(int)$this->id_category
+			SELECT ps.`id_product`
+			FROM `'._DB_PREFIX_.'product_shop` ps
+			WHERE ps.`id_category_default` = '.(int)$this->id_category
 		);
 
 		$ids = array();
@@ -81,9 +81,9 @@ class GroupReductionCore extends ObjectModel
 	protected function _setCache()
 	{
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT p.`id_product`
-			FROM `'._DB_PREFIX_.'product` p
-			WHERE p.`id_category_default` = '.(int)$this->id_category
+			SELECT ps.`id_product`
+			FROM `'._DB_PREFIX_.'product_shop` ps
+			WHERE ps.`id_category_default` = '.(int)$this->id_category
 		);
 
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
@@ -102,9 +102,9 @@ class GroupReductionCore extends ObjectModel
 	protected function _updateCache()
 	{
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT p.`id_product`
-			FROM `'._DB_PREFIX_.'product` p
-			WHERE p.`id_category_default` = '.(int)$this->id_category,
+			SELECT ps.`id_product`
+			FROM `'._DB_PREFIX_.'product_shop` ps
+			WHERE ps.`id_category_default` = '.(int)$this->id_category,
 		false);
 
 		$ids = array();

@@ -2045,6 +2045,7 @@ PRIMARY KEY (`id_store`, `id_shop`),
 CREATE TABLE `PREFIX_product_shop` (
 `id_product` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`id_category_default` INT( 11 ) UNSIGNED DEFAULT NULL,
 PRIMARY KEY ( `id_shop` , `id_product` ),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

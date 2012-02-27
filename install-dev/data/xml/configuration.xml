@@ -866,5 +866,11 @@
     <configuration id="PS_STORES_ICON" name="PS_STORES_ICON">
       <value>logo_stores.gif</value>
     </configuration>
+    <configuration id="PS_ROOT_CATEGORY" name="PS_ROOT_CATEGORY">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_HOME_CATEGORY" name="PS_HOME_CATEGORY">
+      <value>2</value>
+    </configuration>
   </entities>
 </entity_configuration>

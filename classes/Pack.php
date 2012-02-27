@@ -109,7 +109,7 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return array();
 
-		$sql = 'SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity
+		$sql = 'SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity, asso_shop_product.`id_category_default`
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
@@ -117,17 +117,19 @@ class PackCore extends Product
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-					ON p.`id_category_default` = cl.`id_category`
+					ON asso_shop_product.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
 					AND ptrgs.id_shop='.(int)Context::getContext()->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
-			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
-				WHERE a.`id_product_pack` = '.(int)$id_product;
+				WHERE asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
+				AND a.`id_product_pack` = '.(int)$id_product;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$full)
 			return $result;

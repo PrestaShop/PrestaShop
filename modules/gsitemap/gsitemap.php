@@ -172,7 +172,7 @@ XML;
 				FROM '._DB_PREFIX_.'product p
 				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_shop ='.$shopID.')
-				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (p.id_category_default = cl.id_category AND pl.id_lang = cl.id_lang AND cl.id_shop = '.$shopID.')
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (ps.id_category_default = cl.id_category AND pl.id_lang = cl.id_lang AND cl.id_shop = '.$shopID.')
 				LEFT JOIN '._DB_PREFIX_.'image i ON p.id_product = i.id_product
 				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image)
 				LEFT JOIN '._DB_PREFIX_.'lang l ON (pl.id_lang = l.id_lang)

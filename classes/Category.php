@@ -353,10 +353,10 @@ class CategoryCore extends ObjectModel
 			}
 		}
 
-		/* Set category default to 1 where categorie no more exists */
+		/* Set category default to Home category where categorie no more exists */
 		$result = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'product`
-			SET `id_category_default` = 1
+			UPDATE `'._DB_PREFIX_.'product_shop`
+			SET `id_category_default` = '.(int)Configuration::get('PS_HOME_CATEGORY').'
 			WHERE `id_category_default`
 			NOT IN (SELECT `id_category` FROM `'._DB_PREFIX_.'category`)
 		');
@@ -638,7 +638,7 @@ class CategoryCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-					ON (p.`id_category_default` = cl.`id_category`
+					ON (asso_shop_product.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product`
@@ -663,7 +663,8 @@ class CategoryCore extends ObjectModel
 					AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE cp.`id_category` = '.(int)$this->id
+				WHERE asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
+				AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND p.`active` = 1' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
@@ -696,7 +697,7 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function getHomeCategories($id_lang, $active = true)
 	{
-		return self::getChildren(1, $id_lang, $active);
+		return self::getChildren(Configuration::get('PS_HOME_CATEGORY'), $id_lang, $active);
 	}
 
 	public static function getRootCategory($id_lang = null, Shop $shop = null)
@@ -844,7 +845,7 @@ class CategoryCore extends ObjectModel
 	public static function checkBeforeMove($id_category, $id_parent)
 	{
 		if ($id_category == $id_parent) return false;
-		if ($id_parent == 1) return true;
+		if ($id_parent == Configuration::get('PS_HOME_CATEGORY')) return true;
 		$i = (int)$id_parent;
 
 		while (42)
@@ -852,7 +853,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance()->getRow('SELECT `id_parent` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.(int)$i);
 			if (!isset($result['id_parent'])) return false;
 			if ($result['id_parent'] == $id_category) return false;
-			if ($result['id_parent'] == 1) return true;
+			if ($result['id_parent'] == Configuration::get('PS_HOME_CATEGORY')) return true;
 			$i = $result['id_parent'];
 		}
 	}
@@ -920,8 +921,8 @@ class CategoryCore extends ObjectModel
 					ON (c.`id_category` = cl.`id_category`
 					AND `id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 				WHERE `name` LIKE \'%'.pSQL($query).'%\'
-				AND c.`id_category` != 1
-			');
+				AND c.`id_category` != '.(int)Configuration::get('PS_HOME_CATEGORY')
+			);
 	}
 
 	/**
@@ -941,7 +942,7 @@ class CategoryCore extends ObjectModel
 		    	ON (c.`id_category` = cl.`id_category`
 		    	AND `id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 		    WHERE `name`  LIKE \''.pSQL($category_name).'\'
-				AND c.`id_category` != 1
+				AND c.`id_category` != '.(int)Configuration::get('PS_HOME_CATEGORY').'
 				AND c.`id_parent` = '.(int)$id_parent_category
 		);
 	}
