@@ -36,6 +36,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -70,8 +71,6 @@ class AdminStockManagementControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 
 		// overrides confirmation messages specifically for this controller
 		$this->_conf = array(

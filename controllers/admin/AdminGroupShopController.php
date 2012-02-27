@@ -33,6 +33,7 @@ class AdminGroupShopControllerCore extends AdminController
 		$this->className = 'GroupShop';
 		$this->lang = false;
 		$this->requiredDatabase = true;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->addRowAction('edit');
 
@@ -67,8 +68,6 @@ class AdminGroupShopControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	public function renderForm()

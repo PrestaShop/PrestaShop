@@ -38,6 +38,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->table = 'stock';
 		$this->className = 'Stock';
 		$this->lang = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -102,8 +103,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 		array_unshift($this->stock_instant_state_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**

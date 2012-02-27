@@ -255,7 +255,7 @@ class AdminControllerCore extends Controller
 	 */
 	public $controller_name;
 
-	public $multishop_context;
+	public $multishop_context = -1;
 
 	public function __construct()
 	{
@@ -266,7 +266,8 @@ class AdminControllerCore extends Controller
 
 		parent::__construct();
 
-		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
+		if ($this->multishop_context == -1)
+			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 		$this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template');

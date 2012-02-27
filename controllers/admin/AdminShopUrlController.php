@@ -33,6 +33,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->context = Context::getContext();
 
@@ -88,8 +89,6 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	public function renderList()

@@ -44,6 +44,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
 	 	$this->is_template_list = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->addRowAction('updatereceipt');
 		$this->addRowAction('changestate');
@@ -113,8 +114,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		array_unshift($this->warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**
