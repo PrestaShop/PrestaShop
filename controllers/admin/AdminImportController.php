@@ -227,8 +227,8 @@ class AdminImportControllerCore extends AdminController
 				);
 
 				self::$default_values = array(
-					'id_category' => array(1),
-					'id_category_default' => 1,
+					'id_category' => array((int)Configuration::get('PS_HOME_CATEGORY')),
+					'id_category_default' => (int)Configuration::get('PS_HOME_CATEGORY'),
 					'active' => '1',
 					'quantity' => 0,
 					'price' => 0,
@@ -1040,7 +1040,7 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create = new Category();
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
-							$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
+							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 								$product->id_category[] = (int)$category_to_create->id;
@@ -1057,6 +1057,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
+
 			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? $product->link_rewrite[$default_language_id] : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
@@ -1090,7 +1091,7 @@ class AdminImportControllerCore extends AdminController
 						FROM `'._DB_PREFIX_.'product`
 						WHERE `reference` = "'.$product->reference.'"
 					');
-					$product->id = pSQL($datas['id_product']);
+					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				} // Else If id product && id product already in base, trying to update
@@ -1243,6 +1244,9 @@ class AdminImportControllerCore extends AdminController
 				// clean feature positions to avoid conflict
 				Feature::cleanPositions();
 			}
+
+			// stock available
+			StockAvailable::setQuantity((int)$product->id, 0, $product->quantity);
 		}
 		$this->closeCsvFile($handle);
 	}
