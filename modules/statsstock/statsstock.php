@@ -68,7 +68,7 @@ class StatsStock extends Module
 				), p.wholesale_price) as wholesale_price,
 				IFNULL(stock.quantity, 0) as quantity
 				FROM '._DB_PREFIX_.'product p
-				'.$this->context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				INNER JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
 				'.Product::sqlStock('p', 0).'

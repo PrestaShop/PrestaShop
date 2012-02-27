@@ -195,14 +195,11 @@ class CurrencyCore extends ObjectModel
 	 *
 	 * @return array Currencies
 	 */
-	public static function getCurrencies($object = false, $active = 1, Shop $shop = null)
+	public static function getCurrencies($object = false, $active = 1)
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'currency` c
-				'.$shop->addSqlAssociation('currency', 'c').'
+				'.Shop::addSqlAssociation('currency', 'c').'
 				WHERE `deleted` = 0'
 					.($active == 1 ? ' AND c.`active` = 1' : '').'
 				GROUP BY c.id_currency

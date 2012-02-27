@@ -44,15 +44,12 @@ class ProductSaleCore
 	** Get number of actives products sold
 	** @return int number of actives products listed in product_sales
 	*/
-	public static function getNbSales(Context $context = null)
+	public static function getNbSales()
 	{
-		if (!$context)
-			$context = Context::getContext();
-
 		$sql = 'SELECT COUNT(ps.`id_product`) AS nb
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ps.`id_product`
-				'.$context->shop->addSqlAssociation('product', 'p', false).'
+				'.Shop::addSqlAssociation('product', 'p', false).'
 				WHERE p.`active` = 1';
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
@@ -65,11 +62,8 @@ class ProductSaleCore
 	** @param integer $nb_products Number of products to return (optional)
 	** @return array from Product::getProductProperties
 	*/
-	public static function getBestSales($id_lang, $page_number = 0, $nb_products = 10, $order_by = null, $order_way = null, Context $context = null)
+	public static function getBestSales($id_lang, $page_number = 0, $nb_products = 10, $order_by = null, $order_way = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
 		if (empty($order_by) || $order_by == 'position') $order_by = 'sales';
@@ -89,7 +83,7 @@ class ProductSaleCore
 					INTERVAL '.$interval.' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
-				'.$context->shop->addSqlAssociation('product', 'p', false).'
+				'.Shop::addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
@@ -144,7 +138,7 @@ class ProductSaleCore
 					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
-				'.$context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'

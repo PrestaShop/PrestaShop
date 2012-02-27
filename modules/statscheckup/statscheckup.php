@@ -99,7 +99,7 @@ class StatsCheckUp extends Module
 		// Get languages
 		$sql = 'SELECT l.*
 				FROM '._DB_PREFIX_.'lang l'
-				.$this->context->shop->addSqlAssociation('lang', 'l');
+				.Shop::addSqlAssociation('lang', 'l');
 		$languages = $db->executeS($sql);
 
 		$arrayColors = array(
@@ -126,7 +126,7 @@ class StatsCheckUp extends Module
 		$sql = 'SELECT p.id_product, p.active, pl.name, (
 					SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'image i
-					'.$this->context->shop->addSqlAssociation('image', 'i').'
+					'.Shop::addSqlAssociation('image', 'i').'
 					WHERE i.id_product = p.id_product
 				) as nbImages, (
 					SELECT SUM(od.product_quantity)
@@ -141,7 +141,7 @@ class StatsCheckUp extends Module
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-				'.$this->context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->executeS($sql);
 

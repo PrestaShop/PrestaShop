@@ -91,7 +91,7 @@ class CMSCore extends ObjectModel
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
 		FROM '._DB_PREFIX_.'cms c
 		LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = '.(int)$id_lang.')
-		'.Context::getContext()->shop->addSqlAssociation('cms', 'c').'
+		'.Shop::addSqlAssociation('cms', 'c').'
 		WHERE 1
 		'.(($selection !== null) ? ' AND c.id_cms IN ('.implode(',', array_map('intval', $selection)).')' : '').
 		($active ? ' AND c.`active` = 1 ' : '').
@@ -117,7 +117,7 @@ class CMSCore extends ObjectModel
 		SELECT c.id_cms, l.meta_title
 		FROM  '._DB_PREFIX_.'cms c
 		JOIN '._DB_PREFIX_.'cms_lang l ON (c.id_cms = l.id_cms)
-		'.Context::getContext()->shop->addSqlAssociation('cms', 'c').'
+		'.Shop::addSqlAssociation('cms', 'c').'
 		'.(($id_block) ? 'JOIN '._DB_PREFIX_.'block_cms b ON (c.id_cms = b.id_cms)' : '').'
 		WHERE l.id_lang = '.(int)$id_lang.(($id_block) ? ' AND b.id_block = '.(int)$id_block : '').($active ? ' AND c.`active` = 1 ' : '').'
 		GROUP BY c.id_cms

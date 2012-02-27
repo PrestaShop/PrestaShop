@@ -615,7 +615,7 @@ class CategoryCore extends ObjectModel
 		{
 			$sql = 'SELECT COUNT(cp.`id_product`) AS total
 					FROM `'._DB_PREFIX_.'product` p
-					'.$context->shop->addSqlAssociation('product', 'p').'
+					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)$this->id.
 					($active ? ' AND p.`active` = 1' : '').
@@ -635,7 +635,7 @@ class CategoryCore extends ObjectModel
 					ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product` AND default_on = 1)
-				'.$context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (p.`id_category_default` = cl.`id_category`
@@ -737,7 +737,7 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-		'.Context::getContext()->shop->addSqlAssociation('category', 'c').'
+		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE `id_lang` = '.(int)$id_lang.'
 		AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 		AND c.`id_parent` = '.(int)$id_parent.'
