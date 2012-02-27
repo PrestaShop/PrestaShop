@@ -157,10 +157,10 @@ class BlockCMSModel extends ObjectModel
 		return Db::getInstance()->Insert_ID();
 	}
 
-	public static function insertCMSBlockShop($id_cms_block, $id_group_shop, $id_shop)
+	public static function insertCMSBlockShop($id_cms_block, $id_shop)
 	{
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'cms_block_shop` (`id_cms_block`, `id_group_shop`, `id_shop`)
-				VALUES('.(int)$id_cms_block.', '.(int)$id_group_shop.', '.(int)$id_shop.')';
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'cms_block_shop` (`id_cms_block`, `id_shop`)
+				VALUES('.(int)$id_cms_block.', '.(int)$id_shop.')';
 
 		Db::getInstance()->execute($sql);
 
@@ -521,11 +521,11 @@ class BlockCMSModel extends ObjectModel
 		return $titles;
 	}
 
-	public static function getCMSTitles($location, $id_group_shop = false, $id_shop = false)
+	public static function getCMSTitles($location, $id_shop = false)
 	{
 		$content = array();
 		$context = Context::getContext();
-		$cmsCategories = BlockCMSModel::getCMSCategoriesByLocation($location, $id_group_shop, $id_shop);
+		$cmsCategories = BlockCMSModel::getCMSCategoriesByLocation($location, $id_shop);
 
 		if (is_array($cmsCategories) && count($cmsCategories))
 		{
