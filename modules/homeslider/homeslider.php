@@ -517,7 +517,7 @@ class HomeSlider extends Module
 			else
 				$slide->active = 0;
 			$res = $slide->update();
-			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayErro($this->l('Configuration could not be updated')));
+			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayError($this->l('Configuration could not be updated')));
 		}
 		/* Processes Slide */
 		else if (Tools::isSubmit('submitSlide'))
@@ -613,10 +613,10 @@ class HomeSlider extends Module
 	public function hookHome()
 	{
 		$slider = array(
-				 'width' => Configuration::get('HOMESLIDER_WIDTH'),
-				 'height' => Configuration::get('HOMESLIDER_HEIGHT'),
-				 'speed' => Configuration::get('HOMESLIDER_SPEED'),
-				 'pause' => Configuration::get('HOMESLIDER_PAUSE')
+			'width' => Configuration::get('HOMESLIDER_WIDTH'),
+			'height' => Configuration::get('HOMESLIDER_HEIGHT'),
+			'speed' => Configuration::get('HOMESLIDER_SPEED'),
+			'pause' => Configuration::get('HOMESLIDER_PAUSE')
 		);
 
 		$slides = $this->getSlides(true);
