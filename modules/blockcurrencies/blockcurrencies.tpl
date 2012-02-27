@@ -61,16 +61,4 @@ $(document).ready(function () {
 		</ul>
 	</form>
 </div>
-
-{if isset($hook_mobile)}
-<div class="ui-block-a">
-	<div data-role="fieldcontain">
-		<select name="select-choice-1" id="select-choice-1">
-			<option value="standard">€ Euros</option>
-			<option value="rush">$ Dollars</option>
-		</select>
-	</div>
-</div>
-{/if}
-
 <!-- /Block currencies module -->
