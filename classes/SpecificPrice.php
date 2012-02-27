@@ -397,5 +397,21 @@ class SpecificPriceCore extends ObjectModel
 	{
 		return Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
 	}
+	
+	public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to)
+	{
+		return (int)Db::getInstance()->getValue('SELECT `id_specific_price`
+																FROM '._DB_PREFIX_.'specific_price
+																WHERE `id_product`='.(int)$id_product.' AND
+																	`id_product_attribute`='.(int)$id_product_attribute.' AND
+																	`id_shop`='.(int)$id_shop.' AND
+																	`id_group`='.(int)$id_group.' AND
+																	`id_country`='.(int)$id_country.' AND
+																	`id_currency`='.(int)$id_currency.' AND
+																	`id_customer`='.(int)$id_customer.' AND
+																	`from_quantity`='.(int)$from_quantity.' AND
+																	`from` >= \''.pSQL($from).'\' AND
+																	 `to` <= \''.pSQL($to).'\'');
+	}
 }
 

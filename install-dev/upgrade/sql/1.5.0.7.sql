@@ -8,8 +8,6 @@ UPDATE `PREFIX_product` set is_virtual = 1 WHERE id_product IN (SELECT id_produc
 
 ALTER TABLE `PREFIX_employee` ADD `bo_width` int(10) unsigned NOT NULL DEFAULT 0 AFTER `bo_theme`;
 
-
-
 CREATE TABLE `PREFIX_product_tax_rules_group_shop` (
 	`id_product` INT(11) UNSIGNED NOT NULL,
 	`id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
@@ -32,4 +30,8 @@ INSERT INTO `PREFIX_carrier_tax_rules_group_shop` (`id_carrier`, `id_tax_rules_g
 	(SELECT `id_carrier`, `id_tax_rules_group`, `id_shop` FROM `PREFIX_carrier`, `PREFIX_shop`);
 ALTER TABLE `PREFIX_carrier` DROP `id_tax_rules_group`;
 
-ALTER TABLE  `PREFIX_product_shop` ADD  `id_category_default` INT( 11 ) UNSIGNED DEFAULT NULL;
+ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
+	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
+
+ALTER TABLE `PREFIX_specific_price` ADD UNIQUE (`id_product`,`id_shop`,`id_group_shop`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX (`id_cart`);
