@@ -49,6 +49,16 @@ class BlockCurrencies extends Module
 		return parent::install() && $this->registerHook('top') && $this->registerHook('header');
 	}
 
+	private function _prepareHook($params)
+	{
+		if (Configuration::get('PS_CATALOG_MODE'))
+			return;
+
+		if (!count(Currency::getCurrencies()))
+			return '';
+		$this->smarty->assign('blockcurrencies_sign', $this->context->currency->sign);
+	}
+
 	/**
 	* Returns module content for header
 	*
@@ -57,12 +67,7 @@ class BlockCurrencies extends Module
 	*/
 	public function hookTop($params)
 	{
-		if (Configuration::get('PS_CATALOG_MODE'))
-			return;
-
-		if (!count(Currency::getCurrencies()))
-			return '';
-		$this->smarty->assign('blockcurrencies_sign', $this->context->currency->sign);
+		$this->_prepareHook($params);
 		return $this->display(__FILE__, 'blockcurrencies.tpl');
 	}
 
@@ -73,10 +78,10 @@ class BlockCurrencies extends Module
 		$this->context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
 
-	public function hookMobileFooterChoice($params)
+	public function hookDisplayMobileFooterChoice($params)
 	{
-		$this->smarty->assign('hook_mobile', true);
-		$this->hookTop($params);
+		$this->_prepareHook($params);
+		return $this->display(__FILE__, 'blockmobilecurrencies.tpl');
 	}
 }
 
