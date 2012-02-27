@@ -103,6 +103,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)';
 		$this->_where = 'AND a.cache_is_pack = 0 AND a.is_virtual = 0';
+		$this->_group = 'GROUP BY a.id_product';
 
 		// displays informations
 		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
