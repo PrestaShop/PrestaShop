@@ -238,10 +238,6 @@ class AdminCustomersControllerCore extends AdminController
 			$list_genders[$key]['value'] = $gender->id;
 			$list_genders[$key]['label'] = $gender->name;
 		}
-		$key++;
-		$list_genders[$key]['id'] = 'gender_unknown';
-		$list_genders[$key]['value'] = 0;
-		$list_genders[$key]['label'] = $this->l('Unknown');
 
 		$years = Tools::dateYears();
 		$months = Tools::dateMonths();
@@ -729,7 +725,7 @@ class AdminCustomersControllerCore extends AdminController
 		if ($customer->id)
 			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 		else
-		{	
+		{
 			if ($customer = parent::processAdd($token))
 			{
 				$this->context->smarty->assign('new_customer', $customer);
