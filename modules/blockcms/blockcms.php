@@ -178,11 +178,12 @@ class BlockCms extends Module
 					'label' => $this->l('CMS Blocks :'),
 					'name' => 'cms_blocks',
 					'values' => array(
-						0 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::LEFT_COLUMN),
-						1 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::RIGHT_COLUMN))
+						0 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::LEFT_COLUMN, Shop::getContextShopID()),
+						1 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::RIGHT_COLUMN, Shop::getContextShopID()))
 				)
 			)
 		);
+
 		$this->fields_form[1]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
