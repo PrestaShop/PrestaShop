@@ -276,6 +276,10 @@ class ManufacturerCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+			
 		if ($p < 1)
 			$p = 1;
 
@@ -299,6 +303,7 @@ class ManufacturerCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE p.id_manufacturer = '.(int)$id_manufacturer
 				.($active ? ' AND p.`active` = 1' : '').'
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
@@ -350,8 +355,9 @@ class ManufacturerCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				'.Product::sqlStock('p', 0).'
-				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.($active ? '
-					AND p.`active` = 1' : '').'
+				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
+				'.($active ? ' AND p.`active` = 1' : '').'
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -376,15 +382,20 @@ class ManufacturerCore extends ObjectModel
 
 	public function getProductsLite($id_lang)
 	{
-		$sql = 'SELECT p.`id_product`,  pl.`name`
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				)
-				WHERE p.`id_manufacturer` = '.(int)$this->id;
-
-		return Db::getInstance()->executeS($sql);
+		$context = Context::getContext();
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+			
+		return Db::getInstance()->executeS('
+		SELECT p.`id_product`,  pl.`name`
+		FROM `'._DB_PREFIX_.'product` p
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+			p.`id_product` = pl.`id_product`
+			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+		)
+		WHERE p.`id_manufacturer` = '.(int)$this->id.
+		($front ? ' AND p.`visibility` IN ("both", "catalog")' : ''));
 	}
 
 	/*

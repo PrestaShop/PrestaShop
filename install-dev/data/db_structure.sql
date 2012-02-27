@@ -1366,6 +1366,7 @@ CREATE TABLE `PREFIX_product` (
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL default '1',
   `indexed` tinyint(1) NOT NULL default '0',
+  `visibility` ENUM('both', 'catalog', 'search', 'none') NOT NULL default 'both',
   `cache_is_pack` tinyint(1) NOT NULL default '0',
   `cache_has_attachments` tinyint(1) NOT NULL default '0',
   `is_virtual` tinyint(1) NOT NULL default '0',

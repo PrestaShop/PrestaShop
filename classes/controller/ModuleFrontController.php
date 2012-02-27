@@ -37,6 +37,8 @@ class ModuleFrontControllerCore extends FrontController
 
 	public function __construct()
 	{
+		$this->controller_type = 'modulefront';
+		
 		$this->module = Module::getInstanceByName(Tools::getValue('module'));
 		if (!$this->module->active)
 			Tools::redirect('index');

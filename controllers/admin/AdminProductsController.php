@@ -440,7 +440,8 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					Hook::exec('actionProductAdd', array('product' => $product));
-					Search::indexation(false, $product->id);
+					if (in_array($product->visibility, array('both', 'search')))
+						Search::indexation(false, $product->id);
 					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.($token ? $token : $this->token);
 				}
 			}
@@ -1436,7 +1437,8 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					Hook::exec('actionProductAdd', array('product' => $this->object));
-					Search::indexation(false, $this->object->id);
+					if (in_array($this->object->visibility, array('both', 'search')))
+						Search::indexation(false, $this->object->id);
 				}
 
 				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
@@ -1505,7 +1507,8 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$this->_removeTaxFromEcotax();
 				$this->copyFromPost($object, $this->table);
-
+				$object->indexed = 0;
+				
 				if ($object->update())
 				{
 					$this->addCarriers();
@@ -1529,7 +1532,8 @@ class AdminProductsControllerCore extends AdminController
 					elseif (empty($this->errors))
 					{
 						Hook::exec('actionProductUpdate', array('product' => $object));
-						Search::indexation(false, $object->id);
+						if (in_array($object->visibility, array('both', 'search')))
+							Search::indexation(false, $object->id);
 
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))

@@ -579,7 +579,11 @@ class CategoryCore extends ObjectModel
 			$context = Context::getContext();
 		if (!$check_access || !$this->checkAccess($context->customer->id))
 			return false;
-
+		
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+			
 		if ($p < 1) $p = 1;
 
 		if (empty($order_by))
@@ -618,6 +622,7 @@ class CategoryCore extends ObjectModel
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)$this->id.
+					($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').
 					($active ? ' AND p.`active` = 1' : '').
 					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -666,6 +671,7 @@ class CategoryCore extends ObjectModel
 				WHERE asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
 				AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND p.`active` = 1' : '')
+					.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
 		if ($random === true)

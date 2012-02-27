@@ -193,6 +193,11 @@ class SupplierCore extends ObjectModel
 	public static function getProducts($id_supplier, $id_lang, $p, $n,
 		$order_by = null, $order_way = null, $get_total = false, $active = true, $active_category = true)
 	{
+		$context = Context::getContext();
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+		
 		if ($p < 1) $p = 1;
 	 	if (empty($order_by) || $order_by == 'position') $order_by = 'name';
 	 	if (empty($order_way)) $order_way = 'ASC';
@@ -213,6 +218,7 @@ class SupplierCore extends ObjectModel
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 				AND ps.id_product_attribute = 0'.
 				($active ? ' AND p.`active` = 1' : '').'
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
@@ -271,6 +277,7 @@ class SupplierCore extends ObjectModel
 				'.Product::sqlStock('p').'
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.
 					($active ? ' AND p.`active` = 1' : '').'
+					'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -294,6 +301,11 @@ class SupplierCore extends ObjectModel
 
 	public function getProductsLite($id_lang)
 	{
+		$context = Context::getContext();
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+			
 		$sql = '
 			SELECT p.`id_product`,
 				   pl.`name`
@@ -306,6 +318,7 @@ class SupplierCore extends ObjectModel
 				ps.`id_product` = p.`id_product`
 				AND ps.`id_supplier` = '.(int)$this->id.'
 			)
+			'.($front ? ' WHERE p.`visibility` IN ("both", "catalog")' : '').'
 			GROUP BY p.`id_product`';
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

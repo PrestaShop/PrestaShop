@@ -74,6 +74,8 @@ abstract class ControllerCore
 
 	protected $redirect_after = null;
 	
+	public $controller_type;
+	
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */

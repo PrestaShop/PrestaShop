@@ -85,22 +85,30 @@
 	<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 	<tr>
 		<td class="col-left">
-		
-
-		<label class="text">{l s='Status:'}</label></td>
+			<label class="text">{l s='Status:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
 				<li>
 					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-			<label for="active_on" class="radioCheck">
-			{l s='Enabled'}</label>
-			</li>
-
+					<label for="active_on" class="radioCheck">{l s='Enabled'}</label>
+				</li>
 				<li>
 					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
-			<label for="active_off" class="radioCheck">{l s='Disabled'} </label>
+					<label for="active_off" class="radioCheck">{l s='Disabled'}</label>
 				</li>
 			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td class="col-left"><label>{l s='Visibility:'}</label></td>
+		<td style="padding-bottom:5px;">
+			<select name="visibility" id="visibility">
+				<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
+				<option value="catalog" {if $product->visibility == 'catalog'}selected="selected"{/if} >{l s='Catalog only'}</option>
+				<option value="search" {if $product->visibility == 'search'}selected="selected"{/if} >{l s='Search only'}</option>
+				<option value="none" {if $product->visibility == 'none'}selected="selected"{/if}>{l s='Nowhere'}</option>
+			</select>
 		</td>
 	</tr>
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
