@@ -254,8 +254,9 @@ class SearchCore
 						p.`id_product` = pl.`id_product`
 						AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 					)
+					'.Shop::addSqlAssociation('product', 'p').'
 					INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (
-						p.`id_category_default` = cl.`id_category`
+						asso_shop_product.`id_category_default` = cl.`id_category`
 						AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 					)
 					WHERE p.`id_product` '.$product_pool.'
@@ -374,8 +375,9 @@ class SearchCore
 			FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
+			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl
-				ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang)
+				ON (cl.id_category = asso_shop_product.id_category_default AND pl.id_lang = cl.id_lang)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
 				ON m.id_manufacturer = p.id_manufacturer
 			WHERE p.indexed = 0

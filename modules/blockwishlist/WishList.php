@@ -248,11 +248,12 @@ class WishList extends ObjectModel
 			die (Tools::displayError());
 		$products = Db::getInstance()->executeS('
 		SELECT wp.`id_product`, wp.`quantity`, p.`quantity` AS product_quantity, pl.`name`, wp.`id_product_attribute`, wp.`priority`, pl.link_rewrite, cl.link_rewrite AS category_rewrite
-	  FROM `'._DB_PREFIX_.'wishlist_product` wp
+		FROM `'._DB_PREFIX_.'wishlist_product` wp
 		JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = wp.`id_product`
+		'.Shop::addSqlAssociation('product', 'p').'
 		JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = wp.`id_product`'.Shop::addSqlRestrictionOnLang('pl').'
 		JOIN `'._DB_PREFIX_.'wishlist` w ON w.`id_wishlist` = wp.`id_wishlist`
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = p.`id_category_default` AND cl.id_lang='.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = asso_shop_product.`id_category_default` AND cl.id_lang='.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 		WHERE w.`id_customer` = '.(int)($id_customer).'
 		AND pl.`id_lang` = '.(int)($id_lang).'
 		AND wp.`id_wishlist` = '.(int)($id_wishlist).

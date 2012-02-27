@@ -58,10 +58,10 @@
 			<td class="col-right">
 				<select id="id_category_default" name="id_category_default">
 					{foreach from=$selected_cat item=cat}
-						<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
+						<option value="{$cat.id_category}" {if $id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 					{/foreach}
 				</select>
-                <div class="hint" style="display:block;">{l s='The default category is the category who is displayed by default.'}</div>
+				<div class="hint" style="display:block;">{l s='The default category is the category who is displayed by default.'}</div>
 			</td>
 		</tr>
 	</table>

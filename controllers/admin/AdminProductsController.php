@@ -2549,6 +2549,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
+					'id_category_default' => $product->getDefaultCategory(),
 					'category_tree' => $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, true),
 					'product' => $product,
 					'link' => $this->context->link
@@ -3271,7 +3272,7 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign(array(
 				'list' => $this->renderListAttributes($id_product_download, $product, $currency),
 				'product' => $product,
-				'id_category' => $product->id_category_default,
+				'id_category' => $product->getDefaultCategory(),
 				'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator')
 			));
 		}
@@ -3942,5 +3943,40 @@ class AdminProductsControllerCore extends AdminController
 				</p>
 			</div>';
 			$this->tpl_form_vars['warning_unavailable_product'] = $content;
+	}
+
+	protected function updateAssoShop($id_object = false, $new_id_object = false)
+	{
+		$assos_data = $this->getAssoShop($this->table, $id_object);
+		$assos = $assos_data[0];
+		$type = $assos_data[1];
+
+		$product_shop = Product::getShopsByProduct($id_object);
+
+		if (!$type)
+			return;
+
+		$delete = $insert = '';
+		foreach ($assos as $asso)
+		{
+			$passed = false;
+			$delete .= (int)$asso['id_'.$type].',';
+			foreach ($product_shop as $product)
+				if ($product['id_shop'] == $asso['id_'.$type])
+					$passed = true;
+			if (!$passed)
+				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].'),';
+		}
+		$delete = rtrim($delete, ',');
+		$insert = rtrim($insert, ',');
+
+		if (!empty($delete))
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
+				($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
+
+		if (!empty($insert))
+			Db::getInstance()->execute('
+				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
+				VALUES '.pSQL($insert));
 	}
 }
