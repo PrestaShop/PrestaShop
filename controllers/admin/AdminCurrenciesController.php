@@ -29,9 +29,17 @@ class AdminCurrenciesControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'currency';
+		$this->table = 'currency';
 		$this->className = 'Currency';
-	 	$this->lang = false;
+		$this->lang = false;
+
+		parent::__construct();
+		$this->multishop_context = Shop::CONTEXT_ALL;
+	}
+
+	public function init()
+	{
+		parent::init();
 
 		$this->fieldsDisplay = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -79,9 +87,6 @@ class AdminCurrenciesControllerCore extends AdminController
 					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
 			)
 		);
-		parent::__construct();
-
-		$this->multishop_context = Shop::CONTEXT_ALL;
 	}
 
 	public function renderList()
