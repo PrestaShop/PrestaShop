@@ -125,6 +125,8 @@ class HomeSlide extends ObjectModel
 			$current_slide->update();
 			unset($current_slide);
 		}
+
 		return true;
 	}
+
 }
