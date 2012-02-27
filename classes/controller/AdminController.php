@@ -259,6 +259,7 @@ class AdminControllerCore extends Controller
 
 	public function __construct()
 	{
+		$this->controller_type = 'admin';
 		$this->controller_name = get_class($this);
 		if (strpos($this->controller_name, 'Controller'))
 			$this->controller_name = substr($this->controller_name, 0, -10);

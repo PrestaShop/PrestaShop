@@ -214,6 +214,7 @@ class SearchCore
 				'.Shop::addSqlAssociation('product', 'p', false).'
 				WHERE c.`active` = 1
 					AND p.`active` = 1
+					AND p.`visibility` IN ("both", "search")
 					AND indexed = 1
 					AND cg.`id_group` '.(!$id_customer ?  '= 1' : 'IN (
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
@@ -381,7 +382,8 @@ class SearchCore
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
 				ON m.id_manufacturer = p.id_manufacturer
 			WHERE p.indexed = 0
-				'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
+			AND p.visibility IN ("both", "search")
+			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
 			LIMIT '.(int)$limit
 		);
 	}
@@ -401,11 +403,12 @@ class SearchCore
 		}
 		else
 		{
-			// Do it even if you already know the product id in order to be sure that it exists
+			// Do it even if you already know the product id in order to be sure that it exists and it needs to be indexed
 			$products = $db->executeS('
 				SELECT id_product
 				FROM '._DB_PREFIX_.'product
-				WHERE '.($id_product ? 'id_product = '.(int)$id_product : 'indexed = 0')
+				WHERE visibility IN ("both", "search")
+				AND '.($id_product ? 'id_product = '.(int)$id_product : 'indexed = 0')
 			);
 
 			$ids = array();
