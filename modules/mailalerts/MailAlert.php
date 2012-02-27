@@ -97,7 +97,7 @@ class MailAlert extends ObjectModel
 
 		$customer = new Customer($id_customer);
 		$customer_email = $customer->email;
-		$products = MailAlert::getProducts($customer, $id_lang, $shop);
+		$products = MailAlert::getProducts($customer, $id_lang);
 
 		if ((empty($products) === true) || (!sizeof($products)))
 			return array();
@@ -195,7 +195,7 @@ class MailAlert extends ObjectModel
 	/*
 	 * Get products according to alerts
 	 */
-	public static function getProducts($customer, $id_lang, Shop $shop)
+	public static function getProducts($customer, $id_lang)
 	{
 		$sql = 'SELECT ma.`id_product`, p.`quantity` AS product_quantity, pl.`name`, ma.`id_product_attribute`
 			FROM `'._DB_PREFIX_.self::$definition['table'].'` ma
@@ -204,7 +204,7 @@ class MailAlert extends ObjectModel
 			WHERE p.`active` = 1
 			AND (ma.`id_customer` = '.(int)$customer->id.'
 			OR ma.`customer_email` = \''.pSQL($customer->email).'\')
-			AND pl.`id_lang` = '.(int)$id_lang.$shop->addSqlRestriction(false, 'ma');
+			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestriction(false, 'ma');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}

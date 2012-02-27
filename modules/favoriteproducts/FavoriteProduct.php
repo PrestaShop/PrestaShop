@@ -54,11 +54,8 @@ class FavoriteProduct extends ObjectModel
 		),
 	);
 
-	public static function getFavoriteProducts($id_customer, $id_lang, Shop $shop = null)
+	public static function getFavoriteProducts($id_customer, $id_lang)
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT fp.`id_shop`, p.`id_product`, pl.`description_short`, pl.`link_rewrite`,
 				pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
@@ -67,13 +64,13 @@ class FavoriteProduct extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 				ON p.`id_product` = pl.`id_product`
 				AND pl.`id_lang` = '.(int)$id_lang
-				.$shop->addSqlRestrictionOnLang('pl').'
+				.Shop::addSqlRestrictionOnLang('pl').'
 			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 			WHERE p.`active` = 1
 				'.($id_customer ? ' AND fp.id_customer = '.(int)$id_customer : '').'
-				'.$shop->addSqlRestriction(false, 'fp')
+				'.Shop::addSqlRestriction(false, 'fp')
 		);
 	}
 

@@ -134,13 +134,13 @@ class StatsCheckUp extends Module
 					LEFT JOIN '._DB_PREFIX_.'order_detail od ON o.id_order = od.id_order
 					WHERE od.product_id = p.id_product
 						AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
-						'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+						'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 				) as nbSales,
 				IFNULL(stock.quantity, 0) as stock
 				FROM '._DB_PREFIX_.'product p
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
-					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
+					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->executeS($sql);
@@ -229,7 +229,7 @@ class StatsCheckUp extends Module
 				FROM '._DB_PREFIX_.'product_lang pl
 				LEFT JOIN '._DB_PREFIX_.'lang l
 					ON pl.id_lang = l.id_lang
-				WHERE id_product = '.(int)$row['id_product'].$this->context->shop->addSqlRestrictionOnLang('pl'));
+				WHERE id_product = '.(int)$row['id_product'].Shop::addSqlRestrictionOnLang('pl'));
 			foreach ($descriptions as $description)
 			{
 				$row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));

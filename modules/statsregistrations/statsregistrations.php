@@ -63,7 +63,7 @@ class StatsRegistrations extends ModuleGraph
 		$sql = 'SELECT COUNT(`id_customer`) as total
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `date_add` BETWEEN '.ModuleGraph::getDateBetween().'
-				'.$this->sqlShopRestriction(Shop::SHARE_ORDER);
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		return isset($result['total']) ? $result['total'] : 0;
 	}
@@ -80,7 +80,7 @@ class StatsRegistrations extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_connections = cp.id_connections
 				LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
 				WHERE pt.name = "authentication"
-					'.$this->sqlShopRestriction(false, 'c').'
+					'.Shop::addSqlRestriction(false, 'c').'
 					AND (g.id_customer IS NULL OR g.id_customer = 0)
 					AND c.`date_add` BETWEEN '.ModuleGraph::getDateBetween();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -94,7 +94,7 @@ class StatsRegistrations extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'guest` g ON o.id_customer = g.id_customer
 				LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND ABS(TIMEDIFF(o.date_add, c.date_add)+0) < 120000';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -143,7 +143,7 @@ class StatsRegistrations extends ModuleGraph
 			SELECT `date_add`
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE 1
-				'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+				'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				AND `date_add` BETWEEN';
 		$this->_titles['main'] = $this->l('Number of customer accounts created');
 		$this->setDateGraph($layers, true);
