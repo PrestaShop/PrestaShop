@@ -217,8 +217,8 @@ abstract class ModuleCore
 
 		Cache::clean('Module::isInstalled'.$this->name);
 		
-		// Enable the module for all shops
-		$this->enable(true);
+		// Enable the module for current shops in context
+		$this->enable();
 
 		// Permissions management
 		Db::getInstance()->execute('
@@ -525,7 +525,9 @@ abstract class ModuleCore
 	{
 		// Retrieve all shops where the module is enabled
 		$list = Shop::getContextListShopID();
-		$sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? 'AND `id_shop` IN('.implode(', ', $list).')' : '');
+		$sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop`
+				WHERE `id_module` = '.$this->id.
+				((!$forceAll) ? ' AND `id_shop` IN('.implode(', ', $list).')' : '');
 
 		// Store the results in an array
 		$items = array();
