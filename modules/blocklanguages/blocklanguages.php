@@ -49,17 +49,11 @@ class BlockLanguages extends Module
 		return (parent::install() && $this->registerHook('top') && $this->registerHook('header'));
 	}
 
-	/**
-	* Returns module content for header
-	*
-	* @param array $params Parameters
-	* @return string Content
-	*/
-	public function hookTop($params)
+	private function _prepareHook($params)
 	{
 		$languages = Language::getLanguages(true, $this->context->shop->id);
 		if (!count($languages))
-			return;
+			return false;
 		$link = new Link();
 
 		if ((int)Configuration::get('PS_REWRITING_SETTINGS'))
@@ -93,13 +87,31 @@ class BlockLanguages extends Module
 			if (count($default_rewrite))
 				$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
+	}
 
+	/**
+	* Returns module content for header
+	*
+	* @param array $params Parameters
+	* @return string Content
+	*/
+	public function hookTop($params)
+	{
+		if (!$this->_prepareHook($params))
+			return;
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocklanguages.css', 'all');
+	}
+
+	public function hookDisplayMobileFooterChoice($params)
+	{
+		if (!$this->_prepareHook($params))
+			return;
+		return $this->display(__FILE__, 'blockmobilelanguages.tpl');
 	}
 }
 
