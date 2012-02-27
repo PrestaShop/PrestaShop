@@ -617,7 +617,7 @@ class ShopCore extends ObjectModel
 	 * @param string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @return array
 	 */
-	public function getListOfID($share = false)
+	public static function getContextListShopID($share = false)
 	{
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
@@ -713,7 +713,7 @@ class ShopCore extends ObjectModel
 		else
 		{
 			if (Shop::getContext() != Shop::CONTEXT_ALL)
-				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
+				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
 			//else if ($share == Shop::SHARE_STOCK)
 			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
 		}
@@ -742,7 +742,7 @@ class ShopCore extends ObjectModel
 
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
 					ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-					AND '.$table_alias.'.id_shop IN('.implode(', ', $this->getListOfID()).') ';
+					AND '.$table_alias.'.id_shop IN('.implode(', ', Shop::getContextListShopID()).') ';
 		return $sql;
 	}
 

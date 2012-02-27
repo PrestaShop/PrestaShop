@@ -2468,7 +2468,7 @@ class AdminProductsControllerCore extends AdminController
 			$error = '';
 			$detail = array();
 
-			if (count($this->context->shop->getListOfID()) > 1)
+			if (count(Shop::getContextListShopID()) > 1)
 				$error = $this->l('Please select the shop you want to configure');
 			else
 			{

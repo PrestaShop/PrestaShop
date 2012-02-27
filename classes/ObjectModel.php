@@ -478,7 +478,7 @@ abstract class ObjectModelCore
 					// If this table is linked to multishop system, update / insert for all shops from context
 					if ($this->isLangMultishop())
 					{
-						$list_shops = ($this->id_shop && !$this->get_shop_from_context) ? array($this->id_shop) : Context::getContext()->shop->getListOfID();
+						$list_shops = ($this->id_shop && !$this->get_shop_from_context) ? array($this->id_shop) : Shop::getContextListShopID();
 						foreach ($list_shops as $shop)
 						{
 							$field['id_shop'] = $shop;

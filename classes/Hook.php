@@ -177,7 +177,7 @@ class HookCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'hook` h
 					INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook)
 					INNER JOIN `'._DB_PREFIX_.'module` as m    ON (m.id_module = hm.id_module)
-					WHERE hm.id_shop IN('.implode(', ', Context::getContext()->shop->getListOfID()).')
+					WHERE hm.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
 					GROUP BY hm.id_hook, hm.id_module
 					ORDER BY hm.position';
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -240,7 +240,7 @@ class HookCore extends ObjectModel
 		if (!Cache::isStored($cache_id))
 		{
 			// Get shops and groups list
-			$shop_list = $context->shop->getListOfID();
+			$shop_list = Shop::getContextListShopID();
 			if (isset($context->customer) && $context->customer->isLogged())
 				$groups = $context->customer->getGroups();
 

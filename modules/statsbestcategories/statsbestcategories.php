@@ -130,7 +130,7 @@ class StatsBestCategories extends ModuleGrid
 					WHERE c.id_category IN (
 						SELECT s.id_category
 						FROM '._DB_PREFIX_.'shop s
-						WHERE s.id_shop IN ('.implode(', ', $this->context->shop->getListOfID()).')
+						WHERE s.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					)';
 			if ($result = Db::getInstance()->executeS($sql))
 			{

@@ -136,7 +136,7 @@ else
 
 		if (!isset($cookie->id_cart))
 		{
-			$shops_share = Context::getContext()->shop->getListOfID(Shop::SHARE_ORDER);
+			$shops_share = Shop::getContextListShopID(Shop::SHARE_ORDER);
 			$id_cart = Db::getInstance()->getValue('SELECT `id_cart` FROM `'._DB_PREFIX_.'cart` WHERE `id_customer` = "'.(int)$customer->id.'" AND `id_shop` IN ("'.implode('","', $shops_share).'") ORDER BY `id_cart` DESC');
 			if ($id_cart != false)
 				$cookie->id_cart = $id_cart;
