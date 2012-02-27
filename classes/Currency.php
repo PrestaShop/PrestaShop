@@ -205,6 +205,7 @@ class CurrencyCore extends ObjectModel
 				'.$shop->addSqlAssociation('currency', 'c').'
 				WHERE `deleted` = 0'
 					.($active == 1 ? ' AND c.`active` = 1' : '').'
+				GROUP BY c.id_currency
 				ORDER BY `name` ASC';
 		$tab = Db::getInstance()->executeS($sql);
 		if ($object)

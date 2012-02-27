@@ -158,7 +158,7 @@ class AdminInvoicesControllerCore extends AdminController
 			) id_order_state
 			FROM '._DB_PREFIX_.'order_invoice oi
 			LEFT JOIN '._DB_PREFIX_.'orders o ON (oi.id_order = o.id_order)
-			WHERE o.id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')
+			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
 			GROUP BY id_order_state
 		');
 
