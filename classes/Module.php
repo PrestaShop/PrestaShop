@@ -142,7 +142,7 @@ abstract class ModuleCore
 			if (self::$modules_cache == null && !is_array(self::$modules_cache))
 			{
 				// Join clause is done to check if the module is activated in current shop context
-				$list = $this->context->shop->getListOfID();
+				$list = Shop::getContextListShopID();
 				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` IN ('.implode(',', $list).')';
 				$sql = 'SELECT m.`id_module`, m.`name`, ('.$sql_limit_shop.') as total FROM `'._DB_PREFIX_.'module` m';
 
@@ -532,7 +532,7 @@ abstract class ModuleCore
 	public function enable($forceAll = false)
 	{
 		// Retrieve all shops where the module is enabled
-		$list = $this->context->shop->getListOfID();
+		$list = Shop::getContextListShopID();
 		$sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? 'AND `id_shop` IN('.implode(', ', $list).')' : '');
 
 		// Store the results in an array
@@ -581,7 +581,7 @@ abstract class ModuleCore
 	public function disable($forceAll = false)
 	{
 		// Disable module for all shops
-		$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? ' AND `id_shop` IN('.implode(', ', $this->context->shop->getListOfID()).')' : '');
+		$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? ' AND `id_shop` IN('.implode(', ', Shop::getContextListShopID()).')' : '');
 		Db::getInstance()->execute($sql);
 	}
 
@@ -743,7 +743,7 @@ abstract class ModuleCore
 	{
 		// If shop lists is null, we fill it with all shops
 		if (is_null($shop_list))
-			Context::getContext()->shop->getListOfID();
+			$shop_list = Shop::getContextListShopID();
 
 		// Save modules exception for each shop
 		foreach ($shop_list as $shop_id)
@@ -778,7 +778,7 @@ abstract class ModuleCore
 		$result = true;
 		foreach ($excepts as $shop_id => $except)
 		{
-			$shop_list = ($shop_id == 0) ? Context::getContext()->shop->getListOfID() : array($shop_id);
+			$shop_list = ($shop_id == 0) ? Shop::getContextListShopID() : array($shop_id);
 			$this->unregisterExceptions($id_hook, $shop_list);
 			$result &= $this->registerExceptions($id_hook, $except, $shop_list);
 		}
@@ -1050,7 +1050,7 @@ abstract class ModuleCore
 		// Get modules information from database
 		if (!empty($module_name_list))
 		{
-			$list = Context::getContext()->shop->getListOfID();
+			$list = Shop::getContextListShopID();
 
 			$sql = 'SELECT m.id_module, m.name, (
 						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
@@ -1239,7 +1239,7 @@ abstract class ModuleCore
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
 			$hookPayment = 'displayPayment';
 
-		$list = Context::getContext()->shop->getListOfID();
+		$list = Shop::getContextListShopID();
 		$sql = 'SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 				FROM `'._DB_PREFIX_.'module_country` mc
 				LEFT JOIN `'._DB_PREFIX_.'module` m ON m.`id_module` = mc.`id_module`
@@ -1297,7 +1297,7 @@ abstract class ModuleCore
 	 */
 	public function updatePosition($id_hook, $way, $position = null)
 	{
-		foreach ($this->context->shop->getListOfID() as $shop_id)
+		foreach (Shop::getContextListShopID() as $shop_id)
 		{
 			$sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
 					FROM `'._DB_PREFIX_.'hook_module` hm
@@ -1399,7 +1399,7 @@ abstract class ModuleCore
 		{
 			self::$exceptionsCache = array();
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
-				WHERE `id_shop` IN ('.implode(', ', Context::getContext()->shop->getListOfID()).')';
+				WHERE `id_shop` IN ('.implode(', ', Shop::getContextListShopID()).')';
 			$result = Db::getInstance()->executeS($sql);
 			foreach ($result as $row)
 			{
@@ -1418,7 +1418,7 @@ abstract class ModuleCore
 		if (!$dispatch)
 		{
 			$files = array();
-			foreach (Context::getContext()->shop->getListOfID() as $shop_id)
+			foreach (Shop::getContextListShopID() as $shop_id)
 				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shop_id]))
 					foreach (self::$exceptionsCache[$key][$shop_id] as $file)
 						if (!in_array($file, $files))
@@ -1428,7 +1428,7 @@ abstract class ModuleCore
 		else
 		{
 			$list = array();
-			foreach (Context::getContext()->shop->getListOfID() as $shop_id)
+			foreach (Shop::getContextListShopID() as $shop_id)
 				if (isset(self::$exceptionsCache[$key], self::$exceptionsCache[$key][$shop_id]))
 					$list[$shop_id] = self::$exceptionsCache[$key][$shop_id];
 			return $list;

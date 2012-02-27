@@ -1645,6 +1645,24 @@ class AdminControllerCore extends Controller
 			$this->lite_display = true;
 		}
 
+		$this->initShopContext();
+
+		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
+			$this->ajaxPreProcess();
+
+		$this->context->smarty->assign(array(
+			'table' => $this->table,
+			'current' => self::$currentIndex,
+			'token' => $this->token,
+		));
+
+		$this->context->smarty->assign('submit_form_ajax', (int)Tools::getValue('submitFormAjax'));
+
+		$this->initProcess();
+	}
+
+	public function initShopContext()
+	{
 		// Change shop context ?
 		if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false)
 		{
@@ -1685,24 +1703,20 @@ class AdminControllerCore extends Controller
 		else
 			Employee::getEmployeeShopAccess((int)$this->context->employee->id);
 
+		// Check multishop context and set right context if need
+		if (!($this->multishop_context & Shop::getContext()))
+		{
+			if (Shop::getContext() == Shop::CONTEXT_SHOP && !($this->multishop_context & Shop::CONTEXT_SHOP))
+				Shop::setContext(Shop::CONTEXT_GROUP, Shop::getContextGroupShopID());
+			if (Shop::getContext() == Shop::CONTEXT_GROUP && !($this->multishop_context & Shop::CONTEXT_GROUP))
+				Shop::setContext(Shop::CONTEXT_ALL);
+		}
+
 		// Replace existing shop if necessary
 		if (!$shop_id)
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		else if ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
-
-		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
-			$this->ajaxPreProcess();
-
-		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-		));
-
-		$this->context->smarty->assign('submit_form_ajax', (int)Tools::getValue('submitFormAjax'));
-
-		$this->initProcess();
 	}
 
 	/**
@@ -1950,7 +1964,7 @@ class AdminControllerCore extends Controller
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 			{
 				$filter_key = $assos[$this->table]['type'];
-				$idenfier_shop = $this->context->shop->getListOfID();
+				$idenfier_shop = Shop::getContextListShopID();
 			}
 			else if (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
 			{

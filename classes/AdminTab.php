@@ -1313,7 +1313,7 @@ abstract class AdminTabCore
 		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 		{
 			$filterKey = $assos[$this->table]['type'];
-			$idenfierShop = $this->context->shop->getListOfID();
+			$idenfierShop = Shop::getContextListShopID();
 		}
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
