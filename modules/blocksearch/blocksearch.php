@@ -34,7 +34,7 @@ class BlockSearch extends Module
 	{
 		$this->name = 'blocksearch';
 		$this->tab = 'search_filter';
-		$this->version = 1.0;
+		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -49,6 +49,12 @@ class BlockSearch extends Module
 		if (!parent::install() || !$this->registerHook('top') || !$this->registerHook('header'))
 			return false;
 		return true;
+	}
+
+	public function hookMobileTop($params)
+	{
+		$this->smarty->assign('hook_mobile', true);
+		$this->hookTop($params);
 	}
 
 	public function hookHeader($params)
