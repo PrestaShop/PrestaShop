@@ -461,7 +461,6 @@ class ShopCore extends ObjectModel
 
 		if ($results = Db::getInstance()->executeS($sql))
 		{
-			$group_shop = new GroupShop();
 			foreach ($results as $row)
 			{
 				if (!isset(self::$shops[$row['id_group_shop']]))

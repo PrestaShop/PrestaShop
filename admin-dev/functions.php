@@ -412,15 +412,11 @@ function generateShopList()
 	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
 	$html = '<select class="shopList chosen" onchange="location.href = \''.$url.'\'+$(this).val();">';
 
-	if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
-					$context->shop->getTotalShopsWhoExists() == Employee::getTotalEmployeeShopById($context->employee->id))
-		$html .= '<option value="" class="first">'.translate('All shops').'</option>';
-	/*$html .= (Context::getContext()->employee->id_profile == _PS_ADMIN_PROFILE_) ? '<option value="" class="first">'.translate('All shops').'</option>' : '';*/
+	$html .= '<option value="" class="first">'.translate('All shops').'</option>';
 	foreach ($tree as $gID => $group_data)
 	{
-		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
 		if ($context->controller->multishop_context & Shop::CONTEXT_GROUP)
-			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 		else
 			$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';
 
