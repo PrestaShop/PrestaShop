@@ -739,10 +739,9 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE `id_lang` = '.(int)$id_lang.'
-		AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 		AND c.`id_parent` = '.(int)$id_parent.'
 		'.($active ? 'AND `active` = 1' : '').'
-		ORDER BY cs.`position` ASC');
+		ORDER BY asso_shop_category.`position` ASC');
 	}
 
 	/**
