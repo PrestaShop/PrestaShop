@@ -174,7 +174,7 @@ abstract class InstallControllerHttp
 
 		// Set current language
 		$this->language = InstallLanguages::getInstance();
-		$lang = (isset($this->session->lang)) ? $this->session->lang : 'en';
+		$lang = (isset($this->session->lang)) ? $this->session->lang : $this->detectLanguage();
 		if (!in_array($lang, $this->language->getIsoList()))
 			$lang = 'en';
 		$this->language->setLanguage($lang);
@@ -388,6 +388,25 @@ abstract class InstallControllerHttp
 			ob_end_clean();
 			return $content;
 		}
+	}
+
+	public function detectLanguage()
+	{
+		// This code is from a php.net comment : http://www.php.net/manual/fr/reserved.variables.server.php#94237
+		$split_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		if (!is_array($split_languages))
+			return false;
+
+		foreach ($split_languages as $lang)
+		{
+			$pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})'.
+				'(?:-(?P<subtag>[a-zA-Z]{2,8}))?(?:(?:;q=)'.
+				'(?P<quantifier>\d\.\d))?$/';
+			if (preg_match($pattern, $lang, $m))
+				if (in_array($m['primarytag'], $this->language->getIsoList()))
+					return $m['primarytag'];
+		}
+		return false;
 	}
 
 	public function &__get($varname)
