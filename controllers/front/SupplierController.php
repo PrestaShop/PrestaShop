@@ -74,8 +74,8 @@ class SupplierControllerCore extends FrontController
 	{
 		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
 		{
+			$this->productSort(); // productSort must be called before assignOne
 			$this->assignOne();
-			$this->productSort();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
 		}
 		else
