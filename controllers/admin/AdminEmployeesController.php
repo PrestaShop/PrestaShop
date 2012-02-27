@@ -292,6 +292,7 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->fields_form['input'][] = array(
 					'type' => 'shop',
 					'label' => $this->l('Shop association:'),
+					'desc' => $this->l('Select the shops the employee is allowed to access'),
 					'name' => 'checkBoxShopAsso',
 				);
 			}
