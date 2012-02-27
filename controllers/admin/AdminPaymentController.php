@@ -31,6 +31,8 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		$shop_id = Context::getContext()->shop->id;
 
 		/* Get all modules then select only payment ones */
@@ -80,8 +82,6 @@ class AdminPaymentControllerCore extends AdminController
 
 				$this->payment_modules[] = $module;
 			}
-
-		parent::__construct();
 	}
 
 	public function postProcess()
