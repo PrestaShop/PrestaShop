@@ -309,6 +309,8 @@ class AdminControllerCore extends Controller
 		$this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$this->initShopContext();
 	}
 
 	/**
@@ -1644,8 +1646,6 @@ class AdminControllerCore extends Controller
 			$this->content_only = false;
 			$this->lite_display = true;
 		}
-
-		$this->initShopContext();
 
 		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
 			$this->ajaxPreProcess();
