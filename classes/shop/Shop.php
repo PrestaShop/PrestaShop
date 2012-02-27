@@ -730,7 +730,7 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function addSqlAssociation($table, $alias, $inner_join = true)
+	public static function addSqlAssociation($table, $alias, $inner_join = true)
 	{
 		$table_alias = ' asso_shop_'.$table;
 		if (strpos($table, '.') !== false)

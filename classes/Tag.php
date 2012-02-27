@@ -137,7 +137,7 @@ class TagCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_tag` pt
 		LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
-		'.Context::getContext()->shop->addSqlAssociation('product', 'p').'
+		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE t.`id_lang` = '.(int)$id_lang.'
 		AND p.`active` = 1
 		AND p.`id_product` IN (

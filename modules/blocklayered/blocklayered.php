@@ -2288,7 +2288,7 @@ class BlockLayered extends Module
 		}
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
-			$queryFiltersFrom .= Context::getContext()->shop->addSqlAssociation('product', 'p');
+			$queryFiltersFrom .= Shop::addSqlAssociation('product', 'p');
 		
 		$allProductsOut = self::query('
 		SELECT p.`id_product` id_product
@@ -2624,7 +2624,7 @@ class BlockLayered extends Module
 			if (!empty($sqlQuery['from']))
 			{
 				if (version_compare(_PS_VERSION_,'1.5','>'))
-					$sqlQuery['from'] .= Context::getContext()->shop->addSqlAssociation('product', 'p');
+					$sqlQuery['from'] .= Shop::addSqlAssociation('product', 'p');
 				$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlQuery['select']."\n".$sqlQuery['from']."\n".$sqlQuery['join']."\n".$sqlQuery['where']."\n".$sqlQuery['group']);
 			}
 
