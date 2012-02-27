@@ -146,8 +146,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share available quantities to sale between shops of this group'),
-					'h' => $this->l('When changing this option, all product available quantities for the current groupof shop will be reseted to 0.')
+					'desc' => $this->l('Share available quantities to sale between shops of this group. When changing this option, all product available quantities for this group will be reset to 0.'),
 				),
 				array(
 					'type' => 'radio',
