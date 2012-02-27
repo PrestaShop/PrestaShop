@@ -122,7 +122,7 @@ class GroupReductionCore extends ObjectModel
 
 	public static function getGroupReductions($id_group, $id_lang)
 	{
-		$lang = $id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl');
+		$lang = $id_lang.Shop::addSqlRestrictionOnLang('cl');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT gr.`id_group_reduction`, gr.`id_group`, gr.`id_category`, gr.`reduction`, cl.`name` AS category_name
 			FROM `'._DB_PREFIX_.'group_reduction` gr

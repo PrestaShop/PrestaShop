@@ -47,7 +47,7 @@ class StatsSearch extends ModuleGraph
 		$this->_query = 'SELECT `keywords`, COUNT(TRIM(`keywords`)) as occurences, MAX(results) as total
 				FROM `'._DB_PREFIX_.'statssearch`
 				WHERE 1
-					'.$this->sqlShopRestriction().'
+					'.Shop::addSqlRestriction().'
 					AND `date_add` BETWEEN ';
 
 		$this->_query2 = 'GROUP BY `keywords`

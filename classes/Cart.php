@@ -390,7 +390,7 @@ class CartCore extends ObjectModel
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl')
+			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
 		$sql->leftJoin('product_tax_rules_group_shop', 'ptrgs', 
 			'p.`id_product` = ptrgs.`id_product` AND cp.`id_shop` = ptrgs.`id_shop`');
@@ -408,7 +408,7 @@ class CartCore extends ObjectModel
 		);
 		$sql->leftJoin('category_lang', 'cl', '
 			p.`id_category_default` = cl.`id_category`
-			AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl')
+			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl')
 		);
 
 		// @todo test if everything is ok, then refactorise call of this method
@@ -2531,7 +2531,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
 				WHERE c.`id_customer` = '.(int)$id_customer.'
 					AND o.`id_cart` IS NULL
-					'.Context::getContext()->shop->addSqlRestriction(Shop::SHARE_ORDER, 'c').'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
 
 		if (!$id_cart = Db::getInstance()->getValue($sql))

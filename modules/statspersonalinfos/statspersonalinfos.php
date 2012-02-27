@@ -133,7 +133,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM '._DB_PREFIX_.'customer c
 						LEFT JOIN '._DB_PREFIX_.'gender g ON c.id_gender = g.id_gender
 						WHERE 1
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER, 'c').'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').'
 						GROUP BY c.id_gender';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -160,7 +160,7 @@ class StatsPersonalInfos extends ModuleGraph
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 18
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -174,7 +174,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 18
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 25
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -188,7 +188,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 25
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 35
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
  				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -202,7 +202,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 35
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 50
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -216,7 +216,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 50
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 60
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -229,7 +229,7 @@ class StatsPersonalInfos extends ModuleGraph
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 60
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
@@ -242,7 +242,7 @@ class StatsPersonalInfos extends ModuleGraph
 				$sql = 'SELECT COUNT(`id_customer`) as total
 						FROM `'._DB_PREFIX_.'customer`
 						WHERE `birthday` IS NULL
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER);
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 				if (isset($result['total']) && $result['total'])
 				{
@@ -259,7 +259,7 @@ class StatsPersonalInfos extends ModuleGraph
 						LEFT JOIN `'._DB_PREFIX_.'country` c ON a.`id_country` = c.`id_country`
 						LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 						WHERE a.id_customer != 0
-							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER, 'cu').'
+							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 						GROUP BY c.`id_country`';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
@@ -275,7 +275,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'orders` o
 						LEFT JOIN `'._DB_PREFIX_.'currency` c ON o.`id_currency` = c.`id_currency`
 						WHERE 1
-							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+							'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_currency`';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
@@ -291,7 +291,7 @@ class StatsPersonalInfos extends ModuleGraph
 						FROM `'._DB_PREFIX_.'orders` o
 						LEFT JOIN `'._DB_PREFIX_.'lang` c ON o.`id_lang` = c.`id_lang`
 						WHERE 1
-							'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+							'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_lang`';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)

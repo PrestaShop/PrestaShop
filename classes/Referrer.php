@@ -128,7 +128,7 @@ class ReferrerCore extends ObjectModel
 	 * @param int $employee
 	 * @param Context $context
 	 */
-	public function getStatsVisits($id_product, $employee, Shop $shop)
+	public function getStatsVisits($id_product, $employee)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -151,8 +151,8 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
 				'.$join.'
 				WHERE cs.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->addSqlRestriction(false, 'rs').'
-					'.$shop->addSqlRestriction(false, 'c').'
+					'.Shop::addSqlRestriction(false, 'rs').'
+					'.Shop::addSqlRestriction(false, 'c').'
 					AND rc.id_referrer = '.(int)$this->id
 					.$where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -165,7 +165,7 @@ class ReferrerCore extends ObjectModel
 	 * @param int $employee
 	 * @param Context $context
 	 */
-	public function getRegistrations($id_product, $employee, Shop $shop)
+	public function getRegistrations($id_product, $employee)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -186,9 +186,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'customer cu ON cu.id_customer = g.id_customer
 				'.$join.'
 				WHERE cu.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->addSqlRestriction(false, 'rs').'
-					'.$shop->addSqlRestriction(false, 'c').'
-					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
+					'.Shop::addSqlRestriction(false, 'rs').'
+					'.Shop::addSqlRestriction(false, 'c').'
+					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 					AND cu.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)$this->id
 					.$where;
@@ -201,9 +201,8 @@ class ReferrerCore extends ObjectModel
 	 * 
 	 * @param int $id_product
 	 * @param int $employee
-	 * @param Context $context
 	 */
-	public function getStatsSales($id_product, $employee, Shop $shop)
+	public function getStatsSales($id_product, $employe)
 	{
 		$join = $where = '';
 		if ($id_product)
@@ -221,9 +220,9 @@ class ReferrerCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'orders oo ON oo.id_customer = g.id_customer
 				'.$join.'
 				WHERE oo.invoice_date BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.$shop->addSqlRestriction(false, 'rs').'
-					'.$shop->addSqlRestriction(false, 'c').'
-					'.$shop->addSqlRestriction(Shop::SHARE_ORDER, 'oo').'
+					'.Shop::addSqlRestriction(false, 'rs').'
+					'.Shop::addSqlRestriction(false, 'c').'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'oo').'
 					AND oo.date_add > cs.date_add
 					AND rc.id_referrer = '.(int)$this->id.'
 					AND oo.valid = 1'
@@ -240,7 +239,7 @@ class ReferrerCore extends ObjectModel
 			$sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
 					FROM '._DB_PREFIX_.'orders
 					WHERE id_order IN ('.implode($implode, ',').')
-						'.$shop->addSqlRestriction(Shop::SHARE_ORDER).'
+						'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 						AND valid = 1';
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		}
@@ -267,9 +266,9 @@ class ReferrerCore extends ObjectModel
 					continue;
 
 				$shop = new Shop($shop_id);
-				$stats_visits = $referrer->getStatsVisits(null, $employee, $shop);
-				$registrations = $referrer->getRegistrations(null, $employee, $shop);
-				$stats_sales = $referrer->getStatsSales(null, $employee, $shop);
+				$stats_visits = $referrer->getStatsVisits(null, $employee);
+				$registrations = $referrer->getRegistrations(null, $employee);
+				$stats_sales = $referrer->getStatsSales(null, $employee);
 
 				Db::getInstance()->update('referrer_shop', array(
 					'cache_visitors' => $stats_visits['uniqs'],
@@ -326,9 +325,9 @@ class ReferrerCore extends ObjectModel
 		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'));
 		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$referrer = new Referrer($id_referrer);
-		$stats_visits = $referrer->getStatsVisits($id_product, $employee, $context->shop);
-		$registrations = $referrer->getRegistrations($id_product, $employee, $context->shop);
-		$stats_sales = $referrer->getStatsSales($id_product, $employee, $context->shop);
+		$stats_visits = $referrer->getStatsVisits($id_product, $employee);
+		$registrations = $referrer->getRegistrations($id_product, $employee);
+		$stats_sales = $referrer->getStatsSales($id_product, $employee);
 
 		// If it's a product and it has no visits nor orders
 		if ((int)$id_product && !$stats_visits['visits'] && !$stats_sales['orders'])

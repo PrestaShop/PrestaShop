@@ -57,7 +57,7 @@ class StatsOrigin extends ModuleGraph
 		$sql = 'SELECT http_referer
 				FROM '._DB_PREFIX_.'connections
 				WHERE 1
-					'.$this->sqlShopRestriction().'
+					'.Shop::addSqlRestriction().'
 					AND date_add BETWEEN '.$dateBetween;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
 		$websites = array($directLink => 0);

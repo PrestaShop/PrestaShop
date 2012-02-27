@@ -47,7 +47,7 @@ class SEKeywords extends ModuleGraph
 		$this->_query = 'SELECT `keyword`, COUNT(TRIM(`keyword`)) as occurences
 				FROM `'._DB_PREFIX_.'sekeyword`
 				WHERE '.(Configuration::get('SEK_FILTER_KW') == '' ? '1' : '`keyword` REGEXP \''.pSQL(Configuration::get('SEK_FILTER_KW')).'\'')
-					.$this->sqlShopRestriction().
+					.Shop::addSqlRestriction().
 					' AND `date_add` BETWEEN ';
 
 		$this->_query2 = 'GROUP BY TRIM(`keyword`)

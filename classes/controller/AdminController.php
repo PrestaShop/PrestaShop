@@ -1954,7 +1954,7 @@ class AdminControllerCore extends Controller
 			$select_shop = ', shop.name as shop_name ';
 			$join_shop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
 							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
-			$where_shop = $this->context->shop->addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
+			$where_shop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
 		if ($this->multishop_context)
