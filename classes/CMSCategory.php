@@ -159,12 +159,10 @@ class CMSCategoryCore extends ObjectModel
 		);
 	}
 
-	public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, Link $link = null, Shop $shop = null)
+	public static function getRecurseCategory($id_lang = null, $current = 1, $active = 1, $links = 0, Link $link = null)
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		if (!$shop)
-			$shop = Context::getContext()->shop;
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
 
@@ -185,7 +183,7 @@ class CMSCategoryCore extends ObjectModel
 
 		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms` c
-				'.$shop->addSqlAssociation('cms', 'c', false).'
+				'.Shop::addSqlAssociation('cms', 'c', false).'
 				JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
 				WHERE `id_cms_category` = '.(int)$current.'
 				AND cl.`id_lang` = '.(int)$id_lang.($active ? ' AND c.`active` = 1' : '').'

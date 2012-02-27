@@ -296,7 +296,7 @@ class ManufacturerCore extends ObjectModel
 			$sql = '
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE p.id_manufacturer = '.(int)$id_manufacturer
 				.($active ? ' AND p.`active` = 1' : '').'
 				AND p.`id_product` IN (
@@ -327,7 +327,7 @@ class ManufacturerCore extends ObjectModel
 					) > 0 AS new,
 					(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice
 				FROM `'._DB_PREFIX_.'product` p
-				'.$context->shop->addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (p.`id_product` = pa.`id_product` AND default_on = 1)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl

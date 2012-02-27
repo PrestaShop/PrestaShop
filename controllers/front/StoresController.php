@@ -92,7 +92,7 @@ class StoresControllerCore extends FrontController
 		$stores = Db::getInstance()->executeS('
 		SELECT s.*, cl.name country, st.iso_code state
 		FROM '._DB_PREFIX_.'store s
-		'.$this->context->shop->addSqlAssociation('shop', 's').'
+		'.Shop::addSqlAssociation('shop', 's').'
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 		LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
@@ -118,7 +118,7 @@ class StoresControllerCore extends FrontController
 			$stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state
 			FROM '._DB_PREFIX_.'store s
-			'.$this->context->shop->addSqlAssociation('shop', 's').'
+			'.Shop::addSqlAssociation('shop', 's').'
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
@@ -141,7 +141,7 @@ class StoresControllerCore extends FrontController
 			) distance,
 			cl.id_country id_country
 			FROM '._DB_PREFIX_.'store s
-			'.$this->context->shop->addSqlAssociation('shop', 's').'
+			'.Shop::addSqlAssociation('shop', 's').'
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.'
