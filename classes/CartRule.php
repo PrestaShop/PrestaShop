@@ -104,9 +104,9 @@ class CartRuleCore extends ObjectModel
 		),
 	);
 
-    /**
-     * @see ObjectModel::add()
-     */
+	/**
+	 * @see ObjectModel::add()
+	 */
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!parent::add($autodate, $nullValues))
@@ -116,9 +116,9 @@ class CartRuleCore extends ObjectModel
 		return true;
 	}
 
-    /**
-     * @see ObjectModel::delete()
-     */
+	/**
+	 * @see ObjectModel::delete()
+	 */
 	public function delete()
 	{
 		if (!parent::delete())
@@ -139,13 +139,13 @@ class CartRuleCore extends ObjectModel
 		return $r;
 	}
 
-    /**
-     * Copy conditions from one cart rule to an other
-     *
-     * @static
-     * @param int $id_cart_rule_source
-     * @param int $id_cart_rule_destination
-     */
+	/**
+	 * Copy conditions from one cart rule to an other
+	 *
+	 * @static
+	 * @param int $id_cart_rule_source
+	 * @param int $id_cart_rule_destination
+	 */
 	public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
 	{
 		Db::getInstance()->Execute('
@@ -170,30 +170,30 @@ class CartRuleCore extends ObjectModel
 		// Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
 	}
 
-    /**
-     * Retrieves the id associated to the given code
-     *
-     * @static
-     * @param string $code
-     * @return int|bool
-     */
+	/**
+	 * Retrieves the id associated to the given code
+	 *
+	 * @static
+	 * @param string $code
+	 * @return int|bool
+	 */
 	public static function getIdByCode($code)
 	{
 		if (!Validate::isDiscountName($code))
-	 		return false;
-	 	return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM `'._DB_PREFIX_.'cart_rule` WHERE `code` = \''.pSQL($code).'\'');
+			return false;
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM `'._DB_PREFIX_.'cart_rule` WHERE `code` = \''.pSQL($code).'\'');
 	}
 
-    /**
-     * @static
-     * @param $id_lang
-     * @param $id_customer
-     * @param bool $active
-     * @param bool $includeGeneric
-     * @param bool $inStock
-     * @param Cart|null $cart
-     * @return array
-     */
+	/**
+	 * @static
+	 * @param $id_lang
+	 * @param $id_customer
+	 * @param bool $active
+	 * @param bool $includeGeneric
+	 * @param bool $inStock
+	 * @param Cart|null $cart
+	 * @return array
+	 */
 	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
 	{
 		if (!CartRule::isFeatureActive())
@@ -228,10 +228,10 @@ class CartRuleCore extends ObjectModel
 		return $result;
 	}
 
-    /**
-     * @param $id_customer
-     * @return bool
-     */
+	/**
+	 * @param $id_customer
+	 * @return bool
+	 */
 	public function usedByCustomer($id_customer)
 	{
 		return (bool)Db::getInstance()->getValue('
@@ -242,11 +242,11 @@ class CartRuleCore extends ObjectModel
 		AND o.`id_customer` = '.(int)$id_customer);
 	}
 
-    /**
-     * @static
-     * @param $name
-     * @return bool
-     */
+	/**
+	 * @static
+	 * @param $name
+	 * @return bool
+	 */
 	public static function cartRuleExists($name)
 	{
 		if (!CartRule::isFeatureActive())
@@ -258,11 +258,11 @@ class CartRuleCore extends ObjectModel
 		WHERE `code` = \''.pSQL($name).'\'');
 	}
 
-    /**
-     * @static
-     * @param $id_customer
-     * @return bool
-     */
+	/**
+	 * @static
+	 * @param $id_customer
+	 * @return bool
+	 */
 	public static function deleteByIdCustomer($id_customer)
 	{
 		$return = true;
@@ -273,9 +273,9 @@ class CartRuleCore extends ObjectModel
 		return $return;
 	}
 
-    /**
-     * @return array
-     */
+	/**
+	 * @return array
+	 */
 	public function getProductRuleGroups()
 	{
 		if (!Validate::isLoadedObject($this) || $this->product_restriction == 0)
@@ -295,10 +295,10 @@ class CartRuleCore extends ObjectModel
 		return $productRuleGroups;
 	}
 
-    /**
-     * @param $id_product_rule_group
-     * @return array ('type' => ? , 'values' => ?)
-     */
+	/**
+	 * @param $id_product_rule_group
+	 * @return array ('type' => ? , 'values' => ?)
+	 */
 	public function getProductRules($id_product_rule_group)
 	{
 		if (!Validate::isLoadedObject($this) || $this->product_restriction == 0)
@@ -320,13 +320,13 @@ class CartRuleCore extends ObjectModel
 	}
 
 	// Todo : Add shop management
-    /**
-     * Check if this cart rule can be applied
-     *
-     * @param Context $context
-     * @param bool $alreadyInCart
-     * @return bool|mixed|string
-     */
+	/**
+	 * Check if this cart rule can be applied
+	 *
+	 * @param Context $context
+	 * @param bool $alreadyInCart
+	 * @return bool|mixed|string
+	 */
 	public function checkValidity(Context $context, $alreadyInCart = false)
 	{
 		if (!CartRule::isFeatureActive())
@@ -779,7 +779,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		return $reduction_value;
-    }
+	}
 
 	protected function getCartRuleCombinations()
 	{
@@ -872,11 +872,11 @@ class CartRuleCore extends ObjectModel
 		return $errors;
 	}
 
-    /**
-     * @static
-     * @param Context|null $context
-     * @return mixed
-     */
+	/**
+	 * @static
+	 * @param Context|null $context
+	 * @return mixed
+	 */
 	public static function autoAddToCart(Context $context = null)
 	{
 		if ($context === null)
@@ -936,21 +936,21 @@ class CartRuleCore extends ObjectModel
 				$context->cart->addCartRule($cartRule->id);
 	}
 
-    /**
-     * @static
-     * @return bool
-     */
+	/**
+	 * @static
+	 * @return bool
+	 */
 	public static function isFeatureActive()
 	{
 		return (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
 	}
 
-    /**
-     * @static
-     * @param $name
-     * @param $id_lang
-     * @return array
-     */
+	/**
+	 * @static
+	 * @param $name
+	 * @param $id_lang
+	 * @return array
+	 */
 	public static function getCartsRuleByCode($name, $id_lang)
 	{
 		return Db::getInstance()->ExecuteS('
