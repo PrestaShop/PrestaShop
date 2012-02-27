@@ -40,6 +40,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->className = 'Product';
 		$this->lang = true;
 		$this->colorOnBackground = true;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -103,8 +104,6 @@ class AdminStockCoverControllerCore extends AdminController
 		array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	/**

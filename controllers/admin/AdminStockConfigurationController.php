@@ -39,6 +39,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 	 	$this->table = 'stock_mvt_reason';
 	 	$this->className = 'StockMvtReason';
 		$this->lang = true;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		// defines fields
 		$this->fieldsDisplay = array(
@@ -121,8 +122,6 @@ class AdminStockConfigurationControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context = null;
 	}
 
 	public function init()

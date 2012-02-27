@@ -33,6 +33,7 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->className = 'Language';
 	 	$this->lang = false;
 		$this->deleted = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->requiredDatabase = true;
 

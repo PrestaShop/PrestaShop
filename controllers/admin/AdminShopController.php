@@ -33,6 +33,7 @@ class AdminShopControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->table = 'shop';
 		$this->className = 'Shop';
+		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_SHOP;
 
 		$this->fieldsDisplay = array(
 			'id_shop' => array(
@@ -92,8 +93,6 @@ class AdminShopControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
-		$this->multishop_context ^= Shop::CONTEXT_SHOP;
 	}
 
 	public function initToolbar()
