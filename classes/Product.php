@@ -174,8 +174,12 @@ class ProductCore extends ObjectModel
 	/** @var boolean Show price of Product */
 	public $show_price = true;
 
+	/** @var boolean is the product indexed in the search index? */
 	public $indexed = 0;
 
+	/** @var string ENUM('both', 'catalog', 'search', 'none') front office visibility */
+	public $visibility;
+	
 	/** @var string Object creation date */
 	public $date_add;
 
@@ -260,6 +264,7 @@ class ProductCore extends ObjectModel
 			'ean13' => 						array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 						array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
 			'indexed' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'visibility' => 				array('type' => self::TYPE_STRING, 'validate' => 'isProductVisibility', 'values' => array('both', 'catalog', 'search', 'none'), 'default' => 'both'),
 			'cache_is_pack' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'cache_default_attribute' => 	array('type' => self::TYPE_INT),
 			'is_virtual' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -925,6 +930,10 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+		
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
 		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add')
@@ -955,6 +964,7 @@ class ProductCore extends ObjectModel
 				($id_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` c ON (c.`id_product` = p.`id_product`)' : '').'
 				WHERE pl.`id_lang` = '.(int)$id_lang.
 					($id_category ? ' AND c.`id_category` = '.(int)$id_category : '').
+					($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').
 					($only_active ? ' AND p.`active` = 1' : '').'
 				ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).
 				($limit > 0 ? ' LIMIT '.(int)$start.','.(int)$limit : '');
@@ -969,11 +979,16 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+		
 		$sql = 'SELECT p.`id_product`, pl.`name`
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.Shop::addSqlRestrictionOnLang('pl').')
 				WHERE pl.`id_lang` = '.(int)$id_lang.'
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				ORDER BY pl.`name`';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
@@ -1775,6 +1790,10 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
+			
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
 
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
@@ -1808,6 +1827,7 @@ class ProductCore extends ObjectModel
 							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 						)
 					) > 0
+					'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -1851,6 +1871,8 @@ class ProductCore extends ObjectModel
 		Product::sqlStock('p', 0, false, null, $sql);
 
 		$sql->where('p.`active` = 1');
+		if ($front)
+			$sql->where('p.`visibility` IN ("both", "catalog")');
 		$sql->where('
 			DATEDIFF(
 				p.`date_add`,
@@ -1923,6 +1945,10 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+			
 		$current_date = date('Y-m-d H:i:s');
 		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
@@ -1965,7 +1991,8 @@ class ProductCore extends ObjectModel
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0).'
-				WHERE p.id_product = '.(int)$id_product;
+				WHERE p.id_product = '.(int)$id_product.'
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '');
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
 		return Product::getProductProperties($id_lang, $row);
@@ -2000,6 +2027,10 @@ class ProductCore extends ObjectModel
 		$current_date = date('Y-m-d H:i:s');
 		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+		
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
@@ -2010,6 +2041,7 @@ class ProductCore extends ObjectModel
 					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE p.`active` = 1
 						AND p.`show_price` = 1
+						'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 						'.((!$beginning && !$ending) ? 'AND p.`id_product` IN('.((is_array($ids_product) && count($ids_product)) ? implode(', ', array_map('intval', $ids_product)) : 0).')' : '').'
 						AND p.`id_product` IN (
 							SELECT cp.`id_product`
@@ -2053,6 +2085,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE p.`active` = 1
 				AND p.`show_price` = 1
+				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($ids_product) && count($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`

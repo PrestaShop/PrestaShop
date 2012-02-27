@@ -609,6 +609,17 @@ class ValidateCore
 	}
 
 	/**
+	 * Check for product visibility
+	 *
+	 * @param string $s visibility to check
+	 * @return boolean Validity is ok or not
+	 */
+	public static function isProductVisibility($s)
+	{
+		return preg_match('/^both|catalog|search|none$/i', $s);
+	}
+
+	/**
 	 * Check for an integer validity
 	 *
 	 * @param integer $id Integer to validate
