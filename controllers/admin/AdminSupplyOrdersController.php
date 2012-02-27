@@ -2058,6 +2058,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				unset($product_currency);
 			}
 		}
+
+		// updates supply order
+		$supply_order->update();
 	}
 
 	/**
