@@ -72,6 +72,12 @@ class BlockCurrencies extends Module
 			return;
 		$this->context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
+
+	public function hookMobileFooterChoice($params)
+	{
+		$this->smarty->assign('hook_mobile', true);
+		$this->hookTop($params);
+	}
 }
 
 
