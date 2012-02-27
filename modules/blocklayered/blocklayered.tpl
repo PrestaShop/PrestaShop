@@ -99,7 +99,7 @@ param_product_url = '';
 											{if !$value.nbr}
 											{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{else}
-											<a href="{$value.link}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+											<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{/if}
 										</label>
 									</li>
@@ -120,7 +120,7 @@ param_product_url = '';
 											{if !$value.nbr}
 												{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{else}
-												<a href="{$value.link}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+												<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 											{/if}
 										</label>
 									</li>

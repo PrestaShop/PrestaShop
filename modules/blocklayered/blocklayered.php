@@ -477,7 +477,7 @@ class BlockLayered extends Module
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selectedFilters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
 		// Need a nofollow on the pagination links?
-		//$smarty->assign('no_follow', $filterBlock['nofollow']);
+		$smarty->assign('no_follow', $filterBlock['no_follow']);
 	}
 	
 	public function hookAfterSaveProduct($params)
@@ -1031,14 +1031,26 @@ class BlockLayered extends Module
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'layered_price_index` WHERE `id_product` = '.(int)$idProduct.' AND `id_shop` = '.(int)$id_shop);
 			
 			if (Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX'))
-				$maxTaxRate = Db::getInstance()->getValue('
-					SELECT max(t.rate) max_rate
-					FROM `'._DB_PREFIX_.'product` p
-					LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (trg.id_tax_rules_group = p.id_tax_rules_group)
-					LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.id_tax_rules_group = trg.id_tax_rules_group)
-					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.id_tax = tr.id_tax AND t.active = 1)
-					WHERE id_product = '.(int)$idProduct.'
-					GROUP BY id_product');
+			{
+				if (version_compare(_PS_VERSION_,'1.5','>'))
+					$maxTaxRate = Db::getInstance()->getValue('
+						SELECT max(t.rate) max_rate
+						FROM `'._DB_PREFIX_.'product_tax_rules_group_shop` p
+						LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (trg.id_tax_rules_group = p.id_tax_rules_group)
+						LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.id_tax_rules_group = trg.id_tax_rules_group)
+						LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.id_tax = tr.id_tax AND t.active = 1)
+						WHERE id_product = '.(int)$idProduct.'
+						GROUP BY id_product');
+				else
+					$maxTaxRate = Db::getInstance()->getValue('
+						SELECT max(t.rate) max_rate
+						FROM `'._DB_PREFIX_.'product` p
+						LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (trg.id_tax_rules_group = p.id_tax_rules_group)
+						LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.id_tax_rules_group = trg.id_tax_rules_group)
+						LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.id_tax = tr.id_tax AND t.active = 1)
+						WHERE id_product = '.(int)$idProduct.'
+						GROUP BY id_product');
+			}
 			else
 				$maxTaxRate = 0;
 			
@@ -1205,13 +1217,18 @@ class BlockLayered extends Module
 			{
 				case 'price':
 				case 'weight':
-					return '<meta name="robots" content="noindex,nofollow"/>';
+					$smarty->assign('nobots', true);
+					$smarty->assign('nofollow', true);
+					return;
 				case 'id_attribute_group':
 					foreach ($val as $attr)
 					{
 						$attr_id = preg_replace('/_\d+$/', '', $attr);
-						if (in_array($attr_id, $attributes) || in_array(array('id_attribute_group' => $attr_id), $attribute_group_list))
-							return '<meta name="robots" content="noindex,nofollow"/>';
+						if (in_array($attr_id, $attributes) || in_array(array('id_attribute_group' => $attr_id), $attribute_group_list)) {
+							$smarty->assign('nobots', true);
+							$smarty->assign('nofollow', true);
+							return;
+						}
 						$attributes[] = $attr_id;
 					}
 					break;
@@ -1219,14 +1236,20 @@ class BlockLayered extends Module
 					foreach ($val as $feat)
 					{
 						$feat_id = preg_replace('/_\d+$/', '', $feat);
-						if (in_array($feat_id, $features) || in_array(array('id_feature' => $feat_id), $feature_list))
-							return '<meta name="robots" content="noindex,nofollow"/>';
+						if (in_array($feat_id, $features) || in_array(array('id_feature' => $feat_id), $feature_list)) {
+							$smarty->assign('nobots', true);
+							$smarty->assign('nofollow', true);
+							return;
+						}
 						$features[] = $feat_id;
 					}
 					break;
 				default:
-					if (count($val) > 1)
-						return '<meta name="robots" content="noindex,nofollow"/>';
+					if (count($val) > 1) {
+						$smarty->assign('nobots', true);
+						$smarty->assign('nofollow', true);
+						return;
+					}
 					break;
 			}
 		}
@@ -2938,6 +2961,29 @@ class BlockLayered extends Module
 				
 			}
 		}
+		
+		// All non indexable attribute and feature
+		$nonIndexable = array();
+		
+		// Get all non indexable attribute groups
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT public_name
+		FROM `'._DB_PREFIX_.'attribute_group_lang` agl
+		LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group` liag
+		ON liag.id_attribute_group = agl.id_attribute_group
+		WHERE indexable IS NULL OR indexable = 0
+		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+			$nonIndexable[] = Tools::link_rewrite($attribute['public_name']);
+		
+		// Get all non indexable features
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT name
+		FROM `'._DB_PREFIX_.'feature_lang` fl
+		LEFT JOIN  `'._DB_PREFIX_.'layered_indexable_feature` lif
+		ON lif.id_feature = fl.id_feature
+		WHERE indexable IS NULL OR indexable = 0
+		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+			$nonIndexable[] = Tools::link_rewrite($attribute['name']);
 
 		//generate SEO link
 		$paramSelected = '';
@@ -2986,6 +3032,7 @@ class BlockLayered extends Module
 			$paramSelected .= '/page-'.$this->page;
 
 		$blackList = array('weight','price');
+		$nofollow = false;
 		foreach ($filterBlocks as &$typeFilter)
 		{
 			$filterName = (!empty($typeFilter['url_name']) ? $typeFilter['url_name'] : $typeFilter['name']);
@@ -2994,6 +3041,7 @@ class BlockLayered extends Module
 			{
 				foreach ($typeFilter['values'] as $key => $values)
 				{
+					$nofollow = false;
 					$optionCheckedCloneArray = $optionCheckedArray;
 					
 					// If not filters checked, add parameter
@@ -3002,13 +3050,17 @@ class BlockLayered extends Module
 					{
 						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filterName), $optionCheckedArray))
+						{
 							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = $optionCheckedCloneArray[Tools::link_rewrite($filterName)].'-'.str_replace('-', '_', Tools::link_rewrite($valueName));
+							$nofollow = true;
+						}
 						else
 							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = '-'.str_replace('-', '_', Tools::link_rewrite($valueName));
 					}
 					else
 					{
 						// Remove selected parameters
+						$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = str_replace('-'.str_replace('-', '_', Tools::link_rewrite($valueName)), '', $optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
 						if (empty($optionCheckedCloneArray[Tools::link_rewrite($filterName)]))
 							unset($optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
 					}
@@ -3017,11 +3069,16 @@ class BlockLayered extends Module
 						$parameters .= '/'.str_replace('-', '_', $keyGroup).$valueGroup;
 					
 					// Check if there is an non indexable attribute or feature in the url
+					foreach ($nonIndexable as $value)
+						if (strpos($parameters, '/'.$value) !== false)
+							$nofollow = true;
 					// Write link by mode rewriting
 					if (!Configuration::get('PS_REWRITING_SETTINGS'))
 						$typeFilter['values'][$key]['link'] = $linkBase.'&selected_filters='.$parameters;
 					else
 						$typeFilter['values'][$key]['link'] = $linkBase.$parameters;
+						
+					$typeFilter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
 			}
 		}
@@ -3047,7 +3104,7 @@ class BlockLayered extends Module
 			'title_values' => $titleValues,
 			'current_friendly_url' => htmlentities($paramSelected),
 			'param_product_url' => htmlentities($param_product_url),
-			//'nofollow' => !empty($paramSelected) || $nofollow
+			'no_follow' => (!empty($paramSelected) || $nofollow)
 		);
 		
 		return $cache;
