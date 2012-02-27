@@ -714,6 +714,7 @@ class AdminProductsControllerCore extends AdminController
 	public function processPricesModification($token)
 	{
 		$id_specific_prices = Tools::getValue('spm_id_specific_price');
+		$id_combinations = Tools::getValue('spm_id_product_attribute');
 		$id_shops = Tools::getValue('spm_id_shop');
 		$id_currencies = Tools::getValue('spm_id_currency');
 		$id_countries = Tools::getValue('spm_id_country');
@@ -727,10 +728,11 @@ class AdminProductsControllerCore extends AdminController
 		$tos = Tools::getValue('spm_to');
 
 		foreach ($id_specific_prices as $key => $id_specific_price)
-			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
+			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key]))
 			{
 				$specific_price = new SpecificPrice((int)($id_specific_price));
 				$specific_price->id_shop = (int)$id_shops[$key];
+				$specific_price->id_product_attribute = (int)$id_combinations[$key];
 				$specific_price->id_currency = (int)($id_currencies[$key]);
 				$specific_price->id_country = (int)($id_countries[$key]);
 				$specific_price->id_group = (int)($id_groups[$key]);
@@ -767,8 +769,13 @@ class AdminProductsControllerCore extends AdminController
 		$reduction = (float)(Tools::getValue('sp_reduction'));
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
 		$from = Tools::getValue('sp_from');
+		if (!$from)
+			$from = '0000-00-00 00:00:00';
 		$to = Tools::getValue('sp_to');
-		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
+		if (!$to)
+			$to = '0000-00-00 00:00:00';
+			
+		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{
 			$specificPrice = new SpecificPrice();
 			$specificPrice->id_product = (int)$id_product;
@@ -782,8 +789,8 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->from_quantity = (int)($from_quantity);
 			$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
 			$specificPrice->reduction_type = $reduction_type;
-			$specificPrice->from = !$from ? '0000-00-00 00:00:00' : $from;
-			$specificPrice->to = !$to ? '0000-00-00 00:00:00' : $to;
+			$specificPrice->from = $from;
+			$specificPrice->to = $to;
 			if (!$specificPrice->add())
 				$this->errors = Tools::displayError('An error occurred while updating the specific price.');
 		}
@@ -1285,18 +1292,20 @@ class AdminProductsControllerCore extends AdminController
 		$this->status = 'ok';
 	}
 
-	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
+	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
 			$this->errors[] = Tools::displayError('Wrong ID\'s');
-		else if ((empty($price) && empty($reduction)) || (!empty($price) && !Validate::isPrice($price)) || (!empty($reduction) && !Validate::isPrice($reduction)))
+		elseif ((empty($price) && empty($reduction)) || (!empty($price) && !Validate::isPrice($price)) || (!empty($reduction) && !Validate::isPrice($reduction)))
 			$this->errors[] = Tools::displayError('Invalid price/reduction amount');
-		else if (!Validate::isUnsignedInt($from_quantity))
+		elseif (!Validate::isUnsignedInt($from_quantity))
 			$this->errors[] = Tools::displayError('Invalid quantity');
-		else if ($reduction && !Validate::isReductionType($reduction_type))
+		elseif ($reduction && !Validate::isReductionType($reduction_type))
 			$this->errors[] = Tools::displayError('Please select a reduction type (amount or percentage)');
-		else if ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to)))
+		elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to)))
 			$this->errors[] = Tools::displayError('Wrong from/to date');
+		elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to))
+			$this->errors[] = Tools::displayError('A specific price already exists for these parameters');
 		else
 			return true;
 		return false;
