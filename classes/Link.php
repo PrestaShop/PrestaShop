@@ -416,14 +416,22 @@ class LinkCore
 
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
 	{
+		// If no parameter $type, try to get it by using the controller name
+		if (!$type && !$id_object)
+		{
+			$method_name = 'get'.Dispatcher::getInstance()->getController().'Link';
+			if (method_exists($this, $method_name) && isset($_GET['id_'.Dispatcher::getInstance()->getController()]))
+			{
+				$type = Dispatcher::getInstance()->getController();
+				$id_object = $_GET['id_'.Dispatcher::getInstance()->getController()];
+			}
+		}
+		
 		if ($type && $id_object)
 			$url = $this->{'get'.$type.'Link'}($id_object, null);
 		else
-		{
-			$url = $this->url;
-			if (Configuration::get('PS_REWRITING_SETTINGS'))
-				$url = $this->getPageLink(basename($url));
-		}
+			$url = $this->getPageLink(Context::getContext()->controller->php_self);
+		
 		$vars = (!$array) ? '' : array();
 		$vars_nb = array('n', 'search_query');
 		$vars_sort = array('orderby', 'orderway');
