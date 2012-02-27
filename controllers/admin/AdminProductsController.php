@@ -3965,6 +3965,10 @@ class AdminProductsControllerCore extends AdminController
 		if (!$type)
 			return;
 
+		if ($new_id_object)
+			$object = new Product($new_id_object);
+		else
+			$object = new Product($id_object);
 		$delete = $insert = '';
 		foreach ($assos as $asso)
 		{
@@ -3974,7 +3978,7 @@ class AdminProductsControllerCore extends AdminController
 				if ($product['id_shop'] == $asso['id_'.$type])
 					$passed = true;
 			if (!$passed)
-				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].'),';
+				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].', '.(int)$object->id_category_default.'),';
 		}
 		$delete = rtrim($delete, ',');
 		$insert = rtrim($insert, ',');
