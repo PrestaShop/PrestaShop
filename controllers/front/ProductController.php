@@ -68,7 +68,7 @@ class ProductControllerCore extends FrontController
 		parent::init();
 
 		if ($id_product = (int)Tools::getValue('id_product'))
-			$this->product = new Product($id_product, true, $this->context->language->id);
+			$this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
 
 		if (!Validate::isLoadedObject($this->product))
 		{
@@ -429,8 +429,6 @@ class ProductControllerCore extends FrontController
 	 */
 	protected function assignCategory()
 	{
-
-
 		// Assign category to the template
 		if ($this->category !== false && Validate::isLoadedObject($this->category))
 		{

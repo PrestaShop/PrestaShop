@@ -499,13 +499,14 @@ class StatsForecast extends Module
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (asso_shop_product.id_category_default = cl.id_category AND cl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				'.$join.'
 				WHERE o.valid = 1
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$where.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-				GROUP BY p.id_category_default';
+				GROUP BY asso_shop_product.id_category_default';
 		$ca['cat'] = Db::getInstance()->executeS($sql);
 		uasort($ca['cat'], 'statsforecast_sort');
 
