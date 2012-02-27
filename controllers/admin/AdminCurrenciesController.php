@@ -32,9 +32,9 @@ class AdminCurrenciesControllerCore extends AdminController
 		$this->table = 'currency';
 		$this->className = 'Currency';
 		$this->lang = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		parent::__construct();
-		$this->multishop_context = Shop::CONTEXT_ALL;
 	}
 
 	public function init()
