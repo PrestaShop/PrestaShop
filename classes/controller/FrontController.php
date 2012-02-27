@@ -320,7 +320,8 @@ class FrontControllerCore extends Controller
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
-			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE')
+			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
+			'request' => $link->getPaginationLink(false, false, false, true)
 		));
 
 		// Deprecated
