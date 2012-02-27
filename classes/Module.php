@@ -171,14 +171,6 @@ abstract class ModuleCore
 	}
 
 	/**
-	 * Get SQL modules restriction by shop
-	 */
-	protected function sqlShopRestriction($share = false, $alias = null)
-	{
-		return $this->context->shop->addSqlRestriction($share, $alias, 'shop');
-	}
-
-	/**
 	 * Insert module into datable
 	 */
 	public function install()

@@ -157,7 +157,7 @@ class AttachmentCore extends ObjectModel
 				$ids_attachements[] = $attachement['id_attachment'];
 
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
-					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
+					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
 					WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).')
 						AND pl.`id_lang` = '.(int)$id_lang;
 			$tmp = Db::getInstance()->executeS($sql);

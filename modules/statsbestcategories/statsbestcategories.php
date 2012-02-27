@@ -170,8 +170,8 @@ class StatsBestCategories extends ModuleGrid
 				AND dr.`time_end` BETWEEN '.$dateBetween.'
 			) AS totalPageViewed
 		FROM `'._DB_PREFIX_.'category` ca
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` calang ON (ca.`id_category` = calang.`id_category` AND calang.`id_lang` = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('calang').')
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` parent ON (ca.`id_parent` = parent.`id_category` AND parent.`id_lang` = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('parent').')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` calang ON (ca.`id_category` = calang.`id_category` AND calang.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('calang').')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` parent ON (ca.`id_parent` = parent.`id_category` AND parent.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('parent').')
 		LEFT JOIN `'._DB_PREFIX_.'category_product` capr ON ca.`id_category` = capr.`id_category`
 		LEFT JOIN (
 			SELECT pr.`id_product`, t.`totalQuantitySold`, t.`totalPriceSold`

@@ -93,16 +93,13 @@ class MetaCore extends ObjectModel
 		ORDER BY page ASC');
 	}
 
-	public static function getMetasByIdLang($id_lang, Shop $shop = null)
+	public static function getMetasByIdLang($id_lang)
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'meta` m
 				LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
 				WHERE ml.`id_lang` = '.(int)$id_lang
-					.$shop->addSqlRestrictionOnLang('ml').
+					.Shop::addSqlRestrictionOnLang('ml').
 				'ORDER BY page ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -118,7 +115,7 @@ class MetaCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
 				WHERE m.page = \''.pSQL($page).'\'
 					AND ml.id_lang = '.(int)$id_lang
-					.$context->shop->addSqlRestrictionOnLang('ml');
+					.Shop::addSqlRestrictionOnLang('ml');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 

@@ -252,7 +252,7 @@ class SupplierCore extends ObjectModel
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
 					AND ps.id_product_attribute = 0)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`
 					AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`

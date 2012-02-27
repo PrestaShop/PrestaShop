@@ -252,11 +252,11 @@ class SearchCore
 					FROM '._DB_PREFIX_.'product p
 					INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
-						AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+						AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 					)
 					INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (
 						p.`id_category_default` = cl.`id_category`
-						AND cl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').'
+						AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 					)
 					WHERE p.`id_product` '.$product_pool.'
 					ORDER BY position DESC LIMIT 10';
@@ -281,7 +281,7 @@ class SearchCore
 				FROM '._DB_PREFIX_.'product p
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)$context->country->id.'
@@ -300,7 +300,7 @@ class SearchCore
 				FROM '._DB_PREFIX_.'product p
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -628,7 +628,7 @@ class SearchCore
 				FROM `'._DB_PREFIX_.'product` p
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				'.$context->shop->addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)

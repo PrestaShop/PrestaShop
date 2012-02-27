@@ -754,7 +754,7 @@ class ToolsCore
 			{
 				$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
 						FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
+						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
 						WHERE pl.id_lang = '.(int)$id_lang.'
 							AND pl.id_product = '.(int)$id_product.'
 							AND p.active = 1';
@@ -776,7 +776,7 @@ class ToolsCore
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
-				WHERE cl.`id_lang` = '.(int)($id_lang).' AND cl.`id_category` = '.(int)$id_category.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
+				WHERE cl.`id_lang` = '.(int)($id_lang).' AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl'));
 				if ($row)
 				{
 					if (empty($row['meta_description']))
@@ -976,7 +976,7 @@ class ToolsCore
 			{
 				$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
 						FROM '._DB_PREFIX_.'category c
-						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.$context->shop->addSqlRestrictionOnLang('cl').')
+						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
 						WHERE c.nleft <= '.$interval['nleft'].'
 							AND c.nright >= '.$interval['nright'].'
 							AND c.nleft >= '.$intervalRoot['nleft'].'
@@ -1519,7 +1519,7 @@ class ToolsCore
 	public static function cccJS($js_files)
 	{
 		Tools::displayAsDeprecated();
-		return Media::cccJS($css_files);
+		return Media::cccJS($js_files);
 	}
 
 	private static $_cache_nb_media_servers = null;

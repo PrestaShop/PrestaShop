@@ -789,7 +789,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND date_upd >= \''.pSQL($date_from).'\'
-					'.Context::getContext()->shop->addSqlRestriction()
+					'.Shop::addSqlRestriction()
 					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -815,7 +815,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 				WHERE 1
-					'.Context::getContext()->shop->addSqlRestriction(false, 'o').'
+					'.Shop::addSqlRestriction(false, 'o').'
 				ORDER BY o.`date_add` DESC
 				'.((int)$limit ? 'LIMIT 0, '.(int)$limit : '');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -838,7 +838,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
-					'.Context::getContext()->shop->addSqlRestriction()
+					'.Shop::addSqlRestriction()
 					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
 				' ORDER BY invoice_date ASC';
@@ -863,7 +863,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT id_order
 				FROM '._DB_PREFIX_.'orders o
 				WHERE o.`current_state` = '.(int)$id_order_state.'
-				'.Context::getContext()->shop->addSqlRestriction(false, 'o').'
+				'.Shop::addSqlRestriction(false, 'o').'
 				ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -933,7 +933,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT COUNT(`id_order`) AS nb
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `id_customer` = '.(int)$id_customer
-					.Context::getContext()->shop->addSqlRestriction();
+					.Shop::addSqlRestriction();
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
 		return isset($result['nb']) ? $result['nb'] : 0;
@@ -950,7 +950,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `id_cart` = '.(int)($id_cart)
-					.Context::getContext()->shop->addSqlRestriction();
+					.Shop::addSqlRestriction();
 		$result = Db::getInstance()->getRow($sql);
 
 		return isset($result['id_order']) ? $result['id_order'] : false;
@@ -1120,7 +1120,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT id_order
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `delivery_number` = '.(int)($id_delivery).'
-				'.Context::getContext()->shop->addSqlRestriction();
+				'.Shop::addSqlRestriction();
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		return new Order((int)($res['id_order']));
 	}
@@ -1159,7 +1159,7 @@ class OrderCore extends ObjectModel
 				WHERE o.`id_order` = '.(int)$this->id.'
 					AND c.`email` = \''.pSQL($email).'\'
 					AND c.`is_guest` = 1
-					'.Context::getContext()->shop->addSqlRestriction(false, 'c');
+					'.Shop::addSqlRestriction(false, 'c');
 		return (bool)Db::getInstance()->getValue($sql);
 	}
 

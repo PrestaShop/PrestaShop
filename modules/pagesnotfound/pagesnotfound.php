@@ -73,7 +73,7 @@ class Pagesnotfound extends Module
 		$sql = 'SELECT http_referer, request_uri, COUNT(*) as nb
 				FROM `'._DB_PREFIX_.'pagenotfound`
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween()
-					.$this->sqlShopRestriction().
+					.Shop::addSqlRestriction().
 				'GROUP BY http_referer, request_uri';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 

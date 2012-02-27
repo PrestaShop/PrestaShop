@@ -264,7 +264,7 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	FROM `'._DB_PREFIX_.'product` p
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-	'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
+	'.Shop::addSqlRestrictionOnLang('pl').'
 	AND p.`id_product` NOT IN (SELECT DISTINCT id_product_pack FROM `'._DB_PREFIX_.'pack`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
@@ -866,7 +866,7 @@ if (Tools::isSubmit('searchCategory'))
 	$results = Db::getInstance()->executeS(
 		'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.$context->shop->addSqlRestrictionOnLang('cl').')
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category

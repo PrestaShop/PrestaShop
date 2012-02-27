@@ -59,7 +59,7 @@ class StatsCarrier extends ModuleGraph
 		$sql = 'SELECT COUNT(o.`id_order`) as total
 				FROM `'._DB_PREFIX_.'orders` o
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					'.((int)Tools::getValue('id_order_state') ? 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)Tools::getValue('id_order_state') : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		$states = OrderState::getOrderStates($this->context->language->id);
@@ -102,7 +102,7 @@ class StatsCarrier extends ModuleGraph
 				FROM `'._DB_PREFIX_.'carrier` c
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.id_carrier = c.id_carrier
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
-					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					'.$stateQuery.'
 				GROUP BY c.`id_carrier`';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

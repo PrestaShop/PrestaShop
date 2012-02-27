@@ -410,7 +410,7 @@ class CarrierCore extends ObjectModel
 
 		$sql = 'SELECT c.*, cl.delay
 				FROM `'._DB_PREFIX_.'carrier` c
-				LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)'.
 				($id_zone ? 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = '.(int)$id_zone.')' : '').'
 				WHERE c.`deleted` = '.($delete ? '1' : '0').

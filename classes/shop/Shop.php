@@ -696,7 +696,7 @@ class ShopCore extends ObjectModel
 	 * @param string $alias
 	 * @param string $type shop|group_shop
 	 */
-	public function addSqlRestriction($share = false, $alias = null, $type = 'shop')
+	public static function addSqlRestriction($share = false, $alias = null, $type = 'shop')
 	{
 		if ($type != 'shop' && $type != 'group_shop')
 			$type = 'shop';
@@ -753,9 +753,11 @@ class ShopCore extends ObjectModel
 	 * @param Context $context
 	 * @return string
 	 */
-	public function addSqlRestrictionOnLang($alias = null)
+	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
-		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$this->id.' ';
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->id;
+		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
 	}
 
 	/**

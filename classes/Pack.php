@@ -114,12 +114,12 @@ class PackCore extends Product
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.id_product = pl.id_product
-					AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON p.`id_category_default` = cl.`id_category`
-					AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').'
+					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
 					AND ptrgs.id_shop='.(int)Context::getContext()->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -166,7 +166,7 @@ class PackCore extends Product
 	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 		WHERE pl.`id_lang` = '.(int)$id_lang.'
-			'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
+			'.Shop::addSqlRestrictionOnLang('pl').'
 			AND p.`id_product` IN ('.$packs.')';
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;

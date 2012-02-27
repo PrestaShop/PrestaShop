@@ -70,7 +70,7 @@ class StatsStock extends Module
 				FROM '._DB_PREFIX_.'product p
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				INNER JOIN '._DB_PREFIX_.'product_lang pl
-					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
+					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
 				'.Product::sqlStock('p', 0).'
 				WHERE 1 = 1
 				'.$filter;

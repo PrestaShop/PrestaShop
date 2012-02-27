@@ -92,7 +92,7 @@ class ProductSaleCore
 				'.$context->shop->addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
@@ -147,12 +147,12 @@ class ProductSaleCore
 				'.$context->shop->addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
+					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON cl.`id_category` = p.`id_category_default`
-					AND cl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').'
+					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE p.`active` = 1
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
