@@ -94,7 +94,6 @@ class ShopCore extends ObjectModel
 		'store' => array('type' => 'shop'),
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
-		/* 'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'), */
 	);
 
 	protected $webserviceParameters = array(
@@ -127,7 +126,7 @@ class ShopCore extends ObjectModel
 		parent::__construct($id, $id_lang, $id_shop);
 		if ($this->id)
 		{
-			$sql = 'SELECT su.physical_uri, su.virtual_uri, 
+			$sql = 'SELECT su.physical_uri, su.virtual_uri,
 				su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
 					FROM '._DB_PREFIX_.'shop s
 					LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)

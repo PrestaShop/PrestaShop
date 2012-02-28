@@ -390,7 +390,7 @@ class StockAvailableCore extends ObjectModel
 		if (!$depends_on_stock)
 		{
 			$id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-			
+
 			$product = new Product($id_product, true, $id_lang, $id_shop, $context);
 			Hook::exec('actionUpdateQuantity', array('product' => $product, 'attribute_id' => $id_product_attribute));
 
@@ -441,7 +441,7 @@ class StockAvailableCore extends ObjectModel
 			else
 				Hook::exec('actionProductUpdate', array('product' => $product));
 		}
-		
+
 	}
 
 	/**
@@ -628,5 +628,37 @@ class StockAvailableCore extends ObjectModel
 		// if no group specific restriction, set simple shop restriction
 		if (!$group_ok)
 			$params['id_shop'] = (int)$id_shop;
+	}
+
+	/**
+	 * Copies stock available content table
+	 *
+	 * @param int $src_shop_id
+	 * @param int $dst_shop_id
+	 * @return bool
+	 */
+	public static function copyStockAvailableFromShopToShop($src_shop_id, $dst_shop_id)
+	{
+		if (!$src_shop_id || !$dst_shop_id)
+			return false;
+
+		$query = '
+			INSERT INTO '._DB_PREFIX_.'stock_available
+			(
+				id_product,
+				id_product_attribute,
+				id_shop,
+				id_group_shop,
+				quantity,
+				depends_on_stock,
+				out_of_stock
+			)
+			(
+				SELECT id_product, id_product_attribute, '.(int)$dst_shop_id.', 0, quantity, depends_on_stock, out_of_stock
+				FROM '._DB_PREFIX_.'stock_available
+				WHERE id_shop = '.(int)$src_shop_id.
+			')';
+
+		return Db::getInstance()->execute($query);
 	}
 }
