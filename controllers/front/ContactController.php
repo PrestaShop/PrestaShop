@@ -50,7 +50,7 @@ class ContactControllerCore extends FrontController
 			$message = Tools::htmlentitiesUTF8(Tools::getValue('message'));
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
-			else if (!($message = Tools::nl2br($message)))
+			else if (!$message)
 				$this->errors[] = Tools::displayError('Message cannot be blank');
 			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
@@ -119,7 +119,7 @@ class ContactControllerCore extends FrontController
 				{
 					$mail_var_list = array(
 						'{email}' => $from,
-						'{message}' => stripslashes($message),
+						'{message}' => Tools::nl2br(stripslashes($message)),
 						'{id_order}' => (int)Tools::getValue('id_order'),
 						'{attached_file}' => $_FILES['fileUpload']['name'] ? $_FILES['fileUpload']['name'] : '');
 

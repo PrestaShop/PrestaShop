@@ -319,7 +319,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				if ($id_employee && $employee && Validate::isLoadedObject($employee))
 				{
 					$params = array(
-					'{messages}' => $output,
+					'{messages}' => Tools::nl2br(stripslashes($output)),
 					'{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
 					'{comment}' => stripslashes($_POST['message_forward']));
 
@@ -341,7 +341,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				else if ($email && Validate::isEmail($email))
 				{
 					$params = array(
-					'{messages}' => $output,
+					'{messages}' => Tools::nl2br(stripslashes($output)),
 					'{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
 					'{comment}' => stripslashes($_POST['message_forward']));
 

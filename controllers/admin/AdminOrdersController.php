@@ -345,7 +345,7 @@ class AdminOrdersControllerCore extends AdminController
 						else
 						{
 							$message = $customer_message->message;
-							if (Configuration::get('PS_MAIL_TYPE') != 2)
+							if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
 								$message = Tools::nl2br($customer_message->message);
 
 							$varsTpl = array(

@@ -48,7 +48,7 @@
 		<div class="infoCustomer">
 			{if !empty($message.id_customer) && empty($message.id_employee)}
 			<dl>
-				<dt>{l s='Customer ID:'}&#32;:</dd> 
+				<dt>{l s='Customer ID:'}</dd> 
 				<dd><a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='view'}" />
 				</a>
@@ -57,21 +57,21 @@
 			{/if}
 			
 			<dl>			
-				<dt>{l s='Sent on:'}&#32;:</dt>
+				<dt>{l s='Sent on:'}</dt>
 				<dd>{$message.date_add}</dd> 
 			
 			</dl>
 
 			{if empty($message.id_employee)}
 			<dl>
-				<dt>{l s='Browser:'}&#32;:</dt>
+				<dt>{l s='Browser:'}</dt>
 				<dd>{$message.user_agent}</dd>
 			</dl>
 			{/if}
 
 			{if !empty($message.file_name) && $file_name}
 			<dl>
-				<dt>{l s='File attachment'}&#32;:</dt> 
+				<dt>{l s='File attachment'}</dt> 
 				<dd><a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
 					title="{l s='View file'}">
 						<img src="../img/admin/search.gif" alt="{l s='view'}" />
@@ -82,7 +82,7 @@
 
 			{if !empty($message.id_order) && empty($message.id_employee)}
 				<dl>
-					<dt>{l s='Order #'}&#32;:</dt> 
+					<dt>{l s='Order #'}</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
 					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='view'}" />
 				</a></dd>
@@ -91,7 +91,7 @@
 
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl>
-					<dt>{l s='Product #'}&#32;:</dt> 
+					<dt>{l s='Product #'}</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$id_order_product}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
 					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='view'}" />
 				</a></dd>
@@ -143,16 +143,16 @@
 
 {/if}
 		<dl>
-			<dt>{l s='Thread ID:'}&#32;:</dt>
+			<dt>{l s='Thread ID:'}</dt>
 			<dd>{$message.id_customer_thread}</dd>
 		</dl>
 		<dl>
-			<dt>{l s='Message ID:'}&#32;:</dt>
+			<dt>{l s='Message ID:'}</dt>
 			<dd>{$message.id_customer_message}</dd>
 		</dl>
 		<dl>
-			<dt>{l s='Message:'}&#32;:</dt>
-			<dd>{$message.message}</dd>
+			<dt>{l s='Message:'}</dt>
+			<dd>{$message.message|nl2br}</dd>
 		</dl>
 	</div>
 
