@@ -35,6 +35,9 @@ var id_category_root = 0;
 
 function buildTreeView()
 {
+	use_shop_context = false;
+	if (buildTreeView.arguments[0])
+		use_shop_context = true;
 	$("#categories-treeview").treeview({
 		url : 'ajax.php',
 		toggle: function () { callbackToggle($(this)); },
@@ -43,6 +46,7 @@ function buildTreeView()
 			async: true,
 			data: {
 				getChildrenCategories : true,
+				use_shop_context : use_shop_context,
 				selectedCat: selectedCat
 			}
 		}
