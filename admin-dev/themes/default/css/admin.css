@@ -144,6 +144,13 @@ td.col-left label { display:block; width:100%; text-align:right;}
 .cat_bar{background-color:#F4E8CD;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;margin-bottom:20px;padding:5px}
 .cat_bar a{font-weight:700}
 
+.table tr#total_products, 
+.table tr#total_discounts,
+.table tr#total_wrapping,
+.table tr#total_shipping { height:35px;}
+.table tr#total_order { height:50px;}
+
+
 a.action_module{color: #268CCD;text-decoration: underline;}
 a.header_module_toggle{font-weight: bold;color: #268CCD;display:block;}
 a.module_toggle_all{color: #268CCD;}
