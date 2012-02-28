@@ -65,6 +65,8 @@ require_once(_PS_INSTALL_PATH_.'classes/xmlLoader.php');
 require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
 @set_time_limit(0);
+if (!@ini_get('date.timezone'))
+	@date_default_timezone_set('UTC');
 
 // Try to improve memory limit if it's under 32M
 if (Tools::getMemoryLimit() < Tools::getOctets('32M'))
