@@ -64,7 +64,13 @@ class BlockStore extends Module
 	function hookRightColumn($params)
 	{
 		$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
-		return $this->display(__FILE__, 'blockstore.tpl');
+		$sql = 'SELECT COUNT(*)
+				FROM '._DB_PREFIX_.'store s'
+				.Shop::addSqlAssociation('store', 's');
+		$total = Db::getInstance()->getValue($sql);
+
+		if ($total > 0)
+			return $this->display(__FILE__, 'blockstore.tpl');
 	}
 
 	function hookHeader($params)

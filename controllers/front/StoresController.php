@@ -54,7 +54,6 @@ class StoresControllerCore extends FrontController
 			'lastname'
 		);
 
-		$out = '';
 		$out_datas = array();
 
 		$address_datas = AddressFormat::getOrderedAddressFields($store['id_country'], false, true);
@@ -92,7 +91,7 @@ class StoresControllerCore extends FrontController
 		$stores = Db::getInstance()->executeS('
 		SELECT s.*, cl.name country, st.iso_code state
 		FROM '._DB_PREFIX_.'store s
-		'.Shop::addSqlAssociation('shop', 's').'
+		'.Shop::addSqlAssociation('store', 's').'
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 		LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
@@ -118,7 +117,7 @@ class StoresControllerCore extends FrontController
 			$stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state
 			FROM '._DB_PREFIX_.'store s
-			'.Shop::addSqlAssociation('shop', 's').'
+			'.Shop::addSqlAssociation('store', 's').'
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
@@ -141,7 +140,7 @@ class StoresControllerCore extends FrontController
 			) distance,
 			cl.id_country id_country
 			FROM '._DB_PREFIX_.'store s
-			'.Shop::addSqlAssociation('shop', 's').'
+			'.Shop::addSqlAssociation('store', 's').'
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.'
@@ -240,9 +239,9 @@ class StoresControllerCore extends FrontController
 	public function initContent()
 	{
 		if (Configuration::get('PS_STORES_SIMPLIFIED'))
-			$stores = $this->assignStoresSimplified();
+			$this->assignStoresSimplified();
 		else
-			$stores = $this->assignStores();
+			$this->assignStores();
 
 		$this->context->smarty->assign(array(
 			'mediumSize' => Image::getSize('medium'),
