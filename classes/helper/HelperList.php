@@ -588,7 +588,7 @@ class HelperListCore extends Helper
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
 			'title' => $this->title,
 			'show_toolbar' => $this->show_toolbar,
-			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'toolbar_btn' => $this->toolbar_btn,
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
