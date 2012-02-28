@@ -147,7 +147,7 @@ class HelperFormCore extends Helper
 			'title' => $this->title,
 			'toolbar_btn' => $this->toolbar_btn,
 			'show_toolbar' => $this->show_toolbar,
-			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'submit_action' => $this->submit_action,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,

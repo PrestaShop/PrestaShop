@@ -26,7 +26,7 @@
 
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
-		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+		<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
 				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
 				<div class="pageTitle">
 					<h3>

@@ -120,7 +120,7 @@ class AdminControllerCore extends Controller
 	protected $toolbar_btn = null;
 
 	/** @var boolean scrolling toolbar */
-	protected $toolbar_fix = true;
+	protected $toolbar_scroll = true;
 
 	/** @var boolean set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
@@ -1530,7 +1530,7 @@ class AdminControllerCore extends Controller
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->show_toolbar = $this->show_toolbar;
-		$helper->toolbar_fix = $this->toolbar_fix;
+		$helper->toolbar_scroll = $this->toolbar_scroll;
 		$helper->override_folder = $this->tpl_folder;
 		$helper->actions = $this->actions;
 		$helper->simple_header = $this->list_simple_header;
