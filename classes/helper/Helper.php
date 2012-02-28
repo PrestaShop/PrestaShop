@@ -161,6 +161,7 @@ class HelperCore
 	 * @param bool $use_search display a find category search box
 	 * @param array $disabled_categories
 	 * @param bool $use_in_popup
+	 * @param bool $use_shop_context
 	 * @return string
 	 */
 	public function renderCategoryTree($root = null,
@@ -169,7 +170,8 @@ class HelperCore
 									   $use_radio = false,
 									   $use_search = false,
 									   $disabled_categories = array(),
-									   $use_in_popup = false)
+									   $use_in_popup = false,
+									   $use_shop_context = false)
 	{
 		$translations = array(
 			'selected' => $this->l('selected'),
@@ -229,10 +231,10 @@ class HelperCore
 		if (!$use_in_popup)
 			$html .= '
 			$(document).ready(function(){
-				buildTreeView();
+				buildTreeView('.$use_shop_context.');
 			});';
 		else
-			$html .= 'buildTreeView();';
+			$html .= 'buildTreeView('.$use_shop_context.');';
 		$html .= '</script>';
 
 		$html .= '

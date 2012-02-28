@@ -781,7 +781,7 @@ class CategoryCore extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+		$id_shop = $shop->id ? $shop->id : Configuration::get('PS_SHOP_DEFAULT');
 		$selected_cat = explode(',', str_replace(' ', '', $selected_cat));
 		$sql = 'SELECT c.`id_category`, c.`level_depth`, cl.`name`, IF((
 						SELECT COUNT(*)
@@ -806,7 +806,7 @@ class CategoryCore extends ObjectModel
 					AND cs.`id_shop` = '.(int)$shop->id;
 		$sql .= '
 					AND c.`id_parent` = '.(int)$id_parent.'
-				ORDER BY `position` ASC';
+				ORDER BY cs.`position` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
