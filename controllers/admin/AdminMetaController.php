@@ -51,8 +51,20 @@ class AdminMetaControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('URLs Setup'),
 				'fields' =>	array(
-					'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
-					'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+					'PS_REWRITING_SETTINGS' => array(
+						'title' => $this->l('Friendly URL'),
+						'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+						),
+					'PS_CANONICAL_REDIRECT' => array(
+						'title' => $this->l('Automatically redirect to Canonical url'),
+						'desc' => $this->l('Recommended but your theme must be compliant'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+						),
 				),
 				'submit' => array()
 			),
