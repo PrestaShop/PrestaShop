@@ -212,17 +212,27 @@ class HelperFormCore extends Helper
 			switch (Shop::getContext())
 			{
 				case Shop::CONTEXT_SHOP :
-					$assos[Shop::getContextShopID()] = Shop::getContextShopID();
+					if ($type == 'shop')
+						$assos[Shop::getContextShopID()] = Shop::getContextShopID();
+					else
+						$assos[Shop::getContextGroupShopID()] = Shop::getContextGroupShopID();
 				break;
 
 				case Shop::CONTEXT_GROUP :
-					foreach (Shop::getShops(false, Shop::getContextGroupShopID(), true) as $id_shop)
-						$assos[$id_shop] = $id_shop;
+					if ($type == 'shop')
+						foreach (Shop::getShops(false, Shop::getContextGroupShopID(), true) as $id_shop)
+							$assos[$id_shop] = $id_shop;
+					else
+						$assos[Shop::getContextGroupShopID()] = Shop::getContextGroupShopID();
 				break;
 
 				default :
-					foreach (Shop::getShops(false, null, true) as $id_shop)
-						$assos[$id_shop] = $id_shop;
+					if ($type == 'shop')
+						foreach (Shop::getShops(false, null, true) as $id_shop)
+							$assos[$id_shop] = $id_shop;
+					else
+						foreach (Shop::getTree() as $group_shop)
+							$assos[$group_shop['id']] = $group_shop['id'];
 				break;
 			}
 		}
