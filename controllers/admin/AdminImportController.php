@@ -879,7 +879,7 @@ class AdminImportControllerCore extends AdminController
 				// If id category AND id category already in base, trying to update
 				if ($category->id && $category->categoryExists($category->id) && $category->id != 1)
 					$res = $category->update();
-				if ($category->id == 1)
+				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('Root category cannot be modify');
 				// If no id_category or update failed
 				if (!$res)
