@@ -504,8 +504,7 @@ class AdminShopControllerCore extends AdminController
 		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
 		{
 			$id_src_shop = (int)Tools::getValue('importFromShop');
-			$group = new GroupShop((int)Shop::getGroupFromShop($object->id));
-			if ($group->share_stock == false)
+			if ($object->getGroup()->share_stock == false)
 				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
 		}
 
