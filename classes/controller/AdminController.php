@@ -119,7 +119,7 @@ class AdminControllerCore extends Controller
 	/** @var array list of toolbar buttons */
 	protected $toolbar_btn = null;
 
-	/** @var array list of toolbar buttons */
+	/** @var boolean scrolling toolbar */
 	protected $toolbar_fix = true;
 
 	/** @var boolean set to false to hide toolbar and page title */
@@ -984,7 +984,6 @@ class AdminControllerCore extends Controller
 	{
 		switch ($this->display)
 		{
-			// @todo defining default buttons
 			case 'add':
 			case 'edit':
 				// Default save button - action dynamically handled in javascript
@@ -1440,7 +1439,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$list = $helper->generateList($this->_list, $this->fieldsDisplay);
-		$this->toolbar_fix = false;
 
 		return $list;
 	}
@@ -1455,7 +1453,6 @@ class AdminControllerCore extends Controller
 		$helper->tpl_vars = $this->tpl_view_vars;
 		!is_null($this->base_tpl_view) ? $helper->base_tpl = $this->base_tpl_view : '';
 		$view = $helper->generateView();
-		$this->toolbar_fix = false;
 
 		return $view;
 	}
@@ -1490,7 +1487,6 @@ class AdminControllerCore extends Controller
 					$helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex.'&token='.$this->token));
 			}
 			$form = $helper->generateForm($this->fields_form);
-			$this->toolbar_fix = false;
 
 			return $form;
 		}
@@ -1511,7 +1507,6 @@ class AdminControllerCore extends Controller
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
 			$options = $helper->generateOptions($this->options);
-			$this->toolbar_fix = false;
 
 			return $options;
 		}
