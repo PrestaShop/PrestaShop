@@ -47,7 +47,7 @@
 </script>
 
 {block name="defaultOptions"}
-<form action="{$current}&submitOptions{$table}=1&token={$token}"
+<form action="{$current}&token={$token}"
 	id="{$table}_form"
 	{if isset($categoryData['name'])} name={$categoryData['name']}{/if}
 	{if isset($categoryData['id'])} id={$categoryData['id']} {/if}
@@ -197,7 +197,7 @@
 			<div class="margin-form">
 				<input type="submit"
 						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}"
-						name="{if isset($categoryData['submit']['name'])}$categoryData['submit']['name']{else}submit{$category|ucfirst}{$table}{/if}"
+						name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
 						class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}button{/if}"
 						id="{$table}_form_submit_btn"
 				/>
