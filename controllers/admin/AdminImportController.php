@@ -167,7 +167,7 @@ class AdminImportControllerCore extends AdminController
 
 				self::$default_values = array(
 					'active' => '1',
-					'parent' => '1',
+					'parent' => Configuration::get('PS_HOME_CATEGORY'),
 					'link_rewrite' => ''
 				);
 			break;
@@ -801,7 +801,7 @@ class AdminImportControllerCore extends AdminController
 			$info = AdminImportController::getMaskedRow($line);
 
 			if (!isset($info['id']) || (int)$info['id'] < 2)
-								continue;
+				continue;
 
 			AdminImportController::setDefaultValues($info);
 			$category = new Category();
@@ -823,7 +823,7 @@ class AdminImportControllerCore extends AdminController
 					$category_to_create = new Category();
 					$category_to_create->name = AdminImportController::createMultiLangField($category->parent);
 					$category_to_create->active = 1;
-					$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
+					$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 						$category->id_parent = $category_to_create->id;
@@ -1017,7 +1017,7 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create->id = (int)$value;
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
-							$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
+							$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 								$product->id_category[] = (int)$category_to_create->id;
