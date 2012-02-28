@@ -28,6 +28,18 @@
 {block name="other_input"}
 
 {if isset($supply_order) && $supply_order->id > 0 && isset($supply_order_states)}
+<script>
+$(document).ready(function() {
+	$('#id_supply_order_state option').each(function () {
+		
+		if ($(this).attr('disabled') == false)
+			$(this).attr('selected', true);
+		
+		return ($(this).attr('disabled') == true);
+		
+	});
+});
+</script>
 <input type="hidden" name="id_supply_order" id="id_supply_order" value="{$supply_order->id}">
 <label>{l s='Status of the order:'}</label>						
 
