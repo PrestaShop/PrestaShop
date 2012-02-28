@@ -59,7 +59,7 @@ class AdminImagesControllerCore extends AdminController
 					'PS_JPEG_QUALITY' => array('title' => $this->l('JPEG quality'), 'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
 		 			'PS_PNG_QUALITY' => array('title' => $this->l('PNG quality'), 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)'), 'validation' => 'isUnsignedId', 'required' => true, 'cast' => 'intval', 'type' => 'text'),
 				),
-				'submit' => array(),
+				'submit' => array('name' => 'submitImagePreferences'),
 			)
 		);
 
