@@ -223,7 +223,7 @@ class AdminTabsControllerCore extends AdminController
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
 			$helper->imageType = $this->imageType;
-			$helper->toolbar_fix = false;
+			$helper->toolbar_scroll = false;
 			$helper->show_toolbar = false;
 			$helper->orderBy = 'position';
 			$helper->orderWay = 'ASC';

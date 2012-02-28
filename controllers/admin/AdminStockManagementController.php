@@ -826,7 +826,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// Render list
 			$helper = new HelperList();
 			$helper->bulk_actions = array();
-			$helper->toolbar_fix = $this->toolbar_fix;
+			$helper->toolbar_scroll = $this->toolbar_scroll;
 			$helper->show_toolbar = false;
 			$helper->actions = $this->actions;
 			$helper->list_skip_actions = $this->list_skip_actions;

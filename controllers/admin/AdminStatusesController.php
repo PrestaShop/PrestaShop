@@ -373,7 +373,7 @@ class AdminStatusesControllerCore extends AdminController
 		$helper->table = 'order_return_state';
 		$helper->identifier = 'id_order_return_state';
 		$helper->id = $order_return_state->id;
-		$helper->toolbar_fix = false;
+		$helper->toolbar_scroll = false;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;

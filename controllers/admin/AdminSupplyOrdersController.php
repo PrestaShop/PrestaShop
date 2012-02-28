@@ -577,7 +577,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->submit_action = 'submitChangestate';
 		$helper->currentIndex = self::$currentIndex;
 		$helper->toolbar_btn = $this->toolbar_btn;
-		$helper->toolbar_fix = false;
+		$helper->toolbar_scroll = false;
 		$helper->token = $this->token;
 		$helper->id = null; // no display standard hidden field in the form
 		$helper->languages = $this->_languages;
@@ -1523,7 +1523,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper = new HelperList();
 			$helper->no_link = true;
 			$helper->show_toolbar = false;
-			$helper->toolbar_fix = false;
+			$helper->toolbar_scroll = false;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
 			//$helper->colorOnBackground = true;
@@ -1576,7 +1576,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper = new HelperList();
 			$helper->no_link = true;
 			$helper->show_toolbar = false;
-			$helper->toolbar_fix = false;
+			$helper->toolbar_scroll = false;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
 			$helper->colorOnBackground = true;
@@ -1663,7 +1663,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function renderView()
 	{
 		$this->show_toolbar = true;
-		$this->toolbar_fix = false;
+		$this->toolbar_scroll = false;
 		$this->table = 'supply_order_detail';
 		$this->identifier = 'id_supply_order_detail';
 	 	$this->className = 'SupplyOrderDetail';

@@ -333,7 +333,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$helper->table = 'tax_rule';
 		$helper->identifier = 'id_tax_rule';
 		$helper->id = $obj->id;
-		$helper->toolbar_fix = true;
+		$helper->toolbar_scroll = true;
 		$helper->show_toolbar = false;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;

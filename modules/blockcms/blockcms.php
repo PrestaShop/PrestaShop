@@ -428,7 +428,7 @@ class BlockCms extends Module
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		$helper->default_form_language = $this->context->controller->default_form_language;
 		$helper->allow_employee_form_lang = $this->context->controller->allow_employee_form_lang;
-		$helper->toolbar_fix = true;
+		$helper->toolbar_scroll = true;
 		$helper->toolbar_btn = $this->initToolbar();
 
 		return $helper;

@@ -2105,7 +2105,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 
 		parent::initToolbar();
-		$this->context->smarty->assign('toolbar_fix', 1);
+		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
 	}

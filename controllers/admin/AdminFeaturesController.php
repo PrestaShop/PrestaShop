@@ -131,7 +131,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$helper->no_link = true;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
-			$helper->toolbar_fix = false;
+			$helper->toolbar_scroll = false;
 			$helper->orderBy = 'position';
 			$helper->orderWay = 'ASC';
 			$helper->currentIndex = self::$currentIndex;
@@ -286,7 +286,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$helper->identifier = 'id_feature_value';
 		$helper->override_folder = 'feature_value/';
 		$helper->id = $feature_value->id;
-		$helper->toolbar_fix = false;
+		$helper->toolbar_scroll = false;
 		$helper->tpl_vars = $this->tpl_vars;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
