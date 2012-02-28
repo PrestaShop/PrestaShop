@@ -462,7 +462,7 @@ class Blocknewsletter extends Module
 		return $this->hookDisplayLeftColumn($params);
 	}
 
-	public function hookDisplayLeftColumn($params)
+	private function _prepareHook($params)
 	{
 		if (Tools::isSubmit('submitNewsletter'))
 		{
@@ -470,21 +470,26 @@ class Blocknewsletter extends Module
 			if ($this->error)
 			{
 				$this->smarty->assign(array('color' => 'red',
-					'msg' => $this->error,
-					'nw_value' => isset($_POST['email']) ? pSQL($_POST['email']) : false,
-					'nw_error' => true,
-					'action' => $_POST['action'])
+						'msg' => $this->error,
+						'nw_value' => isset($_POST['email']) ? pSQL($_POST['email']) : false,
+						'nw_error' => true,
+						'action' => $_POST['action'])
 				);
 			}
 			else if ($this->valid)
 			{
 				$this->smarty->assign(array('color' => 'green',
-					'msg' => $this->valid,
-					'nw_error' => false)
+						'msg' => $this->valid,
+						'nw_error' => false)
 				);
 			}
 		}
 		$this->smarty->assign('this_path', $this->_path);
+	}
+
+	public function hookDisplayLeftColumn($params)
+	{
+		$this->_prepareHook($params);
 		return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
 
@@ -492,6 +497,13 @@ class Blocknewsletter extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
 	}
+
+	public function hookDisplayMobileIndex()
+	{
+		$this->_prepareHook($params);
+		return $this->display(__FILE__, 'blockmobilenewsletter.tpl');
+	}
+}
 }
 
 
