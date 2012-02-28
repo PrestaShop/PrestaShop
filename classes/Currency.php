@@ -241,6 +241,9 @@ class CurrencyCore extends ObjectModel
 
 	public static function checkPaymentCurrencies($id_module, $id_shop = null)
 	{
+        if (empty($id_module))
+            return false;
+
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 
