@@ -191,5 +191,6 @@ return array(
 		'Cannot install module "%s"' => 'Impossible d\'installer le module "%s"',
 		'Fixtures class "%s" not found' => 'La classe "%s" pour les fixtures n\'a pas été trouvée',
 		'"%s" must be an instane of "InstallXmlLoader"' => '"%s" doit être une instance de "InstallXmlLoader"',
+		'Display' => 'Afficher',
 	),
 );
