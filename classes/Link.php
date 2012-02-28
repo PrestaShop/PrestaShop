@@ -430,7 +430,13 @@ class LinkCore
 		if ($type && $id_object)
 			$url = $this->{'get'.$type.'Link'}($id_object, null);
 		else
-			$url = $this->getPageLink(Context::getContext()->controller->php_self);
+		{
+			if (isset(Context::getContext()->controller->php_self))
+				$name = Context::getContext()->controller->php_self;
+			else
+				$name = Dispatcher::getInstance()->getController();
+			$url = $this->getPageLink($name);
+		}
 		
 		$vars = (!$array) ? '' : array();
 		$vars_nb = array('n', 'search_query');
