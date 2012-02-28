@@ -30,6 +30,7 @@ class AdminMetaControllerCore extends AdminController
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
+	protected $toolbar_fix = false;
 
 	public function __construct()
 	{
@@ -85,10 +86,17 @@ class AdminMetaControllerCore extends AdminController
 			$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
 			$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
 			$this->addFieldRoute('module', $this->l('Route to modules'));
-			$this->options['routes']['submit'] = array();
 		}
 	}
-	
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		// This is a composite page, we don't want the "options" display mode
+		if ($this->display == 'options')
+			$this->display = '';
+	}
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -174,6 +182,7 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Rewritten URL:'),
 					'name' => 'url_rewrite',
 					'lang' => true,
+					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
@@ -296,5 +305,30 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRouteCmsCategoryRule()
 	{
 		$this->checkAndUpdateRoute('cms_category_rule');
+	}
+
+	/**
+	 * Function used to render the options for this controller
+	 */
+	public function renderOptions()
+	{
+		if (!Configuration::get('PS_REWRITING_SETTINGS'))
+			unset($this->options['routes']);
+
+		if ($this->options && is_array($this->options))
+		{
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
+			$helper->toolbar_fix = true;
+			$helper->toolbar_btn = array('save' => array(
+								'href' => '#',
+								'desc' => $this->l('Save')
+							));
+			$helper->id = $this->id;
+			$helper->tpl_vars = $this->tpl_option_vars;
+			$options = $helper->generateOptions($this->options);
+
+			return $options;
+		}
 	}
 }
