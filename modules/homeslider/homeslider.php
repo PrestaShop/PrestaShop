@@ -610,7 +610,7 @@ class HomeSlider extends Module
 			$this->_html .= $this->displayConfirmation($this->l('Slide added'));
 	}
 
-	public function hookHome()
+	private function _prepareHook()
 	{
 		$slider = array(
 			'width' => Configuration::get('HOMESLIDER_WIDTH'),
@@ -621,11 +621,17 @@ class HomeSlider extends Module
 
 		$slides = $this->getSlides(true);
 		if (!$slides)
-			return;
+			return false;
 
 		$this->smarty->assign('homeslider_slides', $slides);
 		$this->smarty->assign('homeslider', $slider);
+		return true;
+	}
 
+	public function hookHome()
+	{
+		if(!$this->_prepareHook())
+			return;
 		return $this->display(__FILE__, 'homeslider.tpl');
 	}
 
@@ -637,6 +643,13 @@ class HomeSlider extends Module
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
+	}
+
+	public function hookDisplayMobileIndex()
+	{
+		if(!$this->_prepareHook())
+			return;
+		return $this->display(__FILE__, 'homemobileslider.tpl');
 	}
 
 	public function headerHTML()
