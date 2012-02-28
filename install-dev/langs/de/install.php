@@ -55,7 +55,7 @@
     'Create settings.inc file' => 'settings.inc Datei wird erstellt',
     'Create database tables' => 'Datenbanktabellen werden erstellt',
     'Populate database tables' => 'Datenbankdaten werden eingetragen',
-    'Configure shop informations' => 'Shopeinstellungen vornehmen',
+    'Configure shop information' => 'Shopeinstellungen vornehmen',
     'Install modules' => 'Module werden installiert',
     'Install demonstration data' => 'Demo wird installiert',
     'Install theme' => 'Theme wird installiert',
