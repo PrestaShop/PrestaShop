@@ -87,6 +87,7 @@ class BlockLanguages extends Module
 			if (count($default_rewrite))
 				$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
+		return true;
 	}
 
 	/**

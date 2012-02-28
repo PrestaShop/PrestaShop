@@ -51,10 +51,10 @@ class BlockSearch extends Module
 		return true;
 	}
 
-	public function hookMobileTop($params)
+	public function hookDisplayMobileTop($params)
 	{
 		$this->smarty->assign('hook_mobile', true);
-		$this->hookTop($params);
+		return $this->hookTop($params);
 	}
 
 	public function hookHeader($params)
