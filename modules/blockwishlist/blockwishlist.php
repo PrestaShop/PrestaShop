@@ -221,6 +221,12 @@ class BlockWishList extends Module
 	{
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
+
+	public function hookDisplayMobileCustomerAccount($params)
+	{
+		$this->smarty->assign('mobile_hook', true);
+		return $this->display(__FILE__, 'my-account.tpl');
+	}
 	
 	public function hookMyAccountBlock($params)
 	{
