@@ -28,7 +28,7 @@
 class AdminAccessControllerCore extends AdminController
 {
 	/* Black list of id_tab that do not have access */
-	public $accesses_black_list = array(107);
+	public $accesses_black_list = array();
 
 	public function __construct()
 	{
@@ -36,6 +36,9 @@ class AdminAccessControllerCore extends AdminController
 		$this->className = 'Profile';
 	 	$this->lang = false;
 		$this->context = Context::getContext();
+
+		// Blacklist AdminLogin
+		$this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
 
 		parent::__construct();
 	}
