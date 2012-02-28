@@ -96,7 +96,7 @@ $(document).ready(function() {
 </script>
 {/if}
 
-<h2>{l s='Quick link'}</h2>
+<h2>{l s='Quick links'}</h2>
 		<ul class="F_list clearfix">
 		{foreach from=$quick_links key=k item=link}
 		<li id="{$k}_block">
