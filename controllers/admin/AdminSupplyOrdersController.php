@@ -2029,7 +2029,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 			$diff = (int)$threshold;
 
-			if ($supply_order->is_template != 0)
+			if ($supply_order->is_template != 1)
 			{
 				$real_quantity = (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true);
 				$diff = (int)$threshold - (int)$real_quantity;
