@@ -20,7 +20,8 @@ function start_install()
 	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
 
-	process_install();
+	install_success();
+	//process_install();
 }
 
 function process_install(step)
