@@ -672,7 +672,7 @@ class BlockCms extends Module
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
 
-	private function _prepareHook($params)
+	private function _prepareHook()
 	{
 		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION');
 
@@ -714,14 +714,14 @@ class BlockCms extends Module
 
 	public function hookFooter()
 	{
-		if (!$this->_prepareHook($params))
+		if (!$this->_prepareHook())
 			return ;
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
 
-	public function hookDisplayMobileFooterCms($params)
+	public function hookDisplayMobileFooterCms()
 	{
-		if (!$this->_prepareHook($params))
+		if (!$this->_prepareHook())
 			return ;
 		return $this->display(__FILE__, 'blockmobilecms.tpl');
 	}
