@@ -798,7 +798,7 @@ abstract class ObjectModelCore
 					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{
-					if (!isset($data['copy_from_front']) || !$data['copy_from_front'])
+					if (isset($data['copy_post']) && !$data['copy_post'])
 						continue;
 					if ($field == 'passwd')
 					{
