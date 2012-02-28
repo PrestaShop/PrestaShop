@@ -181,7 +181,7 @@
 			<ul>
 				{foreach from=$testsOptional item='value' key='key'}
 					{if $value eq 'fail'}
-						<li>{$testsErrors[$key]}</li>
+						<li>{$key}</li>
 					{/if}
 				{/foreach}
 			</ul>
