@@ -1109,7 +1109,7 @@ class CategoryCore extends ObjectModel
 			return false;
 		return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'category_group`
-			VALUES (1, '.(int)$id_group.')
+			VALUES ('.(int)Context::getContext()->shop->getCategory().', '.(int)$id_group.')
 		');
 	}
 
