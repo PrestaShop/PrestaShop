@@ -78,7 +78,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'date_add' => array(
 				'title' => $this->l('Creation'),
 				'width' => 150,
-				'align' => 'right',
+				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_add'
@@ -86,7 +86,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'date_upd' => array(
 				'title' => $this->l('Last modification'),
 				'width' => 150,
-				'align' => 'right',
+				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_upd'
@@ -94,7 +94,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'date_delivery_expected' => array(
 				'title' => $this->l('Delivery (expected)'),
 				'width' => 150,
-				'align' => 'right',
+				'align' => 'left',
 				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_delivery_expected'
@@ -486,7 +486,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		unset($this->fieldsDisplay['state'],
 			  $this->fieldsDisplay['date_upd'],
 			  $this->fieldsDisplay['id_pdf'],
-			  $this->fieldsDisplay['date_delivery_expected']);
+			  $this->fieldsDisplay['date_delivery_expected'],
+			  $this->fieldsDisplay['id_export']);
+
+		// $this->fieldsDisplay['date_add']['align'] = 'left';
+
 		// adds filter, to gets only templates
 		unset($this->_where);
 		$this->_where = ' AND a.is_template = 1';
