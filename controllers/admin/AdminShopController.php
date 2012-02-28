@@ -405,6 +405,7 @@ class AdminShopControllerCore extends AdminController
 			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
 			'warehouse' => $this->l('Warehouse'),
+			'stock_available' => $this->l('Stock Available'),
 		);
 
 		if (!$this->object->id)
@@ -496,8 +497,19 @@ class AdminShopControllerCore extends AdminController
 		if (count($this->errors) > 0)
 			return;
 
-		// if we import datas from another shop, we do not update the shop categories
+		// datas to import
 		$import_data = Tools::getValue('importData');
+
+		// specific import for stock
+		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
+		{
+			$id_src_shop = (int)Tools::getValue('importFromShop');
+			$group = new GroupShop((int)Shop::getGroupFromShop($object->id));
+			if ($group->share_stock == false)
+				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
+		}
+
+		// if we import datas from another shop, we do not update the shop categories
 		if (!isset($import_data['category']))
 			Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
 
@@ -506,7 +518,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function initCategoriesAssociation($id_root = 1)
 	{
-		$id_shop = Tools::getValue('id_shop');
+		$id_shop = (int)Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);
 		$selected_cat = Shop::getCategories($id_shop);
 		if (empty($selected_cat))
