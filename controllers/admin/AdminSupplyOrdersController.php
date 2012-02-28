@@ -44,7 +44,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
 	 	$this->is_template_list = false;
-		$this->multishop_context = Shop::CONTEXT_ALL;
+	 	$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->addRowAction('updatereceipt');
 		$this->addRowAction('changestate');
@@ -805,6 +805,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->override_folder = 'supply_orders_receipt_history/';
 		$helper->toolbar_btn = $this->toolbar_btn;
 
+		$helper->ajax_params = array(
+			'display_product_history' => 1,
+		);
+
 		$helper->currentIndex = self::$currentIndex.$action;
 
 		// display these global order informations
@@ -1451,7 +1455,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function ajaxProcess()
 	{
 		// tests if an id is submit
-		if (Tools::isSubmit('id'))
+		if (Tools::isSubmit('id') && !Tools::isSubmit('display_product_history'))
 		{
 			// overrides attributes
 			$this->identifier = 'id_supply_order_history';
@@ -1524,14 +1528,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
-		else if (Tools::isSubmit('id_supply_order_detail'))
+		else if (Tools::isSubmit('id') && Tools::isSubmit('display_product_history'))
 		{
 			$this->identifier = 'id_supply_order_receipt_history';
 			$this->table = 'supply_order_receipt_history';
 			$this->display = 'list';
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
-			$id_supply_order_detail = (int)Tools::getValue('id_supply_order_detail');
+			$id_supply_order_detail = (int)Tools::getValue('id');
 
 			unset($this->fieldsDisplay);
 			$this->fieldsDisplay = array(
@@ -2023,14 +2027,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$manager = StockManagerFactory::getManager();
 		foreach ($items as $item)
 		{
-			$diff = 0;
+			$diff = (int)$threshold;
+
 			if ($supply_order->is_template != 0)
 			{
 				$real_quantity = (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true);
 				$diff = (int)$threshold - (int)$real_quantity;
 			}
-			else
-				$diff = (int)$threshold;
 
 			if ($diff > 0)
 			{
@@ -2060,6 +2063,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// updates supply order
 		$supply_order->update();
+
 	}
 
 	/**

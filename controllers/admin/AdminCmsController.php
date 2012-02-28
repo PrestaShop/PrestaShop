@@ -53,7 +53,7 @@ class AdminCmsControllerCore extends AdminController
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
 		$this->_select = 'a.position ';
-		$this->_filter = 'AND c.id_cms_category = '.(int)($this->_category->id);
+		$this->_filter = 'AND c.id_cms_category = '.(int)$this->_category->id;
 
 		parent::__construct();
 	}
@@ -231,7 +231,7 @@ class AdminCmsControllerCore extends AdminController
 				Configuration::updateValue('PS_CONDITIONS', 0);
 				Configuration::updateValue('PS_CONDITIONS_CMS_ID', 0);
 			}
-			$cms = new CMS((int)(Tools::getValue('id_cms')));
+			$cms = new CMS((int)Tools::getValue('id_cms'));
 			$cms->cleanPositions($cms->id_cms_category);
 			if (!$cms->delete())
 				$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';

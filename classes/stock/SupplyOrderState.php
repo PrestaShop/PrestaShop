@@ -165,6 +165,8 @@ class SupplyOrderStateCore extends ObjectModel
 		if ($ids)
 			$query->where('s.id_supply_order_state NOT IN('.implode(',', array_map('intval', $ids)).')');
 
+		$query->orderBy('sl.name ASC');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
