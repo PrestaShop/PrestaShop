@@ -143,7 +143,7 @@ class HelperOptionsCore extends Helper
 			'title' => $this->title,
 			'toolbar_btn' => $this->toolbar_btn,
 			'show_toolbar' => $this->show_toolbar,
-			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'current' => $this->currentIndex,
 			'table' => $this->table,
 			'token' => $this->token,

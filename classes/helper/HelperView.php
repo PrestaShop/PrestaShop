@@ -53,7 +53,7 @@ class HelperViewCore extends Helper
 			'token' => $this->token,
 			'table' => $this->table,
 			'show_toolbar' => $this->show_toolbar,
-			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'toolbar_btn' => $this->toolbar_btn,
 			'link' => $this->context->link
 		));

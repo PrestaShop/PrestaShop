@@ -41,7 +41,7 @@ class HelperCore
 	public $title;
 	public $show_toolbar = true;
 	public $context;
-	public $toolbar_fix = false;
+	public $toolbar_scroll = false;
 
 	/**
 	 * @var Module
