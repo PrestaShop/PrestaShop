@@ -241,6 +241,15 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initToolbar();
 		if ($this->_category->id == Category::getTopCategory()->id && isset($this->toolbar_btn['new']))
 			unset($this->toolbar_btn['new']);
+		// after adding a category
+		if (empty($this->display))
+		{
+			$id_category = (Tools::isSubmit('id_category')) ? '&amp;id_parent='.(int)Tools::getValue('id_category') : '';
+			$this->toolbar_btn['new'] = array(
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token.$id_category,
+				'desc' => $this->l('Add new')
+			);
+		}
 	}
 
 	public function initProcess()
