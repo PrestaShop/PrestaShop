@@ -33,7 +33,7 @@ class AdminShopControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->table = 'shop';
 		$this->className = 'Shop';
-		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_SHOP;
+		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP;
 
 		$this->fieldsDisplay = array(
 			'id_shop' => array(
@@ -301,8 +301,8 @@ class AdminShopControllerCore extends AdminController
 				'options' => array(
 					'query' => $options,
 					'id' => 'id_group_shop',
-					'name' => 'name'
-				)
+					'name' => 'name',
+				),
 			);
 		}
 		$categories = Category::getRootCategories($this->context->language->id);
@@ -435,7 +435,7 @@ class AdminShopControllerCore extends AdminController
 			);
 
 		$this->fields_value = array(
-			'id_group_shop' => $obj->id_group_shop,
+			'id_group_shop' => (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID(),
 			'active' => true,
 			'id_theme_checked' => isset($obj->id_theme) ? $obj->id_theme : $id_theme
 		);
