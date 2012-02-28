@@ -168,6 +168,7 @@ class ShopUrlCore extends ObjectModel
 	 */
 	public static function virtualUriExists($virtual_uri, $id_shop_tested)
 	{
+		Tools::displayAsDeprecated();
 		$virtual_uri = trim($virtual_uri);
 		if (substr($virtual_uri, -1) != '/')
 			$virtual_uri .= '/';
@@ -176,5 +177,23 @@ class ShopUrlCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'shop_url`
 		WHERE `id_shop` != '.(int)$id_shop_tested.'
 		AND `virtual_uri` = "'.pSQL($virtual_uri).'"');
+	}
+	
+	/**
+	 * @static
+	 * @param string $domain
+	 * @param string $physical_uri
+	 * @param string $virtual_uri
+	 * @param int $id_shop_tested
+	 * @return bool
+	 */
+	public static function urlExists($domain, $physical_uri, $virtual_uri, $id_shop_tested)
+	{
+		$url = $domain.$physical_uri.$virtual_uri;
+		return (bool)Db::getInstance()->getValue('
+		SELECT *
+		FROM `'._DB_PREFIX_.'shop_url`
+		WHERE `id_shop` != '.(int)$id_shop_tested.'
+		AND CONCAT(`domain`, `physical_uri`, `virtual_uri`) ="'.pSQL($url).'"');
 	}
 }

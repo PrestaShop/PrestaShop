@@ -267,7 +267,7 @@ class AdminShopUrlControllerCore extends AdminController
 		}
 		else if (Tools::isSubmit('submitAdd'.$this->table) && $this->tabAccess['add'] === '1')
 		{
-			if (ShopUrl::virtualUriExists(Tools::getValue('virtual_uri'), Tools::getValue('id_shop')))
+			if (ShopUrl::urlExists(Tools::getValue('domain'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'), Tools::getValue('id_shop')))
 				$this->errors[] = Tools::displayError('Virtual URI already used.');
 			else
 				return parent::postProcess();
