@@ -24,13 +24,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<hr width="99%" align="center" size="2" />
 <!-- Block Mobile Newsletter module-->
 <div id="newsletter">
-	<p>Newsletter</p>
+	<h4>{l s="Newsletter" mod="blocknewletter"}</h4>
 	<form action="form.php" method="post">
-		<div data-role="fieldcontain">
-			<label for="email">Your email:</label>
-			<input type="text" name="email" size="18"
+		<fieldset>
+			<input type="email" name="email"
 				   value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='blocknewsletter'}{/if}"
 				   onfocus="javascript:if(this.value=='{l s='your e-mail' mod='blocknewsletter'}')this.value='';"
 				   onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='blocknewsletter'}';"
@@ -38,6 +38,6 @@
 			<div data-theme="a" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" aria-disabled="false">
 				<span aria-hidden="true" class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">OK</span></span>
 			</div>
-		</div>
+		</fieldset>
 	</form>
 </div><!-- /newsletter -->
