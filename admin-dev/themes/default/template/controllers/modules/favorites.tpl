@@ -35,10 +35,10 @@
 				</thead>
 				<tbody>
 				{foreach from=$modules key=km item=module}
-					<tr{if $km % 2 eq 0} class="alt_row"{/if}>
+					<tr height="32" {if $km % 2 eq 0} class="alt_row"{/if}>
 						<td><img src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}" width="16" height="16" /></td>
-						<td>{$module->displayName}</td>
-						<td>{$module->description|truncate:80:'…'}</td>
+						<td><span class="moduleName">{$module->displayName}</span></td>
+						<td><span class="moduleFavDesc">{$module->description|truncate:80:'…'}</span></td>
 						<td>{if isset($module->id) && $module->id gt 0}<span class="setup">{l s='Installed'}</span>{else}<span class="setup non-install">{l s='Not Installed'}</span>{/if}</td>
 						<td>{$module->categoryName}</td>
 						<td>

@@ -219,8 +219,9 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 /*MODULECONTAINER*/
 #moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
 #moduleContainer .table tr th { height:40px;}
-#moduleContainer .table tr td { vertical-align:top; padding: 5px 7px 0; border-top:1px dotted #ccc; border-bottom:none;}
+#moduleContainer .table tr td { font-size:12px; vertical-align:top; padding: 5px 7px 0; border-top:1px solid #ccc; border-bottom:none;}
 #moduleContainer .table tr:first-child {border-top:1px solid #ccc}
+#moduleContainer .table tr:hover { background-color:#FFF1B5;}
 #moduleContainer .moduleDesc { font-size:12px; position:relative; margin-bottom:10px;}
 #moduleContainer .moduleDesc h3 { color:#3A6EA7; margin:0;}
 #moduleContainer .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
@@ -239,6 +240,8 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 #moduleContainer .button.updated {  margin-top:15px; display: inline-block; font-size:12px;}
 #list-action-button{width:175px}
 #list-action-button li{margin-left:10px;display: inline;float: left;}
+#moduleContainer .moduleName {font-size:12px; color:#3A6EA7;font-weight:bold;}
+#moduleContainer .moduleFavDesc { font-family:Georgia; font-style:italic; color:#666;}
 
 
 /*FOOTER*/
