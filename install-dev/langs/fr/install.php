@@ -57,7 +57,7 @@ return array(
 		'Create database tables' => 'Création des tables de la base',
 		'Create default shop and languages' => 'Création de la boutique par défaut et des langues',
 		'Populate database tables' => 'Remplissage des tables de la base',
-		'Configure shop informations' => 'Configuration de la boutique',
+		'Configure shop information' => 'Configuration de la boutique',
 		'Install modules' => 'Installation des modules',
 		'Install demonstration data' => 'Installation des produits de démo',
 		'Install theme' => 'Installation du thème',
