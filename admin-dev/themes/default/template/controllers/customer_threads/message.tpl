@@ -167,9 +167,7 @@
 	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;"">
 		<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data">
 			<p>{l s='Please type your reply below:'}</p>
-			<textarea style="width: 450px; height: 175px;" name="reply_message">'.
-				{$PS_CUSTOMER_SERVICE_SIGNATURE}
-			</textarea>
+			<textarea style="width: 450px; height: 175px;" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE}</textarea>
 			<div style="width: 450px; text-align: right; font-style: italic; font-size: 9px; margin-top: 2px;">
 				{l s='Your reply will be sent to:'} {$message.email}
 			</div>
