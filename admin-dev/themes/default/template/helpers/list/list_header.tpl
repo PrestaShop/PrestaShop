@@ -108,7 +108,7 @@
 							<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
 						{/if}
 						| {l s='Display'}
-						<select name="pagination">
+						<select name="pagination" onchange="submit()">
 							{* Choose number of results per page *}
 							{foreach $pagination AS $value}
 								<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
