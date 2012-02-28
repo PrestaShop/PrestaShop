@@ -87,6 +87,12 @@ class FavoriteProducts extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
+	public function hookDisplayMobileCustomerAccount($params)
+	{
+		$this->smarty->assign('mobile_hook', true);
+		$this->hookDisplayCustomerAccount($params);
+	}
+
 	public function hookDisplayMyAccountBlock($params)
 	{
 		return $this->hookDisplayCustomerAccount($params);

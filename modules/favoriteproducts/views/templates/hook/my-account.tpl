@@ -26,7 +26,7 @@
 
 <li class="favoriteproducts">
 	<a href="{$link->getModuleLink('favoriteproducts', 'account')}" title="{l s='My favorite products' mod='favoriteproducts'}">
-		<img src="{$module_template_dir}img/favorites.png" class="icon" />
+		<img {if isset($mobile_hook)}src="{$module_template_dir}img/favorites.png" class="ui-li-icon ui-li-thumb" alt="favorites products"{else}src="{$module_template_dir}img/favorites.png" class="icon"{/if} />
 		{l s='My favorite products' mod='favoriteproducts'}
 	</a>
 </li>
