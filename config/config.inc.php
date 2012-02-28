@@ -125,6 +125,10 @@ if (defined('_PS_ADMIN_DIR_'))
 	$employee = new Employee($cookie->id_employee);
 	Context::getContext()->employee = $employee;
 
+	/* Auth on shops are recached after employee assignation */
+	if ($employee->id_profile != _PS_ADMIN_PROFILE_)
+		Shop::cacheShops(true);
+
 	$cookie->id_lang = (int)$employee->id_lang;
 }
 else
