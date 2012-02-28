@@ -98,6 +98,7 @@ class OrderControllerCore extends ParentOrderController
 			$delivery_option = $this->context->cart->getDeliveryOption();
 			$delivery_option[(int)Tools::getValue('id_address')] = Tools::getValue('id_delivery_option');
 			$this->context->cart->setDeliveryOption($delivery_option);
+			$this->context->cart->save();
 			$return = array(
 				'content' => Hook::exec(
 					'displayCarrierList',
@@ -108,7 +109,7 @@ class OrderControllerCore extends ParentOrderController
 			);
 			die(Tools::jsonEncode($return));
 		}
-		
+
 		if ($this->nbProducts)
 			$this->context->smarty->assign('virtual_cart', $isVirtualCart);
 
@@ -141,10 +142,17 @@ class OrderControllerCore extends ParentOrderController
 			break;
 
 			case 3:
-				// Test that the conditions (so active) were accepted by the customer
+				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv');
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
 					Tools::redirect('index.php?controller=order&step=2');
+
+				// Check the delivery option is setted
+                if (!Tools::getValue('delivery_option'))
+ 	               Tools::redirect('index.php?controller=order&step=2');
+                foreach (Tools::getValue('delivery_option') as $delivery_option)
+    	            if (empty($delivery_option))
+        	            Tools::redirect('index.php?controller=order&step=2');
 
 				$this->autoStep();
 
@@ -203,10 +211,10 @@ class OrderControllerCore extends ParentOrderController
 
 		if ($this->step >= 2 && (!$this->context->cart->id_address_delivery || !$this->context->cart->id_address_invoice))
 			Tools::redirect('index.php?controller=order&step=1');
-		
+
 		if ($this->step > 2 && !$isVirtualCart && count($this->context->cart->getDeliveryOptionList()) == 0)
 			Tools::redirect('index.php?controller=order&step=2');
-		
+
 		$delivery = new Address((int)$this->context->cart->id_address_delivery);
 		$invoice = new Address((int)$this->context->cart->id_address_invoice);
 
