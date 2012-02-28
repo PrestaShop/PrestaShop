@@ -672,6 +672,31 @@ class BlockCms extends Module
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
 
+	private function _prepareHook($params)
+	{
+		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION');
+
+		if (!$block_activation)
+			return false;
+
+		$cms_titles = BlockCMSModel::getCMSTitlesFooter();
+		$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER');
+		$display_poweredby = Configuration::get('FOOTER_POWEREDBY');
+		$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id);
+
+		$this->smarty->assign(
+			array(
+				'block' => 0,
+				'cmslinks' => $cms_titles,
+				'display_stores_footer' => $display_footer,
+				'display_poweredby' => ((int)$display_poweredby === 1 || $display_poweredby === false),
+				'footer_text' => $footer_text
+			)
+		);
+		return true;
+	}
+
+
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockcms.css', 'all');
@@ -689,27 +714,16 @@ class BlockCms extends Module
 
 	public function hookFooter()
 	{
-		$block_activation = Configuration::get('FOOTER_BLOCK_ACTIVATION');
+		if (!$this->_prepareHook($params))
+			return ;
+		return $this->display(__FILE__, 'blockcms.tpl');
+	}
 
-		if ($block_activation)
-		{
-			$cms_titles = BlockCMSModel::getCMSTitlesFooter();
-			$display_footer = Configuration::get('PS_STORES_DISPLAY_FOOTER');
-			$display_poweredby = Configuration::get('FOOTER_POWEREDBY');
-			$footer_text = Configuration::get('FOOTER_CMS_TEXT_'.(int)$this->context->language->id);
-
-			$this->smarty->assign(
-				array(
-					'block' => 0,
-					'cmslinks' => $cms_titles,
-					'display_stores_footer' => $display_footer,
-					'display_poweredby' => ((int)$display_poweredby === 1 || $display_poweredby === false),
-					'footer_text' => $footer_text
-				)
-			);
-			return $this->display(__FILE__, 'blockcms.tpl');
-		}
-		return;
+	public function hookDisplayMobileFooterCms($params)
+	{
+		if (!$this->_prepareHook($params))
+			return ;
+		return $this->display(__FILE__, 'blockmobilecms.tpl');
 	}
 
 }
