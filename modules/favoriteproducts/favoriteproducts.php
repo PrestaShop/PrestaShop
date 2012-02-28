@@ -90,7 +90,7 @@ class FavoriteProducts extends Module
 	public function hookDisplayMobileCustomerAccount($params)
 	{
 		$this->smarty->assign('mobile_hook', true);
-		$this->hookDisplayCustomerAccount($params);
+		return $this->hookDisplayCustomerAccount($params);
 	}
 
 	public function hookDisplayMyAccountBlock($params)
