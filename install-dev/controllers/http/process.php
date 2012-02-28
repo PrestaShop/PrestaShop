@@ -323,7 +323,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		}
 
 		$this->process_steps[] = $populate_step;
-		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations'));
+		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop information'));
 
 
 		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));

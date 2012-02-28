@@ -55,7 +55,7 @@
     'Create settings.inc file' => NULL,
     'Create database tables' => NULL,
     'Populate database tables' => NULL,
-    'Configure shop informations' => NULL,
+    'Configure shop information' => NULL,
     'Install modules' => NULL,
     'Install demonstration data' => NULL,
     'Install theme' => NULL,
