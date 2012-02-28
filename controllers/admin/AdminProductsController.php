@@ -4002,7 +4002,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!empty($insert))
 			Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
+				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`, `id_category_default`)
 				VALUES '.pSQL($insert));
 	}
 }
