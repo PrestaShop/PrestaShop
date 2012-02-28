@@ -76,9 +76,10 @@ class AdminCmsContentControllerCore extends AdminController
 
 		if ($this->display == 'edit_category')
 			$this->content .= $this->adminCMSCategories->renderForm();
-		elseif ($this->display == 'edit_page')
+		else if ($this->display == 'edit_page')
 			$this->content .= $this->adminCMS->renderForm();
-		elseif ($this->display == 'view_page'){}
+		else if ($this->display == 'view_page')
+			$fixme = 'fixme';// @FIXME
 		else
 		{
 			$id_cms_category = (int)(Tools::getValue('id_cms_category'));
@@ -112,14 +113,14 @@ class AdminCmsContentControllerCore extends AdminController
 			|| isset($_GET['updatecms_category'])
 			|| isset($_GET['addcms_category']))
 			$this->display = 'edit_category';
-		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
+		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
 			|| isset($_GET['updatecms'])
 			|| isset($_GET['addcms']))
 			$this->display = 'edit_page';
 		else
 		{
 			$this->display = 'list';
-			$this->id_cms_category = (int)(Tools::getValue('id_cms_category'));
+			$this->id_cms_category = (int)Tools::getValue('id_cms_category');
 		}
 
 		if (Tools::isSubmit('submitDelcms')
@@ -129,7 +130,7 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('viewcms')
 			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position') && !Tools::isSubmit('id_cms_category_to_move')))
 			$this->adminCMS->postProcess();
-		elseif (Tools::isSubmit('submitDelcms_category')
+		else if (Tools::isSubmit('submitDelcms_category')
 			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
 			|| Tools::isSubmit('submitAddcms_category')
 			|| isset($_GET['deletecms_category'])

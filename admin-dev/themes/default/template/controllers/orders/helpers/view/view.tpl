@@ -192,6 +192,12 @@
 
 		<!-- Right column -->
 		<div style="width: 49%; float:right;">
+			<div class="button-command-prev-next">
+				<b>{l s='Orders'}</b> :
+				{if $previousOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$previousOrder}">{l s='< Prev'}</a>{/if}
+				{if $nextOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$nextOrder}">{l s='Next >'}</a>{/if}
+			</div>
+			<div class="clear"></div>
 			<!-- Documents block -->
 			<fieldset>
 				<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
@@ -564,7 +570,7 @@
 						{l s='tax included.'}
 					{/if}
 
-					{if Configuration::get('PS_ORDER_RETURN')}
+					{if !Configuration::get('PS_ORDER_RETURN')}
 						<br /><br />{l s='Merchandise returns are disabled'}
 					{/if}
 				</div>
