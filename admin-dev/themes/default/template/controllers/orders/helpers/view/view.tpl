@@ -576,7 +576,7 @@
 				</div>
 
 				<div style="float:right;">
-					<table class="table" width="450px;" cellspacing="0" cellpadding="0">
+					<table class="table" width="450px;" style="border-radius:0px;"cellspacing="0" cellpadding="0">
 						<tr id="total_products">
 							<td width="150px;"><b>{l s='Products'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
@@ -635,7 +635,7 @@
 					{if $can_edit}
 						<tr>
 							<td colspan="3" class="center">
-								<a href="#" id="add_voucher"><img src="../img/admin/add.gif" alt="{l s='Add'}" /> {l s='Add a new discount'}</a>
+								<a class="button" href="#" id="add_voucher"><img src="../img/admin/add.gif" alt="{l s='Add'}" /> {l s='Add a new discount'}</a>
 							</td>
 						</tr>
 						<tr style="display: none" >
