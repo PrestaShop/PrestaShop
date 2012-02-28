@@ -254,11 +254,12 @@ class ShopCore extends ObjectModel
 
 			$id_shop = '';
 			$found_uri = '';
+			$request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
 				{
 					// An URL matching current shop was found
-					if (!$id_shop && preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
+					if (!$id_shop && preg_match('#^'.preg_quote($row['uri'], '#').'#', $request_uri))
 					{
 						$id_shop = $row['id_shop'];
 						$found_uri = $row['uri'];
@@ -270,7 +271,7 @@ class ShopCore extends ObjectModel
 					else if ($id_shop && $row['main'])
 					{
 						// If an URL was found but is not current URL, redirect to main URL
-						$request_uri = substr($_SERVER['REQUEST_URI'], strlen($found_uri));
+						$request_uri = substr($request_uri, strlen($found_uri));
 						header('HTTP/1.1 301 Moved Permanently');
 						header('Cache-Control: no-cache');
 						header('location: http://'.$row['domain'].$row['uri'].$request_uri);
