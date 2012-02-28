@@ -30,7 +30,7 @@ class AdminMetaControllerCore extends AdminController
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
-	protected $toolbar_fix = false;
+	protected $toolbar_scroll = false;
 
 	public function __construct()
 	{
@@ -319,7 +319,7 @@ class AdminMetaControllerCore extends AdminController
 		{
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
-			$helper->toolbar_fix = true;
+			$helper->toolbar_scroll = true;
 			$helper->toolbar_btn = array('save' => array(
 								'href' => '#',
 								'desc' => $this->l('Save')

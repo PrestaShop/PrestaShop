@@ -120,7 +120,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'url_create_language' => 'index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$this->context->employee->id),
 		);
 
-		$this->toolbar_fix = false;
+		$this->toolbar_scroll = false;
 		$this->base_tpl_view = 'main.tpl';
 		return parent::renderView();
 	}

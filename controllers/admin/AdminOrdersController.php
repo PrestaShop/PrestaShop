@@ -107,7 +107,7 @@ class AdminOrdersControllerCore extends AdminController
 			'order_states' => OrderState::getOrderStates((int)Context::getContext()->language->id),
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
-			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'title' => $this->l('Orders : create order'),
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();

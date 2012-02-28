@@ -272,7 +272,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'show_toolbar' => true,
 			'toolbar_btn' => $this->toolbar_btn,
 			'title' => $this->toolbar_title,
-			'toolbar_fix' => 'false',
+			'toolbar_scroll' => 'false',
 			'token' => $this->token,
 			'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
 			'modules' => $module_instances,

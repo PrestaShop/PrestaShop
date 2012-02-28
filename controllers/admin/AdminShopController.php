@@ -146,7 +146,7 @@ class AdminShopControllerCore extends AdminController
 		}
 
 		parent::initToolbar();
-		$this->context->smarty->assign('toolbar_fix', 1);
+		$this->context->smarty->assign('toolbar_scroll', 1);
 	}
 
 	public function renderList()

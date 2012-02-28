@@ -431,7 +431,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->fields_form = array('');
 
-		$this->toolbar_fix = false;
+		$this->toolbar_scroll = false;
 		$this->toolbar_btn = array();
 
 		// adds fancybox

@@ -466,7 +466,7 @@ class AdminCartRulesControllerCore extends AdminController
 			array(
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
-				'toolbar_fix' => $this->toolbar_fix,
+				'toolbar_scroll' => $this->toolbar_scroll,
 				'title' => $this->l('Payment : Cart Rules '),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
