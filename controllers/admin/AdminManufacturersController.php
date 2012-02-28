@@ -518,7 +518,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$helper->identifier = $this->identifier;
 		$helper->title = $this->l('Edit Addresses');
 		$helper->id = $address->id;
-		$helper->toolbar_fix = true;
+		$helper->toolbar_scroll = true;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;

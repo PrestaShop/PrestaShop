@@ -146,7 +146,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->no_link = true;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
-			$helper->toolbar_fix = false;
+			$helper->toolbar_scroll = false;
 			$helper->orderBy = 'position';
 			$helper->orderWay = 'ASC';
 			$helper->currentIndex = self::$currentIndex;
