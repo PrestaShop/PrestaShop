@@ -1072,6 +1072,14 @@ class AdminProductsControllerCore extends AdminController
 		if (isset($result['success']))
 		{
 			$obj = new Image((int)$result['success']['id_image']);
+
+			// Associate image to shop from context
+			$shops = Shop::getContextListShopID();
+			$obj->associateTo($shops);
+			$json_shops = array();
+			foreach ($shops as $id_shop)
+				$json_shops[$id_shop] = true;
+
 			$json = array(
 				'name' => $result['success']['name'],
 				'status' => 'ok',
@@ -1079,6 +1087,7 @@ class AdminProductsControllerCore extends AdminController
 				'path' => $obj->getExistingImgPath(),
 				'position' => $obj->position,
 				'cover' => $obj->cover,
+				'shops' => $json_shops,
 			);
 			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
 			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'.jpg');

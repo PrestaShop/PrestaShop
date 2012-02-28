@@ -123,6 +123,7 @@
 				{
 					assoc = assoc.slice(0, -1);
 					assoc += {literal}"}"{/literal};
+					assoc = jQuery.parseJSON(assoc);
 				}
 				else
 					assoc = false;
@@ -188,7 +189,7 @@
 						cover = "forbbiden";
 						if (responseJSON.cover == "1")
 							cover = "enabled";
-						imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, false)
+						imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, responseJSON.shops)
 						$("#imageTable tr:last").after(responseJSON.html);
 						$("#countImage").html(parseInt($("#countImage").html()) + 1);
 						$("#img" + id).remove();
@@ -318,8 +319,7 @@
 				line = line.replace("</tbody>", "");
 				if (shops != false)
 				{
-					tmp = jQuery.parseJSON(shops);
-					$.each(tmp, function(key, value){
+					$.each(shops, function(key, value){
 						if (value == 1)
 							line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
 					});
