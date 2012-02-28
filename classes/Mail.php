@@ -32,19 +32,25 @@ include_once(_PS_SWIFT_DIR_.'Swift/Plugin/Decorator.php');
 
 class MailCore
 {
+	const TYPE_HTML = 1;
+	const TYPE_TEXT = 2;
+	const TYPE_BOTH = 3;
+
 	public static function Send($id_lang, $template, $subject, $templateVars, $to,
 		$toName = null, $from = null, $fromName = null, $fileAttachment = null, $modeSMTP = null, $templatePath = _PS_MAIL_DIR_, $die = false)
 	{
-		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL',
-														  'PS_MAIL_METHOD',
-														  'PS_MAIL_SERVER',
-														  'PS_MAIL_USER',
-														  'PS_MAIL_PASSWD',
-														  'PS_SHOP_NAME',
-														  'PS_MAIL_SMTP_ENCRYPTION',
-														  'PS_MAIL_SMTP_PORT',
-														  'PS_MAIL_METHOD',
-														  'PS_MAIL_TYPE'));
+		$configuration = Configuration::getMultiple(array(
+			'PS_SHOP_EMAIL',
+			'PS_MAIL_METHOD',
+			'PS_MAIL_SERVER',
+			'PS_MAIL_USER',
+			'PS_MAIL_PASSWD',
+			'PS_SHOP_NAME',
+			'PS_MAIL_SMTP_ENCRYPTION',
+			'PS_MAIL_SMTP_PORT',
+			'PS_MAIL_METHOD',
+			'PS_MAIL_TYPE'
+		));
 
 		if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION'])) $configuration['PS_MAIL_SMTP_ENCRYPTION'] = 'off';
 		if (!isset($configuration['PS_MAIL_SMTP_PORT'])) $configuration['PS_MAIL_SMTP_PORT'] = 'default';
@@ -192,9 +198,9 @@ class MailCore
 			$templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
 			$templateVars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__;
 			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $templateVars)), 'decorator');
-			if ($configuration['PS_MAIL_TYPE'] == 3 || $configuration['PS_MAIL_TYPE'] == 2)
+			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
 				$message->attach(new Swift_Message_Part($templateTxt, 'text/plain', '8bit', 'utf-8'));
-			if ($configuration['PS_MAIL_TYPE'] == 3 || $configuration['PS_MAIL_TYPE'] == 1)
+			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)
 				$message->attach(new Swift_Message_Part($templateHtml, 'text/html', '8bit', 'utf-8'));
 			if ($fileAttachment && isset($fileAttachment['content']) && isset($fileAttachment['name']) && isset($fileAttachment['mime']))
 				$message->attach(new Swift_Message_Attachment($fileAttachment['content'], $fileAttachment['name'], $fileAttachment['mime']));
