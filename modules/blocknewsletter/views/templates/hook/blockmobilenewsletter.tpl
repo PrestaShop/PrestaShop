@@ -28,16 +28,18 @@
 <!-- Block Mobile Newsletter module-->
 <div id="newsletter">
 	<h4>{l s="Newsletter" mod="blocknewletter"}</h4>
-	<form action="form.php" method="post">
+	{if isset($msg) && $msg}
+		<p class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</p>
+	{/if}
+	<form action="{$link->getPageLink('index')}" method="post">
 		<fieldset>
 			<input type="email" name="email"
 				   value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='blocknewsletter'}{/if}"
 				   onfocus="javascript:if(this.value=='{l s='your e-mail' mod='blocknewsletter'}')this.value='';"
 				   onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='blocknewsletter'}';"
 				   class="inputNew" />
-			<div data-theme="a" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-a" aria-disabled="false">
-				<span aria-hidden="true" class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">OK</span></span>
-			</div>
+			<input type="submit" value="OK" data-role="button" data-theme="a" name="submitNewsletter" />
+			<input type="hidden" name="action" value="0" />
 		</fieldset>
 	</form>
 </div><!-- /newsletter -->
