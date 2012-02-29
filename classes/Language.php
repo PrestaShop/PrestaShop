@@ -634,13 +634,13 @@ class LanguageCore extends ObjectModel
 			return true;
 		else
 		{
-			if (@fsockopen('api.prestashop.com', 80))
+			if (@fsockopen('www.prestashop.com', 80))
 			{
 				$lang = new Language();
 				$lang->iso_code = $iso_code;
 				$lang->active = true;
 
-				if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code)))
+				if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code)))
 				{
 					if (isset($lang_pack->name)
 					&& isset($lang_pack->version)
@@ -653,7 +653,7 @@ class LanguageCore extends ObjectModel
 
 				if ($lang_pack)
 				{
-					$flag = Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
+					$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
 					if ($flag != null && !preg_match('/<body>/', $flag))
 					{
 						$file = fopen(dirname(__FILE__).'/../img/l/'.$insert_id.'.jpg', 'w');

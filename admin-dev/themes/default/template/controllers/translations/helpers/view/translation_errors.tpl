@@ -30,8 +30,22 @@
 	
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
 	{l s='Errors to translate'} : <b>{$count}</b>
-	{$limit_warning}
-	{if !$suoshin_exceeded}
+	{if $post_limit_exceeded}
+	<div class="warn">
+		{if $limit_warning['error_type'] == 'suhosin'}
+			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
+
+			<b>{$limit_warning['post.max_vars']}</b>{l s='for suhosin.post.max_vars.'}<br/>
+			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the suhosin post and request limit to'}
+		{else}
+			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
+			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
+			{l s='Please ask your hosting provider to increase the this limit to'}
+		{/if}
+		<u><b>{$limit_warning['needed_limit']}</b></u> {l s='at least.'} {l s='or edit the translation file manually.'}
+	</div>
+	{else}
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 			{*{$auto_translate}$*}
 			<input type="hidden" name="lang" value="{$lang}" />
