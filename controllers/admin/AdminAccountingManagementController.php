@@ -73,9 +73,9 @@ class AdminAccountingManagementControllerCore extends AdminController
 			'title' => $this->l('Accounting Management'),
 			'table' => 'accounting'
 		));
-		parent::initContent();
+		parent::initContent();	
 	}
-	
+
 	/**
 	 * AdminController::init() override
 	 * @see AdminController::postProcess()
