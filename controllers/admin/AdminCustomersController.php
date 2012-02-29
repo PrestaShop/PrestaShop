@@ -291,6 +291,14 @@ class AdminCustomersControllerCore extends AdminController
 					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Accounting number:'),
+					'name' => 'account_number',
+					'size' => 33,
+					'required' => false,
+					'desc' => $this->l('Used for the accounting export')
+				),
+				array(
 					'type' => 'birthday',
 					'label' => $this->l('Birthday:'),
 					'name' => 'birthday',

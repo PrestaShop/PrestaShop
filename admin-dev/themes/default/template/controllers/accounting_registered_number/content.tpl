@@ -24,10 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !empty($error)}
-	<div class="hint" style="display:block">{$error}</div>
-{else}
-	<div class="toolbarBox">
+<div class="toolbarBox">
 		{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
 		<div class="pageTitle">
 			<h3>
@@ -36,30 +33,33 @@
 				</span>
 			</h3>
 		</div>
-	</div>
-	<fieldset>
-		<legend>{l s='Account number'}</legend>
-		<div class="hint" style="display:block">
-			{l s='Configure the account number by zone for:'} <b>{$shop_details['name']}</b>
-		</div>
-		<br />
-		<form id="{$table}_form" method="POST" action="{$smarty.server.REQUEST_URI}">
-			<label>{l s='Default number for this shop'}</label>
-				<div class="margin-form">
-				<input type="text" name="default_account_number" value="{$shop_details['default_account_number']|htmlentities}" />
-				<p>{l s='If a zone field is empty it will use this default number.'}</p>
-			</div>
-			{foreach from=$shop_details['zones'] key=id_zone item=currentZone}
-				<label>{$currentZone['name']}</label>
-				<div class="margin-form">
-					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']|escape:htmlall|htmlentities}" />
+</div>
 
-				</div>
-			{/foreach}
-			<div class="margin-form">
-				<input type="submit" class="button" id="{$table}_form_submit_btn" name="UpdateNumbers" value="{l s='Save'}"/>
-			</div>
-		</form>
+<div id="account_list">
+	{foreach from=$account_number_list item=detail key=name}
+		<h2>{$detail['title']}</h2>
+		{if $detail['list']|count}
+			<table class="table" style="width:100%;">
+				<thead>
+					{if $detail['list']|count}
+						{foreach from=$detail['fields'] item=col_name key=sql_name}
+							<th>{$col_name}</th>
+						{/foreach}
+					{/if}
+				</thead>
+				<tbody>
+					{foreach from=$detail['list'] item=row key=row_number}
+						<tr>
+							{foreach from=$row item=value key=value_num}
+								<td>{$value}</td>
+							{/foreach}
+						</tr>
+					{/foreach}
+				</tbody>
+			</table>
+		{else}
+			<p>{l s='No defined account number for this list'}</p>
+		{/if}
 		<div class="separation"></div>
-	</fieldset>
-{/if}
+	{/foreach}
+</div>

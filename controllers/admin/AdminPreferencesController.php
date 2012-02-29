@@ -249,6 +249,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'list' => $taxes,
 					'identifier' => 'id'
 				),
+				'PS_GIFT_WRAPPING_ACCOUNT_NUMBER' => array(
+					'title' => $this->l('Gift-wrapping account number'),
+					'desc' => $this->l('Set an account number for your gift-wrapping (used for accounting)'),
+					'validation' => 'isString',
+					'type' => 'text',
+					'size' => 30,
+				),
+
 				'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 					'title' => $this->l('Attachment maximum size'),
 					'desc' => $this->l('Set the maximum size of attachment files (in MegaBytes).').' '.$this->l('Maximum:').' '.

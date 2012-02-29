@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Home" name="Accueil"/>
-  <tab id="tab_107" name=""/>
+  <tab id="tab_2" name=""/>
   <tab id="CMS_pages" name="Pages CMS"/>
   <tab id="CMS_categories" name="Cat&#xE9;gories CMS"/>
   <tab id="Combinations_generator" name="G&#xE9;n&#xE9;rateur de d&#xE9;clinaisons"/>
@@ -57,6 +57,11 @@
   <tab id="My_Account" name="Mon compte"/>
   <tab id="Themes" name="Th&#xE8;mes"/>
   <tab id="Positions" name="Positions"/>
+  <tab id="Profiles" name="Profils"/>
+  <tab id="Permissions" name="Permissions"/>
+  <tab id="Contacts" name="Contacts"/>
+  <tab id="Tabs" name="Onglets"/>
+  <tab id="Customer_Service" name="SAV"/>
   <tab id="Contact_Information" name="Coordonn&#xE9;es"/>
   <tab id="Themes_1" name="Th&#xE8;mes"/>
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
@@ -82,11 +87,6 @@
   <tab id="Webservice" name="Service web"/>
   <tab id="Logs" name="Log"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
-  <tab id="Profiles" name="Profils"/>
-  <tab id="Permissions" name="Permissions"/>
-  <tab id="Contacts" name="Contacts"/>
-  <tab id="Tabs" name="Onglets"/>
-  <tab id="Customer_Service" name="SAV"/>
   <tab id="Group_Shops" name="Groupes de boutique"/>
   <tab id="Shop_Urls" name="URLs de boutique"/>
   <tab id="Warehouses" name="Entrep&#xF4;ts"/>
@@ -98,4 +98,5 @@
   <tab id="Configuration" name="Configuration"/>
   <tab id="Account_Number_Management" name="Gestion des num&#xE9;ros de comptes"/>
   <tab id="Export" name="Export"/>
+  <tab id="Display_Accounting_Plan" name="Display Accounting Plan"/>
 </entity_tab>
