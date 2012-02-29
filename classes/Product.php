@@ -4851,7 +4851,8 @@ class ProductCore extends ObjectModel
 			SELECT asso_shop_product.`id_category_default`
 			FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			WHERE asso_shop_product.`id_shop` = '.(int)$id_shop);
+			WHERE asso_shop_product.`id_shop` = '.(int)$id_shop.'
+			AND p.`id_product` = '.(int)$this->id);
 
 	}
 
