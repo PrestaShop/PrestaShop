@@ -332,7 +332,7 @@ class AdminCmsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)(Tools::getValue('id_cms_category'))) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (Tools::isSubmit('status') && Tools::isSubmit($this->identifier))
+		elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
