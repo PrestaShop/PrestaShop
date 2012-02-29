@@ -32,6 +32,7 @@
 <script type="text/javascript">
 	var token = '{$token}';
 	var currentIndex = '{$currentIndex}';
+	var currentIndexWithToken = '{$currentIndex}&token={$token}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var by = '{l s='by'}';
@@ -175,7 +176,7 @@
 				{
 					// res.status  = cache or refresh
 					if (data == '{"status":"refresh"}')
-						window.location.href = window.location.href;
+						window.location.href = currentIndexWithToken;
 				},
 				error: function(res,textStatus,jqXHR)
 				{
@@ -217,7 +218,7 @@
 							{
 								$('#addons_loading').html('');
 								$('#addons_login_div').fadeOut();
-								window.location.href = window.location.href;
+								window.location.href = currentIndexWithToken;
 							}
 							else
 								$('#addons_loading').html(errorLogin);
@@ -259,7 +260,7 @@
 							{
 								$('#addons_loading').html('');
 								$('#addons_login_div').fadeOut();
-								window.location.href = window.location.href;
+								window.location.href = currentIndexWithToken;
 							}
 							else
 								$('#addons_loading').html(errorLogin);
@@ -303,7 +304,7 @@
 						{
 							// res.status  = cache or refresh
 							if (data == 'OK')
-								window.location.href = window.location.href;
+								window.location.href = currentIndexWithToken;
 						},
 						error: function(res,textStatus,jqXHR)
 						{
