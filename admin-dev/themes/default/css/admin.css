@@ -444,8 +444,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modulePosition .table tr th { height:40px;}
 #modulePosition form{ margin-right:270px;}
 #modulePosition .lab_modules_positions h3 { color:#3A6EA7; margin:0 0 0 10px; float:left;}
-#modulePosition .lab_modules_positions p { font-family:Georgia; font-style: italic; font-size:12px; padding-left:40px;}
-#modulePosition .lab_modules_positions span { font-size:12px; padding-left:5px;}
+#modulePosition .lab_modules_positions p { font-family:Georgia; font-style: italic; font-size:12px; padding-left:40px; clear:both;}
+#modulePosition .lab_modules_positions span { font-size:12px; padding-top:4px; padding-left:5px; float:left; }
 
 select#show_modules { font-size:12px;}
 
