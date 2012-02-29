@@ -35,7 +35,7 @@
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var by = '{l s='by'}';
-	var errorLogin = '{l s='Could not login to Addons'}';
+	var errorLogin = '{l s='Could not login to Addons, please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
@@ -232,6 +232,47 @@
 			return false;
 		});
 
+
+		// Method to log out PrestaShop Addons WebServices
+		$('#addons_logout_button').click(function()
+		{
+			try
+			{
+				resAjax = $.ajax({
+						type:"POST",
+						url : ajaxCurrentIndex,
+						async: true,
+						data : {
+							ajax : "1",
+							token : token,
+							controller : "AdminModules",
+							action : "logOutAddonsWebservices"
+						},
+ 						beforeSend: function(xhr)
+						{
+							$('#addons_loading').html('<img src="../img/loader.gif" border="0">');
+						},
+						success : function(data)
+						{
+							// res.status  = cache or refresh
+							if (data == 'OK')
+							{
+								$('#addons_loading').html('');
+								$('#addons_login_div').fadeOut();
+								window.location.href = window.location.href;
+							}
+							else
+								$('#addons_loading').html(errorLogin);
+						},
+						error: function(res,textStatus,jqXHR)
+						{
+							//jAlert("TECHNICAL ERROR"+res);
+						}
+				});
+			}
+			catch(e){}
+			return false;
+		});
 
 
 		// Method to set filter on modules

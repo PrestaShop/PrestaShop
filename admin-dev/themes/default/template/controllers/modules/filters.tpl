@@ -25,7 +25,23 @@
 *}
 
 
-	{if !isset($logged_on_addons)}
+	{if isset($logged_on_addons)}
+
+			<!--start addons login-->
+			<div class="filter-module" id="addons_login_div">
+		
+				<p>{l s='You are logged on PrestaShop Addons'}</p>
+				
+				<div style="float:right">				
+					<label><img src="themes/default/img/module-profile.png" /> {l s='Welcome'} {$username_addons}</label>
+					<label>|</label>
+					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Logout from addons'}</a></label>
+				</div>
+
+			</div>
+			<!--end addons login-->
+
+	{else}
 
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			
@@ -45,7 +61,7 @@
 					<label>{l s='Login Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
 					<label>{l s= 'Password Addons'} :</label> <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
 					<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
-					<span id="addons_loading" style="color:red"></span>
+					<br /><span id="addons_loading" style="color:red"></span>
 				</form>
 
 			</div>
