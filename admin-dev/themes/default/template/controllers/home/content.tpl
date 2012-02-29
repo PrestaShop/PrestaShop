@@ -51,7 +51,7 @@
 			<a href="{$protocol}://screencasts.prestashop.com/v1.5/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="../img/admin/preview_fr.jpg" /><span class="mask-player"></span></a>
 		</div>
 			<div id="video-content">
-			<p>{l s='With PrestaShop, take part in the adventure of e-commerce with ease. PrestaShop is rapid, powerful, and customizable, with 275 features for you to take advantage of to create a world of opportunities without limits. Discover the solution that has already conquered more than 100,000 merchants worldwide!'}</p>
+			<p>{l s='With PrestaShop, take part in the adventure of e-commerce with ease. PrestaShop is fast, powerful, and customizable, with 275 features for you to take advantage of to create a world of opportunities without limits. Discover the solution that has already conquered more than 100,000 merchants worldwide!'}</p>
 			</div>
 	<div id="footer_iframe_home">
 		<!--<a href="#">{l s='View more video tutorials'}</a>-->
