@@ -80,10 +80,6 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 
-		// if we are not in a shop context, we remove the position column
-		if (Shop::getContext() != Shop::CONTEXT_SHOP)
-			unset($this->fieldsDisplay['position']);
-
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected')));
 		$this->specificConfirmDelete = false;
 		
@@ -103,7 +99,17 @@ class AdminCategoriesControllerCore extends AdminController
 			else if (count(Category::getCategoriesWithoutParent()) > 1)
 				$this->_category = Category::getTopCategory();
 			else
-				$this->_category = new Category(2);
+				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
+
+		// if we are not in a shop context, we remove the position column
+		if (Shop::getContext() != Shop::CONTEXT_SHOP)
+			unset($this->fieldsDisplay['position']);
+		// shop restriction : if category is not available for current shop, we redirect to the list from default category
+		if (!Shop::isCategoryAvailable($this->_category->id))
+		{
+			$this->redirect_after = self::$currentIndex.'&id_category='.(int)$this->context->shop->getCategory().'&token='.$this->token;
+			$this->redirect();
+		}
 	}
 	
 	public function initContent()
@@ -140,7 +146,7 @@ class AdminCategoriesControllerCore extends AdminController
 		else if (!$is_multishop && $count_categories_without_parent > 1)
 			$id_parent = $top_category->id;
 		else if ($is_multishop && $count_categories_without_parent == 1)
-			$id_parent = 2; //TODO need to get the ID category where category = Home
+			$id_parent = Configuration::get('PS_HOME_CATEGORY');
 		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
 			$id_parent = $top_category->id;
 		else
