@@ -186,7 +186,7 @@ class AdminThemesControllerCore extends AdminController
 			'tinymce' => false,
 			'legend' => array(
 				'title' => $this->l('Theme'),
-				'image' => '../img/admin/tab-themes.gif'
+				'image' => '../img/admin/themes.gif'
 			),
 			'input' => array(
 				array(
