@@ -129,9 +129,6 @@
     <tab id="Order_Messages" id_parent="Orders" active="1">
       <class_name>AdminOrderMessage</class_name>
     </tab>
-    <tab id="PDF" id_parent="Orders" active="1">
-      <class_name>AdminPdf</class_name>
-    </tab>
     <tab id="Currencies" id_parent="Payment" active="1">
       <class_name>AdminCurrencies</class_name>
     </tab>
