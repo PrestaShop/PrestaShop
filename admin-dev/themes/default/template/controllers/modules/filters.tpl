@@ -85,7 +85,7 @@
 			<div class="select-filter">
 				<label class="search-filter">{l s='Sort by'}:</label>
 
-					<select name="module_type" id="module_type_filter" {if $showTypeModules ne 'allModules'}style="background-color:#49B2FF;color:white;"{/if}>
+					<select name="module_type" id="module_type_filter" {if $showTypeModules ne 'allModules' && $showTypeModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All Modules'}</option>
 						<option value="nativeModules" {if $showTypeModules eq 'nativeModules'}selected="selected"{/if}>{l s='Native Modules'}</option>
 						<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partners Modules'}</option>
@@ -98,13 +98,13 @@
 						<option value="otherModules" {if $showTypeModules eq 'otherModules'}selected="selected"{/if}>{l s='Others Modules'}</option>
 					</select>
 					&nbsp;
-					<select name="module_install" id="module_install_filter" {if $showInstalledModules ne 'installedUninstalled'}style="background-color:#49B2FF;color:white;"{/if}>
+					<select name="module_install" id="module_install_filter" {if $showInstalledModules ne 'installedUninstalled' && $showInstalledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Uninstalled'}</option>
 						<option value="installed" {if $showInstalledModules eq 'installed'}selected="selected"{/if}>{l s='Installed Modules'}</option>
 						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Uninstalled Modules'}</option>
 					</select>
 					&nbsp;
-					<select name="module_status" id="module_status_filter" {if $showEnabledModules ne 'enabledDisabled'}style="background-color:#49B2FF;color:white;"{/if}>
+					<select name="module_status" id="module_status_filter" {if $showEnabledModules ne 'enabledDisabled' && $showEnabledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="enabledDisabled" {if $showEnabledModules eq 'enabledDisabled'}selected="selected"{/if}>{l s='Enabled & Disabled'}</option>
 						<option value="enabled" {if $showEnabledModules eq 'enabled'}selected="selected"{/if}>{l s='Enabled Modules'}</option>
 						<option value="disabled" {if $showEnabledModules eq 'disabled'}selected="selected"{/if}>{l s='Disabled Modules'}</option>
