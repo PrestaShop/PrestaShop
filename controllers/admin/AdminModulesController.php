@@ -873,6 +873,10 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 
+		// Handle "others" category
+		if (!isset($this->list_modules_categories[$module->tab]))
+			$module->tab = 'others';
+
 		// Filter on module category
 		$categoryFiltered = array();
 		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
@@ -890,7 +894,7 @@ class AdminModulesControllerCore extends AdminController
 			return true;
 		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
 			return true;
-		else if (!isset($module->type) || ($show_type_modules == 'addonsModules' && $module->type != 'addonsBought'))
+		else if ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought'))
 			return true;
 		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
 			return true;
