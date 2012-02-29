@@ -176,7 +176,7 @@
 				{
 					// res.status  = cache or refresh
 					if (data == '{"status":"refresh"}')
-						window.location.href = currentIndexWithToken;
+						window.location.href = window.location.href;
 				},
 				error: function(res,textStatus,jqXHR)
 				{
