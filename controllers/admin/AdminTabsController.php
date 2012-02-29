@@ -159,11 +159,7 @@ class AdminTabsControllerCore extends AdminController
 					'options' => array(
 						'query' => $tabs,
 						'id' => 'id_tab',
-						'name' => 'name',
-						'default' => array(
-							'value' => -1,
-							'label' => $this->l('None')
-						)
+						'name' => 'name'
 					)
 				)
 			),
@@ -186,7 +182,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowAction('details');
 
-		$this->_where = 'AND a.`id_parent` = 0 OR a.id_parent = -1';
+		$this->_where = 'AND a.`id_parent` = 0';
 		$this->_orderBy = 'position';
 
 		return parent::renderList();
@@ -274,11 +270,6 @@ class AdminTabsControllerCore extends AdminController
 				$_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
 			parent::postProcess();
 		}
-	}
-
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		parent::getList($id_lang, 'position', $order_way, $start, $limit, $id_lang_shop);
 	}
 
 	protected function afterImageUpload()
