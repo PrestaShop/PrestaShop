@@ -849,6 +849,11 @@ class AdminModulesControllerCore extends AdminController
 			return true;
 
 
+		// If action on module, we display it
+		if (Tools::getValue('module_name') != '' && Tools::getValue('module_name') == $module->name)
+			return false;
+
+
 		// Filter on module name
 		$filter_name = Tools::getValue('filtername');
 		if (!empty($filter_name))
