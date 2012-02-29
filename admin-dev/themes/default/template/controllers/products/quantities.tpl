@@ -160,7 +160,11 @@
 										<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
 											{l s='Default'}:
+											{if $order_out_of_stock == 1}
+											<i>{l s='Allow orders'}</i>
+											{else}
 											<i>{l s='Deny orders'}</i>
+											{/if} 
 											<a class="confirm_leave" href="index.php?tab=AdminPPreferences&token={$token_preferences}">
 												{l s='as set in Preferences'}
 											</a>
