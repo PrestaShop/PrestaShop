@@ -266,21 +266,11 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		$this->list_countries = array();
 		$countries = $this->language->getCountries();
 		$top_countries = array(
-			'fr',
-			'es',
-			'us',
-			'gb',
-			'it',
-			'de',
-			'nl',
-			'pl',
-			'id',
-			'be',
-			'br',
-			'se',
-			'ca',
-			'ru',
-			'cn',
+			'fr', 'es', 'us',
+			'gb', 'it', 'de',
+			'nl', 'pl', 'id',
+			'be', 'br', 'se',
+			'ca', 'ru', 'cn',
 		);
 
 		foreach ($top_countries as $iso)
@@ -291,6 +281,16 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 			if (!in_array($iso, $top_countries))
 				$this->list_countries[] = array('iso' => $iso, 'name' => $lang);
 
+		// Try to detect default country
+		if (!$this->session->shop_country)
+		{
+			$detect_language = $this->language->detectLanguage();
+			if (isset($detect_language['primarytag']))
+			{
+				$this->session->shop_country = (isset($detect_language['subtag'])) ? $detect_language['subtag'] : $detect_language['primarytag'];
+				$this->session->shop_timezone = $this->getTimezoneByIso($this->session->shop_country);
+			}
+		}
 
 		// Install type
 		$this->install_type = ($this->session->install_type) ? $this->session->install_type : 'full';
