@@ -31,6 +31,8 @@ class AdminInvoicesControllerCore extends AdminController
 	{
 		$this->table = 'invoice';
 
+		parent::__construct();
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Invoice options'),
@@ -68,13 +70,18 @@ class AdminInvoicesControllerCore extends AdminController
 						'type' => 'select',
 						'identifier' => 'value',
 						'list' => $this->getInvoicesModels()
+					),
+					'PS_PDF_USE_CACHE' => array(
+						'title' => $this->l('Use disk as cache for PDF invoices'),
+						'desc' => $this->l('Save memory but slow down the rendering process.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
 					)
 				),
 				'submit' => array()
-			),
+			)
 		);
-
-		parent::__construct();
 	}
 
 	public function initFormByDate()
