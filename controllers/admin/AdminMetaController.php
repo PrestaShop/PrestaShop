@@ -78,17 +78,9 @@ class AdminMetaControllerCore extends AdminController
 			),
 		);
 
-		// Display route options only if friendly URL is activated
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
-		{
-			$this->addFieldRoute('product_rule', $this->l('Route to products'));
-			$this->addFieldRoute('category_rule', $this->l('Route to category'));
-			$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
-			$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
-			$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
-			$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
-			$this->addFieldRoute('module', $this->l('Route to modules'));
-		}
+		// Add display route options to options form
+		if (Configuration::get('PS_REWRITING_SETTINGS') && Tools::getValue('PS_REWRITING_SETTINGS'))
+			$this->addAllRouteFields();
 	}
 
 	public function initProcess()
@@ -314,8 +306,9 @@ class AdminMetaControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
-		if (!Configuration::get('PS_REWRITING_SETTINGS'))
-			unset($this->options['routes']);
+		// If friendly url is not active, do not display custom routes form
+		if (Configuration::get('PS_REWRITING_SETTINGS'))
+			$this->addAllRouteFields();
 
 		if ($this->options && is_array($this->options))
 		{
@@ -332,5 +325,19 @@ class AdminMetaControllerCore extends AdminController
 
 			return $options;
 		}
+	}
+
+	/**
+	 * Add all custom route fields to the options form
+	 */
+	public function addAllRouteFields()
+	{
+		$this->addFieldRoute('product_rule', $this->l('Route to products'));
+		$this->addFieldRoute('category_rule', $this->l('Route to category'));
+		$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
+		$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
+		$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
+		$this->addFieldRoute('cms_category_rule', $this->l('Route to CMS category'));
+		$this->addFieldRoute('module', $this->l('Route to modules'));
 	}
 }
