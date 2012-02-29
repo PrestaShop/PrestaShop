@@ -29,7 +29,7 @@ define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslationsControllerCore extends AdminController
 {
-	protected $link_lang_pack = 'http://api.prestashop.com/download/lang_packs/get_each_language_pack.php';
+	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
 	protected $modules_translations = array();
@@ -62,7 +62,16 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initContent()
 	{
 		if ($type = Tools::getValue('type'))
-			$this->content .= $this->{'initForm'.ucfirst($type)}(Tools::strtolower(Tools::getValue('lang')));
+		{
+			$method_name = 'initForm'.$type;
+			if (method_exists($this, $method_name))
+				$this->content .= $this->{$method_name}(Tools::strtolower(Tools::getValue('lang')));
+			else
+			{
+				$this->errors[] = sprintf(Tools::displayError('"%s" does not exists. Maybe you typed the url manually.'), $type);
+				$this->content .= $this->initMain();
+			}
+		}
 		else
 			$this->content .= $this->initMain();
 
@@ -316,7 +325,7 @@ class AdminTranslationsControllerCore extends AdminController
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
 			if ($content = Tools::file_get_contents(
-				'http://api.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
+				'http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
@@ -1120,14 +1129,17 @@ class AdminTranslationsControllerCore extends AdminController
 						continue;
 					preg_match_all('/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(, (true|false))?\)/U', fread(fopen($fn, 'r'), filesize($fn)), $matches);
 					foreach ($matches[1] as $key)
+					{
 						$stringToTranslate[$key] = (key_exists(md5($key), $_ERRORS)) ? html_entity_decode($_ERRORS[md5($key)], ENT_COMPAT, 'UTF-8') : '';
+						$this->total_expression++;
+					}
 				}
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('Error translations'),
-			'count' => count($stringToTranslate),
-			'limit_warning' => $this->displayLimitPostWarning($count),
+			'count' => $this->total_expression,
+			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsErrors=1&token='.$this->token,
 			'auto_translate' => '',
@@ -1244,11 +1256,15 @@ class AdminTranslationsControllerCore extends AdminController
 					$type = substr($email_file, strripos($email_file, '.') + 1);
 					if (!isset($arr_return['files'][$email_name]))
 						$arr_return['files'][$email_name] = array();
+					// $email_file is from scandir ($dir), so we already know that file exists
 					$arr_return['files'][$email_name][$type]['en'] = $this->getMailContent($dir, $email_file, 'en');
 
 					// check if the file exists in the language to translate
 					if (file_exists($dir.$lang.'/'.$email_file))
+					{
 						$arr_return['files'][$email_name][$type][$lang] = $this->getMailContent($dir, $email_file, $lang);
+						$this->total_expression++;
+					}
 					else
 						$arr_return['files'][$email_name][$type][$lang] = '';
 
@@ -1259,6 +1275,9 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 		}
+		else
+			// @todo : allow to translate when english is missing
+			$this->warnings[] = sprintf(Tools::displayError('mail directory exists for %1$s but not for english in %s'), $lang, str_replace(_PS_ROOT_DIR_, '', $dir));
 		return $arr_return;
 	}
 
@@ -1490,6 +1509,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($modules_has_mails as $module_name => $module_path)
 		{
 			$module_mails[$module_name] = $this->getMailFiles($module_path.'/mails/', $lang, 'module_mail');
+			// @todo : all subjects (for core and modules name) are currently saved in mails/$lang/lang.php instead of module directory
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
 			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $obj_lang, Tools::strtolower($module_name), sprintf($this->l('E-mails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
 		}
@@ -1541,6 +1561,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('E-mail template translations'),
+			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsMails=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
@@ -1595,10 +1616,11 @@ class AdminTranslationsControllerCore extends AdminController
 
 		if (Tools::file_exists_cache($directory.'/lang.php'))
 		{
-			// we need to include this even if already included
+			// we need to include this even if already included (no include once)
 			include($directory.'/lang.php');
 			foreach ($_LANGMAIL as $key => $subject)
 			{
+				$this->total_expression++;
 				$subject = str_replace('\n', ' ', $subject);
 				$subject = str_replace("\\'", "\'", $subject);
 
