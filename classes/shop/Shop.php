@@ -94,6 +94,7 @@ class ShopCore extends ObjectModel
 		'store' => array('type' => 'shop'),
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
+		'stock_available' => array('type' => 'fk_shop'),
 	);
 
 	protected $webserviceParameters = array(

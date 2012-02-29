@@ -319,7 +319,7 @@ class AdminShopControllerCore extends AdminController
 
 		if (Tools::isSubmit('id_shop'))
 		{
-			$shop = new Shop(Tools::getValue('id_shop'));
+			$shop = new Shop((int)Tools::getValue('id_shop'));
 			$parent = $shop->id_category;
 		}
 		else
@@ -405,7 +405,6 @@ class AdminShopControllerCore extends AdminController
 			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
 			'warehouse' => $this->l('Warehouse'),
-			'stock_available' => $this->l('Stock Available'),
 		);
 
 		if (!$this->object->id)
