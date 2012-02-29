@@ -168,7 +168,7 @@ class CustomerCore extends ObjectModel
 			'ip_registration_newsletter' =>	array('type' => self::TYPE_STRING, 'copy_post' => false),
 			'optin' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'website' =>					array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
-			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'siret' =>						array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
 			'ape' =>						array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
 			'outstanding_allow_amount' =>	array('type' => self::TYPE_INT, 'validate' => 'isFloat', 'copy_post' => false),
