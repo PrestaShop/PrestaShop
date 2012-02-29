@@ -34,12 +34,6 @@
 						<div>{l s='Add new module'}</div>
 					</a>
 				</li>
-				<li>
-					<a id="desc-module-addon-new" class="toolbar_btn" href="{$addonsUrl}" title="Add new">
-						<span class="process-icon-new-module-addon" ></span>
-						<div>{l s='Add new via Addons'}</div>
-					</a>
-				</li>
 			</ul>
 
 			<div class="pageTitle">
