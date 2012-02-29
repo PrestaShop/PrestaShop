@@ -152,6 +152,15 @@ function initTableDnD(table)
 					}
 				}
 
+				if (table.id == 'tab') {
+					params = {
+						ajaxTabsPositions: true,
+						id_tab : ids[2],
+						way: way,
+						token: token
+					}
+				}
+
 				$.ajax({
 					type: 'POST',
 					async: false,
