@@ -190,7 +190,7 @@ class AdminProductsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (a.`id_product` = ptrgs.`id_product` 
+			LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (a.`id_product` = ptrgs.`id_product`
 				AND ptrgs.id_shop='.(int)$this->context->shop->id.')
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
@@ -775,7 +775,7 @@ class AdminProductsControllerCore extends AdminController
 		$to = Tools::getValue('sp_to');
 		if (!$to)
 			$to = '0000-00-00 00:00:00';
-			
+
 		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{
 			$specificPrice = new SpecificPrice();
@@ -1517,7 +1517,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->_removeTaxFromEcotax();
 				$this->copyFromPost($object, $this->table);
 				$object->indexed = 0;
-				
+
 				if ($object->update())
 				{
 					$this->addCarriers();
@@ -3571,6 +3571,7 @@ class AdminProductsControllerCore extends AdminController
 				'product_designation' => $product_designation,
 				'product' => $obj,
 				'show_quantities' => $show_quantities,
+				'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 				'token' => $this->token,
 				'languages' => $languages,
@@ -3860,7 +3861,7 @@ class AdminProductsControllerCore extends AdminController
 	{
  		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
-	}	
+	}
 
 
 
