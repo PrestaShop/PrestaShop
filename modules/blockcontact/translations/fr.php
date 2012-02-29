@@ -10,7 +10,7 @@ $_MODULE['<{blockcontact}prestashop>blockcontact_44a87f7752c32d2d4dba5b25cb2a966
 $_MODULE['<{blockcontact}prestashop>blockcontact_b17f3f4dcf653a5776792498a9b44d6a'] = 'Mettre à jour les réglages';
 $_MODULE['<{blockcontact}prestashop>blockcontact_02d4482d332e1aef3437cd61c9bcc624'] = 'Contactez-nous';
 $_MODULE['<{blockcontact}prestashop>blockcontact_6e6a51212bd633f9901a22cea27194d8'] = 'Notre service client';
-$_MODULE['<{blockcontact}prestashop>blockcontact_0410dfe3c18ee59b251102c205ceca34'] = 'sont disponible 24h/24, 7j/7';
+$_MODULE['<{blockcontact}prestashop>blockcontact_0410dfe3c18ee59b251102c205ceca34'] = 'est disponible 24h/24, 7j/7';
 $_MODULE['<{blockcontact}prestashop>blockcontact_6e6c05a143d676b33ca265b0306813fb'] = 'Tél. :';
 $_MODULE['<{blockcontact}prestashop>blockcontact_bbaff12800505b22a853e8b7f4eb6a22'] = 'Contacter';
 $_MODULE['<{blockcontact}prestashop>blockcontact_e9376117c97ae76d0eefdc3e1f4486e7'] = 'notre service client';
