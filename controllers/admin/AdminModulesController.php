@@ -890,6 +890,8 @@ class AdminModulesControllerCore extends AdminController
 			return true;
 		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
 			return true;
+		else if (!isset($module->type) || ($show_type_modules == 'addonsModules' && $module->type != 'addonsBought'))
+			return true;
 		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
 			return true;
 		else if (strpos($show_type_modules, 'authorModules[') !== false)
