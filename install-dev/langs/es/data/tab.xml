@@ -41,7 +41,6 @@
   <tab id="Credit_Slips" name="Vales"/>
   <tab id="Statuses" name="Estados"/>
   <tab id="Order_Messages" name="Mensajes de Orden"/>
-  <tab id="PDF" name="PDF"/>
   <tab id="Currencies" name="Divisas"/>
   <tab id="Taxes" name="Impuestos"/>
   <tab id="Tax_Rules" name="Reglas de Impuestos"/>
