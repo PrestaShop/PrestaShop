@@ -1270,6 +1270,7 @@ $_LANGADM['AdminHome7e4b7faf0fc36dc296e66f6ea3096dcd'] = 'Cliquez ici si vous so
 $_LANGADM['AdminHome801ab24683a4a8c433c6eb40c48bcd9d'] = 'Téléchager';
 $_LANGADM['AdminHome830faa39d4dffcb14f4f514c9342e5d1'] = 'Créez une nouvelle catégorie et organisez vos produits sur votre boutique.';
 $_LANGADM['AdminHome8524de963f07201e5c086830d370797f'] = 'Chargement en cours...';
+$_LANGADM['AdminHome8ca8a450bf18dd19193783ed373c8c50'] = 'Avec PrestaShop, vivez une aventure e-commerce passionnante en toute simplicité. Rapide, performante et personnalisable, adoptez la solution PrestaShop et profitez de ses 275 fonctionnalités pour un monde d\'opportunités sans limite. Découvrez la solution qui a déjà conquis plus de 100 000 marchands à travers le monde !';
 $_LANGADM['AdminHome96b0141273eabab320119c467cdcaf17'] = 'Total';
 $_LANGADM['AdminHomea340073fa87f8783e926b7865a8d9fe0'] = 'Fils de discussion non lus';
 $_LANGADM['AdminHomea7aea4dd3ab07e5892a8aa90b131f862'] = 'Nouvelle règle de prix pour le panier';
