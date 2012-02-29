@@ -236,7 +236,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$this->fields_value = array(
 										'price' => number_format((($value = $this->getFieldValue($this->object, 'price')) ? $value : 0), 2),
 										'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
-										'reduction' => number_format((($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 0), 2),
+										'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 2),
 									);
 		$attribute_groups = array();
 		$attributes = Attribute::getAttributes((int)$this->context->language->id);
