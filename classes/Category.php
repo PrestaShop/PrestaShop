@@ -805,8 +805,10 @@ class CategoryCore extends ObjectModel
 			$sql .= '
 					AND cs.`id_shop` = '.(int)$shop->id;
 		$sql .= '
-					AND c.`id_parent` = '.(int)$id_parent.'
-				ORDER BY cs.`position` ASC';
+					AND c.`id_parent` = '.(int)$id_parent;
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && $use_shop_context)
+			$sql .= '
+					ORDER BY cs.`position` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
