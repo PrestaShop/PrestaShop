@@ -34,10 +34,9 @@
 	<form action="{$link->getPageLink('index')}" method="post">
 		<fieldset>
 			<input type="email" name="email"
-				   value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='blocknewsletter'}{/if}"
-				   onfocus="javascript:if(this.value=='{l s='your e-mail' mod='blocknewsletter'}')this.value='';"
-				   onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='blocknewsletter'}';"
-				   class="inputNew" />
+				placeholder="{l s='your e-mail' mod='blocknewsletter'}"
+				value="{if isset($value) && $value}{$value}{/if}"
+				class="inputNew" />
 			<input type="submit" value="OK" data-role="button" data-theme="a" name="submitNewsletter" />
 			<input type="hidden" name="action" value="0" />
 		</fieldset>
