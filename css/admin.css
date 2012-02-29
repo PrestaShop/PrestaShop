@@ -1822,7 +1822,7 @@ p.preference_description .light-warning {
 	font-style: italic;
 }
 
-.multishop_warning{
+.multishop_warning, .warning_mod_rewrite{
     background-image: url("../img/admin/warning.gif");
     background-repeat: no-repeat;
     color: #FE2744;

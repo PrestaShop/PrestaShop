@@ -2221,6 +2221,11 @@ FileETag INode MTime Size
 		for ($len; $len > 0; $len--)
 			$str .= '.0';
 	}
+	
+	public static function modRewriteActive()
+	{
+		return (in_array('mod_rewrite', apache_get_modules()) ? true : false);
+	}
 }
 
 /**

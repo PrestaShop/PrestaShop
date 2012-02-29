@@ -45,6 +45,7 @@ class AdminGeneratorControllerCore extends AdminController
 		$this->tpl_option_vars['checkConfiguration_rb'] = $this->checkConfiguration($this->rb_file);
 		$this->tpl_option_vars['ps_htaccess_cache_control'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		$this->tpl_option_vars['ps_rewriting_settings'] = Configuration::get('PS_REWRITING_SETTINGS');
+		$this->tpl_option_vars['mod_rewrite'] = Tools::modRewriteActive();
 		$this->tpl_option_vars['ps_htaccess_disable_multiviews'] = Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
 		parent::initContent();
