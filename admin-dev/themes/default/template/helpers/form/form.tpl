@@ -435,7 +435,6 @@
 {/if}
 {if $firstCall}
 	<script type="text/javascript">
-		var vat_number = {$vat_number};
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
