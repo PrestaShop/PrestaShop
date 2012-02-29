@@ -27,10 +27,10 @@
 {block name="defaultOptions"}
 		<form action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data">
 		<fieldset><legend><img src="../img/admin/htaccess.gif" alt="" />{l s='Htaccess file generation'}</legend>
-		<p>
+		<div class="warn">
 			<b>{l s='Warning:'}</b> 
 			{l s='this tool can ONLY be used if you are hosted by an Apache web server. Please ask your webhost.'}
-		</p>
+		</div>
 		<p>
 			{l s='This tool will automatically generate a ".htaccess" file that will give you the ability to do URL rewriting and to catch 404 errors.'}
 		</p>
@@ -44,8 +44,16 @@
 			<div class="clear">&nbsp;</div>
 			<label for="imageCacheControl">{l s='Friendly URL'}</label>
 			<div class="margin-form">
-				<input type="checkbox" name="PS_REWRITING_SETTINGS" id="PS_REWRITING_SETTINGS" value="1" {if $ps_rewriting_settings}checked="checked"{/if} />
-				<p>{l s='Enable only if your server allows URL rewriting.'}</p>
+				{if $mod_rewrite}
+					<input type="checkbox" name="PS_REWRITING_SETTINGS" id="PS_REWRITING_SETTINGS" value="1" {if $ps_rewriting_settings}checked="checked"{/if} />
+					<p>{l s='Enable only if your server allows URL rewriting.'}</p>
+				{else}
+					<span class="warning_mod_rewrite" style="display:block;height:15px">
+						{l s='URL rewriting (mod_rewrite) is not active on your server. If you want to use Friendly URL you have to active this mod.'}
+					</span>
+					<div class="clear"></div>
+				{/if}
+
 			</div>
 			<div class="clear">&nbsp;</div>
 			<label for="imageCacheControl">{l s='Disable apache multiviews'}</label>
