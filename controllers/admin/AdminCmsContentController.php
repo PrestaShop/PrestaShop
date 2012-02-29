@@ -138,4 +138,11 @@ class AdminCmsContentControllerCore extends AdminController
 			|| (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move')))
 			$this->adminCMSCategories->postProcess();
 	}
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryUi('ui.widget');
+		$this->addJqueryPlugin('tagify');
+	}
 }
