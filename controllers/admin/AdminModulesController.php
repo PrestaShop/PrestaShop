@@ -867,25 +867,25 @@ class AdminModulesControllerCore extends AdminController
 		// Filter on favorites
 		if (Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee) == 'favorites')
 		{
-			if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)') > 0)
-				return false;
-			return true;
+			if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)') < 1)
+				return true;
 		}
+		else
+		{
+			// Handle "others" category
+			if (!isset($this->list_modules_categories[$module->tab]))
+				$module->tab = 'others';
 
-
-		// Handle "others" category
-		if (!isset($this->list_modules_categories[$module->tab]))
-			$module->tab = 'others';
-
-		// Filter on module category
-		$categoryFiltered = array();
-		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-		if (count($filterCategories) > 0)
-			foreach ($filterCategories as $fc)
-				if (!empty($fc))
-					$categoryFiltered[$fc] = 1;
-		if (count($categoryFiltered) > 0 && !isset($categoryFiltered[$module->tab]))
-			return true;
+			// Filter on module category
+			$categoryFiltered = array();
+			$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
+			if (count($filterCategories) > 0)
+				foreach ($filterCategories as $fc)
+					if (!empty($fc))
+						$categoryFiltered[$fc] = 1;
+			if (count($categoryFiltered) > 0 && !isset($categoryFiltered[$module->tab]))
+				return true;
+		}
 
 
 		// Filter on module type and author
