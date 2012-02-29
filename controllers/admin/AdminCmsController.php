@@ -277,22 +277,6 @@ class AdminCmsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 					else
 						$this->updateAssoShop($cms->id);
-					if (Tools::isSubmit('submitAddcmsAndPreview'))
-					{
-						$preview_url = $this->context->link->getCMSLink($cms, $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id), $this->context->language->id);
-
-						if (!$cms->active)
-						{
-							$admin_dir = dirname($_SERVER['PHP_SELF']);
-							$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-							$token = Tools::encrypt('PreviewCMS'.$cms->id);
-
-							$preview_url .= $cms->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
-						}
-						Tools::redirectAdmin($preview_url);
-					}
-					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=3&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 				}
 				else
 				{
@@ -302,22 +286,25 @@ class AdminCmsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 					else
 						$this->updateAssoShop($cms->id);
-					if (Tools::isSubmit('submitAddcmsAndPreview'))
-					{
-						$preview_url = $this->context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), $this->context->language->id);
-						if (!$cms->active)
-						{
-							$admin_dir = dirname($_SERVER['PHP_SELF']);
-							$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-							$token = Tools::encrypt('PreviewCMS'.$cms->id);
 
-							$preview_url .= $object->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
-						}
-						Tools::redirectAdmin($preview_url);
-					}
-					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 				}
+                if (Tools::isSubmit('submitAddcmsAndPreview'))
+                {
+                    $alias = $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id);
+                    $preview_url = $this->context->link->getCMSLink($cms, $alias, $this->context->language->id);
+
+                    if (!$cms->active)
+                    {
+                        $admin_dir = dirname($_SERVER['PHP_SELF']);
+                        $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+                        $token = Tools::encrypt('PreviewCMS'.$cms->id);
+
+                        $preview_url .= $object->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
+                    }
+                    Tools::redirectAdmin($preview_url);
+                }
+                else
+                    Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 			}
 		}
 		elseif (Tools::getValue('position'))

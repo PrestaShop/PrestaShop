@@ -47,10 +47,10 @@
 				}
 		}
 		$('#active_on').bind('click', function(){
-			toggleDraftWarning(true);
+			toggleDraftWarning(false);
 		});
 		$('#active_off').bind('click', function(){
-			toggleDraftWarning(false);
+			toggleDraftWarning(true);
 		});		
 	});
 {/block}
