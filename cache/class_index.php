@@ -17,6 +17,8 @@
   'AdminAccountingExportControllerCore' => 'controllers/admin/AdminAccountingExportController.php',
   'AdminAccountingManagementController' => 'override/controllers/admin/AdminAccountingManagementController.php',
   'AdminAccountingManagementControllerCore' => 'controllers/admin/AdminAccountingManagementController.php',
+  'AdminAccountingRegisteredNumberController' => '',
+  'AdminAccountingRegisteredNumberControllerCore' => 'controllers/admin/AdminAccountingRegisteredNumberController.php',
   'AdminAddonsCatalogController' => 'override/controllers/admin/AdminAddonsCatalogController.php',
   'AdminAddonsCatalogControllerCore' => 'controllers/admin/AdminAddonsCatalogController.php',
   'AdminAddonsMyAccountController' => 'override/controllers/admin/AdminAddonsMyAccountController.php',
