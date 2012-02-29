@@ -289,6 +289,13 @@ class AdminModulesControllerCore extends AdminController
 		die($result);
 	}
 
+	public function ajaxProcessLogOutAddonsWebservices()
+	{
+		$this->context->cookie->username_addons = '';
+		$this->context->cookie->password_addons = '';
+		die('OK');
+	}
+
 	public function ajaxProcessReloadModulesList()
 	{
 		if (Tools::getValue('filterCategory'))
@@ -1084,7 +1091,10 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
 
 		if ($this->logged_on_addons)
+		{
 			$tpl_vars['logged_on_addons'] = 1;
+			$tpl_vars['username_addons'] = $this->context->cookie->username_addons;
+		}
 		$smarty->assign($tpl_vars);
 	}
 
