@@ -209,8 +209,16 @@ class LinkCore
 		$params = array();
 		$params['id'] = $cms->id;
 		$params['rewrite'] = (!$alias) ? $cms->link_rewrite : $alias;
-		$params['meta_keywords'] =	Tools::str2url($cms->meta_keywords);
-		$params['meta_title'] = Tools::str2url($cms->meta_title);
+
+        if (isset($cms->meta_keywords[$id_lang]) && !empty($cms->meta_keywords[$id_lang]))
+            $params['meta_keywords'] = Tools::str2url($cms->meta_keywords[$id_lang]);
+        else
+            $params['meta_keywords'] = '';
+
+        if (isset($cms->meta_title[$id_lang]) && !empty($cms->meta_title[$id_lang]))
+            $params['meta_title'] = Tools::str2url($cms->meta_title[$id_lang]);
+        else
+            $params['meta_title'] = '';
 
 		return $url.Dispatcher::getInstance()->createUrl('cms_rule', $params, $this->allow);
 	}
