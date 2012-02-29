@@ -128,7 +128,8 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('submitAddcms')
 			|| isset($_GET['deletecms'])
 			|| Tools::isSubmit('viewcms')
-			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position') && !Tools::isSubmit('id_cms_category_to_move')))
+			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
+ 	 	 	|| (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position')))
 			$this->adminCMS->postProcess();
 		else if (Tools::isSubmit('submitDelcms_category')
 			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
