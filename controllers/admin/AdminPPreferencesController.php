@@ -35,120 +35,9 @@ class AdminPPreferencesControllerCore extends AdminController
 		parent::__construct();
 
 		$this->options = array(
-			'products' => array(
-				'title' =>	$this->l('Products'),
-				'icon' =>	'tab-orders',
+			'order_by_pagination' => array(
+				'title' =>	$this->l('Pagniation'),
 				'fields' =>	array(
-					'PS_CATALOG_MODE' => array(
-						'title' => $this->l('Catalog mode:'),
-						'desc' => $this->l('When active, all features for shopping will be disabled'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool'
-					),
-		 			'PS_ORDER_OUT_OF_STOCK' => array(
-		 				'title' => $this->l('Allow ordering out-of-stock product:'),
-		 				'desc' => $this->l('Add to cart button is hidden when product is unavailable'),
-		 				'validation' => 'isBool',
-		 				'cast' => 'intval',
-		 				'required' => false,
-		 				'type' => 'bool'
-					),
-					'PS_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable stock management:'),
-						'desc' => '',
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool',
-						'js' => array(
-							'on' => 'onchange="stockManagementActivationAuthorization()"',
-							'off' => 'onchange="stockManagementActivationAuthorization()"'
-						)
-					),
-					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced stock management:'),
-						'desc' => $this->l('Allows you to manage a physical stock, warehouses and supply orders.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
-					),
-					'PS_DISPLAY_QTIES' => array(
-						'title' => $this->l('Display available quantities on product page:'),
-						'desc' => '',
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool'
-					),
-					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on product page:'),
-						'desc' => '',
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool'
-					),
-					'PS_DISP_UNAVAILABLE_ATTR' => array(
-						'title' => $this->l('Display unavailable product attributes on product page:'),
-						'desc' => '',
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool'
-					),
-					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
-						'title' => $this->l('Display "add to cart" button when product has attributes:'),
-						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes to force customers to see the product detail'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_COMPARATOR_MAX_ITEM' => array(
-						'title' => $this->l('Max items in the comparator:'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
-						'validation' => 'isUnsignedId',
-						'required' => true,
-						'cast' => 'intval',
-						'type' => 'text'
-					),
-					'PS_PURCHASE_MINIMUM' => array(
-						'title' => $this->l('Minimum purchase total required in order to validate order:'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
-						'validation' => 'isFloat',
-						'cast' => 'floatval',
-						'type' => 'price'
-					),
-					'PS_LAST_QTIES' => array(
-						'title' => $this->l('Display last quantities when qty is lower than:'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
-						'validation' => 'isUnsignedId',
-						'required' => true,
-						'cast' => 'intval',
-						'type' => 'text'
-					),
-					'PS_NB_DAYS_NEW_PRODUCT' => array(
-						'title' => $this->l('Number of days during which the product is considered \'new\':'),
-						'validation' => 'isUnsignedInt',
-						'cast' => 'intval',
-						'type' => 'text'
-					),
-					'PS_CART_REDIRECT' => array(
-						'title' => $this->l('Re-direction after adding product to cart:'),
-						'desc' => $this->l('Concerns only the non-AJAX version of the cart'),
-						'cast' => 'intval',
-						'show' => true,
-						'required' => false,
-						'type' => 'radio',
-						'validation' => 'isBool',
-						'choices' => array(
-							0 => $this->l('previous page'),
-							1 => $this->l('cart summary')
-						)
-					),
 					'PS_PRODUCTS_PER_PAGE' => array(
 						'title' => $this->l('Products per page:'),
 						'desc' => $this->l('Products displayed per page. Default is 10.'),
@@ -185,14 +74,56 @@ class AdminPPreferencesControllerCore extends AdminController
 							)
 						),
 						'identifier' => 'id'
+					)				
+				)
+			),
+			'fo_product_page' => array(
+				'title' =>	$this->l('Product page'),
+				'fields' =>	array(
+					'PS_DISPLAY_QTIES' => array(
+						'title' => $this->l('Display available quantities on product page:'),
+						'desc' => '',
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					),
-					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
-						'title' => $this->l('Short description max size'),
-						'desc' => $this->l('Set the maximum size of product short description'),
-						'validation' => 'isInt',
+					'PS_LAST_QTIES' => array(
+						'title' => $this->l('Display last quantities when qty is lower than:'),
+						'desc' => $this->l('Set to 0 to disable this feature'),
+						'validation' => 'isUnsignedId',
+						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text'
 					),
+					'PS_DISPLAY_JQZOOM' => array(
+						'title' => $this->l('Enable JqZoom instead of Thickbox on product page:'),
+						'desc' => '',
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
+					),
+					'PS_DISP_UNAVAILABLE_ATTR' => array(
+						'title' => $this->l('Display unavailable product attributes on product page:'),
+						'desc' => '',
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
+					),
+					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
+						'title' => $this->l('Display "add to cart" button when product has attributes:'),
+						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes to force customers to see the product detail'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					)
+				)
+			),
+			'product_images' => array(
+				'title' =>	$this->l('Products images'),
+				'fields' =>	array(
 					'PS_IMAGE_GENERATION_METHOD' => array(
 						'title' => $this->l('Image generated by:'),
 						'validation' => 'isUnsignedId',
@@ -251,6 +182,94 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => false,
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL
+					),
+				)
+			),
+			'stock' => array(
+				'title' =>	$this->l('Products stock'),
+				'fields' =>	array(
+					'PS_ORDER_OUT_OF_STOCK' => array(
+		 				'title' => $this->l('Allow ordering out-of-stock product:'),
+		 				'desc' => $this->l('Add to cart button is hidden when product is unavailable'),
+		 				'validation' => 'isBool',
+		 				'cast' => 'intval',
+		 				'required' => false,
+		 				'type' => 'bool'
+					),
+					'PS_STOCK_MANAGEMENT' => array(
+						'title' => $this->l('Enable stock management:'),
+						'desc' => '',
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool',
+						'js' => array(
+							'on' => 'onchange="stockManagementActivationAuthorization()"',
+							'off' => 'onchange="stockManagementActivationAuthorization()"'
+						)
+					),
+					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
+						'title' => $this->l('Enable advanced stock management:'),
+						'desc' => $this->l('Allows you to manage a physical stock, warehouses and supply orders.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+				)
+			),
+			'products' => array(
+				'title' =>	$this->l('Products (general)'),
+				'fields' =>	array(
+					'PS_CATALOG_MODE' => array(
+						'title' => $this->l('Catalog mode:'),
+						'desc' => $this->l('When active, all features for shopping will be disabled'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
+					),
+					'PS_COMPARATOR_MAX_ITEM' => array(
+						'title' => $this->l('Max items in the comparator:'),
+						'desc' => $this->l('Set to 0 to disable this feature'),
+						'validation' => 'isUnsignedId',
+						'required' => true,
+						'cast' => 'intval',
+						'type' => 'text'
+					),
+					'PS_PURCHASE_MINIMUM' => array(
+						'title' => $this->l('Minimum purchase total required in order to validate order:'),
+						'desc' => $this->l('Set to 0 to disable this feature'),
+						'validation' => 'isFloat',
+						'cast' => 'floatval',
+						'type' => 'price'
+					),
+					'PS_NB_DAYS_NEW_PRODUCT' => array(
+						'title' => $this->l('Number of days during which the product is considered \'new\':'),
+						'validation' => 'isUnsignedInt',
+						'cast' => 'intval',
+						'type' => 'text'
+					),
+					'PS_CART_REDIRECT' => array(
+						'title' => $this->l('Re-direction after adding product to cart:'),
+						'desc' => $this->l('Concerns only the non-AJAX version of the cart'),
+						'cast' => 'intval',
+						'show' => true,
+						'required' => false,
+						'type' => 'radio',
+						'validation' => 'isBool',
+						'choices' => array(
+							0 => $this->l('previous page'),
+							1 => $this->l('cart summary')
+						)
+					),
+					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
+						'title' => $this->l('Short description max size'),
+						'desc' => $this->l('Set the maximum size of product short description'),
+						'validation' => 'isInt',
+						'cast' => 'intval',
+						'type' => 'text'
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on:'),
