@@ -96,21 +96,24 @@ class AdminCmsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'class' => 'copy2friendlyUrl',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'size' => 50
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'size' => 70
 				),
 				array(
-					'type' => 'text',
+					'type' => 'tags',
 					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'size' => 70
 				),
 				array(
 					'type' => 'text',
