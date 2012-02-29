@@ -374,9 +374,7 @@ class AdminShopControllerCore extends AdminController
 		);
 
 		if (Shop::getTotalShops() > 1 && $obj->id)
-			$disabled = array(
-				'active' => false
-			);
+			$disabled = array('active' => false);
 		else
 			$disabled = false;
 
@@ -409,19 +407,16 @@ class AdminShopControllerCore extends AdminController
 
 		if (!$this->object->id)
 			$this->fields_import_form = array(
-				'legend' => array(
-					'title' => $this->l('Import data from another shop')
-				),
-				'label' => $this->l('Import data from another shop'),
-				'checkbox' => array(
-					'type' => 'checkbox',
-					'label' => $this->l('Duplicate data from shop'),
+				'radio' => array(
+					'type' => 'radio',
+					'label' => $this->l('Import data'),
 					'name' => 'useImportData',
 					'value' => 1
 				),
 				'select' => array(
 					'type' => 'select',
 					'name' => 'importFromShop',
+					'label' => $this->l('Choose the shop (source)'),
 					'options' => array(
 						'query' => Shop::getShops(false),
 						'name' => 'name'
@@ -429,6 +424,7 @@ class AdminShopControllerCore extends AdminController
 				),
 				'allcheckbox' => array(
 					'type' => 'checkbox',
+					'label' => $this->l('Choose data to import'),
 					'values' => $import_data
 				),
 				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
