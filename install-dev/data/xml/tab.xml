@@ -9,7 +9,7 @@
     <tab id="Home" id_parent="-1" active="1">
       <class_name>AdminHome</class_name>
     </tab>
-    <tab id="tab_107" id_parent="-1" active="1">
+    <tab id="tab_2" id_parent="-1" active="1">
       <class_name>AdminLogin</class_name>
     </tab>
     <tab id="CMS_pages" id_parent="-1" active="1">
@@ -177,6 +177,21 @@
     <tab id="Positions" id_parent="Modules" active="1">
       <class_name>AdminModulesPositions</class_name>
     </tab>
+    <tab id="Profiles" id_parent="Employees" active="1">
+      <class_name>AdminProfiles</class_name>
+    </tab>
+    <tab id="Permissions" id_parent="Employees" active="1">
+      <class_name>AdminAccess</class_name>
+    </tab>
+    <tab id="Contacts" id_parent="Employees" active="1">
+      <class_name>AdminContacts</class_name>
+    </tab>
+    <tab id="Tabs" id_parent="Employees" active="1">
+      <class_name>AdminTabs</class_name>
+    </tab>
+    <tab id="Customer_Service" id_parent="Employees" active="1">
+      <class_name>AdminCustomerThreads</class_name>
+    </tab>
     <tab id="Contact_Information" id_parent="Preferences" active="1">
       <class_name>AdminContact</class_name>
     </tab>
@@ -252,21 +267,6 @@
     <tab id="SQL_Manager" id_parent="Tools" active="1">
       <class_name>AdminRequestSql</class_name>
     </tab>
-    <tab id="Profiles" id_parent="Employees" active="1">
-      <class_name>AdminProfiles</class_name>
-    </tab>
-    <tab id="Permissions" id_parent="Employees" active="1">
-      <class_name>AdminAccess</class_name>
-    </tab>
-    <tab id="Contacts" id_parent="Employees" active="1">
-      <class_name>AdminContacts</class_name>
-    </tab>
-    <tab id="Tabs" id_parent="Employees" active="1">
-      <class_name>AdminTabs</class_name>
-    </tab>
-    <tab id="Customer_Service" id_parent="Employees" active="1">
-      <class_name>AdminCustomerThreads</class_name>
-    </tab>
     <tab id="Group_Shops" id_parent="Shops" active="1">
       <class_name>AdminGroupShop</class_name>
     </tab>
@@ -299,6 +299,9 @@
     </tab>
     <tab id="Export" id_parent="Accounting" active="1">
       <class_name>AdminAccountingExport</class_name>
+    </tab>
+    <tab id="Display_Accounting_Plan" id_parent="Accounting" active="1">
+      <class_name>AdminAccountingRegisteredNumber</class_name>
     </tab>
   </entities>
 </entity_tab>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Home" name="Home"/>
-  <tab id="tab_107" name=""/>
+  <tab id="tab_2" name=""/>
   <tab id="CMS_pages" name="CMS pages"/>
   <tab id="CMS_categories" name="CMS categories"/>
   <tab id="Combinations_generator" name="Combinations generator"/>
@@ -57,6 +57,11 @@
   <tab id="My_Account" name="Mein Konto"/>
   <tab id="Themes" name="Themen"/>
   <tab id="Positions" name="Positionen"/>
+  <tab id="Profiles" name="Profile"/>
+  <tab id="Permissions" name="Berechtigungen"/>
+  <tab id="Contacts" name="Kontakte"/>
+  <tab id="Tabs" name="Tabs"/>
+  <tab id="Customer_Service" name="Kundenservice"/>
   <tab id="Contact_Information" name="Kontaktinformation"/>
   <tab id="Themes_1" name="Themen"/>
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
@@ -82,11 +87,6 @@
   <tab id="Webservice" name="Webservice"/>
   <tab id="Logs" name="Log"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
-  <tab id="Profiles" name="Profile"/>
-  <tab id="Permissions" name="Berechtigungen"/>
-  <tab id="Contacts" name="Kontakte"/>
-  <tab id="Tabs" name="Tabs"/>
-  <tab id="Customer_Service" name="Kundenservice"/>
   <tab id="Group_Shops" name="Group Shops"/>
   <tab id="Shop_Urls" name="Shop Urls"/>
   <tab id="Warehouses" name="Warehouses"/>
@@ -98,4 +98,5 @@
   <tab id="Configuration" name="Configuration"/>
   <tab id="Account_Number_Management" name="Account Number Management"/>
   <tab id="Export" name="Export"/>
+  <tab id="Display_Accounting_Plan" name="Display Accounting Plan"/>
 </entity_tab>
