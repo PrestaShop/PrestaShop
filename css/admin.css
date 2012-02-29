@@ -309,7 +309,7 @@ select optgroup option {
 	padding: 0;
 	cursor: pointer;
 	display: block;
-	width: 425px;
+	width: 500px;
 }
 
 .lab_modules {
@@ -319,7 +319,7 @@ select optgroup option {
 	padding-left: 10px;
 	cursor: pointer;
 	display: block;
-	width: 350px;
+	width: 500px;
 }
 
 .lab_modules_positions img {
