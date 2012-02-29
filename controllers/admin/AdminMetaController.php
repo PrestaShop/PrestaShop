@@ -48,16 +48,18 @@ class AdminMetaControllerCore extends AdminController
 		);
 		$this->_group = 'GROUP BY a.id_meta';
 
+		$mod_rewrite = Tools::modRewriteActive();
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('URLs Setup'),
 				'fields' =>	array(
 					'PS_REWRITING_SETTINGS' => array(
 						'title' => $this->l('Friendly URL'),
-						'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)'),
+						'desc' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended)') : ''),
 						'validation' => 'isBool',
 						'cast' => 'intval',
-						'type' => 'bool'
+						'type' => 'rewriting_settings',
+						'mod_rewrite' => $mod_rewrite
 						),
 					'PS_CANONICAL_REDIRECT' => array(
 						'title' => $this->l('Automatically redirect to Canonical url'),
