@@ -366,7 +366,7 @@ var ajaxCart = {
 
 	//refresh display of vouchers (needed for vouchers in % of the total)
 	refreshVouchers : function (jsonData) {
-		if (jsonData.discounts.length == 0)
+		if (jsonData.discounts = undefined || jsonData.discounts.length == 0)
 			$('#vouchers').remove();
 		else
 		{
