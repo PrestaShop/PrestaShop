@@ -36,8 +36,8 @@ ALTER TABLE `PREFIX_customer` ADD `account_number` VARCHAR(128) NOT NULL AFTER `
 
 ALTER TABLE  `PREFIX_product_shop` ADD  `id_category_default` INT( 11 ) UNSIGNED DEFAULT NULL;
 
-ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
-	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
+ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`,
+	ADD INDEX (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`);
 
 ALTER TABLE `PREFIX_specific_price` ADD UNIQUE (`id_product`,`id_shop`,`id_group_shop`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`);
 ALTER TABLE `PREFIX_specific_price` ADD INDEX (`id_cart`);
