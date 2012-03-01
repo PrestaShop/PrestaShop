@@ -99,6 +99,8 @@ function migrate_orders()
 			foreach (array_keys($order_details) as $k)
 				if (!in_array($k, $col_order_detail))
 					unset($order_details[$k]);
+				else
+					$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
 			$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
 		}
 
