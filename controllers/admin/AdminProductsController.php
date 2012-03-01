@@ -3547,7 +3547,10 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($items as $item)
 				{
 					if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
-						$pack_quantities[] = Product::getQuantity($item->id) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+					{
+						$pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
+						$pack_quantities[] = Product::getQuantity($item->id, $pack_id_product_attribute) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+					}
 				}
 
 				// gets the minimum

@@ -109,6 +109,7 @@
 				{if isset($pack_quantity)}
 				<tr>
 					<td valign="top" style="text-align:left;vertical-align:top;">
+						<p><b>{l s='When a product has combinations, quantities will be based on the default combination.'}</b></p>
 						<p><b>{l s='Given the quantities of the products in this pack, the maximum quantity should be: '} {$pack_quantity}</b></p>
 					</td>
 				</tr>
