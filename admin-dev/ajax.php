@@ -919,6 +919,14 @@ if (Tools::isSubmit('ajaxTabsPositions'))
 	$id_tab = (int)(Tools::getValue('id_tab'));
 	$positions = Tools::getValue('tab');
 
+	// when changing positions in a tab sub-list, the first array value is empty and needs to be removed
+	if (!$positions[0])
+	{
+		unset($positions[0]);
+		// reset indexation from 0
+		$positions = array_merge($positions);
+	}
+
 	foreach ($positions as $position => $value)
 	{
 		$pos = explode('_', $value);
