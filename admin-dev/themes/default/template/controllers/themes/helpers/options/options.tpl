@@ -34,7 +34,7 @@
 			tab: 'AdminThemes',
 			token: '{$token}',
 			ajax: '1',
-			action:'getAddons',
+			action:'getAddonsThemes',
 			page:'themes'
 		}, function(a){
 			$("#prestastore-content").html("<legend><img src='../img/admin/prestastore.gif' class='middle' />{l s='Live from PrestaShop Addons!'}</legend>"+a);
