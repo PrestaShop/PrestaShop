@@ -40,7 +40,7 @@ function initTableDnD(table)
 			reOrder = ':even';
 			if (table.tBodies[0].rows[1] && $('#' + table.tBodies[0].rows[1].id).hasClass('alt_row'))
 				reOrder = ':odd';
-			$('#'+table.id+ '#' + row.id).parent('tr').addClass('myDragClass');
+			$(table).find('#' + row.id).parent('tr').addClass('myDragClass');
 		},
 		dragHandle: 'dragHandle',
 		onDragClass: 'myDragClass',
@@ -48,7 +48,7 @@ function initTableDnD(table)
 			if (originalOrder != $.tableDnD.serialize()) {
 				var way = (originalOrder.indexOf(row.id) < $.tableDnD.serialize().indexOf(row.id))? 1 : 0;
 				var ids = row.id.split('_');
-				var tableDrag = $('#' + table.id);
+				var tableDrag = table;
 				var params = '';
 				if (table.id == 'cms_category')
 					params = {
