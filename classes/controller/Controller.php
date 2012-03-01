@@ -301,14 +301,15 @@ abstract class ControllerCore
 	public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
 	{
 		$ui_path = array();
-		if (is_array($component))
-			foreach ($component as $ui)
-				$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-		else
-			$ui_path = Media::getJqueryUIPath($component, $theme, $check_dependencies);
+		if (!is_array($component))
+			$component = array($component);
 
-		$this->addCSS($ui_path['css']);
-		$this->addJS($ui_path['js']);
+		foreach ($component as $ui)
+		{
+			$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
+			$this->addCSS($ui_path['css']);
+			$this->addJS($ui_path['js']);
+		}
 	}
 
 	/**
