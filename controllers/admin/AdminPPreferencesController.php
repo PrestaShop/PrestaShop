@@ -232,7 +232,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_COMPARATOR_MAX_ITEM' => array(
 						'title' => $this->l('Max items in the comparator:'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
+						'desc' => $this->l('Specify here the threshold from which be displayed a message announcing an upcoming out of stock.').' '.$this->l('Set to 0 to disable this feature'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
