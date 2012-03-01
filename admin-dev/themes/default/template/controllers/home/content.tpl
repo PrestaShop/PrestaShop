@@ -108,10 +108,13 @@ $(document).ready(function() {
 		{/foreach}
 		{hook h="displayAdminHomeQuickLinks"}
 		</ul>
-	<div class="separation"></div>
-	<div id="partner_preactivation"><h2>{l s='Your Required'}</h2><p class="center"><img src="../img/loader.gif" alt="" /></p>
-		<div class="separation"></div>
+
+	<div id="partner_preactivation">
+		<p class="center"><img src="../img/loader.gif" alt="" /></p>
 	</div>
+
+	<div class="separation"></div>
+
 
 	{$tips_optimization}
 	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>

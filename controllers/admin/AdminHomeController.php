@@ -468,14 +468,6 @@ class AdminHomeControllerCore extends AdminController
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
 
-		// PREACTIVATION PAYPAL WARNING
-		$content = @file_get_contents('https://api.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
-		$content = explode('|', $content);
-		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
-			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);
-		else
-			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', '');
-
 		// DISCOVER PRESTASHOP
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
@@ -485,11 +477,10 @@ class AdminHomeControllerCore extends AdminController
 			$result['discover_prestashop'] .= '';
 
 		// SHOW PAYPAL TIPS
-			$content = '';
-			$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
-			$content = explode('|', $content);
-			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
-				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
+		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = explode('|', $content);
+		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
+			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
 
 		$this->content = Tools::jsonEncode($result);
 	}
@@ -510,41 +501,46 @@ class AdminHomeControllerCore extends AdminController
 
 	public function getBlockPartners()
 	{
-		// @TODO : Check the following fields because they weren't set...
+		// Init var
+		$return = '';
 		$protocol = Tools::getShopProtocol();
 		$isoCountry = Context::getContext()->country->iso_code;
-		$isoUser = '';
+		$isoUser = Context::getContext()->language->iso_code;
 
-		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
-		$content = @file_get_contents(
-			'http://api.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).
-			'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).
-			'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).
-			'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
-
-		if (!$content)
-			$return = ''; // NOK
-		else
+		// Refresh preactivation xml file if needed
+		if (is_writable('../config/xml/') && (!file_exists('../config/xml/preactivation.xml') || (time() - filemtime('../config/xml/preactivation.xml')) > 86400))
 		{
-			$content = explode('|', $content);
-			if ($content[0] == 'OK' && Validate::isCleanHtml($content[2]) && Validate::isCleanHtml($content[1]))
-			{
-				$return = $content[2];
-				$content[1] = explode('#%#', $content[1]);
-				foreach ($content[1] as $partnerPopUp)
-					if ($partnerPopUp)
-					{
-						$partnerPopUp = explode('%%', $partnerPopUp);
-						if (!Configuration::get('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0])))
-						{
-							$return .= $partnerPopUp[1];
-							Configuration::updateValue('PS_PREACTIVATION_'.strtoupper($partnerPopUp[0]), 'TRUE');
-						}
-					}
-			}
-			else
-				$return = ''; // NOK
+			$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
+			$content = @file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
+			@unlink('../config/xml/preactivation.xml');
+			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
+
+		// If preactivation xml file exists, we load it
+		if (file_exists('../config/xml/preactivation.xml'))
+		{
+			$preactivation = simplexml_load_file('../config/xml/preactivation.xml');
+			foreach ($preactivation->partner as $partner)
+			{
+				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
+					@copy(htmlentities((string)$partner->logo), '../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png');
+			
+				$label_final = '';
+				foreach ($partner->labels->label as $label)
+					if (empty($label_final) || (string)$label->attributes()->iso == $isoUser)
+						$label_final = (string)$label;
+				$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
+				$return .= '<div style="float:left;width:275px;height:90px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px'.(empty($return) ? '' : ';margin-left:45px;').'">
+					<p align="center">
+						<a href="'.$link.'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
+						<b><a href="'.$link.'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
+					</p>
+				</div>';
+			}
+		}
+		if (!empty($return))
+			$return .= '<br clear="left" />';
+
 		return $return;
 	}
 
