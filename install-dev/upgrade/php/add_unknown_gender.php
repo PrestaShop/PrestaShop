@@ -50,9 +50,10 @@ function add_unknown_gender()
 
 	foreach ($languages as $lang)
 	{
+		$name = (isset($lang_names[$lang['id_lang']]) ? $lang_names[$lang['id_lang']] : 'Unknown');
 		$res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
-				('.(int)$id_gender.', '.(int)$lang['id_lang'].', \''.pSQL($lang_names[$lang['id_lang']]).'\')');
+				('.(int)$id_gender.', '.(int)$lang['id_lang'].', \''.pSQL($name).'\')');
 	}
 
 	// for all clients where id gender is 0, sets the new id gender
