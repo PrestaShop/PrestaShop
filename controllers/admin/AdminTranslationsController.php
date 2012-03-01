@@ -1277,7 +1277,8 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		else
 			// @todo : allow to translate when english is missing
-			$this->warnings[] = sprintf(Tools::displayError('mail directory exists for %1$s but not for english in %s'), $lang, str_replace(_PS_ROOT_DIR_, '', $dir));
+			$this->warnings[] = sprintf(Tools::displayError('mail directory exists for %1$s but not for english in %2$s'),
+				$lang, str_replace(_PS_ROOT_DIR_, '', $dir));
 		return $arr_return;
 	}
 
@@ -1320,7 +1321,9 @@ class AdminTranslationsControllerCore extends AdminController
 		$str_return .= '
 		<div class="mails_field" >
 			<h3 style="cursor : pointer" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.' - <font color="red">'.$mails['empty_values'].'</font> '
-			.sprintf($this->l('missing translation(s) on %s template(s) for %s'), '<font color="blue">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).'</font>', $obj_lang->name)
+			.sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),
+				'<font color="blue">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).'</font>',
+			 	$obj_lang->name)
 			.':</h3>
 			<div name="mails_div" id="'.$id_html.'">';
 		if (!empty($mails['files']))
