@@ -173,7 +173,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$group_type = array(
 			array(
 				'id' => 'select',
-				'name' => $this->l('Select')
+				'name' => $this->l('Drop-down list')
 			),
 			array(
 				'id' => 'radio',
