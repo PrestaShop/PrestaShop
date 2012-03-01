@@ -147,6 +147,7 @@ class AdminStockManagementControllerCore extends AdminController
 				$last_sm_quantity = 0;
 				$last_sm_quantity_is_usable = -1;
 				$last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
+
 				if ($last_sm != false)
 				{
 					$last_sm_currency = new Currency((int)$last_sm['id_currency']);
@@ -1032,6 +1033,9 @@ class AdminStockManagementControllerCore extends AdminController
 						'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),
 						'is_post' => 1,
 					);
+
+					if ($this->display == 'addstock')
+						$_POST['id_product'] = (int)$id_product;
 
 					if ($this->display == 'transferstock')
 					{

@@ -231,6 +231,7 @@ class StockMvtCore extends ObjectModel
 		$query->orderBy('date_add DESC');
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
 		if ($res != false)
 			return $res['0'];
 		return false;

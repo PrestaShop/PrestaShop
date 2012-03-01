@@ -54,34 +54,34 @@ class MailAlert extends ObjectModel
 
 	public static function customerHasNotification($id_customer, $id_product, $id_product_attribute, $id_shop = null)
 	{
-
 		if ($id_shop == null)
 		    $id_shop = Context::getContext()->shop->id;
 
 		$customer = new Customer($id_customer);
 		$customer_email = $customer->email;
 
-		$sql = 'SELECT *
+		$sql = '
+			SELECT *
 			FROM `'._DB_PREFIX_.self::$definition['table'].'`
-			WHERE (`id_customer` = '.(int)$id_customer.'
-			OR `customer_email` = \''.pSQL($customer_email).'\') 
-			AND `id_product` = '.(int)$id_product.' 
+			WHERE (`id_customer` = '.(int)$id_customer.' OR `customer_email` = \''.pSQL($customer_email).'\')
+			AND `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
 			AND `id_shop` = '.(int)$id_shop;
 
-		return sizeof(Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql));
+		return count(Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql));
 	}
 
 	public static function deleteAlert($id_customer, $customer_email, $id_product, $id_product_attribute)
 	{
-		$sql = 'DELETE FROM `'._DB_PREFIX_.self::$definition['table'].'`
+		$sql = '
+			DELETE FROM `'._DB_PREFIX_.self::$definition['table'].'`
 			WHERE '.(($id_customer > 0) ? '(`customer_email` = \''.pSQL($customer_email).'\'
 			OR `id_customer` = '.(int)$id_customer.')' :
 			'`customer_email` = \''.pSQL($customer_email).'\'').
 			' AND `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute;
 
-		return Db::getInstance()->Execute($sql);
+		return Db::getInstance()->execute($sql);
 	}
 
 	/*
@@ -98,11 +98,12 @@ class MailAlert extends ObjectModel
 		$customer = new Customer($id_customer);
 		$customer_email = $customer->email;
 		$products = MailAlert::getProducts($customer, $id_lang);
+		$products_number = count($products);
 
-		if ((empty($products) === true) || (!sizeof($products)))
+		if (empty($products) === true || !$products_number)
 			return array();
 
-		for ($i = 0; $i < sizeof($products); ++$i)
+		for ($i = 0; $i < $products_number; ++$i)
 		{
 			$obj = new Product((int)$products[$i]['id_product'], false, (int)$id_lang);
 			if (!Validate::isLoadedObject($obj))
@@ -113,40 +114,52 @@ class MailAlert extends ObjectModel
 			{
 				$attributes = self::getProductAttributeCombination($products[$i]['id_product_attribute'], $id_lang);
 				$products[$i]['attributes_small'] = '';
+
 				if ($attributes)
-					foreach ($attributes AS $k => $row)
+				{
+					foreach ($attributes as $k => $row)
 						$products[$i]['attributes_small'] .= $row['attribute_name'].', ';
+				}
+
 				$products[$i]['attributes_small'] = rtrim($products[$i]['attributes_small'], ', ');
 				$products[$i]['id_shop'] = $shop->id;
-				
+
 				/* Get cover */
-				$attrgrps = $obj->getAttributesGroups((int)($id_lang));
-				foreach ($attrgrps AS $attrgrp)
+				$attrgrps = $obj->getAttributesGroups((int)$id_lang);
+				foreach ($attrgrps as $attrgrp)
+				{
 					if ($attrgrp['id_product_attribute'] == (int)$products[$i]['id_product_attribute']
 					    && $images = Product::_getAttributeImageAssociations((int)$attrgrp['id_product_attribute']))
 					{
 						$products[$i]['cover'] = $obj->id.'-'.array_pop($images);
 						break;
 					}
+				}
 			}
+
 			if (!isset($products[$i]['cover']) || !$products[$i]['cover'])
 			{
 				$images = $obj->getImages((int)$id_lang);
 				foreach ($images as $k => $image)
+				{
 					if ($image['cover'])
 					{
 						$products[$i]['cover'] = $obj->id.'-'.$image['id_image'];
 						break;
 					}
+				}
 			}
+
 			if (!isset($products[$i]['cover']))
 				$products[$i]['cover'] = Language::getIsoById($id_lang).'-default';
+
 			$products[$i]['link'] = $obj->getLink();
 			$products[$i]['link_rewrite'] = $obj->link_rewrite;
 		}
+
 		return ($products);
 	}
-	
+
 	public static function sendCustomerAlert($id_product, $id_product_attribute)
 	{
 		$link = new Link();
@@ -157,7 +170,7 @@ class MailAlert extends ObjectModel
 					'{product}' => (is_array($product->name) ? $product->name[$id_lang] : $product->name),
 					'{product_link}' => $link->getProductLink($product)
 				);
-		
+
 		$customers = self::getCustomers($id_product, $id_product_attribute);
 		foreach ($customers as $customer)
 		{
@@ -173,13 +186,13 @@ class MailAlert extends ObjectModel
 				$customer_email = $customer['customer_email'];
 			}
 			$iso = Language::getIsoById($id_lang);
-			
+
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.txt') &&
 			    file_exists(dirname(__FILE__).'/mails/'.$iso.'/customer_qty.html'))
 				Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'customer_qty', Mail::l('Product available', $id_lang), $templateVars, strval($customer_email), NULL, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 
 			Hook::exec('actionModuleMailAlertSendCustomer', array('product' => (is_array($product->name) ? $product->name[$id_lang] : $product->name), 'link' => $link->getProductLink($product)));
-			
+
 			self::deleteAlert((int)$customer_id, strval($customer_email), (int)$id_product, (int)$id_product_attribute);
 		}
 	}
@@ -197,7 +210,8 @@ class MailAlert extends ObjectModel
 	 */
 	public static function getProducts($customer, $id_lang)
 	{
-		$sql = 'SELECT ma.`id_product`, p.`quantity` AS product_quantity, pl.`name`, ma.`id_product_attribute`
+		$sql = '
+			SELECT ma.`id_product`, p.`quantity` AS product_quantity, pl.`name`, ma.`id_product_attribute`
 			FROM `'._DB_PREFIX_.self::$definition['table'].'` ma
 			JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
 			JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product`
@@ -206,7 +220,7 @@ class MailAlert extends ObjectModel
 			OR ma.`customer_email` = \''.pSQL($customer->email).'\')
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestriction(false, 'ma');
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/*
@@ -214,7 +228,8 @@ class MailAlert extends ObjectModel
 	 */
 	public static function getProductAttributeCombination($id_product_attribute, $id_lang)
 	{
-		$sql = 'SELECT al.`name` AS attribute_name
+		$sql = '
+			SELECT al.`name` AS attribute_name
 			FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 			LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
 			LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
@@ -223,7 +238,7 @@ class MailAlert extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 			WHERE pac.`id_product_attribute` = '.(int)$id_product_attribute;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/*
@@ -231,10 +246,12 @@ class MailAlert extends ObjectModel
 	 */
 	public static function getCustomers($id_product, $id_product_attribute)
 	{
-		$sql = 'SELECT id_customer, customer_email
+		$sql = '
+			SELECT id_customer, customer_email
 			FROM `'._DB_PREFIX_.self::$definition['table'].'`
 			WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 	}
+
 }
