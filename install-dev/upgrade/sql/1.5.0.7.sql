@@ -32,7 +32,7 @@ INSERT INTO `PREFIX_carrier_tax_rules_group_shop` (`id_carrier`, `id_tax_rules_g
 	(SELECT `id_carrier`, `id_tax_rules_group`, `id_shop` FROM `PREFIX_carrier`, `PREFIX_shop`);
 ALTER TABLE `PREFIX_carrier` DROP `id_tax_rules_group`;
 
-ALTER TABLE `PREFIX_customer` ADD `account_number` VARCHAR(128) NOT NULL AFTER `birthday`;
+ALTER TABLE `PREFIX_customer` ADD `account_number` VARCHAR(128) NULL AFTER `birthday`;
 
 ALTER TABLE  `PREFIX_product_shop` ADD  `id_category_default` INT( 11 ) UNSIGNED DEFAULT NULL;
 
