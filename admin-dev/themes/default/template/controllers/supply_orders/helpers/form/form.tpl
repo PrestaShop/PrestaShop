@@ -39,7 +39,7 @@
 			{l s='Manage the products you want to order from your supplier'}
 		</legend>
 
-		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select the it from the drop-down list:'}</p>
+		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list:'}</p>
 		<input type="text" size="100" id="cur_product_name" />
 		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supply order'}" title="{l s='Add a product to the supply order'}" /></span>
 
