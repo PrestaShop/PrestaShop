@@ -361,8 +361,6 @@ class BlockCMSModel extends ObjectModel
 			AND c.`active` = 1
 			ORDER BY `position`';
 
-//        d($sql);
-
 		return Db::getInstance()->executeS($sql);
 	}
 
@@ -396,40 +394,41 @@ class BlockCMSModel extends ObjectModel
 		return Db::getInstance()->executeS($sql);
 	}
 
-	public static function getCMSCategories($recursive = false, $from = 0)
-	{
-		if ($recursive === false)
-		{
-			$sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
-				FROM `'._DB_PREFIX_.'cms_category` bcp
-				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
-				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id;
+    public static function getCMSCategories($recursive = false, $parent = 0)
+    {
+        if ($recursive === false)
+        {
+            $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                    FROM `'._DB_PREFIX_.'cms_category` bcp
+                    INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                    ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                    WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id.'
+                    AND bcp.`id_parent` = '.(int)$parent;
 
-			return Db::getInstance()->executeS($sql);
-		}
-		else
-		{
-			$sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
-				FROM `'._DB_PREFIX_.'cms_category` bcp
-				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
-				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id.'
-				AND bcp.`id_parent` = '.(int)$from;
+            return Db::getInstance()->executeS($sql);
+        }
+        else
+        {
+            $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+                    FROM `'._DB_PREFIX_.'cms_category` bcp
+                    INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
+                    ON (bcp.`id_cms_category` = cl.`id_cms_category`)
+                    WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id.'
+                    AND bcp.`id_parent` = '.(int)$parent;
 
-			$results = Db::getInstance()->executeS($sql);
-			foreach ($results as $result)
-			{
-				$sub_categories = BlockCMSModel::getCMSCategories(true, $result['id_cms_category']);
-				if ($sub_categories && count($sub_categories) > 0)
-					$result['sub_categories'] = $sub_categories;
-				$categories[] = $result;
-			}
+            $results = Db::getInstance()->executeS($sql);
+            foreach ($results as $result)
+            {
+                $sub_categories = BlockCMSModel::getCMSCategories(true, $result['id_cms_category']);
+                if ($sub_categories && count($sub_categories) > 0)
+                    $result['sub_categories'] = $sub_categories;
+                $categories[] = $result;
+            }
 
-			return isset($categories) ? $categories : false;
-		}
+            return isset($categories) ? $categories : false;
+        }
 
-	}
+    }
 
 	/* Get a single CMS block by its ID */
 	public static function getBlockCMS($id_cms_block)
