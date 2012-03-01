@@ -1913,7 +1913,7 @@ class ProductCore extends ObjectModel
 		return Product::getProductsProperties((int)$id_lang, $result);
 	}
 
-	protected static function _getProductIdByDate($beginning, $ending, Context $context = null)
+	protected static function _getProductIdByDate($beginning, $ending, Context $context = null, $with_combination = false)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -1928,7 +1928,9 @@ class ProductCore extends ObjectModel
 			$id_country,
 			$context->customer->id_default_group,
 			$beginning,
-			$ending
+			$ending,
+			0,
+			true
 		);
 	}
 
@@ -1948,27 +1950,39 @@ class ProductCore extends ObjectModel
 			$front = false;
 
 		$current_date = date('Y-m-d H:i:s');
-		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
-
+		$product_reductions = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context, true);
+		
+		$ids_product = false;
+		if ($product_reductions)
+		{
+			$ids_product = ' AND (';
+			foreach ($product_reductions as $product_reduction)
+				$ids_product .= '( p.`id_product` = '.(int)$product_reduction['id_product'].($product_reduction['id_product_attribute'] ? ' AND pa.`id_product_attribute`='.(int)$product_reduction['id_product_attribute'] :'').') OR';
+			$ids_product = rtrim($ids_product, 'OR').')';
+		}
+		
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
 		// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
-		$sql = 'SELECT p.id_product
+		$sql = 'SELECT p.id_product, pa.id_product_attribute
 				FROM `'._DB_PREFIX_.'product` p
+				LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (p.id_product = pa.id_product)
 				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE p.`active` = 1
-					'.(($ids_product) ? 'AND p.`id_product` IN ('.implode(', ', $ids_product).')' : '').'
+					'.(($ids_product) ? $ids_product : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
+				GROUP BY p.id_product
 				ORDER BY RAND()';
-		$id_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+		
 
-		if (!$id_product)
+		if (!$id_product = $result['id_product'])
 			return false;
 
 		$sql = 'SELECT p.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
@@ -1992,7 +2006,8 @@ class ProductCore extends ObjectModel
 				WHERE p.id_product = '.(int)$id_product.'
 				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '');
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-
+		if ($result['id_product_attribute'])
+			$row['id_product_attribute'] = $result['id_product_attribute'];
 		return Product::getProductProperties($id_lang, $row);
 	}
 

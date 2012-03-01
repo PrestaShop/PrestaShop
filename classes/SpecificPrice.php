@@ -341,13 +341,13 @@ class SpecificPriceCore extends ObjectModel
 		');
 	}
 
-	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0)
+	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0, $with_combination_id = false)
 	{
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_product`
+			SELECT `id_product`, `id_product_attribute`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
@@ -365,7 +365,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 		$ids_product = array();
 		foreach ($results as $row)
-			$ids_product[] = (int)$row['id_product'];
+			$ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
 		return $ids_product;
 	}
 
