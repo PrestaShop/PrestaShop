@@ -35,6 +35,7 @@
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 		<br/>
 		<p>{l s='For packs, if it has products that use the advanced stock management, you have to specify a common warehouse for these products and the pack.'}</p>
+		<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
 	</div>
 	<br />
 	<h4>{l s='Available quantities for sale'}</h4>
