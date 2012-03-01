@@ -91,6 +91,7 @@ class AdminThemesControllerCore extends AdminController
 	
 	public $className = 'Theme';
 	public $table = 'theme';
+	protected $toolbar_scroll = false;
 
 	public function init()
 	{
@@ -594,5 +595,36 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = sprintf(Tools::displayError('An error occurred while uploading favicon: %s to %s'), $_FILES[$name]['tmp_name'], $dest);
 		}
 		return !count($this->errors) ? true : false;
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		// This is a composite page, we don't want the "options" display mode
+		if ($this->display == 'options')
+			$this->display = '';
+	}
+
+	/**
+	 * Function used to render the options for this controller
+	 */
+	public function renderOptions()
+	{
+		if ($this->options && is_array($this->options))
+		{
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
+			$helper->toolbar_scroll = true;
+			$helper->title = $this->l('Theme appearance');
+			$helper->toolbar_btn = array('save' => array(
+								'href' => '#',
+								'desc' => $this->l('Save')
+							));
+			$helper->id = $this->id;
+			$helper->tpl_vars = $this->tpl_option_vars;
+			$options = $helper->generateOptions($this->options);
+
+			return $options;
+		}
 	}
 }
