@@ -340,7 +340,6 @@ class AdminThemesControllerCore extends AdminController
 		// notice : readfile should be replaced by something else
 		if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 			readfile('http://addons.prestashop.com/adminmodules.php?lang='.$this->context->language->iso_code);
-		$this->content = '';
 	}
 
 	/**
