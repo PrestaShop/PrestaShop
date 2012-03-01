@@ -27,6 +27,11 @@
 
 class CartRuleCore extends ObjectModel
 {
+	const FILTER_ACTION_ALL = 1;
+	const FILTER_ACTION_SHIPPING = 2;
+	const FILTER_ACTION_REDUCTION = 3;
+	const FILTER_ACTION_GIFT = 4;
+
 	public $id;
 	public $name;
 	public $id_customer;
@@ -630,17 +635,19 @@ class CartRuleCore extends ObjectModel
 	 * @param Context $context
 	 * @return float|int|string
 	 */
-	public function getContextualValue($useTax, Context $context = null)
+	public function getContextualValue($useTax, Context $context = null, $filter = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
 		if (!$context)
 			$context = Context::getContext();
+		if (!$filter)
+			$filter = CartRule::FILTER_ACTION_ALL;
 
 		$reduction_value = 0;
 
 		// Free shipping on selected carriers
-		if ($this->free_shipping)
+		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
 		{
 			if (!$this->carrier_restriction)
 				$reduction_value += $context->cart->getTotalShippingCost(null, $useTax = true, $context->country);
@@ -657,121 +664,125 @@ class CartRuleCore extends ObjectModel
 						$reduction_value += $context->cart->getCarrierCost((int)$cart_rule['id_carrier'], $useTax, $context->country);
 			}
 		}
-
-		// Discount (%) on the whole order
-		if ($this->reduction_percent && $this->reduction_product == 0)
-			$reduction_value += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
-
-		// Discount (%) on a specific product
-		if ($this->reduction_percent && $this->reduction_product > 0)
+		
+		if ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_REDUCTION)
 		{
-			foreach ($context->cart->getProducts() as $product)
-				if ($product['id_product'] == $this->reduction_product)
-					$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
-		}
 
-		// Discount (%) on the cheapest product
-		if ($this->reduction_percent && $this->reduction_product == -1)
-		{
-			$minPrice = false;
-			foreach ($context->cart->getProducts() as $product)
+			// Discount (%) on the whole order
+			if ($this->reduction_percent && $this->reduction_product == 0)
+				$reduction_value += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
+
+			// Discount (%) on a specific product
+			if ($this->reduction_percent && $this->reduction_product > 0)
 			{
-				$price = ($useTax ? $product['price_wt'] : $product['price']);
-				if ($price > 0 && ($minPrice === false || $minPrice > $price))
-					$minPrice = $price;
-			}
-			$reduction_value += $minPrice * $this->reduction_percent / 100;
-		}
-
-		// Discount (%) on the selection of products
-		if ($this->reduction_percent && $this->reduction_product == -2)
-		{
-			$selected_products_reduction = 0;
-			$selected_products = $this->checkProductRestrictions($context, true);
-			if (is_array($selected_products))
 				foreach ($context->cart->getProducts() as $product)
-					if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
-						|| in_array($product['id_product'].'-0', $selected_products))
-					{
-						$price = ($useTax ? $product['price_wt'] : $product['price']);
-						$selected_products_reduction += $price * $product['cart_quantity'];
-					}
-			$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
-		}
-
-		// Discount (¤)
-		if ($this->reduction_amount)
-		{
-			$reduction_amount = $this->reduction_amount;
-			// If we need to convert the voucher value to the cart currency
-			if ($this->reduction_currency != $context->currency->id)
-			{
-				$voucherCurrency = new Currency($this->reduction_currency);
-
-				// First we convert the voucher value to the default currency
-				if ($reduction_amount == 0 || $voucherCurrency->conversion_rate == 0)
-					$reduction_amount = 0;
-				else
-					$reduction_amount /= $voucherCurrency->conversion_rate;
-
-				// Then we convert the voucher value in the default currency into the cart currency
-				$reduction_amount *= $context->currency->conversion_rate;
-				$reduction_amount = Tools::ps_round($reduction_amount);
+					if ($product['id_product'] == $this->reduction_product)
+						$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
 
-			// If it has the same tax application that you need, then it's the right value, whatever the product!
-			if ($this->reduction_tax == $useTax)
-				$reduction_value += $reduction_amount;
-			else
+			// Discount (%) on the cheapest product
+			if ($this->reduction_percent && $this->reduction_product == -1)
 			{
-				if ($this->reduction_product > 0)
+				$minPrice = false;
+				foreach ($context->cart->getProducts() as $product)
 				{
+					$price = ($useTax ? $product['price_wt'] : $product['price']);
+					if ($price > 0 && ($minPrice === false || $minPrice > $price))
+						$minPrice = $price;
+				}
+				$reduction_value += $minPrice * $this->reduction_percent / 100;
+			}
+
+			// Discount (%) on the selection of products
+			if ($this->reduction_percent && $this->reduction_product == -2)
+			{
+				$selected_products_reduction = 0;
+				$selected_products = $this->checkProductRestrictions($context, true);
+				if (is_array($selected_products))
 					foreach ($context->cart->getProducts() as $product)
-						if ($product['id_product'] == $this->reduction_product)
+						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+							|| in_array($product['id_product'].'-0', $selected_products))
 						{
-							$product_price_ti = $product['price_wt'];
-							$product_price_te = $product['price'];
-							$product_vat_amount = $product_price_ti - $product_price_te;
-
-							if ($product_vat_amount == 0 || $product_price_te == 0)
-								$product_vat_rate = 0;
-							else
-								$product_vat_rate = $product_vat_amount / $product_price_te;
-
-							if ($this->reduction_tax && !$useTax)
-								$reduction_value += $reduction_amount / (1 + $product_vat_rate);
-							elseif (!$this->reduction_tax && $useTax)
-								$reduction_value += $reduction_amount * (1 + $product_vat_rate);
+							$price = ($useTax ? $product['price_wt'] : $product['price']);
+							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
-				}
-				// Discount (¤) on the whole order
-				elseif ($this->reduction_product == 0)
+				$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
+			}
+
+			// Discount (¤)
+			if ($this->reduction_amount)
+			{
+				$reduction_amount = $this->reduction_amount;
+				// If we need to convert the voucher value to the cart currency
+				if ($this->reduction_currency != $context->currency->id)
 				{
-					$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-					$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-					$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
+					$voucherCurrency = new Currency($this->reduction_currency);
 
-					if ($cart_vat_amount == 0 || $cart_amount_te == 0)
-						$cart_average_vat_rate = 0;
+					// First we convert the voucher value to the default currency
+					if ($reduction_amount == 0 || $voucherCurrency->conversion_rate == 0)
+						$reduction_amount = 0;
 					else
-						$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+						$reduction_amount /= $voucherCurrency->conversion_rate;
 
-					if ($this->reduction_tax && !$useTax)
-						$reduction_value += $reduction_amount / (1 + $cart_average_vat_rate);
-					elseif (!$this->reduction_tax && $useTax)
-						$reduction_value += $reduction_amount * (1 + $cart_average_vat_rate);
+					// Then we convert the voucher value in the default currency into the cart currency
+					$reduction_amount *= $context->currency->conversion_rate;
+					$reduction_amount = Tools::ps_round($reduction_amount);
 				}
-				/*
-				 * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
-				 * Please keep this code, so it won't be considered as a bug
-				 * elseif ($this->reduction_product == -1)
-				 * elseif ($this->reduction_product == -2)
-				*/
+
+				// If it has the same tax application that you need, then it's the right value, whatever the product!
+				if ($this->reduction_tax == $useTax)
+					$reduction_value += $reduction_amount;
+				else
+				{
+					if ($this->reduction_product > 0)
+					{
+						foreach ($context->cart->getProducts() as $product)
+							if ($product['id_product'] == $this->reduction_product)
+							{
+								$product_price_ti = $product['price_wt'];
+								$product_price_te = $product['price'];
+								$product_vat_amount = $product_price_ti - $product_price_te;
+
+								if ($product_vat_amount == 0 || $product_price_te == 0)
+									$product_vat_rate = 0;
+								else
+									$product_vat_rate = $product_vat_amount / $product_price_te;
+
+								if ($this->reduction_tax && !$useTax)
+									$reduction_value += $reduction_amount / (1 + $product_vat_rate);
+								elseif (!$this->reduction_tax && $useTax)
+									$reduction_value += $reduction_amount * (1 + $product_vat_rate);
+							}
+					}
+					// Discount (¤) on the whole order
+					elseif ($this->reduction_product == 0)
+					{
+						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+						$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
+
+						if ($cart_vat_amount == 0 || $cart_amount_te == 0)
+							$cart_average_vat_rate = 0;
+						else
+							$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+
+						if ($this->reduction_tax && !$useTax)
+							$reduction_value += $reduction_amount / (1 + $cart_average_vat_rate);
+						elseif (!$this->reduction_tax && $useTax)
+							$reduction_value += $reduction_amount * (1 + $cart_average_vat_rate);
+					}
+					/*
+					 * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
+					 * Please keep this code, so it won't be considered as a bug
+					 * elseif ($this->reduction_product == -1)
+					 * elseif ($this->reduction_product == -2)
+					*/
+				}
 			}
 		}
-
+		
 		// Free gift
-		if ((int)$this->gift_product)
+		if ((int)$this->gift_product && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_GIFT))
 		{
 			foreach ($context->cart->getProducts() as $product)
 				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
