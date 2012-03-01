@@ -1540,7 +1540,6 @@ class AdminProductsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 					elseif (empty($this->errors))
 					{
-						Hook::exec('actionProductUpdate', array('product' => $object));
 						if (in_array($object->visibility, array('both', 'search')))
 							Search::indexation(false, $object->id);
 

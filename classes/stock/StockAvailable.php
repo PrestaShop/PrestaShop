@@ -149,6 +149,14 @@ class StockAvailableCore extends ObjectModel
 					Db::getInstance()->update($query['table'], $query['data'], $query['where']);
 
 					$product_quantity += $quantity;
+
+					Hook::exec('actionUpdateQuantity',
+				   				array(
+				   					'id_product' => $id_product,
+				   					'id_product_attribute' => $id_product_attribute,
+				   					'quantity' => $quantity
+				   				)
+				  	);
 				}
 
 				// updates
@@ -357,13 +365,13 @@ class StockAvailableCore extends ObjectModel
 		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
 		$stock_available->update();
 
-		$id_lang = Context::getContext()->language->id;
-		$product = new Product($id_product, true, $id_lang, $id_shop, Context::getContext());
-
-		if ($id_product_attribute != 0)
-			Hook::exec('actionUpdateQuantity', array('product' => $product, 'attribute_id' => $id_product_attribute));
-		else
-			Hook::exec('actionProductUpdate', array('product' => $product));
+		Hook::exec('actionUpdateQuantity',
+				   array(
+				   	'id_product' => $id_product,
+				   	'id_product_attribute' => $id_product_attribute,
+				   	'quantity' => $stock_available->quantity
+				   )
+				  );
 	}
 
 
@@ -390,9 +398,6 @@ class StockAvailableCore extends ObjectModel
 		if (!$depends_on_stock)
 		{
 			$id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-
-			$product = new Product($id_product, true, $id_lang, $id_shop, $context);
-			Hook::exec('actionUpdateQuantity', array('product' => $product, 'attribute_id' => $id_product_attribute));
 
 			if ($id_stock_available)
 			{
@@ -429,19 +434,16 @@ class StockAvailableCore extends ObjectModel
 				}
 
 				$stock_available->add();
-
 			}
-		}
-		else
-		{
-			$product = new Product($id_product, true, $id_lang, $id_shop, $context);
 
-			if ($id_product_attribute != 0)
-				Hook::exec('actionUpdateQuantity', array('product' => $product, 'attribute_id' => $id_product_attribute));
-			else
-				Hook::exec('actionProductUpdate', array('product' => $product));
+			Hook::exec('actionUpdateQuantity',
+				   array(
+				   	'id_product' => $id_product,
+				   	'id_product_attribute' => $id_product_attribute,
+				   	'quantity' => $stock_available->quantity
+				   )
+				  );
 		}
-
 	}
 
 	/**
