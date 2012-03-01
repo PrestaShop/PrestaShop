@@ -48,8 +48,8 @@ class AdminSearchConfControllerCore extends AdminController
 						$this->l('The "indexed" products have been analysed by PrestaShop and will appear in the results of the front office search.').'<br />
 						'.$this->l('Indexed products:').' <b>'.(int)$indexed.' / '.(int)$total.'</b>.
 						</p>
-						<p>'.$this->l('Building the product index can take a few minutes or more. 
-							If your server stop the process before it ends, you can resume the indexation by clicking "Add missing products".').'</p>
+						<p>'.$this->l('Building the product index can take a few minutes or more.')
+						.$this->l('If your server stop the process before it ends, you can resume the indexation by clicking "Add missing products".').'</p>
 						-&gt; <a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
 							$this->l('Add missing products to index.').'</a><br />
 						-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
@@ -98,8 +98,7 @@ class AdminSearchConfControllerCore extends AdminController
 				'info' =>
 						$this->l('The "weight" represents its importance and relevance for the ranking of the products when try a new search.').'<br />
 						'.$this->l('A word with a weight of 8 will have 4 times more value than a word with a weight of 2.').'<br /><br />
-						'.$this->l('That\'s why we advize to set a greater weight for words which appear in the name or reference of a products 
-							than the ones of the description of category name. Thus, the search results will be as precised and releant as possible.'),
+						'.$this->l('That\'s why we advise to set a greater weight for words which appear in the name or reference of a products than the ones of the description. Thus, the search results will be as precised and releant as possible.'),
 				'fields' =>	array(
 					'PS_SEARCH_WEIGHT_PNAME' => array(
 						'title' => $this->l('Product name weight'),
