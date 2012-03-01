@@ -304,6 +304,7 @@ class AdminEmployeesControllerCore extends AdminController
 		);
 
 		$this->fields_value['passwd'] = false;
+		$this->fields_value['id_lang'] = $this->context->language->id;
 
 		return parent::renderForm();
 	}
