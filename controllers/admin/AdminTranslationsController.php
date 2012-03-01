@@ -1017,7 +1017,7 @@ class AdminTranslationsControllerCore extends AdminController
 					$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
 
 				// Adding list, form, option in Helper Translations
-				if ($prefix_key == 'AdminHelpers' || $prefix_key == 'AdminList' || $prefix_key == 'AdminOptions' || $prefix_key == 'AdminForm')
+				if ($prefix_key == 'AdminHelpers' || $prefix_key == 'AdminList' || $prefix_key == 'AdminOptions' || $prefix_key == 'AdminForm' || $prefix_key == 'AdminHelpAccess')
 					$prefix_key = 'Helper';
 
 				// Adding the folder backup/download/ in AdminBackup Translations
