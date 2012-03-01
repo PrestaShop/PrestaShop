@@ -445,4 +445,20 @@ class TabCore extends ObjectModel
 			$tabs = Tab::recursiveTab($admin_tab['id_parent'], $tabs);
 		return $tabs;
 	}
+
+	/**
+	 * Overrides update to set position to last when changing parent tab
+	 *
+	 * @see ObjectModel::update
+	 * @param bool $null_values
+	 * @return bool
+	 */
+	public function update($null_values = false)
+	{
+		$current_tab = new Tab($this->id);
+		if ($current_tab->id_parent != $this->id_parent)
+			$this->position = Tab::getNewLastPosition($this->id_parent);
+
+		return parent::update($null_values);
+	}
 }
