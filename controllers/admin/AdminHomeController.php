@@ -519,23 +519,36 @@ class AdminHomeControllerCore extends AdminController
 		// If preactivation xml file exists, we load it
 		if (file_exists('../config/xml/preactivation.xml'))
 		{
+			$count = 0;
 			$preactivation = simplexml_load_file('../config/xml/preactivation.xml');
 			foreach ($preactivation->partner as $partner)
 			{
+				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
 					@copy(htmlentities((string)$partner->logo), '../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png');
 			
-				$label_final = '';
-				foreach ($partner->labels->label as $label)
-					if (empty($label_final) || (string)$label->attributes()->iso == $isoUser)
-						$label_final = (string)$label;
-				$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
-				$return .= '<div style="float:left;width:275px;height:90px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px'.(empty($return) ? '' : ';margin-left:45px;').'">
-					<p align="center">
-						<a href="'.$link.'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
-						<b><a href="'.$link.'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
-					</p>
-				</div>';
+				// Check if module is not already installed and configured
+				$display = 0;
+				foreach ($partner->checkconfiguration->key as $key)
+					if (Configuration::get(pSQL((string)$key)) == '')
+						$display = 1;
+			
+				// Display the module
+				if ($display == 1 && $count < 2)
+				{
+					$label_final = '';
+					foreach ($partner->labels->label as $label)
+						if (empty($label_final) || (string)$label->attributes()->iso == $isoUser)
+							$label_final = (string)$label;
+					$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
+					$return .= '<div style="width:46.5%;height:90px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
+						<p align="center">
+							<a href="'.$link.'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
+							<b><a href="'.$link.'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
+						</p>
+					</div>';
+					$count++;
+				}
 			}
 		}
 		if (!empty($return))
