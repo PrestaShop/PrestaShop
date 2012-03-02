@@ -51,7 +51,7 @@
     <tab id="Advanced_parameters" id_parent="" active="1">
       <class_name>AdminTools</class_name>
     </tab>
-    <tab id="tab_16" id_parent="" active="1">
+    <tab id="Administration" id_parent="" active="1">
       <class_name>AdminAdmin</class_name>
     </tab>
     <tab id="Stats" id_parent="" active="1">
@@ -264,22 +264,22 @@
     <tab id="Webservice" id_parent="Advanced_parameters" active="1">
       <class_name>AdminWebservice</class_name>
     </tab>
-    <tab id="Preferences_1" id_parent="tab_16" active="1">
+    <tab id="Preferences_1" id_parent="Administration" active="1">
       <class_name>AdminAdminPreferences</class_name>
     </tab>
-    <tab id="Quick_Access" id_parent="tab_16" active="1">
+    <tab id="Quick_Access" id_parent="Administration" active="1">
       <class_name>AdminQuickAccesses</class_name>
     </tab>
-    <tab id="Employees" id_parent="tab_16" active="1">
+    <tab id="Employees" id_parent="Administration" active="1">
       <class_name>AdminEmployees</class_name>
     </tab>
-    <tab id="Profiles" id_parent="tab_16" active="1">
+    <tab id="Profiles" id_parent="Administration" active="1">
       <class_name>AdminProfiles</class_name>
     </tab>
-    <tab id="Permissions" id_parent="tab_16" active="1">
+    <tab id="Permissions" id_parent="Administration" active="1">
       <class_name>AdminAccess</class_name>
     </tab>
-    <tab id="Tabs" id_parent="tab_16" active="1">
+    <tab id="Tabs" id_parent="Administration" active="1">
       <class_name>AdminTabs</class_name>
     </tab>
     <tab id="Stats_1" id_parent="Stats" active="1">
