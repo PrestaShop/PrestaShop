@@ -4038,6 +4038,7 @@ $_LANGADM['AdminTracking428a70e43c5371126c0fb675e98c61d5'] = 'Liste des catégor
 $_LANGADM['AdminTracking49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_LANGADM['AdminTracking63d5049791d9d79d86e9a108b0a999ca'] = 'Référence';
 $_LANGADM['AdminTracking9aabc6d7a546d7f8b13503258c822a50'] = 'Liste des produits sans déclinaison et qui ne sont pas disponibles à la vente :';
+$_LANGADM['AdminTracking9ef6875ec1c9965818eb9759236c40ba'] = 'Les produits non disponibles à la vente ne sont pas affiché car la gestion des stocks est désactivée.';
 $_LANGADM['AdminTrackingb5a7adde1af5c87d7fd797b6245c2a39'] = 'Description';
 $_LANGADM['AdminTrackingb718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_LANGADM['AdminTrackingbcaad756615668f5e8e0447aa36f4f22'] = 'Produit retiré de la vente';
