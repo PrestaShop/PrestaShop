@@ -48,7 +48,7 @@
     <tab id="Preferences" id_parent="" active="1">
       <class_name>AdminParentPreferences</class_name>
     </tab>
-    <tab id="Tools" id_parent="" active="1">
+    <tab id="Advanced_parameters" id_parent="" active="1">
       <class_name>AdminTools</class_name>
     </tab>
     <tab id="tab_16" id_parent="" active="1">
@@ -234,34 +234,34 @@
     <tab id="Geolocation" id_parent="Preferences" active="1">
       <class_name>AdminGeolocation</class_name>
     </tab>
-    <tab id="Configuration_Information" id_parent="Tools" active="1">
+    <tab id="Configuration_Information" id_parent="Advanced_parameters" active="1">
       <class_name>AdminInformation</class_name>
     </tab>
-    <tab id="Performance" id_parent="Tools" active="1">
+    <tab id="Performance" id_parent="Advanced_parameters" active="1">
       <class_name>AdminPerformance</class_name>
     </tab>
-    <tab id="E-mail" id_parent="Tools" active="1">
+    <tab id="E-mail" id_parent="Advanced_parameters" active="1">
       <class_name>AdminEmails</class_name>
     </tab>
-    <tab id="CSV_Import" id_parent="Tools" active="1">
+    <tab id="CSV_Import" id_parent="Advanced_parameters" active="1">
       <class_name>AdminImport</class_name>
     </tab>
-    <tab id="DB_Backup" id_parent="Tools" active="1">
+    <tab id="DB_Backup" id_parent="Advanced_parameters" active="1">
       <class_name>AdminBackup</class_name>
     </tab>
-    <tab id="SQL_Manager" id_parent="Tools" active="1">
+    <tab id="SQL_Manager" id_parent="Advanced_parameters" active="1">
       <class_name>AdminRequestSql</class_name>
     </tab>
-    <tab id="Accounting" id_parent="Tools" active="1">
+    <tab id="Accounting" id_parent="Advanced_parameters" active="1">
       <class_name>AdminAccountingManagement</class_name>
     </tab>
-    <tab id="Logs" id_parent="Tools" active="1">
+    <tab id="Logs" id_parent="Advanced_parameters" active="1">
       <class_name>AdminLogs</class_name>
     </tab>
-    <tab id="Subdomains" id_parent="Tools" active="1">
+    <tab id="Subdomains" id_parent="Advanced_parameters" active="1">
       <class_name>AdminSubDomains</class_name>
     </tab>
-    <tab id="Webservice" id_parent="Tools" active="1">
+    <tab id="Webservice" id_parent="Advanced_parameters" active="1">
       <class_name>AdminWebservice</class_name>
     </tab>
     <tab id="Preferences_1" id_parent="tab_16" active="1">
