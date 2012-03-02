@@ -36,7 +36,7 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		$this->options = array(
 			'order_by_pagination' => array(
-				'title' =>	$this->l('Pagniation'),
+				'title' =>	$this->l('Pagination'),
 				'fields' =>	array(
 					'PS_PRODUCTS_PER_PAGE' => array(
 						'title' => $this->l('Products per page:'),
@@ -154,6 +154,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
+						'suffix' => $this->l('bytes'),
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
@@ -163,6 +164,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
+						'suffix' => 'px',
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
@@ -172,6 +174,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
+						'suffix' => 'px',
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_LEGACY_IMAGES' => array(
