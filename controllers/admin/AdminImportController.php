@@ -1018,6 +1018,8 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+							$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 								$product->id_category[] = (int)$category_to_create->id;
@@ -1041,6 +1043,8 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+							$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 								$product->id_category[] = (int)$category_to_create->id;
@@ -1068,6 +1072,7 @@ class AdminImportControllerCore extends AdminController
 				if ($link_rewrite == '')
 					$link_rewrite = 'friendly-url-autogeneration-failed';
 			}
+
 			if (!$valid_link)
 				$this->warnings[] = Tools::displayError('Rewrite link for').' '.$link_rewrite.(isset($info['id']) ? ' (ID '.$info['id'].') ' : '').
 					' '.Tools::displayError('was re-written as').' '.$link_rewrite;
@@ -1110,6 +1115,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $product->add();
 				}
 			}
+
 			// If both failed, mysql error
 			if (!$res)
 			{
@@ -1231,7 +1237,8 @@ class AdminImportControllerCore extends AdminController
 
 				// Features import
 				$features = get_object_vars($product);
-				if (isset($features['features']))
+
+				if (isset($features['features']) && !empty($features['features']))
 					foreach (explode(',', $features['features']) as $single_feature)
 					{
 						$tab_feature = explode(':', $single_feature);
