@@ -405,7 +405,8 @@ class blocktopmenu extends Module
 
 	private function makeMenu()
 	{
-        $this->page_name = $this->context->controller->php_self;
+        if (isset($this->context->controller->php_self))
+            $this->page_name = $this->context->controller->php_self;
 
         $menu_items = $this->getMenuItems();
         $id_lang = (int)$this->context->language->id;
