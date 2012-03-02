@@ -272,7 +272,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'desc' => $this->l('Set the maximum size of product short description'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
-						'type' => 'text'
+						'type' => 'text',
+						'suffix' => $this->l('characters')
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
 						'title' => $this->l('Quantity discounts based on:'),
