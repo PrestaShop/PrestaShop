@@ -652,6 +652,15 @@ class AdminCategoriesControllerCore extends AdminController
 				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
 				VALUES '.pSQL($insert));
 	}
+
+	/**
+	 * @param $token
+	 * @return bool
+	 */
+	protected function processSelectDelete($token)
+	{
+		return parent::processBulkDelete($token);
+	}
 }
 
 
