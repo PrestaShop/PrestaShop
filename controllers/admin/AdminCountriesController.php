@@ -56,14 +56,6 @@ class AdminCountriesControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Countries options'),
 				'fields' =>	array(
-					'PS_COUNTRY_DEFAULT' => array(
-						'title' => $this->l('Default country:'),
-						'desc' => $this->l('The default country used in shop'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_country',
-						'list' => Country::getCountries(Context::getContext()->language->id)
-					),
 					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
 						'title' => $this->l('Restrict countries in FO by those delivered by active carriers'),
 						'cast' => 'intval',

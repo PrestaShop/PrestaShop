@@ -7,86 +7,96 @@
   <tab id="Combinations_generator" name="Combinations generator"/>
   <tab id="Search" name="B&#xFA;squeda"/>
   <tab id="Catalog" name="Cat&#xE1;logo"/>
-  <tab id="Customers" name="Clientes"/>
   <tab id="Orders" name="Pedidos"/>
-  <tab id="Payment" name="Pago"/>
+  <tab id="Customers" name="Clientes"/>
+  <tab id="Price_rules" name="Price rules"/>
   <tab id="Shipping" name="Transporte"/>
-  <tab id="Stats" name="Estad&#xED;sticas"/>
+  <tab id="Localization" name="Ubicaci&#xF3;n"/>
   <tab id="Modules" name="M&#xF3;dulos"/>
-  <tab id="Employees" name="Empleados"/>
   <tab id="Preferences" name="Preferencias"/>
   <tab id="Tools" name="Herramientas"/>
+  <tab id="tab_16" name=""/>
+  <tab id="Stats" name="Estad&#xED;sticas"/>
   <tab id="Shops" name="Shops"/>
   <tab id="Stock" name="Stock"/>
-  <tab id="Accounting" name="Accounting"/>
   <tab id="Products" name="Products"/>
   <tab id="Categories" name="Categories"/>
   <tab id="Monitoring" name="Rastreo"/>
-  <tab id="Manufacturers" name="Fabricantes"/>
-  <tab id="Suppliers" name="Proveedores"/>
   <tab id="Attributes_and_Values" name="Atributos y Valores"/>
   <tab id="Features" name="Caracter&#xED;sticas"/>
+  <tab id="Manufacturers" name="Fabricantes"/>
+  <tab id="Suppliers" name="Proveedores"/>
   <tab id="Image_Mapping" name="Mapeo de la imagen"/>
   <tab id="Tags" name="Etiquetas"/>
   <tab id="Attachments" name="Adjuntos"/>
-  <tab id="Catalog_price_rules" name="Catalog price rules"/>
-  <tab id="Addresses" name="Direcciones"/>
-  <tab id="Groups" name="Grupos"/>
-  <tab id="Shopping_Carts" name="Carritos"/>
-  <tab id="Genders" name="Genders"/>
-  <tab id="Outstanding" name="Outstanding"/>
+  <tab id="Orders_1" name="Pedidos"/>
   <tab id="Invoices" name="Facturas"/>
-  <tab id="Delivery_Slips" name="Albaranes de entrega"/>
   <tab id="Merchandise_Returns" name="Devoluci&#xF3;n productos"/>
+  <tab id="Delivery_Slips" name="Albaranes de entrega"/>
   <tab id="Credit_Slips" name="Vales"/>
   <tab id="Statuses" name="Estados"/>
   <tab id="Order_Messages" name="Mensajes de Orden"/>
-  <tab id="Currencies" name="Divisas"/>
-  <tab id="Taxes" name="Impuestos"/>
-  <tab id="Tax_Rules" name="Reglas de Impuestos"/>
+  <tab id="Customers_1" name="Clientes"/>
+  <tab id="Addresses" name="Direcciones"/>
+  <tab id="Groups" name="Grupos"/>
+  <tab id="Shopping_Carts" name="Carritos"/>
+  <tab id="Customer_Service" name="Servicio al cliente"/>
+  <tab id="Contacts" name="Contactos"/>
+  <tab id="Genders" name="Genders"/>
+  <tab id="Outstanding" name="Outstanding"/>
   <tab id="Cart_Rules" name="Vales de descuento"/>
+  <tab id="Catalog_price_rules" name="Catalog price rules"/>
+  <tab id="Shipping_1" name="Transporte"/>
   <tab id="Carriers" name="Transportistas"/>
-  <tab id="States" name="Estados"/>
-  <tab id="Countries" name="Pa&#xED;ses"/>
-  <tab id="Zones" name="Zonas"/>
   <tab id="Price_Ranges" name="Franja de precios"/>
   <tab id="Weight_Ranges" name="Franja de pesos"/>
-  <tab id="Search_Engines" name="Motores de b&#xFA;squeda"/>
-  <tab id="Referrers" name="Referido"/>
+  <tab id="Localization_1" name="Ubicaci&#xF3;n"/>
+  <tab id="Languages" name="Idiomas"/>
+  <tab id="Zones" name="Zonas"/>
+  <tab id="Countries" name="Pa&#xED;ses"/>
+  <tab id="States" name="Estados"/>
+  <tab id="Currencies" name="Divisas"/>
+  <tab id="Tax_Rules" name="Reglas de Impuestos"/>
+  <tab id="Taxes" name="Impuestos"/>
+  <tab id="Translations" name="Traducciones"/>
+  <tab id="Modules_1" name="M&#xF3;dulos"/>
   <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
   <tab id="My_Account" name="My Account"/>
-  <tab id="Themes" name="Temas"/>
   <tab id="Positions" name="Posiciones"/>
+  <tab id="Payment" name="Pago"/>
+  <tab id="General" name="General"/>
+  <tab id="Orders_2" name="Pedidos"/>
+  <tab id="Products_1" name="Productos"/>
+  <tab id="Customers_2" name="Clientes"/>
+  <tab id="Themes" name="Temas"/>
+  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
+  <tab id="CMS" name="CMS"/>
+  <tab id="Images" name="Im&#xE1;genes"/>
+  <tab id="Contact_stores" name="Contact &amp; stores"/>
+  <tab id="Search_1" name="B&#xFA;squeda"/>
+  <tab id="Maintenance" name="Maintenance"/>
+  <tab id="Geolocation" name="Geolocalizaci&#xF3;n"/>
+  <tab id="Configuration_Information" name="Informaciones"/>
+  <tab id="Performance" name="Rendimiento"/>
+  <tab id="E-mail" name="Emails"/>
+  <tab id="CSV_Import" name="Importar"/>
+  <tab id="DB_Backup" name="Copia de seguridad"/>
+  <tab id="SQL_Manager" name="SQL Manager"/>
+  <tab id="Accounting" name="Accounting"/>
+  <tab id="Logs" name="Log"/>
+  <tab id="Subdomains" name="Subcampos"/>
+  <tab id="Webservice" name="Web service"/>
+  <tab id="Preferences_1" name="Preferencias"/>
+  <tab id="Quick_Access" name="Acceso r&#xE1;pido"/>
+  <tab id="Employees" name="Empleados"/>
   <tab id="Profiles" name="Perfiles"/>
   <tab id="Permissions" name="Permisos"/>
-  <tab id="Contacts" name="Contactos"/>
   <tab id="Tabs" name="Pesta&#xF1;as"/>
-  <tab id="Customer_Service" name="Servicio al cliente"/>
-  <tab id="Contact_Information" name="Datos"/>
-  <tab id="Themes_1" name="Temas"/>
-  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
-  <tab id="Products_1" name="Productos"/>
-  <tab id="Keyword_Typos" name="Alias"/>
-  <tab id="E-mail" name="Emails"/>
-  <tab id="Images" name="Im&#xE1;genes"/>
-  <tab id="Database" name="Base de datos"/>
-  <tab id="Localization" name="Ubicaci&#xF3;n"/>
-  <tab id="Search_1" name="B&#xFA;squeda"/>
-  <tab id="Performance" name="Rendimiento"/>
-  <tab id="Geolocation" name="Geolocalizaci&#xF3;n"/>
-  <tab id="Languages" name="Idiomas"/>
-  <tab id="Translations" name="Traducciones"/>
-  <tab id="Quick_Access" name="Acceso r&#xE1;pido"/>
-  <tab id="Configuration_Information" name="Informaciones"/>
-  <tab id="CSV_Import" name="Importar"/>
-  <tab id="Subdomains" name="Subcampos"/>
-  <tab id="DB_Backup" name="Copia de seguridad"/>
-  <tab id="CMS" name="CMS"/>
-  <tab id="Generators" name="Generadores"/>
-  <tab id="Stores" name="Tiendas"/>
-  <tab id="Webservice" name="Web service"/>
-  <tab id="Logs" name="Log"/>
-  <tab id="SQL_Manager" name="SQL Manager"/>
+  <tab id="Stats_1" name="Estad&#xED;sticas"/>
+  <tab id="Search_Engines" name="Motores de b&#xFA;squeda"/>
+  <tab id="Referrers" name="Referido"/>
+  <tab id="Accounting_export" name="Accounting export"/>
+  <tab id="Shops_1" name="Shops"/>
   <tab id="Group_Shops" name="Group Shops"/>
   <tab id="Shop_Urls" name="Shop Urls"/>
   <tab id="Warehouses" name="Warehouses"/>
@@ -96,7 +106,4 @@
   <tab id="Stock_cover" name="Stock cover"/>
   <tab id="Supply_orders" name="Supply orders"/>
   <tab id="Configuration" name="Configuration"/>
-  <tab id="Account_Number_Management" name="Account Number Management"/>
-  <tab id="Export" name="Export"/>
-  <tab id="Display_Accounting_Plan" name="Display Accounting Plan"/>
 </entity_tab>

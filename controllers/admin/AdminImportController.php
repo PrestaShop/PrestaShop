@@ -2156,16 +2156,14 @@ class AdminImportControllerCore extends AdminController
 					case UPLOAD_ERR_INI_SIZE:
 						$this->errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini.
 							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
-						.'<br/><a href="?tab=AdminGenerator&amp;token='
-						.Tools::getAdminTokenLite('AdminGenerator').'" >
+						.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
 						<code>php_value upload_max_filesize 20M</code> '.
 						Tools::displayError('(clic to open Generator tab)').'</a>';
 						break;
 					case UPLOAD_ERR_FORM_SIZE:
 						$this->errors[] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
 							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
-						.'<br/><a href="?tab=AdminGenerator&amp;token='
-						.Tools::getAdminTokenLite('AdminGenerator').'" >
+						.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
 						<code>php_value post_max_size 20M</code> '.
 						Tools::displayError('(clic to open Generator tab)').'</a>';
 						break;

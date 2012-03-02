@@ -429,6 +429,9 @@ class TabCore extends ObjectModel
 	{
 		static $tabAccesses = null;
 
+		if (Context::getContext()->employee->id_profile == _PS_ADMIN_PROFILE_)
+			return true;
+
 		if ($tabAccesses === null)
 			$tabAccesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
 

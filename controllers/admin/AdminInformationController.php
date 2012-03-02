@@ -37,10 +37,14 @@ class AdminInformationControllerCore extends AdminController
 	{
 		$this->tpl_view_vars = array(
 			'version' => array(
-				'mysql' => Db::getInstance()->getVersion(),
 				'php' => phpversion(),
 				'ps' => _PS_VERSION_,
 				'server' => $_SERVER['SERVER_SOFTWARE'],
+			),
+			'database' => array(
+				'version' => Db::getInstance()->getVersion(),
+				'prefix' => _DB_PREFIX_,
+				'engine' => _MYSQL_ENGINE_,
 			),
 			'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
 			'apache_instaweb' => Tools::apacheModExists('mod_instaweb'),
