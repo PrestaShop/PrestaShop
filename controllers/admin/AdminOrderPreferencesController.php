@@ -1,0 +1,184 @@
+<?php
+/*
+* 2007-2012 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2012 PrestaShop SA
+*  @version  Release: $Revision$
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+class AdminOrderPreferencesControllerCore extends AdminController
+{
+	public function __construct()
+	{
+		$this->className = 'Configuration';
+		$this->table = 'configuration';
+
+		parent::__construct();
+
+		// List of CMS tabs
+		$cms_tab = array(0 => array(
+			'id' => 0,
+			'name' => $this->l('None')
+		));
+		foreach (CMS::listCms($this->context->language->id) as $cms_file)
+			$cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
+
+		// List of order process types
+		$order_process_type = array(
+			array(
+				'value' => PS_ORDER_PROCESS_STANDARD,
+				'name' => $this->l('Standard (5 steps)')
+			),
+			array(
+				'value' => PS_ORDER_PROCESS_OPC,
+				'name' => $this->l('One page checkout')
+			)
+		);
+
+		// Tax list
+		$taxes[] = array('id' => 0, 'name' => $this->l('None'));
+		foreach (Tax::getTaxes($this->context->language->id) as $tax)
+			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
+
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('General'),
+				'icon' =>	'tab-preferences',
+				'fields' =>	array(
+					'PS_ORDER_PROCESS_TYPE' => array(
+						'title' => $this->l('Order process type'),
+						'desc' => $this->l('You can choose the order process type as either standard (5 steps) or One Page Checkout'),
+						'validation' => 'isInt',
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $order_process_type,
+						'identifier' => 'value'
+					),
+					'PS_GUEST_CHECKOUT_ENABLED' => array(
+						'title' => $this->l('Enable guest checkout'),
+						'desc' => $this->l('Your guest can make an order without registering'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_PURCHASE_MINIMUM' => array(
+						'title' => $this->l('Minimum purchase total required in order to validate order:'),
+						'desc' => $this->l('Set to 0 to disable this feature'),
+						'validation' => 'isFloat',
+						'cast' => 'floatval',
+						'type' => 'price'
+					),
+					'PS_ALLOW_MULTISHIPPING' => array(
+						'title' => $this->l('Allow multi-shipping'),
+						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will transform the customer cart in one or more orders.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_SHIP_WHEN_AVAILABLE' => array(
+						'title' => $this->l('Delayed shipping'),
+						'desc' => $this->l('Allow the customer to split his order. One with the products "in stock", and an other with the other products. This option will transform the customer cart in two orders.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_CONDITIONS' => array(
+						'title' => $this->l('Terms of service'),
+						'desc' => $this->l('Require customers to accept or decline terms of service before processing the order'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'js' => array(
+							'on' => 'onchange="changeCMSActivationAuthorization()"',
+							'off' => 'onchange="changeCMSActivationAuthorization()"'
+						)
+					),
+					'PS_CONDITIONS_CMS_ID' => array(
+						'title' => $this->l('Conditions of use CMS page'),
+						'desc' => $this->l('Choose the Conditions of use CMS page'),
+						'validation' => 'isInt',
+						'type' => 'select',
+						'list' => $cms_tab,
+						'identifier' => 'id',
+						'cast' => 'intval'
+					),
+				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+			),
+			'gift' => array(
+				'title' =>	$this->l('Gift options'),
+				'icon' =>	'tab-preferences',
+				'fields' =>	array(
+					'PS_GIFT_WRAPPING' => array(
+						'title' => $this->l('Offer gift-wrapping'),
+						'desc' => $this->l('Suggest gift-wrapping to customer and possibility of leaving a message'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_GIFT_WRAPPING_PRICE' => array(
+						'title' => $this->l('Gift-wrapping price'),
+						'desc' => $this->l('Set a price for gift-wrapping'),
+						'validation' => 'isPrice',
+						'cast' => 'floatval',
+						'type' => 'price'
+					),
+					'PS_GIFT_WRAPPING_TAX' => array(
+						'title' => $this->l('Gift-wrapping tax'),
+						'desc' => $this->l('Set a tax for gift-wrapping'),
+						'validation' => 'isInt',
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $taxes,
+						'identifier' => 'id'
+					),
+					'PS_RECYCLABLE_PACK' => array(
+						'title' => $this->l('Offer recycled packaging'),
+						'desc' => $this->l('Suggest recycled packaging to customer'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_GIFT_WRAPPING_ACCOUNT_NUMBER' => array(
+						'title' => $this->l('Gift-wrapping account number'),
+						'desc' => $this->l('Set an account number for your gift-wrapping (used for accounting)'),
+						'validation' => 'isString',
+						'type' => 'text',
+						'size' => 30,
+					),
+				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+			),
+		);
+	}
+
+	/**
+	 * This method is called before we start to update options configuration
+	 */
+	public function beforeUpdateOptions()
+	{
+		$sql = 'SELECT `id_cms` FROM `'._DB_PREFIX_.'cms`
+				WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
+		if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
+			$this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
+	}
+}

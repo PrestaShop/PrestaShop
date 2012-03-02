@@ -61,7 +61,7 @@ class AdminControllerCore extends Controller
 	public $id = -1;
 
 	/** @var array noTabLink array of admintab names which have no content */
-	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
+	public $noTabLink = array('AdminCatalog', 'AdminPriceRule', 'AdminTools', 'AdminStock', 'AdminAdmin');
 
 	public $required_database = false;
 
@@ -1250,15 +1250,11 @@ class AdminControllerCore extends Controller
 			$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
-			// Add parent tab to sub_tabs list
-			array_unshift($sub_tabs, $tab);
-
 			foreach ($sub_tabs as $index2 => $sub_tab)
 			{
 				// class_name is the name of the class controller
 				if (Tab::checkTabRights($sub_tab['id_tab']) === true
-						&& (bool)$sub_tab['active']
-						&& !in_array($sub_tab['class_name'], $this->noTabLink)) // check that tab is not in "do not display" list
+					&& (bool)$sub_tab['active'])
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 				else
 					unset($sub_tabs[$index2]);

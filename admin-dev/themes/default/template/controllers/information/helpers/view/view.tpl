@@ -94,12 +94,21 @@
 		<p>
 			<b>{l s='PHP Version'}:</b> {$version.php}
 		</p>
-		<p>
-			<b>{l s='MySQL Version'}:</b> {$version.mysql}
-		</p>
 		{if $apache_instaweb}
 		<p style="color:red;font-weight:700">{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
 		{/if}
+
+		<hr />
+		<h3>{l s='Database information'}</h3>
+		<p>
+			<b>{l s='MySQL Version'}:</b> {$database.version}
+		</p>
+		<p>
+			<b>{l s='MySQL Engine'}:</b> {$database.engine}
+		</p>
+		<p>
+			<b>{l s='Tables prefix'}:</b> {$database.prefix}
+		</p>
 	
 		<hr />
 		<h3>{l s='Store information'}</h3>

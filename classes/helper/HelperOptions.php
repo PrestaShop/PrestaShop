@@ -121,8 +121,6 @@ class HelperOptionsCore extends Helper
 							}
 						</script>';
 					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP', 'Helper').'</a>';
-					if (!isset($category_data['bottom']))
-						$category_data['bottom'] = '<script type="text/javascript">changeCMSActivationAuthorization();</script>';
 				}
 
 				// Multishop default value

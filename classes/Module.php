@@ -1582,21 +1582,25 @@ abstract class ModuleCore
 			return false;
 		if (!$employee)
 			$employee = Context::getContext()->employee;
-		if (!isset($cache_permissions[$employee->id_profile]))
+
+		if ($employee->id_profile == _PS_ADMIN_PROFILE_)
+			return true;
+
+		if (!isset(self::$cache_permissions[$employee->id_profile]))
 		{
-			$cache_permissions[$employee->id_profile] = array();
+			self::$cache_permissions[$employee->id_profile] = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
-				$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
-				$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
+				self::$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
+				self::$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
 			}
 		}
 
-		if (!isset($cache_permissions[$employee->id_profile][$id_module]))
+		if (!isset(self::$cache_permissions[$employee->id_profile][$id_module]))
 			throw new PrestaShopException('No access reference in table module_access for id_module '.$id_module.'.');
 
-		return (bool)$cache_permissions[$employee->id_profile][$id_module][$variable];
+		return (bool)self::$cache_permissions[$employee->id_profile][$id_module][$variable];
 	}
 
 	/**

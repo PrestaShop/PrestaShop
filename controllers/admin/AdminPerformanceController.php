@@ -192,7 +192,7 @@ class AdminPerformanceControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'hidden',
-					'name' => 'ccc_up'
+					'name' => 'ccc_up',
 				),
 				array(
 					'type' => 'radio',
@@ -288,6 +288,26 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('Keep W3C validation')
 						)
 					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Apache optimization'),
+					'name' => 'PS_HTACCESS_CACHE_CONTROL',
+					'class' => 't',
+					'desc' => $this->l('This will add directives to your .htaccess file which should improve caching and compression.'),
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+							'value' => 1,
+							'label' => $this->l('Yes'),
+						),
+						array(
+							'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+							'value' => 0,
+							'label' => $this->l('No'),
+						),
+					),
 				)
 			)
 		);
@@ -297,6 +317,8 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['PS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_JS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_HIGH_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION');
+		$this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->fields_value['ccc_up'] = 1;
 	}
 
 	public function initFieldsetMediaServer()
@@ -585,10 +607,15 @@ class AdminPerformanceControllerCore extends AdminController
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
 					!Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
-					!Configuration::updateValue('PS_HIGH_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HIGH_HTML_THEME_COMPRESSION')))
+					!Configuration::updateValue('PS_HIGH_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HIGH_HTML_THEME_COMPRESSION')) ||
+					!Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
+				{
 					$redirecAdmin = true;
+					if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
+						Tools::generateHtaccess();
+				}
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');

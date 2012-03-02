@@ -105,7 +105,7 @@ class AdminHomeControllerCore extends AdminController
 			$this->context->smarty->assign('hide_tips', Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
 			$opti_list[] = array(
 				'title' => $this->l('URL rewriting'),
-				'href' => $link->getAdminLink('AdminGenerator'),
+				'href' => $link->getAdminLink('AdminMeta'),
 				'color' => $lights[$rewrite]['color'],
 				'image' => $lights[$rewrite]['image'],
 			);
@@ -147,7 +147,7 @@ class AdminHomeControllerCore extends AdminController
 
 			$opti_list[] = array(
 				'title' => $this->l('.htaccess up-to-date'),
-				'href' => $link->getAdminLink('AdminGenerator'),
+				'href' => $link->getAdminLink('AdminMeta'),
 				'color' => $lights[$htaccessAfterUpdate]['color'],
 				'image' => $lights[$htaccessAfterUpdate]['image'],
 			);

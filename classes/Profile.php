@@ -114,17 +114,33 @@ class ProfileCore extends ObjectModel
 	{
 		if (!isset(self::$_cache_accesses[$id_profile]))
 		{
-			$result = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'access`
-			WHERE `id_profile` = '.(int)$id_profile);
-
-			self::$_cache_accesses[$id_profile] = array();
-			foreach ($result as $row)
+			// Super admin profile has full auth
+			if ($id_profile == _PS_ADMIN_PROFILE_)
 			{
-				if (!isset(self::$_cache_accesses[$id_profile][$row['id_tab']]))
-					self::$_cache_accesses[$id_profile][$row['id_tab']] = array();
-				self::$_cache_accesses[$id_profile][$row['id_tab']] = $row;
+				foreach (Tab::getTabs(Context::getContext()->language->id) as $tab)
+					self::$_cache_accesses[$id_profile][$tab['id_tab']] = array(
+						'id_profile' => _PS_ADMIN_PROFILE_,
+						'id_tab' => $tab['id_tab'],
+						'view' => '1',
+						'add' => '1',
+						'edit' => '1',
+						'delete' => '1',
+					);
+			}
+			else
+			{
+				$result = Db::getInstance()->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'access`
+				WHERE `id_profile` = '.(int)$id_profile);
+
+				self::$_cache_accesses[$id_profile] = array();
+				foreach ($result as $row)
+				{
+					if (!isset(self::$_cache_accesses[$id_profile][$row['id_tab']]))
+						self::$_cache_accesses[$id_profile][$row['id_tab']] = array();
+					self::$_cache_accesses[$id_profile][$row['id_tab']] = $row;
+				}
 			}
 		}
 		return self::$_cache_accesses[$id_profile];

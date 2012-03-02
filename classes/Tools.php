@@ -1558,9 +1558,6 @@ class ToolsCore
 		if (is_null($disable_multiviews))
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
-		if (!$rewrite_settings && !Shop::isFeatureActive())
-			return true;
-
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
 		if (file_exists($path))
@@ -1610,16 +1607,19 @@ class ToolsCore
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
-		fwrite($write_fd, "RewriteEngine on\n\n");
-		foreach ($domains as $domain => $list_uri)
-			foreach ($list_uri as $uri)
-				// Rewrite virtual multishop uri
-				if ($uri['virtual'])
-				{
-					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-					fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
-					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
-				}
+		if (Shop::isFeatureActive())
+		{
+			fwrite($write_fd, "RewriteEngine on\n\n");
+			foreach ($domains as $domain => $list_uri)
+				foreach ($list_uri as $uri)
+					// Rewrite virtual multishop uri
+					if ($uri['virtual'])
+					{
+						fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
+						fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
+					}
+		}
 
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");

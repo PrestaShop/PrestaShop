@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @deprecated 1.5.0
+ */
 abstract class AdminTabCore
 {
 	/** @var integer Tab id */
@@ -200,7 +203,7 @@ abstract class AdminTabCore
 	);
 
 	/** @var array noTabLink array of admintabs with no content */
-	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
+	public $noTabLink = array('AdminCatalog', 'AdminPriceRule', 'AdminTools', 'AdminStock', 'AdminAdmin');
 
 	public function __construct()
 	{

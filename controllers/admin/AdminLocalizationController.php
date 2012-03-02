@@ -32,7 +32,43 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
+		parent::__construct();
+
 		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Configuration'),
+				'fields' =>	array(
+					'PS_LANG_DEFAULT' => array(
+						'title' => $this->l('Default language:'),
+						'desc' => $this->l('The default language used in shop'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_lang',
+						'list' => Language::getlanguages(false)
+					),
+					'PS_COUNTRY_DEFAULT' => array(
+						'title' => $this->l('Default country:'),
+						'desc' => $this->l('The default country used in shop'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_country',
+						'list' => Country::getCountries($this->context->language->id)
+					),
+					'PS_CURRENCY_DEFAULT' => array(
+						'title' => $this->l('Default currency:'),
+						'desc' =>
+							$this->l('The default currency used in shop')
+							.'<div class="warn">'
+								.$this->l('If you change default currency, you will have to manually edit every product price.')
+							.'</div>',
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_currency',
+						'list' => Currency::getCurrencies()
+					),
+				),
+				'submit' => array()
+			),
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
 				'width' =>	'width2',
@@ -88,11 +124,20 @@ class AdminLocalizationControllerCore extends AdminController
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 					)
-				)
+				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			)
 		);
 
-		parent::__construct();
+		if (function_exists('date_default_timezone_set'))
+			$this->options['general']['fields']['PS_TIMEZONE'] = array(
+				'title' => $this->l('Time Zone:'),
+				'validation' => 'isAnything',
+				'type' => 'select',
+				'list' => Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone'),
+				'identifier' => 'name',
+				'visibility' => Shop::CONTEXT_ALL
+			);
 	}
 
 	public function postProcess()
@@ -231,18 +276,29 @@ class AdminLocalizationControllerCore extends AdminController
 
 	public function initContent()
 	{
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
-		$this->content .= $this->renderOptions();
-
 		if (!$this->loadObject(true))
 			return;
 
-		$this->content .= $this->renderForm();
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
 
 		$this->context->smarty->assign(array(
-			'content' => $this->content,
+			'localization_form' => $this->renderForm(),
+			'localization_options' => $this->renderOptions(),
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
+	}
+
+	public function beforeUpdateOptions()
+	{
+		$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
+		if (!$lang->active)
+			$this->errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
+	}
+
+	public function updateOptionPsCurrencyDefault($value)
+	{
+		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+		Currency::refreshCurrencies();
 	}
 }

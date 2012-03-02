@@ -27,13 +27,33 @@
 
 class AdminSearchConfControllerCore extends AdminController
 {
+	protected $toolbar_scroll = false;
+
 	public function __construct()
 	{
-		$this->className = 'Configuration';
-		$this->table = 'configuration';
+		$this->table = 'alias';
+		$this->className = 'Alias';
+		$this->lang = false;
+		$this->requiredDatabase = true;
 
 		parent::__construct();
 
+		// Alias fields
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
+		if (!Tools::getValue('realedit'))
+			$this->deleted = false;
+
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		$this->fieldsDisplay = array(
+			'alias' => array('title' => $this->l('Aliases'), 'width' => 'auto'),
+			'search' => array('title' => $this->l('Search'), 'width' => 100),
+			'active' => array('title' => $this->l('Status'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+		);
+
+		// Search options
 		$current_file_name = array_reverse(explode('/', $_SERVER['SCRIPT_NAME']));
 		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.
 			substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($current_file_name['0'])).
@@ -166,5 +186,100 @@ class AdminSearchConfControllerCore extends AdminController
 				)
 			),
 		);
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		// This is a composite page, we don't want the "options" display mode
+		if ($this->display == 'options')
+			$this->display = '';
+	}
+
+	/**
+	 * Function used to render the options for this controller
+	 */
+	public function renderOptions()
+	{
+		if ($this->options && is_array($this->options))
+		{
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
+			$helper->toolbar_scroll = true;
+			$helper->toolbar_btn = array('save' => array(
+				'href' => '#',
+				'desc' => $this->l('Save')
+			));
+			$helper->id = $this->id;
+			$helper->tpl_vars = $this->tpl_option_vars;
+			$options = $helper->generateOptions($this->options);
+
+			return $options;
+		}
+	}
+
+	public function renderForm()
+	{
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Aliases'),
+				'image' => '../img/admin/search.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Alias:'),
+					'name' => 'alias',
+					'size' => 40,
+					'required' => true,
+					'desc' => array(
+						$this->l('Enter each alias separated by a comma (\',\') (e.g., \'prestshop,preztashop,prestasohp\')'),
+						$this->l('Forbidden characters: <>;=#{}')
+					)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Result:'),
+					'name' => 'search',
+					'size' => 15,
+					'required' => true,
+					'desc' => $this->l('Search this word instead.')
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
+		$this->fields_value = array('alias' => $this->object->getAliases());
+
+		return parent::renderForm();
+	}
+
+	public function processSave($token)
+	{
+		$search = strval(Tools::getValue('search'));
+		$string = strval(Tools::getValue('alias'));
+		$aliases = explode(',', $string);
+		if (empty($search) || empty($string))
+			$this->errors[] = $this->l('aliases and result are both required');
+		if (!Validate::isValidSearch($search))
+			$this->errors[] = $search.' '.$this->l('is not a valid result');
+		foreach ($aliases as $alias)
+			if (!Validate::isValidSearch($alias))
+				$this->errors[] = $alias.' '.$this->l('is not a valid alias');
+
+		if (!count($this->errors))
+		{
+			foreach ($aliases as $alias)
+			{
+				$obj = new Alias(null, trim($alias), trim($search));
+				$obj->save();
+			}
+		}
+
+		if (empty($this->errors))
+			$this->confirmations[] = $this->l('Creation successfull');
 	}
 }
