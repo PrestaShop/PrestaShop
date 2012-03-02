@@ -72,18 +72,22 @@
 		</span>
 		{if count($warnings) > 1}
 			{l s='There are'} {count($warnings)} {l s='warnings'}
+			<span style="margin-left:20px;" id="labelSeeMore">
+				<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
+				<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
+			</span>
+			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore">
+			{foreach $warnings as $warning}
+				<li>{$warning}</li>
+			{/foreach}
+			</ul>
 		{else}
-			{l s='There is'} {count($warnings)} {l s='warning'}
+			<ul style="margin-top: 3px">
+			{foreach $warnings as $warning}
+				<li>{$warning}</li>
+			{/foreach}
+			</ul>
 		{/if}
-		<span style="margin-left:20px;" id="labelSeeMore">
-			<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
-			<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
-		</span>
-		<ul style="display:none;" id="seeMore">
-		{foreach $warnings as $warning}
-			<li>{$warning}</li>
-		{/foreach}
-		</ul>
 	</div>
 {/if}
 
