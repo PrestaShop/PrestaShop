@@ -29,11 +29,6 @@
 	{if $field['type'] == 'disabled'}
 		<div class="margin-form">
 			{$field['disabled']}
-	{elseif $field['type'] == 'maintenance_ip'}
-		<div class="margin-form">
-			{$field['script_ip']}
-			<input type="text"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else} 5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'|htmlentities}" />
-			{$field['link_remove_ip']}
 	{else}
 		<div class="margin-form">
 	{/if}

@@ -54,22 +54,6 @@ class AdminCurrenciesControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->options = array(
-			'general' => array(
-				'title' =>	$this->l('Currencies options'),
-				'fields' =>	array(
-					'PS_CURRENCY_DEFAULT' => array(
-						'title' => $this->l('Default currency:'),
-						'desc' => $this->l('The default currency used in shop')
-							.'<div class="warn">'.
-								$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_currency',
-						'list' => Currency::getCurrencies()
-					)
-				),
-				'submit' => array()
-			),
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
@@ -318,12 +302,6 @@ class AdminCurrenciesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		parent::initProcess();
-	}
-
-	public function updateOptionPsCurrencyDefault($value)
-	{
-		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
-		Currency::refreshCurrencies();
 	}
 }
 

@@ -94,22 +94,6 @@ class AdminLanguagesControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 	 	$this->specificConfirmDelete = $this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?');
 
-		$this->options = array(
-			'general' => array(
-				'title' =>	$this->l('Languages options'),
-				'fields' =>	array(
-					'PS_LANG_DEFAULT' => array(
-						'title' => $this->l('Default language:'),
-						'desc' => $this->l('The default language used in shop'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'id_lang',
-						'list' => Language::getlanguages(false)
-					)
-				),
-				'submit' => array()
-			)
-		);
 		parent::__construct();
 	}
 
@@ -476,13 +460,6 @@ class AdminLanguagesControllerCore extends AdminController
 			if (Validate::isLanguageIsoCode($_POST['iso_code']))
 				$object->moveToIso($_POST['iso_code']);
 		parent::copyFromPost($object, $table);
-	}
-
-	public function beforeUpdateOptions()
-	{
-		$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
-		if (!$lang->active)
-			$this->errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
 	}
 
 	public function ajaxProcessCheckLangPack()

@@ -138,24 +138,6 @@ class AdminCustomersControllerCore extends AdminController
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
 
-		$this->options = array(
-			'general' => array(
-				'title' =>	$this->l('Customers options'),
-				'fields' =>	array(
-					'PS_PASSWD_TIME_FRONT' => array(
-						'title' => $this->l('Regenerate password:'),
-						'desc' => $this->l('Security minimum time to wait to regenerate the password'),
-						'validation' => 'isUnsignedInt',
-						'cast' => 'intval',
-						'size' => 5,
-						'type' => 'text',
-						'suffix' => ' '.$this->l('minutes')
-					)
-				),
-				'submit' => array()
-			)
-		);
-
 		parent::__construct();
 	}
 
@@ -742,7 +724,6 @@ class AdminCustomersControllerCore extends AdminController
 			else
 				return false;
 		}
-
 	}
 
 	public function processUpdate($token)
