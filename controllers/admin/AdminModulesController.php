@@ -728,13 +728,22 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 		if ($return)
+		{
+			// If redirect parameter is present and module installed with success, we redirect on configuration module page
+			if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && Module::isInstalled(pSQL(Tools::getValue('module_name'))))
+				Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name'));
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+		}
 	}
 	
 	public function postProcess()
 	{
 		// Parent Post Process
 		parent::postProcess();
+
+		// If redirect parameter is present and module already installed, we redirect on configuration module page
+		if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && Module::isInstalled(pSQL(Tools::getValue('module_name'))))
+			Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name'));
 
 		// Execute filter or callback methods
 		$filterMethods = array('filterModules', 'resetFilterModules', 'filterCategory', 'unfilterCategory');
