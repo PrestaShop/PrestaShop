@@ -520,7 +520,7 @@ class AdminHomeControllerCore extends AdminController
 		if (file_exists('../config/xml/preactivation.xml'))
 		{
 			$count = 0;
-			$preactivation = simplexml_load_file('../config/xml/preactivation.xml');
+			$preactivation = @simplexml_load_file('../config/xml/preactivation.xml');
 			foreach ($preactivation->partner as $partner)
 			{
 				// Cache the logo
@@ -543,8 +543,8 @@ class AdminHomeControllerCore extends AdminController
 					$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
 					$return .= '<div style="width:46.5%;height:90px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
 						<p align="center">
-							<a href="'.$link.'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
-							<b><a href="'.$link.'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
+							<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
+							<b><a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
 						</p>
 					</div>';
 					$count++;
@@ -552,9 +552,48 @@ class AdminHomeControllerCore extends AdminController
 			}
 		}
 		if (!empty($return))
-			$return .= '<br clear="left" />';
+			$return .= '<br clear="left" />
+			<script>
+				$(".preactivationLink").click(function() {
+					var module = $(this).attr("rel");
+					var ajaxCurrentIndex = "'.str_replace('index', 'ajax-tab', self::$currentIndex).'";
+					try
+					{
+						resAjax = $.ajax({
+								type:"POST",
+								url : ajaxCurrentIndex,
+								async: true,
+								data : {
+									ajax : "1",
+									controller : "AdminHome",
+									action : "savePreactivationRequest",
+									module : module,
+								},
+								success : function(data)
+								{
+								},
+								error: function(res,textStatus,jqXHR)
+								{
+								}
+						});
+					}
+					catch(e){}
+				});
+			</script>';
 
 		return $return;
+	}
+
+	public function ajaxProcessSavePreactivationRequest()
+	{
+		$isoUser = Context::getContext()->language->iso_code;
+		$isoCountry = Context::getContext()->country->iso_code;
+		$employee = new Employee((int)Context::getContext()->cookie->id_employee);
+		$firstname = $employee->firstname;
+		$lastname = $employee->lastname;
+		$email = $employee->email;
+		$return = @file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+		die($return);
 	}
 
 	public function getBlockDiscover()
