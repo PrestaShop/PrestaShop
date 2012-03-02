@@ -168,19 +168,19 @@ class AdminModulesControllerCore extends AdminController
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version=151&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY'));
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version=151&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons));
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons)).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'check_customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version=151&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+			$postData = 'version='._PS_VERSION_.'&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
 		}
 		if ($request == 'module')
 		{
@@ -188,12 +188,12 @@ class AdminModulesControllerCore extends AdminController
 			if (isset($params['username_addons']) && isset($params['password_addons']))
 			{
 				$protocolsList = array('https://' => 443);
-				$postData = 'version=151&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
 			}
 			else
 			{
 				$protocolsList = array('https://' => 443, 'http://' => 80);
-				$postData = 'version=151&method=module&id_module='.pSQL($params['id_module']);
+				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']);
 			}
 		}
 
@@ -210,7 +210,7 @@ class AdminModulesControllerCore extends AdminController
 		$context = stream_context_create($opts);
 		foreach ($protocolsList as $protocol => $port)
 		{
-			$content = file_get_contents($protocol.$this->addons_url, false, $context);
+			$content = @file_get_contents($protocol.$this->addons_url, false, $context);
 
 			// If content returned, we cache it
 			if ($content)
