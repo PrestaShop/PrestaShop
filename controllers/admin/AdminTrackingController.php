@@ -51,6 +51,9 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+			$this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disable.');
+		
 		$methods = get_class_methods($this);
 		$tpl_vars['arrayList'] = array();
 		foreach ($methods as $method_name)
@@ -100,6 +103,9 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function getCustomListProductsAttributesNoStock()
 	{
+		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+			return;
+		
 		$this->clearListOptions();
 		$this->table = 'product';
 		$this->lang = true;
@@ -138,6 +144,9 @@ class AdminTrackingControllerCore extends AdminController
 
 	public function getCustomListProductsNoStock()
 	{
+		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+			return;
+		
 		$this->clearListOptions();
 		$this->table = 'product';
 		$this->lang = true;
