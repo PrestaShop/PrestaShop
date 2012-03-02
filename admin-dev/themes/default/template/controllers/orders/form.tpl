@@ -201,6 +201,28 @@
 			var product = $(this).attr('rel').split('_');
 			updateProductPrice(product[0], product[1], $(this).val());
 		});
+		$('#order_message').live('change', function(e) {
+			e.preventDefault();
+			$.ajax({
+				type:"POST",
+				url: "{$link->getAdminLink('AdminCarts')}",
+				async: true,
+				dataType: "json",
+				data : {
+					ajax: "1",
+					token: "{getAdminToken tab='AdminCarts'}",
+					tab: "AdminCarts",
+					action: "updateOrderMessage",
+					id_cart: id_cart,
+					id_customer: id_customer,
+					message: $(this).val()
+					},
+				success : function(res)
+				{
+					displaySummary(res);
+				}
+			});
+		});
 		/*$('.fancybox').live('click', function(e) {
 			$(this).fancybox().trigger('click');
 			return false;
@@ -611,6 +633,7 @@
 		$('#id_lang option[value="'+id_lang+'"]').attr('selected', 'selected');
 		$('#send_email_to_customer').attr('rel', jsonSummary.link_order);
 		$('#go_order_process').attr('href', jsonSummary.link_order);
+		$('#order_message').val(jsonSummary.order_message);
 		resetBind();
 	}
 

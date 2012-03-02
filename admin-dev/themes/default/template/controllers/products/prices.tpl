@@ -157,7 +157,7 @@ jQuery(document).ready(Customer.init);
 			</span>
 			{if $tax_exclude_taxe_option}
 				<span style="margin-left:10px; color:red;">{l s='Taxes are currently disabled'}</span> (<b><a href="{$link->getAdminLink('AdminTaxes')}">{l s='Tax options'}</a></b>)
-				<input type="hidden" value="{$product->id_tax_rules_group}" name="id_tax_rules_group" />
+				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			{/if}
 		</td>
 	</tr>

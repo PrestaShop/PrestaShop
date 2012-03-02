@@ -301,6 +301,31 @@ class AdminCartsControllerCore extends AdminController
 			echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
 	}
+	
+	public function ajaxProcessUpdateOrderMessage()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$id_message = false;
+			if ($old_message = Message::getMessageByCartId((int)$this->context->cart->id))
+				$id_message = $old_message['id_message'];
+			$message = new Message((int)$id_message);
+			if ($message_content = Tools::getValue('message'))
+			{
+				if (Validate::isMessage($message_content))
+				{
+					$message->message = htmlentities($message_content, ENT_COMPAT, 'UTF-8');
+					$message->id_cart = (int)$this->context->cart->id;
+					$message->id_customer = (int)$this->context->cart->id_customer;
+					$message->save();
+				}
+			}
+			else
+				if (Validate::isLoadedObject($message))
+					$message->delete();
+			echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
+	}
 
 	public function ajaxProcessUpdateCurrency()
 	{
@@ -504,12 +529,18 @@ class AdminCartsControllerCore extends AdminController
 
 	public function ajaxReturnVars()
 	{
-		$id_cart = (int)$this->context->cart->id;
+		$id_cart = (int)$this->context->cart->id;	
+
+		$message_content = '';
+		if ($message = Message::getMessageByCartId((int)$this->context->cart->id))
+			$message_content = $message['message'];
+	
 		return array('summary' => $this->getCartSummary(),
 						'delivery_option_list' => $this->getDeliveryOptionList(),
 						'cart' => $this->context->cart,
 						'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
 						'id_cart' => $id_cart,
+						'order_message' => $message_content,
 						'link_order' => $this->context->link->getPageLink(
 							'order', false,
 							(int)$this->context->cart->id_lang,
