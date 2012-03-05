@@ -193,6 +193,9 @@ class AdminStockCoverControllerCore extends AdminController
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
+		// Hack for multi shop ..
+		$this->_where .= ' AND b.id_shop = 1';
+
 		$this->tpl_list_vars['stock_cover_periods'] = $this->stock_cover_periods;
 		$this->tpl_list_vars['stock_cover_cur_period'] = $this->getCurrentCoveragePeriod();
 		$this->tpl_list_vars['stock_cover_warehouses'] = $this->stock_cover_warehouses;
