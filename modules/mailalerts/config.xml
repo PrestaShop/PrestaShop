@@ -2,7 +2,7 @@
 <module>
 	<name>mailalerts</name>
 	<displayName><![CDATA[Mail alerts]]></displayName>
-	<version><![CDATA[2.3]]></version>
+	<version><![CDATA[2.4]]></version>
 	<description><![CDATA[Sends e-mail notifications to customers and merchants.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[administration]]></tab>
