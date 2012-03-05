@@ -311,10 +311,6 @@ foreach ($tabs AS $t)
 			<ul class="submenu">';
 		$subTabs = Tab::getTabs(Context::getContext()->language->id, (int)$t['id_tab']);
 
-		// @todo need a better way than using noTabLink property, keeping the fact to avoid db modification
-		if (!in_array($t['class_name'], $noTabLink))
-			array_unshift($subTabs, $t);
-
 		foreach ($subTabs AS $t2)
 			if (checkTabRights($t2['id_tab']) === true AND (bool)$t2['active'])
 				echo '<li><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
