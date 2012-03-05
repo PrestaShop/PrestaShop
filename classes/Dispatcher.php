@@ -289,8 +289,9 @@ class DispatcherCore
 						}
 						else
 						{
-							include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.$this->controller.'.php');
-							$controller_class = $controllers[$this->controller].'Controller';
+							// Controllers in modules can be named AdminXXX.php or AdminXXXController.php
+							include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.$controllers[$this->controller].'.php');
+							$controller_class = $controllers[$this->controller].(strpos($controllers[$this->controller], 'Controller') ? '' : 'Controller');
 						}
 					}
 				}
