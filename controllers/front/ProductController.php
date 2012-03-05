@@ -132,6 +132,8 @@ class ProductControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (!$this->errors)
 		{
 			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
@@ -228,7 +230,6 @@ class ProductControllerCore extends FrontController
 		$this->context->smarty->assign('errors', $this->errors);
 
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
-		parent::initContent();
 	}
 
 	/**

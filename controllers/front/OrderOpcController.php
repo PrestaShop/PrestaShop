@@ -271,6 +271,8 @@ class OrderOpcControllerCore extends ParentOrderController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		// SHOPPING CART
 		$this->_assignSummaryInformations();
 		// WRAPPING AND TOS
@@ -324,7 +326,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
-		parent::initContent();
 	}
 
 	protected function _getGuestInformations()

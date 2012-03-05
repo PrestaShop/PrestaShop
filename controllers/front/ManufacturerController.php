@@ -70,6 +70,8 @@ class ManufacturerControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToGroupShop())
 		{
 			$this->productSort();
@@ -81,7 +83,6 @@ class ManufacturerControllerCore extends FrontController
 			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'manufacturer-list.tpl');
 		}
-		parent::initContent();
 	}
 
 	/**

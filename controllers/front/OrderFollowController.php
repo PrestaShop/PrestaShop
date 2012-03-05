@@ -78,6 +78,8 @@ class OrderFollowControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$ordersReturn = OrderReturn::getOrdersReturn($this->context->customer->id);
 		if (Tools::isSubmit('errorQuantity'))
 			$this->context->smarty->assign('errorQuantity', true);
@@ -93,7 +95,6 @@ class OrderFollowControllerCore extends FrontController
 		$this->context->smarty->assign('ordersReturn', $ordersReturn);
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-follow.tpl');
-		parent::initContent();
 	}
 
 	public function setMedia()

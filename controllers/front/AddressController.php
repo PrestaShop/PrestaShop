@@ -268,6 +268,8 @@ class AddressControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		/* Secure restriction for guest */
 		if ($this->context->customer->is_guest)
 			Tools::redirect('index.php?controller=addresses');
@@ -297,7 +299,6 @@ class AddressControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'address.tpl');
-		parent::initContent();
 	}
 
 	/**

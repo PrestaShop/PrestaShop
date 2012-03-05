@@ -60,6 +60,8 @@ class AddressesControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$total = 0;
 		$multiple_addresses_formated = array();
 		$ordered_fields = array();
@@ -102,7 +104,6 @@ class AddressesControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'addresses.tpl');
-		parent::initContent();
 	}
 }
 

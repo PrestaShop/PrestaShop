@@ -41,6 +41,8 @@ class NewProductsControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$this->productSort();
 
 		$nbProducts = (int)Product::getNewProducts(
@@ -60,7 +62,6 @@ class NewProductsControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'new-products.tpl');
-		parent::initContent();
 	}
 }
 

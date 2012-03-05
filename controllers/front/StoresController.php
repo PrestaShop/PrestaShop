@@ -238,6 +238,8 @@ class StoresControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (Configuration::get('PS_STORES_SIMPLIFIED'))
 			$this->assignStoresSimplified();
 		else
@@ -251,7 +253,6 @@ class StoresControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'stores.tpl');
-		parent::initContent();
 	}
 
 	public function setMedia()

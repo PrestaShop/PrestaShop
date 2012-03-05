@@ -72,6 +72,8 @@ class SupplierControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
 		{
 			$this->productSort(); // productSort must be called before assignOne
@@ -83,7 +85,6 @@ class SupplierControllerCore extends FrontController
 			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
 		}
-		parent::initContent();
 	}
 
 	/**

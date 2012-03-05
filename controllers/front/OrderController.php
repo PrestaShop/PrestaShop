@@ -92,6 +92,8 @@ class OrderControllerCore extends ParentOrderController
 	{
 		global $isVirtualCart;
 
+		parent::initContent();
+
 		if (Tools::isSubmit('ajax') && Tools::getValue('method') == 'updateExtraCarrier')
 		{
 			// Change virtualy the currents delivery options
@@ -186,7 +188,6 @@ class OrderControllerCore extends ParentOrderController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
 		));
-		parent::initContent();
 	}
 
 	protected function processAddressFormat()
