@@ -64,13 +64,13 @@ class Watermark extends Module
 		$this->displayName = $this->l('Watermark');
 		$this->description = $this->l('Protect image by watermark.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
-		if (!isset($this->transparency) OR !isset($this->xAlign) OR !isset($this->yAlign))
+		if (!isset($this->transparency) || !isset($this->xAlign) || !isset($this->yAlign))
 			$this->warning = $this->l('Watermark image must be uploaded in order for this module to work correctly.');
 	}
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('watermark'))
+		if (!parent::install() || !$this->registerHook('watermark'))
 			return false;
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', 60);
 		Configuration::updateValue('WATERMARK_Y_ALIGN', 'bottom');
@@ -81,10 +81,10 @@ class Watermark extends Module
 	public function uninstall()
 	{
 		return (parent::uninstall()
-			AND Configuration::deleteByName('WATERMARK_TYPES')
-			AND Configuration::deleteByName('WATERMARK_TRANSPARENCY')
-			AND Configuration::deleteByName('WATERMARK_Y_ALIGN')
-			AND Configuration::deleteByName('WATERMARK_X_ALIGN'));
+			&& Configuration::deleteByName('WATERMARK_TYPES')
+			&& Configuration::deleteByName('WATERMARK_TRANSPARENCY')
+			&& Configuration::deleteByName('WATERMARK_Y_ALIGN')
+			&& Configuration::deleteByName('WATERMARK_X_ALIGN'));
 	}
 
 	private function _postValidation()
@@ -96,33 +96,32 @@ class Watermark extends Module
 		
 		if (empty($transparency))
 			$this->_postErrors[] = $this->l('Transparency required.');
-		elseif($transparency < 0 || $transparency > 100)
+		elseif ($transparency < 0 || $transparency > 100)
 			$this->_postErrors[] = $this->l('Transparency is not in allowed range.');
 
 		if (empty($yalign))
 			$this->_postErrors[] = $this->l('Y-Align is required.');
-		elseif(!in_array($yalign, $this->yaligns))
+		elseif (!in_array($yalign, $this->yaligns))
 			$this->_postErrors[] = $this->l('Y-Align is not in allowed range.');
 		
 		if (empty($xalign))
 			$this->_postErrors[] = $this->l('X-Align is required.');
-		elseif(!in_array($xalign, $this->xaligns))
+		elseif (!in_array($xalign, $this->xaligns))
 			$this->_postErrors[] = $this->l('X-Align is not in allowed range.');
 		if (empty($image_types))
 			$this->_postErrors[] = $this->l('At least one image type is required.');
 
-		if (isset($_FILES['PS_WATERMARK']['tmp_name']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
+		if (isset($_FILES['PS_WATERMARK']['tmp_name']) && !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
 			if (!ImageManager::isRealImage($_FILES['PS_WATERMARK']['tmp_name'], $_FILES['PS_WATERMARK']['type'], array('image/gif')))
 				$this->_postErrors[] = $this->l('Image must be in GIF format.');
 		}
 		
-		return !sizeof($this->_postErrors) ? true : false;
+		return !count($this->_postErrors) ? true : false;
 	}
 
 	private function _postProcess()
-	{	
-		
+	{
 		Configuration::updateValue('WATERMARK_TYPES', implode(',', Tools::getValue('image_types')));
 		Configuration::updateValue('WATERMARK_Y_ALIGN', Tools::getValue('yalign'));
 		Configuration::updateValue('WATERMARK_X_ALIGN', Tools::getValue('xalign'));
@@ -139,11 +138,11 @@ class Watermark extends Module
 			if ($error = ImageManager::validateUpload($_FILES['PS_WATERMARK']))
 				$this->_errors[] = $error;
 			/* Copy new watermark */
-			elseif(!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
+			elseif (!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 				$this->_errors[] = Tools::displayError('an error occurred while uploading watermark: '.$_FILES['PS_WATERMARK']['tmp_name'].' to '.$dest);
 		}
 		
-		if($this->_errors)
+		if ($this->_errors)
 			foreach ($this->_errors as $error)
 				$this->_html .= '<div class="module_error alert error"><img src="../img/admin/warning.gif" alt="'.$this->l('ok').'" /> '.$this->l($error).'</div>';
 		else
@@ -180,7 +179,7 @@ class Watermark extends Module
 					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark X align').'</td>
 					    <td>
 						<select id="xalign" name = "xalign">';
-					    foreach($this->xaligns as $align)
+					    foreach ($this->xaligns as $align)
 						    $this->_html .= '<option value="'.$align.'"'.(Tools::getValue('xalign', Configuration::get('WATERMARK_X_ALIGN')) == $align ? ' selected="selected"' : '' ).'>'.$this->l($align).'</option>';
 					    $this->_html .= '</select>
 					    </td>
@@ -188,14 +187,14 @@ class Watermark extends Module
 					<tr><td width="270" style="height: 35px;">'.$this->l('Watermark Y align').'</td>
 					    <td>
 						<select id="yalign" name = "yalign">';
-					    foreach($this->yaligns as $align)
+					    foreach ($this->yaligns as $align)
 						    $this->_html .= '<option value="'.$align.'"'.(Tools::getValue('yalign', Configuration::get('WATERMARK_Y_ALIGN')) == $align ? ' selected="selected"' : '' ).'>'.$this->l($align).'</option>';
 					    $this->_html .= '</select>
 					    </td>
 					</tr>
 					<tr><td width="270" style="height: 35px;">'.$this->l('Choose image types for watermark protection.').'</td><td>';
 					$selected_types = explode(',', Configuration::get('WATERMARK_TYPES'));
-					foreach(ImageType::getImagesTypes('products') as $type)
+					foreach (ImageType::getImagesTypes('products') as $type)
 					{
 					    $this->_html .= '<label style="float:none; ">
 						<input type="checkbox" value="'.$type['id_image_type'].'" name="image_types[]"'.
@@ -217,11 +216,11 @@ class Watermark extends Module
 		if (!empty($_POST))
 		{
 			$this->_postValidation();
-			if (!sizeof($this->_postErrors))
+			if (!count($this->_postErrors))
 				$this->_postProcess();
 			else
-				foreach ($this->_postErrors AS $err)
-					$this->_html .= '<div class="alert error">'. $err .'</div>';
+				foreach ($this->_postErrors as $err)
+					$this->_html .= '<div class="alert error">'.$err.'</div>';
 		}
 		else
 			$this->_html .= '<br />';
@@ -231,7 +230,7 @@ class Watermark extends Module
 		return $this->_html;
 	}
 	
-	//we assume here only jpg files
+	/* we assume here only jpg files */
 	public function hookwatermark($params)
 	{
 		$image = new Image($params['id_image']);
@@ -243,10 +242,10 @@ class Watermark extends Module
 			$str_shop = '';
 
 		//first make a watermark image
-		$return = $this->watermarkByImage(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.jpg',  dirname(__FILE__).'/watermark'.$str_shop.'.gif', $file, 23, 0, 0, 'right');
+		$return = $this->watermarkByImage(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.jpg', dirname(__FILE__).'/watermark'.$str_shop.'.gif', $file, 23, 0, 0, 'right');
 
 		//go through file formats defined for watermark and resize them
-		foreach($this->imageTypes as $imageType)
+		foreach ($this->imageTypes as $imageType)
 		{
 		    $newFile = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg';
 		    if (!ImageManager::resize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
@@ -264,12 +263,18 @@ class Watermark extends Module
 			die ($this->l('The watermark image is not a real gif, please CONVERT the image.'));
 		list($watermarkWidth, $watermarkHeight) = getimagesize($watermarkpath); 
 		list($imageWidth, $imageHeight) = getimagesize($imagepath); 
-		if ($this->xAlign == "middle") { $xpos = $imageWidth/2 - $watermarkWidth/2 + $Xoffset; } 
-		if ($this->xAlign == "left") { $xpos = 0 + $Xoffset; } 
-		if ($this->xAlign == "right") { $xpos = $imageWidth - $watermarkWidth - $Xoffset; } 
-		if ($this->yAlign == "middle") { $ypos = $imageHeight/2 - $watermarkHeight/2 + $Yoffset; } 
-		if ($this->yAlign == "top") { $ypos = 0 + $Yoffset; } 
-		if ($this->yAlign == "bottom") { $ypos = $imageHeight - $watermarkHeight - $Yoffset; } 
+		if ($this->xAlign == 'middle')
+			$xpos = $imageWidth / 2 - $watermarkWidth / 2 + $Xoffset;
+		if ($this->xAlign == 'left')
+			$xpos = 0 + $Xoffset;
+		if ($this->xAlign == 'right')
+			$xpos = $imageWidth - $watermarkWidth - $Xoffset;
+		if ($this->yAlign == 'middle')
+			$ypos = $imageHeight / 2 - $watermarkHeight / 2 + $Yoffset;
+		if ($this->yAlign == 'top')
+			$ypos = 0 + $Yoffset;
+		if ($this->yAlign == 'bottom')
+			$ypos = $imageHeight - $watermarkHeight - $Yoffset;
 		if (!imagecopymerge($image, $imagew, $xpos, $ypos, 0, 0, $watermarkWidth, $watermarkHeight, $this->transparency))
 			return false;
 		return imagejpeg($image, $outputpath, 100); 
