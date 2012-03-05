@@ -223,7 +223,7 @@ var ajaxCart = {
 				if (cartBlockOffset != undefined && $picture.size())
 				{
 					$picture.appendTo('body');
-					$picture.css({ 'position': 'absolute', 'top': $picture.css('top'), 'left': $picture.css('left') })
+					$picture.css({ 'position': 'absolute', 'top': $picture.css('top'), 'left': $picture.css('left'), 'z-index': 4242 })
 					.animate({ 'width': $element.attr('width')*0.66, 'height': $element.attr('height')*0.66, 'opacity': 0.2, 'top': cartBlockOffset.top + 30, 'left': cartBlockOffset.left + 15 }, 1000)
 					.fadeOut(100, function() {
 						ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
