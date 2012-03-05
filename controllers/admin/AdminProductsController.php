@@ -2524,7 +2524,7 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 		// Prepare Categories tree for display in Associations tab
 		$root = Category::getRootCategory();
-		$default_category = Tools::getValue('id_category', $root->id);
+		$default_category = Tools::getValue('id_category', Configuration::get('PS_HOME_CATEGORY'));
 
 		if (!$product->id)
 			$selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
@@ -2562,12 +2562,13 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
 
+		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
 		$helper = new Helper();
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'id_category_default' => $product->getDefaultCategory(),
-					'category_tree' => $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, true),
+					'category_tree' => $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true),
 					'product' => $product,
 					'link' => $this->context->link
 		));
