@@ -210,10 +210,11 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 		{
-			$this->toolbar_btn['new-url'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
-				'desc' => $this->l('Add new root category')
-			);
+			if (Shop::isFeatureActive())
+				$this->toolbar_btn['new-url'] = array(
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
+					'desc' => $this->l('Add new root category')
+				);
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')

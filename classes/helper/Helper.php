@@ -273,7 +273,7 @@ class HelperCore
 		}
 
 		$root_input = '&nbsp;';
-		if ($root_category->id != $top_category->id || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
+		if ($root['id_category'] != $top_category->id || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
 			$root_input = '<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
 									.$input_name.'" value="'.$root['id_category'].'" '
 									.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" />
