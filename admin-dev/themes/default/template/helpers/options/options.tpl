@@ -190,7 +190,10 @@
 				{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
 				{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in this shop context'}</p>{/if}
 				</div>
-				{block name="end_field_block"}</div>{/block}
+				{block name="end_field_block"}
+					</div>
+					<div class="clear"></div>
+				{/block}
 			{/if}
 		{/foreach}
 		{if isset($categoryData['submit'])}

@@ -339,7 +339,10 @@
 								</p>
 							{/if}
 							{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
-						{block name="end_field_block"}</div>{/block}
+						{block name="end_field_block"}
+							</div>
+							<div class="clear"></div>
+						{/block}
 						{/if}
 						{if $input.name == 'id_state'}
 							</div>
