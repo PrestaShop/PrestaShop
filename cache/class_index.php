@@ -22,7 +22,6 @@
   'AdminAddonsCatalogController' => 'override/controllers/admin/AdminAddonsCatalogController.php',
   'AdminAddonsCatalogControllerCore' => 'controllers/admin/AdminAddonsCatalogController.php',
   'AdminAddonsMyAccountController' => 'override/controllers/admin/AdminAddonsMyAccountController.php',
-  'AdminAddonsMyAccountControllerCore' => 'controllers/admin/AdminAddonsMyAccountController.php',
   'AdminAddressesController' => 'override/controllers/admin/AdminAddressesController.php',
   'AdminAddressesControllerCore' => 'controllers/admin/AdminAddressesController.php',
   'AdminAdminPreferencesController' => 'override/controllers/admin/AdminAdminPreferencesController.php',
