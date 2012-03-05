@@ -190,8 +190,6 @@ abstract class AdminTabCore
 	public $ignore_sleep = false;
 
 	public static $tabParenting = array(
-//		'AdminProducts' => 'AdminCatalog',
-//		'AdminCategories' => 'AdminCatalog',
 		'AdminCms' => 'AdminCmsContent',
 		'AdminCmsCategories' => 'AdminCmsContent',
 		'AdminOrdersStates' => 'AdminStatuses',
@@ -201,9 +199,6 @@ abstract class AdminTabCore
 		'AdminReturnStates' => 'AdminStatuses',
 		'AdminStatsTab' => 'AdminStats'
 	);
-
-	/** @var array noTabLink array of admintabs with no content */
-	public $noTabLink = array('AdminCatalog', 'AdminPriceRule', 'AdminTools', 'AdminStock', 'AdminAdmin');
 
 	public function __construct()
 	{
