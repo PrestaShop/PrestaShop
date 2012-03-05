@@ -45,22 +45,22 @@ class TaxRulesGroupCore extends ObjectModel
 		),
 	);
 
-    protected $webserviceParameters = array(
+	protected $webserviceParameters = array(
 	'objectsNodeName' => 'tax_rule_groups',
 	'objectNodeName' => 'tax_rule_group',
-        'fields' => array(
-        ),
-    );
+		'fields' => array(
+		),
+	);
 
-    protected static $_taxes = array();
+	protected static $_taxes = array();
 
 	public static function getTaxRulesGroups($only_active = true)
 	{
-	    return Db::getInstance()->executeS('
-	    SELECT *
-	    FROM `'._DB_PREFIX_.'tax_rules_group` g'
-	    .($only_active ? ' WHERE g.`active` = 1' : '')
-	    );
+		return Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'tax_rules_group` g'
+		.($only_active ? ' WHERE g.`active` = 1' : '').'
+		ORDER BY name ASC');
 	}
 
 	/**
