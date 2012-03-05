@@ -26,8 +26,8 @@
     <zone id="Europe_out_E_U" active="1">
       <name>Europe (out E.U)</name>
     </zone>
-    <zone id="Centrale_America_Antilla" active="1">
-      <name>Centrale America/Antilla</name>
+    <zone id="Central_America_Antilla" active="1">
+      <name>Central America/Antilla</name>
     </zone>
   </entities>
 </entity_zone>
