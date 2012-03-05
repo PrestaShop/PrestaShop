@@ -546,7 +546,7 @@
       <value>1</value>
     </configuration>
     <configuration id="BLOCK_CATEG_MAX_DEPTH" name="BLOCK_CATEG_MAX_DEPTH">
-      <value>3</value>
+      <value>4</value>
     </configuration>
     <configuration id="MANUFACTURER_DISPLAY_FORM" name="MANUFACTURER_DISPLAY_FORM">
       <value>1</value>
@@ -726,7 +726,7 @@
       <value>1</value>
     </configuration>
     <configuration id="BLOCK_CATEG_MAX_DEPTH_1" name="BLOCK_CATEG_MAX_DEPTH">
-      <value>3</value>
+      <value>4</value>
     </configuration>
     <configuration id="MANUFACTURER_DISPLAY_FORM_1" name="MANUFACTURER_DISPLAY_FORM">
       <value>1</value>
