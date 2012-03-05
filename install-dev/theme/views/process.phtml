@@ -46,7 +46,9 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 				<td class="label"><?php echo $this->l('Password:') ?></td>
 				<td class="resultEnd">
 					<span id="password_content"><?php echo preg_replace('#.#', '*', $this->session->admin_password) ?></span>
-					(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars($this->session->admin_password) ?>'); return false"><?php echo $this->l('Display') ?></a>)
+					<span id="password_display">
+						(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars($this->session->admin_password) ?>'); $('#password_display').hide(); return false"><?php echo $this->l('Display') ?></a>)
+					</span>
 				</td>
 			</tr>
 		</table>
