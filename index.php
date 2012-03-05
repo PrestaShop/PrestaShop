@@ -25,11 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- * Shop::getContext() == Shop::CONTEXT_ALL
- * Shop::getContextID() == 42
- * Shop::setContext(Shop::CONTEXT_ALL) | Shop::setContext(Shop::CONTEXT_GROUP, 42) | Shop::setContext(Shop::CONTEXT_SHOP, 42)
- */
 require(dirname(__FILE__).'/config/config.inc.php');
 Dispatcher::getInstance()->dispatch();
 
