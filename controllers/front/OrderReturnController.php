@@ -78,12 +78,13 @@ class OrderReturnControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
-		parent::initContent();
 	}
 
 	public function displayAjax()

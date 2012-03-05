@@ -38,6 +38,8 @@ class DiscountControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
 		$nbDiscounts = 0;
 		foreach ($discounts as $discount)
@@ -46,7 +48,6 @@ class DiscountControllerCore extends FrontController
 
 		$this->context->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
-		parent::initContent();
 	}
 }
 

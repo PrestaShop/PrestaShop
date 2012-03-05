@@ -98,6 +98,8 @@ class IdentityControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if ($this->customer->birthday)
 			$birthday = explode('-', $this->customer->birthday);
 		else
@@ -118,7 +120,6 @@ class IdentityControllerCore extends FrontController
 		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 
 		$this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
-		parent::initContent();
 	}
 
 	public function setMedia()

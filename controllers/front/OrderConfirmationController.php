@@ -70,6 +70,8 @@ class OrderConfirmationControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$this->context->smarty->assign(array(
 			'is_guest' => $this->context->customer->is_guest,
 			'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
@@ -87,7 +89,6 @@ class OrderConfirmationControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-confirmation.tpl');
-		parent::initContent();
 	}
 
 	/**

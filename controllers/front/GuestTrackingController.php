@@ -96,6 +96,8 @@ class GuestTrackingControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		/* Handle brute force attacks */
 		if (count($this->errors))
 			sleep(1);
@@ -105,7 +107,6 @@ class GuestTrackingControllerCore extends FrontController
 			'errors' => $this->errors,
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'guest-tracking.tpl');
-		parent::initContent();
 	}
 
 	/**
