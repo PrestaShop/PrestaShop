@@ -353,9 +353,11 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::getValue('submitAdd'.$this->table))
+		$res = parent::postProcess();
+
+		if (Tools::getValue('submitAdd'.$this->table) && $res)
 		{
-			$id_country = Tools::getValue('id_country');
+			$id_country = ($id_country = Tools::getValue('id_country')) ? $id_country : $res['id'];
 			$tmp_addr_format = new AddressFormat($id_country);
 
 			$save_status = false;
@@ -389,7 +391,7 @@ class AdminCountriesControllerCore extends AdminController
 			unset($tmp_addr_format);
 		}
 
-		return parent::postProcess();
+		return $res;
 	}
 
 	protected function displayValidFields()
