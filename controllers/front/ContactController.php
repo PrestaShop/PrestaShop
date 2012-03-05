@@ -203,6 +203,8 @@ class ContactControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$this->assignOrderList();
 
 		$email = Tools::safeOutput(Tools::getValue('from',
@@ -226,7 +228,6 @@ class ContactControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'contact-form.tpl');
-		parent::initContent();
 	}
 
 	/**

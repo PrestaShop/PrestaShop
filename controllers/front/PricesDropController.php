@@ -41,6 +41,8 @@ class PricesDropControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		$this->productSort();
 		$nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
 		$this->pagination($nbProducts);
@@ -53,7 +55,6 @@ class PricesDropControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'prices-drop.tpl');
-		parent::initContent();
 	}
 }
 

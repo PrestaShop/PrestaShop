@@ -132,6 +132,8 @@ class OrderDetailControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (!($id_order = (int)Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order))
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
@@ -204,7 +206,6 @@ class OrderDetailControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-detail.tpl');
-		parent::initContent();
 	}
 
 	public function setMedia()

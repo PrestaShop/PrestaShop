@@ -88,6 +88,8 @@ class CategoryControllerCore extends FrontController
 
 	public function initContent()
 	{
+		parent::initContent();
+
 		if (isset($this->context->cookie->id_compare))
 			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
 
@@ -116,7 +118,6 @@ class CategoryControllerCore extends FrontController
 
 
 		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
-		parent::initContent();
 	}
 
 	/**

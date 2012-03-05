@@ -50,6 +50,8 @@ class HistoryControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
+		parent::initContent();
+
 		if ($orders = Order::getCustomerOrders($this->context->customer->id))
 			foreach ($orders as &$order)
 			{
@@ -64,7 +66,6 @@ class HistoryControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'history.tpl');
-		parent::initContent();
 	}
 }
 
