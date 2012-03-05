@@ -88,7 +88,19 @@ class AddressFormatCore extends ObjectModel
 		'need_zip_code',
 		'contains_states',
 		'call_prefixes',
-		'call_prefix');
+		'show_public_prices',
+		'max_payment',
+		'max_payment_days',
+		'geoloc_postcode',
+		'logged',
+		'account_number',
+		'groupBox',
+		'ape',
+		'max_payment',
+		'outstanding_allow_amount',
+		'call_prefix',
+		'definition',
+	);
 
 	public static $forbiddenClassList = array(
 		'Manufacturer',
@@ -155,9 +167,9 @@ class AddressFormatCore extends ObjectModel
 			{
 				$associationName[0] = strtolower($associationName[0]);
 				if (in_array($associationName[0], self::$forbiddenPropertyList) ||
-						!$this->_checkValidateClassField('Address', $associationName[0], false))
+					!$this->_checkValidateClassField('Address', $associationName[0], false))
 					$this->_errorFormatList[] = Tools::displayError('This name isn\'t allowed').': '.
-						$associationName[0];
+					$associationName[0];
 			}
 			else if ($totalNameUsed == 2)
 			{
@@ -170,17 +182,19 @@ class AddressFormatCore extends ObjectModel
 
 					if (in_array($associationName[0], self::$forbiddenClassList))
 						$this->_errorFormatList[] = Tools::displayError('This name isn\'t allowed').': '.
-							$associationName[0];
+						$associationName[0];
 					else
 					{
-					// Check if the id field name exist in the Address class
-					$this->_checkValidateClassField('Address', 'id_'.strtolower($associationName[0]), true);
+						// Check if the id field name exist in the Address class
+						// Don't check this attribute on Address (no sense)
+						if ($associationName[0] != 'Address')
+							$this->_checkValidateClassField('Address', 'id_'.strtolower($associationName[0]), true);
 
-					// Check if the field name exist in the class write by the user
-					$this->_checkValidateClassField($associationName[0], $associationName[1], false);
+						// Check if the field name exist in the class write by the user
+						$this->_checkValidateClassField($associationName[0], $associationName[1], false);
+					}
 				}
 			}
-		}
 		}
 	}
 
@@ -206,12 +220,12 @@ class AddressFormatCore extends ObjectModel
 							{
 								$this->_checkLiableAssociation($patternName, $fieldsValidate);
 								$usedKeyList[] = $patternName;
-					}
+							}
 							else
 								$this->_errorFormatList[] = Tools::displayError('This key is used too many times (once allowed)').
 									': '.$patternName;
+					}
 				}
-			}
 			}
 		return (count($this->_errorFormatList)) ? false : true;
 	}
