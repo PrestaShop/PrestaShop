@@ -1,0 +1,8 @@
+Bonjour,
+
+Le produit {product} est bientôt en rupture de stock.
+En effet, la couverture de stock est maintenant inférieur à {warning_coverage}.
+Couverture actuelle : {current_coverage}
+
+
+{shop_url} réalisé avec PrestaShop™
