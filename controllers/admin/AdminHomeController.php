@@ -31,7 +31,6 @@ class AdminHomeControllerCore extends AdminController
 
 	public function __construct()
 	{
-		$this->multishop_context = Shop::CONTEXT_ALL;
 		parent::__construct();
 	}
 
