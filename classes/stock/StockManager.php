@@ -406,6 +406,16 @@ class StockManagerCore implements StockManagerInterface
 			}
 		}
 
+		// if we remove a usable quantity, exec hook
+		if ($is_usable)
+			Hook::exec('actionProductCoverage',
+					   	array(
+		   					'id_product' => $id_product,
+		   					'id_product_attribute' => $id_product_attribute,
+		   					'warehouse' => $warehouse
+					   	)
+			);
+
 		return $return;
 	}
 
