@@ -189,9 +189,6 @@
     <tab id="Modules_Themes_Catalog" id_parent="Modules" active="1">
       <class_name>AdminAddonsCatalog</class_name>
     </tab>
-    <tab id="My_Account" id_parent="Modules" active="1">
-      <class_name>AdminAddonsMyAccount</class_name>
-    </tab>
     <tab id="Positions" id_parent="Modules" active="1">
       <class_name>AdminModulesPositions</class_name>
     </tab>
