@@ -119,8 +119,14 @@ class AdminRangePriceControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		$id = (int)Tools::getValue('id_'.$this->table);		
+		
 		if (Tools::getValue('submitAdd'.$this->table) && Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 			$this->errors[] = Tools::displayError('Invalid range');
+		else if (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
+			$this->errors[] = Tools::displayError('Range already exist');
+		else if (!$id && RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
+			$this->errors[] = Tools::displayError('Range is overlapping');
 		else
 			parent::postProcess();
 	}
