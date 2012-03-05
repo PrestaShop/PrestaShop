@@ -2224,7 +2224,7 @@ FileETag INode MTime Size
 	
 	public static function modRewriteActive()
 	{
-		return (in_array('mod_rewrite', apache_get_modules()) ? true : false);
+		return Tools::apacheModExists('mod_rewrite');
 	}
 }
 
