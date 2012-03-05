@@ -453,7 +453,6 @@ function runAdminTab($tab, $ajaxMode = false)
 	// $tab = $_REQUEST['tab'];
 	if ($adminObj = checkingTab($tab))
 	{
-		$noTabLink = $adminObj->noTabLink;
 		// init is different for new tabs (AdminController) and old tabs (AdminTab)
 		if ($adminObj instanceof AdminController)
 		{
