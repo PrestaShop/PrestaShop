@@ -164,7 +164,7 @@ class StockMvtCore extends ObjectModel
 	/**
 	 * @deprecated since 1.5.0
 	 *
-	 * This method no longer exists, and have no equivalent because of the missing movements have to be handle by inventories on real stock.
+	 * This method no longer exists, and have no equivalent because the missing movements have to be handled by inventories.
 	 */
 	public static function addMissingMvt($id_employee)
 	{
