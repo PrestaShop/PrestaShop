@@ -60,9 +60,6 @@ class AdminControllerCore extends Controller
 	/** @var integer Tab id */
 	public $id = -1;
 
-	/** @var array noTabLink array of admintab names which have no content */
-	public $noTabLink = array('AdminCatalog', 'AdminPriceRule', 'AdminTools', 'AdminStock', 'AdminAdmin');
-
 	public $required_database = false;
 
 	/** @var string Security token */
