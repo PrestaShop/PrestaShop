@@ -136,6 +136,7 @@ class StockMvtReasonCore extends ObjectModel
 		$query->from('stock_mvt_reason', 'smr');
 		$query->where('smr.id_stock_mvt_reason = '.(int)$id_stock_mvt_reason);
 		$query->where('smr.deleted = 0');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }
