@@ -64,10 +64,14 @@ class AdminInformationControllerCore extends AdminController
 		);
 		$this->tpl_view_vars = array_merge($this->getTestResult(), $this->tpl_view_vars);
 
-		$this->toolbar_title = $this->l('Tools : Informations');
-		unset($this->toolbar_btn['cancel']);
 		return parent::renderView();
 	}
+	
+	public function initToolBar()
+	{
+		return;
+	}
+	
 
 	/**
 	 * get all tests
