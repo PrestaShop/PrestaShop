@@ -34,7 +34,9 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_5a12793d564ff29c49e4ab3f542dd72
 $_MODULE['<{blocklayered}prestashop>blocklayered_16349835364cf839e6670b0de7da6362'] = 'Il est recommandé de procéder à la réindexation de nuit.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_56fc8142961f1f3e9f9ec0c178881b69'] = '(en cours)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_e1e43ed7e0922095a801341dca2f1822'] = 'Indexation des URL terminée';
+$_MODULE['<{blocklayered}prestashop>blocklayered_8bf466a25752f2552df8dc8b04fc10ba'] = 'Indexation des attributs terminée';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1c1783101d972ba096fff9756378b0e1'] = 'L\'indexation des URL a échoué';
+$_MODULE['<{blocklayered}prestashop>blocklayered_399e951fec4faaeab09333f40bf6d80c'] = 'L\'Indexation des attributs  a échoué';
 $_MODULE['<{blocklayered}prestashop>blocklayered_e2dd8f544131eaf47a4f722ace7f876b'] = 'Indexation des prix terminée';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7cf7d150dd287df0a8e17eeb4cf2161d'] = '(en cours, %s des prix de produits à indexer)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ceda32b8540dee4f1222cd482a513db8'] = 'L\'indexation des prix a échoué';
