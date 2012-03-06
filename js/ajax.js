@@ -87,7 +87,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	}
 }
 
-function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table)
+function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table, id_tab_access)
 {
  	if (id_tab == '-1' && action == 'all')
  	{
@@ -96,14 +96,14 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
  		$(table+' .delete').attr('checked', src.checked);
 		$(table+' .view').attr('checked', src.checked);
 		$(table+' .all').attr('checked', src.checked);
-		$(table+' .31').attr('checked', "checked");
+		$(table+' .'+id_tab_access).attr('checked', "checked");
  	}
 	else if (action == 'all')
 		$(table+' .'+id_tab).attr('checked', src.checked);
  	else if (id_tab == '-1')
  	{
  		$(table+' .'+action).attr('checked', src.checked);
- 		$(table+' #'+action+'31').attr('checked', "checked");
+ 		$(table+' #'+action+id_tab_access).attr('checked', "checked");
  	}
 	check_for_all_accesses(tabsize, tabnumber);
 }

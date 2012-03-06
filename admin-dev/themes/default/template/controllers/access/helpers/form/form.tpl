@@ -48,8 +48,8 @@
 			var tabnumber = tout[4];
 			var table = 'table#table_'+id_profile;
 
-			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table);
-			
+			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table, '{$id_tab_access}');
+
 			$.ajax({
 				url: "{$link->getAdminLink('AdminAccess')}",
 				cache: false,
@@ -62,7 +62,7 @@
 					submitAddAccess: '1',
 					action: 'updateAccess',
 					ajax: '1',
-					token: '{getAdminToken tab='AdminAccess'}',
+					token: '{getAdminToken tab='AdminAccess'}'
 				},
 				success : function(res,textStatus,jqXHR)
 				{
@@ -86,7 +86,7 @@
 			var id_module = tout[0];
 			var perm = tout[1];
 			var id_profile = tout[2];
-			var enabled = $(this).is(':checked')? 1 : 0;
+			var enabled = $(this).is(':checked') ? 1 : 0;
 			var table = 'table#table_module_'+id_profile;
 
 			if (id_module == -1)
@@ -110,7 +110,7 @@
 					changeModuleAccess: '1',
 					action: 'updateModuleAccess',
 					ajax: '1',
-					token: '{getAdminToken tab='AdminAccess'}',
+					token: '{getAdminToken tab='AdminAccess'}'
 				},
 				success : function(res,textStatus,jqXHR)
 				{
