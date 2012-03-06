@@ -27,8 +27,11 @@
 
 class AdminAccessControllerCore extends AdminController
 {
-	/* Black list of id_tab that do not have access */
+	/* @var array : Black list of id_tab that do not have access */
 	public $accesses_black_list = array();
+
+	/* @var int : id tab of controller AdminAccess */
+	public $id_tab_access;
 
 	public function __construct()
 	{
@@ -39,6 +42,9 @@ class AdminAccessControllerCore extends AdminController
 
 		// Blacklist AdminLogin
 		$this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
+
+		// Get id tab of controller AdminAccess
+		$this->id_tab_access = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = "AdminAccess"');
 
 		parent::__construct();
 	}
@@ -100,7 +106,8 @@ class AdminAccessControllerCore extends AdminController
 			'access_edit' => $this->tabAccess['edit'],
 			'perms' => array('view', 'add', 'edit', 'delete'),
 			'modules' => $modules,
-			'link' => $this->context->link
+			'link' => $this->context->link,
+			'id_tab_access' => (int)$this->id_tab_access
 		);
 
 		return parent::renderForm();
@@ -143,41 +150,37 @@ class AdminAccessControllerCore extends AdminController
 			$enabled = (int)Tools::getValue('enabled');
 			$id_tab = (int)Tools::getValue('id_tab');
 			$id_profile = (int)Tools::getValue('id_profile');
-			$res = true;
 
 			if ($id_tab == -1 && $perm == 'all' && $enabled == 0)
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'access`
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != 31
-				');
+					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != '.(int)$this->id_tab_access;
 			else if ($id_tab == -1 && $perm == 'all')
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'access`
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile
-				);
+					WHERE `id_profile` = '.(int)$id_profile;
 			else if ($id_tab == -1)
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile
-				);
+					WHERE `id_profile` = '.(int)$id_profile;
 			else if ($perm == 'all')
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'access`
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE `id_tab` = '.(int)$id_tab.'
-						AND `id_profile` = '.(int)$id_profile
-				);
+						AND `id_profile` = '.(int)$id_profile;
 			else
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_tab` = '.(int)$id_tab.'
-						AND `id_profile` = '.(int)$id_profile
-				);
-			$res = $res?'ok':'error';
+						AND `id_profile` = '.(int)$id_profile;
+
+			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
+
 			die($res);
 		}
 	}
@@ -194,30 +197,24 @@ class AdminAccessControllerCore extends AdminController
 			$enabled = (int)Tools::getValue('enabled');
 			$id_module = (int)Tools::getValue('id_module');
 			$id_profile = (int)Tools::getValue('id_profile');
-			$res = true;
 
 			if (!in_array($perm, array('view', 'configure')))
 				throw new PrestaShopException('permission not exists');
 
 			if ($id_module == -1)
-			{
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'module_access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_profile` = '.(int)$id_profile
-				);
-			}
+					WHERE `id_profile` = '.(int)$id_profile;
 			else
-			{
-				$res &= Db::getInstance()->execute('
+				$sql = '
 					UPDATE `'._DB_PREFIX_.'module_access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_module` = '.(int)$id_module.'
-						AND `id_profile` = '.(int)$id_profile
-				);
-			}
+						AND `id_profile` = '.(int)$id_profile;
 
-			$res = $res?'ok':'error';
+			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
+
 			die($res);
 		}
 	}
