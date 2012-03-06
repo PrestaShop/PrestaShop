@@ -458,7 +458,7 @@ class MailAlerts extends Module
 		}
 
 		if ($this->_customer_qty && $quantity > 0)
-			MailAlert::sendCustomerAlert((int)$product->id, (int)$params['attribute_id']);
+			MailAlert::sendCustomerAlert((int)$product->id, (int)$params['id_product_attribute']);
 	}
 
 	public function hookActionProductAttributeUpdate($params)
