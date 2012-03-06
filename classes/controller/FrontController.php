@@ -986,9 +986,8 @@ class FrontControllerCore extends Controller
 		$assign['tpl_file'] = basename($tpl_file, '.tpl');
 		if (isset($this->php_self))
 			$assign['controller_name'] = $this->php_self;
-		
+
 		$this->context->smarty->assign($assign);
 		$this->template = $template;
 	}
 }
-
