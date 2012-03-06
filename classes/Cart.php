@@ -2368,10 +2368,9 @@ class CartCore extends ObjectModel
 		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling)
 			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];
 
-		// TODO : $products does not exists
 		// Additional Shipping Cost per product
-		// foreach($products AS $product)
-			// $shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
+		foreach ($products as $product)
+			$shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
 
 		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)$this->id_currency));
 
