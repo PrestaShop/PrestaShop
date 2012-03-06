@@ -295,6 +295,8 @@ class FrontControllerCore extends Controller
 		}
 
 		$this->context->smarty->assign(array(
+			// Usefull for layout.tpl
+			'mobile_device' => $this->context->getMobileDevice(),
 			'link' => $link,
 			'cart' => $cart,
 			'currency' => $currency,
@@ -323,6 +325,12 @@ class FrontControllerCore extends Controller
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true)
 		));
+		
+		// Add the tpl files directory for mobile
+		if ($this->context->getMobileDevice() != false)
+			$this->context->smarty->assign(array(
+				'tpl_mobile_uri' => _PS_THEME_MOBILE_DIR_,
+			));
 
 		// Deprecated
 		$this->context->smarty->assign(array(
@@ -346,6 +354,10 @@ class FrontControllerCore extends Controller
 			'js_dir' => _THEME_JS_DIR_,
 			'pic_dir' => _THEME_PROD_PIC_DIR_
 		);
+		
+		// Add the images directory for mobile
+		if ($this->context->getMobileDevice() != false)
+			$assignArray['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
 
 		foreach ($assignArray as $assignKey => $assignValue)
 			if (substr($assignValue, 0, 1) == '/' || $protocol_content == 'https://')
@@ -405,12 +417,23 @@ class FrontControllerCore extends Controller
 	{
 		$this->process();
 
-		$this->context->smarty->assign(array(
-			'HOOK_HEADER' => Hook::exec('displayHeader'),
-			'HOOK_TOP' => Hook::exec('displayTop'),
-			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
-			'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
-		));
+		if ($this->context->getMobileDevice() == false)
+		{
+			// These hooks aren't used for the mobile theme.
+			// Needed hooks are called in the tpl files.
+			$this->context->smarty->assign(array(
+				'HOOK_HEADER' => Hook::exec('displayHeader'),
+				'HOOK_TOP' => Hook::exec('displayTop'),
+				'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
+				'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
+			));
+		}
+		else
+		{
+			$this->context->smarty->assign(array(
+				'HOOK_MOBILE_HEADER' => Hook::exec('displayMobileHeader'),
+			));
+		}
 	}
 
 	/**
@@ -432,7 +455,7 @@ class FrontControllerCore extends Controller
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
- 		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 
 		$this->context->smarty->assign(array(
@@ -490,7 +513,7 @@ class FrontControllerCore extends Controller
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
- 		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
@@ -498,11 +521,12 @@ class FrontControllerCore extends Controller
 			'display_footer' => $this->display_footer,
 		));
 
-		if (Tools::isSubmit('live_edit'))
+		// Don't use live edit if on mobile device
+		if ($this->context->getMobileDevice() == false && Tools::isSubmit('live_edit'))
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
 		
 		// handle 1.4 theme (with layout.tpl missing)
-		if (file_exists(_PS_THEME_DIR_.'layout.tpl'))
+		if ($this->context->getMobileDevice() != false || file_exists(_PS_THEME_DIR_.'layout.tpl'))
 		{
 			if ($this->template)
 				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
@@ -640,8 +664,28 @@ class FrontControllerCore extends Controller
 		return false;
 	}
 
+	/**
+	 * Specific medias for mobile device.
+	 */
+	public function setMobileMedia()
+	{
+		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
+		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
+		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
+		$this->addJS(_PS_JS_DIR_.'tools.js');
+		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
+			$this->addjqueryPlugin('fancybox');
+	}
+
 	public function setMedia()
 	{
+		// if website is accessed by mobile device
+		// @see FrontControllerCore::setMobileMedia()
+		if ($this->context->getMobileDevice() != false)
+		{
+			$this->setMobileMedia();
+			return true;
+		}
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		$this->addjquery();
 		$this->addjqueryPlugin('easing');
@@ -904,6 +948,47 @@ class FrontControllerCore extends Controller
 		}
 		else
 			return false;
+	}
+
+	/**
+	 * This is overrided to manage is behaviour 
+	 * if a customer access to the site with mobile device.
+	 */
+	public function setTemplate($template)
+	{
+		if ($this->context->getMobileDevice() != false)
+			$this->setMobileTemplate($template);
+		else 
+			parent::setTemplate($template);
+	}
+
+	/**
+	 * This checks if the template set is available for mobile themes,
+	 * otherwise the front template is choosen.
+	 */
+	public function setMobileTemplate($template)
+	{
+		$mobile_template = '';
+		$tpl_file = basename($template);
+		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/'); 
+		
+		if ($dirname == _PS_THEME_DIR_)
+		{
+			if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file))
+				$template = _PS_THEME_MOBILE_DIR_.$tpl_file;
+		}
+		else if ($dirname == _PS_THEME_MOBILE_DIR_)
+		{
+			if (!file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file) && file_exists(_PS_THEME_DIR_.$tpl_file))
+				$template = _PS_THEME_DIR_.$tpl_file;
+		}
+		$assign = array();
+		$assign['tpl_file'] = basename($tpl_file, '.tpl');
+		if (isset($this->php_self))
+			$assign['controller_name'] = $this->php_self;
+		
+		$this->context->smarty->assign($assign);
+		$this->template = $template;
 	}
 }
 
