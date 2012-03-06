@@ -33,7 +33,7 @@ function updateCarrierList(json)
 	//	html += json.HOOK_EXTRACARRIER;
 	
 	$('#carrier_area').replaceWith(html);
-	
+	bindInputs();
 	/* update hooks for carrier module */
 	$('#HOOK_BEFORECARRIER').html(json.HOOK_BEFORECARRIER);
 }
@@ -578,6 +578,20 @@ $(function() {
 		});
 	}
 	
+	bindInputs();
+	
+	$('#opc_account_form input,select,textarea').change(function() {
+		if ($(this).is(':visible'))
+		{
+			$('#opc_account_saved').fadeOut('slow');
+			$('#submitAccount').show();
+		}
+	});
+	
+});
+
+function bindInputs()
+{
 	// Order message update
 	$('#message').blur(function() {
 		$('#opc_delivery_methods-overlay').fadeIn('slow');
@@ -627,9 +641,9 @@ $(function() {
 		$('p#gift_div').show();
 	else
 		$('p#gift_div').hide();
-	
+
 	// Gift message update
-	$('textarea#gift_message').blur(function() {
+	$('textarea#gift_message').change(function() {
 		updateCarrierSelectionAndGift();
 	});
 	
@@ -656,16 +670,7 @@ $(function() {
 			}
 		});
 	});
-	
-	$('#opc_account_form input,select,textarea').change(function() {
-		if ($(this).is(':visible'))
-		{
-			$('#opc_account_saved').fadeOut('slow');
-			$('#submitAccount').show();
-		}
-	});
-	
-});
+}
 
 function multishippingMode(it)
 {
