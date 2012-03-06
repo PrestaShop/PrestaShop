@@ -528,9 +528,10 @@ class AdminHomeControllerCore extends AdminController
 			
 				// Check if module is not already installed and configured
 				$display = 0;
-				foreach ($partner->checkconfiguration->key as $key)
-					if (Configuration::get(pSQL((string)$key)) == '')
-						$display = 1;
+				if (file_exists('../config/xml/default_country_modules_list.xml') && filesize('../config/xml/default_country_modules_list.xml') > 10)
+					foreach ($partner->checkconfiguration->key as $key)
+						if (Configuration::get(pSQL((string)$key)) == '')
+							$display = 1;
 			
 				// Display the module
 				if ($display == 1 && $count < 2)
