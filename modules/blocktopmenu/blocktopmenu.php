@@ -27,7 +27,7 @@
 
 require dirname(__FILE__).'/menutoplinks.class.php';
 
-class blocktopmenu extends Module
+class Blocktopmenu extends Module
 {
 	private $_menu = '';
 	private $_html = '';
@@ -63,7 +63,7 @@ class blocktopmenu extends Module
 
 	public function install()
 	{
-		if(!parent::install() ||
+		if (!parent::install() ||
 			!$this->registerHook('top') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
@@ -81,7 +81,7 @@ class blocktopmenu extends Module
 			`new_window` TINYINT( 1 ) NOT NULL,
 			`link` VARCHAR( 128 ) NOT NULL,
 			INDEX (`id_shop`)
-		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;') AND
+		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;') &&
 		Db::getInstance()->execute('
 			 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
 			`id_linksmenutop` INT NOT NULL,
@@ -114,7 +114,7 @@ class blocktopmenu extends Module
         $id_lang = Shop::getContextShopID();
         $spacer = str_repeat('&nbsp;', $this->spacer_size);
 
-		if(Tools::isSubmit('submitBlocktopmenu'))
+		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
 			if (Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', Tools::getValue('items')))
 				$this->_html .= $this->displayConfirmation($this->l('Settings Updated'));
@@ -122,19 +122,17 @@ class blocktopmenu extends Module
 				$this->_html .= $this->displayError($this->l('Unable to update settings'));
 			Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', (bool)Tools::getValue('search'));
 		}
-		else if(Tools::isSubmit('submitBlocktopmenuLinks'))
+		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
-			if(Tools::getValue('link') == '')
-			{
+			if (Tools::getValue('link') == '')
 				$this->_html .= $this->displayError($this->l('Unable to add this link'));
-			}
 			else
 			{
 				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)$this->context->shop->id);
 				$this->_html .= $this->displayConfirmation($this->l('The link has been added'));
 			}
 		}
-		else if(Tools::isSubmit('submitBlocktopmenuRemove'))
+		else if (Tools::isSubmit('submitBlocktopmenuRemove'))
 		{
 			$id_linksmenutop = Tools::getValue('id_linksmenutop', 0);
 			MenuTopLinks::remove($id_linksmenutop, (int)$this->context->shop->id);
@@ -178,14 +176,14 @@ class blocktopmenu extends Module
 								// BEGIN SUPPLIER
 								$this->_html .= '<optgroup label="'.$this->l('Supplier').'">';
 								$suppliers = Supplier::getSuppliers(false, $id_lang);
-								foreach($suppliers as $supplier)
+								foreach ($suppliers as $supplier)
 									$this->_html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
 								$this->_html .= '</optgroup>';
 
 								// BEGIN Manufacturer
 								$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
 								$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
-								foreach($manufacturers as $manufacturer)
+								foreach ($manufacturers as $manufacturer)
 									$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
 								$this->_html .= '</optgroup>';
 
@@ -202,7 +200,7 @@ class blocktopmenu extends Module
 								// BEGIN Menu Top Links
 								$this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
 								$links = MenuTopLinks::gets($id_lang, null, (int)Shop::getContextShopID());
-								foreach($links as $link)
+								foreach ($links as $link)
 									$this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
 								$this->_html .= '</optgroup>';
 
@@ -229,7 +227,7 @@ class blocktopmenu extends Module
 							if (val == "PRODUCT")
 							{
 								val = prompt("'.$this->l('Set ID product').'");
-								if(val == null || val == "" || isNaN(val))
+								if (val == null || val == "" || isNaN(val))
 									return;
 								text = "'.$this->l('Product ID').' "+val;
 								val = "PRD"+val;
@@ -321,7 +319,7 @@ class blocktopmenu extends Module
 					</tr>
 				</thead>
 				<tbody>';
-				foreach($links as $link)
+				foreach ($links as $link)
 				{
 					$this->_html .= '
 					<tr>
@@ -354,7 +352,7 @@ class blocktopmenu extends Module
         $id_lang = (int)$this->context->language->id;
         $id_shop = (int)Shop::getContextShopID();
 
-		foreach($menu_item as $type => $item)
+		foreach ($menu_item as $type => $item)
         {
             if (!$item)
                 continue;
@@ -364,39 +362,45 @@ class blocktopmenu extends Module
 
             switch (substr($item, 0, strlen($values[1])))
             {
-                case'CAT':
+                case 'CAT':
                     $category = new Category($id, $id_lang);
-                    if(!is_null($category->id))
+                    if (!is_null($category->id))
                         $this->_html .= '<option value="CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
                     break;
-                case'PRD':
+
+                case 'PRD':
                     $product = new Product($id, true, $id_lang);
-                    if(!is_null($product->id))
+                    if (!is_null($product->id))
                         $this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
                     break;
-                case'CMS':
+
+                case 'CMS':
                     $cms = new CMS($id, $id_lang);
                     if (count($cms))
                         $this->_html .= '<option value="CMS'.$id.'">'.$cms->meta_title.'</option>'.PHP_EOL;
                     break;
-                case'CMS_CAT':
+
+                case 'CMS_CAT':
                     $category = new CMSCategory($id, $id_lang);
                     if (count($category))
                         $this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
                     break;
-                case'MAN':
+
+                case 'MAN':
                     $manufacturer = new Manufacturer($id, $id_lang);
-                    if(!is_null($manufacturer->id))
+                    if (!is_null($manufacturer->id))
                         $this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
                     break;
-                case'SUP':
+
+                case 'SUP':
                     $supplier = new Supplier($id, $id_lang);
-                    if(!is_null($supplier->id))
+                    if (!is_null($supplier->id))
                         $this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
                     break;
-                case'LNK':
+
+                case 'LNK':
                     $link = MenuTopLinks::get($id, $id_lang, $id_shop);
-                    if(count($link))
+                    if (count($link))
                         $this->_html .= '<option value="LNK'.$id.'">'.$link[0]['label'].'</option>'.PHP_EOL;
                     break;
             }
@@ -405,14 +409,13 @@ class blocktopmenu extends Module
 
 	private function makeMenu()
 	{
-        if (isset($this->context->controller->php_self))
-            $this->page_name = $this->context->controller->php_self;
+        $this->page_name = Dispatcher::getInstance()->getController();
 
         $menu_items = $this->getMenuItems();
         $id_lang = (int)$this->context->language->id;
         $id_shop = (int)Shop::getContextShopID();
 
-		foreach($menu_items as $type => $item)
+		foreach ($menu_items as $type => $item)
 		{
             if (!$item)
                 continue;
@@ -420,24 +423,27 @@ class blocktopmenu extends Module
             preg_match($this->pattern, $item, $value);
             $id = (int)substr($item, strlen($value[1]), strlen($item));
 
-            switch(substr($item, 0, strlen($value[1])))
+            switch (substr($item, 0, strlen($value[1])))
             {
-                case'CAT':
+                case 'CAT':
                     $this->getCategory($id);
                     break;
-                case'PRD':
+
+                case 'PRD':
                     $selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
                     $product = new Product($id, true, $id_lang);
                     if (!is_null($product->id))
                         $this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
                     break;
-                case'CMS':
+
+                case 'CMS':
                     $selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
                     $cms = CMS::getLinks($id_lang, array($id));
                     if (count($cms))
                         $this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
                     break;
-                case'CMS_CAT':
+
+                case 'CMS_CAT':
                     $category = new CMSCategory($id, $id_lang);
                     if (count($category))
                     {
@@ -446,7 +452,8 @@ class blocktopmenu extends Module
                         $this->_menu .= '</li>'.PHP_EOL;
                     }
                     break;
-                case'MAN':
+
+                case 'MAN':
                     $selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
                     $manufacturer = new Manufacturer($id, $id_lang);
                     if (!is_null($manufacturer->id))
@@ -459,7 +466,8 @@ class blocktopmenu extends Module
                         $this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
                     }
                     break;
-                case'SUP':
+
+                case 'SUP':
                     $selected = ($this->page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
                     $supplier = new Supplier($id, $id_lang);
                     if (!is_null($supplier->id))
@@ -468,7 +476,8 @@ class blocktopmenu extends Module
                         $this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
                     }
                     break;
-                case'LNK':
+
+                case 'LNK':
                     $link = MenuTopLinks::get($id, $id_lang, $id_shop);
                     if (count($link))
                         $this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
@@ -494,7 +503,7 @@ class blocktopmenu extends Module
         $this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.'</option>';
 
         if (isset($childrens) && count($childrens))
-            foreach($childrens as $children)
+            foreach ($childrens as $children)
                 $this->getCategoryOption((int)$children['id_category'], $id_lang);
     }
 
@@ -515,7 +524,7 @@ class blocktopmenu extends Module
 		{
 			$this->_menu .= '<ul>';
 
-			foreach($childrens as $children)
+			foreach ($childrens as $children)
 				$this->getCategory($children['id_category'], $id_lang);
 
 			$this->_menu .= '</ul>';
@@ -585,6 +594,10 @@ class blocktopmenu extends Module
 		$smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
 		$smarty->assign('MENU', $this->_menu);
 		$smarty->assign('this_path', $this->_path);
+
+		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
+		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
+		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 
 		return $this->display(__FILE__, 'blocktopmenu.tpl');
 	}
