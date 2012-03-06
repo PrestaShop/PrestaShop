@@ -118,7 +118,6 @@ class AdminCmsCategoriesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{
-						$this->deleteImage($object->id);
 						if ($this->deleted)
 						{
 							$object->deleted = 1;
