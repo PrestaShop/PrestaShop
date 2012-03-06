@@ -155,7 +155,8 @@
 			</span>
             <div id="header_search">
                 <form method="post" action="index.php?controller=AdminSearch&token={getAdminToken tab='AdminSearch'}">
-                    <select name="bo_search_type" id="bo_search_type" class="chosen no-search">
+                    <input type="text" name="bo_query" id="bo_query" value="{$bo_query|htmlentities}" />
+                      <select name="bo_search_type" id="bo_search_type" class="chosen no-search">
                         <option value="0">{l s='everywhere'}</option>
                         <option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
                         <optgroup label="{l s='customers'}:">
@@ -166,7 +167,6 @@
                         <option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
                         <option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
                     </select>
-                    <input type="text" name="bo_query" id="bo_query" value="{$bo_query|htmlentities}" />
                     <input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
                 </form>
             </div>

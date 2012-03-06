@@ -57,17 +57,18 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_infos #header_foaccess{ text-decoration:none; color:#bababa;}
 #header #header_infos #header_foaccess a {color:#bababa !important;}
 #header #header_infos a#header_foaccess:hover { color:#fff;}
-#header #header_search{ float:left; margin-top:15px; position:relative;  }
-#header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 #fff;  border:1px solid #000; border-radius:4px;  padding: 5px 25px 5px 4px; width: 155px; box-shadow: 0 1px 0 #666;}
-#header #header_search #bo_search_type_chzn{ font-size:13px; float:left; margin:0 10px 0 0; padding:2px 0 4px; vertical-align:middle;width:100px;height:27px;}
-#header #header_search #bo_search_submit { background: transparent url('../img/icon-search.png') no-repeat scroll center; border:none; width:27px; height:27px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; /*hacking ie7*/ font-size:0 !ie7; color: transparent !ie;}
+#header #header_search{ background-color:#fff; border:2px solid #000; float:left; margin-top:15px; margin-left:7%; position:relative; height:25px; box-shadow: 0 1px 0 #666666; }
+#header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 transparent;  border:none; box-shadow:none;  padding: 5px 0px 5px 4px; width: 160px; }
+#header #header_search #bo_search_type_chzn{ font-size:13px; float:left; margin:0 23px 0 0; padding:0 4px; vertical-align:middle;width:100px;height:27px; border:none;}
+#header #header_search #bo_search_type_chzn.chzn-container-single .chzn-single { box-shadow:none; border-radius:0px; border:none; border-left:1px dotted #ccc;} 
+#header #header_search #bo_search_submit { background:  url('../img/icon-search2.png') no-repeat scroll center; border:none; width:27px; height:25px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; border-left:1px solid #3079ED; border-radius:0px; /*hacking ie7*/ font-size:0 !ie7; color: transparent !ie;}
 #header #header_quick{float:right; display:block; margin-top:15px;}
 #header #header_quick #quick_select_chzn{ font-size:13px; margin:0 10px 0 0; padding:0px 0 4px;  }
 #header #header_myaccount{background:url('../img/bg-lang.png') no-repeat;display:block;float:right;height:16px;margin:8px 1px 0 0;width:16px}
 
 
 .path_bar {display:none;}
-#notifs_icon_wrapper {float: left;position: relative;margin:15px 10px 0; width:85px;}
+#notifs_icon_wrapper {float: left;position: relative;margin:15px 10px 0; width:95px;}
 .notifs { float: left;position: relative;cursor: pointer;margin:0; padding:5px; width: 18px;height: 16px;}
 #orders_notif {background: url('../img/notif_order.png') no-repeat center top;}
 #customers_notif {background: url('../img/notif_customer.png') no-repeat center top;}
