@@ -2626,6 +2626,7 @@ $_LANGADM['AdminProducts86a41a63a6a27da14c838aed0c70cc45'] = 'Vous ne pouvez ajo
 $_LANGADM['AdminProducts883cb219650dc3aa23733c0aa59a2ef7'] = 'Code à insérer dans votre description';
 $_LANGADM['AdminProducts887ee91702c962a70b87cbef07bbcaec'] = 'HT';
 $_LANGADM['AdminProducts8a1c241e92c26b92eaae87afa337eaa3'] = 'Le prix d\'achat auquel vous avez commandé le produit';
+$_LANGADM['AdminProducts8a31c29c7a93671a6da5c60c544c0cea'] = 'Quantité disponible à la vente dans la boutique/groupe de boutiques en cours';
 $_LANGADM['AdminProducts8ad79b21078fa8ab5e3a251a533084e5'] = 'Visibilité';
 $_LANGADM['AdminProducts8bcdd31a1ab28f0db60efb2087c3f235'] = 'Valeur prédéfinie';
 $_LANGADM['AdminProducts8bf615c78d82dede20bca75a5c73615c'] = 'Ajouter une nouvelle image pour ce produit';
