@@ -1,4 +1,4 @@
-{*
+ {*
 * 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -86,7 +86,12 @@
 				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
 				dataType: "json",
 				success: function(result){
-					$.fancybox.close();
+                    if (result == 0) {
+                        alert('{/literal}{l s='Your comment can not be posted. Please fill in all required fields.' mod='productcomments'}{literal}');
+                    } else {
+                        location.reload( true );
+                        $.fancybox.close();
+                    }
 	 		 	}
 			});
 		});
@@ -105,7 +110,12 @@
 				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
 				dataType: "json",
 				success: function(result){
-					$.fancybox.close();
+                    if (result == 0) {
+                        alert('{/literal}{l s='Your comment can not be posted. Please fill in all required fields.' mod='productcomments'}{literal}');
+                    } else {
+                        location.reload( true );
+                        $.fancybox.close();
+                    }
 	 		 	}
 			});
 		});
@@ -180,7 +190,7 @@
 					</p>
 					{if $allow_guests == true && $logged == 0}
 					<p class="text">
-						<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
+						<label>{l s='Your name' mod='productcomments'} <sup>*</sup>:</label>
 						<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 					</p>
 					{/if}
