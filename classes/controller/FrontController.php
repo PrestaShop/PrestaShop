@@ -325,7 +325,7 @@ class FrontControllerCore extends Controller
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true)
 		));
-		
+
 		// Add the tpl files directory for mobile
 		if ($this->context->getMobileDevice() != false)
 			$this->context->smarty->assign(array(
@@ -339,7 +339,7 @@ class FrontControllerCore extends Controller
 			'customerName' => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
 		));
 
-		$assignArray = array(
+		$assign_array = array(
 			'img_ps_dir' => _PS_IMG_,
 			'img_cat_dir' => _THEME_CAT_DIR_,
 			'img_lang_dir' => _THEME_LANG_DIR_,
@@ -354,16 +354,16 @@ class FrontControllerCore extends Controller
 			'js_dir' => _THEME_JS_DIR_,
 			'pic_dir' => _THEME_PROD_PIC_DIR_
 		);
-		
+
 		// Add the images directory for mobile
 		if ($this->context->getMobileDevice() != false)
-			$assignArray['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
+			$assign_array['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
 
-		foreach ($assignArray as $assignKey => $assignValue)
-			if (substr($assignValue, 0, 1) == '/' || $protocol_content == 'https://')
-				$this->context->smarty->assign($assignKey, $protocol_content.Tools::getMediaServer($assignValue).$assignValue);
+		foreach ($assign_array as $assign_key => $assign_value)
+			if (substr($assign_value, 0, 1) == '/' || $protocol_content == 'https://')
+				$this->context->smarty->assign($assign_key, $protocol_content.Tools::getMediaServer($assign_value).$assign_value);
 			else
-				$this->context->smarty->assign($assignKey, $assignValue);
+				$this->context->smarty->assign($assign_key, $assign_value);
 
 		/*
 		 * These shortcuts are DEPRECATED as of version 1.5.
@@ -958,7 +958,7 @@ class FrontControllerCore extends Controller
 	{
 		if ($this->context->getMobileDevice() != false)
 			$this->setMobileTemplate($template);
-		else 
+		else
 			parent::setTemplate($template);
 	}
 
@@ -970,8 +970,8 @@ class FrontControllerCore extends Controller
 	{
 		$mobile_template = '';
 		$tpl_file = basename($template);
-		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/'); 
-		
+		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
+
 		if ($dirname == _PS_THEME_DIR_)
 		{
 			if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file))

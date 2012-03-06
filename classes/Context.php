@@ -104,7 +104,7 @@ class ContextCore
 	 * @var boolean|string touch pad device of the customer
 	 */
 	protected $touchpad_device;
-	
+
 	public function getMobileDevice()
 	{
 		if (is_null($this->mobile_device))
@@ -117,10 +117,10 @@ class ContextCore
 
 		return $this->mobile_device;
 	}
-	
+
 	protected function checkMobileContext()
 	{
-		return file_exists(_PS_THEME_MOBILE_DIR_) 
+		return file_exists(_PS_THEME_MOBILE_DIR_)
 			&& Configuration::get('PS_ALLOW_MOBILE_DEVICE')
 			&& isset($_SERVER['HTTP_USER_AGENT']);
 	}
@@ -146,7 +146,7 @@ class ContextCore
 		}
 		return $this->touchpad_device;
 	}
-	
+
 	/**
 	 * Get a singleton context
 	 *
