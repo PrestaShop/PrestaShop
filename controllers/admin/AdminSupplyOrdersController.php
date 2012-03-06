@@ -450,9 +450,16 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->_where = ' AND a.is_template = 0';
 
 		if ($this->getCurrentWarehouse() != -1)
+		{
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
+			self::$currentIndex .= '&id_warehouse='.(int)$this->getCurrentWarehouse();
+		}
+
 		if ($this->getFilterStatus() != 0)
+		{
 			$this->_where .= ' AND st.enclosed != 1';
+			self::$currentIndex .= '&filter_status=on';
+		}
 		$first_list = parent::renderList();
 
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))

@@ -158,9 +158,12 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->_group = 'GROUP BY a.id_stock_mvt';
 
 		// overrides where depending on the warehouse
-		$id_warehouse = $this->getCurrentWarehouseId();
+		$id_warehouse = (int)$this->getCurrentWarehouseId();
 		if ($id_warehouse > 0)
+		{
 			$this->_where = ' AND w.id_warehouse = '.$id_warehouse;
+			self::$currentIndex .= '&id_warehouse='.$id_warehouse;
+		}
 
 		// sets the current warehouse
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouseId();
