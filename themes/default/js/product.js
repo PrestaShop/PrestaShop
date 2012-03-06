@@ -120,7 +120,7 @@ function findCombination(firstTime)
 				selectedCombination['ecotax'] = default_eco_tax;
 
 			//show the large image in relation to the selected combination
-			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+			if (typeof(firstTime) != 'undefined' && !firstTime && combinations[combination]['image'] && combinations[combination]['image'] != -1)
 				displayImage($('#thumb_'+combinations[combination]['image']).parent(), firstTime);
 
 			//show discounts values according to the selected combination
@@ -539,7 +539,6 @@ $(document).ready(function()
 			//position: "right" //zooming div position(default position value is "right")
 		});
 	}
-
 	//add a link on the span 'view full size' and on the big image
 	$('span#view_full_size, div#image-block img').click(function(){
 		$('#views_block li a.shown').click();
@@ -562,10 +561,10 @@ $(document).ready(function()
 	//init the price in relation of the selected attributes
 	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
 		findCombination(true);
+
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
 		refreshProductImages(0);
 
-	//
 	$('a#resetImages').click(function() {
 		refreshProductImages(0);
 	});
@@ -575,6 +574,12 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
+	
+	original_url = window.location+'';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
+	
 });
 
 function saveCustomization()
@@ -665,14 +670,14 @@ function colorPickerClick(elt)
 	id_attribute = $(elt).attr('id').replace('color_', '');
 	$('.color_pick').parent().removeClass('selected');
 	$(elt).fadeTo('fast', 1, function(){
-								$(this).fadeTo('slow', 0, function(){
-									$(this).fadeTo('slow', 1, function(){
+								$(this).fadeTo('fast', 0, function(){
+									$(this).fadeTo('fast', 1, function(){
 										$(this).parent().addClass('selected');
 										});
 									});
 								});
 	$('#color_pick_hidden').val(id_attribute);
-	findCombination();
+	findCombination(false);
 }
 
 
@@ -703,13 +708,6 @@ function getProductAttribute()
 		url = url.substring(0, url.indexOf('#'));
 	window.location = url+request;
 }
-
-$(document).ready(function(){
-	original_url = window.location+'';
-	first_url_check = true;
-	checkUrl();
-	initLocationChange();
-});
 
 function initLocationChange(time)
 {
@@ -753,7 +751,7 @@ function checkUrl()
 			// find combination
 			if (count > 0)
 			{
-				findCombination();
+				findCombination(false);
 				original_url = window.location+'';
 			}
 			// no combination found = removing attributes from url
