@@ -353,7 +353,22 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		$res = parent::postProcess();
+		if (!Tools::getValue('id_'.$this->table))
+		{
+			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
+				$this->errors[] = Tools::displayError('This iso code already exist, you can\'t create two country with the same iso code');
+		}
+		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		{
+			$id_country = Country::getByIso(Tools::getValue('iso_code'));
+			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
+				$this->errors[] = Tools::displayError('This iso code already exist, you can\'t create two country with the same iso code');
+		}
+
+		if (!count($this->errors))
+			$res = parent::postProcess();
+		else
+			return false;
 
 		if (Tools::getValue('submitAdd'.$this->table) && $res)
 		{
