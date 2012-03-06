@@ -74,13 +74,18 @@ class ShopUrlCore extends ObjectModel
 		return parent::getFields();
 	}
 
+	public function getBaseURI()
+	{
+		return $this->physical_uri.$this->virtual_uri;
+	}
+
 	public function getURL($ssl = false)
 	{
 		if (!$this->id)
 			return;
 
 		$url = ($ssl) ? 'https://'.$this->domain_ssl : 'http://'.$this->domain;
-		return $url.$this->physical_uri.$this->virtual_uri;
+		return $url.$this->getBaseUri();
 	}
 
 	/**
