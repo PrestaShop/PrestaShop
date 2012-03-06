@@ -51,7 +51,7 @@
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<legend>
-						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall'}" />{/if}
+						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}}" />{/if}
 						{$field.title}
 					</legend>
 				{elseif $key == 'description'}
@@ -65,7 +65,7 @@
 							{if isset($input.label)}<label>{$input.label} </label>{/if}
 						{/block}
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall'}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
 						{block name="start_field_block"}
 							<div class="margin-form">
@@ -224,7 +224,7 @@
 									<div class="translatable">
 										{foreach $languages as $language}
 											<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall'}</textarea>
+												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 											</div>
 										{/foreach}
 									</div>
