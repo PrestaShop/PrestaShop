@@ -108,14 +108,14 @@
    height: 28px;
    width: 540px;
    border: 1px solid #ccc;
-   background: url(../img/bg_input.png) repeat-x scroll 0 0 #fff;
+   background: #fff;
 }
 #new_comment_form p.textarea textarea {
 	padding: 0 5px;
    height: 80px;
    width: 540px;
    border: 1px solid #ccc;
-   background: url(../img/bg_input.png) repeat-x scroll 0 0 #fff;
+   background: #fff;
 }
 
 #new_comment_form .submit {
@@ -133,7 +133,7 @@
    border-radius: 3px 3px 3px 3px;
    font-weight: bold;
    color: #000;
-	background: url(../img/bg_bt.gif) repeat-x scroll 0 0 #F4B61B
+	background: url(img/bg_bt.gif) repeat-x scroll 0 0 #F4B61B
 }
 #new_comment_form .submit .txt_required {
 	float:left;

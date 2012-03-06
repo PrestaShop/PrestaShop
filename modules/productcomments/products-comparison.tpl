@@ -57,7 +57,7 @@
 </tr>
 
 {foreach from=$grades item=grade key=grade_id}
-<tr>		
+<tr>
 	{cycle values='comparison_feature_odd,comparison_feature_even' assign='classname'}
 	<td class="{$classname}">
 		{$grade}
