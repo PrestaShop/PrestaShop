@@ -75,8 +75,9 @@ class AdminProductsControllerCore extends AdminController
 		$this->lang = true;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		parent::__construct();
+
 		$this->imageType = 'jpg';
-		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
@@ -124,6 +125,14 @@ class AdminProductsControllerCore extends AdminController
 				'align' => 'right',
 				'havingFilter' => true,
 				'orderby' => false
+			),
+			'sav_quantity' => array(
+				'title' => $this->l('Quantity'),
+				'width' => 90,
+				'align' => 'right',
+				'filter_key' => 'sav!quantity',
+				'orderby' => true,
+				'hint' => $this->l('This is the availble quantity in the current shop/group'),
 			),
 			'active' => array(
 				'title' => $this->l('Displayed'),
@@ -185,7 +194,6 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->_category = new Category();
 
-
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
@@ -194,15 +202,16 @@ class AdminProductsControllerCore extends AdminController
 				AND ptrgs.id_shop='.(int)$this->context->shop->id.')
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
+				AND sav.`id_shop` = '.(int)$this->context->shop->id.')';
 
 		// if no category selected, display all products
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 
-		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
+		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity';
 
-		parent::__construct();
 	}
 	protected function _cleanMetaKeywords($keywords)
 	{
