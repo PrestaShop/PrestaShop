@@ -304,7 +304,7 @@ abstract class PaymentModuleCore extends Module
 					foreach ($cart_rules as $cart_rule)
 					{
 						$values = array('tax_incl' => 0, 'tax_excl' => 0);
-						
+
 						// If the cart is split in multiple orders, the cart rule must be split too
 						if (count($order_list) > 1)
 						{
@@ -317,7 +317,7 @@ abstract class PaymentModuleCore extends Module
 								WHERE product_id = '.(int)$cart_rule['obj']->gift_product.'
 								AND product_attribute_id = '.(int)$cart_rule['obj']->gift_product_attribute.'
 								AND id_order = '.(int)$order->id);
-							
+
 								if ($in_order)
 								{
 									$values['tax_incl'] += $cart_rule['obj']->getContextualValue(true, null, CartRule::FILTER_ACTION_GIFT);
@@ -325,22 +325,20 @@ abstract class PaymentModuleCore extends Module
 									$only_one_gift = true;
 								}
 							}
-							
+
 							// If the cart rule offers free shipping, add the shipping cost
 							if ($cart_rule['obj']->free_shipping)
 							{
 								$values['tax_incl'] += $order->total_shipping_tax_incl;
 								$values['tax_excl'] += $order->total_shipping_tax_excl;
 							}
-							
+
 							// If the cart rule offers a reduction, the amount is prorated
 							if ($cart_rule['obj']->reduction_amount || $cart_rule['obj']->reduction_percent)
 							{
 								$prorata = $order->total_paid_tax_incl / $cart_total_paid;
 								$values['tax_incl'] += Tools::ps_round($prorata * $cart_rule['obj']->getContextualValue(true, null, CartRule::FILTER_ACTION_REDUCTION), 2);
 								$values['tax_excl'] += Tools::ps_round($prorata * $cart_rule['obj']->getContextualValue(false, null, CartRule::FILTER_ACTION_REDUCTION), 2);
-								
-								file_put_contents(dirname(__FILE__).'/../ploplop.txt', print_r(array($order->total_paid_tax_incl, $cart_total_paid, $prorata, $values, $order->id), true), FILE_APPEND);
 							}
 						}
 						else
@@ -350,7 +348,7 @@ abstract class PaymentModuleCore extends Module
 								'tax_excl' => $cart_rule['obj']->getContextualValue(false)
 							);
 						}
-						
+
 						// If the reduction is not applicable to this order (in a multi-shipping case), then try the next
 						if (!$values['tax_excl'])
 							continue;
@@ -368,25 +366,25 @@ abstract class PaymentModuleCore extends Module
 							// Create a new voucher from the original
 							$voucher = clone $cart_rule['obj'];
 							unset($voucher->id);
-							
+
 							// Set a new voucher code
 							$voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cart_rule['obj']->id), 0, 16) : $voucher->code.'-2';
 							if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2])
 								$voucher->code = preg_replace('/'.$matches[0].'$/', '-'.(intval($matches[1]) + 1), $voucher->code);
-								
+
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
 								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt;
 							else
 								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products;
-								
+
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
 							if ($voucher->add())
 							{
 								// If the voucher has conditions, they are now copied to the new voucher
 								CartRule::copyConditions($cart_rule['obj']->id, $voucher->id);
-								
+
 								$params = array(
 									'{voucher_amount}' => Tools::displayPrice($voucher->reduction_amount, $currency, false),
 									'{voucher_num}' => $voucher->code,
@@ -399,7 +397,7 @@ abstract class PaymentModuleCore extends Module
 						}
 
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
-						
+
 						$order->total_discounts = $order->total_discounts_tax_incl = $values['tax_incl'];
 						$order->total_discounts_tax_excl = $values['tax_excl'];
 						$order->update();
@@ -407,7 +405,7 @@ abstract class PaymentModuleCore extends Module
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{
 							$cart_rule_used[] = $cart_rule['obj']->id;
-							
+
 							// Create a new instance of Cart Rule without id_lang, in order to update its quantity
 							$cart_rule_to_update = new CartRule($cart_rule['obj']->id);
 							$cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
