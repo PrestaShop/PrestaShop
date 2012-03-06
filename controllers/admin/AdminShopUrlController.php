@@ -276,30 +276,50 @@ class AdminShopUrlControllerCore extends AdminController
 			return parent::postProcess();
 	}
 
+	public function processSave($token)
+	{
+		$return = parent::processSave($token);
+		if (!$this->errors)
+			Tools::generateHtaccess();
+
+		return $return;
+	}
+
 	public function processAdd($token)
 	{
-			$object = $this->loadObject(true);
-			if ($object->id && Tools::getValue('main'))
-				$object->setMain();
+		$object = $this->loadObject(true);
+		if ($object->id && Tools::getValue('main'))
+			$object->setMain();
 
-			if ($object->main && !Tools::getValue('main'))
-				$this->errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
+		if ($object->main && !Tools::getValue('main'))
+			$this->errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
 
-			if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
-				$this->errors[] = Tools::displayError('You can\'t disable a main url');
+		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
+			$this->errors[] = Tools::displayError('You can\'t disable a main url');
 
-			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-				$this->errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
+		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+			$this->errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
 
-			parent::processAdd($token);
-			if (!$this->errors)
-				Tools::generateHtaccess();
+		parent::processAdd($token);
+	}
+
+	public function processUpdate($token)
+	{
+		$this->redirect_shop_url = false;
+		$current_url = parse_url($_SERVER['REQUEST_URI']);
+		if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
+			$this->redirect_shop_url = true;
+
+		return parent::processUpdate($token);
 	}
 
 	protected function afterUpdate($object)
 	{
 		if (Tools::getValue('main'))
 			$object->setMain();
+
+		if ($this->redirect_shop_url)
+			$this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
 	}
 }
 
