@@ -221,7 +221,8 @@ class AdminCategoriesControllerCore extends AdminController
 			);
 		}
 		// be able to edit the Home category
-		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category'))
+		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
+			&& ($this->display == 'view' || empty($this->display)))
 			$this->toolbar_btn['edit'] = array(
 				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)$this->_category->id.'&amp;token='.$this->token,
 				'desc' => $this->l('Edit')
