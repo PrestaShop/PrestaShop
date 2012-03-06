@@ -29,7 +29,7 @@
       <city>Cupertino</city>
       <other/>
     </address>
-    <address id="Mon_adresse" id_country="FR" id_state="" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="Mon adresse" company="My Company" lastname="DOE" firstname="John" postcode="75000" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
+    <address id="Mon_adresse" id_country="FR" id_state="" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="Mon adresse" company="My Company" lastname="DOE" firstname="John" postcode="75002" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
       <address1>16, Main street</address1>
       <address2>2nd floor</address2>
       <city>Paris </city>
