@@ -194,7 +194,9 @@ class ContactControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
+		// These CSS isn't used for the mobile theme.
+		if ($this->context->getMobileDevice() == false)
+			$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
 	}
 
 	/**
