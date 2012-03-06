@@ -203,7 +203,7 @@
 						</p>
 						{if $allow_guests == true && $logged == 0}
 						<p class="text">
-							<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
+							<label>{l s='Your name' mod='productcomments'} <sup>*</sup>:</label>
 							<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 						</p>
 						{/if}
