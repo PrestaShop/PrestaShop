@@ -53,6 +53,7 @@ class AdminMetaControllerCore extends AdminController
 		);
 		$this->_group = 'GROUP BY a.id_meta';
 
+		// Options to generate friendly urls
 		$mod_rewrite = Tools::modRewriteActive();
 		$general_fields = array(
 			'PS_REWRITING_SETTINGS' => array(
@@ -72,6 +73,7 @@ class AdminMetaControllerCore extends AdminController
 			),
 		);
 
+		$url_description = '';
 		if ($this->checkConfiguration($this->ht_file))
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
 				'title' => $this->l('Disable apache multiviews'),
@@ -80,6 +82,12 @@ class AdminMetaControllerCore extends AdminController
 				'cast' => 'intval',
 				'type' => 'bool',
 			);
+		else
+		{
+			$url_description = $this->l('Before being able to use this tool, you need to:');
+			$url_description .= '<br />- '.$this->l('create a .htaccess blank file your root dir');
+			$url_description .= '<br />- '.$this->l('give it write permissions (CHMOD 666 on Unix system)');
+		}
 
 		// Options to generate robot.txt
 		$robots_description = $this->l('Your file robots.txt MUST be in your website\'s root directory and nowhere else.');
@@ -108,6 +116,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('URLs Setup'),
+				'description' => $url_description,
 				'fields' =>	$general_fields,
 				'submit' => array()
 			),
