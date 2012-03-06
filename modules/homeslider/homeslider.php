@@ -108,7 +108,7 @@ class HomeSlider extends Module
 	public function uninstall()
 	{
 		/* Deletes Module */
-		if (parent::uninstall() && $this->unregisterHook('home') && $this->unregisterHook('header'))
+		if (parent::uninstall() && $this->unregisterHook('displayHome') && $this->unregisterHook('displayHeader'))
 		{
 			/* Deletes tables */
 			$res = $this->deleteTables();
@@ -628,14 +628,14 @@ class HomeSlider extends Module
 		return true;
 	}
 
-	public function hookHome()
+	public function hookDisplayHome()
 	{
 		if(!$this->_prepareHook())
 			return;
 		return $this->display(__FILE__, 'homeslider.tpl');
 	}
 
-	public function hookHeader()
+	public function hookDisplayHeader()
 	{
 		if (!$this->getSlides(true))
 			return;
