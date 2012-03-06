@@ -3012,7 +3012,7 @@ class CartCore extends ObjectModel
 				)';
 				Db::getInstance()->execute($sql);
 
-		// upgradng address delivery
+		// Upgrading address delivery
 		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 			SET `id_address_delivery` =
 			(
