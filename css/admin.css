@@ -195,7 +195,7 @@ background: -moz-linear-gradient(center top , #F9F9F9, #ECECEC) repeat-x scroll 
 }
 
 .margin-form {
-	padding: 0 0 1em 210px;
+	padding: 0 0 1em 260px;
 	color: #7F7F7F;
 	font-size: 0.85em;
 }
@@ -211,7 +211,7 @@ fieldset img {
 
 label {
 	float: left;
-	width: 200px;
+	width: 250px;
 	padding: 0.2em 0.5em 0 0;
 	text-align: right;
 	font-weight: bold;
