@@ -96,6 +96,7 @@ class CategoryControllerCore extends FrontController
 		$this->productSort(); // Product sort must be called before assignProductList()
 		
 		$this->assignScenes();
+		$this->assignSubcategories();
 		if ($this->category->id != 1)
 			$this->assignProductList();
 
