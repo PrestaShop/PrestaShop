@@ -1503,12 +1503,12 @@ class BlockLayered extends Module
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.
 			$this->l('Re-build entire price index').'</a>
 			<br />
-			<a class="bold ajaxcall" id="attribute-indexer"
+			<a class="bold ajaxcall" id="attribute-indexer" rel="attribute"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Build attribute index').'</a>
 			<br />
-			<a class="bold ajaxcall" id="url-indexer"
+			<a class="bold ajaxcall" id="url-indexer" rel="price"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
 			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.
 			$this->l('Build url index').'</a>
@@ -1546,6 +1546,7 @@ class BlockLayered extends Module
 					}
 						
 					this.restartAllowed = false;
+					var type = $(this).attr(\'rel\');
 					
 					$.ajax({
 						url: this.href+\'&ajax=1\',
@@ -1558,7 +1559,10 @@ class BlockLayered extends Module
 							this.restartAllowed = true;
 							$(\'#indexing-warning\').hide();
 							$(this).html(this.legend);
-							$(\'#ajax-message-ok span\').html(\''.addslashes($this->l('Url indexation finished')).'\');
+							if (type == \'price\')
+								$(\'#ajax-message-ok span\').html(\''.addslashes($this->l('Url indexation finished')).'\');
+							else
+								$(\'#ajax-message-ok span\').html(\''.addslashes($this->l('Attribute indexation finished')).'\');
 							$(\'#ajax-message-ok\').show();
 							return;
 						},
@@ -1566,7 +1570,10 @@ class BlockLayered extends Module
 						{
 							this.restartAllowed = true;
 							$(\'#indexing-warning\').hide();
-							$(\'#ajax-message-ko span\').html(\''.addslashes($this->l('Url indexation failed')).'\');
+							if (type == \'price\')
+								$(\'#ajax-message-ko span\').html(\''.addslashes($this->l('Url indexation failed')).'\');
+							else
+								$(\'#ajax-message-ko span\').html(\''.addslashes($this->l('Attribute indexation failed')).'\');
 							$(\'#ajax-message-ko\').show();
 							$(this).html(this.legend);
 							
