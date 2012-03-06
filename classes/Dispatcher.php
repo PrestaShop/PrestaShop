@@ -251,7 +251,7 @@ class DispatcherCore
                     $controllers['contactform'] = $controllers['contact'];
 
 				if (!isset($controllers[$this->controller]))
-					$this->controller = 'pagenotfound';
+					$this->controller = $this->controller_not_found;
 				$controller_class = $controllers[$this->controller];
 			break;
 
@@ -632,7 +632,7 @@ class DispatcherCore
 					$controllers += Dispatcher::getControllersInDirectory($dir.$controller_filename.DIRECTORY_SEPARATOR);
 				else if ($controller_filename != 'index.php')
 				{
-					$key = str_replace(array('controller.php', '.php'), array('', ''), strtolower($controller_filename));
+					$key = str_replace(array('controller.php', '.php'), '', strtolower($controller_filename));
 					$controllers[$key] = basename($controller_filename, '.php');
 				}
 			}
