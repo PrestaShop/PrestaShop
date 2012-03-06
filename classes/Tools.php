@@ -1607,9 +1607,9 @@ class ToolsCore
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
+		fwrite($write_fd, "RewriteEngine on\n\n");
 		if (Shop::isFeatureActive())
 		{
-			fwrite($write_fd, "RewriteEngine on\n\n");
 			foreach ($domains as $domain => $list_uri)
 				foreach ($list_uri as $uri)
 					// Rewrite virtual multishop uri
@@ -1691,7 +1691,9 @@ FileETag INode MTime Size
 
 		// In case the user hasn't rewrite mod enabled
 		fwrite($write_fd, "#If rewrite mod isn't enabled\n");
-		fwrite($write_fd, 'ErrorDocument 404 '.$uri['physical']."index.php?controller=404\n\n");
+
+		$domain = current($domains);
+		fwrite($write_fd, 'ErrorDocument 404 '.$domain[0]['physical']."index.php?controller=404\n\n");
 
 		fwrite($write_fd, "# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
 		fwrite($write_fd, "\n\n".trim($specific_after));
