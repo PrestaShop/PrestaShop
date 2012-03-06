@@ -95,6 +95,8 @@ class ShopCore extends ObjectModel
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
 		'stock_available' => array('type' => 'fk_shop'),
+		'product_tax_rules_group_shop' => array('type' => 'fk_shop'),
+		'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
 	);
 
 	protected $webserviceParameters = array(
@@ -785,6 +787,12 @@ class ShopCore extends ObjectModel
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
 	{
+		if (isset($tables_import['product']))
+			$tables_import['product_tax_rules_group_shop'] = true;
+			
+		if (isset($tables_import['carrier']))
+			$tables_import['carrier_tax_rules_group_shop'] = true;
+
 		foreach (Shop::getAssoTables() as $table_name => $row)
 		{
 			if ($tables_import && !isset($tables_import[$table_name]))
