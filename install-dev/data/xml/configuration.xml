@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_configuration>
-  <fields id="name" sql="a.name &lt;&gt; 'PS_LANG_DEFAULT'" null="1">
+  <fields id="name" sql="a.name &lt;&gt; 'PS_LANG_DEFAULT' AND a.id_shop IS NULL AND a.id_group_shop IS NULL" null="1">
     <field name="name"/>
     <field name="value"/>
   </fields>
   <entities>
+    <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_GROUP_FEATURE_ACTIVE" name="PS_GROUP_FEATURE_ACTIVE">
+      <value>1</value>
+    </configuration>
     <configuration id="PS_CURRENCY_DEFAULT" name="PS_CURRENCY_DEFAULT">
       <value>1</value>
     </configuration>
@@ -297,7 +303,7 @@
       <value>fr</value>
     </configuration>
     <configuration id="PS_LOCALE_COUNTRY" name="PS_LOCALE_COUNTRY">
-      <value>FR</value>
+      <value>fr</value>
     </configuration>
     <configuration id="PS_ATTACHMENT_MAXIMUM_SIZE" name="PS_ATTACHMENT_MAXIMUM_SIZE">
       <value>2</value>
@@ -431,17 +437,11 @@
     <configuration id="PS_CART_RULE_FEATURE_ACTIVE" name="PS_CART_RULE_FEATURE_ACTIVE">
       <value>0</value>
     </configuration>
-    <configuration id="PS_GROUP_FEATURE_ACTIVE" name="PS_GROUP_FEATURE_ACTIVE">
-      <value>1</value>
-    </configuration>
     <configuration id="PS_PACK_FEATURE_ACTIVE" name="PS_PACK_FEATURE_ACTIVE">
       <value>0</value>
     </configuration>
     <configuration id="PS_ALIAS_FEATURE_ACTIVE" name="PS_ALIAS_FEATURE_ACTIVE">
       <value>1</value>
-    </configuration>
-    <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
-      <value>2</value>
     </configuration>
     <configuration id="PS_TAX_ADDRESS_TYPE" name="PS_TAX_ADDRESS_TYPE">
       <value>id_address_delivery</value>
@@ -614,150 +614,6 @@
     <configuration id="BLOCKSTORE_IMG" name="BLOCKSTORE_IMG">
       <value>store.jpg</value>
     </configuration>
-    <configuration id="PS_CONDITIONS_1" name="PS_CONDITIONS">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_PRODUCTS_PER_PAGE_1" name="PS_PRODUCTS_PER_PAGE">
-      <value>10</value>
-    </configuration>
-    <configuration id="PS_PRODUCTS_ORDER_WAY_1" name="PS_PRODUCTS_ORDER_WAY">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_PRODUCTS_ORDER_BY_1" name="PS_PRODUCTS_ORDER_BY">
-      <value>4</value>
-    </configuration>
-    <configuration id="PS_DISPLAY_QTIES_1" name="PS_DISPLAY_QTIES">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_NB_DAYS_NEW_PRODUCT_1" name="PS_NB_DAYS_NEW_PRODUCT">
-      <value>20</value>
-    </configuration>
-    <configuration id="PS_BLOCK_CART_AJAX_1" name="PS_BLOCK_CART_AJAX">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_PRODUCT_PICTURE_MAX_SIZE_1" name="PS_PRODUCT_PICTURE_MAX_SIZE">
-      <value>131072</value>
-    </configuration>
-    <configuration id="PS_PRODUCT_PICTURE_WIDTH_1" name="PS_PRODUCT_PICTURE_WIDTH">
-      <value>64</value>
-    </configuration>
-    <configuration id="PS_PRODUCT_PICTURE_HEIGHT_1" name="PS_PRODUCT_PICTURE_HEIGHT">
-      <value>64</value>
-    </configuration>
-    <configuration id="PS_SEARCH_MINWORDLEN_1" name="PS_SEARCH_MINWORDLEN">
-      <value>3</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_PNAME_1" name="PS_SEARCH_WEIGHT_PNAME">
-      <value>6</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_REF_1" name="PS_SEARCH_WEIGHT_REF">
-      <value>10</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_SHORTDESC_1" name="PS_SEARCH_WEIGHT_SHORTDESC">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_DESC_1" name="PS_SEARCH_WEIGHT_DESC">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_CNAME_1" name="PS_SEARCH_WEIGHT_CNAME">
-      <value>3</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_MNAME_1" name="PS_SEARCH_WEIGHT_MNAME">
-      <value>3</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_TAG_1" name="PS_SEARCH_WEIGHT_TAG">
-      <value>4</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_ATTRIBUTE_1" name="PS_SEARCH_WEIGHT_ATTRIBUTE">
-      <value>2</value>
-    </configuration>
-    <configuration id="PS_SEARCH_WEIGHT_FEATURE_1" name="PS_SEARCH_WEIGHT_FEATURE">
-      <value>2</value>
-    </configuration>
-    <configuration id="PS_SEARCH_AJAX_1" name="PS_SEARCH_AJAX">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_DISPLAY_JQZOOM_1" name="PS_DISPLAY_JQZOOM">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_BLOCK_BESTSELLERS_DISPLAY_1" name="PS_BLOCK_BESTSELLERS_DISPLAY">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_BLOCK_NEWPRODUCTS_DISPLAY_1" name="PS_BLOCK_NEWPRODUCTS_DISPLAY">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_BLOCK_SPECIALS_DISPLAY_1" name="PS_BLOCK_SPECIALS_DISPLAY">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_TAX_DISPLAY_1" name="PS_TAX_DISPLAY">
-      <value>0</value>
-    </configuration>
-    <configuration id="PS_STORES_DISPLAY_CMS_1" name="PS_STORES_DISPLAY_CMS">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_STORES_DISPLAY_FOOTER_1" name="PS_STORES_DISPLAY_FOOTER">
-      <value>1</value>
-    </configuration>
-    <configuration id="SHOP_LOGO_WIDTH_1" name="SHOP_LOGO_WIDTH">
-      <value>209</value>
-    </configuration>
-    <configuration id="SHOP_LOGO_HEIGHT_1" name="SHOP_LOGO_HEIGHT">
-      <value>52</value>
-    </configuration>
-    <configuration id="PS_DISPLAY_SUPPLIERS_1" name="PS_DISPLAY_SUPPLIERS">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_LEGACY_IMAGES_1" name="PS_LEGACY_IMAGES">
-      <value>1</value>
-    </configuration>
-    <configuration id="PS_IMAGE_QUALITY_1" name="PS_IMAGE_QUALITY">
-      <value>jpg</value>
-    </configuration>
-    <configuration id="PS_PNG_QUALITY_1" name="PS_PNG_QUALITY">
-      <value>7</value>
-    </configuration>
-    <configuration id="PS_JPEG_QUALITY_1" name="PS_JPEG_QUALITY">
-      <value>90</value>
-    </configuration>
-    <configuration id="PRODUCTS_VIEWED_NBR_1" name="PRODUCTS_VIEWED_NBR">
-      <value>2</value>
-    </configuration>
-    <configuration id="BLOCK_CATEG_DHTML_1" name="BLOCK_CATEG_DHTML">
-      <value>1</value>
-    </configuration>
-    <configuration id="BLOCK_CATEG_MAX_DEPTH_1" name="BLOCK_CATEG_MAX_DEPTH">
-      <value>4</value>
-    </configuration>
-    <configuration id="MANUFACTURER_DISPLAY_FORM_1" name="MANUFACTURER_DISPLAY_FORM">
-      <value>1</value>
-    </configuration>
-    <configuration id="MANUFACTURER_DISPLAY_TEXT_1" name="MANUFACTURER_DISPLAY_TEXT">
-      <value>1</value>
-    </configuration>
-    <configuration id="MANUFACTURER_DISPLAY_TEXT_NB_1" name="MANUFACTURER_DISPLAY_TEXT_NB">
-      <value>5</value>
-    </configuration>
-    <configuration id="NEW_PRODUCTS_NBR_1" name="NEW_PRODUCTS_NBR">
-      <value>5</value>
-    </configuration>
-    <configuration id="BLOCKTAGS_NBR_1" name="BLOCKTAGS_NBR">
-      <value>10</value>
-    </configuration>
-    <configuration id="FOOTER_CMS_1" name="FOOTER_CMS">
-      <value>0_3|0_4</value>
-    </configuration>
-    <configuration id="FOOTER_BLOCK_ACTIVATION_1" name="FOOTER_BLOCK_ACTIVATION">
-      <value>0_3|0_4</value>
-    </configuration>
-    <configuration id="FOOTER_POWEREDBY_1" name="FOOTER_POWEREDBY">
-      <value>1</value>
-    </configuration>
-    <configuration id="BLOCKADVERT_LINK_1" name="BLOCKADVERT_LINK">
-      <value>0</value>
-    </configuration>
-    <configuration id="BLOCKSTORE_IMG_1" name="BLOCKSTORE_IMG">
-      <value>store.jpg</value>
-    </configuration>
     <configuration id="BLOCKADVERT_IMG_EXT" name="BLOCKADVERT_IMG_EXT">
       <value>jpg</value>
     </configuration>
@@ -780,7 +636,9 @@
       <value>Prestashop</value>
     </configuration>
     <configuration id="blockcontactinfos_address" name="blockcontactinfos_address">
-      <value>41, boulevard des capucines, 75002 Paris, France</value>
+      <value>41, boulevard des capucines
+75002 Paris
+France</value>
     </configuration>
     <configuration id="blockcontactinfos_phone" name="blockcontactinfos_phone">
       <value>+33 (0)1.40.18.30.04</value>
@@ -830,9 +688,6 @@
     <configuration id="PS_VERSION_DB" name="PS_VERSION_DB">
       <value>1.5.0.9</value>
     </configuration>
-    <configuration id="PS_VOLUME_UNIT_1" name="PS_VOLUME_UNIT">
-      <value>L</value>
-    </configuration>
     <configuration id="PS_BASE_DISTANCE_UNIT" name="PS_BASE_DISTANCE_UNIT">
       <value>m</value>
     </configuration>
@@ -846,16 +701,16 @@
       <value>1.5.0.9</value>
     </configuration>
     <configuration id="PS_SHOP_NAME" name="PS_SHOP_NAME">
-      <value>Test</value>
+      <value>PrestaShop</value>
     </configuration>
     <configuration id="PS_SHOP_EMAIL" name="PS_SHOP_EMAIL">
-      <value>contact@prestashop.com</value>
+      <value>raphael.malie@gmail.com</value>
     </configuration>
     <configuration id="PS_MAIL_METHOD" name="PS_MAIL_METHOD">
       <value>1</value>
     </configuration>
     <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
-      <value>10</value>
+      <value>Animaux</value>
     </configuration>
     <configuration id="PS_LOGO" name="PS_LOGO">
       <value>logo.jpg</value>
@@ -871,6 +726,39 @@
     </configuration>
     <configuration id="PS_HOME_CATEGORY" name="PS_HOME_CATEGORY">
       <value>2</value>
+    </configuration>
+    <configuration id="PS_CONFIGURATION_AGREMENT" name="PS_CONFIGURATION_AGREMENT">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_MAIL_SERVER" name="PS_MAIL_SERVER">
+      <value>smtp.</value>
+    </configuration>
+    <configuration id="PS_MAIL_USER" name="PS_MAIL_USER">
+      <value/>
+    </configuration>
+    <configuration id="PS_MAIL_PASSWD" name="PS_MAIL_PASSWD">
+      <value/>
+    </configuration>
+    <configuration id="PS_MAIL_SMTP_ENCRYPTION" name="PS_MAIL_SMTP_ENCRYPTION">
+      <value>off</value>
+    </configuration>
+    <configuration id="PS_MAIL_SMTP_PORT" name="PS_MAIL_SMTP_PORT">
+      <value>25</value>
+    </configuration>
+    <configuration id="NW_SALT" name="NW_SALT">
+      <value>nK4KJP7jOsnzWMpo</value>
+    </configuration>
+    <configuration id="PS_PAYMENT_LOGO_CMS_ID" name="PS_PAYMENT_LOGO_CMS_ID">
+      <value>0</value>
+    </configuration>
+    <configuration id="HOME_FEATURED_NBR" name="HOME_FEATURED_NBR">
+      <value>8</value>
+    </configuration>
+    <configuration id="SEK_MIN_OCCURENCES" name="SEK_MIN_OCCURENCES">
+      <value>1</value>
+    </configuration>
+    <configuration id="SEK_FILTER_KW" name="SEK_FILTER_KW">
+      <value/>
     </configuration>
   </entities>
 </entity_configuration>
