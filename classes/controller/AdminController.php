@@ -1624,7 +1624,7 @@ class AdminControllerCore extends Controller
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '&redirect='.$this->controller_name : ''));
 
 		// Set current index
-		$current_index = $this->context->shop->getBaseURI().basename(_PS_ADMIN_DIR_).'/index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
+		$current_index = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
 		if ($back = Tools::getValue('back'))
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
