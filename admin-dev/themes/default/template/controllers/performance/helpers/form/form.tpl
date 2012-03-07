@@ -26,28 +26,25 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="label"}
-
 	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
 		<div id="directory_depth">
 			<div class="warn">{l s='The system CacheFS should be used only when the infrastructure contain only one front-end server. Ask your hosting company if you don\'t know.'}</div>
+	{else}
+		{$smarty.block.parent}
 	{/if}
-
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
-
 {/block}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="warn">
 			{l s='This feature can\'t be disabled because this is currently in use.'}
 		</div>
 	{/if}
+	{$smarty.block.parent}
 {/block}
 
-{block name="end_field_block"}
+{block name="description_block"}
+	{$smarty.block.parent}
 	{if $input.type == 'radio' && $input.name == 'combination'}
 		<ul style="list-style-type:disc;margin:0 0 0 30px;">
 			<li>{l s='Combinations tab on product page'}</li>
@@ -60,10 +57,14 @@
 			<li>{l s='Feature'}</li>
 			<li>{l s='Feature value'}</li>
 		</ul>
-	{elseif $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
+	{/if}
+{/block}
+
+{block name="field_block"}
+	{$smarty.block.parent}
+	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
 		</div>
 	{/if}
-	</div>
 {/block}
 
 {block name="other_input"}

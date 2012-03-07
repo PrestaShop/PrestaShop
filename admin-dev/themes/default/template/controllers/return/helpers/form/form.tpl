@@ -26,8 +26,7 @@
 
 {extends file='helpers/form/form.tpl'}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'text_customer'}
 		{$customer->firstname} {$customer->lastname}
 		<p style="clear: both">
@@ -104,5 +103,7 @@
 				</td>
 			</tr>
 		</table>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
