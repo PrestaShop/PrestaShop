@@ -353,6 +353,10 @@ XML;
 			if (!$result = Db::getInstance()->executeS($sql))
 				return '';
 			
+			$this->_html .= '<h2>'.$this->l('Sitemap index').$shop['domain'].$shop['uri'].'</h2>';
+			$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
+				<a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml</b></a></p><br />';
+		
 			$info = pathinfo(GSITEMAP_FILE);
 			foreach ($result as $shop)
 			{
