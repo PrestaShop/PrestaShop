@@ -4112,33 +4112,37 @@ class ProductCore extends ObjectModel
 															FROM '._DB_PREFIX_.'product_tax_rules_group_shop WHERE `id_product`='.(int)$id_old_product.')');
 	}
 
-	public function deleteTaxRulesGroup($all_shops = false)
+	public function deleteTaxRulesGroup($shops = false)
 	{
-		$shop = '';
-		if (!$all_shops)
-			$shop = ' AND `id_shop`='.(int)Context::getContext()->shop->id;
+		if (!$shops)
+			$shops = Shop::getContextListShopID();
+
+		$shop = ' AND `id_shop` IN (';
+
+		foreach ($shops as $id_shop)
+			$shop .= (int)$id_shop.',';
+		$shop = rtrim($shop, ',').')';
+
 		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tax_rules_group_shop
 					WHERE id_product='.(int)$this->id.$shop);
 	}
 
 	public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
 	{
-		if (!Validate::isInt($id_tax_rules_group))
+		if (!Validate::isUnsignedId($id_tax_rules_group))
 			die(Tools::displayError());
-		$this->deleteTaxRulesGroup($all_shops);
 
-		if (Shop::getContext() != Shop::CONTEXT_SHOP)
-			$all_shops = true;
-
-		if ($all_shops)
-		{
-			$values = '';
-			$shops = Shop::getShops(false, null, true);
-			foreach ($shops as $id_shop)
-				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
-		}
+		if (!$all_shops)
+			$shops = Shop::getContextListShopID();
 		else
-			$values = '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)Context::getContext()->shop->id.')';
+			$shops = Shop::getShops(true, null, true);
+
+		$this->deleteTaxRulesGroup($shops);
+
+		$values = '';			
+		foreach ($shops as $id_shop)
+				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
+
 		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tax_rules_group_shop (`id_product`, `id_tax_rules_group`, `id_shop`) VALUES '.rtrim($values, ','));
 	}
 
