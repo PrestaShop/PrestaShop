@@ -253,7 +253,7 @@
 					<label>{l s='Minimum quantity:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
-					<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$minimal_quantity}" />
+					<input size="3" maxlength="6" name="attribute_minimal_quantity" id="attribute_minimal_quantity" type="text" value="{$minimal_quantity}" />
 					<p>{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 				</td>
 			</tr>
