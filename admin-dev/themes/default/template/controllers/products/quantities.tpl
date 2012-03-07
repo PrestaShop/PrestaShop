@@ -207,7 +207,7 @@
 				<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 			</td>
 		</tr>
-	{/if}
+		{/if}
 	<tr>
 		<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
 		<td style="padding-bottom:5px;">

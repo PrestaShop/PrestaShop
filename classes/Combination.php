@@ -44,6 +44,8 @@ class CombinationCore extends ObjectModel
 	public $price;
 
 	public $ecotax;
+	
+	public $minimal_quantity = 1;
 
 	public $quantity;
 
@@ -69,6 +71,7 @@ class CombinationCore extends ObjectModel
 			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
 			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
 			'weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
+			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'default_on' => 		array('type' => self::TYPE_INT, 'validate' => 'isBool'),
 			'available_date' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'reference' => 			array('type' => self::TYPE_STRING, 'size' => 32),

@@ -615,7 +615,7 @@ class AdminProductsControllerCore extends AdminController
 									Tools::getValue('attribute_default'),
 									Tools::getValue('attribute_location'),
 									Tools::getValue('attribute_upc'),
-									Tools::getValue('minimal_quantity'),
+									Tools::getValue('attribute_minimal_quantity'),
 									Tools::getValue('available_date_attribute'));
 
 								Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
@@ -648,7 +648,8 @@ class AdminProductsControllerCore extends AdminController
 								Tools::getValue('attribute_ean13'),
 								Tools::getValue('attribute_default'),
 								Tools::getValue('attribute_location'),
-								Tools::getValue('attribute_upc')
+								Tools::getValue('attribute_upc'),
+								Tools::getValue('attribute_minimal_quantity')
 							);
 						$this->updateDownloadProduct($product, 0, $id_product_attribute);
 					}
