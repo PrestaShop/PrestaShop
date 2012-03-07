@@ -263,7 +263,7 @@ class AdminStockCoverControllerCore extends AdminController
 			}
 			else
 			{
-				$item['stock'] = 'See details';
+				$item['stock'] = $this->l('See details');
 				$item['reference'] = '--';
 				$item['ean13'] = '--';
 				$item['upc'] = '--';
