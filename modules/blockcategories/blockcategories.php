@@ -196,7 +196,7 @@ class BlockCategories extends Module
 				AND cg.`id_group` IN ('.pSQL($groups).')
 				AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 				GROUP BY id_category
-				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'cs.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
 
 				return Tools::restoreCacheSettings();
 
