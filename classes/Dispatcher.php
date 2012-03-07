@@ -184,12 +184,15 @@ class DispatcherCore
 	 */
 	protected function __construct()
 	{
+		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
+
 		// Select right front controller
 		if (defined('_PS_ADMIN_DIR_'))
 		{
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
 			$this->default_controller = 'adminhome';
+			$this->use_routes = false;
 		}
 		else if (Tools::getValue('fc') == 'module')
 		{
@@ -204,7 +207,6 @@ class DispatcherCore
 			$this->default_controller = 'index';
 		}
 
-		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->loadRoutes();
 
 		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
@@ -284,7 +286,7 @@ class DispatcherCore
 						$controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/');
 						if (!isset($controllers[$this->controller]))
 						{
-							$this->controller = 'adminnotfound';
+							$this->controller = $this->controller_not_found;
 							$controller_class = 'AdminNotFoundController';
 						}
 						else
@@ -299,7 +301,7 @@ class DispatcherCore
 				{
 					$controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
 					if (!isset($controllers[$this->controller]))
-						$this->controller = 'adminnotfound';
+						$this->controller = $this->controller_not_found;
 					$controller_class = $controllers[$this->controller];
 
 					if (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php'))
