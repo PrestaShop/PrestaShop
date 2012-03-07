@@ -24,43 +24,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/form/form.tpl"}
-{debug}
-{block name="label"}
 
+{block name="label"}
 	{if $input.type == 'text' && $input.name == 'name'}
 		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t change the GroupShop when you have more than one Shop'}</div><br />
 	{/if}
-
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
-
+	{$smarty.block.parent}
 {/block}
 
-{block name="start_field_block"}
-	<div class="margin-form">
-	{if $input.type == 'select' && $input.name == 'id_category'}
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$("#id_category").change(function(){
-					doAdminAjax(
-						{
-						ajax:"1",
-						id_category : $(this).val(),
-						use_shop_context : 0,
-						action : "getCategoriesFromRootCategory",
-						controller: "AdminShop",
-						token : "{$token}",
-						},
-						function(res)
-						{
-							$('#categories-treeview').parent().html(res);
-						}
-					);
-				});
-			});
-		</script>
-	{else if $input.type == 'theme'}
+{block name="input_block"}
+	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
 			<div class="select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				{$theme->name}<br />
@@ -69,9 +42,32 @@
 			</div>
 		{/foreach}
 		<div class="clear">&nbsp;</div>
-	{/if}
-	{if $input.type == 'textGroupShop'}
+	{elseif $input.type == 'textGroupShop'}
 		{$input.value}
+	{else}
+		{if $input.type == 'select' && $input.name == 'id_category'}
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$("#id_category").change(function(){
+						doAdminAjax(
+							{
+							ajax:"1",
+							id_category : $(this).val(),
+							use_shop_context : 0,
+							action : "getCategoriesFromRootCategory",
+							controller: "AdminShop",
+							token : "{$token}",
+							},
+							function(res)
+							{
+								$('#categories-treeview').parent().html(res);
+							}
+						);
+					});
+				});
+			</script>
+		{/if}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
@@ -124,8 +120,7 @@
 	{/if}
 {/block}
 
-{block name=script}
-
+{block name="script"}
 	$(document).ready(function() {
 		$('input[name=useImportData]').click(function()	{
 		if ($(this).attr('id') == 'useImportData_on')
@@ -134,5 +129,4 @@
 			$('#shop_list, #data_list').slideUp('slow');
 		});
 	});
-
 {/block}
