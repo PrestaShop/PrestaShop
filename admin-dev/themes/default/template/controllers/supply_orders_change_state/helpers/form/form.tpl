@@ -55,7 +55,7 @@ $(document).ready(function() {
 </div>
 
 <div class="margin-form">
-<input type="submit" id="_form_submit_btn" value="   Save   " name="submitChangestate" class="button" style="display: none; ">
+<input type="submit" id="_form_submit_btn" value="{l s='Save'}" name="submitChangestate" class="button" style="display: none;">
 </div>
 {/if}
 {/block}
