@@ -8,6 +8,7 @@ $_MODULE['<{gsitemap}prestashop>gsitemap_5bbdad908e423585a7ecc6b61b66b313'] = 'I
 $_MODULE['<{gsitemap}prestashop>gsitemap_09fa1e865bdcf4d3215d5b0005b93154'] = 'le fichier sitemap.xml.';
 $_MODULE['<{gsitemap}prestashop>gsitemap_5a517cec50ac8e742f6583c6c404c4e9'] = 'Fichier Sitemap généré';
 $_MODULE['<{gsitemap}prestashop>gsitemap_0a6ee1a4f10278211d74152e633d0ed0'] = 'Erreur durant la création du fichier sitemap';
+$_MODULE['<{gsitemap}prestashop>gsitemap_4851323bb81fbc4aa65c1b37af8a1d1d'] = 'Sitemap pour : ';
 $_MODULE['<{gsitemap}prestashop>gsitemap_eb175747116b689caadea1b84202f513'] = 'Votre fichier Google sitemap est en ligne à l\'adresse suivante :';
 $_MODULE['<{gsitemap}prestashop>gsitemap_39d616ecc73e174052f1877ac2b3c853'] = 'Mise à jour';
 $_MODULE['<{gsitemap}prestashop>gsitemap_b908c2f34052b5276e0bf50f0e042211'] = 'Taille du fichier';
