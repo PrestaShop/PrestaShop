@@ -326,21 +326,23 @@
 								{/if}
 								{/block}
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
-								{if isset($input.desc)}
-									<p class="preference_description">
-										{if is_array($input.desc)}
-											{foreach $input.desc as $p}
-												{if is_array($p)}
-													<span id="{$p.id}">{$p.text}</span><br />
-												{else}
-													{$p}<br />
-												{/if}
-											{/foreach}
-										{else}
-											{$input.desc}
-										{/if}
-									</p>
-								{/if}
+								{block name="description_block"}
+									{if isset($input.desc)}
+										<p class="preference_description">
+											{if is_array($input.desc)}
+												{foreach $input.desc as $p}
+													{if is_array($p)}
+														<span id="{$p.id}">{$p.text}</span><br />
+													{else}
+														{$p}<br />
+													{/if}
+												{/foreach}
+											{else}
+												{$input.desc}
+											{/if}
+										</p>
+									{/if}
+								{/block}
 								{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
 							{block name="end_field_block"}
 								</div>
