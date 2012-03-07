@@ -157,7 +157,7 @@ class StoresControllerCore extends FrontController
 	 */
 	protected function assignStores()
 	{
-		$this->context->smarty->assign('hasStoreIcon', file_exists(dirname(__FILE__).'/../img/'.Configuration::get('PS_STORES_ICON')));
+		$this->context->smarty->assign('hasStoreIcon', file_exists(_PS_IMG_DIR_.Configuration::get('PS_STORES_ICON')));
 
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
 		if (!in_array($distanceUnit, array('km', 'mi')))
@@ -198,6 +198,7 @@ class StoresControllerCore extends FrontController
 			$address = $this->processStoreAddress($store);
 
 			$other = '';
+
 			if (!empty($store['hours']))
 			{
 				$hours = unserialize($store['hours']);
