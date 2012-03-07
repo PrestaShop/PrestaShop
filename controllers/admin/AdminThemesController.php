@@ -97,7 +97,21 @@ class AdminThemesControllerCore extends AdminController
 	{
 		parent::init();
 
+		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
+
 		$this->options = array(
+			'theme' => array(
+				'title' => sprintf($this->l('Select theme for shop %s'), $this->context->shop->name),
+				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop in top list if you want to select a theme') : '',
+				'fields' => array(
+					'theme_for_shop' => array(
+						'type' => 'theme',
+						'themes' => Theme::getThemes(),
+						'id_theme' => $this->context->shop->id_theme,
+						'can_display_themes' => $this->can_display_themes,
+					),
+				),
+			),
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
@@ -579,6 +593,23 @@ class AdminThemesControllerCore extends AdminController
 			Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
 		
 		Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
+	}
+
+	/**
+	 * Update theme for current shop
+	 */
+	public function updateOptionThemeForShop()
+	{
+		if (!$this->can_display_themes)
+			return;
+
+		$id_theme = (int)Tools::getValue('id_theme');
+		if ($id_theme && $this->context->shop->id_theme != $id_theme)
+		{
+			$this->context->shop->id_theme = $id_theme;
+			$this->context->shop->update();
+			$this->redirect_after = self::$currentIndex.'&token='.$this->token;
+		}
 	}
 
 	protected function uploadIco($name, $dest)
