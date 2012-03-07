@@ -3487,6 +3487,7 @@ $_LANGADM['AdminStockCover694e8d1f2ee056f98ee488bdc4982d73'] = 'Quantité';
 $_LANGADM['AdminStockCover6ff095679d5d2d4432b5271ed232e384'] = 'Tous les entrepôts';
 $_LANGADM['AdminStockCover79f2c11f6a28e04a57212be2bfc4f0e3'] = 'Trois semaines';
 $_LANGADM['AdminStockCover8be20afb17bd15d450d87a037aeedb33'] = 'Six mois';
+$_LANGADM['AdminStockCover8e46f6ecf73c49b1c8962c6dcaa98835'] = 'N/D';
 $_LANGADM['AdminStockCover974985cd65fa0617f7596b848e78a456'] = 'Un mois';
 $_LANGADM['AdminStockCover9841bdc50c4226cb6ec5db76494249e6'] = 'Couverture';
 $_LANGADM['AdminStockCover9bab7764f99773f4ca3cfb05fde1e7a3'] = 'Surligner quand la prévision (en jours) est inférieure à :';
