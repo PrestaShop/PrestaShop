@@ -30,9 +30,8 @@ $(document).ready(function() {
 
 function initTableDnD(table)
 {
-	if (typeof(table) == 'undefined') {
+	if (typeof(table) == 'undefined')
 		table = 'table.tableDnD';
-    }
 
 	$(table).tableDnD({
 		onDragStart: function(table, row) {
@@ -66,31 +65,31 @@ function initTableDnD(table)
 						way: way,
 						token: token
 					};
-                if (table.id == 'cms')
-                    params = {
-                        ajaxCMSPositions: true,
-                        id_cms_category: ids[1],
-                        id_cms: ids[2],
-                        way: way,
-                        token: token
-                    };
-                if (table.id == 'cms_block_0')
-                    params = {
-                        ajaxCMSBlockPositions: true,
-                        id_cms_block: ids[1],
-                        position: ids[2],
-                        way: way,
-                        token: token
-                    };
-                if (table.id == 'cms_block_1')
-                    params = {
-                        ajaxCMSBlockPositions: true,
-                        id_cms_block: ids[1],
-                        position: ids[2],
-                        way: way,
-                        token: token
-                    };
-                if (come_from == 'AdminModulesPositions')
+				if (table.id == 'cms')
+					params = {
+						ajaxCMSPositions: true,
+						id_cms_category: ids[1],
+						id_cms: ids[2],
+						way: way,
+						token: token
+					};
+				if (table.id == 'cms_block_0')
+					params = {
+						ajaxCMSBlockPositions: true,
+						id_cms_block: ids[1],
+						position: ids[2],
+						way: way,
+						token: token
+					};
+				if (table.id == 'cms_block_1')
+					params = {
+						ajaxCMSBlockPositions: true,
+						id_cms_block: ids[1],
+						position: ids[2],
+						way: way,
+						token: token
+					};
+				if (come_from == 'AdminModulesPositions')
 					params = {
 						ajaxModulesPositions: true,
 						id_hook: ids[0],
@@ -118,8 +117,8 @@ function initTableDnD(table)
 				if (table.id.indexOf('attribute') != -1 && table.id != 'attribute_group') {
 					params = {
 						ajaxAttributesPositions: true,
-						id_attribute_group: ids[1],
-						id_attribute: ids[2],
+						id_attribute_group: ids[2],
+						id_attribute: ids[3],
 						way: way,
 						token: token
 					};
@@ -128,7 +127,7 @@ function initTableDnD(table)
 				if (table.id == 'attribute_group') {
 					params = {
 						ajaxGroupsAttributesPositions: true,
-						id_attribute_group: ids[1],
+						id_attribute_group: ids[2],
 						way: way,
 						token: token
 					}
@@ -208,7 +207,7 @@ function initTableDnD(table)
 							}
 							
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
-							tableDrag.children('tbody').children('tr').each(function(i) {
+							$(tableDrag).children('tbody').children('tr').each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
 								// Update link position
 								// Up links
@@ -218,18 +217,18 @@ function initTableDnD(table)
 								$(this).children('td.dragHandle a:even').attr('href', $(this).children('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
 								
 							});
-							tableDrag.children('tbody').children('tr').not('.nodrag').removeClass('alt_row').removeClass('not_alt_row');
-							tableDrag.children('tbody').children('tr:not(".nodrag"):odd').addClass('alt_row');
-							tableDrag.children('tbody').children('tr:not(".nodrag"):even').addClass('not_alt_row');
-							tableDrag.children('tbody').children('tr').children('td.dragHandle').children('a:hidden').show();
+							$(tableDrag).children('tbody').children('tr').not('.nodrag').removeClass('alt_row').removeClass('not_alt_row');
+							$(tableDrag).children('tbody').children('tr:not(".nodrag"):odd').addClass('alt_row');
+							$(tableDrag).children('tbody').children('tr:not(".nodrag"):even').addClass('not_alt_row');
+							$(tableDrag).children('tbody').children('tr').children('td.dragHandle').children('a:hidden').show();
 
-                            if (alternate) {
-								tableDrag.children('tbody').children('tr').children('td.dragHandle:first').children('a:odd').hide();
-								tableDrag.children('tbody').children('tr').children('td.dragHandle:last').children('a:even').hide();
+							if (alternate) {
+								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:first').children('a:odd').hide();
+								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:last').children('a:even').hide();
 							}
 							else {
-								tableDrag.children('tbody').children('tr').children('td.dragHandle:first').children('a:even').hide();
-								tableDrag.children('tbody').children('tr').children('td.dragHandle:last').children('a:odd').hide();
+								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:first').children('a:even').hide();
+								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:last').children('a:odd').hide();
 							}
 						}
 					}
