@@ -121,10 +121,11 @@ if (Tools::isSubmit('ajaxCategoriesPositions'))
 			$pos = explode('_', $value);
 			if ((isset($pos[1]) AND isset($pos[2])) AND ($pos[1] == $id_category_parent AND $pos[2] == $id_category_to_move))
 			{
-				$position = $key;
+				$position = $key + 1;
 				break;
 			}
 		}
+
 	$category = new Category($id_category_to_move);
 	if (Validate::isLoadedObject($category))
 	{
@@ -777,7 +778,7 @@ if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 
 	$new_positions = array();
 	foreach($positions as $k => $v)
-		if (count(explode('_', $v)) == 3)
+		if (count(explode('_', $v)) == 4)
 			$new_positions[] = $v;
 
 	foreach ($new_positions as $position => $value)
@@ -785,11 +786,11 @@ if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 		// pos[1] = id_attribute_group, pos[2] = old position
 		$pos = explode('_', $value);
 
-		if (isset($pos[1]) && (int)$pos[1] === $id_attribute_group)
+		if (isset($pos[2]) && (int)$pos[2] === $id_attribute_group)
 		{
-			if ($group_attribute = new AttributeGroup((int)$pos[1]))
+			if ($group_attribute = new AttributeGroup((int)$pos[2]))
 				if (isset($position) && $group_attribute->updatePosition($way, $position))
-					echo "ok position ".(int)$position." for group attribute ".(int)$pos[1]."\r\n";
+					echo "ok position ".(int)$position." for group attribute ".(int)$pos[2]."\r\n";
 				else
 					echo '{"hasError" : true, "errors" : "Can not update group attribute '. (int)$id_attribute_group . ' to position '.(int)$position.' "}';
 			else
