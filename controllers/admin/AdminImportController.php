@@ -1440,7 +1440,7 @@ class AdminImportControllerCore extends AdminController
 
 					foreach ($attribute_combinations as $attribute_combination)
 					{
-						if (in_array($id_product_attribute, $attribute_combination))
+						if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination))
 						{
 							$product->updateAttribute(
 								$id_product_attribute,
