@@ -35,14 +35,14 @@ function initMarkers()
 		{
 			var name = markerNodes[i].getAttribute('name');
 			var address = markerNodes[i].getAttribute('address');
-			var addressNoHtml = markerNodes[i].getAttribute('addressNoHtml');				
+			var addressNoHtml = markerNodes[i].getAttribute('addressNoHtml');
 			var other = markerNodes[i].getAttribute('other');
 			var id_store = markerNodes[i].getAttribute('id_store');
 			var has_store_picture = markerNodes[i].getAttribute('has_store_picture');
 			var latlng = new google.maps.LatLng(
 			parseFloat(markerNodes[i].getAttribute('lat')),
 			parseFloat(markerNodes[i].getAttribute('lng')));
-			createMarker(latlng, name, address, addressNoHtml, other, id_store, has_store_picture);
+			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 		}
 	});
@@ -135,7 +135,7 @@ function searchLocationsNear(center)
 	});
 }
 
-function createMarker(latlng, name, address, addressNoHtml, other, id_store, has_store_picture)
+function createMarker(latlng, name, address, other, id_store, has_store_picture)
 {
 	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture == 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
 	var image = new google.maps.MarkerImage(img_ps_dir+'logo_stores.gif');
