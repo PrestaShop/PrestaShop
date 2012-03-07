@@ -353,7 +353,7 @@ XML;
 			if (!$result = Db::getInstance()->executeS($sql))
 				return '';
 			
-			$this->_html .= '<h2>'.$this->l('Sitemap index').$shop['domain'].$shop['uri'].'</h2>';
+			$this->_html .= '<h2>'.$this->l('Sitemap index').'</h2>';
 			$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
 				<a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml</b></a></p><br />';
 		
@@ -400,7 +400,12 @@ XML;
 	}
 
 	private function _displayForm()
-	{
+	{	
+		if (Tools::usingSecureMode())
+			$domain = Tools::getShopDomainSsl(true);
+		else
+			$domain = Tools::getShopDomain(true);
+		
 		$this->_html .=
 		'<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 			<div style="margin:0 0 20px 0;">
@@ -411,7 +416,11 @@ XML;
 			</div>
 			<input name="btnSubmit" class="button" type="submit"
 			value="'.((!file_exists(GSITEMAP_FILE)) ? $this->l('Generate sitemap file') : $this->l('Update sitemap file')).'" />
-		</form>';
+		</form><br /><br /><br />
+		<h2>'.$this->l('Use cron job to re-build the sitemap:').'</h2>
+		<p>
+			<b>'.$domain.Tools::htmlentitiesUTF8(dirname($_SERVER['REQUEST_URI'])).'?controller=adminmodules&configure=gsitemap&token='.Tools::getValue('token').'&btnSubmit&GSITEMAP_ALL_CMS='.((int)Configuration::get('GSITEMAP_ALL_CMS')).'&GSITEMAP_ALL_PRODUCTS='.((int)Configuration::get('GSITEMAP_ALL_PRODUCTS')).'</b>
+		</p>';
 	}
 
 	public function getContent()
