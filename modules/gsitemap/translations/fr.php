@@ -18,6 +18,7 @@ $_MODULE['<{gsitemap}prestashop>gsitemap_b8cb67a25f16d9000d8c974e30441b59'] = 'L
 $_MODULE['<{gsitemap}prestashop>gsitemap_60ee4e03c30c4827c80eb31bfd27130d'] = 'Le sitemap inclut également les pages CMS qui ne sont pas dans un bloc de CMS';
 $_MODULE['<{gsitemap}prestashop>gsitemap_8103220a578f92ec726809c3d47adc6e'] = 'Générer le fichier sitemap';
 $_MODULE['<{gsitemap}prestashop>gsitemap_0033cf1fdbd4354facfaa51f6f0de6a4'] = 'Mettre à jour le fichier sitemap';
+$_MODULE['<{gsitemap}prestashop>gsitemap_be35982b0637fe74565dde00768e3534'] = 'Utiliser une tâche cron pour reconstruire le sitemap : ';
 $_MODULE['<{gsitemap}prestashop>gsitemap_f5a592018c8b55d2c968515ad7c58c91'] = 'Optimisation pour les moteurs de recherche (SEO)';
 $_MODULE['<{gsitemap}prestashop>gsitemap_4ff2e716a7d06ce5274b4090b39abad3'] = 'Voir';
 $_MODULE['<{gsitemap}prestashop>gsitemap_8334797b9b3383d4f48d98178b8845ea'] = 'cette page';
