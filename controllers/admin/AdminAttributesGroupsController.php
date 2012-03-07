@@ -255,7 +255,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Values'),
-				'image' => '../img/admin/asterisk.gif'
+				'image' => '../img/admin/asterisk.gif',
 			),
 			'input' => array(
 				array(
@@ -284,6 +284,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		if (Shop::isFeatureActive())
 		{
+			// We get all associated shops for all attribute groups, because we will disable group shops
+			// for attributes that the selected attribute group don't support
+			$sql = 'SELECT id_attribute_group, id_group_shop FROM '._DB_PREFIX_.'attribute_group_group_shop';
+			$associations = array();
+			foreach (Db::getInstance()->executeS($sql) as $row)
+				$associations[$row['id_attribute_group']][] = $row['id_group_shop'];
+			$this->fields_form['shop_associations'] = Tools::jsonEncode($associations);
+
 			$this->fields_form['input'][] = array(
 				'type' => 'group_shop',
 				'label' => $this->l('Group Shop association:'),
