@@ -64,4 +64,20 @@
 	displayColorFieldsOption();
 	
 	$('#id_attribute_group').change(displayColorFieldsOption);
+
+	var shop_associations = {$fields[0]['form']['shop_associations']};
+	var changeAssociationGroup = function()
+	{
+		var id_attribute_group = $('#id_attribute_group').val();
+		$('.input_group_shop').each(function(k, item)
+		{
+			var id_group_shop = $(item).val();
+			if (shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]))
+			$(item).attr('disabled', false);
+			else
+			$(item).attr('disabled', true);
+		});
+	};
+	$('#id_attribute_group').change(changeAssociationGroup);
+	changeAssociationGroup();
 {/block}
