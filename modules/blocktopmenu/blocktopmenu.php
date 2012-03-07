@@ -111,8 +111,13 @@ class Blocktopmenu extends Module
 
 	public function getContent()
 	{
-        $id_lang = Shop::getContextShopID();
+        $id_lang = (int)Context::getContext()->language->id;
+        $languages = $this->context->controller->getLanguages();
+        $default_language = Configuration::get('PS_LANG_DEFAULT');
+
+        $labels = Tools::getValue('label') ? array_filter(Tools::getValue('label'), 'strlen') : array();
         $spacer = str_repeat('&nbsp;', $this->spacer_size);
+        $divLangName = 'link_label';
 
 		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
@@ -124,18 +129,25 @@ class Blocktopmenu extends Module
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
-			if (Tools::getValue('link') == '')
-				$this->_html .= $this->displayError($this->l('Unable to add this link'));
+
+            if ((Tools::getValue('link') == '') && (!count($labels)))
+                ;
+            else if (Tools::getValue('link') == '')
+                $this->_html .= $this->displayError($this->l('Please, fill the "Link" field'));
+            else if (!count($labels))
+                $this->_html .= $this->displayError($this->l('Please add a label'));
+            else if (!isset($labels[$default_language]))
+                $this->_html .= $this->displayError($this->l('Please add a label for your default language'));
 			else
 			{
-				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)$this->context->shop->id);
+				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
 				$this->_html .= $this->displayConfirmation($this->l('The link has been added'));
 			}
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuRemove'))
 		{
 			$id_linksmenutop = Tools::getValue('id_linksmenutop', 0);
-			MenuTopLinks::remove($id_linksmenutop, (int)$this->context->shop->id);
+			MenuTopLinks::remove($id_linksmenutop, (int)Shop::getContextShopID());
 			Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_linksmenutop.',', 'LNK'.$id_linksmenutop), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
 			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
 		}
@@ -170,7 +182,7 @@ class Blocktopmenu extends Module
 
 								// BEGIN CMS
 								$this->_html .= '<optgroup label="'.$this->l('CMS').'">';
-                                $this->getCMSOptions();
+                                $this->getCMSOptions(0, 1, $id_lang);
 								$this->_html .= '</optgroup>';
 
 								// BEGIN SUPPLIER
@@ -189,7 +201,7 @@ class Blocktopmenu extends Module
 
 								// BEGIN Categories
 								$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
-								$this->getCategoryOption();
+								$this->getCategoryOption(1, $id_lang);
 								$this->_html .= '</optgroup>';
 
 								// BEGIN Products
@@ -201,7 +213,15 @@ class Blocktopmenu extends Module
 								$this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
 								$links = MenuTopLinks::gets($id_lang, null, (int)Shop::getContextShopID());
 								foreach ($links as $link)
-									$this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
+                                {
+                                    if ($link['label'] == '')
+                                    {
+                                        $link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+                                        $this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
+                                    }
+                                    else
+                                        $this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
+                                }
 								$this->_html .= '</optgroup>';
 
 								$this->_html .= '</select><br />
@@ -265,11 +285,6 @@ class Blocktopmenu extends Module
 			</form>
 		</fieldset><br />';
 
-		$defaultLanguage = intval($this->context->language->id);
-		$languages = $this->context->controller->getLanguages();
-		$iso = Language::getIsoById($defaultLanguage);
-		$divLangName = 'link_label';
-
 		$this->_html .= '
 		<fieldset>
 			<legend><img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
@@ -279,20 +294,20 @@ class Blocktopmenu extends Module
 				foreach ($languages as $language)
 				{
 					$this->_html .= '
-					<div id="link_label_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
-						<input type="text" name="label['.$language['id_lang'].']" id="label_'.$language['id_lang'].'" size="70" value="" />
+					<div id="link_label_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang ? 'block' : 'none').';float: left;">
+						<input type="text" name="label['.$language['id_lang'].']" id="label_'.$language['id_lang'].'" size="70" value="'.(isset($labels[$language['id_lang']]) ? $labels[$language['id_lang']] : '').'" />
 					</div>';
 				 }
-				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'link_label', true);
+				$this->_html .= $this->displayFlags($languages, $id_lang, $divLangName, 'link_label', true);
 
 				$this->_html .= '</div><p class="clear"> </p>
 				<label>'.$this->l('Link').'</label>
 				<div class="margin-form">
-					<input type="text" name="link" value="" size="70" />
+					<input type="text" name="link" value="'.Tools::getValue('link').'" size="70" />
 				</div>
 				<label>'.$this->l('New Window').'</label>
 				<div class="margin-form">
-					<input type="checkbox" name="new_window" value="1" />
+					<input type="checkbox" name="new_window" value="1" '.(Tools::getValue('new_window') ? 'checked' : '').'/>
 				</div>
 				<p class="center">
 					<input type="submit" name="submitBlocktopmenuLinks" value="'.$this->l('	Add	').'" class="button" />
@@ -401,7 +416,14 @@ class Blocktopmenu extends Module
                 case 'LNK':
                     $link = MenuTopLinks::get($id, $id_lang, $id_shop);
                     if (count($link))
-                        $this->_html .= '<option value="LNK'.$id.'">'.$link[0]['label'].'</option>'.PHP_EOL;
+                    {
+                        if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
+                        {
+                            $default_language = Configuration::get('PS_LANG_DEFAULT');
+                            $link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+                        }
+                        $this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$link[0]['label'].'</option>';
+                    }
                     break;
             }
         }
@@ -480,7 +502,14 @@ class Blocktopmenu extends Module
                 case 'LNK':
                     $link = MenuTopLinks::get($id, $id_lang, $id_shop);
                     if (count($link))
+                    {
+                        if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
+                        {
+                            $default_language = Configuration::get('PS_LANG_DEFAULT');
+                            $link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+                        }
                         $this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
+                    }
                     break;
             }
 		}
@@ -532,14 +561,14 @@ class Blocktopmenu extends Module
 		$this->_menu .= '</li>';
 	}
 
-    private function getCMSMenuItems($parent, $depth = 1)
+    private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
     {
-        $id_lang = Context::getContext()->language->id;
+        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
         if ($depth > 3)
             return;
 
-        $categories = $this->getCMSCategories(false, $parent);
+        $categories = $this->getCMSCategories(false, $parent, $id_lang);
         $pages = $this->getCMSPages($parent);
 
         if (count($categories) || count($pages))
@@ -569,16 +598,19 @@ class Blocktopmenu extends Module
         }
     }
 
-    private function getCMSOptions($parent = 0, $depth = 1)
+    private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false)
     {
-        $categories = $this->getCMSCategories(false, $parent);
-        $pages = $this->getCMSPages($parent);
+        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+
+        $categories = $this->getCMSCategories(false, $parent, $id_lang);
+        $pages = $this->getCMSPages($parent, false, $id_lang);
+
         $spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
 
         foreach ($categories as $category)
         {
             $this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
-            $this->getCMSOptions($category['id_cms_category'], $depth + 1);
+            $this->getCMSOptions($category['id_cms_category'], $depth + 1, $id_lang);
         }
 
         foreach ($pages as $page)
@@ -602,15 +634,17 @@ class Blocktopmenu extends Module
 		return $this->display(__FILE__, 'blocktopmenu.tpl');
 	}
 
-    private function getCMSCategories($recursive = false, $parent = 1)
+    private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
     {
+        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+
         if ($recursive === false)
         {
             $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id.'
+				WHERE cl.`id_lang` = '.$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
             return Db::getInstance()->executeS($sql);
@@ -621,13 +655,13 @@ class Blocktopmenu extends Module
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.(int)Context::getContext()->language->id.'
+				WHERE cl.`id_lang` = '.$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
             $results = Db::getInstance()->executeS($sql);
             foreach ($results as $result)
             {
-                $sub_categories = $this->getCMSCategories(true, $result['id_cms_category']);
+                $sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], $id_lang);
                 if ($sub_categories && count($sub_categories) > 0)
                     $result['sub_categories'] = $sub_categories;
                 $categories[] = $result;
@@ -638,9 +672,10 @@ class Blocktopmenu extends Module
 
     }
 
-    private function getCMSPages($id_cms_category, $id_shop = false)
+    private function getCMSPages($id_cms_category, $id_shop = false, $id_lang = false)
     {
-        $id_shop = ($id_shop !== false) ? $id_shop : Context::getContext()->shop->id;
+        $id_shop = ($id_shop !== false) ? $id_shop : (int)Context::getContext()->shop->id;
+        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
         $sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 			FROM `'._DB_PREFIX_.'cms` c
@@ -649,8 +684,8 @@ class Blocktopmenu extends Module
 			INNER JOIN `'._DB_PREFIX_.'cms_lang` cl
 			ON (c.`id_cms` = cl.`id_cms`)
 			WHERE c.`id_cms_category` = '.(int)$id_cms_category.'
-			AND cs.`id_shop` = '.(int)$id_shop.'
-			AND cl.`id_lang` = '.(int)Context::getContext()->language->id.'
+			AND cs.`id_shop` = '.$id_shop.'
+			AND cl.`id_lang` = '.$id_lang.'
 			AND c.`active` = 1
 			ORDER BY `position`';
 
