@@ -84,64 +84,65 @@ class Gsitemap extends Module
 		else
 			$res = $this->generateSitemap(Configuration::get('PS_SHOP_DEFAULT'), GSITEMAP_FILE);
 
-        $this->_html .= '<h3 class="'. ($res ? 'conf confirm' : 'alert error') .'" style="margin-bottom: 20px">';
-        $this->_html .= $res ? $this->l('Sitemap file generated') : $this->l('Error while creating sitemap file');
-        $this->_html .= '</h3>';
-    }
+		$this->_html .= '<h3 class="'. ($res ? 'conf confirm' : 'alert error') .'" style="margin-bottom: 20px">';
+		$this->_html .= $res ? $this->l('Sitemap file generated') : $this->l('Error while creating sitemap file');
+		$this->_html .= '</h3>';
+	}
 
-    /**
-     * Generate sitemap index to reference the sitemap of each shop
-     *
-     * @return bool
-     */
-    private function generateSitemapIndex()
-    {
-    	$xmlString = <<<XML
+	/**
+	 * Generate sitemap index to reference the sitemap of each shop
+	 *
+	 * @return bool
+	 */
+	private function generateSitemapIndex()
+	{
+		$xmlString = <<<XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 </sitemapindex>
 XML;
-    	$xml = new SimpleXMLElement($xmlString);
+		$xml = new SimpleXMLElement($xmlString);
 
-    	$sql = 'SELECT s.id_shop, su.domain, su.domain_ssl, CONCAT(su.physical_uri, su.virtual_uri) as uri
-    			FROM '._DB_PREFIX_.'shop s
-    			INNER JOIN '._DB_PREFIX_.'shop_url su ON s.id_shop = su.id_shop AND su.main = 1
-    			WHERE s.active = 1
-    				AND s.deleted = 0
-    				AND su.active = 1';
-    	if (!$result = Db::getInstance()->executeS($sql))
-    		return false;
+		$sql = 'SELECT s.id_shop, su.domain, su.domain_ssl, CONCAT(su.physical_uri, su.virtual_uri) as uri
+				FROM '._DB_PREFIX_.'shop s
+				INNER JOIN '._DB_PREFIX_.'shop_url su ON s.id_shop = su.id_shop AND su.main = 1
+				WHERE s.active = 1
+					AND s.deleted = 0
+					AND su.active = 1';
+		if (!$result = Db::getInstance()->executeS($sql))
+			return false;
+		
+		$res = true;
+		foreach ($result as $row)
+		{
+			$info = pathinfo(GSITEMAP_FILE);
+			$filename = $info['filename'].'-'.$row['id_shop'].'.'.$info['extension'];
+			
+			$replaceUrl = array('http://'.$row['domain'].$row['uri'], ((Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$row['domain_ssl'].$row['uri']);
 
-    	$res = true;
-    	foreach ($result as $row)
-    	{
-    		$info = pathinfo(GSITEMAP_FILE);
-    		$filename = $info['filename'].'-'.$row['id_shop'].'.'.$info['extension'];
-    		$replaceUrl = array('http://'.$row['domain'].$row['uri'], ((Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$row['domain_ssl'].$row['uri']);
-
-    		$last = $this->generateSitemap($row['id_shop'], $info['dirname'].'/'.$filename, $replaceUrl);
-    		if ($last)
-    			$this->_addSitemapIndexNode($xml, 'http://'.$row['domain'].(($row['uri']) ? $row['uri'] : '/').$filename, date('Y-m-d'));
-    		$res &= $last;
-    	}
-
+			$last = $this->generateSitemap($row['id_shop'], $info['dirname'].'/'.$filename, $replaceUrl);
+			if ($last)
+				$this->_addSitemapIndexNode($xml, 'http://'.$row['domain'].(($row['uri']) ? $row['uri'] : '/').$filename, date('Y-m-d'));
+			$res &= $last;
+		}
+		
 		$fp = fopen(GSITEMAP_FILE, 'w');
 		fwrite($fp, $xml->asXML());
 		fclose($fp);
 
 		return $res && file_exists(GSITEMAP_FILE);
-    }
+	}
 
-    /**
-     * Generate a sitemap for a shop
-     *
-     * @param int $shopID
-     * @param string $filename
-     * @return bool
-     */
-    private function generateSitemap($shopID, $filename = '', $replaceUrl = array())
-    {
+	/**
+	 * Generate a sitemap for a shop
+	 *
+	 * @param int $shopID
+	 * @param string $filename
+	 * @return bool
+	 */
+	private function generateSitemap($shopID, $filename = '', $replaceUrl = array())
+	{
 		$langs = Language::getLanguages();
 		$shop = new Shop($shopID);
 		if (!$shop->id)
@@ -191,7 +192,7 @@ XML;
 			if (!isset($done[$product['id_image']]))
 			{
 				if ($tmp == $product['id_product'])
-				   $res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+					$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
 				else
 				{
 					$tmp = $product['id_product'];
@@ -294,18 +295,18 @@ XML;
 			foreach($pages as $page => $ssl)
 				$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl), '0.5', 'monthly');
 
-        $xmlString = $xml->asXML();
+		$xmlString = $xml->asXML();
 
-        // Replace URL in XML strings by real shops URL
-        if ($replaceUrl)
-        	$xmlString = str_replace(array(Tools::getShopDomain(true), Tools::getShopDomainSsl(true)), $replaceUrl, $xmlString);
+		// Replace URL in XML strings by real shops URL
+		if ($replaceUrl)
+			$xmlString = str_replace(array(Tools::getShopDomain(true).'/', Tools::getShopDomainSsl(true).'/'), $replaceUrl, $xmlString);
 
-        $fp = fopen($filename, 'w');
-        fwrite($fp, $xmlString);
-        fclose($fp);
+		$fp = fopen($filename, 'w');
+		fwrite($fp, $xmlString);
+		fclose($fp);
 
-        return file_exists($filename);
-    }
+		return file_exists($filename);
+	}
 
 	private function _addSitemapIndexNode($xml, $loc, $last_mod)
 	{
@@ -339,25 +340,59 @@ XML;
 		}
 	}
 
-    private function _displaySitemap()
-    {
-		if (file_exists(GSITEMAP_FILE) && filesize(GSITEMAP_FILE))
-        {
-            $fp = fopen(GSITEMAP_FILE, 'r');
-            $fstat = fstat($fp);
-            fclose($fp);
-            $xml = simplexml_load_file(GSITEMAP_FILE);
+	private function _displaySitemap()
+	{
+		if (Shop::isFeatureActive())
+		{
+			$sql = 'SELECT s.id_shop, su.domain, su.domain_ssl, CONCAT(su.physical_uri, su.virtual_uri) as uri
+					FROM '._DB_PREFIX_.'shop s
+					INNER JOIN '._DB_PREFIX_.'shop_url su ON s.id_shop = su.id_shop AND su.main = 1
+					WHERE s.active = 1
+						AND s.deleted = 0
+						AND su.active = 1';
+			if (!$result = Db::getInstance()->executeS($sql))
+				return '';
+			
+			$info = pathinfo(GSITEMAP_FILE);
+			foreach ($result as $shop)
+			{
+				$filename = $info['dirname'].'/'.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'];
+				if (file_exists($filename) && filesize($filename))
+				{
+					$fp = fopen($filename, 'r');
+					$fstat = fstat($fp);
+					fclose($fp);
+					$xml = simplexml_load_file($filename);
+		
+					$nbPages = count($xml->url);
+		
+					$this->_html .= '<h2>'.$this->l('Sitemap for: ').$shop['domain'].$shop['uri'].'</h2>';
+					$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
+					<a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'].'" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'].'</b></a></p><br />';
+		
+					$this->_html .= $this->l('Update:').' <b>'.utf8_encode(strftime('%A %d %B %Y %H:%M:%S',$fstat['mtime'])).'</b><br />';
+					$this->_html .= $this->l('Filesize:').' <b>'.number_format(($fstat['size']*.000001), 3).'MB</b><br />';
+					$this->_html .= $this->l('Indexed pages:').' <b>'.$nbPages.'</b><br /><br />';
+				}
+			}
+		}
+		elseif (file_exists(GSITEMAP_FILE) && filesize(GSITEMAP_FILE))
+		{
+			$fp = fopen(GSITEMAP_FILE, 'r');
+			$fstat = fstat($fp);
+			fclose($fp);
+			$xml = simplexml_load_file(GSITEMAP_FILE);
 
 			$nbPages = count($xml->url);
 
-            $this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
-            <a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml</b></a></p><br />';
+			$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
+			<a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'sitemap.xml</b></a></p><br />';
 
-            $this->_html .= $this->l('Update:').' <b>'.utf8_encode(strftime('%A %d %B %Y %H:%M:%S',$fstat['mtime'])).'</b><br />';
-            $this->_html .= $this->l('Filesize:').' <b>'.number_format(($fstat['size']*.000001), 3).'MB</b><br />';
-            $this->_html .= $this->l('Indexed pages:').' <b>'.$nbPages.'</b><br /><br />';
-        }
-    }
+			$this->_html .= $this->l('Update:').' <b>'.utf8_encode(strftime('%A %d %B %Y %H:%M:%S',$fstat['mtime'])).'</b><br />';
+			$this->_html .= $this->l('Filesize:').' <b>'.number_format(($fstat['size']*.000001), 3).'MB</b><br />';
+			$this->_html .= $this->l('Indexed pages:').' <b>'.$nbPages.'</b><br /><br />';
+		}
+	}
 
 	private function _displayForm()
 	{
