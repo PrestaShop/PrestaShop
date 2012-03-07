@@ -122,7 +122,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
-					'size' => 8,
+					'size' => 32,
 					'maxlength' => 32,
 					'required' => true
 				),
@@ -131,7 +131,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
 					'required' => true,
-					'size' => 4,
+					'size' => 2,
 					'maxlength' => 2,
 					'desc' => $this->l('2-letter ISO code (e.g., fr, en, de)')
 				),
@@ -140,7 +140,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'label' => $this->l('Language code:'),
 					'name' => 'language_code',
 					'required' => true,
-					'size' => 10,
+					'size' => 2,
 					'maxlength' => 5,
 					'desc' => $this->l('Full language code (e.g., en-us, pt-br)')
 				),

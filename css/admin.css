@@ -983,7 +983,7 @@ p.fail{
 	font-weight:bold;
 	color:red;
 }
-#resultCheckLangPack{
+#lang_pack_msg {
 	border: 1px solid #DFD5C3;
 	padding:10px;
 	margin-bottom:10px;
