@@ -43,7 +43,7 @@
 {/block}
 
 
-{block name="start_field_block"}
+{block name="field_block"}
 	{if $input['type'] == 'group_discount_category'}
 	<div style="{if !$form_id}display:none{/if}">
 		<script type="text/javascript">
@@ -269,6 +269,6 @@
 			</table>
 	</div>
 	{else}
-		<div class="margin-form">
+		{$smarty.block.parent}
 	{/if}
 {/block}

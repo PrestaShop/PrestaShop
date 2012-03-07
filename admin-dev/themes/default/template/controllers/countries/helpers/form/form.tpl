@@ -25,9 +25,9 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="start_field_block"}
-	<div class="margin-form">
-		{if $input.type == 'address_layout'}
+{block name="field_block"}
+	{if $input.type == 'address_layout'}
+		<div class="margin-form">
 			<div style="float:left">
 				<textarea id="ordered_fields" name="address_layout" style="width: 300px;height: 140px;">{$input.address_layout}</textarea>
 			</div>
@@ -46,7 +46,10 @@
 					{l s='Clean layout'}</a>
 				<div style="margin-top:10px; padding-top:5px; height:10px;" id="explanationText"></div>
 			</div>
-		{/if}
+		</div>
+	{else}
+		{$smarty.block.parent}
+	{/if}
 {/block}
 
 {block name=script}
