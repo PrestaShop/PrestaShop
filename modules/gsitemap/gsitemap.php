@@ -365,10 +365,11 @@ XML;
 					$xml = simplexml_load_file($filename);
 		
 					$nbPages = count($xml->url);
+					$sitemap_uri = 'http://'.rtrim($shop['domain'].$shop['uri'], '/').__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'];
 		
 					$this->_html .= '<h2>'.$this->l('Sitemap for: ').$shop['domain'].$shop['uri'].'</h2>';
 					$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
-					<a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'].'" target="_blank"><b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'].'</b></a></p><br />';
+					<a href="'.$sitemap_uri.'" target="_blank"><b>'.$sitemap_uri.'</b></a></p><br />';
 		
 					$this->_html .= $this->l('Update:').' <b>'.utf8_encode(strftime('%A %d %B %Y %H:%M:%S',$fstat['mtime'])).'</b><br />';
 					$this->_html .= $this->l('Filesize:').' <b>'.number_format(($fstat['size']*.000001), 3).'MB</b><br />';
