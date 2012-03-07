@@ -30,31 +30,24 @@
 	{if $input.type == 'color'}
 		<div id="colorAttributeProperties" style="display:{if $colorAttributeProperties}block{else}none{/if}";>
 	{/if}
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
+	{$smarty.block.parent}
 {/block}
 
-
-{block name="start_field_block"}
-	<div class="margin-form">
-		{if $input.name == 'current_texture'}
+{block name="field_block"}
+	{if $input.name == 'current_texture'}
+		<div class="margin-form">
 			{if isset($imageTextureExists) && $imageTextureExists}
 				<img src="{$imageTexture}" alt="{l s='Texture'}" />
 			{else}
 				{l s='None'}
 			{/if}
-		{/if}
-{/block}
-
-{block name="end_field_block"}
-		{if $input.type == 'text' && $input.name == 'texture'}
-			</div>
-		{/if}
-	</div>
-		{if $input.name == 'name'}
-			{hook h="displayAttributeForm" id_attribute=$form_id}
-		{/if}
+		</div>
+	{else}
+		{$smarty.block.parent}
+	{/if}
+	{if $input.name == 'name'}
+		{hook h="displayAttributeForm" id_attribute=$form_id}
+	{/if}
 {/block}
 
 {block name="script"}
@@ -71,5 +64,4 @@
 	displayColorFieldsOption();
 	
 	$('#id_attribute_group').change(displayColorFieldsOption);
-	
 {/block}
