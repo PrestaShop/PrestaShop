@@ -1930,7 +1930,7 @@ class ProductCore extends ObjectModel
 			$beginning,
 			$ending,
 			0,
-			true
+			$with_combination
 		);
 	}
 
@@ -1951,64 +1951,64 @@ class ProductCore extends ObjectModel
 
 		$current_date = date('Y-m-d H:i:s');
 		$product_reductions = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context, true);
-		
-		$ids_product = false;
+
 		if ($product_reductions)
 		{
 			$ids_product = ' AND (';
 			foreach ($product_reductions as $product_reduction)
 				$ids_product .= '( p.`id_product` = '.(int)$product_reduction['id_product'].($product_reduction['id_product_attribute'] ? ' AND pa.`id_product_attribute`='.(int)$product_reduction['id_product_attribute'] :'').') OR';
 			$ids_product = rtrim($ids_product, 'OR').')';
-		}
-		
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
-		$sql = 'SELECT p.id_product, pa.id_product_attribute
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (p.id_product = pa.id_product)
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE p.`active` = 1
-					'.(($ids_product) ? $ids_product : '').'
-					AND p.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+
+			// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
+			$sql = 'SELECT p.id_product, pa.id_product_attribute
+					FROM `'._DB_PREFIX_.'product` p
+					LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (p.id_product = pa.id_product)
+					'.Shop::addSqlAssociation('product', 'p').'
+					WHERE p.`active` = 1
+						'.(($ids_product) ? $ids_product : '').'
+						AND p.`id_product` IN (
+							SELECT cp.`id_product`
+							FROM `'._DB_PREFIX_.'category_group` cg
+							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+							WHERE cg.`id_group` '.$sql_groups.'
+						)
+					GROUP BY p.id_product
+					ORDER BY RAND()';
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+
+			if (!$id_product = $result['id_product'])
+				return false;
+
+			$sql = 'SELECT p.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
+						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
+						p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`, asso_shop_product.`id_category_default`
+					FROM `'._DB_PREFIX_.'product` p
+					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+						p.`id_product` = pl.`id_product`
+						AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 					)
-				GROUP BY p.id_product
-				ORDER BY RAND()';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		
-
-		if (!$id_product = $result['id_product'])
+					'.Shop::addSqlAssociation('product', 'p').'
+					LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product`
+						AND ptrgs.id_shop='.(int)$context->shop->id.')
+					LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
+						AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
+						AND tr.`id_state` = 0)
+					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+					'.Product::sqlStock('p', 0).'
+					WHERE p.id_product = '.(int)$id_product.'
+					'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '');
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+			if ($result['id_product_attribute'])
+				$row['id_product_attribute'] = $result['id_product_attribute'];
+			return Product::getProductProperties($id_lang, $row);
+		}
+		else
 			return false;
-
-		$sql = 'SELECT p.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
-					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-					p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`, asso_shop_product.`id_category_default`
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				)
-				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product`
-					AND ptrgs.id_shop='.(int)$context->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-					AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-				'.Product::sqlStock('p', 0).'
-				WHERE p.id_product = '.(int)$id_product.'
-				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '');
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		if ($result['id_product_attribute'])
-			$row['id_product_attribute'] = $result['id_product_attribute'];
-		return Product::getProductProperties($id_lang, $row);
 	}
 
 	/**
@@ -2070,6 +2070,12 @@ class ProductCore extends ObjectModel
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
+		$tab_id_product = array();
+		foreach ($ids_product as $product)
+			if (is_array($product))
+				$tab_id_product[] = $product['id_product'];
+			else
+				$tab_id_product = $product;
 		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
@@ -2099,7 +2105,7 @@ class ProductCore extends ObjectModel
 				WHERE p.`active` = 1
 				AND p.`show_price` = 1
 				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
-				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($ids_product) && count($ids_product)) ? implode(', ', $ids_product) : 0).')' : '').'
+				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
