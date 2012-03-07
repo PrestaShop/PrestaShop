@@ -178,6 +178,8 @@ class CarrierCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
+		if ($this->position <= 0)
+			$this->position = Carrier::getHigherPosition() + 1;
 		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
 			return false;
 		if (!Db::getInstance()->executeS('SELECT `id_carrier` FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE `deleted` = 0'))
