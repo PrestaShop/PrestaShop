@@ -485,7 +485,7 @@ class AdminCarriersControllerCore extends AdminController
 
 							$this->postImage($new_carrier->id);
 							$this->changeZones($new_carrier->id);
-							$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
+							$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
 							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
 						}
 						else
