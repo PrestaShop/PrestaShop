@@ -109,7 +109,6 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->displayInformation($this->l('Through this interface, you can increase quantities (add) and decrease quantities (delete) of products for a given warehouse.'));
 		$this->displayInformation($this->l('Furthermore, you can move quantities (transfer) of products between warehouses, or within one warehouse.').'<br />');
 		$this->displayInformation($this->l('Note that if you want to increase quantities of multiple products at once, you can use the supply orders tab.').'<br />');
-
 		$this->displayInformation($this->l('Finally, you will be asked to specify the state of the quantity you will add : '));
 		$this->displayInformation($this->l('usable for sale means that this quantity will be available in shop(s),'));
 		$this->displayInformation($this->l('otherwise it will be considered reserved (i.e. for other purposes).'));
@@ -148,6 +147,7 @@ class AdminStockManagementControllerCore extends AdminController
 				$last_sm_quantity_is_usable = -1;
 				$last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
 
+				// if there is a stock mvt
 				if ($last_sm != false)
 				{
 					$last_sm_currency = new Currency((int)$last_sm['id_currency']);
@@ -577,7 +577,7 @@ class AdminStockManagementControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('The selected product is not valid.');
 
 			// get quantity and check that the post value is really an integer
-			// If it's not, we have to do nothing.
+			// If it's not, we have nothing to do
 			$quantity = Tools::getValue('quantity', 0);
 			if (!is_numeric($quantity) || (int)$quantity <= 0)
 				$this->errors[] = Tools::displayError('The quantity value is not valid.');
@@ -700,7 +700,7 @@ class AdminStockManagementControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in destination warehouse.');
 			$usable_to = (bool)$usable_to;
 
-			// if all is ok, transfer stock
+			// if we can process stock transfers
 			if (count($this->errors) == 0)
 			{
 				// transfer stock
