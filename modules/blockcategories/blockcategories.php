@@ -167,23 +167,10 @@ class BlockCategories extends Module
 		$id_lang = (int)($params['cookie']->id_lang);
 		$smartyCacheId = 'blockcategories|'.$id_current_shop.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
 
-		/*Tools::enableCache();
+		Tools::enableCache();
 		if (!$this->isCached('blockcategories.tpl', $smartyCacheId))
-		{*/
+		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
-			/*p('
-							SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
-							FROM `'._DB_PREFIX_.'category` c
-							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.Shop::addSqlRestrictionOnLang('cl').')
-							LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
-							LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category`)
-							WHERE (c.`active` = 1 OR c.`id_category` = '.(int)Configuration::get('PS_HOME_CATEGORY').')
-							AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY').'
-							'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
-							AND cg.`id_group` IN ('.pSQL($groups).')
-							AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-							GROUP BY id_category
-							ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'));*/
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
@@ -235,7 +222,7 @@ class BlockCategories extends Module
 			else
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
-		//}
+		}
 		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
