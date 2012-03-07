@@ -365,7 +365,7 @@ XML;
 					$xml = simplexml_load_file($filename);
 		
 					$nbPages = count($xml->url);
-					$sitemap_uri = 'http://'.rtrim($shop['domain'].$shop['uri'], '/').__PS_BASE_URI__.$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'];
+					$sitemap_uri = 'http://'.$shop['domain'].$shop['uri'].$info['filename'].'-'.$shop['id_shop'].'.'.$info['extension'];
 		
 					$this->_html .= '<h2>'.$this->l('Sitemap for: ').$shop['domain'].$shop['uri'].'</h2>';
 					$this->_html .= '<p>'.$this->l('Your Google sitemap file is online at the following address:').'<br />
