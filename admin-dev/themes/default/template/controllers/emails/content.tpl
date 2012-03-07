@@ -30,6 +30,10 @@
 	var textSendOk = "{l s='Mail is sent'}";
 	var textSendError= "{l s='Error: please check your configuration'}";
 	var errorMail = "{l s='This email address is wrong!'}";
+	$(document).ready(function() {
+		if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)
+			$('#smtp').show();
+	});
 </script>
 <script type="text/javascript" src="../js/sendMailTest.js"></script>
 
