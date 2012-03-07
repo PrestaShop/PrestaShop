@@ -2040,6 +2040,13 @@ class ProductCore extends ObjectModel
 		$current_date = date('Y-m-d H:i:s');
 		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
+		$tab_id_product = array();
+		foreach ($ids_product as $product)
+			if (is_array($product))
+				$tab_id_product[] = (int)$product['id_product'];
+			else
+				$tab_id_product[] = (int)$product;
+		
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
@@ -2055,7 +2062,7 @@ class ProductCore extends ObjectModel
 					WHERE p.`active` = 1
 						AND p.`show_price` = 1
 						'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
-						'.((!$beginning && !$ending) ? 'AND p.`id_product` IN('.((is_array($ids_product) && count($ids_product)) ? implode(', ', array_map('intval', $ids_product)) : 0).')' : '').'
+						'.((!$beginning && !$ending) ? 'AND p.`id_product` IN('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 						AND p.`id_product` IN (
 							SELECT cp.`id_product`
 							FROM `'._DB_PREFIX_.'category_group` cg
@@ -2070,12 +2077,6 @@ class ProductCore extends ObjectModel
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
-		$tab_id_product = array();
-		foreach ($ids_product as $product)
-			if (is_array($product))
-				$tab_id_product[] = $product['id_product'];
-			else
-				$tab_id_product = $product;
 		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
