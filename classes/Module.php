@@ -1020,7 +1020,8 @@ abstract class ModuleCore
 					$item->description = $tmp_module->description;
 					$item->author = $tmp_module->author;
 					$item->limited_countries = $tmp_module->limited_countries;
-					$item->is_configurable = isset($tmp_module->is_configurable) ? $tmp_module->is_configurable : 1;
+					$item->parent_class = get_parent_class($module);
+					$item->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
 					$item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
@@ -1095,6 +1096,7 @@ abstract class ModuleCore
 							$item->description = strip_tags((string)$modaddons->description);
 							$item->author = strip_tags((string)$modaddons->author);
 							$item->limited_countries = array();
+							$item->parent_class = '';
 							$item->is_configurable = 0;
 							$item->need_instance = 0;
 							$item->not_on_disk = 1;
@@ -1540,7 +1542,7 @@ abstract class ModuleCore
 	<description><![CDATA['.Tools::htmlentitiesUTF8($this->description).']]></description>
 	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
 	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall>'.$this->confirmUninstall.'</confirmUninstall>' : '').'
-	<is_configurable>'.(int)method_exists($this, 'getContent').'</is_configurable>
+	<is_configurable>'.(int)$this->is_configurable.'</is_configurable>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
 		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
