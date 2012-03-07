@@ -218,7 +218,7 @@ class SupplyOrderCore extends ObjectModel
 		$this->total_ti = 0;
 		$is_discount = false;
 
-		if (is_numeric($this->discount_rate) && (float)$this->discount_rate > 0)
+		if (is_numeric($this->discount_rate) && (float)$this->discount_rate >= 0)
 			$is_discount = true;
 
 		// gets all product entries in this order
