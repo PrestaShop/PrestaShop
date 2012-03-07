@@ -27,6 +27,8 @@
 function checkLangPack(token){
 	if ($('#iso_code').val().length == 2)
 	{
+		$('#lang_pack_loading').show();
+		$('#lang_pack_msg').hide();
 		doAdminAjax(
 			{
 				controller:'AdminLanguages',
@@ -38,6 +40,7 @@ function checkLangPack(token){
 			},
 			function(ret)
 			{
+				$('#lang_pack_loading').hide();
 				ret = $.parseJSON(ret);
 				if( ret.status == 'ok')
 				{
@@ -46,7 +49,8 @@ function checkLangPack(token){
 						+'<br />' + langPackVersion + ' ' + content['version']
 						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
 						+ $('#iso_code').val()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
-					showSuccessMessage(message);
+					$('#lang_pack_msg').html(message);
+					$('#lang_pack_msg').show();
 				}
 				else
 					showErrorMessage(ret.error);
