@@ -25,8 +25,7 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'select_theme'}
 		<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 			{foreach $input.options.query AS $option}
@@ -42,7 +41,8 @@
 				>{$option|escape:'htmlall':'UTF-8'}</option>
 			{/foreach}
 		</select>
-		{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 

@@ -26,12 +26,13 @@
 
 {extends file="helpers/form/form.tpl"}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'select_category'}
 		<select name="id_parent">
 			{$input.options.html}
 		</select>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 

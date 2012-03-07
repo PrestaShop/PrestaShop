@@ -66,12 +66,13 @@
 	</div>
 {/block}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'select_category'}
 		<select name="{$input.name}">
 			{$input.options.html}
 		</select>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
