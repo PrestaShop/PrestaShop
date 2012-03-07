@@ -25,10 +25,14 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'special'}
-		<p id="{$input.name}"><img src="../img/admin/{$input.img}" alt="" /> {$input.text}</p>
+		<div id="#resultCheckLangPack">
+			<p id="lang_pack_loading" style="display:none"><img src="../img/admin/{$input.img}" alt="" /> {$input.text}</p>
+			<p id="lang_pack_msg" style="display:none"></p>
+		</div>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
