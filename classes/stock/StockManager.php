@@ -205,16 +205,16 @@ class StockManagerCore implements StockManagerInterface
 		$context = Context::getContext();
 
 		// Special case of a pack
-		if (Pack::isPack($id_product))
+		if (Pack::isPack((int)$id_product))
 		{
 			// Gets items
-			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+			$products_pack = Pack::getItems((int)$id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 			// Foreach item
 			foreach ($products_pack as $product_pack)
 			{
-				//TODO $pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1);
+				$pack_id_product_attribute = Product::getDefaultAttribute($product_pack->id, 1);
 				if ($product_pack->advanced_stock_management == 1)
-					$this->removeProduct($product_pack->id, 0, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+					$this->removeProduct($product_pack->id, $pack_id_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
 			}
 		}
 		else
