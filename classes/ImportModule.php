@@ -81,7 +81,7 @@ abstract class ImportModuleCore extends Module
 	{
 		$modules = Module::getModulesOnDisk(true);
 		foreach ($modules as $key => $module)
-			if (get_parent_class($module) != 'ImportModule')
+			if (!isset($module->parent_class) || $module->parent_class != 'ImportModule')
 				unset($modules[$key]);
 		return $modules;
 	}
