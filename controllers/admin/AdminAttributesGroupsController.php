@@ -386,7 +386,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
 		}
 		
 		if (count($this->errors))
@@ -469,12 +469,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 
-				$this->toolbar_btn['save-and-stay'] = array(
-					'short' => 'SaveAndStay',
-					'href' => '#',
-					'desc' => $this->l('Save and add'),
-					'force_desc' => true,
-				);
+				if ($this->display == 'editAttributes')
+					$this->toolbar_btn['save-and-stay'] = array(
+						'short' => 'SaveAndStay',
+						'href' => '#',
+						'desc' => $this->l('Save and add'),
+						'force_desc' => true,
+					);
 
 				$back = self::$currentIndex.'&token='.$this->token;
 				$this->toolbar_btn['back'] = array(
