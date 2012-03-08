@@ -193,7 +193,7 @@ class HomeSlider extends Module
 				$this->_postProcess();
 			$this->_displayForm();
 		}
-		else if (Tools::isSubmit('addSlide') || (Tools::isSubmit('id_slide') && $this->slideExists((int)Tools::getValue('id_slide'))))
+		elseif (Tools::isSubmit('addSlide') || (Tools::isSubmit('id_slide') && $this->slideExists((int)Tools::getValue('id_slide'))))
 			$this->_displayAddForm();
 		else
 			$this->_displayForm();
@@ -270,14 +270,14 @@ class HomeSlider extends Module
 			foreach ($slides as $slide)
 			{
 				$this->_html .= '
-  					<li id="slides_'.$slide['id_slide'].'">
-    					<strong>#'.$slide['id_slide'].'</strong> '.$slide['title'].'
-    					<p style="float: right">'.
-    						$this->displayStatus($slide['id_slide'], $slide['active']).'
-    						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
+					<li id="slides_'.$slide['id_slide'].'">
+						<strong>#'.$slide['id_slide'].'</strong> '.$slide['title'].'
+						<p style="float: right">'.
+							$this->displayStatus($slide['id_slide'], $slide['active']).'
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
 							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&delete_id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</p>
-  					</li>';
+					</li>';
 			}
 			$this->_html .= '</ul></div>';
 		}
@@ -331,7 +331,7 @@ class HomeSlider extends Module
 		$this->_html .= '<fieldset class="width3">';
 		if (Tools::isSubmit('addSlide')) /* Configure legend */
 			$this->_html .= '<legend><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> 2 - '.$this->l('Configure your slide').'</legend>';
-		else if (Tools::isSubmit('id_slide')) /* Edit legend */
+		elseif (Tools::isSubmit('id_slide')) /* Edit legend */
 			$this->_html .= '<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" /> 2 - '.$this->l('Edit your slide').'</legend>';
 		/* Sets id slide as hidden */
 		if ($slide && Tools::getValue('id_slide'))
@@ -394,11 +394,11 @@ class HomeSlider extends Module
 		<label for="active_on">'.$this->l('Active:').'</label>
 		<div class="margin-form">
 			<img src="../img/admin/enabled.gif" alt="Yes" title="Yes" />
-	        <input type="radio" name="active_slide" id="active_on" '.(($slide && (isset($slide->active) && (int)$slide->active == 0)) ? '' : 'checked="checked" ').' value="1" />
-		    <label class="t" for="active_on">'.$this->l('Yes').'</label>
-		    <img src="../img/admin/disabled.gif" alt="No" title="No" style="margin-left: 10px;" />
-		    <input type="radio" name="active_slide" id="active_off" '.(($slide && (isset($slide->active) && (int)$slide->active == 0)) ? 'checked="checked" ' : '').' value="0" />
-		    <label class="t" for="active_off">'.$this->l('No').'</label>
+			<input type="radio" name="active_slide" id="active_on" '.(($slide && (isset($slide->active) && (int)$slide->active == 0)) ? '' : 'checked="checked" ').' value="1" />
+			<label class="t" for="active_on">'.$this->l('Yes').'</label>
+			<img src="../img/admin/disabled.gif" alt="No" title="No" style="margin-left: 10px;" />
+			<input type="radio" name="active_slide" id="active_off" '.(($slide && (isset($slide->active) && (int)$slide->active == 0)) ? 'checked="checked" ' : '').' value="0" />
+			<label class="t" for="active_off">'.$this->l('No').'</label>
 		</div>';
 
 		/* Save */
@@ -427,17 +427,17 @@ class HomeSlider extends Module
 				!Validate::isInt(Tools::getValue('HOMESLIDER_WIDTH')) || !Validate::isInt(Tools::getValue('HOMESLIDER_HEIGHT')))
 					$errors[] = $this->l('Invalid values');
 		} /* Validation for status */
-		else if (Tools::isSubmit('changeStatus'))
+		elseif (Tools::isSubmit('changeStatus'))
 		{
 			if (!Validate::isInt(Tools::getValue('id_slide')))
 				$errors[] = $this->l('Invalid slide');
 		}
 		/* Validation for Slide */
-		else if (Tools::isSubmit('submitSlide'))
+		elseif (Tools::isSubmit('submitSlide'))
 		{
 			/* Checks state (active) */
 			if (!Validate::isInt(Tools::getValue('active_slide')) || (Tools::getValue('active_slide') != 0 && Tools::getValue('active_slide') != 1))
-			    $errors[] = $this->l('Invalid slide state');
+				$errors[] = $this->l('Invalid slide state');
 			/* Checks position */
 			if (!Validate::isInt(Tools::getValue('position')) || (Tools::getValue('position') < 0))
 				$errors[] = $this->l('Invalid slide position');
@@ -480,7 +480,7 @@ class HomeSlider extends Module
 			if (Tools::getValue('image_old_'.$defaultLanguage) && !Validate::isFileName(Tools::getValue('image_old_'.$defaultLanguage)))
 				$errors[] = $this->l('Image is not set');
 		} /* Validation for deletion */
-		else if (Tools::isSubmit('delete_id_slide') && (!Validate::isInt(Tools::getValue('delete_id_slide')) || !$this->slideExists((int)Tools::getValue('delete_id_slide'))))
+		elseif (Tools::isSubmit('delete_id_slide') && (!Validate::isInt(Tools::getValue('delete_id_slide')) || !$this->slideExists((int)Tools::getValue('delete_id_slide'))))
 			$errors[] = $this->l('Invalid id_slide');
 
 		/* Display errors if needed */
@@ -509,7 +509,7 @@ class HomeSlider extends Module
 				$errors .= $this->displayError($this->l('Configuration could not be updated'));
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
 		} /* Process Slide status */
-		else if (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
+		elseif (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
 		{
 			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
 			if ($slide->active == 0)
@@ -520,7 +520,7 @@ class HomeSlider extends Module
 			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayError($this->l('Configuration could not be updated')));
 		}
 		/* Processes Slide */
-		else if (Tools::isSubmit('submitSlide'))
+		elseif (Tools::isSubmit('submitSlide'))
 		{
 			/* Sets ID if needed */
 			if (Tools::getValue('id_slide'))
@@ -566,15 +566,15 @@ class HomeSlider extends Module
 					$salt = sha1(microtime());
 					if ($error = ImageManager::validateUpload($_FILES['image_'.$language['id_lang']]))
 						$errors .= $error;
-					else if (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
+					elseif (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					else if (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).$type))
+					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type))
 						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						@unlink($temp_name);
-					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).$type);
+					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).'.'.$type);
 				}
-				if (Tools::getValue('image_old_'.$language['id_lang']) != '')
+				elseif (Tools::getValue('image_old_'.$language['id_lang']) != '')
 					$slide->image[$language['id_lang']] = pSQL(Tools::getValue('image_old_'.$language['id_lang']));
 			}
 
@@ -587,11 +587,11 @@ class HomeSlider extends Module
 					if (!$slide->add())
 						$errors .= $this->displayError($this->l('Slide could not be added'));
 				} /* Update */
-				else if (!$slide->update())
+				elseif (!$slide->update())
 					$errors .= $this->displayError($this->l('Slide could not be updated'));
 			}
 		} /* Deletes */
-		else if (Tools::isSubmit('delete_id_slide'))
+		elseif (Tools::isSubmit('delete_id_slide'))
 		{
 			$slide = new HomeSlide((int)Tools::getValue('delete_id_slide'));
 			$res = $slide->delete();
@@ -604,9 +604,9 @@ class HomeSlider extends Module
 		/* Display errors if needed */
 		if (count($errors))
 			$this->_html .= $this->displayError(implode('<br />', $errors));
-		else if (Tools::isSubmit('submitSlide') && Tools::getValue('id_slide'))
+		elseif (Tools::isSubmit('submitSlide') && Tools::getValue('id_slide'))
 			$this->_html .= $this->displayConfirmation($this->l('Slide updated'));
-		else if (Tools::isSubmit('submitSlide'))
+		elseif (Tools::isSubmit('submitSlide'))
 			$this->_html .= $this->displayConfirmation($this->l('Slide added'));
 	}
 
@@ -671,7 +671,7 @@ class HomeSlider extends Module
 		}
 		</style>
 		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui.will.be.removed.in.1.6.js"></script>
-	 	<script type="text/javascript">
+		<script type="text/javascript">
 			$(function() {
 				var $mySlides = $("#slides");
 				$mySlides.sortable({
@@ -683,10 +683,10 @@ class HomeSlider extends Module
 						}
 					});
 				$mySlides.hover(function() {
- 					$(this).css("cursor","move");
- 					},
- 					function() {
- 					$(this).css("cursor","auto");
+					$(this).css("cursor","move");
+					},
+					function() {
+					$(this).css("cursor","auto");
 				});
 			});
 		</script>';
