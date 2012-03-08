@@ -27,6 +27,8 @@
 
 class AdminAttributesGroupsControllerCore extends AdminController
 {
+	protected $id_attribute;
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();
@@ -469,11 +471,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 
-				if ($this->display == 'editAttributes')
+				if ($this->display == 'editAttributes' && !$this->id_attribute)
 					$this->toolbar_btn['save-and-stay'] = array(
 						'short' => 'SaveAndStay',
 						'href' => '#',
-						'desc' => $this->l('Save and add'),
+						'desc' => $this->l('Save then add another value'),
 						'force_desc' => true,
 					);
 
@@ -507,18 +509,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$current_tab = array_pop($tabs);
 				$tabs[] = array('name' => $this->l('Edit new Attribute'));
 				break;
 
 			case 'add':
-				$current_tab = array_pop($tabs);
 				$tabs[] = array('name' => $this->l('Add new Attribute'));
 				break;
 
 			case 'editAttributes':
-				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => $this->l('Add new Value'));
+				if ($this->id_attribute)
+					$tabs[] = array('name' => $this->l('Edit Value'));
+				else
+					$tabs[] = array('name' => $this->l('Add new Value'));
 				break;
 		}
 		// note : this should use a tpl file
@@ -536,7 +538,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		parent::initProcess();
 		if ($this->table == 'attribute')
+		{
 			$this->display = 'editAttributes';
+			$this->id_attribute = (int)Tools::getValue('id_attribute');
+		}
 	}
 	
 	protected function defineObjectTypeAttribute()
