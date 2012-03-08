@@ -35,8 +35,6 @@
 		{else}
 			<div style="display: none;">
 		{/if}
-	{else if $input.name == 'id_state'}
-		<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
@@ -94,7 +92,7 @@
 	{else}
 		{$smarty.block.parent}
 	{/if}
-	{if $input.name == 'vat_number' || $input.name == 'id_state'}
+	{if $input.name == 'vat_number'}
 		</div>
 	{/if}
 {/block}
