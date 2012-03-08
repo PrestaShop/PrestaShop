@@ -682,7 +682,7 @@ class ProductCore extends ObjectModel
 			!$this->deleteAccessories() ||
 			!$this->deleteFromAccessories() ||
 			!$this->deleteFromSupplier() ||
-			!$this->deleteTaxRulesGroup(true))
+			!$this->deleteTaxRulesGroup(Shop::getShops(true, null, true)))
 		return false;
 
 		if ($id = ProductDownload::getIdFromIdProduct($this->id))
