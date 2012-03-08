@@ -44,9 +44,9 @@ function smartyTranslate($params, &$smarty)
 	else if ($params['pdf']) 
 		return Translate::getPdfTranslation($params['s']);
 
-	if (is_array($lang_array) && key_exists($key, $lang_array))
+	if ($lang_array != null && isset($lang_array[$key]))
 		$msg = $lang_array[$key];
-	elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
+	elseif ($lang_array != null && isset($lang_array[Tools::strtolower($key)]))
 		$msg = $lang_array[Tools::strtolower($key)];
 	else
 		$msg = $params['s'];
