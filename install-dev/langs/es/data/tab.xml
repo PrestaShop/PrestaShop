@@ -82,6 +82,7 @@
   <tab id="DB_Backup" name="Copia de seguridad"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Accounting" name="Accounting"/>
+  <tab id="Accounting_plan" name="Accounting plan"/>
   <tab id="Logs" name="Log"/>
   <tab id="Subdomains" name="Subcampos"/>
   <tab id="Webservice" name="Web service"/>

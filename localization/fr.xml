@@ -8,10 +8,10 @@
 	</languages>
 
 	<taxes>
-        <tax id="1" name="TVA FR 19.6%" rate="19.6" />
-        <tax id="2" name="TVA FR 7%" rate="7" />
-        <tax id="3" name="TVA FR 5.5%" rate="5.5" />
-        <tax id="4" name="TVA FR 2.1%" rate="2.1" />
+        <tax id="1" name="TVA FR 19.6%" rate="19.6" account_number="445711" />
+        <tax id="2" name="TVA FR 7%" rate="7" account_number="" />
+        <tax id="3" name="TVA FR 5.5%" rate="5.5" account_number="445712" />
+        <tax id="4" name="TVA FR 2.1%" rate="2.1" account_number="445711" />
 
         <taxRulesGroup name="FR Taux standard (19.6%)">
             <taxRule iso_code_country="be" id_tax="1" />

@@ -82,6 +82,7 @@
   <tab id="DB_Backup" name="Sauvegarde BDD"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Accounting" name="Comptabilit&#xE9;"/>
+  <tab id="Accounting_plan" name="Plan comptable"/>
   <tab id="Logs" name="Log"/>
   <tab id="Subdomains" name="Sous domaines"/>
   <tab id="Webservice" name="Service web"/>

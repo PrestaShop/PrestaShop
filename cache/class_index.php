@@ -13,6 +13,8 @@
   'AddressesControllerCore' => 'controllers/front/AddressesController.php',
   'AdminAccessController' => 'override/controllers/admin/AdminAccessController.php',
   'AdminAccessControllerCore' => 'controllers/admin/AdminAccessController.php',
+  'AdminAccountingConfigurationController' => '',
+  'AdminAccountingConfigurationControllerCore' => 'controllers/admin/AdminAccountingConfigurationController.php',
   'AdminAccountingExportController' => 'override/controllers/admin/AdminAccountingExportController.php',
   'AdminAccountingExportControllerCore' => 'controllers/admin/AdminAccountingExportController.php',
   'AdminAccountingManagementController' => 'override/controllers/admin/AdminAccountingManagementController.php',

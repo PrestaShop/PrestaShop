@@ -158,13 +158,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
-					'PS_GIFT_WRAPPING_ACCOUNT_NUMBER' => array(
-						'title' => $this->l('Gift-wrapping account number'),
-						'desc' => $this->l('Set an account number for your gift-wrapping (used for accounting)'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'size' => 30,
-					),
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
 			),
