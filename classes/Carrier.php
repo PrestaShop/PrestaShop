@@ -204,7 +204,7 @@ class CarrierCore extends ObjectModel
 		if (!parent::delete())
 			return false;
 		return (Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_rule_carrier WHERE id_carrier = '.(int)$this->id) &&
-					$this->deleteTaxRulesGroup(true));
+					$this->deleteTaxRulesGroup(Shop::getShops(true, null, true)));
 		
 	}
 
