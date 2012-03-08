@@ -75,7 +75,7 @@ class RangeWeightCore extends ObjectModel
 		AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2`='.(float)$delimiter2);
 	}
 	
-	public function isOverlapping($id_carrier, $delimiter1, $delimiter2)
+	public static function isOverlapping($id_carrier, $delimiter1, $delimiter2)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT count(*)
