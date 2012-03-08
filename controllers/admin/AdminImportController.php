@@ -800,9 +800,12 @@ class AdminImportControllerCore extends AdminController
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
-			if (!isset($info['id']) || (int)$info['id'] < 2)
+			$tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
+			if (isset($info['id']) && in_array((int)$info['id'], $tab_categ))
+			{
+				$this->errors[] = Tools::displayError('The ID category cannot be the same as the ID Root category, nor the ID Home category');
 				continue;
-
+			}
 			AdminImportController::setDefaultValues($info);
 			$category = new Category();
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
