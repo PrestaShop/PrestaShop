@@ -293,7 +293,7 @@ class HomeSlider extends Module
 			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
 		/* Checks if directory is writable */
 		if (!is_writable('.'))
-			$this->displayWarning(sprintf($this->l('modules %s must be writable (CHMOD 755 / 777)'), $this->name));
+			$this->adminDisplayWarning(sprintf($this->l('modules %s must be writable (CHMOD 755 / 777)'), $this->name));
 
 		/* Gets languages and sets which div requires translations */
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
