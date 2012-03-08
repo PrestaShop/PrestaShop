@@ -72,10 +72,10 @@
 		$('.input_group_shop').each(function(k, item)
 		{
 			var id_group_shop = $(item).val();
-			if (shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]))
-			$(item).attr('disabled', false);
+			if (shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]) > -1)
+				$(item).attr('disabled', false);
 			else
-			$(item).attr('disabled', true);
+				$(item).attr('disabled', true);
 		});
 	};
 	$('#id_attribute_group').change(changeAssociationGroup);
