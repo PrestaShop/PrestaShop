@@ -49,7 +49,7 @@ class TranslateCore
 		if (!isset($modules_tabs))
 			$modules_tabs = Tab::getModuleTabList();
 
-		if (!is_array($_LANGADM))
+		if ($_LANGADM == null)
 		{
 			$iso = Context::getContext()->language->iso_code;
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
@@ -141,7 +141,7 @@ class TranslateCore
 		$cache_key = $name.'|'.$string.'|'.$source;
 		if (!isset($lang_cache[$cache_key]))
 		{
-			if (!is_array($_MODULES))
+			if ($_MODULES == null)
 				return str_replace('"', '&quot;', $string);
 
 			// set array key to lowercase for 1.3 compatibility
