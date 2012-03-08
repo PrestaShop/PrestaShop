@@ -286,23 +286,32 @@ class AdminHomeControllerCore extends AdminController
 	{
 		$currency = Tools::setCurrency($this->context->cookie);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT IFNULL(SUM(o.`total_paid_real` / o.conversion_rate), "0") as total_sales, COUNT(*) as total_orders
-		FROM `'._DB_PREFIX_.'orders` o
-		WHERE o.valid = 1
-		AND o.`invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\' ');
+			SELECT IFNULL(SUM(`total_paid_real` / conversion_rate), "0") as total_sales, COUNT(*) as total_orders
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE valid = 1
+				AND `invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+		');
+
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_customer`) AS total_registrations
-		FROM `'._DB_PREFIX_.'customer` c
-		WHERE c.`date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
+			SELECT COUNT(`id_customer`) AS total_registrations
+			FROM `'._DB_PREFIX_.'customer` c
+			WHERE c.`date_add` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+				'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+		');
+
 		$result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(pv.`counter`) AS total_viewed
-		FROM `'._DB_PREFIX_.'page_viewed` pv
-		LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-		LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-		LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-		WHERE pt.`name` = \'product.php\'
-		AND dr.`time_start` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
-		AND dr.`time_end` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'');
+			SELECT SUM(pv.`counter`) AS total_viewed
+			FROM `'._DB_PREFIX_.'page_viewed` pv
+			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+			LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
+			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+			WHERE pt.`name` = \'product\'
+				AND dr.`time_start` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+				AND dr.`time_end` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\'
+				'.Shop::addSqlRestriction().'
+		');
+
 		$results = array_merge($result, array_merge($result2, $result3));
 
 		$content = '<div class="table_info">
@@ -362,7 +371,9 @@ class AdminHomeControllerCore extends AdminController
 			SELECT total_paid / conversion_rate as total_converted, invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1
-			AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'');
+				AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
+				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+		');
 		foreach ($result as $row)
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date']), $row['total_converted']);
 		$chart->setSize(580, 170);
