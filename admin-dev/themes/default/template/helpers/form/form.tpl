@@ -324,8 +324,8 @@
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{/if}
-								{/block}
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
+								{/block}
 								{block name="description_block"}
 									{if isset($input.desc)}
 										<p class="preference_description">
@@ -344,14 +344,14 @@
 									{/if}
 								{/block}
 								{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
-							{block name="end_field_block"}
-								</div>
-								<div class="clear"></div>
+								{block name="end_field_block"}
+									</div>
+									<div class="clear"></div>
+								{/block}
 							{/block}
 							{if $input.name == 'id_state'}
 								</div>
 							{/if}
-						{/block}
 						{/if}
 					{/foreach}
 					{hook h='displayAdminForm'}
