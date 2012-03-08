@@ -133,7 +133,7 @@ class CustomerCore extends ObjectModel
 
 	public $groupBox;
 
-	public $account_number;
+	public $account_number = '';
 
 	protected $webserviceParameters = array(
 		'fields' => array(

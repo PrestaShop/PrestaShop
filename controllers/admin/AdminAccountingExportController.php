@@ -29,13 +29,13 @@ class AdminAccountingExportControllerCore extends AdminController
 {
 	public $exportTypeList = array();
 	
-	public $pathTheme = '';
-	
-	public $defaultType = 'block_global_export';
-	
 	public $downloadDir = '';
 	
 	public $downloadFile = '';
+
+	public $file = '';
+
+	public $already_generated = false;
 	
 	public $exportSelected = '';
 	
@@ -48,12 +48,14 @@ class AdminAccountingExportControllerCore extends AdminController
 	
 	public $prevent = array(
 		'errors' => array(),
-		'warns' => array(),
+		'warn' => array(),
 		'hints' => array());
 	
 	public $exportedFilePath = '';
 	
-	public $clientPrefix = '';
+	public $acc_conf = array();
+
+	public $file_format;
 	
 	public function __construct()
 	{
@@ -88,7 +90,8 @@ class AdminAccountingExportControllerCore extends AdminController
 					'payment_type' => $this->l('Payment Type', 'AdminTab', false, false),
 					'currency_code' => $this->l('Currency Code', 'AdminTab', false, false),
 					'wording' => $this->l('Wording', 'AdminTab', false, false)
-				)
+				),
+				'type' => 0
 			),
 			'reconciliation_export' => array(
 				'name' => $this->l('Reconciliation Export'),
@@ -101,24 +104,10 @@ class AdminAccountingExportControllerCore extends AdminController
 					'invoice_date' => $this->l('Invoice Date', 'AdminTab', false, false),
 					'transaction_id' => $this->l('Transaction Number', 'AdminTab', false, false),
 					'account_client' => $this->l('Account client', 'AdminTab', false, false)
-				)
+				),
+				'type' => 1
 			) 
 	 	);
-	}
-	
-	/**
-	 * Init the block Menu
-	 */
-	protected function initMenu()
-	{
-		$this->context->smarty->assign(array(
-			'exportTypeList' => $this->exportTypeList,
-			'defaultType' => $this->defaultType,
-			'preventList' => $this->prevent
-			)
-		);
-
-		$this->content .= $this->createTemplate('menu.tpl')->fetch();
 	}
 	
 	/**
@@ -135,39 +124,71 @@ class AdminAccountingExportControllerCore extends AdminController
 	protected function checkRights()
 	{
 		if (!is_writeable($this->downloadDir))
-			$this->errors[] = $this->l('The download folder doesn\'t have the sufficient right…');
+			$this->errors[] = $this->l('The download folder doesn\'t have the sufficient right');
 		if (!($this->fd = fopen($this->downloadFile, 'w+')))
 			$this->errors[] = $this->l('The file can\'t be opened or created, please check the right');
 		@chmod($this->downloadFile, 0777);
 	}
-	
+
+	public function getExportedList()
+	{
+		$exported_list = Accounting::getExportedList();
+		foreach ($exported_list as &$export)
+			foreach ($this->exportTypeList as $export_type)
+			{
+				$export['title'] = $this->l('Undefined');
+				if (((int)$export_type['type']) == ((int)$export['type']))
+				{
+					$export['title'] = $export_type['name'];
+					break;
+				}
+			}
+		return $exported_list;
+	}
+
 	/**
 	 * AdminController::init() override
 	 * @see AdminController::init()
 	 */
 	public function initContent()
-	{	
-		$this->initMenu();
-		
+	{
 		$this->context->smarty->assign(array(
-			'clientPrefix' => Configuration::get('ACCOUNTING_CLIENT_PREFIX_EXPORT'),
-			'journal' => Configuration::get('ACCOUNTING_JOURNAL_EXPORT'),
-			'begin_date' => Tools::getValue('beginDate'),
-			'end_date' => Tools::getValue('endDate'),
-			'urlDownload' => Tools::getShopDomain().'/download/'
+			'begin_date' => Tools::getValue('begin_date'),
+			'end_date' => Tools::getValue('end_date'),
+			'file_format' => $this->file_format,
+			'export_type' => $this->exportSelected,
+			'urlDownload' => Tools::getShopDomain().'/download/',
+			'preventList' => $this->prevent,
+			'export_type_list' => $this->exportTypeList,
+			'exported_list' => $this->getExportedList(),
+			'already_generated' => Configuration::get('REQUEST_URI').$this->already_generated,
 		));
-		
-		foreach ($this->exportTypeList as $exportType)
-		{
-			$this->context->smarty->assign(array(
-				'title' => $exportType['name'],
-				'type' => $exportType['type'],
-				'existingExport' => file_exists($this->downloadDir.$exportType['file']) ? true : false
-			));
-
-			$this->content .= $this->createTemplate($exportType['type'].'.tpl')->fetch();
-		}
+	
 		parent::initContent();
+	}
+
+	public function saveRangeDate()
+	{
+		$keys = array('`begin_to`', '`end_to`', '`type`', '`file`');
+
+		$values = array(
+			'"'.pSQL($this->date['begin']).'"', 
+			'"'.pSQL($this->date['end']).'"',
+			(int)$this->exportTypeList[$this->exportSelected]['type'],
+			'"'.pSQL($this->file).'"'
+		);
+
+		if (!($id_acc_export = Tools::getValue('regenerate')))
+			$query = '
+				INSERT INTO `'._DB_PREFIX_.'accounting_export`
+				('.implode(', ', $keys).')
+				VALUES('.implode(', ', $values).')';
+		else
+			$query = 'UPDATE `'._DB_PREFIX_.'accounting_export` 
+				SET `date` = CURRENT_TIMESTAMP, `file` = "'.$this->file.'"
+				WHERE `id_accounting_export` = '.(int)$id_acc_export;
+	 
+		Db::getInstance()->execute($query);
 	}
 	
 	/**
@@ -176,38 +197,71 @@ class AdminAccountingExportControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitAccountingExportType'))
+		$succeed = false;
+
+		if (Tools::isSubmit('accounting_export'))
 		{
-			$this->date['begin'] = Tools::getValue('beginDate');
-			$this->date['end'] = Tools::getValue('endDate');
-			$this->clientPrefix = Tools::getValue('clientPrefix');
-			$this->exportSelected = Tools::getValue('exportType');
-			$this->downloadFile = $this->downloadDir.'accounting_'.$this->exportSelected.'.csv';
-			
-			Configuration::updateValue('ACCOUNTING_CLIENT_PREFIX_EXPORT', $this->clientPrefix);
+			$this->acc_conf = Accounting::getConfiguration();
+			$this->date['begin'] = Tools::getValue('begin_date');
+			$this->date['end'] = Tools::getValue('end_date');
+			$this->exportSelected = Tools::getValue('type');
+			$this->file_format = Tools::getValue('format');
+			$this->file = $this->exportSelected.'-'.$this->date['begin'].
+				'to'.$this->date['end'].'.'.$this->file_format;
+			$this->downloadFile = $this->downloadDir.$this->file;
+
 			// Depends of the number of order and the range dates
 			// Switch to ajax if there is any problems with time
 			ini_set('max_execution_time', 0);
-			
-			switch ($this->exportSelected)
+			if (!in_array($this->file_format, array('csv', 'txt')))
+				$this->prevent['error'][] = $this->l('Please select file format');
+			else if (!empty($this->date['begin']) && !empty($this->date['end']) &&
+				(Tools::getValue('regenerate') || !$this->isAlreadyGenerated()))
 			{
-				case 'reconciliation_export':
-					$this->runReconciliationExport();
-					break;
-				case 'global_export':
-					$this->runGlobalExport();
-					Configuration::updateValue('ACCOUNTING_JOURNAL_EXPORT', Tools::getValue('journal'));
-					break;
-				default:
-					// If not defined, set export type to default
-					$this->exportSelected = 'global_export';
+				switch ($this->exportSelected)
+				{
+					case 'reconciliation_export':
+						$succeed = $this->runReconciliationExport();
+						break;
+					case 'global_export':
+						$succeed = $this->runGlobalExport();
+						break;
+					default:
+						$this->prevent['error'][] = $this->l('Please select a export type');
+				}
+				if ($succeed)
+					$this->saveRangeDate();
 			}
-			
-			// Set back the default block type to display
-			$this->defaultType = 'block_'.$this->exportSelected.'';
+			else if (!$this->already_generated)
+				$this->prevent['error'][] = $this->l('Please select the date');
 		}
-		else if (($type = Tools::getValue('download')) && array_key_exists($type, $this->exportTypeList))
-			$this->downloadFile($this->exportTypeList[$type]['file']);
+		else if (($file = Tools::getValue('download')) && file_exists($this->downloadDir.$file))
+			$this->launchDownloadFile($this->downloadDir.$file);
+	}
+
+	public function isAlreadyGenerated()
+	{
+		$query = '
+			SELECT ae.`type`, ae.`id_accounting_export` 
+			FROM `'._DB_PREFIX_.'accounting_export` ae
+			WHERE ae.`begin_to` = "'.pSQL($this->date['begin']).'"
+			AND ae.`end_to` = "'.pSQL($this->date['end']).'"
+			AND ae.`type` = '.(int)$this->exportTypeList[$this->exportSelected]['type'];
+
+		if (($entry = Db::getInstance()->getRow($query)) !== false)
+		{
+			if ($this->exportTypeList[$this->exportSelected]['type'] == $entry['type'])
+			{	
+				$this->prevent['warn'][] = $this->l('This export has already be proceed with this file format');
+				$this->already_generated = $entry['id_accounting_export'];
+			}
+			else
+			{
+				$this->prevent['warn'][] = $this->l('This export has already be proceed with a different file format');	
+				$this->already_generated = true;
+			}
+		}
+		return (bool)$this->already_generated;
 	}
 	
 	/**
@@ -235,7 +289,9 @@ class AdminAccountingExportControllerCore extends AdminController
 				fwrite($this->fd, mb_convert_encoding(rtrim($buffer, ';')."\r\n", 'UTF-16LE'));
 			}
 			$this->confirmations[] = $this->l('Export has been successfully done');
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -253,7 +309,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				o.`total_paid_real`,
 				oi.`date_add` as invoice_date,
 				pcc.`transaction_id`,
-				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(c.`id_customer`, 6, "0")) AS account_client
+				CONCAT(\''.pSQL($this->acc_conf['client_prefix']).'\', LPAD(c.`id_customer`, 6, "0")) AS account_client
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
@@ -266,7 +322,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		
 		$list = Db::getInstance()->executeS($query);
 		
-		$this->writeExportToFile($list);
+		return $this->writeExportToFile($list);
 	}
 
 	/**
@@ -282,7 +338,7 @@ class AdminAccountingExportControllerCore extends AdminController
 
 		// Default Values
 		$line[0] = $row['invoice_date'];
-		$line[1] = Tools::getValue('journal');
+		$line[1] = $this->acc_conf['journal'];
 		$line[2] = ''; // account number
 		$line[3] = $row['invoice_number'];
 		$line[4] = 0.00; // Credit TTC (Total for first csv line, 0 for others)
@@ -418,8 +474,9 @@ class AdminAccountingExportControllerCore extends AdminController
 				pcc.`transaction_id`,
 				o.`payment` AS payment_type,
 				currency.`iso_code` AS currency_code,
-				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(customer.`id_customer`, 6, "0")) AS account_client,
-				CASE 
+				CONCAT(\''.pSQL($this->acc_conf['client_prefix']).'\', LPAD(customer.`id_customer`, 6, "0")) AS account_client,
+				CASE
+				 	WHEN (customer.`account_number` != "" AND customer.`account_number` IS NOT NULL) THEN customer.`account_number`	
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`
 					ELSE  a.`lastname`
 				END AS wording,
@@ -455,14 +512,14 @@ class AdminAccountingExportControllerCore extends AdminController
 				ORDER BY o.`id_order` ASC';
 
 		$list = $this->buildGlobalExportlist(Db::getInstance()->executeS($query));
-		$this->writeExportToFile($list);
+		return $this->writeExportToFile($list);
 	}
 	
 	/**
 	* Allow to download the last export file
 	* @var string File name
 	*/
-	protected function downloadFile($fileName)
+	protected function launchDownloadFile($fileName)
 	{
 		$path = $this->downloadDir.$fileName;
 		header('Content-length: '.filesize($path));

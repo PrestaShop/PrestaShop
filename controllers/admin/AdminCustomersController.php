@@ -278,7 +278,8 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'account_number',
 					'size' => 33,
 					'required' => false,
-					'desc' => $this->l('Used for the accounting export')
+					'desc' => $this->l('Used for the accounting export. If this field is empty, the accounting export will use this number ').
+						Accounting::getDisplayedCustomerAccount($this->getFieldValue($obj, 'id_customer'), true)
 				),
 				array(
 					'type' => 'birthday',

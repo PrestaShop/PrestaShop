@@ -542,7 +542,7 @@ CREATE TABLE `PREFIX_customer` (
   `passwd` varchar(32) NOT NULL,
   `last_passwd_gen` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `birthday` date default NULL,
-	`account_number` varchar(128) NULL,
+  `account_number` varchar(128) NULL,
   `newsletter` tinyint(1) unsigned NOT NULL default '0',
   `ip_registration_newsletter` varchar(15) default NULL,
   `newsletter_date_add` datetime default NULL,
@@ -2304,6 +2304,26 @@ CREATE TABLE `PREFIX_supplier_rates` (
 `price_te` DECIMAL(20,6) DEFAULT '0.000000',
   PRIMARY KEY (`id_product_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `ps_accounting_export` (
+  `id_accounting_export` int(11) NOT NULL AUTO_INCREMENT,
+  `begin_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `end_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `type` int(11) NOT NULL,
+  `file` varchar(256) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_accounting_export`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_accounting_export` (
+  `id_accounting_export` int(11) NOT NULL AUTO_INCREMENT,
+  `begin_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `end_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `type` int(11) NOT NULL,
+  `file` varchar(256) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_accounting_export`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_accounting_zone_shop` (
   `id_accounting_zone_shop` int(11) NOT NULL AUTO_INCREMENT,

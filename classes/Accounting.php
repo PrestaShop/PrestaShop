@@ -27,6 +27,24 @@
 
 class AccountingCore
 {
+	const CONF_NAME = 'ACCOUNTING_CONFIGURATION';
+	
+	/**
+     * Default Values
+     *
+     * @var array
+     */
+	public static $acc_conf = array(
+		'customer_prefix' => '411',
+		'journal' => 'VE',
+		'account_length' => 13,
+		'account_submit_shipping_charge' => '708510',
+		'account_unsubmit_shipping_charge' => '708520',
+		'account_gift_wripping' => ''
+	);
+
+	public static $acc_conf_cached = false;
+
 	/**
 	* Set an account number to a zone (will be refactoring for a dynamic use depending of the Controller)
 	* @var array $assoZoneShopList correspond to an associated list of id_zone - id_shop - num
@@ -107,5 +125,74 @@ class AccountingCore
 			SELECT `id_shop`, `id_zone`, `account_number` 
 			FROM `'._DB_PREFIX_.'accounting_zone_shop`
 			WHERE `id_shop` = '.(int)$id_shop);
+	}
+
+	/**
+	 * Get the Accounting Configuration
+	 * If a key is defined, then it will try to get the value
+	 *
+	 * @static
+	 * @param null $key
+	 * @return array|bool
+	 */
+	public static function getConfiguration($key = null)
+	{
+		// Cache for call performance
+		if (!self::$acc_conf_cached)
+		{
+			// Merge default values with the configured values
+			if ($conf = unserialize(Configuration::get(Accounting::CONF_NAME)))
+				self::$acc_conf = array_merge(self::$acc_conf, $conf);
+			self::$acc_conf_cached = true;
+		}
+
+
+		// Return value key or the complete configuration depending of the $key definition
+		return (!$key) ? self::$acc_conf : ((isset(self::$acc_conf[$key]) ? self::$acc_conf[$key] : false));
+	}
+
+	/**
+	 * Get the list of export done
+	 *
+	 * @static
+	 * @return array
+	 */
+	public static function getExportedList()
+	{
+		return Db::getInstance()->executeS('
+			SELECT * FROM `'._DB_PREFIX_.'accounting_export` ORDER BY `date` DESC');
+	}
+
+	/**
+	 * Get the displayed customer account.
+	 * Pad with / without prefix if the account is set
+	 *
+	 * @static
+	 * @param $id_customer
+	 * @param $default_value
+	 * @return string
+	 */
+	public static function getDisplayedCustomerAccount($id_customer, $default_value = false)
+	{
+		$acc_num = Db::getInstance()->getValue('
+			SELECT account_number FROM `'._DB_PREFIX_.'customer`
+			WHERE id_customer = '.(int)$id_customer);
+
+		$display = $acc_num;
+		if (empty($acc_num) || $default_value)
+		{
+			$display = Accounting::getConfiguration('customer_prefix');
+			$max_len = Accounting::getConfiguration('account_length');
+			$len = Tools::strlen($display) + Tools::strlen((string)$id_customer);
+
+			// Pad the displayed string
+			while ($max_len > 0 && $max_len > $len)
+			{
+				$display .= '0';
+				--$max_len;
+			}
+			$display .= (string)$id_customer;
+		}
+		return $display;
 	}
 }

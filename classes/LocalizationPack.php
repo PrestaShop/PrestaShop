@@ -151,6 +151,7 @@ class LocalizationPackCore
 				$tax = new Tax();
 				$tax->name[(int)Configuration::get('PS_LANG_DEFAULT')] = (string)$attributes['name'];
 				$tax->rate = (float)$attributes['rate'];
+				$tax->account_number = isset($attributes['account_number']) ? (string)$attributes['account_number'] : '';
 				$tax->active = 1;
 
 				if (!$tax->validateFields())

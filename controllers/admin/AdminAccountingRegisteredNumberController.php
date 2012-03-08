@@ -47,7 +47,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 					'COUNT(*) AS total' => $this->l('Number of product associated to this account')
 				),
 				'group_by' => 'account_number',
-				'condition' => 'p.account_number <> ""',
+				'condition' => 'p.account_number <> "" AND account_number IS NOT NULL',
 				'title' => $this->l('Product account number list'),
 				'list' => array()),
 
@@ -59,7 +59,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 					'COUNT(*) AS total' => $this->l('Number of taxes associated to this account')
 				),
 				'group_by' => 'account_number',
-				'condition' => 'account_number <> ""',
+				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
 				'title' => $this->l('Taxes Account number list'),
 				'list' => array()),
 
@@ -70,7 +70,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 					'account_number' => $this->l('Account number'),
 					'total' => $this->l('Number of gift-wrapping associated to this account')
 				),
-				'condition' => 'account_number <> ""',
+				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
 				'group_by' => 'account_number',
 				'title' => $this->l('Gift wrapping account number list'),
 				'list' => array()),
@@ -84,7 +84,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 					'lastname' => $this->l('Last name')
 				),
 				'group_by' => 'account_number',
-				'condition' => 'account_number <> ""',
+				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
 				'title' => $this->l('Customer account number list'),
 				'list' => array()),
 
@@ -96,7 +96,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 					'COUNT(*) AS total' => $this->l('Number of zone associated to this account')
 				),
 				'group_by' => 'account_number',
-				'condition' => 'account_number <> ""',
+				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
 				'title' => $this->l('Zone shop account number list'),
 				'list' => array())
 		);
@@ -113,6 +113,13 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 	{
 		$this->initToolbar();
 		$this->initAccountNumberList();
+
+		$this->context->smarty->assign(array(
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->l('Accounting Plan'),
+			'account_number_list' => $this->account_number_list));
+
+		parent::initContent();
 	}
 
 	public function initAccountNumberList()
@@ -144,13 +151,6 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 
 		$num = Configuration::get('PS_GIFT_WRAPPING_ACCOUNT_NUMBER');
 		if (!empty($num))
-			$this->account_number_list['gift_wrapping']['list'][] = array($num, '1');
-
-		$this->context->smarty->assign(array(
-			'toolbar_btn' => $this->toolbar_btn,
-			'title' => $this->l('Accounting Plan'),
-			'account_number_list' => $this->account_number_list));
-
-		parent::initContent();
+			$this->account_number_list['gift_wrapping']['list'][] = array($num, '1');	
 	}
 }
