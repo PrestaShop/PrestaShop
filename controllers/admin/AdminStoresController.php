@@ -196,7 +196,8 @@ class AdminStoresControllerCore extends AdminController
 					'required' => true,
 					'options' => array(
 						'id' => 'id_state',
-						'name' => 'name'
+						'name' => 'name',
+                        'query' => null
 					)
 				),
 				array(
@@ -369,6 +370,8 @@ class AdminStoresControllerCore extends AdminController
 
 		if (!count($this->errors))
 			parent::postProcess();
+        else
+            $this->display = 'add';
 	}
 
 	protected function postImage($id)

@@ -431,9 +431,12 @@ class AdminShopControllerCore extends AdminController
 			);
 
 		$this->fields_value = array(
-			'id_group_shop' => (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID(),
-			'active' => true,
-			'id_theme_checked' => isset($obj->id_theme) ? $obj->id_theme : $id_theme
+            'id_group_shop' => (Tools::getValue('id_group_shop') ? Tools::getValue('id_group_shop') :
+                (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
+            'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
+                (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
+			'active' => (Tools::getValue('active') ? true : false),
+			'id_theme_checked' => (isset($obj->id_theme) ? $obj->id_theme : $id_theme)
 		);
 
 		$this->tpl_form_vars = array(
@@ -490,7 +493,10 @@ class AdminShopControllerCore extends AdminController
 
 		$this->errors = array_unique($this->errors);
 		if (count($this->errors) > 0)
-			return;
+        {
+            $this->display = 'add';
+            return;
+        }
 
 		// datas to import
 		$import_data = Tools::getValue('importData');
