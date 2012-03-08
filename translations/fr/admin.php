@@ -2012,6 +2012,7 @@ $_LANGADM['AdminOrders034d2690db87b737dd810afccbe41b7a'] = 'Créer une commande'
 $_LANGADM['AdminOrders03ab340b3f99e03cff9e84314ead38c0'] = 'Qté';
 $_LANGADM['AdminOrders03c2e7e41ffc181a4e84080b4710e81e'] = 'Nouveau';
 $_LANGADM['AdminOrders044083ab9d382e5bed8c049f601c509d'] = 'Aucun bon trouvé';
+$_LANGADM['AdminOrders06218411415e79be5c93e529adf6d2b1'] = 'Première commande du client';
 $_LANGADM['AdminOrders068f80c7519d0528fb08e82137a72131'] = 'Produits';
 $_LANGADM['AdminOrders06933067aafd48425d67bcb01bba5cb6'] = 'Mettre à jour';
 $_LANGADM['AdminOrders074d20a3d8b933b677a76337a81df873'] = 'Numéro de carte :';

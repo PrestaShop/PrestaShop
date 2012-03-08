@@ -63,17 +63,75 @@ class AdminOrdersControllerCore extends AdminController
 			$statuses_array[$status['id_order_state']] = $status['name'];
 
 		$this->fieldsDisplay = array(
-		'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
-		'new' => array('title' => $this->l('New'), 'width' => 25, 'align' => 'center', 'type' => 'bool',
-						'filter_key' => 'new', 'tmpTableFilter' => true, 'icon' => array(0 => 'blank.gif', 1 => 'news-new.gif'), 'orderby' => false),
-		'customer' => array('title' => $this->l('Customer'), 'filter_key' => 'customer', 'tmpTableFilter' => true),
-		'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'type' => 'price', 'currency' => true),
-		'payment' => array('title' => $this->l('Payment'), 'width' => 100),
-		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 280, 'type' => 'select',
-						'list' => $statuses_array, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
-		'date_add' => array('title' => $this->l('Date'), 'width' => 130, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
-		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false, 'remove_onclick' => true));
+		'id_order' => array(
+			'title' => $this->l('ID'),
+			'align' => 'center',
+			'width' => 25
+		),
+		'reference' => array(
+			'title' => $this->l('Reference'),
+			'align' => 'center',
+			'width' => 65
+		),
+		'new' => array(
+			'title' => $this->l('New'),
+			'width' => 25,
+			'align' => 'center',
+			'type' => 'bool',
+			'filter_key' => 'new',
+			'tmpTableFilter' => true,
+			'icon' => array(
+				0 => 'blank.gif',
+				1 => array(
+					'src' => 'news-new.gif',
+					'alt' => $this->l('First customer order'),
+				)
+			),
+			'orderby' => false
+		),
+		'customer' => array(
+			'title' => $this->l('Customer'),
+			'filter_key' => 'customer',
+			'tmpTableFilter' => true
+		),
+		'total_paid_tax_incl' => array(
+			'title' => $this->l('Total'),
+			'width' => 70,
+			'align' => 'right',
+			'prefix' => '<b>',
+			'suffix' => '</b>',
+			'type' => 'price',
+			'currency' => true
+		),
+		'payment' => array(
+			'title' => $this->l('Payment'),
+			'width' => 100
+		),
+		'osname' => array(
+			'title' => $this->l('Status'),
+			'color' => 'color',
+			'width' => 280,
+			'type' => 'select',
+			'list' => $statuses_array,
+			'filter_key' => 'os!id_order_state',
+			'filter_type' => 'int'
+		),
+		'date_add' => array(
+			'title' => $this->l('Date'),
+			'width' => 130,
+			'align' => 'right',
+			'type' => 'datetime',
+			'filter_key' => 'a!date_add'
+		),
+		'id_pdf' => array(
+			'title' => $this->l('PDF'),
+			'width' => 35,
+			'align' => 'center',
+			'callback' => 'printPDFIcons',
+			'orderby' => false,
+			'search' => false,
+			'remove_onclick' => true)
+		);
 
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_ORDER;

@@ -281,7 +281,18 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
 				}
 				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
-					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
+				{
+					if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]]))
+						$this->_list[$index][$key] = array(
+							'src' => $params['icon'][$tr[$key]]['src'],
+							'alt' => $params['icon'][$tr[$key]]['alt'],
+						);
+					else
+						$this->_list[$index][$key] = array(
+							'src' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
+							'alt' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
+						);
+				}
 				else if (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
 				else if (isset($params['type']) && $params['type'] == 'price')
