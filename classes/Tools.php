@@ -1690,6 +1690,8 @@ FileETag INode MTime Size
 		// In case the user hasn't rewrite mod enabled
 		fwrite($write_fd, "#If rewrite mod isn't enabled\n");
 
+		// Do not remove ($domains is already iterated upper)
+		reset($domains);
 		$domain = current($domains);
 		fwrite($write_fd, 'ErrorDocument 404 '.$domain[0]['physical']."index.php?controller=404\n\n");
 
