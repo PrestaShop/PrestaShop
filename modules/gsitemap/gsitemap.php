@@ -94,7 +94,7 @@ class Gsitemap extends Module
 	 *
 	 * @return bool
 	 */
-	private function generateSitemapIndex()
+	public function generateSitemapIndex()
 	{
 		$xmlString = <<<XML
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -416,10 +416,10 @@ XML;
 			</div>
 			<input name="btnSubmit" class="button" type="submit"
 			value="'.((!file_exists(GSITEMAP_FILE)) ? $this->l('Generate sitemap file') : $this->l('Update sitemap file')).'" />
-		</form><br /><br /><br />
+		</form><br />
 		<h2>'.$this->l('Use cron job to re-build the sitemap:').'</h2>
 		<p>
-			<b>'.$domain.Tools::htmlentitiesUTF8(dirname($_SERVER['REQUEST_URI'])).'?controller=adminmodules&configure=gsitemap&token='.Tools::getValue('token').'&btnSubmit&GSITEMAP_ALL_CMS='.((int)Configuration::get('GSITEMAP_ALL_CMS')).'&GSITEMAP_ALL_PRODUCTS='.((int)Configuration::get('GSITEMAP_ALL_PRODUCTS')).'</b>
+			<b>'.$domain.__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron?&token='.substr(Tools::encrypt('gsitemap/cron'),0,10).'&GSITEMAP_ALL_CMS='.((int)Configuration::get('GSITEMAP_ALL_CMS')).'&GSITEMAP_ALL_PRODUCTS='.((int)Configuration::get('GSITEMAP_ALL_PRODUCTS')).'</b>
 		</p>';
 	}
 
