@@ -49,7 +49,7 @@
 
 		<table cellpadding="5" style="width:100%">
 			<tbody>
-				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
+				<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input 
 							{if $product->advanced_stock_management == 1 && $stock_management_active == 1}
@@ -72,7 +72,7 @@
 						<br /><br />
 					</td>
 				</tr>
-				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
+				<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input 
 							{if $product->depends_on_stock == 1 && $stock_management_active == 1}
@@ -94,7 +94,7 @@
 					</td>
 				</tr>
 				
-				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
+				<tr {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input 
 							{if $product->depends_on_stock == 0 || $stock_management_active == 0}
