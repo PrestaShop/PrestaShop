@@ -64,8 +64,9 @@ class HelperOptionsCore extends Helper
 
 			foreach ($category_data['fields'] as $key => $field)
 			{
-				// Set field value
-				$field['value'] = $this->getOptionValue($key, $field);
+				// Set field value unless explicitly denied
+				if (!isset($field['auto_value']) || $field['auto_value'])
+					$field['value'] = $this->getOptionValue($key, $field);
 
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
 				$isDisabled = $isInvisible = false;

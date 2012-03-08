@@ -481,8 +481,6 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			if (!isset($this->table))
-				return false;
 			// set token
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
