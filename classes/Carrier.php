@@ -941,21 +941,17 @@ class CarrierCore extends ObjectModel
 		return Cache::retrieve((int)$id_carrier.'_'.(int)$context->shop->id);
 	}
 
-	
-	public function deleteTaxRulesGroup($shops = false)
+	public function deleteTaxRulesGroup(array $shops = null)
 	{
 		if (!$shops)
 			$shops = Shop::getContextListShopID();
 
-		$shop = ' AND `id_shop` IN (';
+		$where = 'id_carrier = '.(int)$this->id;
+		if ($shops)
+			$where .= ' AND id_shop IN('.implode(', ', array_map('intval', $shops)).')';
+		return Db::getInstance()->delete('carrier_tax_rules_group_shop', $where);
+	}
 
-		foreach ($shops as $id_shop)
-			$shop .= (int)$id_shop.',';
-		$shop = rtrim($shop, ',').')';
-		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_tax_rules_group_shop 
-					WHERE id_carrier='.(int)$this->id.$shop);
-	}	
-		
 	public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
 	{
 		if (!Validate::isUnsignedId($id_tax_rules_group))
@@ -968,11 +964,15 @@ class CarrierCore extends ObjectModel
 			
 		$this->deleteTaxRulesGroup($shops);
 				
-		$values = '';			
+		$values = array();
 		foreach ($shops as $id_shop)
-				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
-				
-		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_tax_rules_group_shop (`id_carrier`, `id_tax_rules_group`, `id_shop`) VALUES '.rtrim($values, ','));
+			$values[] = array(
+				'id_carrier' => (int)$this->id,
+				'id_tax_rules_group' => (int)$id_tax_rules_group,
+				'id_shop' => (int)$id_shop,
+			);
+
+		return Db::getInstance()->insert('carrier_tax_rules_group_shop', $values);
 	}
 
 	/**

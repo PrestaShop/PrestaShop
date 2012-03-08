@@ -4116,19 +4116,15 @@ class ProductCore extends ObjectModel
 															FROM '._DB_PREFIX_.'product_tax_rules_group_shop WHERE `id_product`='.(int)$id_old_product.')');
 	}
 
-	public function deleteTaxRulesGroup($shops = false)
+	public function deleteTaxRulesGroup(array $shops = null)
 	{
 		if (!$shops)
 			$shops = Shop::getContextListShopID();
 
-		$shop = ' AND `id_shop` IN (';
-
-		foreach ($shops as $id_shop)
-			$shop .= (int)$id_shop.',';
-		$shop = rtrim($shop, ',').')';
-
-		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tax_rules_group_shop
-					WHERE id_product='.(int)$this->id.$shop);
+		$where = 'id_product = '.(int)$this->id;
+		if ($shops)
+			$where .= ' AND id_shop IN('.implode(', ', array_map('intval', $shops)).')';
+		return Db::getInstance()->delete('product_tax_rules_group_shop', $where);
 	}
 
 	public function setTaxRulesGroup($id_tax_rules_group, $all_shops = false)
@@ -4143,11 +4139,15 @@ class ProductCore extends ObjectModel
 
 		$this->deleteTaxRulesGroup($shops);
 
-		$values = '';			
+		$values = array();
 		foreach ($shops as $id_shop)
-				$values .= '('.(int)$this->id.','.(int)$id_tax_rules_group.','.(int)$id_shop.'),';
+			$values[] = array(
+				'id_product' => (int)$this->id,
+				'id_tax_rules_group' => (int)$id_tax_rules_group,
+				'id_shop' => (int)$id_shop,
+			);
 
-		return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tax_rules_group_shop (`id_product`, `id_tax_rules_group`, `id_shop`) VALUES '.rtrim($values, ','));
+		return Db::getInstance()->insert('product_tax_rules_group_shop', $values);
 	}
 
 	public function getIdTaxRulesGroup(Context $context = null)
