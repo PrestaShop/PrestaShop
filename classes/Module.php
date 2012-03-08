@@ -1694,5 +1694,29 @@ abstract class ModuleCore
 		
 		return $result['position'];
 	}
+	
+	/**
+	 * add a warning message to display at the top of the admin page
+	 *
+	 * @param string $msg
+	 */
+	public function adminDisplayWarning($msg)
+	{
+		if (!($this->context->controller instanceof AdminController))
+			return false;
+		$this->context->controller->warnings[] = $msg;
+	}
+
+	/**
+	 * add a info message to display at the top of the admin page
+	 *
+	 * @param string $msg
+	 */
+	protected function adminDisplayInformation($msg)
+	{
+		if (!($this->context->controller instanceof AdminController))
+			return false;
+		$this->context->controller->informations[] = $msg;
+	}
 }
 
