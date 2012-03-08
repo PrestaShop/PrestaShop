@@ -47,8 +47,8 @@
 		<input class="hook_list" type="hidden" name="hook_list[{$hook_id}]" 
 			value="{$hook_name}" />
 	{/foreach}
-<div class="toto">
-	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive" style=" background-color:#4FB106; background: -moz-linear-gradient(#4FB106, #157402) repeat scroll 0 0 transparent; border:1px solid #4FB106; color:#fff;float:right; text-shadow: 0 -1px 0 #157402; margin-right:20px;">
+<div >
+	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive" style="color:#fff;float:right; text-shadow: 0 -1px 0 #157402; margin-right:20px;">
 	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="button" style="background: #333 none; color:#fff; border:1px solid #000; float:right; margin-right:10px;">
 
 </div>
