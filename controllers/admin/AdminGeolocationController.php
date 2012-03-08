@@ -65,13 +65,6 @@ class AdminGeolocationControllerCore extends AdminController
 										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors can\'t see your catalog')),
 										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but can\'t make an order')))
 					),
-		 			'countries' => array(
-						'title' => $this->l('Select countries that can access your store:'),
-						'type' => 'checkbox_table',
-						'identifier' => 'iso_code',
-						'list' => Country::getCountries($this->context->language->id),
-						'auto_value' => false
-					),
 				),
 			),
 			'geolocationWhitelist' => array(
@@ -91,47 +84,51 @@ class AdminGeolocationControllerCore extends AdminController
 	 */
 	public function processUpdateOptions($token)
 	{
-		$redirectAdmin = false;
 		if ($this->isGeoLiteCityAvailable())
-		{
 			Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
-			$redirectAdmin = true;
-		}
-		else
+		// stop processing if geolocation is set to yes but geolite pack is not available
+		elseif (Tools::getValue('PS_GEOLOCATION_ENABLED'))
 			$this->errors[] = Tools::displayError('Geolocation database is unavailable.');
 
-		if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
-			$this->errors[] = Tools::displayError('Country selection is invalid');
-		else
+		if (empty($this->errors))
 		{
-			Configuration::updateValue(
-				'PS_GEOLOCATION_BEHAVIOR',
-				(!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
-			);
-			Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
-			Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
-			$redirectAdmin = true;
-		}
+			if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
+				$this->errors[] = Tools::displayError('Country selection is invalid');
+			else
+			{
+				Configuration::updateValue(
+					'PS_GEOLOCATION_BEHAVIOR',
+					(!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
+				);
+				Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
+				Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
+			}
 
-		if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
-			$this->errors[] = Tools::displayError('Invalid whitelist');
-		else
-		{
-			Configuration::updateValue(
-				'PS_GEOLOCATION_WHITELIST',
-				str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
-			);
-			$redirectAdmin = true;
+			if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+				$this->errors[] = Tools::displayError('Invalid whitelist');
+			else
+			{
+				Configuration::updateValue(
+					'PS_GEOLOCATION_WHITELIST',
+					str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+				);
+			}
 		}
-
-		if ($redirectAdmin)
-			$this->redirect_after = self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4';
 
 		return parent::processUpdateOptions($token);
 	}
 
 	public function renderOptions()
 	{
+		// This field is not declared in class constructor because we want it to be manually post processed
+		$this->options['geolocationCountries']['fields']['countries'] = array(
+								'title' => $this->l('Select countries that can access your store:'),
+								'type' => 'checkbox_table',
+								'identifier' => 'iso_code',
+								'list' => Country::getCountries($this->context->language->id),
+								'auto_value' => false
+							);
+
 		$this->tpl_option_vars = array('allowed_countries' => explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')));
 
 		return parent::renderOptions();
