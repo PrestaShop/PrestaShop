@@ -26,17 +26,14 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name=script}
-
 	$(document).ready(function() {
 		$('#latitude, #longitude').keyup(function() {
 			$(this).val($(this).val().replace(/,/g, '.'));
 		});
 	});
-
 {/block}
 
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input_block"}
 	{if $input.type == 'latitude'}
 		<input type="text"
 			{if isset($input.size)}size="{$input.size}"{/if}
@@ -50,6 +47,8 @@
 			name="longitude"
 			id="longitude"
 			value="{$fields_value['longitude']|htmlentities}" />
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
