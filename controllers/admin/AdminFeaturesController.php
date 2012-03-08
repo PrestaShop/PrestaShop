@@ -205,12 +205,13 @@ class AdminFeaturesControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 
-				$this->toolbar_btn['save-and-stay'] = array(
-					'short' => 'SaveAndStay',
-					'href' => '#',
-					'desc' => $this->l('Save and add'),
-					'force_desc' => true,
-				);
+				if ($this->display == 'editFeatureValue')
+					$this->toolbar_btn['save-and-stay'] = array(
+						'short' => 'SaveAndStay',
+						'href' => '#',
+						'desc' => $this->l('Save and add'),
+						'force_desc' => true,
+					);
 
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
