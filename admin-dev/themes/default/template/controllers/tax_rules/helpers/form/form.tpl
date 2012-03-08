@@ -26,119 +26,109 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="label"}
-	{if isset($input.label)}
-		<label
-			{if $input.name == 'states[]'}
-				 id="state-label" style="display: none;"
-			{elseif $input.name == 'zipcode'}
-				 id="zipcode-label"
-			{/if}
-			>{$input.label} </label>
+	{if $input.name == 'zipcode' && isset($input.label)}
+		<label id="zipcode-label">{$input.label}</label>
+	{elseif $input.name == 'states[]'}
+		<label id="states-label">{$input.label}</label>
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
-{block name="start_field_block"}
-	<div class="margin-form"
-		{if $input.name == 'states[]'}
-			  id="state-select" style="display: none;"
-		{/if}
-	>
-{/block}
-
 {block name="script"}
-		$(document).ready(function() {
-			$('#country').click(function() {
-				populateStates($(this).val(), '');
-			});
-
-			{if !isset($smarty.get.create_rule)}
-				$('#tax_rule_form').hide();
-			{/if}
-			$('#desc-tax_rules_group-new').click(function() {
-				initForm();
-				$('#tax_rule_form').slideToggle();
-				return false;
-			});
+	$(document).ready(function() {
+		$('#country').click(function() {
+			populateStates($(this).val(), '');
 		});
-	
-		function populateStates(id_country, id_state)
-		{
-			if ($("#country option:selected").size() > 1)
-			{
-				$("#zipcode-label").hide();
-				$("#zipcode").hide();
-	
-				$("#state-select").hide();
-				$("#state-label").hide();
-			} else {
-				$.ajax({
-					url: "ajax.php",
-					cache: false,
-					data: "ajaxStates=1&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All'}",
-					success: function(html){
-						if (html == "false")
-						{
-							$("#state-label").hide();
-							$("#state-select").hide();
-							$("#states").html('');
-						}
-						else
-						{
-							$("#state-label").show();
-							$("#state-select").show();
-							$("#states").html(html);
-						}
-					}
-				});
 
-				$("#zipcode-label").show();
-				$("#zipcode").show();
-			}
-		}				
-	
-		function loadTaxRule(id_tax_rule)
+		{if !isset($smarty.get.create_rule)}
+			$('#tax_rule_form').hide();
+		{/if}
+		$('#desc-tax_rules_group-new').click(function() {
+			initForm();
+			$('#tax_rule_form').slideToggle();
+			return false;
+		});
+	});
+
+	function populateStates(id_country, id_state)
+	{
+		if ($("#country option:selected").size() > 1)
 		{
+			$("#zipcode-label").hide();
+			$("#zipcode").hide();
+
+			$("#states").parent().hide();
+			$("#states-label").hide();
+		} else {
 			$.ajax({
-		        type: 'POST',
-				url: 'ajax.php',
-		        async: true,
-		        dataType: 'json',
-				data: 'ajaxStates=1&ajaxUpdateTaxRule=1&id_tax_rule='+id_tax_rule,
-				success: function(data){
-					$('#tax_rule_form').show();
-					$('#id_tax_rule').val(data.id);
-					$('#country').val(data.id_country);
-					$('#state').val(data.id_state);
-	
-					zipcode = 0;
-					if (data.zipcode_from != 0)
+				url: "ajax.php",
+				cache: false,
+				data: "ajaxStates=1&id_country="+id_country+"&id_state="+id_state+"&empty_value={l s='All'}",
+				success: function(html){
+					if (html == "false")
 					{
-						zipcode = data.zipcode_from;
-	
-						if (data.zipcode_to != 0)
-							zipcode = zipcode +"-"+data.zipcode_to
+						$("#states").parent().hide();
+						$("#states-label").hide();
+						$("#states").html('');
 					}
-	
-					$('#zipcode').val(zipcode);
-					$('#behavior').val(data.behavior);
-					$('#id_tax').val(data.id_tax);
-					$('#description').val(data.description);
-	
-					populateStates(data.id_country, data.id_state);
+					else
+					{
+						$("#states").parent().show();
+						$("#states-label").show();
+						$("#states").html(html);
+					}
 				}
 			});
+
+			$("#zipcode-label").show();
+			$("#zipcode").show();
 		}
-	
-		function initForm()
-		{
-			$('#id_tax_rule').val('');
-			$('#country').val(0);
-			$('#state').val(0);
-			$('#zipcode').val(0);
-			$('#behavior').val(0);
-			$('#tax').val(0);
-			$('#description').val('');
-	
-			populateStates(0,0);
-		}
+	}
+
+	function loadTaxRule(id_tax_rule)
+	{
+		$.ajax({
+			type: 'POST',
+			url: 'ajax.php',
+			async: true,
+			dataType: 'json',
+			data: 'ajaxStates=1&ajaxUpdateTaxRule=1&id_tax_rule='+id_tax_rule,
+			success: function(data){
+				$('#tax_rule_form').show();
+				$('#id_tax_rule').val(data.id);
+				$('#country').val(data.id_country);
+				$('#state').val(data.id_state);
+
+				zipcode = 0;
+				if (data.zipcode_from != 0)
+				{
+					zipcode = data.zipcode_from;
+
+					if (data.zipcode_to != 0)
+						zipcode = zipcode +"-"+data.zipcode_to
+				}
+
+				$('#zipcode').val(zipcode);
+				$('#behavior').val(data.behavior);
+				$('#id_tax').val(data.id_tax);
+				$('#description').val(data.description);
+
+				populateStates(data.id_country, data.id_state);
+			}
+		});
+	}
+
+	function initForm()
+	{
+		$('#id_tax_rule').val('');
+		$('#country').val(0);
+		$('#state').val(0);
+		$('#zipcode').val(0);
+		$('#behavior').val(0);
+		$('#tax').val(0);
+		$('#description').val('');
+
+		populateStates(0,0);
+	}
 {/block}
