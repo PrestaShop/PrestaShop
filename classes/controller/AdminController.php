@@ -851,122 +851,117 @@ class AdminControllerCore extends Controller
 	 */
 	protected function processUpdateOptions($token)
 	{
-		if ($this->tabAccess['edit'] === '1')
+		$this->beforeUpdateOptions();
+
+		$languages = Language::getLanguages(false);
+
+		foreach ($this->options as $category_data)
 		{
-			$this->beforeUpdateOptions();
+			if (!isset($category_data['fields']))
+				continue;
 
-			$languages = Language::getLanguages(false);
+			$fields = $category_data['fields'];
 
-			foreach ($this->options as $category_data)
+			foreach ($fields as $field => $values)
 			{
-				if (!isset($category_data['fields']))
+				if (isset($values['type']) && $values['type'] == 'selectLang')
+				{
+					foreach ($languages as $lang)
+						if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
+							$fields[$field.'_'.strtoupper($lang['iso_code'])] = array(
+								'type' => 'select',
+								'cast' => 'strval',
+								'identifier' => 'mode',
+								'list' => $values['list']
+							);
+				}
+			}
+
+			// Validate fields
+			foreach ($fields as $field => $values)
+			{
+				// We don't validate fields with no visibility
+				if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Shop::getContext()))
 					continue;
 
-				$fields = $category_data['fields'];
-
-				foreach ($fields as $field => $values)
-				{
-					if (isset($values['type']) && $values['type'] == 'selectLang')
-					{
-						foreach ($languages as $lang)
-							if (Tools::getValue($field.'_'.strtoupper($lang['iso_code'])))
-								$fields[$field.'_'.strtoupper($lang['iso_code'])] = array(
-									'type' => 'select',
-									'cast' => 'strval',
-									'identifier' => 'mode',
-									'list' => $values['list']
-								);
-					}
-				}
-
-				// Validate fields
-				foreach ($fields as $field => $values)
-				{
-					// We don't validate fields with no visibility
-					if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Shop::getContext()))
-						continue;
-
-					// Check if field is required
-					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
-						if (isset($values['type']) && $values['type'] == 'textLang')
-						{
-							foreach ($languages as $language)
-								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
-									$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-						}
-						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-							$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
-
-					// Check field validator
+				// Check if field is required
+				if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
-							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
-								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-									$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+							if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
+								$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 					}
-					else if (Tools::getValue($field) && isset($values['validation']))
-						if (!Validate::$values['validation'](Tools::getValue($field)))
-							$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+					else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+						$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
-					// Set default value
-					if (!Tools::getValue($field) && isset($values['default']))
-						$_POST[$field] = $values['default'];
-				}
-
-				if (!count($this->errors))
+				// Check field validator
+				if (isset($values['type']) && $values['type'] == 'textLang')
 				{
-					foreach ($fields as $key => $options)
+					foreach ($languages as $language)
+						if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
+							if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+								$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+				}
+				else if (Tools::getValue($field) && isset($values['validation']))
+					if (!Validate::$values['validation'](Tools::getValue($field)))
+						$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+
+				// Set default value
+				if (!Tools::getValue($field) && isset($values['default']))
+					$_POST[$field] = $values['default'];
+			}
+
+			if (!count($this->errors))
+			{
+				foreach ($fields as $key => $options)
+				{
+					if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Shop::getContext()))
+						continue;
+
+					if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
 					{
-						if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Shop::getContext()))
-							continue;
+						Configuration::deleteFromContext($key);
+						continue;
+					}
 
-						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
+					// check if a method updateOptionFieldName is available
+					$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+					if (method_exists($this, $method_name))
+						$this->$method_name(Tools::getValue($key));
+					else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+					{
+						$list = array();
+						foreach ($languages as $language)
 						{
-							Configuration::deleteFromContext($key);
-							continue;
-						}
-
-						// check if a method updateOptionFieldName is available
-						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
-						if (method_exists($this, $method_name))
-							$this->$method_name(Tools::getValue($key));
-						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
-						{
-							$list = array();
-							foreach ($languages as $language)
-							{
-								$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
-								$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
-								if ($this->validateField($val, $options))
-								{
-									if (Validate::isCleanHtml($val))
-										$list[$language['id_lang']] = $val;
-									else
-										$this->errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
-								}
-							}
-							Configuration::updateValue($key, $list);
-						}
-						else
-						{
-							$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+							$key_lang = Tools::getValue($key.'_'.$language['id_lang']);
+							$val = (isset($options['cast']) ? $options['cast']($key_lang) : $key_lang);
 							if ($this->validateField($val, $options))
 							{
 								if (Validate::isCleanHtml($val))
-									Configuration::updateValue($key, $val);
+									$list[$language['id_lang']] = $val;
 								else
-									$this->errors[] = Tools::displayError('Can not add configuration '.$key);
+									$this->errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
 							}
+						}
+						Configuration::updateValue($key, $list);
+					}
+					else
+					{
+						$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
+						if ($this->validateField($val, $options))
+						{
+							if (Validate::isCleanHtml($val))
+								Configuration::updateValue($key, $val);
+							else
+								$this->errors[] = Tools::displayError('Can not add configuration '.$key);
 						}
 					}
 				}
 			}
-			if (empty($this->errors))
-				$this->confirmations[] = $this->_conf[6];
 		}
-		else
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+		if (empty($this->errors))
+			$this->confirmations[] = $this->_conf[6];
 	}
 
 
@@ -1839,8 +1834,11 @@ class AdminControllerCore extends Controller
 		/* Submit options list */
 		else if (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
 		{
-			$this->action = 'update_options';
 			$this->display = 'options';
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'update_options';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
@@ -1849,14 +1847,24 @@ class AdminControllerCore extends Controller
 			{
 				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
 				{
-					$this->action = 'bulk'.$bulk_action;
-					$this->boxes = Tools::getValue($this->table.'Box');
+					if ($this->tabAccess['edit'] === '1')
+					{
+						$this->action = 'bulk'.$bulk_action;
+						$this->boxes = Tools::getValue($this->table.'Box');
+					}
+					else
+						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 					break;
 				}
 				else if (Tools::isSubmit('submitBulk'))
 				{
-					$this->action = 'bulk'.Tools::getValue('select_submitBulk');
-					$this->boxes = Tools::getValue($this->table.'Box');
+					if ($this->tabAccess['edit'] === '1')
+					{
+						$this->action = 'bulk'.Tools::getValue('select_submitBulk');
+						$this->boxes = Tools::getValue($this->table.'Box');
+					}
+					else
+						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 					break;
 				}
 			}
