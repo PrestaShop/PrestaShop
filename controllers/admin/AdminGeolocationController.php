@@ -69,7 +69,8 @@ class AdminGeolocationControllerCore extends AdminController
 						'title' => $this->l('Select countries that can access your store:'),
 						'type' => 'checkbox_table',
 						'identifier' => 'iso_code',
-						'list' => Country::getCountries($this->context->language->id)
+						'list' => Country::getCountries($this->context->language->id),
+						'auto_value' => false
 					),
 				),
 			),
@@ -85,48 +86,48 @@ class AdminGeolocationControllerCore extends AdminController
 		);
 	}
 
-	public function postProcess()
+	/**
+	 * @see AdminController::processUpdateOptions()
+	 */
+	public function processUpdateOptions($token)
 	{
-		if (Tools::isSubmit('submitGeolocationWhitelist'))
+		$redirectAdmin = false;
+		if ($this->isGeoLiteCityAvailable())
 		{
-			$redirectAdmin = false;
-			if ($this->isGeoLiteCityAvailable())
-			{
-				Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
-				$redirectAdmin = true;
-			}
-			else
-				$this->errors[] = Tools::displayError('Geolocation database is unavailable.');
+			Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
+			$redirectAdmin = true;
+		}
+		else
+			$this->errors[] = Tools::displayError('Geolocation database is unavailable.');
 
-			if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
-				$this->errors[] = Tools::displayError('Country selection is invalid');
-			else
-			{
-				Configuration::updateValue(
-					'PS_GEOLOCATION_BEHAVIOR',
-					(!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
-				);
-				Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
-				Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
-				$redirectAdmin = true;
-			}
-
-			if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
-				$this->errors[] = Tools::displayError('Invalid whitelist');
-			else
-			{
-				Configuration::updateValue(
-					'PS_GEOLOCATION_WHITELIST',
-					str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
-				);
-				$redirectAdmin = true;
-			}
-
-			if ($redirectAdmin)
-				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+		if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
+			$this->errors[] = Tools::displayError('Country selection is invalid');
+		else
+		{
+			Configuration::updateValue(
+				'PS_GEOLOCATION_BEHAVIOR',
+				(!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
+			);
+			Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
+			Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
+			$redirectAdmin = true;
 		}
 
-		return parent::postProcess();
+		if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+			$this->errors[] = Tools::displayError('Invalid whitelist');
+		else
+		{
+			Configuration::updateValue(
+				'PS_GEOLOCATION_WHITELIST',
+				str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+			);
+			$redirectAdmin = true;
+		}
+
+		if ($redirectAdmin)
+			$this->redirect_after = self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4';
+
+		return parent::processUpdateOptions($token);
 	}
 
 	public function renderOptions()
