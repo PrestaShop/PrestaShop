@@ -2488,11 +2488,14 @@ class ProductCore extends ObjectModel
 		// convert only if the specific price is in the default currency (id_currency = 0)
 		if (!$specific_price || !($specific_price['price'] > 0 && $specific_price['id_currency']))
 			$price = Tools::convertPrice($price, $id_currency);
-
+	
 		// Attribute price
-		$attribute_price = Tools::convertPrice(array_key_exists('attribute_price', $result) ? (float)$result['attribute_price'] : 0, $id_currency);
-		if ($id_product_attribute !== false) // If you want the default combination, please use NULL value instead
-			$price += $attribute_price;
+		if (!$specific_price || !$specific_price['id_product_attribute'])
+		{
+			$attribute_price = Tools::convertPrice(array_key_exists('attribute_price', $result) ? (float)$result['attribute_price'] : 0, $id_currency);
+			if ($id_product_attribute !== false) // If you want the default combination, please use NULL value instead
+				$price += $attribute_price;
+		}
 
 		// Tax
 		$address = new Address();
