@@ -90,9 +90,7 @@
 	</table>
 	<div class="clear">&nbsp;</div>
 	<input type="hidden" name="arrayAttachments" id="arrayAttachments" value="{foreach $attach1 as $attach}{$attach.id_attachment},{/foreach}" />
-	<input type="submit" name="submitAttachments" id="submitAttachments" value="{l s='Update attachments'}" class="button" />
-	
-	
+
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#addAttachment").live('click', function() {
