@@ -39,6 +39,7 @@ class shopimporter extends ImportModule
 		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		$this->is_configurable = 1;
 
 		parent::__construct ();
 
