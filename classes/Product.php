@@ -849,7 +849,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCartProducts()
 	{
-		return Db::getInstance()->delete('cart_product', 'id_product` = '.(int)$this->id);
+		return Db::getInstance()->delete('cart_product', 'id_product = '.(int)$this->id);
 	}
 
 	/**
