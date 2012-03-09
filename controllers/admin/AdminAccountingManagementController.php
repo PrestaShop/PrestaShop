@@ -59,11 +59,11 @@ class AdminAccountingManagementControllerCore extends AdminController
 			$shop['default_account_number'] = Configuration::get('default_account_number', null, null, $id_shop);
 			ksort($shop['zones']);
 			
-			$zoneShopList = Accounting::getAccountNumberZoneShop($id_shop);
+			$zone_shop_list = Accounting::getAccountNumberZoneShop($id_shop);
 	
 			// Set Account number to the id_zone for the id_shop if exist
-			foreach ($zoneShopList as $zoneShop)
-				$shop['zones'][$zoneShop['id_zone']]['account_number'] = $zoneShop['account_number'];
+			foreach ($zone_shop_list as $zone_shop)
+				$shop['zones'][$zone_shop['id_zone']]['account_number'] = $zone_shop['account_number'];
 		}
 		
 		$this->context->smarty->assign(array(
@@ -130,8 +130,6 @@ class AdminAccountingManagementControllerCore extends AdminController
 				$this->confirmations[] = $this->l('Account numbers have been updated');
 			else
 				$this->errors[] = $this->l('Account Numbers could not be updated or added in the database');
-				//$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-				//Tools::redirectAdmin(self::$currentIndex.'&token='.$token);
 		}
 	}
 	
