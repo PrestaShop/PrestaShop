@@ -99,7 +99,7 @@ function update_order_canada()
 		{
 			$values = rtrim($values, ",");
 
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'order_tax` (id_order, tax_name, tax_rate, amount)
 			VALUES '.$values);
 		}

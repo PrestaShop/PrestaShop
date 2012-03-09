@@ -539,18 +539,18 @@ class ProductCore extends ObjectModel
 		$return = true;
 
 		$result = Db::getInstance()->executeS('
-		SELECT `id_product`
-		FROM `'._DB_PREFIX_.'category_product`
-		WHERE `id_category` = '.(int)$id_category.'
-		ORDER BY `position`');
-		$sizeof = count($result);
-
-		for ($i = 0; $i < $sizeof; $i++)
-			$return &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position` = '.(int)$i.'
+			SELECT `id_product`
+			FROM `'._DB_PREFIX_.'category_product`
 			WHERE `id_category` = '.(int)$id_category.'
-			AND `id_product` = '.(int)$result[$i]['id_product']);
+			ORDER BY `position`
+		');
+		$total = count($result);
+
+		for ($i = 0; $i < $total; $i++)
+			$return &= Db::getInstance()->update('category_product', array(
+				'position' => $i,
+			), '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']);
+
 		return $return;
 	}
 
@@ -603,23 +603,16 @@ class ProductCore extends ObjectModel
 
 	public static function updateDefaultAttribute($id_product)
 	{
-		$id_product_attribute = Product::getDefaultAttribute($id_product);
-		Db::getInstance()->execute(
-			'UPDATE '._DB_PREFIX_.'product
-			SET cache_default_attribute = '.(int)$id_product_attribute.'
-			WHERE id_product = '.(int)$id_product.'
-			LIMIT 1'
-		);
+		Db::getInstance()->update('product', array(
+			'cache_default_attribute' => (int)Product::getDefaultAttribute($id_product),
+		), 'id_product = '.(int)$id_product);
 	}
 
 	public static function updateIsVirtual($id_product)
 	{
-		Db::getInstance()->execute(
-			'UPDATE '._DB_PREFIX_.'product
-			SET is_virtual = 1
-			WHERE id_product = '.(int)$id_product.'
-			LIMIT 1'
-		);
+		Db::getInstance()->update('product', array(
+			'is_virtual' => (int)$id_product,
+		), 'id_product = '.(int)$id_product);
 	}
 
 	/**
@@ -706,12 +699,7 @@ class ProductCore extends ObjectModel
 
 	public function deleteFromSupplier()
 	{
-		$return = Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'product_supplier`
-			WHERE `id_product` = '.(int)$this->id
-		);
-
-		return $return;
+		return Db::getInstance()->delete('product_supplier', 'id_product = '.(int)$this->id);
 	}
 
 	/**
@@ -753,12 +741,13 @@ class ProductCore extends ObjectModel
 
 		foreach ($categories as $new_id_categ)
 			if (!in_array($new_id_categ, $current_categories))
-				$product_cats[] = '('.$new_id_categ.', '.(int)$this->id.', '.$new_categ_pos[$new_id_categ].')';
-		if (count($product_cats))
-			return Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
-			VALUES '.implode(',', $product_cats));
+				$product_cats[] = array(
+					'id_category' => (int)$new_id_categ,
+					'id_product' => (int)$this->id,
+					'position' => (int)$new_categ_pos[$new_id_categ],
+				);
 
+		Db::getInstance()->insert('category_product', $product_cats);
 		return true;
 	}
 
@@ -775,10 +764,12 @@ class ProductCore extends ObjectModel
 			return false;
 
 		// get max position in each categories
-		$result = Db::getInstance()->executeS('SELECT `id_category`
-				FROM `'._DB_PREFIX_.'category_product`
-				WHERE `id_category` NOT IN('.implode(',', array_map('intval', $categories)).')
-				AND id_product = '.$this->id.'');
+		$result = Db::getInstance()->executeS('
+			SELECT `id_category`
+			FROM `'._DB_PREFIX_.'category_product`
+			WHERE `id_category` NOT IN('.implode(',', array_map('intval', $categories)).')
+				AND id_product = '.$this->id
+		);
 		foreach ($result as $categ_to_delete)
 			$this->deleteCategory($categ_to_delete['id_category']);
 		// if none are found, it's an error
@@ -809,12 +800,8 @@ class ProductCore extends ObjectModel
 			WHERE `id_product` = '.(int)$this->id.'
 			AND id_category = '.(int)$id_category.''
 		);
-		$return = Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_product` = '.(int)$this->id.'
-			AND id_category = '.(int)$id_category.''
-		);
 
+		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id.' AND id_category = '.(int)$id_category);
 		if ($clean_positions === true)
 			foreach ($result as $row)
 				$this->cleanPositions((int)$row['id_category']);
@@ -829,11 +816,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCategories($clean_positions = false)
 	{
-		$return = Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_product` = '.(int)$this->id
-		);
-
+		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
 		if ($clean_positions === true)
 		{
 			$result = Db::getInstance()->executeS(
@@ -855,18 +838,8 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteTags()
 	{
-		return (
-			Db::getInstance()->execute(
-				'DELETE FROM `'._DB_PREFIX_.'product_tag`
-				WHERE `id_product` = '.(int)$this->id
-			)
-			&&
-			Db::getInstance()->execute(
-				'DELETE FROM `'._DB_PREFIX_.'tag`
-				WHERE `id_tag` NOT IN (SELECT `id_tag`
-				FROM `'._DB_PREFIX_.'product_tag`)'
-			)
-		);
+		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id)
+			&& Db::getInstance()->delete('tag', 'id_tag NOT IN (SELECT id_tag FROM '._DB_PREFIX_.'product_tag)');
 	}
 
 	/**
@@ -876,10 +849,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCartProducts()
 	{
-		return Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'cart_product`
-			WHERE `id_product` = '.(int)$this->id
-		);
+		return Db::getInstance()->delete('cart_product', 'id_product` = '.(int)$this->id);
 	}
 
 	/**
@@ -908,9 +878,10 @@ class ProductCore extends ObjectModel
 	public static function getProductAttributePrice($id_product_attribute)
 	{
 		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `price`
-		FROM `'._DB_PREFIX_.'product_attribute`
-		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
+			SELECT `price`
+			FROM `'._DB_PREFIX_.'product_attribute`
+			WHERE `id_product_attribute` = '.(int)$id_product_attribute
+		);
 		return $rq['price'];
 	}
 
@@ -1205,23 +1176,22 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteDefaultAttributes()
 	{
-		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'product_attribute`
-		SET `default_on` = 0
-		WHERE `id_product` = '.(int)$this->id);
+		return Db::getInstance()->update('product_attribute', array(
+			'default_on' => 0,
+		), 'id_product = '.(int)$this->id);
 	}
 
 	public function setDefaultAttribute($id_product_attribute)
 	{
-		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'product_attribute`
-		SET `default_on` = 1
-		WHERE `id_product` = '.(int)$this->id.'
-		AND `id_product_attribute` = '.(int)$id_product_attribute) &&
-		Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'product`
-		SET `cache_default_attribute` = '.(int)$id_product_attribute.'
-		WHERE `id_product` = '.(int)$this->id.' LIMIT 1');
+		$result = Db::getInstance()->update('product_attribute', array(
+			'default_on' => 1
+		), 'id_product` = '.(int)$this->id.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+
+		$result &= Db::getInstance()->update('product', array(
+			'cache_default_attribute' => (int)$id_product_attribute,
+		), 'id_product = '.(int)$this->id);
+
+		return $result;
 	}
 
 	/**
@@ -1518,18 +1488,16 @@ class ProductCore extends ObjectModel
 
 	public function addAttributeCombinationMultiple($id_attributes, $combinations)
 	{
-		$attributes_list = '';
+		$attributes_list = array();
 		foreach ($id_attributes as $nb => $id_product_attribute)
 			if (isset($combinations[$nb]))
 				foreach ($combinations[$nb] as $id_attribute)
-					$attributes_list .= '('.(int)$id_product_attribute.','.(int)$id_attribute.'),';
+					$attributes_list[] = array(
+						'id_product_attribute' => (int)$id_product_attribute,
+						'id_attribute' => (int)$id_attribute,
+					);
 
-		$attributes_list = rtrim($attributes_list, ',');
-
-		return Db::getInstance()->execute(
-			'INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_product_attribute`, `id_attribute`)
-			VALUES '.$attributes_list
-		);
+		return Db::getInstance()->insert('product_attribute_combination', $attributes_list);
 	}
 
 	/**
@@ -3275,11 +3243,15 @@ class ProductCore extends ObjectModel
 		$tags = Db::getInstance()->executeS('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
 		if (!Db::getInstance()->NumRows())
 			return true;
-		$query = 'INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`) VALUES';
+
+		$data = array();
 		foreach ($tags as $tag)
-			$query .= ' ('.(int)$id_product_new.', '.(int)$tag['id_tag'].'),';
-		$query = rtrim($query, ',');
-		return Db::getInstance()->execute($query);
+			$data[] = array(
+				'id_product' => (int)$id_product_new,
+				'id_tag' => (int)$tag['id_tag'],
+			);
+
+		return Db::getInstance()->insert('product_tag', $data);
 	}
 
 	public static function duplicateDownload($id_product_old, $id_product_new)
@@ -3291,18 +3263,19 @@ class ProductCore extends ObjectModel
 		if (!$results)
 			return true;
 
-		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download`
-			(`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`)
-			VALUES';
-
+		$data = array();
 		foreach ($results as $row)
-			$query .= ' ('.(int)$id_product_new.', \''.pSQL($row['display_filename']).'\', \''.pSQL($row['filename']).
-				'\', \''.pSQL($row['date_add']).'\', \''.pSQL($row['date_expiration']).'\', '.(int)$row['nb_days_accessible'].
-				', '.(int)$row['nb_downloadable'].', '.(int)$row['active'].'), '.(int)$row['is_shareable'].'),';
-
-		$query = rtrim($query, ',');
-
-		return Db::getInstance()->execute($query);
+			$data[] = array(
+				'id_product' => (int)$id_product_new,
+				'display_filename' => pSQL($row['display_filename']),
+				'filename' => pSQL($row['filename']),
+				'date_expiration' => pSQL($row['date_expiration']),
+				'nb_days_accessible' => (int)$row['nb_days_accessible'],
+				'nb_downloadable' => (int)$row['nb_downloadable'],
+				'active' => (int)$row['active'],
+				'is_shareable' => (int)$row['is_shareable']
+			);
+		return Db::getInstance()->insert('product_download', $data);
 	}
 
 	/**
@@ -3421,12 +3394,16 @@ class ProductCore extends ObjectModel
 
 			if (isset($customizations['labels']))
 			{
-				$query = 'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`) VALUES ';
+				$query = 'INSERT INTO `'._DB_PREFIX_.'` (`id_customization_field`, `id_lang`, `name`) VALUES ';
+				$data = array();
 				foreach ($customizations['labels'][$old_customization_field_id] as $customization_label)
-					$query .= '('.(int)$customization_field_id.', '.(int)$customization_label['id_lang'].', \''.pSQL($customization_label['name']).'\'), ';
+					$data = array(
+						'id_customization_field' => (int)$customization_field_id,
+						'id_lang' => (int)$customization_label['id_lang'],
+						'name' => pSQL($customization_label['name']),
+					);
 
-				$query = rtrim($query, ', ');
-				if (!Db::getInstance()->execute($query))
+				if (!Db::getInstance()->insert('customization_field_lang', $data))
 					return false;
 			}
 		}

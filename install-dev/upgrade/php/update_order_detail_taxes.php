@@ -36,7 +36,7 @@ function update_order_detail_taxes()
 		{
 			$tax_name = (isset($order_detail_tax['tax_name']) ? $order_detail_tax['tax_name'] : $alternative_tax_name);
 
-			Db::getInstance()->Execute(
+			Db::getInstance()->execute(
 			'INSERT INTO `'._DB_PREFIX_.'tax` (`rate`, `active`, `deleted`)
 			VALUES (\''.(float)$order_detail_tax['tax_rate'].'\', 0, 1)'
 			);
@@ -44,7 +44,7 @@ function update_order_detail_taxes()
 			$id_tax = Db::getInstance()->Insert_ID();
 			foreach ($id_lang_list as $id_lang)
 			{
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'tax_lang` (`id_tax`, `id_lang`, `name`)
 				VALUES ('.(int)$id_tax.','.(int)$id_lang['id_lang'].',\''.pSQL($tax_name).'\')
 				');

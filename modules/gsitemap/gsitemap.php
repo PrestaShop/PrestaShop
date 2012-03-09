@@ -216,7 +216,7 @@ XML;
 
 		/* Categories Generator */
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
-			$categories = Db::getInstance()->ExecuteS('
+			$categories = Db::getInstance()->executeS('
 			SELECT c.id_category, c.level_depth, link_rewrite, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd, cl.id_lang
 			FROM '._DB_PREFIX_.'category c
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON c.id_category = cl.id_category
@@ -224,7 +224,7 @@ XML;
 			WHERE l.`active` = 1 AND c.`active` = 1 AND c.id_category != 1
 			ORDER BY cl.id_category, cl.id_lang ASC');
 		else
-			$categories = Db::getInstance()->ExecuteS(
+			$categories = Db::getInstance()->executeS(
 			'SELECT c.id_category, c.level_depth, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') AS date_upd
 			FROM '._DB_PREFIX_.'category c
 			ORDER BY c.id_category ASC');
@@ -259,7 +259,7 @@ XML;
 			WHERE l.`active` = 1
 			ORDER BY cl.id_cms, cl.id_lang ASC';
 
-		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql_cms);
+		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql_cms);
 		foreach($cmss as $cms)
 		{
 			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ?

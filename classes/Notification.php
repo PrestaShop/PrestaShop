@@ -58,7 +58,7 @@ class NotificationCore
 
 	public function installDb()
 	{
-		Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('ALTER TABLE `'._DB_PREFIX_.'employee`
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('ALTER TABLE `'._DB_PREFIX_.'employee`
 						ADD `id_last_order` INT(10) unsigned NOT NULL default "0"
 						ADD `id_last_customer_message` INT(10) unsigned NOT NULL default "0"
 						ADD `id_last_message` INT(10) unsigned NOT NULL default "0"');
@@ -87,7 +87,7 @@ class NotificationCore
 					ORDER BY `id_'.bqSQL($type).'` DESC';
 
 		$json = array();
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql) as $key => $value)
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $key => $value)
 		{
 			$customer = null;
 			$order = null;
@@ -126,7 +126,7 @@ class NotificationCore
 
 		if (in_array($type, $this->types))
 			// We update the last item viewed
-			return Db::getInstance()->Execute('
+			return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'employee`
 					SET `id_last_'.bqSQL($type).'` = (SELECT MAX(`id_'.$type.'`)
 					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`)

@@ -1028,7 +1028,7 @@ class CartCore extends ObjectModel
 	{
 		Cache::clean('Cart::getCartRules'.$this->id);
 
-		$result = Db::getInstance()->Execute('
+		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
 		WHERE `id_cart_rule` = '.(int)$id_cart_rule.'
 		AND `id_cart` = '.(int)$this->id.'

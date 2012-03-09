@@ -40,10 +40,10 @@ function set_payment_module()
 		$content = fread($fd, filesize($file));
 		if (preg_match_all('/extends PaymentModule/U', $content, $matches))
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
 			SELECT '.(int)($module['id_module']).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
 			SELECT '.(int)($module['id_module']).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0');
 		}

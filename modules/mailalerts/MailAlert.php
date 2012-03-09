@@ -251,7 +251,7 @@ class MailAlert extends ObjectModel
 			FROM `'._DB_PREFIX_.self::$definition['table'].'`
 			WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 }

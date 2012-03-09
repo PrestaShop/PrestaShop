@@ -184,7 +184,7 @@ class BlockLink extends Module
 		}
 
 		$assos_shop = Tools::getValue('checkBoxShopAsso_blocklink');
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'blocklink_shop WHERE id_blocklink='.(int)$id_link);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'blocklink_shop WHERE id_blocklink='.(int)$id_link);
 		foreach ($assos_shop as $asso)
 			foreach ($asso as $id_shop => $row)
 				Db::getInstance()->insert('blocklink_shop', array(

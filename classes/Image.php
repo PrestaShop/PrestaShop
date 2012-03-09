@@ -276,7 +276,7 @@ class ImageCore extends ObjectModel
 			foreach ($image_ids as $image_id)
 				$query .= '('.(int)$id_product_attribute.', '.(int)$image_id.'), ';
 		$query = rtrim($query, ', ');
-		return DB::getInstance()->Execute($query);
+		return DB::getInstance()->execute($query);
 	}
 
 	/**

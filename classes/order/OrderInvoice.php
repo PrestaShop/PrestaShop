@@ -361,7 +361,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public static function getByDateInterval($date_from, $date_to)
 	{
-		$order_invoice_list = Db::getInstance()->ExecuteS('
+		$order_invoice_list = Db::getInstance()->executeS('
 			SELECT oi.*
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
@@ -409,7 +409,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public static function getByDeliveryDateInterval($date_from, $date_to)
 	{
-		$order_invoice_list = Db::getInstance()->ExecuteS('
+		$order_invoice_list = Db::getInstance()->executeS('
 			SELECT oi.*
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)

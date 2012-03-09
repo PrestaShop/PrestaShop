@@ -1293,7 +1293,7 @@ class AdminProductsControllerCore extends AdminController
 		// if deleted image was the cover, change it to the first one
 		if (!Image::getCover($image->id_product))
 		{
-			$res &= Db::getInstance()->Execute('
+			$res &= Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = 1
 			WHERE `id_product` = '.(int)$image->id_product.' LIMIT 1');
