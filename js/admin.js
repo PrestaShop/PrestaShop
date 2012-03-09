@@ -1074,6 +1074,7 @@ function display_action_details(row_id, controller, token, action, params) {
 			url: 'index.php',
 			data: ajax_params,
 			dataType: 'json',
+			cache: false,
 			context: current_element,
 			async: false,
 			success: function(data) {
