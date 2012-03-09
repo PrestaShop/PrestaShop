@@ -120,7 +120,7 @@ class importerosc extends ImportModule
 	{
 		$identifier = 'id_lang';
 
-		$langagues = $this->ExecuteS('
+		$langagues = $this->executeS('
 			SELECT languages_id as id_lang, name as name, code as iso_code, 1 as active, (\'m/j/Y\') as date_format_lite, (\'m/j/Y H:i:s\') as date_format_full
 			FROM  `'.bqSQL($this->prefix).'languages`
 			LIMIT '.(int)$limit.' , '.(int)$nrb_import);
@@ -283,7 +283,7 @@ class importerosc extends ImportModule
 									ORDER BY p.`products_id`
 									LIMIT '.(int)($limit).' , '.(int)$nrb_import);
 
-		$this->Execute('CREATE TABLE IF NOT EXISTS`products_images` (
+		$this->execute('CREATE TABLE IF NOT EXISTS`products_images` (
 						`id` int(11) NOT NULL AUTO_INCREMENT,
 						`products_id` int(11) NOT NULL,
 						`image` varchar(64) DEFAULT NULL,
@@ -302,7 +302,7 @@ class importerosc extends ImportModule
 			$product['link_rewrite'] = Tools::link_rewrite($product['name']);
 
 
-			$result = $this->ExecuteS('SELECT `categories_id` FROM `'.bqSQL($this->prefix).'products_to_categories` WHERE products_id = '.(int)$product['id_product']);
+			$result = $this->executeS('SELECT `categories_id` FROM `'.bqSQL($this->prefix).'products_to_categories` WHERE products_id = '.(int)$product['id_product']);
 			$category_product = array('category_product' => array($product['id_category_default'] => $product['id_product']));
 			foreach($result as $res)
 				$category_product['category_product'][$res['categories_id']] = $product['id_product'];
@@ -498,7 +498,7 @@ class importerosc extends ImportModule
 
 	public function checkCategoriesLevel()
 	{
-		$columns = $this->ExecuteS('SHOW COLUMNS FROM `'.bqSQL($this->prefix).'categories` ');
+		$columns = $this->executeS('SHOW COLUMNS FROM `'.bqSQL($this->prefix).'categories` ');
 		foreach($columns as $field)
 			if ($field['Field'] ==  'level')
 				return true;
@@ -591,7 +591,7 @@ class importerosc extends ImportModule
 
 	public function createLevel()
 	{
-		return $this->Execute('ALTER TABLE `'.bqSQL($this->prefix).'categories` ADD `level` INT NOT NULL');
+		return $this->execute('ALTER TABLE `'.bqSQL($this->prefix).'categories` ADD `level` INT NOT NULL');
 	}
 
 	public function calculateLevel()
@@ -602,7 +602,7 @@ class importerosc extends ImportModule
 
 	public function updateLevel($ids_cat, $level = 1)
 	{
-		$this->Execute('
+		$this->execute('
 			UPDATE `'.bqSQL($this->prefix).'categories`
 			SET level = '.(int)$level.'
 			WHERE categories_id IN ('.implode(',', $ids_cat).')');
@@ -614,7 +614,7 @@ class importerosc extends ImportModule
 
 	public function getSubCat($id_parent)
 	{
-		$result = $this->ExecuteS('SELECT `categories_id` FROM `'.bqSQL($this->prefix).'categories` WHERE `parent_id`='.(int)$id_parent);
+		$result = $this->executeS('SELECT `categories_id` FROM `'.bqSQL($this->prefix).'categories` WHERE `parent_id`='.(int)$id_parent);
 		if (!is_array($result) OR empty($result))
 			return false;
 		return $this->formatCategoriesIds($result);

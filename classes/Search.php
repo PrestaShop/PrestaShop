@@ -401,9 +401,9 @@ class SearchCore
 
 		if ($full)
 		{
-			$db->Execute('TRUNCATE '._DB_PREFIX_.'search_index');
-			$db->Execute('TRUNCATE '._DB_PREFIX_.'search_word');
-			$db->Execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0');
+			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
+			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
+			$db->execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0');
 		}
 		else
 		{
@@ -420,7 +420,7 @@ class SearchCore
 				foreach ($products as $product)
 					$ids[] = (int)$product['id_product'];
 			if (count($ids))
-				$db->Execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
+				$db->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
 		}
 
 		// Every fields are weighted according to the configuration in the backend
@@ -516,7 +516,7 @@ class SearchCore
 					if (count($queryArray))
 					{
 						// The words are inserted...
-						$db->Execute('
+						$db->execute('
 						INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
 						VALUES '.implode(',', $queryArray));
 					}

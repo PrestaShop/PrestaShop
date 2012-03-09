@@ -101,7 +101,7 @@ function reorderpositions()
 						SET `position` = '.(int)$i.'
 						WHERE `id_parent` = '.(int)$id_category_parent.'
 						AND `id_cms_category` = '.(int)$result[$i]['id_cms_category'];
-					$res &= Db::getInstance()->Execute($sql);
+					$res &= Db::getInstance()->execute($sql);
 				}
 		}
 }

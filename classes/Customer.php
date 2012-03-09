@@ -744,7 +744,7 @@ class CustomerCore extends ObjectModel
 
 	public function getWsGroups()
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 				SELECT cg.`id_group` as id
 				FROM '._DB_PREFIX_.'customer_group cg
 				WHERE cg.`id_customer` = '.(int)$this->id);

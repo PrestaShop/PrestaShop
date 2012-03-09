@@ -60,7 +60,7 @@ function migrate_block_info_to_cms_block()
 		}
 
 		// module install
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
 		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
 		`id_cms_category` int(10) unsigned NOT NULL,
@@ -69,9 +69,9 @@ function migrate_block_info_to_cms_block()
 		`display_store` tinyint(1) unsigned NOT NULL default \'1\',
 		PRIMARY KEY (`id_cms_block`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8');
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)');
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_lang`(
 		`id_cms_block` int(10) unsigned NOT NULL,
 		`id_lang` int(10) unsigned NOT NULL,
@@ -83,9 +83,9 @@ function migrate_block_info_to_cms_block()
 		foreach ($languages AS $language)
 			$query_lang .= '(1, '.(int)($language['id_lang']).'),';
 		$query_lang = rtrim($query_lang, ',');
-		$res &= Db::getInstance()->Execute($query_lang);
+		$res &= Db::getInstance()->execute($query_lang);
 
-		$res &= Db::getInstance()->Execute('
+		$res &= Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_page`(
 		`id_cms_block_page` int(10) unsigned NOT NULL auto_increment,
 		`id_cms_block` int(10) unsigned NOT NULL,

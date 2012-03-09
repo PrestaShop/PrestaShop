@@ -81,10 +81,10 @@ class AdminCartRulesControllerCore extends AdminController
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
 		$id_cart_rule = Tools::getValue('id_cart_rule');
 		foreach (array('country', 'carrier', 'group', 'product_rule_group', 'shop') as $type)
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE `id_cart_rule` = '.(int)$id_cart_rule);
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
-		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE `id_cart_rule` = '.(int)$id_cart_rule);
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
 
 		$this->afterAdd($current_object);
 	}
@@ -99,7 +99,7 @@ class AdminCartRulesControllerCore extends AdminController
 				$values = array();
 				foreach ($array as $id)
 					$values[] = '('.(int)$currentObject->id.','.(int)$id.')';
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_'.$type.'` (`id_cart_rule`, `id_'.$type.'`) VALUES '.implode(',', $values));
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_'.$type.'` (`id_cart_rule`, `id_'.$type.'`) VALUES '.implode(',', $values));
 			}
 		// Add cart rule restrictions
 		if (Tools::getValue('cart_rule_restriction') && is_array($array = Tools::getValue('cart_rule_select')) && count($array))
@@ -107,28 +107,28 @@ class AdminCartRulesControllerCore extends AdminController
 			$values = array();
 			foreach ($array as $id)
 				$values[] = '('.(int)$currentObject->id.','.(int)$id.')';
-			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
 		}
 		// Add product rule restrictions
 		if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray))
 		{
 			foreach ($ruleGroupArray as $ruleGroupId)
 			{
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
 				VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity').')');
 				$id_product_rule_group = Db::getInstance()->Insert_ID();
 
 				if (is_array($ruleArray = Tools::getValue('product_rule_'.$ruleGroupId)) && count($ruleArray))
 				foreach ($ruleArray as $ruleId)
 				{
-					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
+					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
 					VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
 					$id_product_rule = Db::getInstance()->Insert_ID();
 
 					$values = array();
 					foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
 						$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
-					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
+					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
 				}
 			}
 		}
@@ -136,7 +136,7 @@ class AdminCartRulesControllerCore extends AdminController
 		// If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
 		if ($currentObject->cart_rule_restriction == 0)
 		{
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
 				SELECT id_cart_rule, '.(int)$currentObject->id.' FROM `'._DB_PREFIX_.'cart_rule` WHERE cart_rule_restriction = 1
 			)');
@@ -144,7 +144,7 @@ class AdminCartRulesControllerCore extends AdminController
 		// And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
 		else
 		{
-			$ruleCombinations = Db::getInstance()->ExecuteS('
+			$ruleCombinations = Db::getInstance()->executeS('
 			SELECT cr.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule cr
 			WHERE cr.id_cart_rule != '.(int)$currentObject->id.'
@@ -156,8 +156,8 @@ class AdminCartRulesControllerCore extends AdminController
 			)');
 			foreach ($ruleCombinations as $incompatibleRule)
 			{
-				Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
-				Db::getInstance()->Execute('
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
+				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
 					SELECT id_cart_rule, '.(int)$incompatibleRule['id_cart_rule'].' FROM `'._DB_PREFIX_.'cart_rule` WHERE active = 1 AND id_cart_rule != '.(int)$currentObject->id.'
 				)');
@@ -233,7 +233,7 @@ class AdminCartRulesControllerCore extends AdminController
 		{
 			case 'attributes':
 				$attributes = array('selected' => array(), 'unselected' => array());
-				$results = Db::getInstance()->ExecuteS('
+				$results = Db::getInstance()->executeS('
 				SELECT CONCAT(agl.name, " - ", al.name) as name, a.id_attribute as id
 				FROM '._DB_PREFIX_.'attribute_group_lang agl
 				LEFT JOIN '._DB_PREFIX_.'attribute a ON a.id_attribute_group = agl.id_attribute_group
@@ -249,7 +249,7 @@ class AdminCartRulesControllerCore extends AdminController
 			case 'products':
 				// Todo: Consider optimization
 				$products = array('selected' => array(), 'unselected' => array());
-				$results = Db::getInstance()->ExecuteS('
+				$results = Db::getInstance()->executeS('
 				SELECT name, id_product as id
 				FROM '._DB_PREFIX_.'product_lang pl
 				WHERE id_lang = '.(int)Context::getContext()->language->id.'
@@ -262,7 +262,7 @@ class AdminCartRulesControllerCore extends AdminController
 				break;
 			case 'manufacturers':
 				$products = array('selected' => array(), 'unselected' => array());
-				$results = Db::getInstance()->ExecuteS('
+				$results = Db::getInstance()->executeS('
 				SELECT name, id_manufacturer as id
 				FROM '._DB_PREFIX_.'manufacturer
 				ORDER BY name');
@@ -274,7 +274,7 @@ class AdminCartRulesControllerCore extends AdminController
 				break;
 			case 'suppliers':
 				$products = array('selected' => array(), 'unselected' => array());
-				$results = Db::getInstance()->ExecuteS('
+				$results = Db::getInstance()->executeS('
 				SELECT name, id_supplier as id
 				FROM '._DB_PREFIX_.'supplier
 				ORDER BY name');
@@ -287,7 +287,7 @@ class AdminCartRulesControllerCore extends AdminController
 			case 'categories':
 				// Todo: Consider optimization
 				$categories = array('selected' => array(), 'unselected' => array());
-				$results = Db::getInstance()->ExecuteS('
+				$results = Db::getInstance()->executeS('
 				SELECT name, id_category as id
 				FROM '._DB_PREFIX_.'category_lang pl
 				WHERE id_lang = '.(int)Context::getContext()->language->id.'
@@ -313,7 +313,7 @@ class AdminCartRulesControllerCore extends AdminController
 		if (Tools::isSubmit('customerFilter'))
 		{
 			$q = trim(Tools::getValue('q'));
-			$customers = Db::getInstance()->ExecuteS('
+			$customers = Db::getInstance()->executeS('
 			SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `deleted` = 0 AND is_guest = 0 AND active = 1

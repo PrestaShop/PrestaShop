@@ -496,7 +496,7 @@ class MailAlerts extends Module
 			DELETE FROM `'._DB_PREFIX_.MailAlert::$definition['table'].'`
 			WHERE `id_product` = '.(int)$params['product']->id;
 
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 
 	public function hookActionAttributeDelete($params)
@@ -511,7 +511,7 @@ class MailAlerts extends Module
 				WHERE `id_product_attribute` = '.(int)$params['id_product_attribute'].'
 				AND `id_product` = '.(int)$params['id_product'];
 
-		Db::getInstance()->Execute($sql);
+		Db::getInstance()->execute($sql);
 	}
 
 	public function hookActionProductCoverage($params)
