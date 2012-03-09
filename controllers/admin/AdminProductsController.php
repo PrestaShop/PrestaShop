@@ -408,14 +408,13 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function processAttachments($token)
 	{
-		if ($this->action == 'attachments')
-			if ($id = (int)Tools::getValue($this->identifier))
-			{
-				$attachments = trim(Tools::getValue('arrayAttachments'), ',');
-				$attachments = explode(',', $attachments);
-				if (Attachment::attachToProduct($id, $attachments))
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
-			}
+		if ($id = (int)Tools::getValue($this->identifier))
+		{
+			$attachments = trim(Tools::getValue('arrayAttachments'), ',');
+			$attachments = explode(',', $attachments);
+			if (!Attachment::attachToProduct($id, $attachments))
+				$this->errors[] = Tools::displayError('There was an error while saving product attachments.');
+		}
 	}
 
 	public function processDuplicate($token)
@@ -1541,6 +1540,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->processProductAttribute($token);
 					$this->processPriceAddition($token);
 					$this->processSpecificPricePriorities($token);
+					$this->processAttachments($token);
 					$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
