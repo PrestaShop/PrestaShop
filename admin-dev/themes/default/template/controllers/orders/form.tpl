@@ -78,9 +78,11 @@
 				$(this).html(txt_show_carts);
 				$('#old_carts_orders').slideUp('slow');
 			}
+			return false;
 		});
 		$('#send_email_to_customer').click(function(){
 			sendMailToCustomer();
+			return false;
 		});
 		$('#show_old_carts').click();
 		$.ajaxSetup({ type:"post" });
@@ -162,6 +164,7 @@
 		$('.use_cart').live('click', function(e) {
 			e.preventDefault();
 			useCart($(this).attr('rel'));
+			return false;
 		});
 
 		$('.duplicate_order').live('click', function(e) {
@@ -400,7 +403,7 @@
 					$.each(res.customers, function() {
 						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+((this.birthday) ? this.birthday : '')+'</span></div>';
 						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
-						html += '<a onclick="setupCustomer('+ this.id_customer+');" href="#" class="id_customer button">{l s='Choose'}</a></li>';
+						html += '<a onclick="setupCustomer('+ this.id_customer+');return false;" href="#" class="id_customer button">{l s='Choose'}</a></li>';
 					});
 					html += '</ul>';
 				}
@@ -1030,7 +1033,7 @@
 				</p>
 				<p>
 					<label for="shipping_price">{l s='Shipping price:'}</label> <input type="text" id="shipping_price"  name="shipping_price" size="7" />&nbsp;<span class="currency_sign"></span>&nbsp;
-					<a class="button" href="#" onclick="resetShippingPrice()">{l s='Reset shipping price'}</a>
+					<a class="button" href="#" onclick="resetShippingPrice();return false;">{l s='Reset shipping price'}</a>
 				</p>
 			</div>
 			<div id="float:left;">
