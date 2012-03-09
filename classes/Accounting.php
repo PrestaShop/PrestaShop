@@ -32,6 +32,9 @@ class AccountingCore
 	/**
      * Default Values
      *
+     * @TODO: Check to put the default value into the localization pack
+     * This configuration is applied for a specific shop
+     *
      * @var array
      */
 	public static $acc_conf = array(
@@ -40,7 +43,8 @@ class AccountingCore
 		'account_length' => 13,
 		'account_submit_shipping_charge' => '708510',
 		'account_unsubmit_shipping_charge' => '708520',
-		'account_gift_wripping' => ''
+		'account_gift_wripping' => '',
+        'account_handling' => ''
 	);
 
 	public static $acc_conf_cached = false;
@@ -74,8 +78,8 @@ class AccountingCore
 	
 	/**
 	* Add or update product accounting information for a product (will be refactoring for a dynamic use depending of the Controller)
-	* @param int $id_product
-	* @param array $accountingInfos
+	* @param array $assoProductZoneShop
+    * @return mixed bool|array
 	*/
 	public static function saveProductAccountingInformations($assoProductZoneShop)
 	{
