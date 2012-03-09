@@ -29,6 +29,7 @@ class AdminWebserviceControllerCore extends AdminController
 {
 	/** this will be filled later */
 	public $fields_form = array('webservice form');
+	protected $toolbar_scroll = false;
 
 	public function __construct()
 	{
@@ -175,6 +176,37 @@ class AdminWebserviceControllerCore extends AdminController
 
 		parent::initContent();
 	}
+
+	/**
+	 * Function used to render the options for this controller
+	 */
+	public function renderOptions()
+	{
+		if ($this->options && is_array($this->options))
+		{
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
+			$helper->toolbar_scroll = true;
+			$helper->toolbar_btn = array('save' => array(
+								'href' => '#',
+								'desc' => $this->l('Save')
+							));
+			$helper->id = $this->id;
+			$helper->tpl_vars = $this->tpl_option_vars;
+			$options = $helper->generateOptions($this->options);
+
+			return $options;
+		}
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		// This is a composite page, we don't want the "options" display mode
+		if ($this->display == 'options')
+			$this->display = '';
+	}
+
 
 	public function postProcess()
 	{
