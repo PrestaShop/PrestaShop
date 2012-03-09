@@ -76,52 +76,63 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		return $res;
 	}
 
+	public function initProcess()
+	{
+		if (isset($_POST['generate']))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'generate';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		parent::initProcess();
+	}
+
 	public function postProcess()
 	{
 		$this->product = new Product((int)Tools::getValue('id_product'));
 		$this->product->loadStockData();
-
-		if (isset($_POST['generate']))
-		{
-			if (!is_array(Tools::getValue('options')))
-				$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');
-			else
-			{
-				$tab = array_values($_POST['options']);
-				if (count($tab) && Validate::isLoadedObject($this->product))
-				{
-					AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
-					$this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
-					$values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
-
-					// @since 1.5.0
-					if ($this->product->depends_on_stock == 0)
-					{
-						$attributes = Product::getProductAttributesIds($this->product->id);
-						foreach ($attributes as $attribute)
-							StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop->id);
-					}
-
-					$this->product->deleteProductAttributes();
-					$res = $this->product->addProductAttributeMultiple($values);
-					$this->product->addAttributeCombinationMultiple($res, $this->combinations);
-
-					// @since 1.5.0
-					if ($this->product->depends_on_stock == 0)
-					{
-						$attributes = Product::getProductAttributesIds($this->product->id);
-						$quantity = (int)Tools::getValue('quantity');
-						foreach ($attributes as $attribute)
-							StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
-					}
-					Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
-				}
-				else
-					$this->errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
-			}
-		}
-
 		parent::postProcess();
+	}
+
+	public function processGenerate($token)
+	{
+		if (!is_array(Tools::getValue('options')))
+			$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');
+		else
+		{
+			$tab = array_values($_POST['options']);
+			if (count($tab) && Validate::isLoadedObject($this->product))
+			{
+				AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
+				$this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
+				$values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
+
+				// @since 1.5.0
+				if ($this->product->depends_on_stock == 0)
+				{
+					$attributes = Product::getProductAttributesIds($this->product->id);
+					foreach ($attributes as $attribute)
+						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop->id);
+				}
+
+				$this->product->deleteProductAttributes();
+				$res = $this->product->addProductAttributeMultiple($values);
+				$this->product->addAttributeCombinationMultiple($res, $this->combinations);
+
+				// @since 1.5.0
+				if ($this->product->depends_on_stock == 0)
+				{
+					$attributes = Product::getProductAttributesIds($this->product->id);
+					$quantity = (int)Tools::getValue('quantity');
+					foreach ($attributes as $attribute)
+						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
+				}
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
+			}
+			else
+				$this->errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
+		}
 	}
 
 	private static function displayAndReturnAttributeJs()
