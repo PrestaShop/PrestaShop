@@ -114,14 +114,13 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 						foreach ($attributes as $attribute)
 							StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
 					}
-					Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&action=Combinations');
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
 				}
 				else
 					$this->errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
 			}
 		}
-		else if (isset($_POST['back']))
-			Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&addproduct'.'&tabs=3&token='.Tools::getValue('token'));
+
 		parent::postProcess();
 	}
 
@@ -204,7 +203,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	public function initToolbar()
 	{
 		$this->toolbar_btn['back'] = array(
-			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&action=Combinations',
+			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
 			'desc' => $this->l('Back to product')
 		);
 	}
