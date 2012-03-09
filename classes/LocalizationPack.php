@@ -92,8 +92,8 @@ class LocalizationPackCore
 				$attributes = $conf->attributes();
 				if (isset($attributes['name']) &&
 						isset($attributes['value']) &&
-						isset($acc_conf[(string)($attributes['name'])]))
-					$acc_conf[(string)($attributes['name'])] = (string)$attributes['value'];
+						isset($acc_conf[(string)$attributes['name']]))
+					$acc_conf[(string)$attributes['name']] = (string)$attributes['value'];
 			}
 			Accounting::updateConfiguration($acc_conf);
 		}
