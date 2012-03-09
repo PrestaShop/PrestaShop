@@ -7,6 +7,16 @@
 		<language iso_code="fr" />
 	</languages>
 
+	<accounting>
+		<conf name="customer_prefix" value="411" />
+		<conf name="journal" value="VE" />
+		<conf name="account_length" value="13" />
+		<conf name="account_submit_shipping_charge" value="708510" />
+		<conf name="account_unsubmit_shipping_charge" value="708520" />
+		<conf name="account_gift_wripping" value="" />
+		<conf name="account_handling" value="" />
+	</accounting>
+
 	<taxes>
         <tax id="1" name="TVA FR 19.6%" rate="19.6" account_number="445711" />
         <tax id="2" name="TVA FR 7%" rate="7" account_number="" />

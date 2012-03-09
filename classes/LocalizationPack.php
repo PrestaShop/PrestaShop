@@ -53,6 +53,7 @@ class LocalizationPackCore
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
 			$res &= $this->updateDefaultGroupDisplayMethod($xml);
+			$res &= $this->installAccounting($xml);
 
 			if (!defined('_PS_MODE_DEV_') || !_PS_MODE_DEV_)
 				$res &= $this->_installLanguages($xml, $install_mode);
@@ -72,6 +73,30 @@ class LocalizationPackCore
 			if (!Validate::isLocalizationPackSelection($selected) || !$this->{'_install'.ucfirst($selected)}($xml))
 				return false;
 
+		return true;
+	}
+
+	/**
+	 * Install the default value for accounting
+	 *
+	 * @param $xml
+	 * @return true
+	 */
+	protected function installAccounting($xml)
+	{
+		if (isset($xml->accounting->conf))
+		{
+			$acc_conf = Accounting::getConfiguration();
+			foreach ($xml->accounting->conf as $conf)
+			{
+				$attributes = $conf->attributes();
+				if (isset($attributes['name']) &&
+						isset($attributes['value']) &&
+						isset($acc_conf[(string)($attributes['name'])]))
+					$acc_conf[(string)($attributes['name'])] = (string)$attributes['value'];
+			}
+			Accounting::updateConfiguration($acc_conf);
+		}
 		return true;
 	}
 
