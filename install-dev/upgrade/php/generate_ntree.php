@@ -27,7 +27,7 @@
 
 function generate_ntree()
 {
-	$categories = Db::getInstance()->ExecuteS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_parent ASC, position ASC');
+	$categories = Db::getInstance()->executeS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_parent ASC, position ASC');
 	$categoriesArray = array();
 	foreach ($categories AS $category)
 		$categoriesArray[(int)$category['id_parent']]['subcategories'][(int)$category['id_category']] = 1;
@@ -43,7 +43,7 @@ function generate_ntree_subTree(&$categories, $id_category, &$n)
 			generate_ntree_subTree($categories, (int)$id_subcategory, $n);
 	$right = (int)$n++;
 
-	Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'category 
+	Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'category
 		SET nleft = '.(int)$left.', nright = '.(int)$right.' 
 		WHERE id_category = '.(int)$id_category.' LIMIT 1');
 }

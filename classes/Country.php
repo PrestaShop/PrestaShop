@@ -104,7 +104,7 @@ class CountryCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_rule_country WHERE id_country = '.(int)$this->id);
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_rule_country WHERE id_country = '.(int)$this->id);
 	}
 
 	/**

@@ -79,7 +79,7 @@ class OrderPaymentCore extends ObjectModel
 	*/
 	public static function getByOrderId($id_order)
 	{
-		return Db::getInstance()->ExecuteS('
+		return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'order_payment`
 			WHERE `id_order` = '.(int)$id_order);

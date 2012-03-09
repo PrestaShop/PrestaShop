@@ -77,12 +77,12 @@ class Blockmyaccountfooter extends Module
 
 	private function addMyAccountBlockHook()
 	{
-		return Db::getInstance()->Execute('INSERT IGNORE INTO `'._DB_PREFIX_.'hook` (`name`, `title`, `description`, `position`) VALUES (\'myAccountBlockfooter\', \'My account block\', \'Display extra informations inside the "my account" block\', 1)');
+		return Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'hook` (`name`, `title`, `description`, `position`) VALUES (\'myAccountBlockfooter\', \'My account block\', \'Display extra informations inside the "my account" block\', 1)');
 	}
 
 	private function removeMyAccountBlockHook()
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'myAccountBlockfooter\'');
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'myAccountBlockfooter\'');
 	}
 
 	public function hookHeader($params)

@@ -88,7 +88,7 @@ function latin1_database_to_utf8()
 	foreach ($tables AS $table)
 	{
 		/* Latin1 datas' selection */
-		if (!Db::getInstance()->Execute('SET NAMES latin1'))
+		if (!Db::getInstance()->execute('SET NAMES latin1'))
 			echo 'Cannot change the sql encoding to latin1!';
 		$query = 'SELECT `'.$table['id'].'`';
 		foreach ($table['fields'] AS $field)
@@ -96,7 +96,7 @@ function latin1_database_to_utf8()
 		if (isset($table['lang']) AND $table['lang'])
 			$query .= ', `id_lang`';
 		$query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
-		$latin1Datas = Db::getInstance()->ExecuteS($query);
+		$latin1Datas = Db::getInstance()->executeS($query);
 		if ($latin1Datas === false)
 		{
 			$warningExist = true;
@@ -111,7 +111,7 @@ function latin1_database_to_utf8()
 		if (Db::getInstance()->NumRows())
 		{
 			/* Utf-8 datas' restitution */
-			if (!Db::getInstance()->Execute('SET NAMES utf8'))
+			if (!Db::getInstance()->execute('SET NAMES utf8'))
 				echo 'Cannot change the sql encoding to utf8!';
 			foreach ($latin1Datas AS $latin1Data)
 			{
@@ -122,7 +122,7 @@ function latin1_database_to_utf8()
 				$query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
 				if (isset($table['lang']) AND $table['lang'])
 					$query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
-				if (!Db::getInstance()->Execute($query))
+				if (!Db::getInstance()->execute($query))
 				{
 					$warningExist = true;
 					$requests .= '
