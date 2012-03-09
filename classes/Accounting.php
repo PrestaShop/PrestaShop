@@ -31,30 +31,29 @@ class AccountingCore
 	
 	/**
      * Default Values
-     *
-     * @TODO: Check to put the default value into the localization pack
+     * All key modification have to be changed into the localization pack and xml
      * This configuration is applied for a specific shop
      *
      * @var array
      */
 	public static $acc_conf = array(
-		'customer_prefix' => '411',
-		'journal' => 'VE',
-		'account_length' => 13,
-		'account_submit_shipping_charge' => '708510',
-		'account_unsubmit_shipping_charge' => '708520',
+		'customer_prefix' => '',
+		'journal' => '',
+		'account_length' => '',
+		'account_submit_shipping_charge' => '',
+		'account_unsubmit_shipping_charge' => '',
 		'account_gift_wripping' => '',
-        'account_handling' => ''
+		'account_handling' => ''
 	);
 
 	public static $acc_conf_cached = false;
 
 	/**
 	* Set an account number to a zone (will be refactoring for a dynamic use depending of the Controller)
-	* @var array $assoZoneShopList correspond to an associated list of id_zone - id_shop - num
+	* @var array $asso_zone_shop_list correspond to an associated list of id_zone - id_shop - num
 	* @return bool To know if any modification in the database succeed
 	*/
-	public static function setAccountNumberByZoneShop($assoZoneShopList)
+	public static function setAccountNumberByZoneShop($asso_zone_shop_list)
 	{
 		$query = '
 			REPLACE INTO`'._DB_PREFIX_.'accounting_zone_shop`
@@ -64,7 +63,7 @@ class AccountingCore
 		$values = '';
 		
 		// Build the query for the update 
-		foreach ($assoZoneShopList as $asso)
+		foreach ($asso_zone_shop_list as $asso)
 			if (array_key_exists('id_zone', $asso) &&
 					array_key_exists('id_shop', $asso) &&
 					array_key_exists('num', $asso))
@@ -78,10 +77,10 @@ class AccountingCore
 	
 	/**
 	* Add or update product accounting information for a product (will be refactoring for a dynamic use depending of the Controller)
-	* @param array $assoProductZoneShop
+	* @param array $asso_product_zone_shop
     * @return mixed bool|array
 	*/
-	public static function saveProductAccountingInformations($assoProductZoneShop)
+	public static function saveProductAccountingInformations($asso_product_zone_shop)
 	{
 		$query = '
 			REPLACE INTO`'._DB_PREFIX_.'accounting_product_zone_shop`
@@ -89,7 +88,7 @@ class AccountingCore
 			VALUES %s';
 		
 		$values = '';
-		foreach ($assoProductZoneShop as $asso)
+		foreach ($asso_product_zone_shop as $asso)
 			if (array_key_exists('id_zone', $asso) &&
 					array_key_exists('id_shop', $asso) &&
 					array_key_exists('id_product', $asso) &&
@@ -153,6 +152,17 @@ class AccountingCore
 
 		// Return value key or the complete configuration depending of the $key definition
 		return (!$key) ? self::$acc_conf : ((isset(self::$acc_conf[$key]) ? self::$acc_conf[$key] : false));
+	}
+
+	/**
+	 * Update Accounting configuration
+	 *
+	 * @static
+	 * @param $acc_conf
+	 */
+	public static function updateConfiguration($acc_conf)
+	{
+		Configuration::updateValue(Accounting::CONF_NAME, serialize($acc_conf));
 	}
 
 	/**

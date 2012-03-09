@@ -63,7 +63,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'title' => $this->l('Taxes Account number list'),
 				'list' => array()),
 
-			// Gift wrapping definition, for now Only one available using Configuration
+			// Gift wrapping definition
 			'gift_wrapping' => array(
 				'func_call' => 'getAccountingNumberConfiguration',
                 'key' => 'account_gift_wripping',
@@ -74,7 +74,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'title' => $this->l('Gift wrapping account number list'),
 				'list' => array()),
 
-            // Submited shipping charge definition, for now Only one available using Configuration
+            // Submited shipping charge definition
             'submited_shipping_charge' => array(
                 'func_call' => 'getAccountingNumberConfiguration',
                 'key' => 'account_submit_shipping_charge',
@@ -85,7 +85,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
                 'title' => $this->l('Submited shipping charge account number list'),
                 'list' => array()),
 
-            // Unsubmited shipping charge definition, for now Only one available using Configuration
+            // Unsubmited shipping charge definition
             'unsubmited_shipping_charge' => array(
                 'func_call' => 'getAccountingNumberConfiguration',
                 'key' => 'account_unsubmit_shipping_charge',
@@ -127,7 +127,6 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 	{
 		$this->initToolbarTitle();
 		$this->toolbar_btn = array();
-
 	}
 
 	public function initContent()
@@ -144,7 +143,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 	}
 
     /**
-     * Return the gift wripping number set.
+     * Return the value configuration requested.
      *
      * @TODO : Add the possibility to check in all shop
      * @param string $key of the Accounting configuration

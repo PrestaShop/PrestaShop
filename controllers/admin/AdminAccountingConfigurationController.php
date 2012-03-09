@@ -141,7 +141,7 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 			foreach ($this->acc_conf as $name => $val)
 				$this->acc_conf[$name] = Tools::getValue($name);
 
-			Configuration::updateValue(Accounting::CONF_NAME, serialize($this->acc_conf));
+			Accounting::updateConfiguration($this->acc_conf);
 			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&update=true');
 		}
 		else if (Tools::getValue('update'))
