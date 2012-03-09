@@ -251,10 +251,17 @@ class CartCore extends ObjectModel
 
 		foreach ($products as $product)
 		{
+			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
+				$address_id = (int)$cart->id_address_invoice;
+			else
+				$address_id = (int)$product->id_address_delivery;
+			if (!Address::addressExists($address_id))
+				$address_id = null;
+			
 			$total_products_moy += $product['total_wt'];
 			$ratio_tax += $product['total_wt'] * Tax::getProductTaxRate(
 				(int)$product['id_product'],
-				(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}
+				(int)$address_id
 			);
 		}
 
@@ -493,6 +500,13 @@ class CartCore extends ObjectModel
 			if (isset($row['id_product_attribute']) && (int)$row['id_product_attribute'] && isset($row['weight_attribute']))
 				$row['weight'] = (float)$row['weight_attribute'];
 
+			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
+				$address_id = (int)$this->id_address_invoice;
+			else
+				$address_id = (int)$row['id_address_delivery'];
+			if (!Address::addressExists($address_id))
+				$address_id = null;
+
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				$row['price'] = Product::getPriceStatic(
@@ -507,7 +521,7 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null),
+					((int)$address_id ? (int)$address_id : null),
 					$specific_price_output
 				); // Here taxes are computed only once the quantity has been applied to the product price
 
@@ -523,10 +537,10 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+					((int)$address_id ? (int)$address_id : null)
 				);
 
-				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$address_id);
 
 				$row['total_wt'] = Tools::ps_round($row['price'] * (float)$row['cart_quantity'] * (1 + (float)$tax_rate / 100), 2);
 				$row['total'] = $row['price'] * (int)$row['cart_quantity'];
@@ -545,7 +559,7 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null),
+					((int)$address_id ? (int)$address_id : null),
 					$specific_price_output
 				);
 
@@ -561,7 +575,7 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+					((int)$address_id ? (int)$address_id : null)
 				);
 
 				// In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals
@@ -1273,6 +1287,13 @@ class CartCore extends ObjectModel
 
 		foreach ($products as $product)
 		{
+			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
+				$address_id = (int)$this->id_address_invoice;
+			else
+				$address_id = (int)$product['id_address_delivery'];
+			if (!Address::addressExists($address_id))
+				$address_id = null;
+			
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				// Here taxes are computed only once the quantity has been applied to the product price
@@ -1288,7 +1309,7 @@ class CartCore extends ObjectModel
 					false,
 					(int)$this->id_customer ? (int)$this->id_customer : null,
 					(int)$this->id,
-					$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}
+					$address_id
 				);
 
 				$total_ecotax = $product['ecotax'] * (int)$product['cart_quantity'];
@@ -1296,8 +1317,8 @@ class CartCore extends ObjectModel
 
 				if ($with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-					$product_eco_tax_rate = Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id);
+					$product_eco_tax_rate = Tax::getProductEcotaxRate((int)$address_id);
 
 					$total_price = ($total_price - $total_ecotax) * (1 + $product_tax_rate / 100);
 					$total_ecotax = $total_ecotax * (1 + $product_eco_tax_rate / 100);
@@ -1318,14 +1339,14 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+					((int)$address_id ? (int)$address_id : null)
 				);
 
 				$total_price = Tools::ps_round($price, 2) * (int)$product['cart_quantity'];
 
 				if (!$with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id);
 					$total_price = Tools::ps_round($total_price / (1 + ($product_tax_rate / 100)), 2);
 				}
 			}
@@ -2178,6 +2199,18 @@ class CartCore extends ObjectModel
 		else
 			$products = $product_list;
 
+		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
+			$address_id = (int)$this->id_address_invoice;
+		elseif (count($product_list))
+		{
+			$prod = current($product_list);
+			$address_id = (int)$prod['id_address_delivery'];
+		}
+		else
+			$address_id = null;
+		if (!Address::addressExists($address_id))
+			$address_id = null;
+
 		// Order total in default currency without fees
 		$order_total = $this->getOrderTotal(true, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING, $product_list);
 
@@ -2296,7 +2329,7 @@ class CartCore extends ObjectModel
 
 		// Select carrier tax
 		if ($use_tax && !Tax::excludeTaxeOption())
-			 $carrier_tax = $carrier->getTaxesRate(new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			$carrier_tax = $carrier->getTaxesRate(new Address((int)$address_id));
 
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHIPPING_FREE_PRICE',
