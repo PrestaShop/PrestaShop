@@ -37,7 +37,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 		$id_lang = $this->context->language->id;
 
 		// p. => main table, s. => join table
-		// Contains rules to build sql query
+		// Contains rules to build sql query, or method call to special traitment
 		$this->account_number_list = array(
 			// Product definition
 			'product' => array(
@@ -65,15 +65,36 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 
 			// Gift wrapping definition, for now Only one available using Configuration
 			'gift_wrapping' => array(
-				'table' => '',
+				'func_call' => 'getAccountingNumberConfiguration',
+                'key' => 'account_gift_wripping',
 				'fields' => array(
 					'account_number' => $this->l('Account number'),
 					'total' => $this->l('Number of gift-wrapping associated to this account')
 				),
-				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
-				'group_by' => 'account_number',
 				'title' => $this->l('Gift wrapping account number list'),
 				'list' => array()),
+
+            // Submited shipping charge definition, for now Only one available using Configuration
+            'submited_shipping_charge' => array(
+                'func_call' => 'getAccountingNumberConfiguration',
+                'key' => 'account_submit_shipping_charge',
+                'fields' => array(
+                    'account_number' => $this->l('Account number'),
+                    'total' => $this->l('Number of submited shipping charge associated to this account')
+                ),
+                'title' => $this->l('Submited shipping charge account number list'),
+                'list' => array()),
+
+            // Unsubmited shipping charge definition, for now Only one available using Configuration
+            'unsubmited_shipping_charge' => array(
+                'func_call' => 'getAccountingNumberConfiguration',
+                'key' => 'account_unsubmit_shipping_charge',
+                'fields' => array(
+                    'account_number' => $this->l('Account number'),
+                    'total' => $this->l('Number of unsubmited shipping charge associated to this account')
+                ),
+                'title' => $this->l('Unsubmited shipping charge account number list'),
+                'list' => array()),
 
 			// Customer definition
 			'customer' => array(
@@ -122,35 +143,48 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initAccountNumberList()
-	{
-		foreach ($this->account_number_list as $name => &$detail)
-		{
-			if (isset($detail['table']) && !empty($detail['table']))
-			{
-				$join = '';
+    /**
+     * Return the gift wripping number set.
+     *
+     * @TODO : Add the possibility to check in all shop
+     * @param string $key of the Accounting configuration
+     * @return array
+     */
+    public function getAccountingNumberConfiguration($key)
+    {
+        if (($num = Accounting::getConfiguration($key)))
+            return array(array($num, '1'));
+        return array();
+    }
 
-				if (isset($detail['left_join']))
-				{
-					$join = 'LEFT JOIN '._DB_PREFIX_.$detail['left_join']['table'].' s ON (';
-					foreach ($detail['left_join']['on'] as $on)
-						$join .= 'p.'.$on.' = s.'.$on.' AND ';
-					$join = rtrim($join, '  AND ').')';
-				}
+    public function initAccountNumberList()
+    {
+        foreach ($this->account_number_list as $name => &$detail)
+        {
+            if (isset($detail['table']) && !empty($detail['table']))
+            {
+                $join = '';
 
-				$query = 'SELECT '.implode(', ', array_keys($detail['fields'])).'
+                if (isset($detail['left_join']))
+                {
+                    $join = 'LEFT JOIN '._DB_PREFIX_.$detail['left_join']['table'].' s ON (';
+                    foreach ($detail['left_join']['on'] as $on)
+                        $join .= 'p.'.$on.' = s.'.$on.' AND ';
+                    $join = rtrim($join, '  AND ').')';
+                }
+
+                $query = '
+                    SELECT '.implode(', ', array_keys($detail['fields'])).'
 					FROM `'._DB_PREFIX_.$detail['table'].'` p '.$join.'
 					WHERE '.$detail['condition'];
 
-				if (isset($detail['group_by']))
-					$query .= ' GROUP BY '.$detail['group_by'];
-				
-				$detail['list'] = Db::getInstance()->executeS($query);
-			}
-		}
+                if (isset($detail['group_by']))
+                    $query .= ' GROUP BY '.$detail['group_by'];
 
-		$num = Configuration::get('PS_GIFT_WRAPPING_ACCOUNT_NUMBER');
-		if (!empty($num))
-			$this->account_number_list['gift_wrapping']['list'][] = array($num, '1');	
-	}
+                $detail['list'] = Db::getInstance()->executeS($query);
+            }
+            else if (isset($detail['func_call']) && isset($detail['key']) && method_exists($this, $detail['func_call']))
+                $detail['list'] = $this->{$detail['func_call']}($detail['key']);
+        }
+    }
 }

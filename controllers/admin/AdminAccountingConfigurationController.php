@@ -63,7 +63,13 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 						'value' => $this->acc_conf['account_length'],
 						'size' => '15',
                         'auto_value' => false
-					),
+					)
+                )
+            ),
+
+            'account_number_list' => array(
+                'title' =>	$this->l('Default account number Management'),
+                'fields' =>	array(
 					'account_submit_shipping_charge' => array(
 						'title' => $this->l('Submited shipping charge account:'),
 						'desc' => $this->l('Set the account for submited shipping charged'),
@@ -87,7 +93,15 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 						'value' => $this->acc_conf['account_gift_wripping'],
 						'size' => '15',
                         'auto_value' => false
-					)
+					),
+                    'account_handling' => array(
+						'title' => $this->l('Handling account number:'),
+						'desc' => $this->l('Set the account number for handling'),
+						'type' => 'text',
+						'value' => $this->acc_conf['account_handling'],
+						'size' => '15',
+                        'auto_value' => false
+                    )
 				),
 				'submit' => array('name' => 'update_cfg')
 			),
