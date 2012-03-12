@@ -92,4 +92,9 @@
 		  	</ul>
 		</li>
 	</ul>
+	{if $categories.use_radio}
+	<scrit type="text/javascript">
+		searchCategory();
+	</scrit>
+	{/if}
 {/if}
