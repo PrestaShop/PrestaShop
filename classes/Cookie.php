@@ -90,15 +90,7 @@ class CookieCore
 		if (!strstr(Tools::getHttpHost(false, false), '.'))
 			return false;
 		$domain = $out[4];
-		$subDomains = SubDomain::getSubDomains();
-		if ($subDomains === false)
-			die(Tools::displayError('Bad SubDomain SQL query.'));
-		foreach ($subDomains as $subDomain)
-		{
-			$subDomainLength = strlen($subDomain) + 1;
-			if (strncmp($subDomain.'.', $domain, $subDomainLength) == 0)
-				$domain = substr($domain, $subDomainLength);
-		}
+
 		return $domain;
 	}
 
