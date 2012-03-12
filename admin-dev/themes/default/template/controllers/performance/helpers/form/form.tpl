@@ -34,7 +34,7 @@
 	{/if}
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="warn">
 			{l s='This feature can\'t be disabled because this is currently in use.'}
@@ -43,7 +43,7 @@
 	{$smarty.block.parent}
 {/block}
 
-{block name="description_block"}
+{block name="description"}
 	{$smarty.block.parent}
 	{if $input.type == 'radio' && $input.name == 'combination'}
 		<ul style="list-style-type:disc;margin:0 0 0 30px;">
@@ -60,7 +60,7 @@
 	{/if}
 {/block}
 
-{block name="field_block"}
+{block name="field"}
 	{$smarty.block.parent}
 	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
 		</div>

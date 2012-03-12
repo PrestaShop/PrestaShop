@@ -111,7 +111,7 @@
 						{$tr.$key|escape:'htmlall':'UTF-8'}
 					{/if}
 				{else}
-					{block name="default_field_block"}--{/block}
+					{block name="default_field"}--{/block}
 				{/if}
 				{if isset($params.suffix)}{$params.suffix}{/if}
 				{if isset($params.color) && isset($tr.color)}

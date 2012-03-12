@@ -25,14 +25,14 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="description_block"}
+{block name="description"}
 	{$smarty.block.parent}
 	{if $input.type == 'text' && $input.name == 'key'}
 		<input type="button" value="{l s='   Generate!   '}" class="button" onclick="gencode(32)" />
 	{/if}
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'resources'}
 		<p>{l s='Set the resource permissions for this key:'}</p>
 		<table border="0" cellspacing="0" cellpadding="0" class="table accesses">

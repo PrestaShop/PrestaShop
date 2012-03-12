@@ -32,7 +32,7 @@
 	{$smarty.block.parent}
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == "select_template"}
 		<div class="translatable">
 			{foreach $languages as $language}
@@ -65,7 +65,7 @@
 	{/if}
 {/block}
 
-{block name="field_block"}
+{block name="field"}
 	{$smarty.block.parent}
 	{if $input.type == "select_template"}
 		</div>

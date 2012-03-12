@@ -25,7 +25,7 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'special'}
 		<div id="#resultCheckLangPack">
 			<p id="lang_pack_loading" style="display:none"><img src="../img/admin/{$input.img}" alt="" /> {$input.text}</p>

@@ -44,7 +44,7 @@
 	{/if}
 {/block}
 
-{block name="field_block"}
+{block name="field"}
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
 			<div class="margin-form"><a style="display: block; padding-top: 4px;" href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={$tokenCustomer}">{$customer->lastname} {$customer->firstname} ({$customer->email})</a></div>

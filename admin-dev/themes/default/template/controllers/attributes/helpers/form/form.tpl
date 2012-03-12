@@ -33,7 +33,7 @@
 	{$smarty.block.parent}
 {/block}
 
-{block name="field_block"}
+{block name="field"}
 	{if $input.name == 'current_texture'}
 		<div class="margin-form">
 			{if isset($imageTextureExists) && $imageTextureExists}

@@ -43,7 +43,7 @@
 {/block}
 
 
-{block name="field_block"}
+{block name="field"}
 	{if $input['type'] == 'group_discount_category'}
 	<div style="{if !$form_id}display:none{/if}">
 		<script type="text/javascript">
