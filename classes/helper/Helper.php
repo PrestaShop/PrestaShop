@@ -289,6 +289,9 @@ class HelperCore
 				  </ul>
 				</li>
 			</ul>';
+
+		if ($use_search)
+			$html .= '<script type="text/javascript">searchCategory();</script>';
 		return $html;
 	}
 
