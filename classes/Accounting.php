@@ -149,7 +149,6 @@ class AccountingCore
 			self::$acc_conf_cached = true;
 		}
 
-
 		// Return value key or the complete configuration depending of the $key definition
 		return (!$key) ? self::$acc_conf : ((isset(self::$acc_conf[$key]) ? self::$acc_conf[$key] : false));
 	}
