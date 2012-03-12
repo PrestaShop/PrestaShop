@@ -1295,7 +1295,7 @@ class AdminControllerCore extends Controller
 			'is_multishop' => $is_multishop,
 			'multishop_context' => $this->multishop_context,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
-			'controller_name' => Tools::getValue('controller'),
+			'controller_name' => htmlentities(Tools::getValue('controller')),
 		));
 
 		// Shop context
