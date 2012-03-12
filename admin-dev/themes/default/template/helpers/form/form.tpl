@@ -323,7 +323,7 @@
 									{$fields_value[$input.name]}
 								{/if}
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
-								{/block}
+								{/block}{* end block input *}
 								{block name="description_block"}
 									{if isset($input.desc)}
 										<p class="preference_description">
@@ -344,7 +344,7 @@
 								{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
 								</div>
 								<div class="clear"></div>
-							{/block}
+							{/block}{* end block field *}
 							{if $input.name == 'id_state'}
 								</div>
 							{/if}

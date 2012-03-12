@@ -25,7 +25,7 @@
 *}
 
 {extends file="helpers/options/options.tpl"}
-{block name="start_field_block"}
+{block name="field"}
 	{if $field['type'] == 'checkbox_table'}
 		<div class="margin-form" style="float: left; padding-left: 0; width: 317px; margin-top: 6px; height: 300px; overflow-y: auto;">
 			<table class="table" cellspacing="0">
@@ -44,18 +44,18 @@
 					{/foreach}
 				</tbody>
 			</table>
-	{elseif $field['type'] == 'textarea_newlines'}
-		<div class="margin-form">
-			<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+		</div>
+		<div class="clear"></div>
+		<br />
 	{else}
-		<div class="margin-form">
+		{$smarty.block.parent}
 	{/if}
 {/block}
 
-{block name="end_field_block"}
-	{if $field['type'] == 'checkbox_table'}
-		<div class="clear"></div>
-		<br />
+{block name="input"}
+	{if $field['type'] == 'textarea_newlines'}
+		<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|replace:';':"\n"|escape:'htmlall':'UTF-8'}</textarea>
+	{else}
+		{$smarty.block.parent}
 	{/if}
-	</div>
 {/block}
