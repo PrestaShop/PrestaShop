@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<entity_subdomain>
-  <fields id="name" class="SubDomain">
-    <field name="name"/>
-  </fields>
-  <entities>
-    <subdomain id="www" name="www"/>
-  </entities>
-</entity_subdomain>

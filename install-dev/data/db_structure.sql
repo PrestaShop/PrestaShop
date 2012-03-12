@@ -1651,11 +1651,6 @@ CREATE TABLE `PREFIX_state` (
   KEY `id_zone` (`id_zone`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_subdomain` (
-  `id_subdomain` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(16) NOT NULL,
-  PRIMARY KEY  (`id_subdomain`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supplier` (
   `id_supplier` int(10) unsigned NOT NULL auto_increment,
