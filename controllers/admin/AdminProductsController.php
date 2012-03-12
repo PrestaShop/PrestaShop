@@ -29,7 +29,7 @@ class AdminProductsControllerCore extends AdminController
 {
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
-	 **/
+	 */
 	protected $max_file_size = null;
 	protected $max_image_size = null;
 
@@ -901,7 +901,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
 				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
-		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+		elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
@@ -923,6 +923,17 @@ class AdminProductsControllerCore extends AdminController
 				$this->action = 'deleteVirtualProductAttribute';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		// Product preview
+		elseif (Tools::isSubmit('submitAddProductAndPreview'))
+		{
+			$this->display = 'edit';
+			$this->action = 'save';
+			if (Tools::getValue('id_product'))
+			{
+				$this->id_object = Tools::getValue('id_product');
+				$this->object = new Product((int)Tools::getValue('id_product'));
+			}
 		}
 		// Update attachments
 		elseif (Tools::isSubmit('submitAddAttachments'))
@@ -1407,9 +1418,9 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('An error occurred during new folder creation');
 			if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
 				$this->errors[] = Tools::displayError('An error occurred during the image upload');
-			else if (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format))
+			elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format))
 				$this->errors[] = Tools::displayError('An error occurred while copying image.');
-			else if ($method == 'auto')
+			elseif ($method == 'auto')
 			{
 				$imagesTypes = ImageType::getImagesTypes('products');
 				foreach ($imagesTypes as $k => $image_type)
@@ -1450,7 +1461,7 @@ class AdminProductsControllerCore extends AdminController
 				$languages = Language::getLanguages(false);
 				if (!$this->object->updateCategories(Tools::getValue('categoryBox')))
 					$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-				else if (!$this->updateTags($languages, $this->object))
+				elseif (!$this->updateTags($languages, $this->object))
 					$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 				else
 				{
@@ -1742,7 +1753,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->errors[] = $this->l('the field').' <b>'.$this->l('expiration date attribute').'</b> '.$this->l('is required');
 						return false;
 					}
-					else if (!empty($id_product_attribute))
+					elseif (!empty($id_product_attribute))
 					{
 						$this->errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
 						return false;
@@ -3494,7 +3505,7 @@ class AdminProductsControllerCore extends AdminController
 			if ($shop_context == Shop::CONTEXT_ALL)
 				$show_quantities = false;
 			// if we are in group shop context
-			else if ($shop_context == Shop::CONTEXT_GROUP)
+			elseif ($shop_context == Shop::CONTEXT_GROUP)
 			{
 				// if quantities are not shared between shops of the group, it's not possible to manage them at group level
 				if (!$group_shop->share_stock)
