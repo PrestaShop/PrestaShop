@@ -44,20 +44,20 @@
 
                     <h3 style="margin-top:1px;">
                         {if $key == 0}
-                            {l s='Left blocks'}
+                            {l s='Left blocks' mod='blockcms'}
                         {else}
-                            {l s='Right blocks'}
+                            {l s='Right blocks' mod='blockcms'}
                         {/if}
                     </h3>
 
                     <table cellspacing="0" cellpadding="0" style="min-width:40em;" class="table tableDnD cms" id="cms_block_{$key%2}">
                         <thead>
                             <tr class="nodrag nodrop">
-                                <th>{l s='ID'}</th>
-                                <th>{l s='Name of block'}</th>
-                                <th>{l s='Category name'}</th>
-                                <th>{l s='Position'}</th>
-                                <th>{l s='Actions'}</th>
+                                <th>{l s='ID' mod='blockcms'}</th>
+                                <th>{l s='Name of block' mod='blockcms'}</th>
+                                <th>{l s='Category name' mod='blockcms'}</th>
+                                <th>{l s='Position' mod='blockcms'}</th>
+                                <th>{l s='Actions' mod='blockcms'}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,19 +72,19 @@
                                                     style="display: none;"
                                             {/if}
                                                     href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=1&position={(int)$cms_block['position'] + 1}&location=0&token={$token}">
-                                            <img src="{$smarty.const._PS_ADMIN_IMG_}down.gif" alt="{l s='Down'}" title="{l s='Down'}" />
+                                            <img src="{$smarty.const._PS_ADMIN_IMG_}down.gif" alt="{l s='Down' mod='blockcms'}" title="{l s='Down' mod='blockcms'}" />
                                         </a>
                                         <a
                                             {if (($cms_block['position'] == 0) || ($key == 0))}
                                                     style="display: none;"
                                             {/if}
                                                     href="{$current}&configure=blockcms&id_cms_block={$cms_block['id_cms_block']}&way=0&position={(int)$cms_block['position'] - 1}&location=0&token={$token}">
-                                            <img src="{$smarty.const._PS_ADMIN_IMG_}up.gif" alt="{l s='Up'}" title="{l s='Up'}" />
+                                            <img src="{$smarty.const._PS_ADMIN_IMG_}up.gif" alt="{l s='Up' mod='blockcms'}" title="{l s='Up' mod='blockcms'}" />
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{$current}&token={$token}&editBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
-                                        <a href="{$current}&token={$token}&deleteBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
+                                        <a href="{$current}&token={$token}&editBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Edit' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}edit.gif" alt="" /></a>
+                                        <a href="{$current}&token={$token}&deleteBlockCMS&id_cms_block={(int)$cms_block['id_cms_block']}" title="{l s='Delete' mod='blockcms'}"><img src="{$smarty.const._PS_ADMIN_IMG_}delete.gif" alt="" /></a>
                                     </td>
                                 </tr>
                             {/foreach}
@@ -132,8 +132,8 @@
                     <th>
                         <input type="checkbox" name="checkme" id="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$input.name}', this.checked)" />
                     </th>
-                    <th>{l s='ID'}</th>
-                    <th>{l s='Name'}</th>
+                    <th>{l s='ID' mod='blockcms'}</th>
+                    <th>{l s='Name' mod='blockcms'}</th>
                 </tr>
 
                 {foreach $cms as $key => $cms_category}
@@ -165,7 +165,7 @@
 
             </table>
             {else}
-            <p>{l s='No pages created'}</p>
+            <p>{l s='No pages created' mod='blockcms'}</p>
         {/if}
 	{else}
 		{$smarty.block.parent}
