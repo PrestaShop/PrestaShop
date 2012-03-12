@@ -78,7 +78,7 @@ class AdminLoginControllerCore extends AdminController
 
 		// Redirect to admin panel
 		if (isset($_GET['redirect']) && Validate::isControllerName($_GET['redirect']))
-			$redirect = $_GET['redirect'];
+			$this->context->smarty->assign(array('redirect' => Tools::getValue('redirect')));
 		
 		if ($nbErrors = count($this->errors))
 			$this->context->smarty->assign(
@@ -89,8 +89,6 @@ class AdminLoginControllerCore extends AdminController
 					'disableDefaultErrorOutPut' => true,
 					)
 				);
-
-		$this->context->smarty->assign(array('redirect' => isset($redirect) ? $redirect : null));
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
@@ -161,7 +159,10 @@ class AdminLoginControllerCore extends AdminController
 				if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect']))
 					$url = $this->context->link->getAdminLink($_POST['redirect']);
 				else
-					$url = $this->context->link->getAdminLink('AdminHome');
+				{
+					$tab = new Tab((int)$this->context->employee->default_tab);
+					$url = $this->context->link->getAdminLink($tab->class_name);
+				}
 
 				if (Tools::isSubmit('ajax'))
 					die(Tools::jsonEncode(array('hasErrors' => false, 'redirect' => $url)));
