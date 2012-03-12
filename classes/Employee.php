@@ -88,7 +88,7 @@ class EmployeeCore extends ObjectModel
 			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'id_profile' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'bo_color' => 			array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-			'default_tab' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'default_tab' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'bo_theme' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
 			'bo_width' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'bo_show_screencast' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
