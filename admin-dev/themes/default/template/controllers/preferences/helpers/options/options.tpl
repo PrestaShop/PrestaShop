@@ -25,18 +25,10 @@
 *}
 
 {extends file="helpers/options/options.tpl"}
-{block name="start_field_block"}
+{block name="input"}
 	{if $field['type'] == 'disabled'}
-		<div class="margin-form">
-			{$field['disabled']}
+		{$field['disabled']}
 	{else}
-		<div class="margin-form">
-	{/if}
-{/block}
-
-{block name="end_field_block"}
-	{if $field['type'] == 'checkbox_table'}
-		<div class="clear"></div>
-		<br />
+		{$smarty.block.parent}
 	{/if}
 {/block}
