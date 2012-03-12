@@ -68,6 +68,7 @@ class OrderOpcControllerCore extends ParentOrderController
 						case 'updateCarrierAndGetPayments':
 							if ((Tools::isSubmit('delivery_option') || Tools::isSubmit('id_carrier')) && Tools::isSubmit('recyclable') && Tools::isSubmit('gift') && Tools::isSubmit('gift_message'))
 							{
+								$this->_assignWrappingAndTOS();
 								if ($this->_processCarrier())
 								{
 									$carriers = $this->context->cart->simulateCarriersOutput();
