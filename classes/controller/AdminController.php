@@ -421,7 +421,7 @@ class AdminControllerCore extends Controller
 					// Assignement by reference
 					if (array_key_exists('tmpTableFilter', $field))
 						$sql_filter = & $this->_tmpTableFilter;
-					else if (array_key_exists('havingFilter', $field))
+					elseif (array_key_exists('havingFilter', $field))
 						$sql_filter = & $this->_filterHaving;
 					else
 						$sql_filter = & $this->_filter;
@@ -452,9 +452,9 @@ class AdminControllerCore extends Controller
 
 						if ($type == 'int' || $type == 'bool')
 							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
-						else if ($type == 'decimal')
+						elseif ($type == 'decimal')
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
-						else if ($type == 'select')
+						elseif ($type == 'select')
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
 						else
 							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
@@ -476,7 +476,7 @@ class AdminControllerCore extends Controller
 			// no need to use displayConf() here
 			if (!empty($action) && method_exists($this, 'ajaxProcess'.Tools::toCamelCase($action)))
 				return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
-			else if (method_exists($this, 'ajaxProcess'))
+			elseif (method_exists($this, 'ajaxProcess'))
 				return $this->ajaxProcess();
 		}
 		else
@@ -544,7 +544,7 @@ class AdminControllerCore extends Controller
 					' <b>'.$this->table.'</b><br />'.
 					Tools::displayError('You cannot delete all of the items.');
 			}
-			else if (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
+			elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
 					$this->errors[] = Tools::displayError('You cannot delete this items.');
 			else
 			{
@@ -560,7 +560,7 @@ class AdminControllerCore extends Controller
 					if ($object->update())
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$token;
 				}
-				else if ($object->delete())
+				elseif ($object->delete())
 				{
 					if (method_exists($object, 'cleanPositions'))
 						$object->cleanPositions();
@@ -617,7 +617,7 @@ class AdminControllerCore extends Controller
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			/* voluntary do affectation here */
-			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
+			elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
@@ -700,7 +700,7 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('An error occurred while updating object.').
 							' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 					}
-					else if ($this->postImage($object->id) && !count($this->errors) && $this->_redirect)
+					elseif ($this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 					{
 						$parent_id = (int)Tools::getValue('id_parent', 1);
 						// Specific back redirect
@@ -797,7 +797,7 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
 				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
-		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+		elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
@@ -892,7 +892,7 @@ class AdminControllerCore extends Controller
 							if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
 								$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 					}
-					else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+					elseif (($value = Tools::getValue($field)) == false && (string)$value != '0')
 						$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
 				// Check field validator
@@ -903,7 +903,7 @@ class AdminControllerCore extends Controller
 							if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
 								$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 				}
-				else if (Tools::getValue($field) && isset($values['validation']))
+				elseif (Tools::getValue($field) && isset($values['validation']))
 					if (!Validate::$values['validation'](Tools::getValue($field)))
 						$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 
@@ -929,7 +929,7 @@ class AdminControllerCore extends Controller
 					$method_name = 'updateOption'.Tools::toCamelCase($key, true);
 					if (method_exists($this, $method_name))
 						$this->$method_name(Tools::getValue($key));
-					else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+					elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 					{
 						$list = array();
 						foreach ($languages as $language)
@@ -1030,7 +1030,7 @@ class AdminControllerCore extends Controller
 			$this->errors[] = Tools::displayError('Object cannot be loaded (not found)');
 			return false;
 		}
-		else if ($opt)
+		elseif ($opt)
 		{
 			if (!$this->object)
 				$this->object = new $this->className();
@@ -1349,14 +1349,14 @@ class AdminControllerCore extends Controller
 
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -1588,7 +1588,7 @@ class AdminControllerCore extends Controller
 		// So we remove 10 characters and we keep same keys
 		if (strtolower(substr($class, -10)) == 'controller')
 			$class = substr($class, 0, -10);
-		else if ($class == 'AdminTab')
+		elseif ($class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
 		return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
 	}
@@ -1656,7 +1656,7 @@ class AdminControllerCore extends Controller
 			unset($parse_query['setShopContext'], $parse_query['conf']);
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query);
 		}
-		else if (!Shop::isFeatureActive())
+		elseif (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-1';
 
 		$shop_id = '';
@@ -1675,9 +1675,9 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
-		else if ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
+		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
-		else if ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		elseif ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
 		{
 			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
 			if (count($shops))
@@ -1698,7 +1698,7 @@ class AdminControllerCore extends Controller
 		// Replace existing shop if necessary
 		if (!$shop_id)
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-		else if ($this->context->shop->id != $shop_id)
+		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
 	}
 
@@ -1716,7 +1716,7 @@ class AdminControllerCore extends Controller
 						if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
 							$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 				}
-				else if (strncmp($key, $this->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
+				elseif (strncmp($key, $this->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
 					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 		if (isset($_GET) && !empty($_GET) && isset($this->table))
 			foreach ($_GET as $key => $value)
@@ -1726,7 +1726,7 @@ class AdminControllerCore extends Controller
 						if (strncmp($key, $table.'OrderBy', 7) === 0 || strncmp($key, $table.'Orderway', 8) === 0)
 							$this->context->cookie->$key = $value;
 				}
-				else if (strncmp($key, $this->table.'OrderBy', 7) === 0 || strncmp($key, $this->table.'Orderway', 12) === 0)
+				elseif (strncmp($key, $this->table.'OrderBy', 7) === 0 || strncmp($key, $this->table.'Orderway', 12) === 0)
 					$this->context->cookie->$key = $value;
 
 		// Manage list filtering
@@ -1744,7 +1744,7 @@ class AdminControllerCore extends Controller
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		/* Delete object */
-		else if (isset($_GET['delete'.$this->table]))
+		elseif (isset($_GET['delete'.$this->table]))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete';
@@ -1752,7 +1752,7 @@ class AdminControllerCore extends Controller
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		/* Change object statuts (active, inactive) */
-		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+		elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'status';
@@ -1760,16 +1760,16 @@ class AdminControllerCore extends Controller
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		/* Move an object */
-		else if (isset($_GET['position']))
+		elseif (isset($_GET['position']))
 		{
 			if ($this->tabAccess['edit'] == '1')
 				$this->action = 'position';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		else if ($submitted_action = Tools::getValue('submitAction'.$this->table))
+		elseif ($submitted_action = Tools::getValue('submitAction'.$this->table))
 				$this->action = $submitted_action;
-		else if (Tools::getValue('submitAdd'.$this->table)
+		elseif (Tools::getValue('submitAdd'.$this->table)
 				 || Tools::getValue('submitAdd'.$this->table.'AndStay')
 				 || Tools::getValue('submitAdd'.$this->table.'AndPreview'))
 		{
@@ -1802,7 +1802,7 @@ class AdminControllerCore extends Controller
 					$this->errors[] = Tools::displayError('You do not have permission to add here.');
 			}
 		}
-		else if (isset($_GET['add'.$this->table]))
+		elseif (isset($_GET['add'.$this->table]))
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
@@ -1812,13 +1812,13 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
+		elseif (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
 			$this->display = 'edit';
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		else if (isset($_GET['view'.$this->table]))
+		elseif (isset($_GET['view'.$this->table]))
 		{
 			if ($this->tabAccess['view'] === '1')
 			{
@@ -1829,10 +1829,10 @@ class AdminControllerCore extends Controller
 				$this->errors[] = Tools::displayError('You do not have permission to view here.');
 		}
 		/* Cancel all filters for this tab */
-		else if (isset($_POST['submitReset'.$this->table]))
+		elseif (isset($_POST['submitReset'.$this->table]))
 			$this->action = 'reset_filters';
 		/* Submit options list */
-		else if (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
+		elseif (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
 		{
 			$this->display = 'options';
 			if ($this->tabAccess['edit'] === '1')
@@ -1840,9 +1840,9 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		else if (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
+		elseif (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
-		else if (is_array($this->bulk_actions))
+		elseif (is_array($this->bulk_actions))
 			foreach ($this->bulk_actions as $bulk_action => $params)
 			{
 				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
@@ -1856,7 +1856,7 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 					break;
 				}
-				else if (Tools::isSubmit('submitBulk'))
+				elseif (Tools::isSubmit('submitBulk'))
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
@@ -1868,7 +1868,7 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
-		else if (!empty($this->options) && empty($this->fieldsDisplay))
+		elseif (!empty($this->options) && empty($this->fieldsDisplay))
 			$this->display = 'options';
 	}
 
@@ -1887,7 +1887,7 @@ class AdminControllerCore extends Controller
 		$use_limit = true;
 		if ($limit === false)
 			$use_limit = false;
-		else if (empty($limit))
+		elseif (empty($limit))
 		{
 			if (isset($this->context->cookie->{$this->table.'_pagination'}) && $this->context->cookie->{$this->table.'_pagination'})
 				$limit = $this->context->cookie->{$this->table.'_pagination'};
@@ -1962,7 +1962,7 @@ class AdminControllerCore extends Controller
 				$filter_key = $assos[$this->table]['type'];
 				$idenfier_shop = Shop::getContextListShopID();
 			}
-			else if (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
+			elseif (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
 			{
 				$filter_key = $assos_group[$this->table]['type'];
 				$idenfier_shop = array(Shop::getContextGroupShopID());
@@ -1974,7 +1974,7 @@ class AdminControllerCore extends Controller
 		{
 			if (!$this->_group)
 				$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
-			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filter_key).'`? *sa#', $this->_join);
@@ -2081,7 +2081,7 @@ class AdminControllerCore extends Controller
 									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row[$this->identifier];
 							}
 						}
-						else if (isset($input['lang']) && $input['lang'])
+						elseif (isset($input['lang']) && $input['lang'])
 							foreach ($this->_languages as $language)
 							{
 								$fieldValue = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
@@ -2089,7 +2089,7 @@ class AdminControllerCore extends Controller
 								{
 									if (isset($input['default_value']) && is_array($input['default_value']) && isset($input['default_value'][$language['id_lang']]))
 										$fieldValue = $input['default_value'][$language['id_lang']];
-									else if (isset($input['default_value']))
+									elseif (isset($input['default_value']))
 										$fieldValue = $input['default_value'];
 								}
 								$this->fields_value[$input['name']][$language['id_lang']] = $fieldValue;
@@ -2198,7 +2198,7 @@ class AdminControllerCore extends Controller
 				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).'</b> '.
 					$this->l('is invalid');
-			else if ($class_name == 'Customer' && !Validate::isPasswd($value))
+			elseif ($class_name == 'Customer' && !Validate::isPasswd($value))
 				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).
 					'</b> '.$this->l('is invalid');
@@ -2316,7 +2316,7 @@ class AdminControllerCore extends Controller
 		$group_shop_asso = GroupShop::getAssoTables();
 		if (isset($shop_asso[$table]) && $shop_asso[$table]['type'] == 'shop')
 			$type = 'shop';
-		else if (isset($group_shop_asso[$table]) && $group_shop_asso[$table]['type'] == 'group_shop')
+		elseif (isset($group_shop_asso[$table]) && $group_shop_asso[$table]['type'] == 'group_shop')
 			$type = 'group_shop';
 		else
 			return;
@@ -2399,7 +2399,7 @@ class AdminControllerCore extends Controller
 	{
 		if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir']))
 			return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/');
-		else if (!empty($this->fieldImageSettings))
+		elseif (!empty($this->fieldImageSettings))
 			foreach ($this->fieldImageSettings as $image)
 				if (isset($image['name']) && isset($image['dir']))
 					$this->uploadImage($id, $image['name'], $image['dir'].'/');
