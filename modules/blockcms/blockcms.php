@@ -662,7 +662,7 @@ class BlockCms extends Module
 	public function displayBlockCMS($column)
 	{
 		$cms_titles = BlockCMSModel::getCMSTitles($column);
-
+print_r($cms_titles);
 		$this->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
