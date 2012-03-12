@@ -47,7 +47,7 @@
 	<div id="module_install" style="width:500px;margin-top:5px;{if !isset($smarty.post.downloadflag)}display: none;{/if}">
 		<fieldset>
 			<legend><img src="../img/admin/add.gif" alt="{l s='Add a new module'}" class="middle" /> {l s='Add a new module'}</legend>
-			<p>{'The module must be either a zip file or a tarball.'}</p>
+			<p>{l s='The module must be either a zip file or a tarball.'}</p>
 			<div style="float:left;margin-right:50px">
 				<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data">
 					<label style="width: 100px">{l s='Module file'}</label>
