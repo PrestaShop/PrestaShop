@@ -99,7 +99,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
 						'title' => $this->l('Limit upload file value'),
-						'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
+						'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or equal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -108,7 +108,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
 						'title' => $this->l('Limit upload image value'),
-						'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
+						'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or equal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
