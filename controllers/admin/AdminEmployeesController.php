@@ -33,6 +33,9 @@ class AdminEmployeesControllerCore extends AdminController
 	/** @var array themes list*/
 	private $themes = array();
 
+	/** @var array tabs list*/
+	private $tabs_list = array();
+
 	public function __construct()
 	{
 	 	$this->table = 'employee';
@@ -111,6 +114,21 @@ class AdminEmployeesControllerCore extends AdminController
 			if (file_exists($path.$theme.'/css/admin.css'))
 				$this->themes[] = $theme;
 
+		$home_tab = Tab::getInstanceFromClassName('adminHome');
+		$this->tabs_list[$home_tab->id] = array(
+				'name' => $home_tab->name[$this->context->language->id],
+				'id_tab' => $home_tab->id,
+				'children' => array(array('id_tab' =>$home_tab->id, 'name' => $home_tab->name[$this->context->language->id])));
+		foreach (Tab::getTabs($this->context->language->id, 0) as $tab)
+		{
+			if (Tab::checkTabRights($tab['id_tab']))
+			{
+				$this->tabs_list[$tab['id_tab']] = $tab;
+				foreach (Tab::getTabs($this->context->language->id, $tab['id_tab']) as $children)
+					if (Tab::checkTabRights($children['id_tab']))
+						$this->tabs_list[$tab['id_tab']]['children'][] = $children;
+			}
+		}
 		parent::__construct();
 
 		// An employee can edit its own profile
@@ -187,6 +205,13 @@ class AdminEmployeesControllerCore extends AdminController
 					'class' => 'color mColorPickerInput',
 					'size' => 20,
 					'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+				),
+				array(
+					'type' => 'default_tab',
+					'label' => $this->l('Default tab'),
+					'name' => 'default_tab',
+					'desc' => $this->l('This tab will be displayed just after login'),
+					'options' => $this->tabs_list
 				),
 				array(
 					'type' => 'text',
