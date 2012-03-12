@@ -8,3 +8,5 @@ ALTER TABLE `PREFIX_employee`
 ALTER TABLE `PREFIX_employee` ADD `default_tab` int(10) unsigned NOT NULL default 0 AFTER `bo_theme`;
 
 DROP TABLE `PREFIX_subdomain`;
+
+/* PHP:migrate_tabs_15(); */;
