@@ -25,8 +25,7 @@
 *}
 
 {extends file="helpers/options/options.tpl"}
-{block name="start_field_block"}
-	<div class="margin-form">
+{block name="input"}
 	{if $field['type'] == 'rewriting_settings'}
 		{if $field['mod_rewrite']}
 			<label class="t" for="{$key}_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
@@ -39,5 +38,7 @@
 			<span class="warning_mod_rewrite" style="display:block;height:15px">{l s='URL rewriting (mod_rewrite) is not active on your server. If you want to use Friendly URL you have to active this mod.'}</span>
 			<div class="clear"></div>
 		{/if}
+	{else}
+		{$smarty.block.parent}
 	{/if}
 {/block}
