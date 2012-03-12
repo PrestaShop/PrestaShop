@@ -115,6 +115,7 @@ class TranslateCore
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 		static $lang_cache = array();
+		static $translations_merged = array();
 
 		if ($module instanceof Module)
 		{
@@ -134,7 +135,11 @@ class TranslateCore
 			$file = $local_path.'/'.Context::getContext()->language->iso_code.'.php';
 
 		if (Tools::file_exists_cache($file) && include_once($file))
-			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+		{
+			if (!isset($translations_merged[md5($file)]))
+				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+			$translations_merged[md5($file)] = true;
+		}
 
 		$string = str_replace('\'', '\\\'', $string);
 
