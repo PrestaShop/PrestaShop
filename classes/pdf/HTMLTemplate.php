@@ -105,10 +105,9 @@ abstract class HTMLTemplateCore
 		$logo = '';
 
 		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
-			$logo = _PS_IMG_.Configuration::get('PS_LOGO_INVOICE');
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE');
 		else if (Configuration::get('PS_LOGO') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
-			$logo = _PS_IMG_.Configuration::get('PS_LOGO');
-
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 		return $logo;
 	}
 
