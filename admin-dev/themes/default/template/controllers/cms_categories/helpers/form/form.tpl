@@ -26,7 +26,7 @@
 
 {extends file="helpers/form/form.tpl"}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'select_category'}
 		<select name="id_parent">
 			{$input.options.html}

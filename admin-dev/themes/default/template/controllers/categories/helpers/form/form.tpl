@@ -25,7 +25,7 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="description_block"}
+{block name="description"}
 	{$smarty.block.parent}
 	{if ($input.name == 'groupBox')}
 		<p class="hint" style="display:block; position:relative; display:inline-block;">

@@ -25,7 +25,7 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'select_theme'}
 		<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
 			{foreach $input.options.query AS $option}

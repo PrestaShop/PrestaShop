@@ -41,7 +41,7 @@
 	{$smarty.block.parent}
 {/block}
 
-{block name="field_block"}
+{block name="field"}
 	{$smarty.block.parent}
 	{if $input.type == 'select' && $input.name == 'range_behavior'}
 		</div>

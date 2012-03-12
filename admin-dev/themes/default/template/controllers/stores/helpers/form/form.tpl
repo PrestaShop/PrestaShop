@@ -33,7 +33,7 @@
 	});
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'latitude'}
 		<input type="text"
 			{if isset($input.size)}size="{$input.size}"{/if}

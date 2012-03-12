@@ -61,7 +61,7 @@
 
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'checkboxStatuses'}
 		{foreach $input.values.query as $value}
 			{assign var=id_checkbox value=$input.name|cat:'_'|cat:intval($value[$input.values.id])}
