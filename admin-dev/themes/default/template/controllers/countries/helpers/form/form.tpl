@@ -25,7 +25,7 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="field_block"}
+{block name="field"}
 	{if $input.type == 'address_layout'}
 		<div class="margin-form">
 			<div style="float:left">

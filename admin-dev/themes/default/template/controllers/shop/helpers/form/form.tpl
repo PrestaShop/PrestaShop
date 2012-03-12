@@ -32,7 +32,7 @@
 	{$smarty.block.parent}
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
 			<div class="select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">

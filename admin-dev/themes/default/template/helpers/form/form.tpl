@@ -67,9 +67,9 @@
 							{block name="label"}
 								{if isset($input.label)}<label>{$input.label} </label>{/if}
 							{/block}
-							{block name="field_block"}
+							{block name="field"}
 								<div class="margin-form">
-								{block name="input_block"}
+								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang)}
 										<div class="translatable">
@@ -324,7 +324,7 @@
 								{/if}
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
 								{/block}{* end block input *}
-								{block name="description_block"}
+								{block name="description"}
 									{if isset($input.desc)}
 										<p class="preference_description">
 											{if is_array($input.desc)}

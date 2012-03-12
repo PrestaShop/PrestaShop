@@ -66,7 +66,7 @@
 	</div>
 {/block}
 
-{block name="input_block"}
+{block name="input"}
 	{if $input.type == 'select_category'}
 		<select name="{$input.name}">
 			{$input.options.html}
