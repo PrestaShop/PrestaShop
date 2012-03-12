@@ -4125,7 +4125,7 @@ class ProductCore extends ObjectModel
 				'id_tax_rules_group' => (int)$id_tax_rules_group,
 				'id_shop' => (int)$id_shop,
 			);
-
+		Cache::clean('product_id_tax_rules_group_'.(int)$this->id.'_'.(int)Context::getContext()->shop->id);
 		return Db::getInstance()->insert('product_tax_rules_group_shop', $values);
 	}
 
@@ -4138,14 +4138,16 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (!Cache::isStored((int)$id_product.'_'.(int)$context->shop->id))
-			Cache::store((int)$id_product.'_'.(int)$context->shop->id,
+
+		$key = 'product_id_tax_rules_group_'.(int)$id_product.'_'.(int)$context->shop->id;
+		if (!Cache::isStored($key))
+			Cache::store($key,
 			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_tax_rules_group`
 				FROM `'._DB_PREFIX_.'product_tax_rules_group_shop`
 				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)Context::getContext()->shop->id));
 
-		return Cache::retrieve((int)$id_product.'_'.(int)$context->shop->id);
+		return Cache::retrieve($key);
 	}
 
 	/**
