@@ -293,12 +293,14 @@ class AddressCore extends ObjectModel
 	*/
 	public static function addressExists($id_address)
 	{
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_address`
-		FROM '._DB_PREFIX_.'address a
-		WHERE a.`id_address` = '.(int)$id_address);
-
-		return isset($row['id_address']);
+		$key = 'address_exists_'.(int)$id_address;
+		if (!Cache::isStored($key))
+				Cache::store(
+					$key, Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+							SELECT `id_address`
+							FROM '._DB_PREFIX_.'address a
+							WHERE a.`id_address` = '.(int)$id_address));
+		return Cache::retrieve($key);
 	}
 
 	public static function getFirstCustomerAddressId($id_customer, $active = true)

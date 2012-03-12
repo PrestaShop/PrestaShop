@@ -3448,7 +3448,9 @@ class ProductCore extends ObjectModel
 	{
 		if (!$row['id_product'])
 			return false;
-		$context = Context::getContext();
+
+		if ($context == null)
+			$context = Context::getContext();
 
 		// Product::getDefaultAttribute is only called if id_product_attribute is missing from the SQL query at the origin of it:
 		// consider adding it in order to avoid unnecessary queries

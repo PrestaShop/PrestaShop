@@ -368,10 +368,9 @@ class HookCore extends ObjectModel
 
 				// Call hook method
 				if ($hook_callable)
-					$display = call_user_func(array($moduleInstance, 'hook'.$hook_name), $hookArgs);
+					$display = $moduleInstance->{'hook'.$hook_name}($hookArgs);
 				else if ($hook_retro_callable)
-					$display = call_user_func(array($moduleInstance, 'hook'.$retro_hook_name), $hookArgs);
-
+					$display = $moduleInstance->{'hook'.$retro_hook_name}($hookArgs);
 				// Live edit
 				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
 				{
