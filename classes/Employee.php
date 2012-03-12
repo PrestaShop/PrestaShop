@@ -56,6 +56,8 @@ class EmployeeCore extends ObjectModel
 	/** @var string Display back office background in the specified color */
 	public $bo_color;
 
+	public $default_tab;
+
 	/** @var string employee's chosen theme */
 	public $bo_theme;
 
@@ -86,6 +88,7 @@ class EmployeeCore extends ObjectModel
 			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'id_profile' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'bo_color' => 			array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+			'default_tab' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'bo_theme' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
 			'bo_width' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'bo_show_screencast' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
