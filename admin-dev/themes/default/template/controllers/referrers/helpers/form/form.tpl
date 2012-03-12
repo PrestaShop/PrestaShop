@@ -101,13 +101,11 @@
 
 {/block}
 
-{block name="end_field_block"}
-	</div>
-
+{block name="field_block"}
+	{$smarty.block.parent}
 	{if $input.name == 'request_uri_regexp_not'}
 		</div>
 	{/if}
-
 {/block}
 
 {block name="script"}

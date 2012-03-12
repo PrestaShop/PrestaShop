@@ -25,7 +25,8 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="end_field_block"}
+{block name="description_block"}
+	{$smarty.block.parent}
 	{if ($input.name == 'groupBox')}
 		<p class="hint" style="display:block; position:relative; display:inline-block;">
 			<span>{$input.info_introduction}</span><br />
@@ -33,5 +34,5 @@
 			<span>{$input.guest}</span><br />
 			<span>{$input.customer}</span><br />
 		</p>
-	{/if}</div>
+	{/if}
 {/block}
