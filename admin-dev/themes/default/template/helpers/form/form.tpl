@@ -68,9 +68,7 @@
 								{if isset($input.label)}<label>{$input.label} </label>{/if}
 							{/block}
 							{block name="field_block"}
-								{block name="start_field_block"}
-									<div class="margin-form">
-								{/block}
+								<div class="margin-form">
 								{block name="input_block"}
 								{if $input.type == 'text' || $input.type == 'tags'}
 									{if isset($input.lang)}
@@ -344,10 +342,8 @@
 									{/if}
 								{/block}
 								{if isset($input.lang) && isset($languages)}<div class="clear"></div>{/if}
-								{block name="end_field_block"}
-									</div>
-									<div class="clear"></div>
-								{/block}
+								</div>
+								<div class="clear"></div>
 							{/block}
 							{if $input.name == 'id_state'}
 								</div>

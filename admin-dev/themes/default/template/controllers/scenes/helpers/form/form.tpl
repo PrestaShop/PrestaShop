@@ -26,11 +26,12 @@
 
 {extends file="helpers/form/form.tpl"}
 
-{block name="end_field_block"}
+{block name="input_block"}
 	{if ($input.type == "description")}
 		<p>{$input.text}</p>
+	{else}
+		{$smarty.block.parent}
 	{/if}
-	</div>
 {/block}
 
 {block name="after"}

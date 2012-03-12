@@ -26,9 +26,7 @@
 
 {extends file="helpers/form/form.tpl"}
 
-{block name="start_field_block"}
-
-    <div class="margin-form">
+{block name="input_block"}
 
     {if $input.type == 'cms_blocks'}
 
@@ -97,9 +95,7 @@
                 </div>
             {/foreach}
         {/if}
-    {/if}
-
-    {if $input.type == 'select_category'}
+    {elseif $input.type == 'select_category'}
 
         {function name=render_select level=0}
             {foreach $items as $item}
@@ -126,10 +122,7 @@
                 {call render_select items=$categories}
             </select>
         {/if}
-
-    {/if}
-
-    {if $input.type == 'cms_pages'}
+    {elseif $input.type == 'cms_pages'}
 
         {assign var=cms value=$input.values}
         {if isset($cms) && count($cms) > 0}
@@ -174,6 +167,8 @@
             {else}
             <p>{l s='No pages created'}</p>
         {/if}
+	{else}
+		{$smarty.block.parent}
     {/if}
 
 {/block}

@@ -38,14 +38,12 @@
 	{if $input.type == 'select' && $input.name == 'id_tax_rules_group'}
 		<div id="shipping_costs_div" style="display:{if isset($fields_value.is_free) && $fields_value.is_free}none{else}block{/if}">
 	{/if}
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
+	{$smarty.block.parent}
 {/block}
 
-{block name="end_field_block"}
+{block name="field_block"}
+	{$smarty.block.parent}
 	{if $input.type == 'select' && $input.name == 'range_behavior'}
 		</div>
 	{/if}
-	</div>
 {/block}
