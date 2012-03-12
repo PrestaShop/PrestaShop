@@ -258,9 +258,6 @@
     <tab id="Logs" id_parent="Advanced_parameters" active="1">
       <class_name>AdminLogs</class_name>
     </tab>
-    <tab id="Subdomains" id_parent="Advanced_parameters" active="1">
-      <class_name>AdminSubDomains</class_name>
-    </tab>
     <tab id="Webservice" id_parent="Advanced_parameters" active="1">
       <class_name>AdminWebservice</class_name>
     </tab>
