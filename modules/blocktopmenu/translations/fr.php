@@ -6,7 +6,9 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_e5b7525b4214a759876af4448bd6b87
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_925a8a825a28f69e7a96f5996f9cfcc5'] = 'Ajouter un nouveau menu en haut de votre boutique.';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_597582c140dd691b522fe42299a24d34'] = 'Paramètres mis à jour';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b9129c167a73844d16d28b0949719155'] = 'Impossible de mettre à jour les paramètres';
-$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_5eef1a8aef991f41dc621dd69e97ad80'] = 'Impossible d\'ajouter ce lien';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_7710e9fcaec3369276557496da24640a'] = 'Veuillez remplir le champs \"Lien\"';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_3679e307d4a14646c488a65381de82ea'] = 'Veuillez ajouter un label';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b2385ac89327dbaeb21d35fa016a3e3e'] = 'Veuillez ajouter un label pour le langage par défaut';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_11ad009c1b7c0615be18fe91185c179a'] = 'Le lien a été ajouté';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_15772d25000bce9fc3a2a2fd7d41a717'] = 'Le lien a été supprimé';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_242e9577826290307cd3e45a259172cc'] = 'les modifications seront appliquées à';
