@@ -63,7 +63,7 @@ class AdminAccountingExportControllerCore extends AdminController
 
 	 	$this->content = '';
 	 	$this->downloadDir = _PS_ADMIN_DIR_.'/export/';
-	 	$this->exportSelected = 'global_export';
+	 	$this->exportSelected = 'accounting_export';
 
 	 	$this->initExportFieldList();	
 		parent::__construct();
@@ -75,10 +75,10 @@ class AdminAccountingExportControllerCore extends AdminController
 	protected function initExportFieldList()
 	{
 		$this->exportTypeList = array(
-			'global_export' => array(
+			'accounting_export' => array(
 				'name' => $this->l('Global Export'),
-				'type' => 'global_export',
-				'file' => 'accounting_global_export.csv',
+				'type' => 'accounting_export',
+				'file' => 'accounting_export.csv',
 				'fields' => array(
 					'invoice_date' => $this->l('Invoice Date', 'AdminTab', false, false),
 					'journal' => $this->l('Journal', 'AdminTab', false, false),
@@ -223,7 +223,7 @@ class AdminAccountingExportControllerCore extends AdminController
 					case 'reconciliation_export':
 						$succeed = $this->runReconciliationExport();
 						break;
-					case 'global_export':
+					case 'accounting_export':
 						$succeed = $this->runGlobalExport();
 						break;
 					default:
@@ -236,7 +236,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				$this->prevent['error'][] = $this->l('Please select the date');
 		}
 		else if (($file = Tools::getValue('download')) && file_exists($this->downloadDir.$file))
-			$this->launchDownloadFile($this->downloadDir.$file);
+			$this->launchDownloadFile($file);
 	}
 
 	public function isAlreadyGenerated()
@@ -309,7 +309,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				o.`total_paid_real`,
 				oi.`date_add` as invoice_date,
 				pcc.`transaction_id`,
-				CONCAT(\''.pSQL($this->acc_conf['client_prefix']).'\', LPAD(c.`id_customer`, 6, "0")) AS account_client
+				CONCAT(\''.pSQL($this->acc_conf['customer_prefix']).'\', LPAD(c.`id_customer`, 6, "0")) AS account_client
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
@@ -474,7 +474,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				pcc.`transaction_id`,
 				o.`payment` AS payment_type,
 				currency.`iso_code` AS currency_code,
-				CONCAT(\''.pSQL($this->acc_conf['client_prefix']).'\', LPAD(customer.`id_customer`, 6, "0")) AS account_client,
+				CONCAT(\''.pSQL($this->acc_conf['customer_prefix']).'\', LPAD(customer.`id_customer`, 6, "0")) AS account_client,
 				CASE
 				 	WHEN (customer.`account_number` != "" AND customer.`account_number` IS NOT NULL) THEN customer.`account_number`	
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`

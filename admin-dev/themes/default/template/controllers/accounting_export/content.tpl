@@ -140,7 +140,7 @@
 		<div class="margin-form">
 			<select id="type" name="type">
 				<option value="">{l s='Choose export type'}</option>
-				<option value="global_export" {if $export_type == 'global_export'} selected="selected"{/if}>
+				<option value="accounting_export" {if $export_type == 'accounting_export'} selected="selected"{/if}>
 					{l s='Accounting export'}
 				</option>
 				<option value="reconciliation_export" {if $export_type == 'reconciliation_export'} selected="selected"{/if}>
