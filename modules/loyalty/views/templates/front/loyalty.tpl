@@ -129,6 +129,9 @@
 {/if}
 
 <br />
+<br />
+<br />
+
 <h2>{l s='My vouchers from loyalty points' mod='loyalty'}</h2>
 
 {if $nbDiscounts}

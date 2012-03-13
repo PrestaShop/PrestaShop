@@ -36,6 +36,8 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 	{
 		parent::__construct();
 
+        $this->context = Context::getContext();
+
 		include_once($this->module->getLocalPath().'LoyaltyModule.php');
 		include_once($this->module->getLocalPath().'LoyaltyStateModule.php');
 		
@@ -69,8 +71,8 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			// Voucher creation and affectation to the customer
 			$cartRule = new CartRule();
 			$cartRule->code = $voucherCode;
-			$cartRule->id_customer = (int)$this->context->cookie->id_customer;
-			$cartRule->id_currency = (int)$this->context->cookie->id_currency;
+			$cartRule->id_customer = (int)$this->context->customer->id;
+			$cartRule->reduction_currency = (int)$this->context->currency->id;
 			$cartRule->reduction_amount = LoyaltyModule::getVoucherValue((int)$customerPoints);
 			$cartRule->quantity = 1;
 			$cartRule->quantity_per_user = 1;
@@ -114,7 +116,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 			// Register order(s) which contributed to create this voucher
 			LoyaltyModule::registerDiscount($cartRule);
 			
-			Tools::redirect($this->context->link->getModuleLink('loyalty', 'default'));
+			Tools::redirect($this->context->link->getModuleLink('loyalty', 'default', array('process' => 'summary')));
 		}
 	}
 

@@ -12,7 +12,7 @@
   width: 43px;
   height: 11px;
   position: absolute;
-  background-image: url('../img/loader.gif');
+  background-image: url('../../../../img/loader.gif');
 }
 .cluetip-arrows {
   display: none;
