@@ -115,14 +115,35 @@ $(document).ready(function()
 		hideFilterValueAction(this);
 	});
 
-	// Unbind event change on #selectPrductSort
-	$('#selectPrductSort').unbind('change');
-
 	// To be sure there is no other events attached to the selectPrductSort, change the ID
-	$('#selectPrductSort').attr('onchange', '');
-	$('#selectPrductSort').attr('id', 'selectPrductSort2');
-	$('label[for=selectPrductSort]').attr('for', 'selectPrductSort2');
-	$('#selectPrductSort2').live('change', function(event) {
+	var id = 1;
+	while ($('#selectPrductSort').length) { // Because ids are duplicated
+		// Unbind event change on #selectPrductSort
+		$('#selectPrductSort').unbind('change');
+		$('#selectPrductSort').attr('onchange', '');
+		$('#selectPrductSort').addClass('selectPrductSort');
+		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
+		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
+		id++;
+	}
+	$('.selectPrductSort').live('change', function(event) {
+		$('.selectPrductSort').val($(this).val());
+		reloadContent();
+	});
+	
+	// To be sure there is no other events attached to the nb_item, change the ID
+	var id = 1;
+	while ($('#nb_item').length) { // Because ids are duplicated
+		// Unbind event change on #nb_item
+		$('#nb_item').unbind('change');
+		$('#nb_item').attr('onchange', '');
+		$('#nb_item').addClass('nb_item');
+		$('#nb_item').attr('id', 'nb_item'+id);
+		$('label[for=nb_item]').attr('for', 'nb_item'+id);
+		id++;
+	}
+	$('.nb_item').live('change', function(event) {
+		$('.nb_item').val($(this).val());
 		reloadContent();
 	});
 	
@@ -306,22 +327,26 @@ function reloadContent(params_plus)
 		}
 	});
 	
-	if ($('#selectPrductSort2').length)
+	if ($('.selectPrductSort').length)
 	{
-		if ($('#selectPrductSort2').val().search(/orderby=/) > 0)
+		if ($('.selectPrductSort').val().search(/orderby=/) > 0)
 		{
 			// Old ordering working
 			var splitData = [
-				$('#selectPrductSort2').val().match(/orderby=(\w*)/)[1],
-				$('#selectPrductSort2').val().match(/orderway=(\w*)/)[1]
+				$('.selectPrductSort').val().match(/orderby=(\w*)/)[1],
+				$('.selectPrductSort').val().match(/orderway=(\w*)/)[1]
 			];
 		}
 		else
 		{
 			// New working for default theme 1.4 and theme 1.5
-			var splitData = $('#selectPrductSort2').val().split(':');
+			var splitData = $('.selectPrductSort').val().split(':');
 		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
+	}
+	if ($('.nb_item').length)
+	{
+		data += '&n='+$('.nb_item').val();
 	}
 	
 	var slideUp = true;
@@ -358,8 +383,12 @@ function reloadContent(params_plus)
 			$('#product_list').css('opacity', '1');
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
 				$('#product_list').css('filter', '');
+
+			if ($(result.pagination).find('ul.pagination').length)
+				$('ul.pagination').replaceWith($(result.pagination).find('ul.pagination'));
+			else
+				$('div#pagination').html($(result.pagination));
 			
-			$('div#pagination').html(result.pagination);
 			paginationButton();
 			ajaxLoaderOn = 0;
 			
