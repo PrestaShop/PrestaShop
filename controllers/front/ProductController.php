@@ -53,6 +53,7 @@ class ProductControllerCore extends FrontController
 		}
 		else
 			$this->addJS(array(
+				_THEME_JS_DIR_.'tools.js',
 				_THEME_MOBILE_JS_DIR_.'product.js'
 			));
 
