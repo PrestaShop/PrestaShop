@@ -46,7 +46,7 @@
 			{block name="open_td"}
 					<td
 				{if isset($params.position)}
-						id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
+						id="td_{if !empty($id_category)}{$id_category}{else}0{/if}_{$tr.$identifier}"
 				{/if}
 						class="{if !$no_link}pointer{/if}
 						{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
