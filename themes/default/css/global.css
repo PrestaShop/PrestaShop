@@ -245,6 +245,7 @@ table.table_block th {
 	padding:14px 12px;
 	font-size:12px;
 	color:#fff;
+    font-weight:bold;
 	text-transform:uppercase;
 	text-shadow:0 1px 0 #000;
 	background:url(../img/bg_table_th.png) repeat-x 0 0 #999
@@ -655,9 +656,10 @@ ul.idTabs li {
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;
+    font-weight:bold;
 	text-transform:uppercase;
-	text-shadow:0 1px 0 #000;
-	background:url(../img/bg_table_th.png) repeat-x 0 0 #999
+    text-shadow:0 1px 0 #666;
+	background:url(../img/bg_table_th.png) repeat-x 0 -15px #999
 }
 table#cart_summary  th.cart_product {text-align:center}
 table#cart_summary  td {
@@ -691,7 +693,6 @@ table#cart_summary  .cart_product {
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary  .cart_description {
 	width:230px;
-	font-weight:normal
 }
 table#cart_summary  .cart_unit {width:130px}
 table#cart_summary  .cart_quantity {width:130px}
@@ -816,8 +817,9 @@ table#cart_summary .cart_total_price .total_price_container {
    font-weight: bold;
    line-height:29px;
    color:#fff;
+    font-weight:bold;
 	text-transform:uppercase;
-   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+   background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
 #order_carrier span {
 	display:block;
@@ -1071,7 +1073,7 @@ margin: 10px 0 0 0;*/
 	line-height:29px;
 	color:#fff;
 	text-transform:uppercase;
-	background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+	background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
 #carrierTable  td {
 	padding:15px;

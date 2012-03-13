@@ -28,7 +28,8 @@ ul.address li.address_title {
    font-weight: bold;
    line-height:29px;
    color:#fff;
-   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+    text-shadow:0 1px 0 #666;
+   background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
 
 ul.address li.address_firstname,
@@ -90,7 +91,8 @@ p.address_delivery, p.addressesAreEquals {
    font-weight: bold;
    line-height:29px;
    color:#fff;
-   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+    text-shadow:0 1px 0 #666;
+   background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
 .addresses ul.address .address_update {margin-top:20px}
 .addresses ul.address .address_update,
