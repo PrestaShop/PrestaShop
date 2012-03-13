@@ -101,12 +101,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			),
 			'from' => array(
 				'title' => $this->l('Beginning'),
-				'align' => 'center',
+				'align' => 'right',
 				'type' => 'date',
 			),
 			'to' => array(
 				'title' => $this->l('End'),
-				'align' => 'center',
+				'align' => 'right',
 				'type' => 'date'
 			),
 		);
