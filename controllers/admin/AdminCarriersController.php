@@ -27,6 +27,8 @@
 
 class AdminCarriersControllerCore extends AdminController
 {
+	protected $position_identifier = 'id_carrier';
+
 	public function __construct()
 	{
 		$this->table = 'carrier';

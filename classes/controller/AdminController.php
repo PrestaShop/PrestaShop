@@ -202,15 +202,8 @@ class AdminControllerCore extends Controller
 
 	protected $is_cms = false;
 
-	protected $is_dnd_identifier = false;
-
-	protected $identifiersDnd = array(
-		'id_product' => 'id_product',
-		'id_category' => 'id_category_to_move',
-		'id_cms_category' => 'id_cms_category_to_move',
-		'id_cms' => 'id_cms',
-		'id_attribute' => 'id_attribute'
-	);
+	/** @var string	identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
+	protected $position_identifier;
 
 	/** @var boolean Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
@@ -1542,6 +1535,7 @@ class AdminControllerCore extends Controller
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->multiple_fieldsets = $this->multiple_fieldsets;
 		$helper->row_hover = $this->row_hover;
+		$helper->position_identifier = $this->position_identifier;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
