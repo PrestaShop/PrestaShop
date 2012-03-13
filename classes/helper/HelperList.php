@@ -188,8 +188,10 @@ class HelperListCore extends Helper
 			sort($positions);
 		}
 
+		// key_to_get is used to display the correct product category or cms category after a position change
 		$identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
-		$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
+		if ($identifier)
+			$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
 
 		foreach ($this->_list as $index => $tr)
 		{
@@ -243,10 +245,12 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
 						'position_url_down' => $this->currentIndex.
-							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->position_identifier.'='.$id.
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							'&'.$this->position_identifier.'='.$id.
 							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
 						'position_url_up' => $this->currentIndex.
-							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->position_identifier.'='.$id.
+							(isset($key_to_get) ? '&'.$key_to_get.'='.(int)$id_category : '').
+							'&'.$this->position_identifier.'='.$id.
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
 				}
@@ -313,7 +317,6 @@ class HelperListCore extends Helper
 			'color_on_bg' => $this->colorOnBackground,
 			'id_category' => $id_category,
 			'bulk_actions' => $this->bulk_actions,
-			'key_to_get' => $key_to_get,
 			'positions' => isset($positions) ? $positions : null,
 			'order_by' => $this->orderBy,
 			'order_way' => $this->orderWay,
