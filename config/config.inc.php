@@ -49,7 +49,7 @@ if (!headers_sent())
 /* No settings file? goto installer... */
 if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 {
-	$dir = ((is_dir($_SERVER['REQUEST_URI']) || substr($_SERVER['REQUEST_URI'], -1) == '/') ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
+	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
 	if (!file_exists(dirname(__FILE__).'/../install'))
 		die('Error: "install" directory is missing');
 	header('Location: install/');
