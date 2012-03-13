@@ -984,8 +984,7 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('display_supplier_link', (((int)$blocksupplier->id) ? true : false));
 		$this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
 		$this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
-		
-		
+
 		$mobile_template = '';
 		$tpl_file = basename($template);
 		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
