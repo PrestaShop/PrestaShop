@@ -27,7 +27,7 @@
 {if count($list)}
 {foreach $list AS $index => $tr}
 	<tr
-	{if $is_dnd_identifier}id="tr_{$tr.id_attribute_group}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
+	{if $position_identifier}id="tr_{$tr.id_attribute_group}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
 	{if $index is odd}class="alt_row"{/if}
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>

@@ -28,7 +28,9 @@
 class AdminCmsCategoriesControllerCore extends AdminController
 {
 	/** @var object CMSCategory() instance for navigation*/
-	private $_CMSCategory;
+	protected $_CMSCategory;
+
+	protected $position_identifier = 'id_cms_category_to_move';
 
 	public function __construct()
 	{

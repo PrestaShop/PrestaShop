@@ -31,6 +31,7 @@ class AdminCategoriesControllerCore extends AdminController
 	 *  @var object Category() instance for navigation
 	 */
 	private $_category = null;
+	protected $position_identifier = 'id_category_to_move';
 
 	public function __construct()
 	{

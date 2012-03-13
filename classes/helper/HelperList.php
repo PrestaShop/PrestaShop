@@ -66,7 +66,7 @@ class HelperListCore extends Helper
 
 	protected $is_cms = false;
 
-	protected $is_dnd_identifier = false;
+	public $position_identifier;
 
 	/**
 	 * @var string Customize list display
@@ -100,18 +100,6 @@ class HelperListCore extends Helper
 	/** @var bool If true, activates color on hover */
 	public $row_hover = true;
 
-	protected $identifiersDnd = array(
-		'id_product' => 'id_product',
-		'id_category' => 'id_category_to_move',
-		'id_cms_category' => 'id_cms_category_to_move',
-		'id_cms' => 'id_cms',
-		'id_attribute' => 'id_attribute',
-		'id_attribute_group' => 'id_attribute_group',
-		'id_carrier' => 'id_carrier',
-		'id_tab' => 'id_tab',
-		'id_feature' => 'id_feature'
-	);
-
 	/** @var if not null, a title will be added on that list */
 	public $title = null;
 
@@ -137,9 +125,6 @@ class HelperListCore extends Helper
 	 */
 	public function generateList($list, $fields_display)
 	{
-		/*if ($this->edit && (!isset($this->noAdd) || !$this->noAdd))
-			$this->displayAddButton();*/
-
 		// Append when we get a syntax error in SQL query
 		if ($list === false)
 		{
@@ -192,10 +177,10 @@ class HelperListCore extends Helper
 
 	public function displayListContent()
 	{
-		if ($this->is_dnd_identifier)
+		if ($this->position_identifier)
 			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', '1');
 		else
-			$id_category = Category::getRootCategory();
+			$id_category = Category::getRootCategory()->id;
 
 		if (isset($this->fieldsDisplay['position']))
 		{
@@ -258,10 +243,10 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
 						'position_url_down' => $this->currentIndex.
-							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
+							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->position_identifier.'='.$id.
 							'&way=1&position='.((int)$tr['position'] + 1).'&token='.$this->token,
 						'position_url_up' => $this->currentIndex.
-							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->identifiersDnd[$this->identifier].'='.$id.
+							'&'.$key_to_get.'='.(int)$id_category.'&'.$this->position_identifier.'='.$id.
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
 				}
@@ -321,7 +306,7 @@ class HelperListCore extends Helper
 		$this->content_tpl->assign(array_merge($this->tpl_vars, array(
 			'shop_link_type' => $this->shopLinkType,
 			'name' => isset($name) ? $name : null,
-			'is_dnd_identifier' => $this->is_dnd_identifier,
+			'position_identifier' => $this->position_identifier,
 			'identifier' => $this->identifier,
 			'table' => $this->table,
 			'token' => $this->token,
@@ -539,16 +524,14 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null
 		);
 
-		$this->is_dnd_identifier = array_key_exists($this->identifier, $this->identifiersDnd);
-
 		// Cleaning links
 		if (Tools::getValue($this->table.'Orderby') && Tools::getValue($this->table.'Orderway'))
 			$this->currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', $this->currentIndex);
 
-		if (array_key_exists($this->identifier, $this->identifiersDnd) && (int)Tools::getValue($this->identifiersDnd[$this->identifier], 1))
+		if ($this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
 			$table_id = substr($this->identifier, 3, strlen($this->identifier));
 
-		if (array_key_exists($this->identifier, $this->identifiersDnd) && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
+		if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
 		foreach ($this->fieldsDisplay as $key => $params)
@@ -610,7 +593,7 @@ class HelperListCore extends Helper
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
 			'list_total' => $this->listTotal,
-			'is_order_position' => array_key_exists($this->identifier, $this->identifiersDnd) && $this->orderBy == 'position',
+			'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
 			'order_way' => $this->orderWay,
 			'order_by' => $this->orderBy,
 			'token' => $this->token,

@@ -26,7 +26,7 @@
 <tbody>
 {foreach $list AS $index => $tr}
 	<tr
-	{if $is_dnd_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
+	{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
 	{if $index is odd}class="alt_row"{/if}
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>

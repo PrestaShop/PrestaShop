@@ -26,6 +26,8 @@
 */
 class AdminFeaturesControllerCore extends AdminController
 {
+	protected $position_identifier = 'id_feature';
+
 	public function __construct()
 	{
 	 	$this->table = 'feature';
