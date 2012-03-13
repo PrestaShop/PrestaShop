@@ -117,14 +117,15 @@ class MailCore
 					if ($toName && is_array($toName) && Validate::isGenericName($toName[$key]))
 						$to_name = $toName[$key];
 				}
-				$to_list->addTo($addr, base64_encode($to_name));
+                /* Encode accentuated chars */
+				$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 			}
 			$to_plugin = $to[0];
 			$to = $to_list;
 		} else {
 			/* Simple recipient, one address */
 			$to_plugin = $to;
-			$to = new Swift_Address($to, base64_encode($toName));
+			$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($toName).'?=');
 		}
 		try {
 			/* Connect with the appropriate configuration */
