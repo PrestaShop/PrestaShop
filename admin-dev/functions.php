@@ -162,7 +162,8 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			$nCategories = (int)sizeof($categories);
 			foreach ($categories AS $category)
 			{
-				$edit = '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory').'&token='.Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).(int)$context->employee->id).'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.(($category['id_category'] == 1  || $home) ? 'home' : 'edit').'.gif" alt="" /></a> ';
+				$link = Context::getContext()->link->getAdminLink('AdminCategories');
+				$edit = '<a href="'.$link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory').'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.(($category['id_category'] == 1  || $home) ? 'home' : 'edit').'.gif" alt="" /></a> ';
 				$fullPath .= $edit.
 				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).(int)$context->employee->id).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 				(!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
