@@ -185,7 +185,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				VALUES('.implode(', ', $values).')';
 		else
 			$query = 'UPDATE `'._DB_PREFIX_.'accounting_export` 
-				SET `date` = CURRENT_TIMESTAMP, `file` = "'.$this->file.'"
+				SET `date` = CURRENT_TIMESTAMP, `file` = "'.pSQL($this->file).'"
 				WHERE `id_accounting_export` = '.(int)$id_acc_export;
 	 
 		Db::getInstance()->execute($query);
