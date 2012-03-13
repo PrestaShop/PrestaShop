@@ -974,6 +974,18 @@ class FrontControllerCore extends Controller
 	 */
 	public function setMobileTemplate($template)
 	{
+		// Needed for site map
+		$blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
+		$blocksupplier = Module::getInstanceByName('blocksupplier');
+		$this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
+		$this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
+		$this->context->smarty->assign('voucherAllowed', (int)Configuration::get('PS_VOUCHERS'));
+		$this->context->smarty->assign('display_manufacturer_link', (((int)$blockmanufacturer->id) ? true : false));
+		$this->context->smarty->assign('display_supplier_link', (((int)$blocksupplier->id) ? true : false));
+		$this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
+		$this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
+		
+		
 		$mobile_template = '';
 		$tpl_file = basename($template);
 		$dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
