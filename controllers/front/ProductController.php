@@ -487,15 +487,16 @@ class ProductControllerCore extends FrontController
 
 				$product_picture_width = (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
 				$product_picture_height = (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
-				if ($error || (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($file['tmp_name'], $tmp_name)))
+				$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+				if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)))
 					return false;
 				/* Original file */
-				else if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
+				if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
 				/* A smaller one */
-				else if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height))
+				elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
-				else if (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
+				elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
 				else
 				{
@@ -574,23 +575,6 @@ class ProductControllerCore extends FrontController
 			$row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : -1);
 		}
 		return $specific_prices;
-	}
-
-	public function postProcess()
-	{
-		if ($this->ajax)
-		{
-			if (Tools::isSubmit('submitCustomizedDatas'))
-			{
-				$this->pictureUpload($this->product, $this->context->cart);
-				$this->textRecord($this->product, $this->context->cart);
-				$this->formTargetFormat();
-			}
-			if (count($this->errors))
-				die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
-			else
-				die(Tools::jsonEncode(array('hasErrors' => false, 'conf' => Tools::displayError('Customization saved successfully.'))));
-		}
 	}
 }
 
