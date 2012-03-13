@@ -61,7 +61,7 @@ class FrontControllerCore extends Controller
 	public function __construct()
 	{
 		$this->controller_type = 'front';
-		
+
 		global $useSSL;
 
 		parent::__construct();
@@ -254,8 +254,8 @@ class FrontControllerCore extends Controller
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
 
 		/* get page name to display it in body id */
-		
-		// Are we in a payment module 
+
+		// Are we in a payment module
 		$module_name = Tools::getValue('module');
 		if (!empty($this->page_name))
 			$page_name = $this->page_name;
@@ -358,6 +358,10 @@ class FrontControllerCore extends Controller
 		// Add the images directory for mobile
 		if ($this->context->getMobileDevice() != false)
 			$assign_array['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
+
+		// Add the CSS directory for mobile
+		if ($this->context->getMobileDevice() != false)
+			$assign_array['css_mobile_dir'] = _THEME_MOBILE_CSS_DIR_;
 
 		foreach ($assign_array as $assign_key => $assign_value)
 			if (substr($assign_value, 0, 1) == '/' || $protocol_content == 'https://')
@@ -524,7 +528,7 @@ class FrontControllerCore extends Controller
 		// Don't use live edit if on mobile device
 		if ($this->context->getMobileDevice() == false && Tools::isSubmit('live_edit'))
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
-		
+
 		// handle 1.4 theme (with layout.tpl missing)
 		if ($this->context->getMobileDevice() != false || file_exists(_PS_THEME_DIR_.'layout.tpl'))
 		{
@@ -541,7 +545,7 @@ class FrontControllerCore extends Controller
 
 			if ($this->template)
 				$this->context->smarty->display($this->template);
-		
+
 			if ($this->display_footer)
 				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 
@@ -564,7 +568,9 @@ class FrontControllerCore extends Controller
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
 			$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
-			$this->context->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
+
+			$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
+			$this->context->smarty->display($template_dir.'maintenance.tpl');
 			exit;
 		}
 	}
@@ -738,14 +744,14 @@ class FrontControllerCore extends Controller
 		{
 			$data = $this->context->smarty->createData();
 			$data->assign(array(
-				'ad' => $ad, 
+				'ad' => $ad,
 				'live_edit' => true,
 				'hook_list' => Hook::$executed_hooks,
 				'id_shop' => $this->context->shop->id
 			));
 			return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
 		}
-		else 
+		else
 			return '';
 	}
 
@@ -951,7 +957,7 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * This is overrided to manage is behaviour 
+	 * This is overrided to manage is behaviour
 	 * if a customer access to the site with mobile device.
 	 */
 	public function setTemplate($template)
