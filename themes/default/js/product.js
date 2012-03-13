@@ -30,7 +30,6 @@ var combinations = new Array();
 var selectedCombination = new Array();
 var globalQuantity = new Number;
 var colors = new Array();
-var input_save_customized_datas = '';
 
 //check if a function exists
 function function_exists(function_name)
@@ -119,13 +118,13 @@ function findCombination(firstTime)
 			else
 				selectedCombination['ecotax'] = default_eco_tax;
 
-			//show the large image in relation to the selected combination
-			if (typeof(firstTime) != 'undefined' && !firstTime && combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage($('#thumb_'+combinations[combination]['image']).parent(), firstTime);
+            //show the large image in relation to the selected combination
+            if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+                displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
 
-			//show discounts values according to the selected combination
-			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
-				displayDiscounts(combinations[combination]['idCombination']);
+            //show discounts values according to the selected combination
+            if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
+                displayDiscounts(combinations[combination]['idCombination']);
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
@@ -394,7 +393,6 @@ function updateDisplay()
 		else
 			$('#our_price_display').text(formatCurrency(0, currencyFormat, currencySign, currencyBlank));
 		
-
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReduction, currencyFormat, currencySign, currencyBlank));
 		if (productPriceWithoutReduction > productPrice)
 			$('#old_price,#old_price_display,#old_price_display_taxes').show();
@@ -552,7 +550,6 @@ $(document).ready(function()
 
 	// Hide the customization submit button and display some message
 	$('p#customizedDatas input').click(function() {
-		input_save_customized_datas = $('p#customizedDatas').html();
 		$('p#customizedDatas input').hide();
 		$('#ajax-loader').fadeIn();
 		$('p#customizedDatas').append(uploading_in_progress);
@@ -561,7 +558,6 @@ $(document).ready(function()
 	//init the price in relation of the selected attributes
 	if (typeof productHasAttributes != 'undefined' && productHasAttributes)
 		findCombination(true);
-
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
 		refreshProductImages(0);
 
@@ -589,50 +585,8 @@ function saveCustomization()
 	$('body select[id^="group_"]').each(function() {
 		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'='+this.value);
 	});
-
-	$.ajax({
-		type: 'POST',
-		url: customAction,
-		data: 'ajax=true&'+$('#customizationForm').serialize(),
-		dataType: 'json',
-		async : true,
-		success: function(data) {
-			$('#customizedDatas').fadeOut();
-			$('#customizedDatas').html(input_save_customized_datas);
-			$('#customizedDatas').fadeIn();
-			if (!data.hasErrors)
-			{
-				$('#customizationForm').find('.error').fadeOut(function(){
-					$(this).remove();
-				});
-				// display a confirmation message
-				if ($('#customizationForm').find('.success').val() == undefined)
-					$('#customizationForm').prepend("<p class='success'>"+data.conf+"</p>");
-				else
-					$('#customizationForm.success').html("<p class='success'>"+data.conf+"</p>");
-			}
-			else
-			{
-				$('#customizationForm').find('.success').fadeOut(function(){
-					$(this).remove();
-				});
-				// display an error message
-				if ($('#customizationForm').find('.error').val() == undefined)
-				{
-					$('#customizationForm').prepend("<p class='error'></p>");
-					for (var i = 0; i < data.errors.length; i++)
-						$('#customizationForm .error').html($('#customizationForm .error').html()+data.errors[i]+"<br />");
-				}
-				else
-				{
-					$('#customizationForm .error').html('');
-					for (var i = 0; i < data.errors.length; i++)
-						$('#customizationForm .error').html($('#customizationForm .error').html()+data.errors[i]+"<br />");
-				}
-			}
-		}
-	});
-	return false;
+	$('#customizationForm').attr('action', customAction);
+	$('#customizationForm').submit();
 }
 
 function submitPublishProduct(url, redirect)
@@ -706,6 +660,9 @@ function getProductAttribute()
 	// redirection
 	if (url.indexOf('#') != -1)
 		url = url.substring(0, url.indexOf('#'));
+
+	// set ipa to the customization form
+	$('#customizationForm').attr('action', $('#customizationForm').attr('action')+request)
 	window.location = url+request;
 }
 
