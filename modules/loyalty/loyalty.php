@@ -229,6 +229,7 @@ class Loyalty extends Module
 					$errors .= $error.'<br />';
 				echo $this->displayError($errors);
 			}
+//            redirect($this->context->link);
 		}
 	}
 
@@ -246,7 +247,6 @@ class Loyalty extends Module
 		$this->instanceDefaultStates();
 		$this->_postProcess();
 
-		$categories = Category::getCategories($this->context->language->id);
 		$order_states = OrderState::getOrderStates($this->context->language->id);
 		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));

@@ -42,8 +42,9 @@ class DiscountControllerCore extends FrontController
 
 		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
 		$nbDiscounts = 0;
+
 		foreach ($discounts as $discount)
-			if ($discount['quantity_for_user'])
+			if (isset($discount['quantity_for_user']) && $discount['quantity_for_user'])
 				$nbDiscounts++;
 
 		$this->context->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
