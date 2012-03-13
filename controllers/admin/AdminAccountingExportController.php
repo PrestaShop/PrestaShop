@@ -76,7 +76,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	{
 		$this->exportTypeList = array(
 			'accounting_export' => array(
-				'name' => $this->l('Global Export'),
+				'name' => $this->l('Accounting Export'),
 				'type' => 'accounting_export',
 				'file' => 'accounting_export.csv',
 				'fields' => array(
