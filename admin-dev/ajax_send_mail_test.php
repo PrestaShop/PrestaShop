@@ -33,6 +33,7 @@ require_once(dirname(__FILE__).'/init.php');
 $smtpChecked = (trim($_POST['mailMethod']) ==  'smtp');
 $smtpServer = $_POST['smtpSrv'];
 $content = urldecode($_POST['testMsg']);
+$content = utf8_encode(html_entity_decode($content));
 $subject = urldecode($_POST['testSubject']);
 $type = 'text/html';
 $to =  $_POST['testEmail'];
