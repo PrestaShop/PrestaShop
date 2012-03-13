@@ -528,6 +528,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_orders; $i++)
 		{
 			$orders[$i]['date_add'] = Tools::displayDate($orders[$i]['date_add'], $this->context->language->id);
+			$orders[$i]['total_paid_real_not_formated'] = $orders[$i]['total_paid_real'];
 			$orders[$i]['total_paid_real'] = Tools::displayPrice($orders[$i]['total_paid_real'], new Currency((int)$orders[$i]['id_currency']));
 		}
 
@@ -560,7 +561,7 @@ class AdminCustomersControllerCore extends AdminController
 			if ($order['valid'])
 			{
 				$orders_ok[] = $order;
-				$total_ok += $order['total_paid_real'];
+				$total_ok += $order['total_paid_real_not_formated'];
 			}
 			else
 				$orders_ko[] = $order;
