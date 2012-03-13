@@ -1021,21 +1021,20 @@ abstract class ModuleCore
 					$item->author = $tmp_module->author;
 					$item->limited_countries = $tmp_module->limited_countries;
 					$item->parent_class = get_parent_class($module);
-					$item->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
+					$item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
 					$item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
-					unset($tmp_module);
 
 					$module_list[] = $item;
 					if (!$xml_exist || $needNewConfigFile)
 					{
 						self::$_generate_config_xml_mode = true;
-						$tmp_module = new $module;
 						$tmp_module->_generateConfigXml();
 						self::$_generate_config_xml_mode = false;
 					}
+					unset($tmp_module);
 				}
 				else
 					$errors[] = sprintf(Tools::displayError('%1$s (class missing in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
