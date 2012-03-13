@@ -160,7 +160,7 @@ class StatsBestProducts extends ModuleGrid
 					FROM '._DB_PREFIX_.'page pa
 					LEFT JOIN '._DB_PREFIX_.'page_viewed pv ON pa.id_page = pv.id_page
 					LEFT JOIN '._DB_PREFIX_.'date_range dr ON pv.id_date_range = dr.id_date_range
-					WHERE pa.id_object = p.id_product AND pa.id_page_type = 1
+					WHERE pa.id_object = p.id_product AND pa.id_page_type = ('.(int)Page::getPageTypeByName('product').')
 					AND dr.time_start BETWEEN '.$dateBetween.'
 					AND dr.time_end BETWEEN '.$dateBetween.'
 				) AS totalPageViewed
