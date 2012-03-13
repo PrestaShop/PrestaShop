@@ -437,6 +437,18 @@ class AdminGroupsControllerCore extends AdminController
 				}
 			}
 		}
+		else
+		{
+			// if we have no category reduction anymore, we delete the existing ones
+			Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'group_reduction`
+				WHERE `id_group` = '.(int)Tools::getValue('id_group')
+			);
+			Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
+				WHERE `id_group` = '.(int)Tools::getValue('id_group')
+			);
+		}
 	}
 
 	/**
