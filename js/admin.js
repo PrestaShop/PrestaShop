@@ -124,6 +124,7 @@ function toggleLanguageFlags(elt)
 // Kept for retrocompatibility only (out of AdminProducts & AdminCategories)
 function changeLanguage(field, fieldsString, id_language_new, iso_code)
 {
+    $('div[id^='+field+'_]').hide();
 	var fields = fieldsString.split('¤');
 	for (var i = 0; i < fields.length; ++i)
 	{
