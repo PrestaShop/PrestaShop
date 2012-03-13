@@ -68,6 +68,8 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $available_tabs_lang = array();
 
+	protected $position_identifier = 'id_product';
+
 	public function __construct()
 	{
 		$this->table = 'product';

@@ -28,6 +28,7 @@
 class AdminAttributesGroupsControllerCore extends AdminController
 {
 	protected $id_attribute;
+	protected $position_identifier = 'id_attribute_group';
 
 	public function __construct()
 	{
@@ -157,6 +158,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->simple_header = true;
 			$helper->show_toolbar = false;
 			$helper->bulk_actions = $this->bulk_actions;
+			$helper->position_identifier = 'id_attribute';
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
 			die (Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content)));

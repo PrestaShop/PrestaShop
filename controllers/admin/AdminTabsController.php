@@ -27,6 +27,8 @@
 
 class AdminTabsControllerCore extends AdminController
 {
+	protected $position_identifier = 'id_tab';
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();
@@ -226,6 +228,7 @@ class AdminTabsControllerCore extends AdminController
 			$helper->currentIndex = self::$currentIndex;
 			$helper->token = $this->token;
 			$helper->table = $this->table;
+			$helper->position_identifier = $this->position_identifier;
 			// Force render - no filter, form, js, sorting ...
 			$helper->simple_header = true;
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
