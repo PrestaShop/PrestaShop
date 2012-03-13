@@ -1832,7 +1832,7 @@ FileETag INode MTime Size
 	public static function pRegexp($s, $delim)
 	{
 		$s = str_replace($delim, '\\'.$delim, $s);
-		foreach (array('?', '[', ']', '(', ')', '{', '}', '-', '.', '+', '*', '^', '$') as $char)
+		foreach (array('?', '[', ']', '(', ')', '{', '}', '-', '.', '+', '*', '^', '$', '`', '"', '%') as $char)
 			$s = str_replace($char, '\\'.$char, $s);
 		return $s;
 	}
