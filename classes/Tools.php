@@ -376,12 +376,15 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang))
-			$context->cookie->id_lang = $id_lang;
 
-		$language = new Language($id_lang);
-		if (Validate::isLoadedObject($language))
-			$context->language = $language;
+		// update language only if new id is different from old id
+		if (($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $context->cookie->id_lang != (int)$id_lang)
+		{
+			$context->cookie->id_lang = $id_lang;
+			$language = new Language($id_lang);
+			if (Validate::isLoadedObject($language))
+				$context->language = $language;
+		}
 	}
 
 	/**
