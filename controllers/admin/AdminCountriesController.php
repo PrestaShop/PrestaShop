@@ -314,7 +314,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Display tax label (e.g. \\"Tax incl.\\"):'),
+					'label' => $this->l('Display tax label (e.g. "Tax incl."):'),
 					'name' => 'display_tax_label',
 					'required' => false,
 					'class' => 't',

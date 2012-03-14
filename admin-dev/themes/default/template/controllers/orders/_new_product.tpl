@@ -72,7 +72,7 @@
 		<div class="margin-form">
 			<input type="checkbox" name="add_invoice[free_shipping]" value="1" />
 			<label class="t">{l s='Free shipping'}</label>
-			<p>{l s='If you don\'t select \\"Free shipping,\\" the normal shipping cost will be applied'}</p>
+			<p>{l s='If you don't select "Free shipping," the normal shipping cost will be applied'}</p>
 		</div>
 	</td>
 </tr>
