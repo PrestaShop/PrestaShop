@@ -945,7 +945,7 @@ abstract class ModuleCore
 				$needNewConfigFile = (filemtime($configFile) < filemtime(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
 			else
 				$needNewConfigFile = true;
-$needNewConfigFile = true;
+
 			// If config.xml exists and that the use config flag is at true
 			if ($useConfig && $xml_exist)
 			{
