@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statscarrier</name>
-            <displayName><![CDATA[R&eacute;partition par transporteur]]></displayName>
+            <displayName><![CDATA[Carrier distribution]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Affiche la r&eacute;partition des commandes par transporteur]]></description>
+            <description><![CDATA[Display the carriers distribution]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

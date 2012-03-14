@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blocksearch</name>
-            <displayName><![CDATA[Bloc recherche rapide]]></displayName>
+            <displayName><![CDATA[Quick Search block]]></displayName>
             <version><![CDATA[1.1]]></version>
-            <description><![CDATA[Ajoute un bloc avec un champ de recherche rapide]]></description>
+            <description><![CDATA[Adds a block with a quick search field.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[search_filter]]></tab>
             <is_configurable>0</is_configurable>

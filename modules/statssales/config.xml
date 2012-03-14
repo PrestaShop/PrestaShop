@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statssales</name>
-            <displayName><![CDATA[Commandes et CA]]></displayName>
+            <displayName><![CDATA[Sales and orders]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Affiche l&#039;&eacute;volution du chiffre d&#039;affaires et la r&eacute;partition des commandes par leurs &eacute;tats.]]></description>
+            <description><![CDATA[Display the sales evolution and orders by statuses]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

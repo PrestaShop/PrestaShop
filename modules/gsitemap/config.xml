@@ -3,7 +3,7 @@
             <name>gsitemap</name>
             <displayName><![CDATA[Google sitemap]]></displayName>
             <version><![CDATA[1.8]]></version>
-            <description><![CDATA[G&eacute;n&egrave;re votre fichier sitemap pour Google]]></description>
+            <description><![CDATA[Generate your Google sitemap file]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[seo]]></tab>
             <is_configurable>1</is_configurable>
