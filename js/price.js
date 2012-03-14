@@ -61,7 +61,7 @@ function calcPrice()
 function calcPriceTI()
 {
 	var tax = getTax();
-	var priceTE = parseFloat(document.getElementById('priceTE').value.replace(/,/g, '.'));
+	var priceTE = parseFloat(document.getElementById('priceTEReal').value.replace(/,/g, '.'));
 	var newPrice = priceTE * ((tax / 100) + 1);
 	document.getElementById('priceTI').value = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice, 2);
@@ -79,8 +79,9 @@ function calcPriceTE()
 	var tax = getTax();
 	var priceTI = parseFloat(document.getElementById('priceTI').value.replace(/,/g, '.'));
 	var newPrice = ps_round(priceTI - getEcotaxTaxIncluded(), 2) / ((tax / 100) + 1);
-	document.getElementById('priceTE').value =	(isNaN(newPrice) == true || newPrice < 0) ? '' :
+	document.getElementById('priceTE').value = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice.toFixed(2), 2);
+	document.getElementById('priceTEReal').value = (isNaN(newPrice) == true || newPrice < 0) ? 0 : ps_round(newPrice, 9);
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(priceTI.toFixed(2), 2);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
@@ -91,9 +92,9 @@ function calcPriceTE()
 function calcImpactPriceTI()
 {
 	var tax = getTax();
-	var priceTE = parseFloat(document.getElementById('attribute_price').value.replace(/,/g, '.'));
+	var priceTE = parseFloat(document.getElementById('attribute_priceTEReal').value.replace(/,/g, '.'));
 	var newPrice = priceTE * ((tax / 100) + 1);
-    $('#attribute_priceTI').val((isNaN(newPrice) == true || newPrice < 0) ? '' : ps_round(newPrice.toFixed(6), 6).toFixed(2));
+	$('#attribute_priceTI').val((isNaN(newPrice) == true || newPrice < 0) ? '' : ps_round(newPrice, 2).toFixed(2));
 	var total = ps_round((parseFloat($('#attribute_priceTI').val())*parseInt($('#attribute_price_impact').val())+parseFloat($('#finalPrice').html())), 2);
 	if (isNaN(total) || total < 0)
 		$('#attribute_new_total_price').html('0.00');
@@ -107,7 +108,8 @@ function calcImpactPriceTE()
 	var priceTI = parseFloat(document.getElementById('attribute_priceTI').value.replace(/,/g, '.'));
 	priceTI = (isNaN(priceTI)) ? 0 : ps_round(priceTI);
 	var newPrice = ps_round(priceTI, 2) / ((tax / 100) + 1);
-	$('#attribute_price').val((isNaN(newPrice) == true || newPrice < 0) ? '' :ps_round(newPrice.toFixed(6), 6));
+	$('#attribute_price').val((isNaN(newPrice) == true || newPrice < 0) ? '' :ps_round(newPrice, 2).toFixed(2));
+	$('#attribute_priceTEReal').val((isNaN(newPrice) == true || newPrice < 0) ? 0 : ps_round(newPrice, 9));
 	var total = ps_round((parseFloat($('#attribute_priceTI').val())*parseInt($('#attribute_price_impact').val())+parseFloat($('#finalPrice').html())), 2);
 	if (isNaN(total) || total < 0)
 		$('#attribute_new_total_price').html('0.00');

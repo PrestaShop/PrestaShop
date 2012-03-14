@@ -193,12 +193,13 @@
 						<option value="-1">{l s='Reduction'}</option>
 					</select>
 					<span id="span_impact">&nbsp;&nbsp;{l s='of'}&nbsp;&nbsp;{if $currency->format % 2 != 0}{$currency->sign} {/if}
-						<input type="text" size="6" name="attribute_price" id="attribute_price" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
+						<input type="hidden"  id="attribute_priceTEReal" name="attribute_price" value="0.00" />
+						<input type="text" size="6" id="attribute_price" value="0.00" onkeyup="$('#attribute_priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTI();"/>{if $currency->format % 2 == 0} {$currency->sign}{/if}
 						{if $country_display_tax_label}
 							{l s='(tax excl.)'}
 							<span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'}
 							{if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
+							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
 							{if $currency->format % 2 == 0} {$currency->sign}{/if} {l s='(tax incl.)'}
 							</span> {l s='final product price will be set to'}
 							{if $currency->format % 2 != 0}{$currency->sign} {/if}
