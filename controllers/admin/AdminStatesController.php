@@ -117,7 +117,7 @@ class AdminStatesControllerCore extends AdminController
 					'maxlength' => 4,
 					'required' => true,
 					'class' => 'uppercase',
-					'desc' => $this->l('1 to 4 letter ISO code (search on Wikipedia if you don\'t know)')
+					'desc' => $this->l('1 to 4 letter ISO code')
 				),
 				array(
 					'type' => 'select',
