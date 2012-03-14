@@ -95,7 +95,8 @@ function changeAddressDelivery(obj)
 				+'&id_product_attribute='+id_product_attribute
 				+'&old_id_address_delivery='+old_id_address_delivery
 				+'&new_id_address_delivery='+new_id_address_delivery
-				+'&token='+static_token,
+				+'&token='+static_token
+				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
 				// The product exist
@@ -154,7 +155,14 @@ function changeAddressDelivery(obj)
 			cache: false,
 			dataType: 'json',
 			context: obj,
-			data: 'controller=cart&ajax=true&duplicate&summary&id_product='+id_product+'&id_product_attribute='+id_product_attribute+'&id_address_delivery='+old_id_address_delivery+'&new_id_address_delivery='+id_address_delivery+'&token='+static_token ,
+			data: 'controller=cart'
+				+'&ajax=true&duplicate&summary'
+				+'&id_product='+id_product
+				+'&id_product_attribute='+id_product_attribute
+				+'&id_address_delivery='+old_id_address_delivery
+				+'&new_id_address_delivery='+id_address_delivery
+				+'&token='+static_token
+				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (jsonData.error)
@@ -250,7 +258,13 @@ function deleteProductFromSummary(id)
 		async: true,
 		cache: false,
 		dataType: 'json',
-		data: 'controller=cart&ajax=true&delete&summary&id_product='+productId+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+ ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&token=' + static_token ,
+		data: 'controller=cart'
+			+'&ajax=true&delete&summary'
+			+'&id_product='+productId
+			+'&ipa='+productAttributeId
+			+'&id_address_delivery='+id_address_delivery+ ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+			+'&token=' + static_token
+			+'&allow_refresh=1',
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -331,7 +345,17 @@ function upQuantity(id, qty)
 		async: true,
 		cache: false,
 		dataType: 'json',
-		data: 'controller=cart&ajax=true&add&getproductprice&summary&id_product='+productId+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
+		data: 'controller=cart'
+			+'&ajax=true'
+			+'&add'
+			+'&getproductprice'
+			+'&summary'
+			+'&id_product='+productId
+			+'&ipa='+productAttributeId
+			+'&id_address_delivery='+id_address_delivery + ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+			+'&qty='+qty
+			+'&token='+static_token
+			+'&allow_refresh=1',
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -392,7 +416,18 @@ function downQuantity(id, qty)
 			async: true,
 			cache: false,
 			dataType: 'json',
-			data: 'controller=cart&ajax=true&add&getproductprice&summary&id_product='+productId+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+'&op=down' + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
+			data: 'controller=cart'
+				+'&ajax=true'
+				+'&add'
+				+'&getproductprice'
+				+'&summary'
+				+'&id_product='+productId
+				+'&ipa='+productAttributeId
+				+'&id_address_delivery='+id_address_delivery
+				+'&op=down' + ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+				+'&qty='+qty
+				+'&token='+static_token
+				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (jsonData.hasError)
@@ -651,7 +686,8 @@ $(document).ready(function() {
 			cache: false,
 			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
 				+($(this).attr('checked') ? '1' : '0')
-				+'&token='+static_token,
+				+'&token='+static_token
+				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
 				if (typeof(getCarrierListAndUpdate) != 'undefined')
@@ -687,7 +723,12 @@ function updateExtraCarrier(id_delivery_option, id_address)
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'ajax=true&method=updateExtraCarrier&id_address='+id_address+'&id_delivery_option='+id_delivery_option+'&token=' + static_token,
+		data: 'ajax=true'
+			+'&method=updateExtraCarrier'
+			+'&id_address='+id_address
+			+'&id_delivery_option='+id_delivery_option
+			+'&token='+static_token
+			+'&allow_refresh=1',
 		success: function(jsonData)
 		{
 			$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
