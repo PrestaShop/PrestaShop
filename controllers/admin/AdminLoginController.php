@@ -40,7 +40,6 @@ class AdminLoginControllerCore extends AdminController
 	public function setMedia()
 	{
 		$this->addJquery();
-		$this->addJqueryPlugin('flip');
 		$this->addCSS(_PS_CSS_DIR_.'login.css');
 		$this->addJS(_PS_JS_DIR_.'login.js');
 		$this->addJqueryUI('ui.widget');
@@ -79,6 +78,12 @@ class AdminLoginControllerCore extends AdminController
 		// Redirect to admin panel
 		if (isset($_GET['redirect']) && Validate::isControllerName($_GET['redirect']))
 			$this->context->smarty->assign(array('redirect' => Tools::getValue('redirect')));
+		else
+		{
+			$tab = new Tab((int)$this->context->employee->default_tab);
+			$url = $this->context->link->getAdminLink($tab->class_name);
+			$this->context->smarty->assign(array('redirect' => $url));
+		}
 		
 		if ($nbErrors = count($this->errors))
 			$this->context->smarty->assign(
