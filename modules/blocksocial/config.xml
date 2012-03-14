@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blocksocial</name>
-            <displayName><![CDATA[Bloc social]]></displayName>
+            <displayName><![CDATA[Block social]]></displayName>
             <version><![CDATA[1.0]]></version>
-            <description><![CDATA[Permet d&#039;ajouter des informations suppl&eacute;mentaires concernant les r&eacute;seaux sociaux]]></description>
+            <description><![CDATA[Allows you to add extra information about social networks]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
