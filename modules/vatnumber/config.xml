@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<module>
-	<name>vatnumber</name>
-	<displayName><![CDATA[European VAT number]]></displayName>
-	<version><![CDATA[1.2]]></version>
-	<description><![CDATA[Enable entering of the VAT intra-community number when creating the address (You must fill in the company field to allow keyboarding VAT number)]]></description>
-	<author><![CDATA[PrestaShop]]></author>
-	<tab><![CDATA[billing_invoicing]]></tab>
-	<is_configurable>1</is_configurable>
-	<need_instance>0</need_instance>
+        <module>
+            <name>vatnumber</name>
+            <displayName><![CDATA[Num&eacute;ro de TVA Europ&eacute;en]]></displayName>
+            <version><![CDATA[1.2]]></version>
+            <description><![CDATA[Permet de renseigner son num&eacute;ro de TVA intra-communautaire lors de la cr&eacute;ation d&#039;une adresse (vous devez d&#039;abord renseigner le champ &amp;quot;Soci&eacute;t&eacute;&amp;quot; pour pouvoir saisir votre num&eacute;ro de TVA)]]></description>
+            <author><![CDATA[PrestaShop]]></author>
+            <tab><![CDATA[billing_invoicing]]></tab>
+            <is_configurable>1</is_configurable>
+            <need_instance>0</need_instance>
 	<limited_countries></limited_countries>
-</module>
+        </module>
