@@ -96,7 +96,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_SHIP_WHEN_AVAILABLE' => array(
 						'title' => $this->l('Delayed shipping'),
-						'desc' => $this->l('Allow the customer to split his order: one with the products currently \\"in stock\\", and another with the other products. This option will convert the customer\'s cart into two orders.'),
+						'desc' => $this->l('Allow the customer to split his order: one with the products currently "in stock", and another with the other products. This option will convert the customer\'s cart into two orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
