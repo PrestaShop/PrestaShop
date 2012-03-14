@@ -49,13 +49,13 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function renderList()
 	{
-		$this->displayWarning($this->l('When saving the query, only the request type \\"SELECT\\" are allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
 		$this->displayInformation('
 			<strong>'.$this->l('How to create a new sql query?').'</strong>
 			<br />
 			<ul>
-				<li>'.$this->l('Click \\"Add new\\".').'<br /></li>
-				<li>'.$this->l('Fill in the fields and click \\"Save\\".').'</li>
+				<li>'.$this->l('Click "Add new".').'<br /></li>
+				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
 				<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif"></li>
 				<li>'.$this->l('You can then export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif"></li>
 			</ul>
@@ -305,7 +305,7 @@ class AdminRequestSqlControllerCore extends AdminController
 						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
 						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else if (isset($e[$key]['*']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator \\"*\\" can be used in a nested query.'));
+						$this->errors[] = Tools::DisplayError($this->l('The operator "*" can be used in a nested query.'));
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
