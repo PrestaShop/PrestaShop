@@ -106,6 +106,9 @@
 	min-width:18px
 }
 #cart_block table#vouchers tr td.delete{
+	padding-left: 0;
+	padding-right: 0;
 	text-align: right;
+	width: 15px;
 }
 

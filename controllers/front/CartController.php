@@ -114,7 +114,7 @@ class CartControllerCore extends FrontController
 			}
 		}
 		$removed = CartRule::autoRemoveFromCart();
-		if (count($removed))
+		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
 
@@ -232,14 +232,14 @@ class CartControllerCore extends FrontController
 				else
 				{
 					$cart_rules2 = $this->context->cart->getCartRules();
-					if (count($cart_rules2) != count($cart_rules))
+					if (count($cart_rules2) != count($cart_rules) && (int)Tools::getValue('allow_refresh'))
 						$this->ajax_refresh = true;
 				}
 			}
 		}
 		
 		$removed = CartRule::autoRemoveFromCart();
-		if (count($removed))
+		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
 

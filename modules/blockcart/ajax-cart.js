@@ -366,30 +366,29 @@ var ajaxCart = {
 
 	//refresh display of vouchers (needed for vouchers in % of the total)
 	refreshVouchers : function (jsonData) {
-		if (jsonData.discounts = undefined || jsonData.discounts.length == 0)
-			$('#vouchers').remove();
+		if (typeof(jsonData.discounts) == 'undefined' || jsonData.discounts.length == 0)
+			$('#vouchers').hide();
 		else
 		{
-			$('.bloc_cart_voucher').each(function(){
-				var idElmt = $(this).attr('id').replace('bloc_cart_voucher_','');
-				var toDelete = true;
-				for (i=0;i<jsonData.discounts.length;i++)
+			$('#vouchers tbody').html('');
+		
+			for (i=0;i<jsonData.discounts.length;i++)
+			{
+				if (parseFloat(jsonData.discounts[i].price_float) > 0)
 				{
-					if (jsonData.discounts[i].id == idElmt && parseFloat(jsonData.discounts[i].price_float) > 0)
-					{
-						$('#bloc_cart_voucher_' + idElmt + ' td.price').text(jsonData.discounts[i].price);
-						toDelete = false;
-					}
+					$('#vouchers tbody').append($(
+						'<tr class="bloc_cart_voucher" id="bloc_cart_voucher_'+jsonData.discounts[i].id+'">'
+						+'	<td class="quantity">1x</td>'
+						+'	<td class="name" title="'+jsonData.discounts[i].description+'">'+jsonData.discounts[i].name+'</td>'
+						+'	<td class="price">-'+jsonData.discounts[i].price+'</td>'
+						+'	<td class="delete"><a class="delete_voucher" href="'+jsonData.discounts[i].link+'" title="'+delete_txt+'"><img src="'+img_dir+'icon/delete.gif" alt="'+delete_txt+'" class="icon" /></a></td>'
+						+'</tr>'
+					));
 				}
-				if (toDelete)
-				{
-					$('#bloc_cart_voucher_' + idElmt).fadeTo('fast', 0, function(){
-							$(this).remove();
-					});
-				}
-			});
-		}
+			}
 
+			$('#vouchers').show();
+		}
 
 	},
 
@@ -629,18 +628,18 @@ var ajaxCart = {
 };
 
 function HoverWatcher(selector){
-  this.hovering = false;
-  var self = this;
+	this.hovering = false;
+	var self = this;
 
-  this.isHoveringOver = function() {
-    return self.hovering;
-  }
+	this.isHoveringOver = function() {
+		return self.hovering;
+	}
 
-    $(selector).hover(function() {
-      self.hovering = true;
-    }, function() {
-      self.hovering = false;
-    })
+	$(selector).hover(function() {
+		self.hovering = true;
+	}, function() {
+		self.hovering = false;
+	})
 }
 
 //when document is loaded...
@@ -674,6 +673,19 @@ $(document).ready(function(){
 			if (!shopping_cart.isHoveringOver())
 				$("#cart_block").stop(true, true).slideUp(450);
 		}, 200);
+	});
+	
+	$('.delete_voucher').live('click', function() {
+		$.ajax({url:$(this).attr('href')});
+		$(this).parent().parent().remove();
+		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
+		{
+			if (typeof(updateAddressSelection) != 'undefined')
+				updateAddressSelection();
+			else
+				location.reload();
+		}
+		return false;
 	});
 });
 
