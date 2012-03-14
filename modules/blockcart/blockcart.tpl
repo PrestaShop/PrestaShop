@@ -34,6 +34,8 @@ var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
 var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
 var freeShippingTranslation = '<b>{l s='Free shipping!' mod='blockcart' js=1}</b>';
 var freeProductTranslation = '<b>{l s='Free!' mod='blockcart' js=1}</b>';
+var delete_txt = '{l s='Delete' mod='blockcart'}';
+var img_dir = '{$img_dir}';
 </script>
 {/if}
 
@@ -67,7 +69,7 @@ var freeProductTranslation = '<b>{l s='Free!' mod='blockcart' js=1}</b>';
 				<a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)}" title="{$product.name|escape:html:'UTF-8'}">
 				{$product.name|truncate:13:'...'|escape:html:'UTF-8'}</a>
 				<span class="remove_link">{if !isset($customizedDatas.$productId.$productAttributeId)}<a rel="nofollow" class="ajax_cart_block_remove_link" href="{$link->getPageLink('cart', true, NULL, "delete&amp;id_product={$product.id_product}&amp;ipa={$product.id_product_attribute}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$static_token}")}" title="{l s='remove this product from my cart' mod='blockcart'}">&nbsp;</a>{/if}</span>
-				<span class="price">{$product.total}
+				<span class="price">
 					{if $product.total > 0}
 						{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
 					{else}
@@ -105,21 +107,22 @@ var freeProductTranslation = '<b>{l s='Free!' mod='blockcart' js=1}</b>';
 	{/if}
 		<p {if $products}class="hidden"{/if} id="cart_block_no_products">{l s='No products' mod='blockcart'}</p>
 
-		{if $discounts|@count > 0}<table id="vouchers">
+		<table id="vouchers">
 			<tbody>
-			{foreach from=$discounts item=discount}
-				{if $discount.value_real > 0}
-				<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
-					<td class="quantity">1x</td>
-					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'htmlall':'UTF-8'}</td>
-					<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
-					<td class="delete"><a href="{$link->getPageLink('$order_process.php', true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="icon" /></a></td>
-				</tr>
+				{if $discounts|@count > 0}
+					{foreach from=$discounts item=discount}
+						{if $discount.value_real > 0}
+						<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
+							<td class="quantity">1x</td>
+							<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'htmlall':'UTF-8'}</td>
+							<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
+							<td class="delete"><a class="delete_voucher" href="{$link->getPageLink('$order_process.php', true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete' mod='blockcart'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete' mod='blockcart'}" class="icon" /></a></td>
+						</tr>
+						{/if}
+					{/foreach}
 				{/if}
-			{/foreach}
 			</tbody>
 		</table>
-		{/if}
 
 		<p id="cart-prices">
 			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
