@@ -69,7 +69,7 @@ class AdminWebserviceControllerCore extends AdminController
 						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice:'),
 							'desc' => $this->l('Before activating the webservice, you must be sure to: ').
 												'<ol>
-													<li>'.$this->l('be certain URL rewrite is available on this server').'</li>
+													<li>'.$this->l('be certain that URL rewriting is available on this server').'</li>
 													<li>'.$this->l('be certain that the 5 methods GET, POST, PUT, DELETE and HEAD are supported by this server').'</li>
 												</ol>',
 							'cast' => 'intval',
@@ -241,7 +241,7 @@ class AdminWebserviceControllerCore extends AdminController
 				if (!in_array('mod_auth_basic', $apache_modules))
 					$this->warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop webservice.');
 				if (!in_array('mod_rewrite', $apache_modules))
-					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow using the PrestaShop webservice.');
+					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow the PrestaShop webservice.');
 			}
 			else
 				$this->warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. 

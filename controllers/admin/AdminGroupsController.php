@@ -190,13 +190,13 @@ class AdminGroupsControllerCore extends AdminController
 					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
 					'size' => 33,
-					'desc' => $this->l('Will automatically apply this value as a discount on ALL shop\'s products for this group\'s members.')
+					'desc' => $this->l('Will automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Price display method:'),
 					'name' => 'price_display_method',
-					'desc' => $this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).'),
+					'desc' => $this->l('How prices are displayed in the order summary for this customer group.'),
 					'options' => array(
 						'query' => array(
 							array(
@@ -242,7 +242,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'modules',
-					'label' => array('auth_modules' => $this->l('Authorized modules :'), 'unauth_modules' => $this->l('Unauthorized modules :')),
+					'label' => array('auth_modules' => $this->l('Authorized modules:'), 'unauth_modules' => $this->l('Unauthorized modules:')),
 					'name' => 'auth_modules',
 					'values' => $this->formatModuleListAuth($group->id)
 				)

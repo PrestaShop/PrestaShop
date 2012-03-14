@@ -30,11 +30,11 @@
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
-		<p>{l s='You can choose to use the advanced stock management system for this product or not.'}</p>
-		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
+		<p>{l s='You can choose whether or not to use the advanced stock management system for this product.'}</p>
+		<p>{l s='You can manually specify the quantities for the product/each product combination, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 		<br/>
-		<p>{l s='For packs, if it has products that use the advanced stock management, you have to specify a common warehouse for these products and the pack.'}</p>
+		<p>{l s='For packs, if it has products that use the advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
 		<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
 	</div>
 	<br />
@@ -64,7 +64,7 @@
 						<label style="float:none;font-weight:normal" for="advanced_stock_management">
 							{l s='I want to use the advanced stock management system for this product'} 
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
-							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management.'}</b>
+							&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management.'}</b>
 							{else if $product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
 							{/if}
@@ -85,7 +85,7 @@
 						<label style="float:none;font-weight:normal" for="depends_on_stock_1">
 							{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} 
 							{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack}
-							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management globaly/for this product.'}</b>
+							&nbsp;-&nbsp;<b>{l s='This requires you to enable the advanced stock management globally or for this product.'}</b>
 							{else if $product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
 							{/if}
@@ -111,7 +111,7 @@
 				<tr>
 					<td valign="top" style="text-align:left;vertical-align:top;">
 						<p><b>{l s='When a product has combinations, quantities will be based on the default combination.'}</b></p>
-						<p><b>{l s='Given the quantities of the products in this pack, the maximum quantity should be: '} {$pack_quantity}</b></p>
+						<p><b>{l s='Given the quantities of the products in this pack, the maximum quantity should be:'} {$pack_quantity}</b></p>
 					</td>
 				</tr>
 				{/if}
@@ -183,7 +183,7 @@
 		</table>
 	{else}
 		<div class="warn">
-			<p>{l s='It is not possible to manage quantities when : '}</p>
+			<p>{l s='It is not possible to manage quantities when:'}</p>
 			<ul>
 				<li>{l s='You are managing all shops.'}</li>
 				<li>{l s='You are managing a group of shops where quantities are not shared between all shops of this group.'}</li>

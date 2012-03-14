@@ -52,7 +52,7 @@ class AdminTrackingControllerCore extends AdminController
 	public function initContent()
 	{
 		if (!Configuration::get('PS_STOCK_MANAGEMENT'))
-			$this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disable.');
+			$this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disabled.');
 		
 		$methods = get_class_methods($this);
 		$tpl_vars['arrayList'] = array();

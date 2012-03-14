@@ -83,7 +83,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									die(Tools::jsonEncode($return));
 								}
 								else
-									$this->errors[] = Tools::displayError('Error occurred updating cart.');
+									$this->errors[] = Tools::displayError('Error occurred while updating cart.');
 								if (count($this->errors))
 									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 								exit;
@@ -296,7 +296,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'sl_country' => isset($selectedCountry) ? $selectedCountry : 0,
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier before', false),
-			'errorTOS' => Tools::displayError('You must accept terms of service before', false),
+			'errorTOS' => Tools::displayError('You must accept the Terms of Service before', false),
 			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) && $_GET['isPaymentStep']),
 			'genders' => Gender::getGenders(),
 		));
@@ -402,7 +402,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 			return '<p class="warning">'.Tools::displayError('Please sign in to see payment methods').'</p>';
 		if ($this->context->cart->OrderExists())
-			return '<p class="warning">'.Tools::displayError('Error: this order is already validated').'</p>';
+			return '<p class="warning">'.Tools::displayError('Error: this order has already been validated').'</p>';
 		if (!$this->context->cart->id_customer || !Customer::customerIdExistsStatic($this->context->cart->id_customer) || Customer::isBanned($this->context->cart->id_customer))
 			return '<p class="warning">'.Tools::displayError('Error: no customer').'</p>';
 		$address_delivery = new Address($this->context->cart->id_address_delivery);
@@ -421,7 +421,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->context->cart->id_currency)
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
 		if (!$this->context->cookie->checkedTOS && Configuration::get('PS_CONDITIONS'))
-			return '<p class="warning">'.Tools::displayError('Please accept Terms of Service').'</p>';
+			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service').'</p>';
 
 		/* If some products have disappear */
 		if (!$this->context->cart->checkQuantities())

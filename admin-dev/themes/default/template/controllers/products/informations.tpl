@@ -242,7 +242,7 @@
 						<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input type="text" id="resultImage" name="resultImage" />
-							<p class="preference_description">{l s='The tag is to copy / paste in the description.'}</p>
+							<p class="preference_description">{l s='The tag is to copy/paste in the description.'}</p>
 						</td>
 					</tr>
 					<tr>
@@ -294,7 +294,7 @@
 						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
 					</div>
 				{/foreach}
-				<p class="preference_description clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
+				<p class="preference_description clear">{l s='Tags separated by commas (e.g. dvd, dvd player, hifi)'}</p>
 			</td>
 		</tr>
 		</table>

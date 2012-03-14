@@ -166,7 +166,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => $this->l('Orders : create order'),
+			'title' => $this->l('Orders: create order'),
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
@@ -286,7 +286,7 @@ class AdminOrdersControllerCore extends AdminController
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 						}
 						else
-							$this->errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
+							$this->errors[] = Tools::displayError('An error occurred while sending e-mail to the customer.');
 					}
 					else
 						$this->errors[] = Tools::displayError('Order carrier can\'t be updated');
@@ -337,7 +337,7 @@ class AdminOrdersControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 					}
 					else
-						$this->errors[] = Tools::displayError('This order has already this status');
+						$this->errors[] = Tools::displayError('This order is already assigned this status');
 				}
 			}
 			else
@@ -397,7 +397,7 @@ class AdminOrdersControllerCore extends AdminController
 						$customer_message->private = Tools::getValue('visibility');
 
 						if (!$customer_message->add())
-							$this->errors[] = Tools::displayError('An error occurred while saving message.');
+							$this->errors[] = Tools::displayError('An error occurred while saving message');
 						elseif ($customer_message->private)
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11&token='.$this->token);
 						else
@@ -417,7 +417,7 @@ class AdminOrdersControllerCore extends AdminController
 								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true))
 								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						}
-						$this->errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
+						$this->errors[] = Tools::displayError('An error occurred while sending e-mail to the customer.');
 					}
 				}
 			}
@@ -458,7 +458,7 @@ class AdminOrdersControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayError('Partial refund data are incorrect');
+					$this->errors[] = Tools::displayError('Partial refund data is incorrect');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
@@ -640,7 +640,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
 						{
 							// @todo generate a voucher using cartrules
-							if (true || !$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip concerning the order #'), Tools::isSubmit('shippingBack')))
+							if (true || !$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip for order #'), Tools::isSubmit('shippingBack')))
 								$this->errors[] = Tools::displayError('Cannot generate voucher');
 							else
 							{
@@ -695,7 +695,7 @@ class AdminOrdersControllerCore extends AdminController
 				else
 				{
 					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
-						$this->errors[] = Tools::displayError('An error occurred on adding of order payment');
+						$this->errors[] = Tools::displayError('An error occurred on adding order payment');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
@@ -818,7 +818,7 @@ class AdminOrdersControllerCore extends AdminController
 					$order->update();
 				}
 				else
-					$this->errors[] = Tools::displayError('You can\'t change the currency');
+					$this->errors[] = Tools::displayError('You cannot change the currency');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -826,7 +826,7 @@ class AdminOrdersControllerCore extends AdminController
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
 			if ($order->hasInvoice())
-				$this->errors[] = Tools::displayError('This order has already invoice');
+				$this->errors[] = Tools::displayError('This order already has an invoice');
 			else
 			{
 				$order->setInvoice();
@@ -872,7 +872,7 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->errors[] = Tools::displayError('Can\'t edit this Order Cart Rule');
+					$this->errors[] = Tools::displayError('Cannot edit this Order Cart Rule');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -937,7 +937,7 @@ class AdminOrdersControllerCore extends AdminController
 							if (isset($order_invoice))
 							{
 								if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('Discount value is superior than the order invoice total');
+									$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total');
 								else
 								{
 									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -953,7 +953,7 @@ class AdminOrdersControllerCore extends AdminController
 								foreach ($order_invoices_collection as $order_invoice)
 								{
 									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-										$this->errors[] = Tools::displayError('Discount value is superior than the order invoice total (Invoice: ').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
+										$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total (Invoice:').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
 									else
 									{
 										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -967,7 +967,7 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								if (Tools::getValue('discount_value') > $order->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('Discount value is superior than the order total');
+									$this->errors[] = Tools::displayError('Discount value is greater than the order total');
 								else
 								{
 									$cart_rules[0]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -1063,7 +1063,7 @@ class AdminOrdersControllerCore extends AdminController
 					if ($res)
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					else
-						$this->errors[] = Tools::displayError('An error occured on OrderCartRule creation');
+						$this->errors[] = Tools::displayError('An error occurred on OrderCartRule creation');
 				}
 			}
 			else
@@ -1285,7 +1285,7 @@ class AdminOrdersControllerCore extends AdminController
 						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
 				}
 			}
-			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
+			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the e-mail to your customer.')));
 		}
 	}
 
@@ -1675,7 +1675,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (!$res)
 			die(Tools::jsonEncode(array(
 				'result' => $res,
-				'error' => Tools::displayError('Error occured on edition of this product line')
+				'error' => Tools::displayError('Error occurred while editing this product line')
 			)));
 
 		die(Tools::jsonEncode(array(
@@ -1725,7 +1725,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (!$res)
 			die(Tools::jsonEncode(array(
 				'result' => $res,
-				'error' => Tools::displayError('Error occured on deletion of this product line')
+				'error' => Tools::displayError('Error occurred on deletion of this product line')
 			)));
 
 		// Get invoices collection
@@ -1787,7 +1787,7 @@ class AdminOrdersControllerCore extends AdminController
 		if ($order->hasBeenDelivered())
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t edit an delivered order')
+				'error' => Tools::displayError('Can\'t edit a delivered order')
 			)));
 
 		if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order'))
@@ -1837,7 +1837,7 @@ class AdminOrdersControllerCore extends AdminController
 		if ($order->hasBeenDelivered())
 			die(Tools::jsonEncode(array(
 				'result' => false,
-				'error' => Tools::displayError('Can\'t edit an delivered order')
+				'error' => Tools::displayError('Can\'t edit a delivered order')
 			)));
 	}
 

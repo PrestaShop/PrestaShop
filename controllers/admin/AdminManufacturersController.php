@@ -167,7 +167,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'a!name'
 			),
 			'postcode' => array(
-				'title' => $this->l('Postcode/ Zip Code'),
+				'title' => $this->l('Postcode / Zip Code'),
 				'align' => 'right',
 				'width' => 50
 			),

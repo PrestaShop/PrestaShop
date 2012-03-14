@@ -126,7 +126,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		if (!is_writeable($this->downloadDir))
 			$this->errors[] = $this->l('The download folder doesn\'t have the sufficient right');
 		if (!($this->fd = fopen($this->downloadFile, 'w+')))
-			$this->errors[] = $this->l('The file can\'t be opened or created, please check the right');
+			$this->errors[] = $this->l('The file can\'t be opened or created, please check the rights');
 		@chmod($this->downloadFile, 0777);
 	}
 
@@ -288,7 +288,7 @@ class AdminAccountingExportControllerCore extends AdminController
 					$buffer .= '"'.$val.'";';
 				fwrite($this->fd, mb_convert_encoding(rtrim($buffer, ';')."\r\n", 'UTF-16LE'));
 			}
-			$this->confirmations[] = $this->l('Export has been successfully done');
+			$this->confirmations[] = $this->l('Export has been successfully completed');
 			return true;
 		}
 		return false;

@@ -82,11 +82,11 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->options = array(
 			'general' => array(
-				'title' =>	$this->l('Employees options'),
+				'title' =>	$this->l('Employee options'),
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array(
-						'title' => $this->l('Password regenerate:'),
-						'desc' => $this->l('Security minimum time to wait to regenerate a new password'),
+						'title' => $this->l('Password regeneration:'),
+						'desc' => $this->l('Security: minimum time to wait between two password changes'),
 						'cast' => 'intval',
 						'size' => 5,
 						'type' => 'text',
@@ -94,8 +94,8 @@ class AdminEmployeesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-						'title' => $this->l('Memorize form language:'),
-						'desc' => $this->l('Allow employees to save their own default form language'),
+						'title' => $this->l('Memorize language used in Admin panel forms:'),
+						'desc' => $this->l('Allow employees to select a specific language for Admin panel forms'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -200,11 +200,11 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'color',
-					'label' => $this->l('Back office color:'),
+					'label' => $this->l('Admin panel color:'),
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'size' => 20,
-					'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+					'desc' => $this->l('Admin panel background will be displayed in this color. HTML colors only (e.g.').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'default_tab',
@@ -215,10 +215,10 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Back office width'),
+					'label' => $this->l('Back Office width'),
 					'name' => 'bo_width',
 					'size' => 10,
-					'desc' => $this->l('Back office width, in pixels. The value "0" means that the back office width will be flexible.')
+					'desc' => $this->l('Back Office width, in pixels. The value \\"0\\" means that the Back Office width will be flexible.')
 				),
 				array(
 					'type' => 'select',
@@ -236,7 +236,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Theme:'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
-					'desc' => $this->l('Back office theme')
+					'desc' => $this->l('Back Office theme')
 				)
 			)
 		);
@@ -245,7 +245,7 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'radio',
-				'label' => $this->l('Show screencast:'),
+				'label' => $this->l('Show screencast at log in:'),
 				'name' => 'bo_show_screencast',
 				'required' => false,
 				'class' => 't',
@@ -262,7 +262,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'desc' => $this->l('Show the welcome video on the dashbord of the back office')
+				'desc' => $this->l('Display the welcome video in the Admin panel dashboard at log in')
 			);
 
 			$this->fields_form['input'][] = array(
@@ -284,7 +284,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'desc' => $this->l('Allow or disallow this employee to log into this Back Office')
+				'desc' => $this->l('Allow or disallow this employee to log into the Admin panel')
 			);
 
 			// if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -352,7 +352,7 @@ class AdminEmployeesControllerCore extends AdminController
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_ && $id_employee = Tools::getValue('id_employee') && (int)$id_employee == _PS_DEMO_MAIN_BO_ACCOUNT_)
 			{
-				$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
 			}
 			/* PrestaShop demo mode*/
@@ -374,7 +374,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$warehouses = Warehouse::getWarehousesByEmployee((int)Tools::getValue('id_employee'));
 			if (Tools::isSubmit('deleteemployee') && count($warehouses) > 0)
 			{
-				$this->errors[] = Tools::displayError('You cannot delete this account since it manages warehouses. Check your warehouses first.');
+				$this->errors[] = Tools::displayError('You cannot delete this account because it manages warehouses. Check your warehouses first.');
 				return false;
 			}
 		}

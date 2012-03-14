@@ -35,7 +35,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 
 		$this->options = array(
 			'general' => array(
-				'title' =>	$this->l('Delivery slips options'),
+				'title' =>	$this->l('Delivery slip options'),
 				'fields' =>	array(
 					'PS_DELIVERY_PREFIX' => array(
 						'title' => $this->l('Delivery prefix:'),
@@ -73,7 +73,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2007-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2011-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'date',
@@ -82,7 +82,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2008-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2012-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
@@ -104,9 +104,9 @@ class AdminDeliverySlipControllerCore extends AdminController
 		if (Tools::isSubmit('submitAdddelivery'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = Tools::displayError('Invalid from date');
+				$this->errors[] = Tools::displayError('Invalid \'from\' date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = Tools::displayError('Invalid end date');
+				$this->errors[] = Tools::displayError('Invalid \'to\' date');
 			if (!count($this->errors))
 			{
 				if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))

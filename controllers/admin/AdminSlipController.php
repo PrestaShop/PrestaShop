@@ -79,7 +79,7 @@ class AdminSlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2007-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2011-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'date',
@@ -88,7 +88,7 @@ class AdminSlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'desc' => $this->l('Format: 2008-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2012-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
@@ -112,9 +112,9 @@ class AdminSlipControllerCore extends AdminController
 		if (Tools::getValue('submitAddorder_slip'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = $this->l('Invalid from date');
+				$this->errors[] = $this->l('Invalid \\"From\\" date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = $this->l('Invalid end date');
+				$this->errors[] = $this->l('Invalid \\"To\\" date');
 			if (!count($this->errors))
 			{
 				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));

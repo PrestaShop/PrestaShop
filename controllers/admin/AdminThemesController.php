@@ -102,7 +102,7 @@ class AdminThemesControllerCore extends AdminController
 		$this->options = array(
 			'theme' => array(
 				'title' => sprintf($this->l('Select theme for shop %s'), $this->context->shop->name),
-				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop in top list if you want to select a theme') : '',
+				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you want to select a theme') : '',
 				'fields' => array(
 					'theme_for_shop' => array(
 						'type' => 'theme',
@@ -125,8 +125,8 @@ class AdminThemesControllerCore extends AdminController
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo:'),
 						'desc' => 
-							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo defined, the header logo is used instead.').'</span><br />' : '').
-							$this->l('Will appear on e-mail headers, if undefined the Header logo will be used'),
+							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No e-mail logo defined, the header logo is used instead.').'</span><br />' : '').
+							$this->l('Will appear on e-mail headers. If undefined, the Header logo will be used'),
 						'type' => 'file',
 						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
@@ -134,7 +134,7 @@ class AdminThemesControllerCore extends AdminController
 						'title' => $this->l('Invoice logo:'),
 						'desc' => 
 							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo defined, the header logo is used instead.').'</span><br />' : '').
-							$this->l('Will appear on invoices headers, if undefined the Header logo will be used'),
+							$this->l('Will appear on invoice headers. If undefined, the Header logo will be used'),
 						'type' => 'file',
 						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
@@ -160,7 +160,7 @@ class AdminThemesControllerCore extends AdminController
 						'size' => 20
 					),
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
 			),
 		);
 
@@ -214,7 +214,7 @@ class AdminThemesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -234,7 +234,7 @@ class AdminThemesControllerCore extends AdminController
 				'type' => 'select',
 				'name' => 'based_on',
 				'label' => $this->l('Copy missing files from existing theme:'),
-				'desc' => $this->l('If you create a new theme, it\'s recommended to use  default theme files for basic.'),
+				'desc' => $this->l('If you create a new theme, it\'s recommended to use default theme files.'),
 				'options' => array(
 					'id' => 'id', 'name' => 'name', 
 					'default' => array('value' => 0, 'label' => '&nbsp;-&nbsp;'),
@@ -325,7 +325,7 @@ class AdminThemesControllerCore extends AdminController
 		$obj = $this->loadObject();
 		if ($obj && $obj->isUsed())
 		{
-			$this->errors[] = $this->l('This theme is used by at least one shop. Please choose another theme first.');
+			$this->errors[] = $this->l('This theme is already used by at least one shop. Please choose another theme first.');
 			return false;
 		}
 

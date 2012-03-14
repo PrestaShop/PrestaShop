@@ -1,6 +1,6 @@
 Hi {firstname} {lastname},
 
-We inform you about the generation of a voucher to your name regarding your sponsorship.
+We have created a voucher in your name for referring a friend.
 
 Here is the code of your voucher : {voucher_num}, with an amount of {voucher_amount}.
 Simply copy/paste this code during the payment process for your next order.

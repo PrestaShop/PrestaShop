@@ -75,7 +75,7 @@ class ParentOrderControllerCore extends FrontController
 			if (!$duplication || !Validate::isLoadedObject($duplication['cart']))
 				$this->errors[] = Tools::displayError('Sorry, we cannot renew your order.');
 			else if (!$duplication['success'])
-				$this->errors[] = Tools::displayError('Missing items - we are unable to renew your order');
+				$this->errors[] = Tools::displayError('Some items are not available, we are unable to renew your order');
 			else
 			{
 				$this->context->cookie->id_cart = $duplication['cart']->id;
@@ -212,7 +212,7 @@ class ParentOrderControllerCore extends FrontController
 		{
 			$address = new Address((int)($this->context->cart->id_address_delivery));
 			if (!($id_zone = Address::getZoneById($address->id)))
-				$this->errors[] = Tools::displayError('No zone match with your address');
+				$this->errors[] = Tools::displayError('No zone matches your address');
 		}
 		else
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));

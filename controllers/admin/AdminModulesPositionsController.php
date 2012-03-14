@@ -71,9 +71,9 @@ class AdminModulesPositionsControllerCore extends AdminController
 				elseif (!$id_hook || !Validate::isLoadedObject($hook))
 					$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 				elseif (Hook::getModulesFromHook($id_hook, $id_module))
-					$this->errors[] = Tools::displayError('This module is already transplanted to this hook.');
+					$this->errors[] = Tools::displayError('This module is already transplanted to this hook');
 				elseif (!$module->isHookableOn($hook->name))
-					$this->errors[] = Tools::displayError('This module can\'t be transplanted to this hook.');
+					$this->errors[] = Tools::displayError('This module cannot be transplanted to this hook.');
 				// Adding vars...
 				else
 				{

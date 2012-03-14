@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General informations'}</legend>
+			<legend>{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}</legend>
 			<table style="width: 400px;" classe="table">
 				<tr>
 					<td>{l s='Creation date:'}</td>
@@ -82,7 +82,7 @@
 					<td bgcolor="#000000"></td>
 				</tr>
 				<tr>
-					<td>{l s='Total TE'}</td>
+					<td>{l s='Total (tax excl.)'}</td>
 					<td align="right">{$supply_order_total_te}</td>
 				</tr>
 				<tr>
@@ -90,7 +90,7 @@
 					<td align="right">{$supply_order_discount_value_te}</td>
 				</tr>
 				<tr>
-					<td>{l s='Total with discount TE'}</td>
+					<td>{l s='Total with discount (tax excl.)'}</td>
 					<td align="right">{$supply_order_total_with_discount_te}</td>
 				</tr>
 				<tr>
@@ -102,7 +102,7 @@
 					<td align="right">{$supply_order_total_tax}</td>
 				</tr>
 				<tr>
-					<td>{l s='Total TI'}</td>
+					<td>{l s='Total (tax incl.)'}</td>
 					<td align="right">{$supply_order_total_ti}</td>
 				</tr>
 				<tr>

@@ -39,7 +39,7 @@
 
 			<b>{$limit_warning['post.max_vars']}</b>{l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin post and request limit to'}
+			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
 		{else}
 			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>

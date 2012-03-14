@@ -4,7 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_75261aaef97717dda0ca98743b24f8f3'] = 'Ungefähres Zustelldamit mit diesem Versender ist zwischen';
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_be5d5d37542d75f93a87094459f76678'] = 'und';
-$_MODULE['<{dateofdelivery}prestashop>beforecarrier_b7ab10d227790bd29e51c1845153f126'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';
+$_MODULE['<{dateofdelivery}prestashop>beforecarrier_c9ed8c0b07828727ca6653924b0498d3'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b0f76e26cffaf27784d901a64f39593e'] = 'Liefertermin';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_98110868b266d63c3bacdac4430169cf'] = 'Zeigt den voraussichtlichen Liefertermin an';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_a39df5444246aeb081729db7e17f51bc'] = 'Konfiguration des Liefertermins';
@@ -70,4 +70,4 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7e823b37564da492ca1629b4732
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_82331503174acbae012b2004f6431fa5'] = 'Dezember';
 $_MODULE['<{dateofdelivery}prestashop>orderdetail_8e8fe67c419e34287373a91cc6cab1de'] = 'Ungefähres Zustelldamit ist zwischen';
 $_MODULE['<{dateofdelivery}prestashop>orderdetail_be5d5d37542d75f93a87094459f76678'] = 'und';
-$_MODULE['<{dateofdelivery}prestashop>orderdetail_b7ab10d227790bd29e51c1845153f126'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';
+$_MODULE['<{dateofdelivery}prestashop>orderdetail_c9ed8c0b07828727ca6653924b0498d3'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';

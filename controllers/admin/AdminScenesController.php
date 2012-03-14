@@ -139,7 +139,7 @@ class AdminScenesControllerCore extends AdminController
 				'image' => '../img/admin/photo.gif',
 				),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			),
 			'input' => array(
@@ -148,11 +148,11 @@ class AdminScenesControllerCore extends AdminController
 					'name' => 'description',
 					'label' => $this->l('How to map products in the image:'),
 					'text' => $this->l('When a customer hovers over the image with the mouse, a pop-up appears displaying a brief description of the product.').
-						$this->l('The customer can then click to open the product\'s full product page. ').
-						$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up. ').
+						$this->l('The customer can then click to open the product\'s full product page.').
+						$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').
 						$this->l('Left-click with your mouse to draw the four-sided mapping zone, then release.').
-						$this->l('Then, begin typing the name of the associated product. A list of products appears. ').
-						$this->l('Click the appropriate product, then click OK. Repeat these steps for each mapping zone you wish to create. ').
+						$this->l('Then, begin typing the name of the associated product. A list of products appears.').
+						$this->l('Click the appropriate product, then click OK. Repeat these steps for each mapping zone you wish to create.').
 						$this->l('When you have finished mapping zones, click Save Image Map.')
 				),
 				array(
@@ -190,7 +190,7 @@ class AdminScenesControllerCore extends AdminController
 
 		$image_to_map_desc = '';
 		$image_to_map_desc .= $this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
-				.(Tools::getMaxUploadSize() / 1024).''.$this->l('KB max.').' '
+				.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
 				.$this->l('If larger than the image size setting, the image will be reduced to ')
 				.' '.$large_scene_image_type['width'].'x'.$large_scene_image_type['height'].'px '
 				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
@@ -220,7 +220,7 @@ class AdminScenesControllerCore extends AdminController
 			$img_alt_desc = '';
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
 				.'<br />'.$this->l('Format:').' JPG, GIF, PNG. '
-				.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
+				.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
 				.$this->l('Automatically resized to')
 				.' '.$thumb_scene_image_type['width'].'x'.$thumb_scene_image_type['height'].'px '.$this->l('(width x height)').'.<br />'
 				.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
@@ -274,7 +274,7 @@ class AdminScenesControllerCore extends AdminController
 		}
 		else
 		{
-			$image_to_map_desc .= '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image...').'</span><br/><br/>';
+			$image_to_map_desc .= '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image.').'</span><br/><br/>';
 			$image_to_map_desc .= '</div>';
 		}
 		if (Shop::isFeatureActive())

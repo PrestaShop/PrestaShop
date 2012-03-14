@@ -127,7 +127,7 @@ class AdminCustomersControllerCore extends AdminController
 				'align' => 'right'
 			),
 			'connect' => array(
-				'title' => $this->l('Connection'),
+				'title' => $this->l('Last visit'),
 				'width' => 100,
 				'type' => 'datetime',
 				'search' => false,
@@ -375,11 +375,11 @@ class AdminCustomersControllerCore extends AdminController
 								'name' => 'groupBox',
 								'values' => $groups,
 								'required' => true,
-								'desc' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
+								'desc' => $this->l('Select all customer groups you would like to apply to this customer')
 							),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Default group:'),
+						'label' => $this->l('Default customer group:'),
 						'name' => 'id_default_group',
 						'options' => array(
 							'query' => $groups,
@@ -437,7 +437,7 @@ class AdminCustomersControllerCore extends AdminController
 			);
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
-				'label' => $this->l('Outstanding allow:'),
+				'label' => $this->l('Outstanding allowed:'),
 				'name' => 'outstanding_allow_amount',
 				'size' => 10,
 				'hint' => $this->l('Valid characters:').' 0-9',
@@ -782,11 +782,11 @@ class AdminCustomersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($customer))
 			$this->errors[] = Tools::displayError('This customer does not exist.');
 		if (Customer::customerExists($customer->email))
-			$this->errors[] = Tools::displayError('This customer already exist as non-guest.');
+			$this->errors[] = Tools::displayError('This customer already exists as a non-guest.');
 		else if ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
 		else
-			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
 	}
 
 	/**
@@ -798,10 +798,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
 		$customer->newsletter = $customer->newsletter ? 0 : 1;
 		if (!$customer->update())
-			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -814,10 +814,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
 		$customer->optin = $customer->optin ? 0 : 1;
 		if (!$customer->update())
-			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating the customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -853,7 +853,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$tpl->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => $this->l('Delete selected item ?').$name,
+			'confirm' => $this->l('Delete selected item?').$name,
 			'action' => $this->l('Delete'),
 			'id' => $id,
 		));

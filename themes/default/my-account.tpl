@@ -30,10 +30,10 @@
 <h1>{l s='My account'}</h1>
 {if isset($account_created)}
 	<p class="success">
-		{l s='Your account is now created.'}
+		{l s='Your account has been created.'}
 	</p>
 {/if}
-<h4>{l s='Welcome to your account. Here you can manage your addresses and orders.'}</h4>
+<h4>{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</h4>
 <ul class="myaccount_lnk_list">
 	{if $has_customer_an_address}
 	<li><a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}"><img src="{$img_dir}icon/addrbook.gif" alt="{l s='Add my first address'}" class="icon" /> {l s='Add my first address'}</a></li>

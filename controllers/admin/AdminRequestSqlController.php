@@ -49,15 +49,15 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function renderList()
 	{
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the request type \\"SELECT\\" are allowed.'));
 		$this->displayInformation('
 			<strong>'.$this->l('How to create a new sql query?').'</strong>
 			<br />
 			<ul>
-				<li>'.$this->l('Click "Add new".').'<br /></li>
-				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-				<li>'.$this->l('You can then view the query results by clicking on the tab: ').' <img src="../img/admin/details.gif"></li>
-				<li>'.$this->l('You can then export the query results as a file. Csv file by clicking on the tab: ').' <img src="../img/admin/export.gif"></li>
+				<li>'.$this->l('Click \\"Add new\\".').'<br /></li>
+				<li>'.$this->l('Fill in the fields and click \\"Save\\".').'</li>
+				<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif"></li>
+				<li>'.$this->l('You can then export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif"></li>
 			</ul>
 		');
 
@@ -93,7 +93,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -290,58 +290,58 @@ class AdminRequestSqlControllerCore extends AdminController
 			{
 				case 'checkedFrom':
 					if (isset($e[$key]['table']))
-						$this->errors[] = Tools::DisplayError($this->l('The Table ').' "'.$e[$key]['table'].'" '.$this->l(' doesn\'t exist.'));
+						$this->errors[] = Tools::DisplayError($this->l('The Table').' "'.$e[$key]['table'].'" '.$this->l('doesn\'t exist.'));
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
 
 				case 'checkedSelect':
 					if (isset($e[$key]['table']))
-						$this->errors[] = Tools::DisplayError($this->l('The Table ').' "'.$e[$key]['table'].'" '.$this->l(' doesn\'t exist.'));
+						$this->errors[] = Tools::DisplayError($this->l('The Table').' "'.$e[$key]['table'].'" '.$this->l('doesn\'t exist.'));
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else if (isset($e[$key]['*']))
-						$this->errors[] = Tools::DisplayError($this->l('The operand "*" can be used in a nested query.'));
+						$this->errors[] = Tools::DisplayError($this->l('The operator \\"*\\" can be used in a nested query.'));
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
 
 				case 'checkedWhere':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
+						$this->errors[] = Tools::DisplayError($this->l('The operator').' "'.$e[$key]['operator'].'" '.$this->l('used is incorrect.'));
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator ').' "'.$e[$key]['operator'].'" '.$this->l(' used is incorrect.'));
+						$this->errors[] = Tools::DisplayError($this->l('The operator').' "'.$e[$key]['operator'].'" '.$this->l('used is incorrect.'));
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
 
 				case 'checkedOrder':
 					if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
 
 				case 'checkedGroupBy':
 					if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute ').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l(' does not exist in the table: ').$e[$key]['attribut'][1].'.');
+						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
+						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
 					else
 						$this->errors[] = Tools::DisplayError($this->l('Error'));
 				break;
@@ -352,18 +352,18 @@ class AdminRequestSqlControllerCore extends AdminController
 
 				case 'returnNameTable':
 						if (isset($e[$key]['reference']))
-							$this->errors[] = Tools::DisplayError($this->l('The reference ').'"'.
-							$e[$key]['reference'][0].'"'.$this->l(' doesn\'t exist in : ').$e[$key]['reference'][1]);
+							$this->errors[] = Tools::DisplayError($this->l('The reference').'"'.
+							$e[$key]['reference'][0].'"'.$this->l('doesn\'t exist in:').$e[$key]['reference'][1]);
 						else
 							$this->errors[] = Tools::DisplayError($this->l('When multiple tables are used, each attribute must be referenced to a table.'));
 				break;
 
 				case 'testedRequired':
-						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l(' doesn\'t exist.'));
+						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l('doesn\'t exist.'));
 					break;
 
 				case 'testedUnauthorized':
-						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l(' is a unauthorized keyword.'));
+						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l('is a unauthorized keyword.'));
 				break;
 			}
 		}

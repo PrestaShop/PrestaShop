@@ -62,7 +62,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'filter_key' => 'domain'
 			),
 			'uri' => array(
-				'title' => $this->l('Uri'),
+				'title' => $this->l('URI'),
 				'width' => 200,
 				'filter_key' => 'uri',
 				'havingFilter' => true
@@ -108,7 +108,7 @@ class AdminShopUrlControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Shop Url')
+				'title' => $this->l('Shop URL')
 			),
 			'input' => array(
 				array(
@@ -127,7 +127,7 @@ class AdminShopUrlControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Physical URI:'),
 					'name' => 'physical_uri',
-					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path. E.g. if your store is available from www.my-prestashop.com/my-store/, you have to set my-store/ in this field.'),
+					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you would set my-store/ in this field).'),
 					'size' => 50,
 				),
 				array(
@@ -135,7 +135,7 @@ class AdminShopUrlControllerCore extends AdminController
 					'label' => $this->l('Virtual URI:'),
 					'name' => 'virtual_uri',
 					'desc' => array(
-						$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server. E.g. if you want your store to be available with url www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field (we considere that my-store/ is your physical URI).'),
+						$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
 						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
 					),
 					'size' => 50,
@@ -182,13 +182,13 @@ class AdminShopUrlControllerCore extends AdminController
 						)
 					),
 					'desc' => array(
-						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).'),
+						$this->l('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).'),
 						array(
-							'text' => $this->l('Since the selected shop has no main url, you have to set this url as main'),
+							'text' => $this->l('Since the selected shop has no Main URL, you have to set this URL as the Main URL'),
 							'id' => 'mainUrlInfo'
 						),
 						array(
-							'text' => $this->l('The selected shop has already a main url, if you set this one as main url, the older one will be set as normal url'),
+							'text' => $this->l('The selected shop has already a Main URL, if you set this one as the Main URL, the older one will be set as the Normal URL.'),
 							'id' => 'mainUrlInfoExplain'
 						)
 					)
@@ -215,7 +215,7 @@ class AdminShopUrlControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -253,7 +253,7 @@ class AdminShopUrlControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->main)
-						$this->errors[] = Tools::displayError('You can\'t disable a main url');
+						$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
 					elseif ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
 					else
@@ -292,13 +292,13 @@ class AdminShopUrlControllerCore extends AdminController
 			$object->setMain();
 
 		if ($object->main && !Tools::getValue('main'))
-			$this->errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
+			$this->errors[] = Tools::displayError('You can\'t change a Main URL to a non-Main URL, you have to set another URL as Main URL for selected shop');
 
 		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
-			$this->errors[] = Tools::displayError('You can\'t disable a main url');
+			$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
 
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-			$this->errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
+			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
 
 		parent::processAdd($token);
 	}

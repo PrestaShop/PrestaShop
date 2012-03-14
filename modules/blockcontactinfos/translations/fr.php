@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_6bde6531cb3dc89a517c203d2177315d'] = 'Bloc infos contact';
-$_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_94ef396566461a04e263191e90bdf447'] = 'Ajoute un bloc permettant d\'afficher des informations sur les moyens de contacter la boutique';
+$_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_e4b4279fc7df686f160eaf46e6129f85'] = 'Ajoute un bloc permettant d\'afficher des informations sur les moyens de contacter la boutique';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration mise à jour';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_c281f92b77ba329f692077d23636f5c9'] = 'Nom de la société';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_dd7bf230fde8d4836917806aff6a6b27'] = 'Adresse';

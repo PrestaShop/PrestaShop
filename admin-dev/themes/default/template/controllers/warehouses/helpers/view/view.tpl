@@ -61,10 +61,10 @@
 					</tr>
 					<tr>
 						<td>{l s='Products:'}</td>
-						<td>{$warehouse_num_products} {l s='references'}</td>
+						<td>{$warehouse_num_products} {l s='References:'}</td>
 					</tr>
 					<tr>
-						<td>{l s='Products physical quantities:'}</td>
+						<td>{l s='Physical product quantities:'}</td>
 						<td>{$warehouse_quantities}</td>
 					</tr>
 					<tr>
@@ -77,7 +77,7 @@
 		<div style="margin-top: 30px">
 			<fieldset>
 				<legend><img src="/img/t/AdminShop.gif" alt="" /> {l s='Shops'}</legend>
-				{l s='The following are the shops associated to this warehouse.'}
+				{l s='The following are the shops associated with this warehouse.'}
 				<table style="width: 400px; margin-top:20px" classe="table">
 					<tr>
 						<th>{l s='ID'}</th>

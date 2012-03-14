@@ -339,7 +339,7 @@ class LocalizationPackCore
 
 									if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 									{
-										$this->_errors[] = Tools::displayError('Cannot decompress the translation file of the language: ').(string)$attributes['iso_code'];
+										$this->_errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$attributes['iso_code'];
 										return false;
 									}
 
@@ -378,7 +378,7 @@ class LocalizationPackCore
 				$attributes = $data->attributes();
 				if (!isset($varNames[strval($attributes['type'])]))
 				{
-					$this->_errors[] = Tools::displayError('Pack corrupted: wrong unit type.');
+					$this->_errors[] = Tools::displayError('Localization pack corrupted: wrong unit type.');
 					return false;
 				}
 				if (!Configuration::updateValue($varNames[strval($attributes['type'])], strval($attributes['value'])))
@@ -410,17 +410,17 @@ class LocalizationPackCore
 					{
 						if (!Module::isInstalled($name))
 							if (!$module->install())
-								$this->_errors[] = Tools::displayError('An error has occured during the module installation: ').$name;
+								$this->_errors[] = Tools::displayError('An error occurred while installing the module:').$name;
 					}
 					else
 						if (Module::isInstalled($name))
 							if (!$module->uninstall())
-								$this->_errors[] = Tools::displayError('An error has occured during the module uninstall: ').$name;
+								$this->_errors[] = Tools::displayError('An error occurred while uninstalling the module:').$name;
 
 					unset($module);
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error has occured, this module doesnt exists: ').$name;
+					$this->_errors[] = Tools::displayError('An error has occurred, this module does not exist:').$name;
 			}
 
 		return true;
@@ -457,10 +457,10 @@ class LocalizationPackCore
 				$group = new Group((int)_PS_DEFAULT_CUSTOMER_GROUP_);
 				$group->price_display_method = (int)$attributes['price_display_method'];
 				if (!$group->save())
-					$this->_errors[] = Tools::displayError('An error has occured during the default group update');
+					$this->_errors[] = Tools::displayError('An error has occurred during the default group update');
 			}
 			else
-				$this->_errors[] = Tools::displayError('An error has occured during the default group update');
+				$this->_errors[] = Tools::displayError('An error has occurred during the default group update');
 		}
 
 		return true;

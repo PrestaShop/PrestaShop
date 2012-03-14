@@ -41,7 +41,7 @@
 				<input type="radio" name="tracking_dt" id="tracking_dt_off" value="0" {if !$tracking_dt}checked="checked"{/if}/>
 				<label class="t" for="tracking_dt_off"> {l s='No'}</label>
 			</div>
-			<p>{l s='Direct traffic can be quite consuming. You should consider enabling it only if you have a strong database server and a strong need for it.'}</p>
+			<p>{l s='Direct traffic can be quite resource-intensive. You should consider enabling it only if you have a strong database server and a strong need for it.'}</p>
 			<input type="submit" class="button" value="{l s='   Save   '}" name="submitSettings" id="submitSettings" />
 		</form>
 		<div class="separation"></div>

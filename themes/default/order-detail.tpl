@@ -46,7 +46,7 @@
 {if $invoice AND $invoiceAllowed}
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a .PDF file'}</a>
+	<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file'}</a>
 </p>
 {/if}
 {if $order->recyclable}
@@ -59,7 +59,7 @@
 </div>
 
 {if count($order_history)}
-<h3>{l s='Follow your order step by step'}</h3>
+<h3>{l s='Follow your order step-by-step'}</h3>
 <div class="table_block">
 	<table class="detail_step_by_step std">
 		<thead>
@@ -93,9 +93,9 @@
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
 	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a .PDF file'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a PDF file'}</a>
 	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a .PDF file'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a PDF file'}</a>
 	{/if}
 </p>
 {/if}
@@ -360,7 +360,7 @@
 			<textarea cols="67" rows="3" name="returnText"></textarea>
 		</p>
 		<p class="submit">
-			<input type="submit" value="{l s='Make a RMA slip'}" name="submitReturnMerchandise" class="button_large" />
+			<input type="submit" value="{l s='Make an RMA slip'}" name="submitReturnMerchandise" class="button_large" />
 			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
 		</p>
 	</div>
@@ -430,5 +430,5 @@
 		</p>
 	</form>
 {else}
-<p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You cannott make a merchandise return with a guest account'}</p>
+<p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You cannot make a merchandise return with a guest account'}</p>
 {/if}

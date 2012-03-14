@@ -1,4 +1,4 @@
-	Hello,
+Hello,
 	
 This is a test e-mail from your PrestaShop™ online shop.
 

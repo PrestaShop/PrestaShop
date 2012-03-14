@@ -47,7 +47,7 @@ class AdminReturnControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Merchandise return (RMA) options'),
 				'fields' =>	array(
-					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Select whether or not to activate merchandise return for your shop'), 'cast' => 'intval', 'type' => 'bool'),
+					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns:'), 'desc' => $this->l('Select whether or not to activate merchandise returns for your shop'), 'cast' => 'intval', 'type' => 'bool'),
 					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity:'), 'desc' => $this->l('Number of days the customer can make a return after the delivery date'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
 				),
 				'submit' => array()
@@ -177,7 +177,7 @@ class AdminReturnControllerCore extends AdminController
 							if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0))))
 								Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
 							else
-								$this->errors[] = Tools::displayError('An error occurred while deleting an order return detail.');
+								$this->errors[] = Tools::displayError('An error occurred while deleting details of your order return.');
 						}
 						else
 							$this->errors[] = Tools::displayError('You need at least one product.');
@@ -186,7 +186,7 @@ class AdminReturnControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('The order return is invalid.');
 				}
 				else
-					$this->errors[] = Tools::displayError('The order return detail is invalid.');
+					$this->errors[] = Tools::displayError('The order return content is invalid.');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');

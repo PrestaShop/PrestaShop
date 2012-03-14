@@ -50,18 +50,18 @@ class AdminPerformanceControllerCore extends AdminController
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
 							'value' => _PS_SMARTY_NO_COMPILE_,
 							'label' => $this->l('Never compile cache'),
-							'desc' => $this->l('Templates are never recompiled, performance are better and this option should be used in production environement')
+							'desc' => $this->l('Templates are never recompiled, performance is better and this option should be used in production environment')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
 							'label' => $this->l('Compile cache if templates are updated'),
-							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your templates files, you should use force compile instead of this option. It should never be used in a production environment.')
+							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
 							'value' => _PS_SMARTY_FORCE_COMPILE_,
-							'label' => $this->l('Force compile'),
+							'label' => $this->l('Force Compile'),
 							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.')
 						)
 					)
@@ -96,7 +96,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'smarty_console_none',
 							'value' => 0,
-							'label' => $this->l('Not open console')
+							'label' => $this->l('Do not open console')
 						),
 						array(
 							'id' => 'smarty_console_url',
@@ -108,7 +108,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'id' => 'smarty_console_open',
 							'value' => 2,
 							'label' => $this->l('Always open console'),
-							'desc' => $this->l('To always force open the debug console choose this option.')
+							'desc' => $this->l('Choose this option to always force the debug console to open.')
 						)
 					)
 				),
@@ -124,7 +124,7 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		$this->fields_form[1]['form'] = array(
 			'legend' => array(
-				'title' => $this->l('Features detachables'),
+				'title' => $this->l('Optional features'),
 				'image' => '../img/admin/tab-plugins.gif'
 			),
 			'desc' => $this->l('Some features can be disabled in order to improve performance.'),
@@ -135,7 +135,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Combination:'),
+					'label' => $this->l('Combinations:'),
 					'name' => 'combination',
 					'class' => 't',
 					'is_bool' => true,
@@ -152,11 +152,11 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features are going to be disabled:')
+					'desc' => $this->l('These features will be disabled:')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Feature:'),
+					'label' => $this->l('Features:'),
 					'name' => 'feature',
 					'class' => 't',
 					'is_bool' => true,
@@ -172,7 +172,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features are going to be disabled:')
+					'desc' => $this->l('These features will be disabled:')
 				)
 			)
 		);
@@ -242,7 +242,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('Minify HTML after "smarty compile" execution.')
+							'label' => $this->l('Minify HTML after \\"smarty compile\\" execution.')
 						),
 						array(
 							'id' => 'PS_HTML_THEME_COMPRESSION_0',
@@ -261,7 +261,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('Compress inline JavaScript in HTML after "smarty compile" execution')
+							'label' => $this->l('Compress inline JavaScript in HTML after \\"smarty compile\\" execution')
 						),
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_0',
@@ -280,7 +280,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_HIGH_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('HTML is compressed but cancels the W3C validation (only when "Minify HTML" is enabled)')
+							'label' => $this->l('HTML is compressed but cancels the W3C validation (only when \\"Minify HTML\\" is enabled)')
 						),
 						array(
 							'id' => 'PS_HIGH_HTML_THEME_COMPRESSION_0',
@@ -325,7 +325,7 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		$this->fields_form[3]['form'] = array(
 			'legend' => array(
-				'title' => $this->l('Media servers (used only with CCC)'),
+				'title' => $this->l('Media servers (use only with CCC)'),
 				'image' => '../img/admin/subdomain.gif'
 			),
 			'desc' => $this->l('You must enter another domain or subdomain in order to use cookieless static content.'),
@@ -339,21 +339,21 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Media server #1:'),
 					'name' => '_MEDIA_SERVER_1_',
 					'size' => 30,
-					'desc' => $this->l('Name of the second domain of your shop, (e.g., myshop-media-server-1.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #2:'),
 					'name' => '_MEDIA_SERVER_2_',
 					'size' => 30,
-					'desc' => $this->l('Name of the third domain of your shop, (e.g., myshop-media-server-2.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #3:'),
 					'name' => '_MEDIA_SERVER_3_',
 					'size' => 30,
-					'desc' => $this->l('Name of the fourth domain of your shop, (e.g., myshop-media-server-3.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank')
 				),
 			)
 		);
@@ -370,7 +370,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Ciphering'),
 				'image' => '../img/admin/computer_key.png'
 			),
-			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
+			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension \\"mcrypt\\". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -513,7 +513,7 @@ class AdminPerformanceControllerCore extends AdminController
 				<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 
 		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
-			$this->warnings[] = $this->l('To use CacheFS the directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
+			$this->warnings[] = $this->l('To use the CacheFS directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
 
 		$this->initToolbar();
 		$this->display = '';
@@ -657,7 +657,7 @@ class AdminPerformanceControllerCore extends AdminController
 				if ($algo)
 				{
 					if (!function_exists('mcrypt_encrypt'))
-						$this->errors[] = Tools::displayError('Mcrypt is not activated on this server.');
+						$this->errors[] = Tools::displayError('PHP \\"Mcrypt\\" extension is not activated on this server.');
 					else
 					{
 						if (!strstr($settings, '_RIJNDAEL_KEY_'))

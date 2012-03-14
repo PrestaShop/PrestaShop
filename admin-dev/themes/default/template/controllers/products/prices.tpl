@@ -194,13 +194,13 @@ jQuery(document).ready(Customer.init);
 					{l s='/'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 				</span>
 			{/if}
-			<p>{l s='Eg. $15 per Lb'}</p>
+			<p>{l s='e.g.  per lb'}</p>
 		</td>
 	</tr>
 	<tr>
 		<td class="col-left"><label>&nbsp;</label></td>
 		<td>
-			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
+			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display \\"on sale\\" icon on product page and text on product listing'}</label>
 		</td>
 	</tr>
 	<tr>
@@ -223,7 +223,7 @@ jQuery(document).ready(Customer.init);
 {if isset($specificPriceModificationForm)}
 	<h4>{l s='Specific prices'}</h4>
 	<div class="hint" style="display:block;min-height:0;">
-		{l s='You can set specific prices for clients belonging to different groups, different countries...'}
+		{l s='You can set specific prices for clients belonging to different groups, different countries, etc.'}
 	</div>
 	<br />
 	<a class="button bt-icon" href="#" id="show_specific_price"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
@@ -348,7 +348,7 @@ jQuery(document).ready(Customer.init);
 				)
 			</span>
 			<div class="hint" style="display:block;min-height:0;">
-				{l s='You can set this value at 0 in order to apply the default price'}
+				{l s='You can set this value to 0 in order to apply the default price'}
 			</div>
 		</div>
 
@@ -360,7 +360,7 @@ jQuery(document).ready(Customer.init);
 				<option value="amount">{l s='Amount'}</option>
 				<option value="percentage">{l s='Percentage'}</option>
 			</select>
-			{l s='(if set to "amount", the tax is included)'}
+			{l s='(if set to \\"amount\\", tax is included)'}
 		</div>
 	</div>
 
@@ -374,7 +374,7 @@ jQuery(document).ready(Customer.init);
 				<th class="cell border" style="width: 11%;">{l s='Country'}</th>
 				<th class="cell border" style="width: 13%;">{l s='Group'}</th>
 				<th class="cell border" style="width: 13%;">{l s='Customer'}</th>
-				<th class="cell border" style="width: 12%;">{l s='Price'} {if $country_display_tax_label}{l s='(tax excl)'}{/if}</th>
+				<th class="cell border" style="width: 12%;">{l s='Price'} {if $country_display_tax_label}{l s='(tax excl.)'}{/if}</th>
 				<th class="cell border" style="width: 10%;">{l s='Reduction'}</th>
 				<th class="cell border" style="width: 15%;">{l s='Period'}</th>
 				<th class="cell border" style="width: 10%;">{l s='From (quantity)'}</th>

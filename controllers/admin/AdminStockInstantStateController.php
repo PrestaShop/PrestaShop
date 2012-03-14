@@ -61,7 +61,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'havingFilter' => true
 			),
 			'price_te' => array(
-				'title' => $this->l('Price (te)'),
+				'title' => $this->l('Price (tax excl.)'),
 				'width' => 150,
 				'orderby' => true,
 				'search' => false,
@@ -75,7 +75,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'search' => false,
 				'type' => 'price',
 				'currency' => true,
-				'hint' => $this->l('Valuation of the physical quantity. The sum (for all prices) is not available for all warehouses, please filter by warehouse.')
+				'hint' => $this->l('Total value of the physical quantity. The sum (for all prices) is not available for all warehouses, please filter by warehouse.')
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
@@ -152,7 +152,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->ajax_params = array('id_warehouse' => $this->getCurrentCoverageWarehouse());
 
 		// displays help information
-		$this->displayInformation($this->l('This interface allows you to display detailed informations on your stock, per warehouse.'));
+		$this->displayInformation($this->l('This interface allows you to display detailed information on your stock per warehouse.'));
 
 		// sets toolbar
 		$this->initToolbar();

@@ -90,7 +90,7 @@ $(function() {
 {/if}
 {if isset($customers)}
 	{if !$customers}
-		<h3>{l s='No customer matching your query'} : {$query}</h3>
+		<h3>{l s='No customers matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Customer matching your query'} : {$query}</h3>
 		{$customers}

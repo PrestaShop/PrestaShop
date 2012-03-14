@@ -43,7 +43,7 @@
 				<ul class="listForm">
 				<li>
 					<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) for real, all data will be removed from the database. A customer with the same e-mail address will be able to register again.'}</label>
+					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) for real. All data will be removed from the database. A customer with the same e-mail address will be able to register again.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
@@ -59,7 +59,7 @@
 						<input type="hidden" name="{$key}" value="{$value}" />
 					{/if}
 				{/foreach}
-				<br /><input type="submit" class="button" value="{l s='   Delete   '}" />
+				<br /><input type="submit" class="button" value="{l s='Delete'}" />
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>

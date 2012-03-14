@@ -57,7 +57,7 @@ class AdminAddressesControllerCore extends AdminController
 			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
 			'lastname' => array('title' => $this->l('Last name'), 'width' => 140, 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),
-			'postcode' => array('title' => $this->l('Postcode/ Zip Code'), 'align' => 'right', 'width' => 80),
+			'postcode' => array('title' => $this->l('Postcode / Zip Code'), 'align' => 'right', 'width' => 80),
 			'city' => array('title' => $this->l('City'), 'width' => 150),
 			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
@@ -249,7 +249,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/ Zip Code'),
+					'label' => $this->l('Postcode / Zip Code'),
 					'name' => 'postcode',
 					'size' => 33,
 					'required' => true,
@@ -348,14 +348,14 @@ class AdminAddressesControllerCore extends AdminController
 				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = Tools::displayError('Your zip/postal code is incorrect.').'<br />'.
+					$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.').'<br />'.
 									   Tools::displayError('Must be typed as follows:').' '.
 									   str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
 			}
 			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Postcode required.');
+				$this->errors[] = Tools::displayError('Postcode / Zip code required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = Tools::displayError('Your zip/postal code is incorrect.');
+				$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.');
 		}
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)

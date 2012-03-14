@@ -75,7 +75,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_GUEST_CHECKOUT_ENABLED' => array(
 						'title' => $this->l('Enable guest checkout'),
-						'desc' => $this->l('Your guest can make an order without registering'),
+						'desc' => $this->l('Guest can place an order without registering'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -89,14 +89,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multi-shipping'),
-						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will transform the customer cart in one or more orders.'),
+						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHIP_WHEN_AVAILABLE' => array(
 						'title' => $this->l('Delayed shipping'),
-						'desc' => $this->l('Allow the customer to split his order. One with the products "in stock", and an other with the other products. This option will transform the customer cart in two orders.'),
+						'desc' => $this->l('Allow the customer to split his order: one with the products currently \\"in stock\\", and another with the other products. This option will convert the customer\'s cart into two orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -122,7 +122,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval'
 					),
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
 			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
@@ -159,7 +159,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
 			),
 		);
 	}

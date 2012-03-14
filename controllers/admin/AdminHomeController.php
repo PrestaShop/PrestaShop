@@ -138,14 +138,14 @@ class AdminHomeControllerCore extends AdminController
 			);
 
 			$opti_list[] = array(
-				'title' => $this->l('index rebuilt after update'),
+				'title' => $this->l('Index rebuilt after update'),
 				'href' => $link->getAdminLink('AdminSearchConf'),
 				'color' => $lights[$indexRebuiltAfterUpdate]['color'],
 				'image' => $lights[$indexRebuiltAfterUpdate]['image'],
 			);
 
 			$opti_list[] = array(
-				'title' => $this->l('.htaccess up-to-date'),
+				'title' => $this->l('.htaccess file up-to-date'),
 				'href' => $link->getAdminLink('AdminMeta'),
 				'color' => $lights[$htaccessAfterUpdate]['color'],
 				'image' => $lights[$htaccessAfterUpdate]['image'],
@@ -174,7 +174,7 @@ class AdminHomeControllerCore extends AdminController
 		$shop = Context::getContext()->shop;
 		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
 			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This one is different from the main shop domain name set in shop tab:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
+			$this->l('This is different from the main shop domain name set in shop tab:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminShopUrl&token='.Tools::getAdminTokenLite('AdminShopUrl').'">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
@@ -183,50 +183,50 @@ class AdminHomeControllerCore extends AdminController
 	{
 		$quick_links['first'] = array(
 			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
-			'title' => $this->l('Product sold recently'),
-			'description' => $this->l('Create a new category and organize your products.'),
+			'title' => $this->l('Products sold recently'),
+			'description' => $this->l('Create a new category and organize your catalog.'),
 		);
 
 		$quick_links['second'] = array(
 			'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;addorder',
 			'title' => $this->l('New order'),
-			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
+			'description' => $this->l('Fill your catalog with new products.'),
 		);
 
 		$quick_links['third'] = array(
 			'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
 			'title' => $this->l('New Price Rule for catalog'),
-			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
+			'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
 		);
 
 		$quick_links['fourth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
 			'title' => $this->l('New Product'),
-			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
+			'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
 		);
 		
 		$quick_links['fifth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminModules').'&amp;addcategory',
 			'title' => $this->l('New module'),
-			'description' => $this->l('Create a new category and organize your products.'),
+			'description' => $this->l('Create a new category and organize your catalog.'),
 		);
 
 		$quick_links['sixth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
 			'title' => $this->l('New Price Rule for cart'),
-			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
+			'description' => $this->l('Fill your catalog with new products.'),
 		);
 
 		$quick_links['seventh'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
 			'title' => $this->l('New Page CMS'),
-			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
+			'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
 		);
 
 		$quick_links['eighth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
 			'title' => $this->l('Abandoned Carts'),
-			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
+			'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
 		);
 		return $quick_links;
 	}
@@ -239,7 +239,7 @@ class AdminHomeControllerCore extends AdminController
 			$close = $all - ($unread + $pending);
 			$content = '
 			<div class="table_info" id="table_info_last">
-				<h5><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.$this->l('View more').'</a> '.$this->l('Customers service').'</h5>
+				<h5><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.$this->l('View more').'</a> '.$this->l('Customer service').'</h5>
 				<table class="table_info_details" style="width:100%;">
 					<colgroup>
 						<col width=""></col>
@@ -247,7 +247,7 @@ class AdminHomeControllerCore extends AdminController
 					</colgroup>
 					<tr class="tr_odd">
 						<td class="td_align_left">
-						'.$this->l('Thread unread').'
+						'.$this->l('Unread threads').'
 						</td>
 						<td>
 							'.$unread.'
@@ -255,7 +255,7 @@ class AdminHomeControllerCore extends AdminController
 					</tr>
 					<tr>
 						<td class="td_align_left">
-							'.$this->l('Thread pending').'
+							'.$this->l('Pending threads').'
 						</td>
 						<td>
 							'.$pending.'
@@ -263,7 +263,7 @@ class AdminHomeControllerCore extends AdminController
 					</tr>
 					<tr class="tr_odd">
 						<td class="td_align_left">
-							'.$this->l('Thread closed').'
+							'.$this->l('Closed threads').'
 						</td>
 						<td>
 							'.$close.'
@@ -271,7 +271,7 @@ class AdminHomeControllerCore extends AdminController
 					</tr>
 					<tr>
 						<td class="td_align_left">
-							'.$this->l('Total thread').'
+							'.$this->l('Total threads').'
 						</td>
 						<td>
 							'.$all.'
@@ -315,7 +315,7 @@ class AdminHomeControllerCore extends AdminController
 		$results = array_merge($result, array_merge($result2, $result3));
 
 		$content = '<div class="table_info">
-			<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('Monthly Statistics').' </h5>
+			<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('This month\'s activity').' </h5>
 			<table class="table_info_details" style="width:100%;">
 					<colgroup>
 						<col width=""></col>
@@ -363,7 +363,7 @@ class AdminHomeControllerCore extends AdminController
 	public function getStatsSales()
 	{
 		$content = '<div id="table_info_large">
-				<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> <strong>'.$this->l('Statistics').'</strong> / '.$this->l('Sales of the week').'</h5>
+				<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> <strong>'.$this->l('Statistics').'</strong> / '.$this->l('This week\'s sales').'</h5>
 				<div id="stat_google">';
 
 		$chart = new Chart();
@@ -379,7 +379,7 @@ class AdminHomeControllerCore extends AdminController
 		$chart->setSize(580, 170);
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
 		$currency = Tools::setCurrency($this->context->cookie);
-		$chart->getCurve(1)->setLabel($this->l('Sales +Tx').' ('.strtoupper($currency->iso_code).')');
+		$chart->getCurve(1)->setLabel($this->l('Sales + Tax').' ('.strtoupper($currency->iso_code).')');
 
 		$content .= $chart->fetch();
 		$content .= '	</div>
@@ -447,12 +447,12 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
 		{
 			$result['result'] = 'ok';
-			$result['msg'] = $this->l('Optimization Tips will be folded by default');
+			$result['msg'] = $this->l('Optimization Tips will be hidden by default');
 		}
 		else
 		{
 			$result['result'] = 'error';
-			$result['msg'] = $this->l('an error occured a');
+			$result['msg'] = $this->l('an error occured');
 		}
 		$this->content = Tools::jsonEncode($result);
 

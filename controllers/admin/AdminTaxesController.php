@@ -60,7 +60,7 @@ class AdminTaxesControllerCore extends AdminController
 		);
 
 		if (Configuration::get('PS_USE_ECOTAX'))
-			$this->options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g., French ecotax: 19.6%).'),
+			$this->options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
 
 		parent::__construct();
@@ -78,7 +78,7 @@ class AdminTaxesControllerCore extends AdminController
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		if (TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use in a tax rule. Are you sure?');
+			$confirm = $this->l('This tax is currently in use in a tax rule. Are you sure you would like to continue?');
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -102,7 +102,7 @@ class AdminTaxesControllerCore extends AdminController
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		if ($value && TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?');
+			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you would like to continue?');
 
 		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
@@ -131,7 +131,7 @@ class AdminTaxesControllerCore extends AdminController
 					'required' => true,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Tax name to display in cart and on invoice, e.g., VAT')
+					'desc' => $this->l('Tax name to display in cart and on invoice, e.g. VAT')
 				),
 				array(
 					'type' => 'text',
@@ -141,7 +141,7 @@ class AdminTaxesControllerCore extends AdminController
 					'maxlength' => 6,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Format: XX.XX or XX.XXX (e.g., 19.60 or 13.925)')
+					'desc' => $this->l('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)')
 				),
 				array(
 					'type' => 'radio',

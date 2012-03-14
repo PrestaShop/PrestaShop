@@ -167,10 +167,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 
 			if (Tools::isSubmit('addsupply_order') ||	Tools::isSubmit('submitAddsupply_order'))
-				$this->toolbar_title = $this->l('Stock : Create new supply order');
+				$this->toolbar_title = $this->l('Stock: Create new supply order');
 
 			if (Tools::isSubmit('updatesupply_order') || Tools::isSubmit('submitUpdatesupply_order'))
-				$this->toolbar_title = $this->l('Stock : Manage supply order');
+				$this->toolbar_title = $this->l('Stock: Manage supply order');
 
 			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' || $this->object->is_template)
 				$this->toolbar_title .= ' ('.$this->l('template').')';
@@ -203,7 +203,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			$this->fields_form = array(
 				'legend' => array(
-					'title' => $this->l('Order informations'),
+					'title' => $this->l('Order information'),
 					'image' => '../img/admin/edit.gif'
 				),
 				'input' => array(
@@ -213,7 +213,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'reference',
 						'size' => 50,
 						'required' => true,
-						'desc' => $this->l('This is the reference of your order.'),
+						'desc' => $this->l('This is the reference for your order.'),
 					),
 					array(
 						'type' => 'select',
@@ -225,8 +225,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_supplier',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the supplier you are buying product from.'),
-						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
+						'desc' => $this->l('Select the supplier from whom you are buying products.'),
+						'hint' => $this->l('Be careful! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
 						'type' => 'select',
@@ -238,7 +238,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_warehouse',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the warehouse where you want the order to be sent to.'),
+						'desc' => $this->l('Select the warehouse to which you want the order to be sent.'),
 					),
 					array(
 						'type' => 'select',
@@ -251,7 +251,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'name' => 'name'
 						),
 						'desc' => $this->l('The currency of the order.'),
-						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
+						'hint' => $this->l('Be careful! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
 						'type' => 'select',
@@ -271,7 +271,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'discount_rate',
 						'size' => 10,
 						'required' => true,
-						'desc' => $this->l('This is the global discount rate in percents for the order.'),
+						'desc' => $this->l('This is the global discount rate in percent for the order.'),
 					),
 					array(
 						'type' => 'text',
@@ -280,11 +280,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'size' => 10,
 						'required' => false,
 						'hint' => $this->l('This will reset the order'),
-						'desc' => $this->l('If specified, each product which quantity is less or equal to this value will be loaded.'),
+						'desc' => $this->l('If specified, each product which quantity is less than or equal to this value will be loaded.'),
 					),
 				),
 				'submit' => array(
-					'title' => $this->l('   Save order   '),
+					'title' => $this->l('Save order'),
 				)
 			);
 
@@ -415,7 +415,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
-		$this->displayInformation($this->l('Also, you can create templates that you can later use to generate actual orders.').'<br />');
+		$this->displayInformation($this->l('Also, you can create templates that you can use later to generate actual orders.').'<br />');
 
 		if (count($this->warehouses) <= 1)
 			$this->displayWarning($this->l('You must have at least one warehouse before creating supply orders. See Stock/Warehouses'));
@@ -470,7 +470,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				die;
 			}
 			else
-				$this->displayWarning($this->l('There is nothing to export as CSV.'));
+				$this->displayWarning($this->l('There is nothing to export as a CSV.'));
 		}
 
 		// second list : templates
@@ -505,7 +505,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
 
 		// re-defines toolbar & buttons
-		$this->toolbar_title = $this->l('Stock : Supply orders templates');
+		$this->toolbar_title = $this->l('Stock: Supply orders templates');
 		$this->initToolbar();
 		unset($this->toolbar_btn['new']);
 		$this->toolbar_btn['new'] = array(
@@ -577,7 +577,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 		);
 
-		$this->displayInformation($this->l('Be careful when changing status. Some of them cannot be changed afterwards. (Canceled, for instance).'));
+		$this->displayInformation($this->l('Be careful when changing status. Some of them cannot be changed afterwards (Canceled, for instance).'));
 
 		// sets up the helper
 		$helper = new HelperForm();
@@ -731,7 +731,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 			),
 			'quantity_received_today' => array(
-				'title' => $this->l('Quantity to receive today ?'),
+				'title' => $this->l('Quantity received today?'),
 				'align' => 'left',
 				'width' => 20,
 				'type' => 'editable',
@@ -781,7 +781,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->addRowAction('details');
 
 		// sets toolbar title with order reference
-		$this->toolbar_title = sprintf($this->l('Reception of products for supply order #%s'), $supply_order->reference);
+		$this->toolbar_title = sprintf($this->l('Receipt of products for supply order #%s'), $supply_order->reference);
 
 		$this->lang = false;
 		$lang_id = (int)$this->context->language->id; //employee lang
@@ -823,7 +823,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->currentIndex = self::$currentIndex.$action;
 
 		// display these global order informations
-		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
+		$this->displayInformation($this->l('This interface allows you to update the quantities of this ongoing order.').'<br />');
 		$this->displayInformation($this->l('Be careful : once you update, you cannot go back unless you add new negative stock movements.').'<br />');
 		$this->displayInformation($this->l('Please not that a green line means that you received what you expected, and a red line means that you received more than expected.').'<br />');
 
@@ -991,10 +991,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 							$error_str = '<ul>';
 							foreach ($errors as $e)
-								$error_str .= '<li>'.$this->l('field ').$e.'</li>';
+								$error_str .= '<li>'.$this->l('field').$e.'</li>';
 							$error_str .= '</ul>';
 
-							$this->errors[] = Tools::displayError($this->l('Please verify the informations of the product: ').$entry->name.' '.$error_str);
+							$this->errors[] = Tools::displayError($this->l('Please verify the product information:').$entry->name.' '.$error_str);
 						}
 						else
 							$entry->save();
@@ -1105,7 +1105,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			&& Tools::isSubmit('id_supply_order_state'))
 		{
 			if ($this->tabAccess['edit'] != '1')
-				$this->errors[] = Tools::displayError($this->l('You do not have permissions to change order status.'));
+				$this->errors[] = Tools::displayError($this->l('You do not have permission to change the order status.'));
 
 			// get state ID
 			$id_state = (int)Tools::getValue('id_supply_order_state', 0);
@@ -1378,7 +1378,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supply_order->save();
 					}
 					else
-						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products in warehouse'));
+						$this->errors[] = Tools::displayError($this->l('Something went wrong when adding products to the warehouse'));
 				}
 			}
 		}
@@ -1401,7 +1401,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     public function displayUpdateReceiptLink($token = null, $id)
     {
         if (!array_key_exists('Receipt', self::$cache_lang))
-            self::$cache_lang['Receipt'] = $this->l('Update on-going receptions');
+            self::$cache_lang['Receipt'] = $this->l('Update ongoing receipt of products');
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.
@@ -1688,9 +1688,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Validate::isLoadedObject($supply_order))
 		{
 			if (!$supply_order->is_template)
-				$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
+				$this->displayInformation($this->l('This interface allows you to display detailed information on your order.').'<br />');
 			else
-				$this->displayInformation($this->l('This interface allows you to display detailed informations on your template of order.').'<br />');
+				$this->displayInformation($this->l('This interface allows you to display detailed information on your order template.').'<br />');
 
 			$lang_id = (int)$supply_order->id_lang;
 
@@ -1755,7 +1755,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'search' => false,
 				),
 				'unit_price_te' => array(
-					'title' => $this->l('Unit price (te)'),
+					'title' => $this->l('Unit price (tax excl.)'),
 					'align' => 'right',
 					'width' => 80,
 					'orderby' => false,
@@ -1773,7 +1773,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'search' => false,
 				),
 				'price_te' => array(
-					'title' => $this->l('Price (te)'),
+					'title' => $this->l('Price (tax excl.)'),
 					'align' => 'right',
 					'width' => 80,
 					'orderby' => false,
@@ -1792,7 +1792,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'suffix' => '%',
 				),
 				'discount_value_te' => array(
-					'title' => $this->l('Discount value (te)'),
+					'title' => $this->l('Discount value (tax excl.)'),
 					'align' => 'right',
 					'width' => 80,
 					'orderby' => false,
@@ -1802,7 +1802,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'currency' => true,
 				),
 				'price_with_discount_te' => array(
-					'title' => $this->l('Price with product discount (te)'),
+					'title' => $this->l('Price with product discount (tax excl.)'),
 					'align' => 'right',
 					'width' => 80,
 					'orderby' => false,
@@ -1831,7 +1831,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'currency' => true,
 				),
 				'price_ti' => array(
-					'title' => $this->l('Price (ti)'),
+					'title' => $this->l('Price (tax incl.)'),
 					'align' => 'right',
 					'width' => 80,
 					'orderby' => false,
@@ -2100,7 +2100,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$id_supply_order = (int)Tools::getValue('id_supply_order');
 		$supply_order = new SupplyOrder($id_supply_order);
 		if (!Validate::isLoadedObject($supply_order))
-			$this->errors[] = Tools::displayError($this->l('Could not copy this template.'));
+			$this->errors[] = Tools::displayError($this->l('This template could not be copied.'));
 
 		// gets SupplyOrderDetail
 		$entries = $supply_order->getEntriesCollection($supply_order->id_lang);

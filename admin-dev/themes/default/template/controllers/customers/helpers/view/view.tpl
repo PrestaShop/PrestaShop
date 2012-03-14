@@ -94,11 +94,11 @@
 				{if !$customer_exists}
 					<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
-						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer'}" /></p>
+						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer account'}" /></p>
 						{l s='This feature generates a random password and sends an e-mail to the customer'}
 					</form>
 				{else}
-					</div><div><b style="color:red;">{l s='A registered customer account exists with the same email address'}</b>
+					</div><div><b style="color:red;">{l s='A registered customer account already exists with this e-mail address'}</b>
 				{/if}
 			</div>
 		{/if}
@@ -111,7 +111,7 @@
 		<h2>
 			<img src="../img/admin/cms.gif" /> {l s='Add a private note'}
 		</h2>
-		<p>{l s='This note will be displayed to all the employees but not to the customer.'}</p>
+		<p>{l s='This note will be displayed to all employees but not to the customer.'}</p>
 		<form action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" id="customer_note">
 			<textarea name="note" id="noteContent" style="width:600px;height:100px" onkeydown="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea><br />
 			<input type="submit" id="submitCustomerNote" class="button" value="{l s='   Save   '}" style="float:left;margin-top:5px" disabled="disabled" />
@@ -201,7 +201,7 @@
 						<th class="left">{l s='Payment'}</th>
 						<th class="left">{l s='State'}</th>
 						<th class="left">{l s='Products'}</th>
-						<th class="left">{l s='Total paid'}</th>
+						<th class="left">{l s='Total spent'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
 					{foreach $orders_ok AS $key => $order}
@@ -238,7 +238,7 @@
 						<th class="center">{l s='Payment'}</th>
 						<th class="center">{l s='State'}</th>
 						<th class="center">{l s='Products'}</th>
-						<th class="center">{l s='Total paid'}</th>
+						<th class="center">{l s='Total spent'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
 					{foreach $orders_ko AS $key => $order}

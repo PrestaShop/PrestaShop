@@ -135,7 +135,7 @@ $(function(){ldelim}
 		{if {$authentification_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
 			{else}
-			<p>{l s='There are '}{$account_error|@count} {l s='errors'} :</p>
+			<p>{l s='There are'}{$account_error|@count} {l s='errors'} :</p>
 		{/if}
 		<ol>
 			{foreach from=$authentification_error item=v}
@@ -164,7 +164,7 @@ $(function(){ldelim}
 
 	<form action="{$link->getPageLink('authentication', true)}" method="post" id="login_form" class="std">
 		<fieldset>
-			<h3>{l s='Already registered ?'}</h3>
+			<h3>{l s='Already registered?'}</h3>
 			<div class="form_content clearfix">
 				<p class="text">
 					<label for="email">{l s='E-mail address'}</label>
@@ -348,7 +348,7 @@ $(function(){ldelim}
 		{if {$account_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
 			{else}
-			<p>{l s='There are '}{$account_error|@count} {l s='errors'} :</p>
+			<p>{l s='There are'}{$account_error|@count} {l s='errors'} :</p>
 		{/if}
 		<ol>
 			{foreach from=$account_error item=v}
@@ -433,7 +433,7 @@ $(function(){ldelim}
 	</fieldset>
 	{if $b2b_enable}
 	<fieldset class="account_creation">
-		<h3>{l s='Your company informations'}</h3>
+		<h3>{l s='Your company information'}</h3>
 		<p class="text">
 			<label for="">{l s='Company'}</label>
 			<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
@@ -482,7 +482,7 @@ $(function(){ldelim}
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, compagny name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. box, company name, c/o'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">
@@ -546,7 +546,7 @@ $(function(){ldelim}
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">
-			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Assign an address alias for future reference'} <sup>*</sup></label>
 			<input type="text" class="text" name="alias" id="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

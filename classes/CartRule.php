@@ -340,7 +340,7 @@ class CartRuleCore extends ObjectModel
 		if (!$this->active)
 			return Tools::displayError('This voucher is disabled');
 		if (!$this->quantity)
-			return Tools::displayError('This voucher has already been used ');
+			return Tools::displayError('This voucher has already been used');
 		if (strtotime($this->date_from) > time())
 			return Tools::displayError('This voucher is not valid yet');
 		if (strtotime($this->date_to) < time())
@@ -496,7 +496,7 @@ class CartRuleCore extends ObjectModel
 			}
 
 			if ($cartTotal < $minimum_amount)
-				return Tools::displayError('You do not reach the minimum amount required to use this voucher');
+				return Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
 	}
 	

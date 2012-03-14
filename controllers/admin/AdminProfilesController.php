@@ -55,7 +55,7 @@ class AdminProfilesControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Profils'),
+				'title' => $this->l('Profile'),
 				'image' => '../img/admin/profiles.png'
 			),
 			'input' => array(
@@ -69,7 +69,7 @@ class AdminProfilesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -86,7 +86,7 @@ class AdminProfilesControllerCore extends AdminController
 	 	/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/

@@ -30,7 +30,7 @@
 	{if $input['type'] == 'modules'}
 		<div style="{if !$form_id}display:none{/if}">
 			<div class="separation"></div>
-			<label>{l s='Modules restrictions: '}</label>
+			<label>{l s='Modules restrictions:'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
 		<div style="{if !$form_id}display:none{/if}">
@@ -183,12 +183,12 @@
 		<div style="display:none" id="group_discount_category_fancybox">
 			<fieldset style="text-align:left"><legend><img src="../img/admin/tab-groups.gif" />{l s='New group category discount'}</legend>
 				<div class="hintGroup" style="font-size: 13px;">
-					{l s='Beware the reduction applied to a category does not stack with the overall reduction but replaces it. The group is automatically added to the category.'}
+					{l s='Caution: the discount applied to a category does not stack with the overall reduction but instead replaces it.'}
 				</div>
 				{$categoryTreeView}
 				<div class="warn">{l s='Only products that have this category as the default category will be affected'}</div>
 				<div class="clear">&nbsp;</div>
-				<label>{l s='Discount (in %):'}</label>
+				<label>{l s='Discount (%):'}</label>
 				<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" size="33">
 				<div class="clear">&nbsp;</div>
 				<button onclick="addCategoryReduction();" class="button">{l s='add'}</button>
@@ -258,7 +258,7 @@
 					<tr>
 						<td style="text-align:center">
 							<button style="width:100%;margin-top:5px" id="authorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>
-							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s='<< Unauthorize'}</button>
+							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s=''}</button>
 						</td>
 						<td style="text-align:center">
 							<button style="width:100%;margin-top:5px"id="unauthorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>

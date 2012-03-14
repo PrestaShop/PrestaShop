@@ -52,7 +52,7 @@ class AdminBackupControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_BACKUP_ALL' => array(
 						'title' => $this->l('Ignore statistics tables:'),
-						'desc' => $this->l('The following tables will NOT be backed up if you enable this option:').'
+						'desc' => $this->l('If enabled, the following tables will NOT be backed up:').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_.'connections_source, '.
 							_DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
 						'cast' => 'intval',
@@ -60,7 +60,7 @@ class AdminBackupControllerCore extends AdminController
 					),
 					'PS_BACKUP_DROP_TABLE' => array(
 						'title' => $this->l('Drop existing tables during import:'),
-						'desc' => $this->l('Select this option to instruct the backup file to drop your tables prior to restoring the backed up data').
+						'desc' => $this->l('If enabled, the backup script will drop your tables prior to restoring the backed up data').
 							'<br />(ie. "DROP TABLE IF EXISTS")',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -142,14 +142,14 @@ class AdminBackupControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
 
 		// Test if the backup dir is writable
 		if (!is_writable(_PS_ADMIN_DIR_.'/backups/'))
-			$this->warnings[] = $this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)');
+			$this->warnings[] = $this->l('\\"Backups\\" Directory in admin directory must be writeable (CHMOD 755 / 777)');
 
 		if ($this->display == 'add' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{
@@ -218,7 +218,7 @@ class AdminBackupControllerCore extends AdminController
 		$dh = @opendir(_PS_ADMIN_DIR_.'/backups/');
 		if ($dh === false)
 		{
-			$this->errors[] = Tools::displayError('Unable to open backup directory .').addslashes(_PS_ADMIN_DIR_.'/backups/').'"';
+			$this->errors[] = Tools::displayError('Unable to open backup directory.').addslashes(_PS_ADMIN_DIR_.'/backups/').'"';
 			return;
 		}
 		while (($file = readdir($dh)) !== false)

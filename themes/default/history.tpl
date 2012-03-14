@@ -31,7 +31,7 @@
 <h1>{l s='Order history'}</h1>
 <p>{l s='Here are the orders you have placed since the creation of your account'}.</p>
 
-{if $slowValidation}<p class="warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh the page if your order is missing.'}</p>{/if}
+{if $slowValidation}<p class="warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.'}</p>{/if}
 
 <div class="block-center" id="block-history">
 	{if $orders && count($orders)}

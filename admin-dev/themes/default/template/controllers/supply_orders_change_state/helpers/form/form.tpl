@@ -50,7 +50,7 @@ $(document).ready(function() {
 	{/foreach}
 	</select>
 	<p class="preference_description">
-		{l s='Choose the new status of your order'}
+		{l s='Choose the new status for your order'}
 	</p>
 </div>
 

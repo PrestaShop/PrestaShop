@@ -416,7 +416,7 @@ abstract class AdminTabCore
 			{
 				if (!$adminTab->viewAccess())
 				{
-					echo Tools::displayError('Access denied');
+					echo Tools::displayError('Access denied.');
 					return false;
 				}
 				if (!count($actions))
@@ -865,7 +865,7 @@ abstract class AdminTabCore
 							if (isset($value[0]) && !empty($value[0]))
 							{
 								if (!Validate::isDate($value[0]))
-									$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+									$this->_errors[] = Tools::displayError('\'From:\' date format is invalid (YYYY-MM-DD)');
 								else
 									$sqlFilter .= ' AND '.$key.' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 							}
@@ -873,7 +873,7 @@ abstract class AdminTabCore
 							if (isset($value[1]) && !empty($value[1]))
 							{
 								if (!Validate::isDate($value[1]))
-									$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+									$this->_errors[] = Tools::displayError('\'To:\' date format is invalid (YYYY-MM-DD)');
 								else
 									$sqlFilter .= ' AND '.$key.' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 							}

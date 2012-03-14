@@ -31,25 +31,25 @@
 
 <table>
 	<tr>
-		<td class="col-left"><label>{l s='Width ( package ) :'}</label></td>
+		<td class="col-left"><label>{l s='Width (package):'}</label></td>
 		<td style="padding-bottom:5px;">
 			<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
-		<td class="col-left"><label>{l s='Height ( package ) :'}</label></td>
+		<td class="col-left"><label>{l s='Height (package):'}</label></td>
 		<td style="padding-bottom:5px;">
 			<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
-	<td class="col-left"><label>{l s='Depth ( package ) :'}</label></td>
+	<td class="col-left"><label>{l s='Depth (package):'}</label></td>
 	<td style="padding-bottom:5px;">
 	<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 	</td>
 	</tr>
 	<tr>
-	<td class="col-left"><label>{l s='Weight ( package ) :'}</label></td>
+	<td class="col-left"><label>{l s='Weight (package):'}</label></td>
 	<td style="padding-bottom:5px;">
 	<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_weight_unit}
 	</td>

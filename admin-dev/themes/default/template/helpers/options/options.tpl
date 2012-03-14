@@ -191,7 +191,7 @@
 						</div>
 					{/if}
 					{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
-					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in this shop context'}</p>{/if}
+					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in the context of this shop'}</p>{/if}
 					</div>
 					</div>
 					<div class="clear"></div>
@@ -201,7 +201,7 @@
 		{if isset($categoryData['submit'])}
 			<div class="margin-form">
 				<input type="submit"
-						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}"
+						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='Save'}{/if}"
 						name="{if isset($categoryData['submit']['name'])}{$categoryData['submit']['name']}{else}submitOptions{$table}{/if}"
 						class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}button{/if}"
 						id="{$table}_form_submit_btn"

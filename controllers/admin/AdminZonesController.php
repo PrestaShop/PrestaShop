@@ -82,7 +82,7 @@ class AdminZonesControllerCore extends AdminController
 					'name' => 'name',
 					'size' => 33,
 					'required' => true,
-					'desc' => $this->l('Zone name, e.g., Africa, West Coast, Neighboring Countries'),
+					'desc' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries)'),
 				),
 				array(
 					'type' => 'radio',
@@ -118,7 +118,7 @@ class AdminZonesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 

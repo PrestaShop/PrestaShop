@@ -172,7 +172,7 @@
 			<div class="title">{l s='Multi-shipping'}</div>
 			<div class="description">
 				<a href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')}"/>
-					{l s='Specify a delivery address for each products ordered.'}
+					{l s='Specify a delivery address for each product ordered.'}
 				</a>
 			</div>
 		</div>
@@ -184,11 +184,11 @@
 			<div class="button_multishipping_mode" id="multishipping_mode_box">
 				<div class="title">{l s='Multi-shipping'}</div>
 				<div class="description">
-					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I want to specify a delivery address for each products I order.'}</label>
+					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I want to specify a delivery address for each product I order.'}</label>
 				</div>
 				<div class="description_off">
 					<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}">
-						{l s='Specify a delivery address for each products.'}
+						{l s='Specify a delivery address for each product.'}
 					</a>
 				</div>
 			</div>
@@ -218,7 +218,7 @@
 		</p>
 		<p class="checkbox addressesAreEquals" {if $cart->isVirtualCart()}style="display:none;"{/if}>
 			<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" {if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1}checked="checked"{/if} />
-			<label for="addressesAreEquals">{l s='Use the same address for billing.'}</label>
+			<label for="addressesAreEquals">{l s='Use the delivery address as the billing address.'}</label>
 		</p>
 
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>

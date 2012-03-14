@@ -46,7 +46,6 @@ $_LANGPDF['PDF_invoiceebaee01719541f61281c16ba22ebbfde'] = 'Total productos (IVA
 $_LANGPDF['PDF_invoicea0eb2cd0b3deb5444102e9a82edae11e'] = 'Total productos';
 $_LANGPDF['PDF_invoicef3e545fccad720e197b9ca3b8b658440'] = 'Total descuentos (IVA incluido)';
 $_LANGPDF['PDF_invoice9cc000efe3e783af5bf114f2e6573156'] = 'Total embalaje';
-$_LANGPDF['PDF_invoicef4e8b53a114e5a17d051ab84d326cae5'] = 'Gastos de envío';
 $_LANGPDF['PDF_invoice96b0141273eabab320119c467cdcaf17'] = 'Total';
 $_LANGPDF['PDF_invoice54732c5d0a3f0d597312b0ee55d71fca'] = '(IVA incluido)';
 $_LANGPDF['PDF_invoiceac5831c7ec2fed92c7bb73e9962003a4'] = '(sin IVA)';

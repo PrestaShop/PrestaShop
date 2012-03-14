@@ -29,7 +29,7 @@
 {block name="override_tpl"}
 	
 	<div id="container-customer">
-		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='from'} {$cart->date_upd}</span></h2>
+		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='on'} {$cart->date_upd}</span></h2>
 				<div class="separation"></div>
 	
 	<div class="info-customer-left">
@@ -39,9 +39,9 @@
 			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></span>
 			{l s='#'}{$customer->id}<br />
 			<a style="text-decoration: underline; color:#268CCD;" href="mailto:{$customer->email}">{$customer->email}</a>	<br /><br />
-			{l s='Account registered:'} {dateFormat date=$customer->date_add}<br />
+			{l s='Account registration date:'} {dateFormat date=$customer->date_add}<br />
 			{l s='Valid orders placed:'} <b>{$customer_stats.nb_orders}</b><br />
-			{l s='Total paid since registration:'} <b>{displayWtPriceWithCurrency price=$customer_stats.total_orders currency=$currency}</b><br />
+			{l s='Total spent since registration:'} <b>{displayWtPriceWithCurrency price=$customer_stats.total_orders currency=$currency}</b><br />
 		{else}
 			{l s='Guest not registered'}
 		{/if}
@@ -56,7 +56,7 @@
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
 			{l s='No order created from this cart'}</span>
-			<p><a class="button" href="{$link->getAdminLink('AdminOrders')}&id_cart={$cart->id}&addorder">{l s='Create an order with this cart'}</a></p>
+			<p><a class="button" href="{$link->getAdminLink('AdminOrders')}&id_cart={$cart->id}&addorder">{l s='Create an order with from cart'}</a></p>
 		{/if}
 	</div>
 	<br style="clear:both;" />
@@ -70,8 +70,8 @@
 			<tr>
 			<th height="39" align="center" style="width: 60px">&nbsp;</th>
 			<th>{l s='Product'}</th>
-			<th style="width: 80px; text-align: center">{l s='UP'}</th>
-			<th style="width: 20px; text-align: center">{l s='Qty'}</th>
+			<th style="width: 80px; text-align: center">{l s='Unit price'}</th>
+			<th style="width: 20px; text-align: center">{l s='Quantity'}</th>
 			<th style="width: 30px; text-align: center">{l s='Stock'}</th>
 			<th style="width: 90px; text-align: right; font-weight:bold;">{l s='Total'}</th>
 		</tr>
@@ -182,7 +182,7 @@
 	</table>
 	{/if}
 	<div style="float:left; margin-top:15px;">
-	{l s='According to the group of this customer, prices are printed:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='tax excluded'}{else}{l s='tax included'}{/if}</b>
+	{l s='For this customer\'s group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='tax excluded'}{else}{l s='tax included'}{/if}</b>
 </div>
 	
 	<div class="clear" style="height:20px;">&nbsp;</div>
