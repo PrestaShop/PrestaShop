@@ -435,7 +435,6 @@ class AdminShopControllerCore extends AdminController
                 (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
             'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
                 (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
-			'active' => (Tools::getValue('active') ? true : false),
 			'id_theme_checked' => (isset($obj->id_theme) ? $obj->id_theme : $id_theme)
 		);
 
