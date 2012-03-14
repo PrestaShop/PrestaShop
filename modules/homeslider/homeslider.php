@@ -27,7 +27,7 @@
 
 /**
  * @since 1.5.0
- * @version 1.1 (2011-11-23)
+ * @version 1.2 (2012-03-14)
  */
 
 if (!defined('_PS_VERSION_'))
@@ -43,7 +43,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -67,6 +67,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '1300');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '7700');
+			$res &= Configuration::updateValue('HOMESLIDER_LOOP', '1');
 			/* Creates tables */
 			$res &= $this->createTables();
 
@@ -117,6 +118,7 @@ class HomeSlider extends Module
 			$res &= Configuration::deleteByName('HOMESLIDER_HEIGHT');
 			$res &= Configuration::deleteByName('HOMESLIDER_SPEED');
 			$res &= Configuration::deleteByName('HOMESLIDER_PAUSE');
+			$res &= Configuration::deleteByName('HOMESLIDER_LOOP');
 			return $res;
 		}
 		return false;
@@ -235,6 +237,17 @@ class HomeSlider extends Module
 		<label>'.$this->l('Pause:').'</label>
 		<div class="margin-form">
 			<input type="text" name="HOMESLIDER_PAUSE" id="pause" size="3" value="'.Configuration::get('HOMESLIDER_PAUSE').'" /> ms
+		</div>';
+		/* Loop field */
+		$this->_html .= '
+		<label for="loop_on">'.$this->l('Loop:').'</label>
+		<div class="margin-form">
+			<img src="../img/admin/enabled.gif" alt="Yes" title="Yes" />
+			<input type="radio" name="HOMESLIDER_LOOP" id="loop_on" '.(Configuration::get('HOMESLIDER_LOOP') == 1 ? 'checked="checked"' : '').' value="1" />
+			<label class="t" for="loop_on">'.$this->l('Yes').'</label>
+			<img src="../img/admin/disabled.gif" alt="No" title="No" style="margin-left: 10px;" />
+			<input type="radio" name="HOMESLIDER_LOOP" id="loop_off" '.(Configuration::get('HOMESLIDER_LOOP') == 0 ? 'checked="checked" ' : '').' value="0" />
+			<label class="t" for="loop_off">'.$this->l('No').'</label>
 		</div>';
 		/* Save */
 		$this->_html .= '
@@ -505,6 +518,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', (int)Tools::getValue('HOMESLIDER_HEIGHT'));
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', (int)Tools::getValue('HOMESLIDER_SPEED'));
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', (int)Tools::getValue('HOMESLIDER_PAUSE'));
+			$res &= Configuration::updateValue('HOMESLIDER_LOOP', (int)Tools::getValue('HOMESLIDER_LOOP'));
 			if (!$res)
 				$errors .= $this->displayError($this->l('Configuration could not be updated'));
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
@@ -616,7 +630,8 @@ class HomeSlider extends Module
 			'width' => Configuration::get('HOMESLIDER_WIDTH'),
 			'height' => Configuration::get('HOMESLIDER_HEIGHT'),
 			'speed' => Configuration::get('HOMESLIDER_SPEED'),
-			'pause' => Configuration::get('HOMESLIDER_PAUSE')
+			'pause' => Configuration::get('HOMESLIDER_PAUSE'),
+			'loop' => Configuration::get('HOMESLIDER_LOOP'),
 		);
 
 		$slides = $this->getSlides(true);
