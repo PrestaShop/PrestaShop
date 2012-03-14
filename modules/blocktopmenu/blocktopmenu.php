@@ -538,7 +538,7 @@ class Blocktopmenu extends Module
 
 	private function getCategory($id_category, $id_lang = false)
 	{
-        $id_lang = $id_lang ? $id_lang : Shop::getContextShopID();
+        $id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
         $category = new Category($id_category, $id_lang);
 
         if (is_null($category->id))
