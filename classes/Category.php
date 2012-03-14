@@ -1367,25 +1367,23 @@ class CategoryCore extends ObjectModel
 	 */
 	public function addShop($id_shop)
 	{
-		$sql = '
-		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES
-		';
-		$datas = '';
+		$data = array();
 		if (!$id_shop)
 		{
-			foreach (Shop::getShops(true) as $shop)
+			foreach (Shop::getShops(false) as $shop)
 				if (!$this->existsInShop($shop['id_shop']))
-					$datas .= '('.(int)$this->id.', '.(int)$shop['id_shop'].'),';
-			// removing last comma to avoid SQL error
-			$datas = substr($datas, 0, strlen($datas) - 1);
-		} else
-			if (!$this->existsInShop($id_shop))
-				$datas .= '('.(int)$this->id.', '.(int)$id_shop.')';
+					$data[] = array(
+						'id_category' => (int)$this->id,
+						'id_shop' => (int)$shop['id_shop'],
+					);
+		}
+		else if (!$this->existsInShop($id_shop))
+			$data[] = array(
+				'id_category' => (int)$this->id,
+				'id_shop' => (int)$id_shop,
+			);
 
-		if (empty($datas))
-			return false;
-		else
-			return Db::getInstance()->execute($sql.$datas);
+		return Db::getInstance()->insert('category_shop', $data);
 	}
 
 	public static function getRootCategories($id_lang = null, $active = true)
