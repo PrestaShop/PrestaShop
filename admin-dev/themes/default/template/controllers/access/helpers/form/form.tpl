@@ -382,7 +382,7 @@
 				<div class="clear">&nbsp;</div>
 
 			{else}
-				{l s='Administrator permissions can\'t be modified.'}
+				{l s='Administrator permissions cannot be modified.'}
 			{/if}
 
 		</div>

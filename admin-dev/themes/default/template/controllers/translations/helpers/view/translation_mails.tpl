@@ -38,7 +38,7 @@
 
 			<b>{$limit_warning['post.max_vars']}</b>{l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin post and request limit to'}
+			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
 		{else}
 			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
@@ -58,18 +58,18 @@
 		<h2>{l s='Core e-mails:'}</h2>
 		{$mail_content}
 
-		<h2>{l s='Modules e-mails:'}</h2>
+		<h2>{l s='Module e-mails:'}</h2>
 		{foreach $module_mails as $module_name => $mails}
 			{$mails['display']}
 		{/foreach}
 		
 		{if !empty($theme_mails)}
-			<h2>{l s='Themes e-mails:'}</h2>
+			<h2>{l s='Theme e-mails:'}</h2>
 			{$bool_title = false}
 			{foreach $theme_mails as $theme_or_module_name => $mails}
 				{if $theme_or_module_name != 'theme_mail' && !$bool_title}
 					{$bool_title = true}
-					<h2>{l s='E-mails modules in theme:'}</h2>
+					<h2>{l s='E-mail modules in theme:'}</h2>
 				{/if}
 				{$mails['display']}
 			{/foreach}

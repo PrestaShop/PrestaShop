@@ -61,7 +61,7 @@
 								<th style="width: 50px">{l s='UPC'}</th>
 								<th style="width: 150px">{l s='Supplier Reference'}</th>
 								<th>{l s='Name'}</th>
-								<th style="width: 100px">{l s='Unit Price TE'}</th>
+								<th style="width: 100px">{l s='Unit Price (tax excl.)'}</th>
 								<th style="width: 100px">{l s='Quantity'}</th>
 								<th style="width: 100px">{l s='Discount rate'}</th>
 								<th style="width: 100px">{l s='Tax rate'}</th>
@@ -139,7 +139,7 @@
 			// check if it's possible to add the product
 			if (product_infos == null || $('#cur_product_name').val() == '')
 			{
-				jAlert('{l s='Thanks to select at least one product.'}');
+				jAlert('{l s='Please select at least one product.'}');
 				return false;
 			}
 

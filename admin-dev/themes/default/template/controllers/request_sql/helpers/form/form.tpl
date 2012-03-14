@@ -91,7 +91,7 @@
 			var table = $('#selectTables select').val();
 
 			if (!table)
-				jAlert("{l s='Please, choose table.'}");
+				jAlert("{l s='Please choose table.'}");
 			else
 				AddRequestSql(table);
 		});

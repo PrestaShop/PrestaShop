@@ -98,7 +98,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '2'
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
-						'title' => $this->l('Limit upload file value'),
+						'title' => $this->l('File value upload limit'),
 						'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or equal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
@@ -107,7 +107,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'default' => '1'
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
-						'title' => $this->l('Limit upload image value'),
+						'title' => $this->l('Image value upload limit'),
 						'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or equal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
@@ -131,7 +131,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_HIDE_OPTIMIZATION_TIPS' => array(
 						'title' => $this->l('Hide optimization tips'),
-						'desc' => $this->l('Hide optimization tips on the back office homepage'),
+						'desc' => $this->l('Hide optimization tips on the Back Office homepage'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -144,21 +144,21 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),
-						'desc' => $this->l('This will display notifications when new orders will be made on your shop'),
+						'desc' => $this->l('This will display notifications when new orders are made on your shop'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHOW_NEW_CUSTOMERS' => array(
 						'title' => $this->l('Show notifications for new customers'),
-						'desc' => $this->l('This will display notifications when new customers will register on your shop'),
+						'desc' => $this->l('This will display notifications when new customers register on your shop'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_SHOW_NEW_MESSAGES' => array(
 						'title' => $this->l('Show notifications for new messages'),
-						'desc' => $this->l('This will display notifications when new messages will be posted on your shop'),
+						'desc' => $this->l('This will display notifications when new messages are posted on your shop'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -176,7 +176,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 
 		if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size || Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size)
 		{
-			$this->errors[] = Tools::displayError('The limit choosen is superior to the server\'s maximum upload file You need to improve the limit of your server.');
+			$this->errors[] = Tools::displayError('The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.');
 			return;
 		}
 

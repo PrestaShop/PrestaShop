@@ -61,7 +61,7 @@ class AdminContactsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'desc' => $this->l('Contact name, e.g., Technical Support'),
+					'desc' => $this->l('Contact name (e.g. Technical Support)'),
 				),
 				array(
 					'type' => 'text',
@@ -73,12 +73,12 @@ class AdminContactsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Save in Customer Service?'),
+					'label' => $this->l('Save messages?'),
 					'name' => 'customer_service',
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('The messages will be saved in the Customer Service tab'),
+					'desc' => $this->l('If enabled, all messages will be saved in the \\"Customer Service\\" tab'),
 					'values' => array(
 						array(
 							'id' => 'customer_service_on',

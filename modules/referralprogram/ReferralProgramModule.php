@@ -176,7 +176,7 @@ class ReferralProgramModule extends ObjectModel
 	public static function isEmailExists($email, $getId = false, $checkCustomer = true)
 	{
 		if (empty($email) OR !Validate::isEmail($email))
-			die (Tools::displayError('Email invalid.'));
+			die (Tools::displayError('E-mail invalid.'));
 
 		if ($checkCustomer === true AND Customer::customerExists($email))
 			return false;

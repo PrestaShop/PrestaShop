@@ -80,17 +80,17 @@
 		<div style="margin:30px;">
 			<p><span>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}<br /><br />
 				<ul>
-					<li>{l s='delete the /install folder'}</li>
-					<li>{l s='renamed the /admin folder (eg.) /admin'}{$randomNb}</li>
+					<li>{l s='deleted the /install folder'}</li>
+					<li>{l s='renamed the /admin folder (e.g. /admin123)'}{$randomNb}</li>
 				</ul>
-			<br />{l s='Please then access this page by the new url (eg.) http://www.domain.tld/admin'}{$randomNb}</span></p>
+			<br />{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin123)'}{$randomNb}</span></p>
 		</div>
 	{/if}
 		<div id="forgot_password" style="display:none">
 			<h1>{$shop_name}</h1>
 			<form action="" method="post" onsubmit="doAjaxForgot();return false;">
 				<div class="page-title center">{l s='Forgot your password?'}</div><br />
-				<span style="font-weight: bold;">{l s='Please, enter your e-mail address the one you wrote during your registration in order to receive your access codes by e-mail'}</span><br />
+				<span style="font-weight: bold;">{l s='Please enter the e-mail address you provided during the registration process in order to receive your access code by e-mail'}</span><br />
 				<input style="margin-top:20px" type="text" name="email_forgot" id="email_forgot" class="input" />
 				<div id="submit">
 					<input type="submit" name="Submit" value="{l s='Send'}" class="button" style="float:left" />

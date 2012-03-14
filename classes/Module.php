@@ -933,7 +933,7 @@ abstract class ModuleCore
 				$memory_threshold = (Tools::isX86_64arch() ? 3 : 1.5);
 				if (($memory_limit - $current_memory) <= ($memory_threshold * 1024 * 1024))
 				{
-					$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restriction reason, please increase your memory_limit value on your server configuration');
+					$errors[] = Tools::displayError('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration');
 					break;
 				}
 			}
@@ -1121,7 +1121,7 @@ abstract class ModuleCore
 
 		if ($errors)
 		{
-			echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) couldn\'t be loaded').':</h3><ol>';
+			echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) could not be loaded').':</h3><ol>';
 			foreach ($errors as $error)
 				echo '<li>'.$error.'</li>';
 			echo '</ol></div>';

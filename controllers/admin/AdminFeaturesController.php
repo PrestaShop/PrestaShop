@@ -349,7 +349,7 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 		}
 		else
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -410,7 +410,7 @@ class AdminFeaturesControllerCore extends AdminController
 				{
 					// Update
 					if (!$feature_value->update())
-						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current feature value');
 					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&id_feature='.(int)Tools::getValue('id_feature').'&conf=3&update'.$this->table.'&token='.$this->token);
 					else
@@ -420,7 +420,7 @@ class AdminFeaturesControllerCore extends AdminController
 				{
 					// Create
 					if (!$feature_value->add())
-						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current feature value');
 					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&id_feature='.(int)Tools::getValue('id_feature').'&conf=3&update'.$this->table.'&token='.$this->token);
 					else

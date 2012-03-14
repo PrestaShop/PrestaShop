@@ -35,7 +35,7 @@
 			<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
 			<label class="t" for="{$key}_off"> {l s='No'}</label>
 		{else}
-			<span class="warning_mod_rewrite" style="display:block;height:15px">{l s='URL rewriting (mod_rewrite) is not active on your server. If you want to use Friendly URL you have to active this mod.'}</span>
+			<span class="warning_mod_rewrite" style="display:block;height:15px">{l s='URL rewriting (mod_rewrite) is not active on your server. If you want to use Friendly URL you must activate this mod.'}</span>
 			<div class="clear"></div>
 		{/if}
 	{else}

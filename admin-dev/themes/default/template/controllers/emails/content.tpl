@@ -25,11 +25,11 @@
 *}
 
 <script type="text/javascript">
-	var textMsg = "{l s='This is a test message, your server is now available to send email'}";
+	var textMsg = "{l s='This is a test message, your server is now configured to send e-mail'}";
 	var textSubject = "{l s='Test message - Prestashop'}";
-	var textSendOk = "{l s='Mail is sent'}";
+	var textSendOk = "{l s='A test e-mail has been sent to the e-mail address you specified'}";
 	var textSendError= "{l s='Error: please check your configuration'}";
-	var errorMail = "{l s='This email address is wrong!'}";
+	var errorMail = "{l s='This e-mail address is invalid'}";
 	$(document).ready(function() {
 		if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)
 			$('#smtp').show();

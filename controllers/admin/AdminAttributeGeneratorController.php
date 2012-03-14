@@ -223,9 +223,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').'
+			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'
 				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
-					$this->l('Performances').'</a>');
+					$this->l('Performance').'</a>');
 			return;
 		}
 

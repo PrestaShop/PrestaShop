@@ -77,7 +77,7 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td style="font-size: 0.85em;">{l s='Sample: 10:00AM - 9:30PM'}</td>
+					<td style="font-size: 0.85em;">{l s='e.g. 10:00AM - 9:30PM'}</td>
 				</tr>
 
 				{foreach $fields_value.days as $k => $value}

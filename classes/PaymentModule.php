@@ -232,7 +232,7 @@ abstract class PaymentModuleCore extends Module
 				if (!$order_creation_failed & isset($order->id))
 				{
 					if (!$secure_key)
-						$message .= '<br />'.Tools::displayError('Warning : the secure key is empty, check your payment account before validation');
+						$message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');
 					// Optional message to attach to this order
 					if (isset($message) & !empty($message))
 					{

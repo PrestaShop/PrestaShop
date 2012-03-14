@@ -134,7 +134,7 @@ class AdminProductsControllerCore extends AdminController
 				'align' => 'right',
 				'filter_key' => 'sav!quantity',
 				'orderby' => true,
-				'hint' => $this->l('This is the availble quantity in the current shop/group'),
+				'hint' => $this->l('This is the quantity available in the current shop/group'),
 			),
 			'active' => array(
 				'title' => $this->l('Displayed'),
@@ -337,14 +337,14 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('Invalid description');
 		}
 		if (!$is_attachment_name_valid)
-			$this->errors[] = Tools::displayError('Attachment Name Required');
+			$this->errors[] = Tools::displayError('Attachment name required');
 
 		if (empty($this->errors))
 		{
 			if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
 			{
 				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-					$this->errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '').$this->l('kb');
+					$this->errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kB').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '').$this->l('kB');
 				else
 				{
 					do $uniqid = sha1(microtime());
@@ -359,7 +359,7 @@ class AdminProductsControllerCore extends AdminController
 				$max_upload = (int)ini_get('upload_max_filesize');
 				$max_post = (int)ini_get('post_max_size');
 				$upload_mb = min($max_upload, $max_post);
-				$this->errors[] = $this->l('the File').' <b>'.$_FILES['attachment_file']['name'].'</b> '.$this->l('exceeds the size allowed by the server, this limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
+				$this->errors[] = $this->l('the File').' <b>'.$_FILES['attachment_file']['name'].'</b> '.$this->l('exceeds the size allowed by the server, this limit is set to').' <b>'.$upload_mb.$this->l('MB').'</b>';
 			}
 			else
 				$this->errors[] = Tools::displayError('File is missing');
@@ -510,7 +510,7 @@ class AdminProductsControllerCore extends AdminController
 				Image::deleteCover($image->id_product);
 				$image->cover = 1;
 				if (!$image->update())
-					$this->errors[] = Tools::displayError('Cannot change the product cover');
+					$this->errors[] = Tools::displayError('Cannot change the product cover image');
 				else
 				{
 					$productId = (int)Tools::getValue('id_product');
@@ -823,7 +823,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 		else
-			$error = Tools::displayError('You do not have permission to delete here.');
+			$error = Tools::displayError('You do not have permission to delete this.');
 
 		if (isset($error))
 			$json = array(
@@ -1334,13 +1334,13 @@ class AdminProductsControllerCore extends AdminController
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
-			$this->errors[] = Tools::displayError('Wrong ID\'s');
+			$this->errors[] = Tools::displayError('Wrong IDs');
 		elseif ((empty($price) && empty($reduction)) || (!empty($price) && !Validate::isPrice($price)) || (!empty($reduction) && !Validate::isPrice($reduction)))
-			$this->errors[] = Tools::displayError('Invalid price/reduction amount');
+			$this->errors[] = Tools::displayError('Invalid price/discount amount');
 		elseif (!Validate::isUnsignedInt($from_quantity))
 			$this->errors[] = Tools::displayError('Invalid quantity');
 		elseif ($reduction && !Validate::isReductionType($reduction_type))
-			$this->errors[] = Tools::displayError('Please select a reduction type (amount or percentage)');
+			$this->errors[] = Tools::displayError('Please select a discount type (amount or percentage)');
 		elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to)))
 			$this->errors[] = Tools::displayError('Wrong from/to date');
 		elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to))
@@ -1627,18 +1627,18 @@ class AdminProductsControllerCore extends AdminController
 			{
 				if (Tools::getValue('id_'.$this->table) && $field == 'passwd')
 					continue;
-				$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
+				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
 			}
 
 		/* Check multilingual required fields */
 		foreach ($rules['requiredLang'] as $fieldLang)
 			if (!Tools::getValue($fieldLang.'_'.$default_language->id))
-				$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$default_language->name;
+				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$default_language->name;
 
 		/* Check fields sizes */
 		foreach ($rules['size'] as $field => $maxLength)
 			if ($value = Tools::getValue($field) && Tools::strlen($value) > $maxLength)
-				$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
 
 		if (Tools::getIsset('description_short'))
 		{
@@ -1652,12 +1652,12 @@ class AdminProductsControllerCore extends AdminController
 		foreach ($languages as $language)
 			if ($value = Tools::getValue('description_short_'.$language['id_lang']))
 				if (Tools::strlen(strip_tags($value)) > $limit)
-					$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : '.$limit.' '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
+					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : '.$limit.' '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
 		/* Check multilingual fields sizes */
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
 				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']) && Tools::strlen($value) > $maxLength)
-					$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
 		if (isset($_POST['description_short']))
 			$_POST['description_short'] = $saveShort;
 
@@ -1665,14 +1665,14 @@ class AdminProductsControllerCore extends AdminController
 		foreach ($rules['validate'] as $field => $function)
 			if ($value = Tools::getValue($field))
 				if (!Validate::$function($value))
-					$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
+					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
 
 		/* Check multilingual fields validity */
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
 				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']))
 					if (!Validate::$function($value))
-						$this->errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
+						$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
 
 		/* Categories */
 		$productCats = '';
@@ -1722,12 +1722,12 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if (!Tools::getValue('virtual_product_name_attribute') && !empty($id_product_attribute))
 					{
-						$this->errors[] = $this->l('the field').' <b>'.$this->l('display filename attribute').'</b> '.$this->l('is required');
+						$this->errors[] = $this->l('this field').' <b>'.$this->l('display filename attribute').'</b> '.$this->l('is required');
 						return false;
 					}
 					elseif (!empty($id_product_attribute))
 					{
-						$this->errors[] = $this->l('the field').' <b>'.$this->l('display filename').'</b> '.$this->l('is required');
+						$this->errors[] = $this->l('this field').' <b>'.$this->l('display filename').'</b> '.$this->l('is required');
 						return false;
 					}
 				}
@@ -1741,13 +1741,13 @@ class AdminProductsControllerCore extends AdminController
 					{
 						if (!empty($edit) && !empty($id_product_attribute))
 						{
-							$this->errors[] = $this->l('the field').' <b>'.$this->l('number of days attribute').'</b> '.$this->l('is required');
+							$this->errors[] = $this->l('this field').' <b>'.$this->l('number of days attribute').'</b> '.$this->l('is required');
 							return false;
 						}
 					}
 					elseif (!empty($id_product_attribute))
 					{
-						$this->errors[] = $this->l('the field').' <b>'.$this->l('number of days').'</b> '.$this->l('is required');
+						$this->errors[] = $this->l('this field').' <b>'.$this->l('number of days').'</b> '.$this->l('is required');
 						return false;
 					}
 				}
@@ -1760,12 +1760,12 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if (!Tools::getValue('virtual_product_expiration_date_attribute'))
 					{
-						$this->errors[] = $this->l('the field').' <b>'.$this->l('expiration date attribute').'</b> '.$this->l('is required');
+						$this->errors[] = $this->l('this field').' <b>'.$this->l('expiration date attribute').'</b> '.$this->l('is required');
 						return false;
 					}
 					elseif (!empty($id_product_attribute))
 					{
-						$this->errors[] = $this->l('the field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
+						$this->errors[] = $this->l('this field').' <b>'.$this->l('expiration date').'</b> '.$this->l('is not valid');
 						return false;
 					}
 				}
@@ -2055,7 +2055,7 @@ class AdminProductsControllerCore extends AdminController
 		$content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
 				<p>
 				<span style="float: left">
-				'.$this->l('Your product will be saved as draft').'
+				'.$this->l('Your product will be saved as a draft').'
 				</span>
 				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
@@ -2544,7 +2544,7 @@ class AdminProductsControllerCore extends AdminController
 			));
 		}
 		else
-			$this->displayWarning($this->l('You must save this product before manage accounting.'));
+			$this->displayWarning($this->l('You must save this product before managing accounting.'));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
@@ -2751,7 +2751,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& !empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
+			$msg = sprintf(Tools::displayError('This file \\"%s\\" is missing'), $product->productDownload->display_filename);
 		else
 			$msg = '';
 
@@ -2785,7 +2785,7 @@ class AdminProductsControllerCore extends AdminController
 				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename;
 				if (!file_exists($exists_file2) && !empty($product_download_attribute->id_product_attribute))
 				{
-					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_download_attribute->display_filename);
+					$msg = sprintf(Tools::displayError('This file \\"%s\\" is missing'), $product_download_attribute->display_filename);
 					$error .= '<p class="alert" id="file_missing">
 						<b>'.$msg.' :<br/>
 						'.realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename.'</b>
@@ -2936,9 +2936,9 @@ class AdminProductsControllerCore extends AdminController
 
 		$content .= '
 		<div class="separation"></div>
-		<h4>'.$this->l('Priorities management').'</h4>
+		<h4>'.$this->l('Priority management').'</h4>
 		<div class="hint" style="display:block;min-height:0;">
-				'.$this->l('Sometimes one customer can fit in multiple specific prices rules. Priorities allow you to define which rule applies to the customer.').'
+				'.$this->l('Sometimes one customer can fit into multiple specific price rules. Priorities allow you to define which rule applies to the customer.').'
 		</div
 	<br /><br />
 		<label>'.$this->l('Priorities:').'</label>
@@ -3561,7 +3561,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->displayWarning($this->l('If you wish to use the advanced stock management, you have to:'));
 				$this->displayWarning('- '.$this->l('associate your products with warehouses'));
 				$this->displayWarning('- '.$this->l('associate your warehouses with carriers'));
-				$this->displayWarning('- '.$this->l('associate your warehouses with the appropriates shops'));
+				$this->displayWarning('- '.$this->l('associate your warehouses with the appropriate shops'));
 			}
 
 			$pack_quantity = null;
@@ -3990,7 +3990,7 @@ class AdminProductsControllerCore extends AdminController
 		$content = '<div class="warn">
 				<p>
 				<span style="float: left">
-				'.$this->l('Your product will be saved as draft').'
+				'.$this->l('Your product will be saved as a draft').'
 				</span>
 				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />

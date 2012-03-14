@@ -65,8 +65,8 @@ class AdminMetaControllerCore extends AdminController
 				'mod_rewrite' => $mod_rewrite
 			),
 			'PS_CANONICAL_REDIRECT' => array(
-				'title' => $this->l('Automatically redirect to Canonical url'),
-				'desc' => $this->l('Recommended but your theme must be compliant'),
+				'title' => $this->l('Automatically redirect to Canonical URL'),
+				'desc' => $this->l('Recommended, but your theme must be compliant'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
@@ -77,7 +77,7 @@ class AdminMetaControllerCore extends AdminController
 		if ($this->checkConfiguration($this->ht_file))
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
 				'title' => $this->l('Disable apache multiviews'),
-				'desc' => $this->l('Enable this option only if you have problems with some pages URL rewriting.'),
+				'desc' => $this->l('Enable this option only if you have problems with URL rewriting on some pages.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -85,23 +85,23 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$url_description = $this->l('Before being able to use this tool, you need to:');
-			$url_description .= '<br />- '.$this->l('create a .htaccess blank file your root dir');
+			$url_description .= '<br />- '.$this->l('create a blank .htaccess in your root directory');
 			$url_description .= '<br />- '.$this->l('give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		// Options to generate robot.txt
-		$robots_description = $this->l('Your file robots.txt MUST be in your website\'s root directory and nowhere else.');
-		$robots_description .= '<br />'.$this->l('eg: http://www.yoursite.com/robots.txt');
+		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else.');
+		$robots_description .= '<br />'.$this->l('e.g. http://www.yoursite.com/robots.txt');
 		if ($this->checkConfiguration($this->rb_file))
 		{
-			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase your old robots.txt file):');
+			$robots_description .= '<br />'.$this->l('Generate your \\"robots.txt\\" file by clicking on the following button (this will erase your old robots.txt file):');
 			$robots_submit = array('name' => 'submitRobots', 'title' => $this->l('Generate robots.txt file'));
 		}
 		else
 		{
 			$robots_description .= '<br />'.$this->l('Before being able to use this tool, you need to:');
-			$robots_description .= '<br />- '.$this->l('create a robots.txt blank file in your root dir');
-			$robots_description .= '<br />- '.$this->l(' give it write permissions (CHMOD 666 on Unix system)');
+			$robots_description .= '<br />- '.$this->l('create a blank robots.txt file in your root directory');
+			$robots_description .= '<br />- '.$this->l('give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		$robots_options = array(
@@ -115,7 +115,7 @@ class AdminMetaControllerCore extends AdminController
 		// List of options
 		$this->options = array(
 			'general' => array(
-				'title' =>	$this->l('URLs Setup'),
+				'title' =>	$this->l('Set up URLs'),
 				'description' => $url_description,
 				'fields' =>	$general_fields,
 				'submit' => array()
@@ -123,7 +123,7 @@ class AdminMetaControllerCore extends AdminController
 			'robots' => $robots_options,
 			'routes' => array(
 				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('You can change here the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add \\"-hey-my-title\\" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
 				'fields' => array(),
 			),
 		);
@@ -196,7 +196,7 @@ class AdminMetaControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Page\'s title:'),
+					'label' => $this->l('Page title:'),
 					'name' => 'title',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
@@ -209,7 +209,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'description',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('A short description'),
+					'desc' => $this->l('A short description of your shop'),
 					'size' => 50
 				),
 				array(
@@ -218,7 +218,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('List of keywords'),
+					'desc' => $this->l('List of keywords for search engines'),
 					'size' => 50
 				),
 				array(
@@ -228,7 +228,7 @@ class AdminMetaControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+					'desc' => $this->l('e.g. \\"contacts\\" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
 			),
@@ -259,7 +259,7 @@ class AdminMetaControllerCore extends AdminController
 
 			if (!$defaultLangIsValidated && !$englishLangIsValidated)
 			{
-				$this->errors[] = Tools::displayError('Url rewrite field must be filled at least in default or english language.');
+				$this->errors[] = Tools::displayError('URL rewrite field must be filled at least in default or English language.');
 				return false;
 			}
 

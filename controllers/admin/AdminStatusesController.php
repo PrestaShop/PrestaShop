@@ -194,7 +194,7 @@ class AdminStatusesControllerCore extends AdminController
 					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
-					'desc' => $this->l('Order status (e.g., \'Pending\')')
+					'desc' => $this->l('Order status (e.g. \'Pending\')')
 				),
 				array(
 					'type' => 'file',
@@ -207,7 +207,7 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Color:'),
 					'name' => 'color',
 					'size' => 30,
-					'desc' => $this->l('Status will be highlighted in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+					'desc' => $this->l('Status will be highlighted in this color. HTML colors only (e.g.').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'checkbox',
@@ -261,7 +261,7 @@ class AdminStatusesControllerCore extends AdminController
 						'query' => array(
 							array(
 								'id' => 'on',
-								'name' => $this->l('Send e-mail to customer when order is changed to this status'),
+								'name' => $this->l('Send e-mail to customer when order status is changed'),
 								'val' => '1'
 							),
 						),
@@ -314,7 +314,7 @@ class AdminStatusesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -360,7 +360,7 @@ class AdminStatusesControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -496,7 +496,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			// Update object
 			if (!$order_return_state->save())
-				$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current order return state');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order return state');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}

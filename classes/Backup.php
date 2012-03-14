@@ -103,7 +103,7 @@ class BackupCore
 		$backupdir = realpath(_PS_ADMIN_DIR_.self::$backupDir);
 
 		if ($backupdir === false)
-			die(Tools::displayError('Backups directory does not exist.'));
+			die(Tools::displayError('\\"Backup\\" directory does not exist.'));
 
 		// Check the realpath so we can validate the backup file is under the backup directory
 		if (!empty($filename))

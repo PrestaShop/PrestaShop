@@ -92,7 +92,7 @@ class AdminLanguagesControllerCore extends AdminController
 		);
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-	 	$this->specificConfirmDelete = $this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?');
+	 	$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to delete this language?');
 
 		parent::__construct();
 	}
@@ -133,7 +133,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 2,
-					'desc' => $this->l('2-letter ISO code (e.g., fr, en, de)')
+					'desc' => $this->l('2-letter ISO code (e.g. fr, en, de)')
 				),
 				array(
 					'type' => 'text',
@@ -142,7 +142,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('Full language code (e.g., en-us, pt-br)')
+					'desc' => $this->l('Full language code (e.g. en-us, pt-br)')
 				),
 				array(
 					'type' => 'text',
@@ -150,7 +150,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_lite',
 					'required' => true,
 					'size' => 15,
-					'desc' => $this->l('Date format, lite (e.g., Y-m-d, d/m/Y)')
+					'desc' => $this->l('Short date format (e.g. Y-m-d, d/m/Y)')
 				),
 				array(
 					'type' => 'text',
@@ -158,7 +158,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_full',
 					'required' => true,
 					'size' => 25,
-					'desc' => $this->l('Date format, full (e.g., Y-m-d H:i:s, d/m/Y H:i)')
+					'desc' => $this->l('Full date format (e.g., Y-m-d H:i:s, d/m/Y H:i)')
 				),
 				array(
 					'type' => 'file',
@@ -169,10 +169,10 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('"No-picture" image:'),
+					'label' => $this->l('\\"No-picture\\" image:'),
 					'name' => 'no-picture',
 					'required' => true,
-					'desc' => $this->l('Image displayed when "no picture found"')
+					'desc' => $this->l('Image displayed when \\"no picture found\\"')
 				),
 				array(
 					'type' => 'radio',
@@ -193,8 +193,8 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('To active if this language is a right to left language').' '.
-							$this->l('(Experimental: your theme must be compliant with RTL language)')
+					'desc' => $this->l('Enable if this language is read from right to left').' '.
+							$this->l('(Experimental: your theme must be compliant with RTL languages)')
 				),
 				array(
 					'type' => 'radio',
@@ -252,7 +252,7 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				'list_files' => array(
 					array(
-						'label' => $this->l('Translations files:'),
+						'label' => $this->l('Translation files:'),
 						'files' => Language::getFilesList($obj->iso_code, _THEME_NAME_, false, false, 'tr', true)
 					),
 					array(
@@ -286,9 +286,9 @@ class AdminLanguagesControllerCore extends AdminController
 				{
 					// English is needed by the system (ex. translations)
 					if ($object->id == Language::getIdByIso('en'))
-						$this->errors[] = $this->l('You cannot delete the English language as it is a system requirement, you can only deactivate it.');
+						$this->errors[] = $this->l('You cannot delete the English language because it is a system requirement, you can only deactivate it.');
 					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
-						$this->errors[] = $this->l('you cannot delete the default language');
+						$this->errors[] = $this->l('You cannot delete the default language');
 					else if ($object->id == $this->context->language->id)
 						$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 					else if ($this->deleteNoPictureImages((int)Tools::getValue('id_lang')) && $object->delete())
@@ -306,7 +306,7 @@ class AdminLanguagesControllerCore extends AdminController
 		 	if ($this->tabAccess['delete'] === '1')
 			{
 				if (in_array(Configuration::get('PS_LANG_DEFAULT'), $_POST[$this->table.'Box']))
-					$this->errors[] = $this->l('you cannot delete the default language');
+					$this->errors[] = $this->l('You cannot delete the default language');
 				else if (in_array($this->context->language->id, $_POST[$this->table.'Box']))
 					$this->errors[] = $this->l('you cannot delete the language currently in use, please change languages before deleting');
 				else
@@ -339,7 +339,7 @@ class AdminLanguagesControllerCore extends AdminController
 					else
 					{
 						$this->validateRules();
-						$this->errors[] = Tools::displayError('Flag and No-Picture image fields are required.');
+						$this->errors[] = Tools::displayError('Flag and \\"No picture\\" image fields are required.');
 					}
 				}
 				else
@@ -408,20 +408,20 @@ class AdminLanguagesControllerCore extends AdminController
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your product folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your category folder.');
+					$this->errors[] = Tools::displayError('An error occurred while copying \\"No picture\\" image to your category folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your manufacturer folder');
+					$this->errors[] = Tools::displayError('An error occurred while copying \\"No picture\\" image to your manufacturer folder');
 				else
 				{
 					$images_types = ImageType::getImagesTypes('products');
 					foreach ($images_types as $k => $image_type)
 					{
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your product directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your product directory.');
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your category directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your category directory.');
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your manufacturer directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your manufacturer directory.');
 					}
 				}
 				unlink($tmp_name);
@@ -488,7 +488,7 @@ class AdminLanguagesControllerCore extends AdminController
 			else
 			{
 				$this->status = 'error';
-				$this->errors[] = $this->l('wrong ISO code or lang pack unavailable');
+				$this->errors[] = $this->l('wrong ISO code or language pack unavailable');
 			}
 		}
 		else

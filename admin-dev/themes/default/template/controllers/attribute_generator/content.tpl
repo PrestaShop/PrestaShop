@@ -76,7 +76,7 @@
 <form enctype="multipart/form-data" method="post" id="generator" action="{$url_generator}">
 	<fieldset style="margin-bottom: 35px;">
 		<legend><img src="../img/admin/asterisk.gif" />{l s='Attributes generator'}</legend>
-        <div style="display: block; margin-bottom: 20px;" class="hint">{l s='To generate the attributes, click on the "Ctrl", select your attributes and click "Add".'}</div>
+        <div style="display: block; margin-bottom: 20px;" class="hint">{l s='To generate the attributes, hold down the \\"Ctrl\\" key, select your attributes and click \\"Add\\".'}</div>
 		<div style="float: left; margin-right:50px;">
 			<div>
 				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">
@@ -99,7 +99,7 @@
 			</div>
 		</div>
 		<br />
-		{l s='Add or modify attributes for product:'} <b>{$product_name}</b>
+		{l s='Add or modify attributes for:'} <b>{$product_name}</b>
 		<br /><br />
 		<div style="padding-top:10px; float: left; width: 570px;">
 			<div style="float:left;">

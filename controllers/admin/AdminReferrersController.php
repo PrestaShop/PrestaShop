@@ -277,7 +277,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_like',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('Request Uri')
+					'h3' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',
@@ -322,7 +322,7 @@ class AdminReferrersControllerCore extends AdminController
 					'name' => 'request_uri_regexp',
 					'cols' => 40,
 					'rows' => 1,
-					'h3' => $this->l('Request Uri')
+					'h3' => $this->l('Request URI')
 				),
 				array(
 					'type' => 'textarea',

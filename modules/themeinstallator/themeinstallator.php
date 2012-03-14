@@ -325,7 +325,7 @@ class ThemeInstallator extends Module
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			return '<div class="error">'.Tools::displayError('This functionnality has been disabled.').'</div>';
+			return '<div class="error">'.Tools::displayError('This functionality has been disabled.').'</div>';
 
 		}
 		self::init_defines();

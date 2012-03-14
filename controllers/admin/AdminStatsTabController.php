@@ -183,7 +183,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
-				$this->errors[] = Tools::displayError('Date specified is invalid');
+				$this->errors[] = Tools::displayError('Specified date is invalid');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{

@@ -44,7 +44,7 @@ class AdminEmailsControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
 						'title' => $this->l('Send e-mail to:'), 
-						'desc' => $this->l('When customers send message from order page'), 
+						'desc' => $this->l('Where customers send messages from order page'), 
 						'validation' => 'isUnsignedId', 
 						'type' => 'select', 
 						'cast' => 'intval', 
@@ -82,8 +82,8 @@ class AdminEmailsControllerCore extends AdminController
 				'bottom' => '</div>',
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
-						'title' => $this->l('Mail domain:'),
-						'desc' => $this->l('Fully qualified domain name (keep it empty if you do not know)'),
+						'title' => $this->l('Mail domain name:'),
+						'desc' => $this->l('Fully qualified domain name (keep empty if you do not know)'),
 						'empty' => true, 'validation' =>
 						'isUrl', 'size' => 30,
 						'type' => 'text',
@@ -91,7 +91,7 @@ class AdminEmailsControllerCore extends AdminController
 						),
 					'PS_MAIL_SERVER' => array(
 						'title' => $this->l('SMTP server:'),
-						'desc' => $this->l('IP or server name (e.g., smtp.mydomain.com)'),
+						'desc' => $this->l('IP address or server name (e.g. smtp.mydomain.com)'),
 						'validation' => 'isGenericName',
 						'size' => 30,
 						'type' => 'text',
@@ -138,7 +138,7 @@ class AdminEmailsControllerCore extends AdminController
 						),
 					'PS_MAIL_SMTP_PORT' => array(
 						'title' => $this->l('Port:'),
-						'desc' => $this->l('Number of port to use'),
+						'desc' => $this->l('Port number to use'),
 						'validation' => 'isInt',
 						'size' => 5,
 						'type' => 'text',
@@ -194,7 +194,7 @@ class AdminEmailsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -204,6 +204,6 @@ class AdminEmailsControllerCore extends AdminController
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
 		if ($_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
-			$this->errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
+			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
 }

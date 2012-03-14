@@ -92,7 +92,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'width' => 140
 			),
 			'zipcode' => array(
-				'title' => $this->l('ZipCodes'),
+				'title' => $this->l('Zip Codes'),
 				'width' => 25,
 			),
 			'behavior' => array(
@@ -251,7 +251,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('ZipCode range:'),
+					'label' => $this->l('Zip Code range:'),
 					'name' => 'zipcode',
 					'required' => false,
 					'hint' => $this->l('You can define a range (eg: 75000-75015) or a simple zipcode')
@@ -408,7 +408,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 				if (count($this->errors) == 0)
 					if (!$tr->save())
-						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
+						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
 			}

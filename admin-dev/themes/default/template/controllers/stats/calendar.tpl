@@ -39,7 +39,7 @@
 					<p><span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='From:'}</span>{/if}</span>
 						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}" class="datepicker">
 					</p>
-					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='   Save   '}{/if}" />
+					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='Save'}{/if}" />
 				</form>
 
 				<script type="text/javascript">

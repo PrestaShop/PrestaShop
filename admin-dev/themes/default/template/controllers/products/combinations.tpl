@@ -139,7 +139,7 @@
 						<p class="block">
 							<label for="virtual_product_name_attribute" class="t">{l s='Filename'}</label>
 							<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
-							<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g., Book.pdf)'}</span>
+							<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g. Book.pdf)'}</span>
 						</p>
 					</div>
 					<div id="virtual_good_more_attribute" style="padding:5px;width:40%;float:left;margin-left:10px">
@@ -151,12 +151,12 @@
 						<p class="block">
 							<label for="virtual_product_expiration_date_attribute" class="t">{l s='Expiration date'}</label>
 							<input class="datepicker" type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
-							<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
+							<span class="hint" name="help_box" style="display:none">{l s='Leave this blank for no expiration date'}</span>
 						</p>
 						<p class="block">
 							<label for="virtual_product_nb_days" class="t">{l s='Number of days'}</label>
 							<input type="text" id="virtual_product_nb_days_attribute" name="virtual_product_nb_days_attribute" value="" class="" size="4" /><sup> *</sup>
-							<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='set to zero for unlimited access'} ) </em></span>
+							<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='Set to zero for unlimited access'} ) </em></span>
 						</p>
 						<p class="block">
 							<label for="virtual_product_is_shareable_attribute" class="t">{l s='is shareable'}</label>
@@ -181,7 +181,7 @@
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
 					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='leave blank if the price does not change'})</span>
-					<span style="display:none" id="attribute_wholesale_price_full">({l s='overrides Wholesale price on Information tab'})</span>
+					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on \\"Information\\" tab'})</span>
 				</td>
 			</tr>
 			<tr>
@@ -244,7 +244,7 @@
 					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 						{if $currency->format % 2 == 0} {$currency->sign}{/if} 
-						({l s='overrides Eco-tax on Information tab'})
+						({l s='overrides Eco-tax on \\"Information\\" tab'})
 					</td>
 				</tr>
 			{/if}

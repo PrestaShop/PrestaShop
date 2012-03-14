@@ -129,7 +129,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -167,10 +167,10 @@ class AdminAttachmentsControllerCore extends AdminController
 					$max_post = (int)ini_get('post_max_size');
 					$upload_mb = min($max_upload, $max_post);
 					$this->errors[] = $this->l('the File').' <b>'.$_FILES['file']['name'].'</b> '.
-						$this->l('exceeds the size allowed by the server. This limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
+						$this->l('exceeds the size allowed by the server. The limit is set to').' <b>'.$upload_mb.$this->l('MB').'</b>';
 				}
 				else if (!empty($_FILES['file']['tmp_name']))
-					$this->errors[] = $this->l('No file or your file isn\'t uploadable, check your server configuration about the upload maximum size.');
+					$this->errors[] = $this->l('No file or your file is not uploadable, please check your server configuration for the maximum upload size.');
 			}
 			$this->validateRules();
 		}

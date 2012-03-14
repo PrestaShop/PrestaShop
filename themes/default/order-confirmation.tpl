@@ -39,7 +39,7 @@
 
 <br />
 {if $is_guest}
-	<p>{l s='Your order ID is:'} <span class="bold">{$id_order_formatted}</span> . {l s='Your order ID has been sent to your e-mail.'}</p>
+	<p>{l s='Your order ID is:'} <span class="bold">{$id_order_formatted}</span> . {l s='Your order ID has been sent to you via e-mail.'}</p>
 	<a href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$id_order}")}" title="{l s='Follow my order'}"><img src="{$img_dir}icon/order.gif" alt="{l s='Follow my order'}" class="icon" /></a>
 	<a href="{$link->getPageLink('guest-tracking', true, NULL, "id_order={$id_order}")}" title="{l s='Follow my order'}">{l s='Follow my order'}</a>
 {else}

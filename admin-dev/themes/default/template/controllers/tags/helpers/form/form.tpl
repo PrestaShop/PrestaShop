@@ -37,7 +37,7 @@
 					<option value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="hint" name="help_box">{l s='double click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
+				<span class="hint" name="help_box">{l s='Double-click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
 				<br /><br />
 				<a href="#" id="move_to_right" class="multiple_select_remove">
 					{l s='Remove'} &gt;&gt;
@@ -49,7 +49,7 @@
 					<option value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="hint" name="help_box">{l s='double click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
+				<span class="hint" name="help_box">{l s='Double-click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
 				<br /><br />
 				<a href="#" id="move_to_left" class="multiple_select_add">
 					&lt;&lt; {l s='Add'}

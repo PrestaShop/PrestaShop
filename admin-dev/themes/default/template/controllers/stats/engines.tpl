@@ -64,7 +64,7 @@
 				{/foreach}
 			</select>
 		</div>
-		<p><input type="submit" value="{l s='   Save   '}" name="submitSettings" id="submitSettings" class="button" /></p>
+		<p><input type="submit" value="{l s='Save'}" name="submitSettings" id="submitSettings" class="button" /></p>
 </form>
 </div>
 

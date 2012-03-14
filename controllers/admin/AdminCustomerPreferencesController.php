@@ -52,7 +52,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),
-						'desc' => $this->l('The "Only account creation" step register process allows the customer to register faster, and create his address later.'),
+						'desc' => $this->l('The \\"Only account creation\\" registration option allows the customer to register faster, and create his address later.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -77,13 +77,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
-						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enable some features about B2B appear.'),
+						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled some B2B features are available.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
 			),
 		);
 	}

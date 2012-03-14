@@ -4,7 +4,7 @@ Thank you for shopping at {shop_name}!
 
 Your order {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
 
-You have selected to pay by cheque. Please include on your cheque:
+You have selected to pay by check. Please include on your cheque:
 
 Amount: {total_paid}
 

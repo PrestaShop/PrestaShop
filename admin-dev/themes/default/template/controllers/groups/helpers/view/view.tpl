@@ -58,7 +58,7 @@
 		</li>
 		</ul>
 	</fieldset>
-	<h2>{l s='Customer members of this group'}</h2>
+	<h2>{l s='Members of this customer group'}</h2>
 	{$customerList}
 
 {/block}

@@ -78,10 +78,10 @@ class FileUploaderCore
 		$pathinfo = pathinfo($this->file->getName());
 		$these = implode(', ', $this->allowedExtensions);
 		if (!isset($pathinfo['extension']))
-			return array('error' => Tools::displayError('File has an invalid extension, it should be one of ').$these.'.');
+			return array('error' => Tools::displayError('File has an invalid extension, it should be one of').$these.'.');
 		$ext = $pathinfo['extension'];
 		if ($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions))
-			return array('error' => Tools::displayError('File has an invalid extension, it should be one of ').$these.'.');
+			return array('error' => Tools::displayError('File has an invalid extension, it should be one of').$these.'.');
 
 		return $this->file->save();
 
@@ -98,7 +98,7 @@ class QqUploadedFileForm
 	{
 		$product = new Product($_GET['id_product']);
 		if (!Validate::isLoadedObject($product))
-			return array('error' => Tools::displayError('Cannot add image because product add failed.'));
+			return array('error' => Tools::displayError('Cannot add image because product creation failed.'));
 		else
 		{
 			$image = new Image();
@@ -182,7 +182,7 @@ class QqUploadedFileXhr
 	{
 		$product = new Product($_GET['id_product']);
 		if (!Validate::isLoadedObject($product))
-			return array('error' => Tools::displayError('Cannot add image because product add failed.'));
+			return array('error' => Tools::displayError('Cannot add image because product creation failed.'));
 		else
 		{
 			$image = new Image();

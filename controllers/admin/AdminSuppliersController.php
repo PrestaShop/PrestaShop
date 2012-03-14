@@ -120,7 +120,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/ Zip Code:'),
+					'label' => $this->l('Postcode / Zip Code:'),
 					'name' => 'postcode',
 					'size' => 10,
 					'maxlength' => 12,
@@ -392,7 +392,7 @@ class AdminSuppliersControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
-				$this->errors[] = $this->l('It is not possible to delete a supplier if there is/are pending supply order(s).');
+				$this->errors[] = $this->l('It is not possible to delete a supplier if there are any pending supply order.');
 			else
 			{
 				$address = new Address($obj->id_address);

@@ -56,8 +56,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'type' => 'select',
 				'filter_key' => 'a!sign',
 				'list' => array(
-					'1' => $this->l('Increment'),
-					'-1' => $this->l('Decrement'),
+					'1' => $this->l('Increase'),
+					'-1' => $this->l('Decrease'),
 				),
 				'icon' => array(
 					-1 => 'remove_stock.png',
@@ -85,7 +85,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(
 					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default label when incrementing stock:'),
+						'title' => $this->l('Default label when increasing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -93,7 +93,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default label when decrementing stock:'),
+						'title' => $this->l('Default label when decreasing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -101,7 +101,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_CUSTOMER_ORDER_REASON' => array(
-						'title' => $this->l('Default label when decrementing stock when a customer order is shipped:'),
+						'title' => $this->l('Default label when decreasing stock when a customer order is shipped:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -109,7 +109,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
-						'title' => $this->l('Default label when incrementing stock when a supply order is received:'),
+						'title' => $this->l('Default label when increasing stock when a supply order is received:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -152,7 +152,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			Tools::isSubmit('submitAddstock_mvt_reason') ||
 			Tools::isSubmit('submitUpdatestock_mvt_reason'))
 		{
-			$this->toolbar_title = $this->l('Stock : Add stock movement label');
+			$this->toolbar_title = $this->l('Stock: Add stock movement label');
 
 			$this->fields_form = array(
 				'legend' => array(
@@ -187,11 +187,11 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the corresponding action : increments or decrements stock.')
+						'desc' => $this->l('Select the corresponding action: increase or decrease stock.')
 					),
 				),
 				'submit' => array(
-					'title' => $this->l('   Save   '),
+					'title' => $this->l('Save'),
 					'class' => 'button'
 				)
 			);
@@ -221,7 +221,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 							'label' => $this->l('Color:'),
 							'name' => 'color',
 							'size' => 20,
-							'desc' => $this->l('Back office background will be displayed in this color. HTML colors only.'),
+							'desc' => $this->l('Back Office background will be displayed in this color. HTML colors only.'),
 						),
 						array(
 							'type' => 'radio',
@@ -242,7 +242,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('For this status, you have to define if it is possible to edit the order. An editable order is an order not valid to send to the supplier.')
+							'desc' => $this->l('Define if it is possible to edit the order. An editable order is not valid to send to the supplier.')
 						),
 						array(
 							'type' => 'radio',
@@ -263,7 +263,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('For this status, you have to define if it is possible to generate the delivery note of the order.')
+							'desc' => $this->l('Define if it is possible to generate a delivery note of the order.')
 						),
 						array(
 							'type' => 'radio',
@@ -284,7 +284,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('For this status, you have to define if products have been partially/completely received. This allows to know if the products ordered have to be added to the corresponding warehouse.'),
+							'desc' => $this->l('Define if products have been partially/completely received. This allows you to know if the products ordered have to be added to the corresponding warehouse.'),
 						),
 						array(
 							'type' => 'radio',
@@ -305,20 +305,20 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('Does this status mean that you are waiting for the delivery ?')
+							'desc' => $this->l('Customer is awaiting delivery')
 						),
 					),
 					'submit' => array(
-						'title' => $this->l('   Save   '),
+						'title' => $this->l('Save'),
 						'class' => 'button'
 					)
 				);
 
 				if (Tools::isSubmit('addsupply_order_state'))
-					$this->toolbar_title = $this->l('Stock : Add supply order status');
+					$this->toolbar_title = $this->l('Stock: Add supply order status');
 				else
 				{
-					$this->toolbar_title = $this->l('Stock : Update Supply order status');
+					$this->toolbar_title = $this->l('Stock: Update Supply order status');
 
 					$id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
 
@@ -341,14 +341,14 @@ class AdminStockConfigurationControllerCore extends AdminController
 								),
 								array(
 									'type' => 'color',
-									'label' => $this->l('Back office color:'),
+									'label' => $this->l('Back Office color:'),
 									'name' => 'color',
 									'size' => 20,
-									'desc' => $this->l('Back office background will be displayed in this color. HTML colors only'),
+									'desc' => $this->l('Back Office background will be displayed in this color. HTML colors only'),
 								),
 							),
 							'submit' => array(
-								'title' => $this->l('   Save   '),
+								'title' => $this->l('Save'),
 								'class' => 'button'
 							)
 						);
@@ -381,7 +381,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		/**
 		 * General messages displayed for all lists
 		 */
-		$this->displayInformation($this->l('This interface allows you to configure your supply orders status and stock movements labels.').'<br />');
+		$this->displayInformation($this->l('This interface allows you to configure your supply order statuses and stock movement labels.').'<br />');
 
 		// Checks access
 		if (!($this->tabAccess['add'] === '1'))
@@ -399,7 +399,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6, 7, 8));
 		$this->_where = ' AND a.deleted = 0';
 
-		$this->toolbar_title = $this->l('Stock : Stock movements labels');
+		$this->toolbar_title = $this->l('Stock: Stock movement labels');
 		$first_list = parent::renderList();
 
 		/**
@@ -434,7 +434,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->list_no_link = true;
 		$this->_orderBy = null;
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
-		$this->toolbar_title = $this->l('Stock : Supply Order status');
+		$this->toolbar_title = $this->l('Stock: Supply Order status');
 		$this->initToolbar();
 
 		$this->fieldsDisplay = array(
@@ -548,7 +548,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 					$item = &$this->_list[$i];
 
 					if (empty($item['product_name']))
-						$item['product_name'] = $this->l('The name of this product is not available. Maybe it has been deleted from the system.');
+						$item['product_name'] = $this->l('The name of this product is not available. It may been deleted from the system.');
 				}
 			}
 	}

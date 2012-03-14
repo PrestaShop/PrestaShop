@@ -212,7 +212,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Term or phrase displayed to the customer')
+					'desc' => $this->l('Group name displayed to the customer')
 				),
 				array(
 					'type' => 'select',
@@ -310,7 +310,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Color:'),
 			'name' => 'color',
 			'size' => 33,
-			'desc' => $this->l('HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+			'desc' => $this->l('HTML colors only (e.g.').' "lightblue", "#CC6600")'
 		);
 
 		$this->fields_form['input'][] = array(
@@ -423,7 +423,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').
+			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').
 				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').
 				'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;

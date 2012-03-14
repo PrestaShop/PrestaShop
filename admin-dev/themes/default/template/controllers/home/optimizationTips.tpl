@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="admin-box1">
-<h5>{l s='A good beginning...'}
+<h5>{l s='Configuration checklist'}
 	<span style="float:right">
 	<a id="optimizationTipsFold" href="#">
 		<img alt="v" src="../img/admin/{if $hide_tips}arrow-down.png{else}arrow-up.png{/if}" />

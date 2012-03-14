@@ -111,7 +111,7 @@
 		{foreach $delivery_option_list as $id_address => $option_list}
 			<h3>
 				{if isset($address_collection[$id_address])}
-					{l s='Choose a shipping option for the address: '}{$address_collection[$id_address]->alias}
+					{l s='Choose a shipping option for the address:'}{$address_collection[$id_address]->alias}
 				{else}
 					{l s='Choose a shipping option'}
 				{/if}
@@ -145,9 +145,9 @@
 								{if count($option_list) > 1}
 									{if $option.is_best_grade}
 										{if $option.is_best_price}
-										<div class="delivery_option_best delivery_option_icon">{l s='The best price and grade'}</div>
+										<div class="delivery_option_best delivery_option_icon">{l s='The best price and speed'}</div>
 										{else}
-										<div class="delivery_option_fast delivery_option_icon">{l s='The faster'}</div>
+										<div class="delivery_option_fast delivery_option_icon">{l s='The fastest'}</div>
 										{/if}
 									{else}
 										{if $option.is_best_price}
@@ -217,7 +217,7 @@
 		<h3 class="gift_title">{l s='Gift'}</h3>
 		<p class="checkbox">
 			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
-			<label for="gift">{l s='I would like the order to be gift-wrapped.'}</label>
+			<label for="gift">{l s='I would like my order to be gift-wrapped.'}</label>
 			<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			{if $gift_wrapping_price > 0}
@@ -240,7 +240,7 @@
 	<h3 class="condition_title">{l s='Terms of service'}</h3>
 	<p class="checkbox">
 		<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-		<label for="cgv">{l s='I agree to the terms of service and adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(read)'}</a>
+		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(read)'}</a>
 	</p>
 	<script type="text/javascript">$('a.iframe').fancybox();</script>
 {/if}

@@ -12,7 +12,7 @@ $_MODULE['<{homeslider}prestashop>homeslider_154e6bcf4e3b49a424323cb9021ef851'] 
 $_MODULE['<{homeslider}prestashop>homeslider_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{homeslider}prestashop>homeslider_571988492824e57070d78e6c86333f20'] = 'Configuration d\'une diapositive';
 $_MODULE['<{homeslider}prestashop>homeslider_02023fc24279454047fd419ecd1db9af'] = 'Ajouter une diapositive';
-$_MODULE['<{homeslider}prestashop>homeslider_8d9fc9d5dd1919e4bf738bd46361ee10'] = 'Vous n\'avez pas encore ajouté de diapositive.';
+$_MODULE['<{homeslider}prestashop>homeslider_a9884c8f5501dc36b3ae14a380f0013f'] = 'Vous n\'avez pas encore ajouté de diapositive.';
 $_MODULE['<{homeslider}prestashop>homeslider_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
 $_MODULE['<{homeslider}prestashop>homeslider_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_MODULE['<{homeslider}prestashop>homeslider_3b21e9521eb7b13b5e33325a4a06ae55'] = 'les modules %s doivent être accessible en écriture (CHMOD 755 / 777)';

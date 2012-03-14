@@ -37,7 +37,7 @@
 	
 	<fieldset>
 		<legend><img src="../img/admin/translation.gif" />{l s='Modify translations'}</legend>
-		{l s='Here you can modify translations for all text input into PrestaShop.'}<br />
+		{l s='Here you can modify translations for all text input in PrestaShop.'}<br />
 		{l s='First, select a section (such as Back Office or Modules), then click the flag representing the language you want to edit.'}<br /><br />
 		<form method="get" action="index.php" id="typeTranslationForm">
 			<input type="hidden" name="tab" value="AdminTranslations" />
@@ -65,7 +65,7 @@
 			<div id="submitAddLangContent" style="float:left;">
 				<p>{l s='You can add or update a language directly from prestashop.com here'}</p>
 				<div class="warn">
-					{l s='If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes front office expressions and default e-mail templates.'}
+					{l s='If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes Front Office expressions and default e-mail templates.'}
 				</div>
 				{if $packs_to_update || $packs_to_install}
 					<div style="font-weight:bold; float:left;">{l s='Language you want to add or update:'}
@@ -81,10 +81,10 @@
 								{/foreach}
 							</optgroup>
 						</select> &nbsp;
-						<input type="submit" value="{l s='Add or update the language'}" name="submitAddLanguage" class="button" />
+						<input type="submit" value="{l s='Add or update a language'}" name="submitAddLanguage" class="button" />
 					</div>
 				{else}
-					<br /><br /><p class="error">{l s='Cannot connect to prestashop.com to get languages list.'}</p></div>
+					<br /><br /><p class="error">{l s='Cannot connect to prestashop.com to get language list.'}</p></div>
 				{/if}
 			</div>
 		</fieldset>
@@ -96,8 +96,8 @@
 				<img src="../img/admin/import.gif" />{l s='Import a language pack manually'}
 			</legend>
 			<div id="submitImportContent">
-				{l s='If the name format is: isocode.gzip (e.g. fr.gzip) and the language corresponding to this package does not exist, it will automatically be created.'}
-				{l s='Be careful, as it will replace all existing data for the destination language!'}<br /><br />
+				{l s='If the name format is: isocode.gzip (e.g. us.gzip) and the language corresponding to this package does not exist, it will automatically be created.'}
+				{l s='Be careful, as this will replace all existing data for the destination language!'}<br /><br />
 				{l s='Language pack to import:'} <input type="file" name="file" /> &nbsp;<input type="submit" value="{l s='Import'}" name="submitImport" class="button" /></p>
 			</div>
 		</fieldset>
@@ -128,7 +128,7 @@
 		<fieldset>
 			<legend><img src="../img/admin/copy_files.gif" />{l s='Copy'}</legend>
 			<p>{l s='Copies data from one language to another.'}<br />
-			{l s='Be careful, as it will replace all existing data for the destination language!'}<br />
+			{l s='Be careful, as this will replace all existing data for the destination language!'}<br />
 			{l s='If necessary'}, <b><a href="{$url_create_language}">{l s='first create a new language'}</a></b>.</p>
 			<div style="float:left;">
 				<p>
@@ -163,7 +163,7 @@
 			<div style="float:left;">
 				<input type="submit" value="{l s='   Copy   '}" name="submitCopyLang" class="button" style="margin:25px 0px 0px 25px;" />
 			</div>
-			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files (as indicated at Tools >> Languages >> Edition) must be complete to allow copying of translations'}</p>
+			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files (as indicated at Tools > Languages > Edition) must be complete to allow copying of translations'}</p>
 		</fieldset>
 	</form>
 {/block}

@@ -51,7 +51,7 @@ class AdminCartsControllerCore extends AdminController
 				'width' => 25
 			),
 			'id_order' => array(
-				'title' => $this->l('ID Order'),
+				'title' => $this->l('Order ID'),
 				'align' => 'center', 'width' => 25
 			),
 			'customer' => array(
@@ -249,7 +249,7 @@ class AdminCartsControllerCore extends AdminController
 			if (!$this->context->cart->id)
 				return;
 			if ($this->context->cart->OrderExists())
-				$errors[] = Tools::displayError('An order already placed with this cart');
+				$errors[] = Tools::displayError('An order has already been placed with this cart');
 			elseif (!($id_product = (int)Tools::getValue('id_product')) || !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)

@@ -44,11 +44,11 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'table' => 'accounting_product_zone_shop',
 				'fields' => array(
 					'p.account_number' => $this->l('Account number'),
-					'COUNT(*) AS total' => $this->l('Number of product associated to this account')
+					'COUNT(*) AS total' => $this->l('Number of products associated with this account')
 				),
 				'group_by' => 'account_number',
 				'condition' => 'p.account_number <> "" AND account_number IS NOT NULL',
-				'title' => $this->l('Product account number list'),
+				'title' => $this->l('Product account numbers'),
 				'list' => array()),
 
 			// Taxes definition
@@ -56,11 +56,11 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'table' => 'tax',
 				'fields' => array(
 					'account_number' => $this->l('Account number'),
-					'COUNT(*) AS total' => $this->l('Number of taxes associated to this account')
+					'COUNT(*) AS total' => $this->l('Number of taxes associated with this account')
 				),
 				'group_by' => 'account_number',
 				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
-				'title' => $this->l('Taxes Account number list'),
+				'title' => $this->l('Tax account numbers'),
 				'list' => array()),
 
 			// Gift wrapping definition
@@ -69,9 +69,9 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'key' => 'account_gift_wripping',
 				'fields' => array(
 					'account_number' => $this->l('Account number'),
-					'total' => $this->l('Number of gift-wrapping associated to this account')
+					'total' => $this->l('Number of gift-wrapping options associated with this account')
 				),
-				'title' => $this->l('Gift wrapping account number list'),
+				'title' => $this->l('Gift-wrapping account numbers'),
 				'list' => array()),
 
 			// Submited shipping charge definition
@@ -106,7 +106,7 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				),
 				'group_by' => 'account_number',
 				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
-				'title' => $this->l('Customer account number list'),
+				'title' => $this->l('Customer account numbers'),
 				'list' => array()),
 
 			// Zone shop definition
@@ -114,11 +114,11 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 				'table' => 'accounting_zone_shop',
 				'fields' => array(
 					'p.account_number' => $this->l('Account number'),
-					'COUNT(*) AS total' => $this->l('Number of zone associated to this account')
+					'COUNT(*) AS total' => $this->l('Number of zones associated with this account')
 				),
 				'group_by' => 'account_number',
 				'condition' => 'account_number <> "" AND account_number IS NOT NULL',
-				'title' => $this->l('Zone shop account number list'),
+				'title' => $this->l('Zone shop account numbers'),
 				'list' => array())
 		);
 	}

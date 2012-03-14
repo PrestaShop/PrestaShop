@@ -31,9 +31,9 @@
 				<div class="separation"></div>
 				<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to specify in which warehouses the product is stocked.'}</p>
-		<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
+		<p>{l s='It is also possible to specify for each product/product combination its location in each warehouse.'}</p>
 	</div>
-	<p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
+	<p>{l s='Please choose the warehouses associated with this product, and the default one.'}</p>
 
 	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse">
 		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
@@ -47,7 +47,7 @@
 					<tr>
 						<th width="100">{l s='Stored'}</th>
 						<th>{l s='Product'}</th>
-						<th width="150">{l s='Location (optionnal)'}</th>
+						<th width="150">{l s='Location (optional)'}</th>
 					</tr>
 					{foreach $attributes AS $index => $attribute}
 						{assign var=location value=''}

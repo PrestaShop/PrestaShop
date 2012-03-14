@@ -142,18 +142,18 @@ class AdminGendersControllerCore extends AdminController
 					'label' => $this->l('Image Width:'),
 					'name' => 'img_width',
 					'size' => 4,
-					'desc' => $this->l('Image width in pixel. "0" to use original size')
+					'desc' => $this->l('Image width in pixels. Enter \\"0\\" to use original size')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Height:'),
 					'name' => 'img_height',
 					'size' => 4,
-					'desc' => $this->l('Image height in pixel. "0" to use original size')
+					'desc' => $this->l('Image height in pixels. Enter \\"0\\" to use original size')
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -180,7 +180,7 @@ class AdminGendersControllerCore extends AdminController
 		if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir']))
 		{
 			if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height')))
-				$this->errors[] = Tools::displayError('Width and height must be a numeric');
+				$this->errors[] = Tools::displayError('Width and height must be numeric values');
 			else
 			{
 				if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0)

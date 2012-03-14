@@ -30,7 +30,7 @@
 	<div class="separation"></div>
 				<ul>
 					<li>{l s='You can specify a value for each relevant feature regarding this product, empty fields will not be displayed.'}</li>
-					<li>{l s='You can either set a specific value, or select among existing pre-defined values you added previously.'}</li>
+					<li>{l s='You can either create a specific value or select among existing pre-defined values you added previously.'}</li>
 				</ul>
 			</td>
 		</tr>

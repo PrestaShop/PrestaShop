@@ -68,7 +68,7 @@ class AdminCartRulesControllerCore extends AdminController
 			if ((int)Tools::getValue('minimum_amount') < 0)
 				$this->errors[] = Tools::displayError('Minimum amount cannot be lower than 0');
 			if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100)
-				$this->errors[] = Tools::displayError('Reduction percent must range from 0% to 100%');
+				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
 		}
@@ -467,7 +467,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
 				'toolbar_scroll' => $this->toolbar_scroll,
-				'title' => $this->l('Payment : Cart Rules '),
+				'title' => $this->l('Payment: Cart Rules'),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,

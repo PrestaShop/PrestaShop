@@ -40,7 +40,7 @@
 
 {if $module_confirmation}
 	<div class="module_confirmation conf confirm"><img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />
-		{l s='The .CSV file has been imported into your shop.'}
+		{l s='Your .CSV file has been sucessfully imported into your shop.'}
 	</div>
 {/if}
 
@@ -89,29 +89,29 @@
 			<div class="margin-form" style="padding-left:190px;">
 				<input name="file" type="file" />
 				<p class="preference_description">
-					{l s='You can also upload your file via FTP in the following directory:'} {$path_import}.
+					{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
 				</p>
 			</div>
 			
 			<div class="margin-form" style="padding-left:190px;">
 				<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="button" />
 				<p class="preference_description">
-					{l s='Allowed files are only UTF-8 and iso-8859-1 encoded ones'}
+					{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}
 				</p>
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>
 		<div style="width:50%; margin: 0 auto;">
-			{l s='Note that our samples our available, below.'}
+			{l s='Note that our samples are available below.'}
 			<div class="clear">&nbsp;</div>
 			<ul id="sample_files_import">
-				<li><a href="../docs/csv_import/categories_import.csv">{l s='Categories sample file'}</a></li>
-				<li><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
-				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
-				<li><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
-				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Addresses sample file'}</a></li>
-				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
-				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
+				<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
+				<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
+				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
+				<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
+				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
+				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
+				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
 				<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
 				<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
 			</ul>
@@ -169,7 +169,7 @@
 				</select>
 				{l s='The locale must be installed'}
 			</div>
-			<label for="convert" class="clear">{l s='iso-8859-1 encoded file?'} </label>
+			<label for="convert" class="clear">{l s='ISO-8859-1 encoded file?'} </label>
 			<div class="margin-form">
 				<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>
 			</div>
@@ -183,11 +183,11 @@
 				<input type="text" size="2" value="," name="multiple_value_separator"/>
 				{l s='e.g. '}"Ipod;red.jpg<span class="bold" style="color: red">,</span>blue.jpg<span class="bold" style="color: red">,</span>green.jpg;129.90"
 			</div>
-			<label for="truncate" class="clear">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import ?'} </label>
+			<label for="truncate" class="clear">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
 			<div class="margin-form">
 				<input name="truncate" id="truncate" type="checkbox"/>
 			</div>
-			<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key ?'}</label>
+			<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
 			<div class="margin-form">
 				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
 			</div>
@@ -196,7 +196,7 @@
 			</div>
 			<div class="warn import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
-				<p>{l s='Note that you can have serveral products with the same reference.'}</p>
+				<p>{l s='Note that you can have several products with the same reference.'}</p>
 			</div>
 			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
 				<p>{l s='Importing Supply Order Details will first reset the products ordered, if any.'}</p>
@@ -207,7 +207,7 @@
 				<ul>
 				<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>	
 					<li>
-				{l s='Read more about CSV format at: '} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
+				{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
 				</ul>
 			</div>
 		{/if}
@@ -217,7 +217,7 @@
 <fieldset style="display:block;">
 
 	<legend>
-		<img src="../img/admin/import.gif" />{l s='Fields available'}
+		<img src="../img/admin/import.gif" />{l s='Available fields'}
 	</legend>
 
 	<div id="availableFields">
@@ -225,7 +225,7 @@
 	</div>
 
 	<div class="clear">
-		<br /><br />{l s='* Required Fields'}
+		<br /><br />{l s='* Required field'}
 	</div>
 
 </fieldset>

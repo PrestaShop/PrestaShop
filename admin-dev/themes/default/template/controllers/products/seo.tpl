@@ -61,7 +61,7 @@
 			{include file="controllers/products/input_text_lang.tpl" languages=$languages
 				input_value=$product->meta_keywords
 				input_name='meta_keywords'}
-			<p class="preference_description">{l s='Keywords for HTML header, separated by a comma'}</p>
+			<p class="preference_description">{l s='Keywords for HTML header, separated by commas'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -77,7 +77,7 @@
 			<p class="clear" style="padding:10px 0 0 0">
 			<a style="cursor:pointer" class="button"
 			onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;
-			{l s='Friendly-url from product\'s name.'}<br /><br />
+			{l s='Friendly URL from product name.'}<br /><br />
 			{l s='Product link will look like this:'}
 			{if $ps_ssl_enabled}https://{else}http://{/if}{$smarty.server.SERVER_NAME}{$smarty.const.__PS_BASE_URI__}{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
 		</td>

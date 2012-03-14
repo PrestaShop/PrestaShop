@@ -28,7 +28,7 @@
 {block name="label"}
 	{if $input.type == 'text' && $input.name == 'ps_cache_fs_directory_depth'}
 		<div id="directory_depth">
-			<div class="warn">{l s='The system CacheFS should be used only when the infrastructure contain only one front-end server. Ask your hosting company if you don\'t know.'}</div>
+			<div class="warn">{l s='The CacheFS system should be used only when the infrastructure contains only one front-end server. If you are not sure, ask your hosting company.'}</div>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -37,7 +37,7 @@
 {block name="input"}
 	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="warn">
-			{l s='This feature can\'t be disabled because this is currently in use.'}
+			{l s='This feature cannot be disabled because it is currently in use.'}
 		</div>
 	{/if}
 	{$smarty.block.parent}
@@ -96,8 +96,8 @@
 				<div class="margin-form">
 					<table style="width: 320px;" cellspacing="0" cellpadding="0" class="table">
 					<tr>
-						<th style="width: 20px; text-align: center">{l s='Id'}</th>
-						<th style="width: 200px; text-align: center">{l s='Ip'}</th>
+						<th style="width: 20px; text-align: center">{l s='ID'}</th>
+						<th style="width: 200px; text-align: center">{l s='IP address'}</th>
 						<th style="width: 50px; text-align: center">{l s='Port'}</th>
 						<th style="width: 30px; text-align: right; font-weight: bold;">{l s='Weight'}</th>
 						<th style="width: 20px; text-align: right;">&nbsp;</th>

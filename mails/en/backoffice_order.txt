@@ -6,4 +6,4 @@ Go on {order_link} to finalize the payment.
 
 {shop_name} - {shop_url}
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} powered by PrestaShop™

@@ -269,7 +269,7 @@ class AdminControllerCore extends Controller
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
 			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
 			5 => $this->l('Status update successful'), 6 => $this->l('Settings update successful'),
-			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfully'),
+			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfullyc'),
 			9 => $this->l('Thumbnails successfully regenerated'), 10 => $this->l('Message sent to the customer'),
 			11 => $this->l('Comment added'), 12 => $this->l('Module(s) installed successfully'),
 			13 => $this->l('Module(s) uninstalled successfully'), 14 => $this->l('Language successfully copied'),
@@ -277,12 +277,12 @@ class AdminControllerCore extends Controller
 			17 => $this->l('Module removed successfully from hook'), 18 => $this->l('Upload successful'),
 			19 => $this->l('Duplication completed successfully'), 20 => $this->l('Translation added successfully but the language has not been created'),
 			21 => $this->l('Module reset successfully'), 22 => $this->l('Module deleted successfully'),
-			23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Refund Successful'),
+			23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Localization pack imported successfully'),
 			25 => $this->l('Images successfully moved'),
 			26 => $this->l('Cover selection saved'),
 			27 => $this->l('Image shop association modified'),
-			28 => $this->l('Zone affected to the selection successfully'),
-			29 => $this->l('Upgrade succeed')
+			28 => $this->l('Zone assigned to the selection successfully'),
+			29 => $this->l('Upgrade successful')
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
@@ -425,7 +425,7 @@ class AdminControllerCore extends Controller
 						if (isset($value[0]) && !empty($value[0]))
 						{
 							if (!Validate::isDate($value[0]))
-								$this->errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+								$this->errors[] = Tools::displayError('\'From:\' date format is invalid (YYYY-MM-DD)');
 							else
 								$sql_filter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 						}
@@ -433,7 +433,7 @@ class AdminControllerCore extends Controller
 						if (isset($value[1]) && !empty($value[1]))
 						{
 							if (!Validate::isDate($value[1]))
-								$this->errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+								$this->errors[] = Tools::displayError('\'To:\' date format is invalid (YYYY-MM-DD)');
 							else
 								$sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 						}

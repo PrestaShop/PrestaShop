@@ -514,7 +514,7 @@ class BlockCms extends Module
 			}
 
 			if (!$empty_footer_text && empty($footer_text[(int)Configuration::get('PS_LANG_DEFAULT')]))
-				$this->_errors[] = Tools::displayError('Please provide a footer text for the default language');
+				$this->_errors[] = Tools::displayError('Please provide footer text for the default language');
 			else
 			{
 				foreach ($this->context->controller->_languages as $language)

@@ -110,16 +110,16 @@
 
 <div id="account_list">
 	<form id="{$table}_form" method="POST" action="{$smarty.server.REQUEST_URI}">
-		<label for="beginDate">{l s='Begin to:'}</label>
+		<label for="beginDate">{l s='Begin at:'}</label>
 		<div class="margin-form">
 			<input class="datepicker" id="begin_date" type="text" name="begin_date" value="{$begin_date}" />
-			<span class="input-error">{l s='The date has not the right format'}</span>
+			<span class="input-error">{l s='The date does not have the right format'}</span>
 		</div>
 
-		<label for="endDate">{l s='End to:'}</label>
+		<label for="endDate">{l s='End at:'}</label>
 		<div class="margin-form">
 			<input class="datepicker" id="end_date" type="text" name="end_date" value="{$end_date}" />
-			<span class="input-error">{l s='The date has not the right format'}</span>
+			<span class="input-error">{l s='The date does not have the right format'}</span>
 		</div>
 
 		<label for="format">{l s='File format:'}</label>
@@ -133,7 +133,7 @@
 					{l s='Text (TXT)'}
 				</option>
 			</select>
-			<span class="input-error">{l s='The date has not the right format'}</span>
+			<span class="input-error">{l s='The date does not have the right format'}</span>
 		</div>
 
 		<label for="type">{l s='Export Type:'}</label>
@@ -147,7 +147,7 @@
 					{l s='Reconciliation'}
 				</option>
 			</select>
-			<span class="input-error">{l s='The date has not the right format'}</span>
+			<span class="input-error">{l s='The date does not have the right format'}</span>
 		</div>
 
 		<div class="margin-form">

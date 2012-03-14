@@ -140,6 +140,6 @@
 	</table>
 </div>
 {else}
-	<p class="warning">{l s='There is no product in the comparator'}</p>
+	<p class="warning">{l s='There are no products selected for comparison'}</p>
 {/if}
 
