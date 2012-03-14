@@ -82,6 +82,9 @@ if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
 	}
 }
 
+if (substr($_SERVER['REQUEST_URI'], -1) != '/')
+	$_SERVER['REQUEST_URI'] .= '/';
+
 /* Trying to redefine HTTP_HOST if empty (on some webservers...) */
 if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST']))
 	$_SERVER['HTTP_HOST'] = @getenv('HTTP_HOST');
