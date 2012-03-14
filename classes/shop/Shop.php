@@ -33,7 +33,7 @@ class ShopCore extends ObjectModel
 	public	$id_group_shop;
 	public	$id_theme;
 	public	$name;
-	public	$active;
+	public	$active = true;
 	public	$id_category;
 	public	$deleted;
 
