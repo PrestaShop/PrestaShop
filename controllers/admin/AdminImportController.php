@@ -163,6 +163,10 @@ class AdminImportControllerCore extends AdminController
 					'meta_description' => array('label' => $this->l('Meta-description')),
 					'link_rewrite' => array('label' => $this->l('URL rewritten')),
 					'image' => array('label' => $this->l('Image URL')),
+					'shop' => array(
+						'label' => $this->l('ID / Name of shop'),
+						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+					),
 				);
 
 				self::$default_values = array(
@@ -898,6 +902,18 @@ class AdminImportControllerCore extends AdminController
 				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
+			}
+			else
+			{
+				// Associate category to shop
+				if (Shop::isFeatureActive() && $info['shop'])
+				{
+					if (!is_numeric($info['shop']))
+						$info['id_shop'] = Shop::getIdByName($info['shop']);
+				}
+				else
+					$info['shop'] = Configuration::get('PS_SHOP_DEFAULT');
+				$category->addShop($info['shop']);
 			}
 		}
 
