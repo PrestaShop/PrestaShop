@@ -49,32 +49,32 @@
 	{/if}
 	<div id="login">
 	{if !isset($wrong_folder_name)}
-		<h1>{$shop_name}</h1>
-		<form action="" method="post" id="login_form" onsubmit="doAjaxLogin('{$redirect}');return false;">
-			<label for="email">{l s='E-mail address:'}</label><br />
-			<input type="text" id="email" name="email" class="input" value="{if isset($email)}{$email|htmlentities}{/if}" />
-			<div style="margin: 1.8em 0 0 0;">
-				<label for="passwd">{l s='Password:'}</label><br />
-				<input id="passwd" type="password" name="passwd" class="input" value="{if isset($password)}{$password}{/if}"/>
-			</div>
-			<div>
-				<div id="submit">
-					{if isset($redirect)}
+		<div id="login_form">
+			<h1>{$shop_name}</h1>
+			<form action="" method="post" id="login_form" onsubmit="doAjaxLogin('{$redirect}');return false;">
+				<label for="email">{l s='E-mail address:'}</label><br />
+				<input type="text" id="email" name="email" class="input" value="{if isset($email)}{$email|htmlentities}{/if}" />
+				<div style="margin: 1.8em 0 0 0;">
+					<label for="passwd">{l s='Password:'}</label><br />
+					<input id="passwd" type="password" name="passwd" class="input" value="{if isset($password)}{$password}{/if}"/>
+				</div>
+				<div>
+					<div id="submit">
 						<input type="hidden" name="redirect" value="{$redirect}"/>
-					{/if}
-					<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button" style="float:left"/>
-					<span style="float:left;width:30px">
-						<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
-					</span>
+						<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button" style="float:left"/>
+						<span style="float:left;width:30px">
+							<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
+						</span>
+					</div>
+					<div id="lost">
+						<a href="#" onclick="displayForgotPassword();return false;">{l s='Lost password?'}</a>
+					</div>
 				</div>
-				<div id="lost">
-					<a href="#" onclick="displayForgotPassword();return false;">{l s='Lost password?'}</a>
-				</div>
-			</div>
-			<script type="text/javascript">
-			//TODO FOCUS ON EMAIL
-			</script>
-		</form>
+				<script type="text/javascript">
+				//TODO FOCUS ON EMAIL
+				</script>
+			</form>
+		</div>
 	{else}
 		<h1>{$shop_name}</h1>
 		<div style="margin:30px;">
@@ -86,21 +86,21 @@
 			<br />{l s='Please then access this page by the new url (eg.) http://www.domain.tld/admin'}{$randomNb}</span></p>
 		</div>
 	{/if}
-	</div>
-	<div id="forgot_password" style="display:none">
-		<h1>{$shop_name}</h1>	
-		<form action="" method="post" onsubmit="doAjaxForgot();return false;">
-			<div class="page-title center">{l s='Forgot your password?'}</div><br />
-			<span style="font-weight: bold;">{l s='Please, enter your e-mail address the one you wrote during your registration in order to receive your access codes by e-mail'}</span><br />
-			<input style="margin-top:20px" type="text" name="email_forgot" id="email_forgot" class="input" />
-			<div id="submit">
-				<input type="submit" name="Submit" value="{l s='Send'}" class="button" style="float:left" />
+		<div id="forgot_password" style="display:none">
+			<h1>{$shop_name}</h1>
+			<form action="" method="post" onsubmit="doAjaxForgot();return false;">
+				<div class="page-title center">{l s='Forgot your password?'}</div><br />
+				<span style="font-weight: bold;">{l s='Please, enter your e-mail address the one you wrote during your registration in order to receive your access codes by e-mail'}</span><br />
+				<input style="margin-top:20px" type="text" name="email_forgot" id="email_forgot" class="input" />
+				<div id="submit">
+					<input type="submit" name="Submit" value="{l s='Send'}" class="button" style="float:left" />
 				<span style="float:left;width:30px">
 					<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
 				</span>
-			</div>
-			<div id="lost"><a href="#" onclick="displayLogin();return false;">{l s='Back to login'}</a></div>
-		</form>
+				</div>
+				<div id="lost"><a href="#" onclick="displayLogin();return false;">{l s='Back to login'}</a></div>
+			</form>
+		</div>
 	</div>
 	<h2><a href="http://www.prestashop.com">&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.</a></h2>
 </div>
