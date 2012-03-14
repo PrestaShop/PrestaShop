@@ -409,6 +409,14 @@ class AdminGroupsControllerCore extends AdminController
 	protected function updateCategoryReduction()
 	{
 		$category_reduction = Tools::getValue('category_reduction');
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'group_reduction`
+			WHERE `id_group` = '.(int)Tools::getValue('id_group')
+		);
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
+			WHERE `id_group` = '.(int)Tools::getValue('id_group')
+		);
 		if (is_array($category_reduction))
 		{
 			foreach ($category_reduction as $cat => $reduction)
@@ -417,15 +425,6 @@ class AdminGroupsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Discount value is incorrect');
 				else
 				{
-					Db::getInstance()->execute('
-						DELETE FROM `'._DB_PREFIX_.'group_reduction`
-						WHERE `id_group` = '.(int)Tools::getValue('id_group').'
-							AND `id_category` = '.(int)$cat
-					);
-					Db::getInstance()->execute('
-						DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
-						WHERE `id_group` = '.(int)Tools::getValue('id_group')
-					);
 					$category = new Category((int)$cat);
 					$category->addGroupsIfNoExist((int)Tools::getValue('id_group'));
 					$group_reduction = new GroupReduction();
@@ -436,18 +435,6 @@ class AdminGroupsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('Cannot save group reductions');
 				}
 			}
-		}
-		else
-		{
-			// if we have no category reduction anymore, we delete the existing ones
-			Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'group_reduction`
-				WHERE `id_group` = '.(int)Tools::getValue('id_group')
-			);
-			Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
-				WHERE `id_group` = '.(int)Tools::getValue('id_group')
-			);
 		}
 	}
 
