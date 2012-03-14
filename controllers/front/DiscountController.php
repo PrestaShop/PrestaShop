@@ -40,14 +40,10 @@ class DiscountControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$discounts = Discount::getCustomerDiscounts($this->context->language->id, $this->context->customer->id, true, false);
-		$nbDiscounts = 0;
+		$cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
+		$nb_cart_rules = count($cart_rules);
 
-		foreach ($discounts as $discount)
-			if (isset($discount['quantity_for_user']) && $discount['quantity_for_user'])
-				$nbDiscounts++;
-
-		$this->context->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
+		$this->context->smarty->assign(array('nb_cart_rules' => (int)$nb_cart_rules, 'cart_rules' => $cart_rules));
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
 	}
 }
