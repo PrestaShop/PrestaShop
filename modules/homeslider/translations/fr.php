@@ -9,6 +9,9 @@ $_MODULE['<{homeslider}prestashop>homeslider_e933dc24fb245d863a43b4fefe9b45f5'] 
 $_MODULE['<{homeslider}prestashop>homeslider_48ccf48dcf2218a413ce473262f21a0c'] = 'Largeur :';
 $_MODULE['<{homeslider}prestashop>homeslider_2c526c645bca9542ba1598835d46b753'] = 'Vitesse :';
 $_MODULE['<{homeslider}prestashop>homeslider_154e6bcf4e3b49a424323cb9021ef851'] = 'Pause :';
+$_MODULE['<{homeslider}prestashop>homeslider_9ce04a5715756f9c0fece348db9b7da1'] = 'Boucle : ';
+$_MODULE['<{homeslider}prestashop>homeslider_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
+$_MODULE['<{homeslider}prestashop>homeslider_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{homeslider}prestashop>homeslider_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{homeslider}prestashop>homeslider_571988492824e57070d78e6c86333f20'] = 'Configuration d\'une diapositive';
 $_MODULE['<{homeslider}prestashop>homeslider_02023fc24279454047fd419ecd1db9af'] = 'Ajouter une diapositive';
@@ -25,8 +28,6 @@ $_MODULE['<{homeslider}prestashop>homeslider_3b3d06023f6353f8fd05f859b298573e'] 
 $_MODULE['<{homeslider}prestashop>homeslider_8046c95f98fc714db47978092bb24264'] = 'Légende :';
 $_MODULE['<{homeslider}prestashop>homeslider_d0042a700e9bdf79689d63ee6846dc0e'] = 'Description :';
 $_MODULE['<{homeslider}prestashop>homeslider_3d091e856cb7615d1ccb96bc759b5a92'] = 'Active :';
-$_MODULE['<{homeslider}prestashop>homeslider_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
-$_MODULE['<{homeslider}prestashop>homeslider_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{homeslider}prestashop>homeslider_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{homeslider}prestashop>homeslider_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{homeslider}prestashop>homeslider_3f80dc2cdd06939d4f5514362067cd86'] = 'Valeur non valables';

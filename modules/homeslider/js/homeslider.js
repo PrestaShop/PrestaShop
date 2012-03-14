@@ -32,11 +32,11 @@ $(function(){
 		var homeslider_pause = 6000;
 	
 	  $('#homeslider').bxSlider({
-	    infiniteLoop: true,
+	    infiniteLoop: homeslider_loop,
 	    hideControlOnEnd: true,
 	    pager: true,
 	    autoHover: true,
-	    auto: true,
+	    auto: homeslider_loop,
 	    speed: homeslider_speed,
 	    pause: homeslider_pause
 	  });
