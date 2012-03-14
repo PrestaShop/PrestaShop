@@ -230,6 +230,38 @@ class CartRuleCore extends ObjectModel
 					unset($result[$key]);
 				}
 		}
+
+		foreach ($result as &$cart_rule)
+			if ($cart_rule['quantity_per_user'])
+			{
+				$quantity_used = Order::getDiscountsCustomer((int)$id_customer, (int)$cart_rule['id_cart_rule']);
+				if (isset($cart) && isset($cart->id))
+					$quantity_used += $cart->getDiscountsCustomer((int)$cart_rule['id_cart_rule']);
+				$cart_rule['quantity_for_user'] = $cart_rule['quantity_per_user'] - $quantity_used;
+			}
+			else
+				$cart_rule['quantity_for_user'] = 0;
+				
+		// Retrocompatibility with 1.4 discounts
+		foreach ($result as &$cart_rule)
+		{
+			$cart_rule['value'] = 0;
+			$cart_rule['minimal'] = $cart_rule['minimum_amount'];
+			$cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
+			if ($cart_rule['free_shipping'])
+				$cart_rule['id_discount_type'] = Discount::FREE_SHIPPING;
+			elseif ($cart_rule['reduction_percent'] > 0)
+			{
+				$cart_rule['id_discount_type'] = Discount::PERCENT;
+				$cart_rule['value'] = $cart_rule['reduction_percent'];
+			}
+			elseif ($cart_rule['reduction_amount'] > 0)
+			{
+				$cart_rule['id_discount_type'] = Discount::AMOUNT;
+				$cart_rule['value'] = $cart_rule['reduction_amount'];
+			}
+		}
+		
 		return $result;
 	}
 

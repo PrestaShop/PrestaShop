@@ -28,7 +28,7 @@
 
 <h1>{l s='My vouchers'}</h1>
 
-{if isset($discount) && count($discount) && $nbDiscounts}
+{if isset($cart_rules) && count($cart_rules) && $nb_cart_rules}
 <table class="discount std table_block">
 	<thead>
 		<tr>
@@ -42,10 +42,10 @@
 		</tr>
 	</thead>
 	<tbody>
-	{foreach from=$discount item=discountDetail name=myLoop}
+	{foreach from=$cart_rules item=discountDetail name=myLoop}
 		<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
-			<td class="discount_code">{$discountDetail.name}</td>
-			<td class="discount_description">{$discountDetail.description}</td>
+			<td class="discount_code">{$discountDetail.code}</td>
+			<td class="discount_description">{$discountDetail.name}</td>
 			<td class="discount_quantity">{$discountDetail.quantity_for_user}</td>
 			<td class="discount_value">
 				{if $discountDetail.id_discount_type == 1}
