@@ -182,7 +182,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
 			$this->tpl_list_vars['POST'] = $_POST;
 		}
-		
+
 		return parent::renderList();
 	}
 
@@ -654,15 +654,6 @@ class AdminCategoriesControllerCore extends AdminController
 			Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
 				VALUES '.pSQL($insert));
-	}
-
-	/**
-	 * @param $token
-	 * @return bool
-	 */
-	protected function processSelectDelete($token)
-	{
-		return parent::processBulkDelete($token);
 	}
 }
 
