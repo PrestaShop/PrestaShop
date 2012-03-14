@@ -1367,19 +1367,25 @@ class CategoryCore extends ObjectModel
 	 */
 	public function addShop($id_shop)
 	{
-		$sql = '';
+		$sql = '
+		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES
+		';
+		$datas = '';
 		if (!$id_shop)
 		{
 			foreach (Shop::getShops(true) as $shop)
-				$sql .= '('.(int)$this->id.', '.(int)$shop['id_shop'].'),';
+				if (!$this->existsInShop($shop['id_shop']))
+					$datas .= '('.(int)$this->id.', '.(int)$shop['id_shop'].'),';
 			// removing last comma to avoid SQL error
-			$sql = substr($sql, 0, strlen($sql) - 1);
+			$datas = substr($datas, 0, strlen($datas) - 1);
 		} else
-			$sql .= '('.(int)$this->id.', '.(int)$id_shop.')';
+			if (!$this->existsInShop($id_shop))
+				$datas .= '('.(int)$this->id.', '.(int)$id_shop.')';
 
-		return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES
-		'.$sql);
+		if (empty($datas))
+			return false;
+		else
+			return Db::getInstance()->execute($sql.$datas);
 	}
 
 	public static function getRootCategories($id_lang = null, $active = true)
@@ -1523,5 +1529,14 @@ class CategoryCore extends ObjectModel
 			$category->addPosition(Category::getLastPosition($category->id_parent, $id_shop), $id_shop);
 
 		return $return;
+	}
+
+	public function existsInShop($id_shop)
+	{
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_category`
+			FROM `'._DB_PREFIX_.'category_shop`
+			WHERE `id_category` = '.(int)$this->id.'
+			AND `id_shop` = '.(int)$id_shop);
 	}
 }
