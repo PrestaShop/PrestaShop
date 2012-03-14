@@ -398,7 +398,7 @@ abstract class PaymentModuleCore extends Module
 
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
-						$order->total_discounts = $order->total_discounts_tax_incl = $values['tax_incl'];
+						$order->total_discounts = $order->total_discounts_tax_incl = round($values['tax_incl'], 9);
 						$order->total_discounts_tax_excl = $values['tax_excl'];
 						$order->update();
 
