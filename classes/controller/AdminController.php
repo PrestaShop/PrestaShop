@@ -2482,7 +2482,10 @@ class AdminControllerCore extends Controller
 		else
 			$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 
-		return $result;
+		if (isset($result))
+			return $result;
+		else
+			return false;
 	}
 
 	protected function processBulkAffectZone($token)
