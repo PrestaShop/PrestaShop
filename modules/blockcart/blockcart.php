@@ -49,12 +49,10 @@ class BlockCart extends Module
 		global $errors;
 
 		// Set currency
-		if (!(int)($params['cart']->id_currency))
-			$currency = new Currency((int)$params['cookie']->id_currency);
-		else
+		if ((int)$params['cart']->id_currency && (int)$params['cart']->id_currency != $this->context->currency->id)
 			$currency = new Currency((int)$params['cart']->id_currency);
-		if (!Validate::isLoadedObject($currency))
-			$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
+		else
+			$currency = $this->context->currency;
 
 		if ($params['cart']->id_customer)
 		{
