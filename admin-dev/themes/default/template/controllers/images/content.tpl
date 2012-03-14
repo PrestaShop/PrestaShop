@@ -83,19 +83,19 @@
 	<br />
 	{if $safe_mode}
 		<div class="warn">
-			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the existing system.'}
+			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive \\"safe_mode\\" is activated). You should continue to use the existing system.'}
 		</div>
 	{else}
 		<form action="{$current}&token={$token}" method="post">
 			<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> {l s='Move images'}</legend><br />
 				{l s='You can choose to keep your images stored in the previous system - there is nothing wrong with that.'}<br />
-				{l s='You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below. Please be patient, this can take several minutes.'}
+				{l s='You can also decide to move your images to the new storage system: in this case, click on the \\"Move images\\" button below. Please be patient, this can take several minutes.'}
 				<br /><br />
 				<div class="hint clear" style="display: block;">&nbsp;
 					{l s='After moving all of your product images, for best performance go to the '}
 					<a style="text-decoration:underline" href="{$link_ppreferences}">{l s='product preferences tab'}</a>
-					{l s='and set "Use the legacy image filesystem" option to "No".'}
+					{l s='and set \\"Use the legacy image filesystem\\" option to \\"No\\".'}
 				</div>
 				<center><input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>
 			</fieldset>

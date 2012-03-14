@@ -52,7 +52,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_REGISTRATION_PROCESS_TYPE' => array(
 						'title' => $this->l('Registration process type'),
-						'desc' => $this->l('The "Only account creation" registration option allows the customer to register faster, and create his address later.'),
+						'desc' => $this->l('The \\"Only account creation\\" registration option allows the customer to register faster, and create his address later.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',

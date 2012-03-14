@@ -94,7 +94,7 @@ class AdminMetaControllerCore extends AdminController
 		$robots_description .= '<br />'.$this->l('e.g. http://www.yoursite.com/robots.txt');
 		if ($this->checkConfiguration($this->rb_file))
 		{
-			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase your old robots.txt file):');
+			$robots_description .= '<br />'.$this->l('Generate your \\"robots.txt\\" file by clicking on the following button (this will erase your old robots.txt file):');
 			$robots_submit = array('name' => 'submitRobots', 'title' => $this->l('Generate robots.txt file'));
 		}
 		else
@@ -123,7 +123,7 @@ class AdminMetaControllerCore extends AdminController
 			'robots' => $robots_options,
 			'routes' => array(
 				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add \\"-hey-my-title\\" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
 				'fields' => array(),
 			),
 		);
@@ -228,7 +228,7 @@ class AdminMetaControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+					'desc' => $this->l('e.g. \\"contacts\\" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
 			),
