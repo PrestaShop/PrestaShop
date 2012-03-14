@@ -169,10 +169,10 @@ class AdminLanguagesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('"No-picture" image:'),
+					'label' => $this->l('\\"No-picture\\" image:'),
 					'name' => 'no-picture',
 					'required' => true,
-					'desc' => $this->l('Image displayed when "no picture found"')
+					'desc' => $this->l('Image displayed when \\"no picture found\\"')
 				),
 				array(
 					'type' => 'radio',

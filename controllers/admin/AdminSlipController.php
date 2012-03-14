@@ -112,9 +112,9 @@ class AdminSlipControllerCore extends AdminController
 		if (Tools::getValue('submitAddorder_slip'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = $this->l('Invalid "From" date');
+				$this->errors[] = $this->l('Invalid \\"From\\" date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = $this->l('Invalid "To" date');
+				$this->errors[] = $this->l('Invalid \\"To\\" date');
 			if (!count($this->errors))
 			{
 				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));

@@ -284,7 +284,7 @@
 			ThickboxI18nImage = "{l s='Image'}";
 			ThickboxI18nOf = "{l s='of'}";
 			ThickboxI18nClose = "{l s='Close'}";
-			ThickboxI18nOrEscKey = "{l s='(or "Esc")'}";
+			ThickboxI18nOrEscKey = "{l s='(or \\"Esc\\")'}";
 			ThickboxI18nNext = "{l s='Next >'}";
 			ThickboxI18nPrev = "{l s='< Previous'}";
 			tb_pathToImage = "../img/loadingAnimation.gif";

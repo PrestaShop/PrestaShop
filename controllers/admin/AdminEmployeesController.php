@@ -218,7 +218,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Back Office width'),
 					'name' => 'bo_width',
 					'size' => 10,
-					'desc' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
+					'desc' => $this->l('Back Office width, in pixels. The value \\"0\\" means that the Back Office width will be flexible.')
 				),
 				array(
 					'type' => 'select',

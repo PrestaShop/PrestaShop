@@ -149,7 +149,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(_PS_ADMIN_DIR_.'/backups/'))
-			$this->warnings[] = $this->l('"Backups" Directory in admin directory must be writeable (CHMOD 755 / 777)');
+			$this->warnings[] = $this->l('\\"Backups\\" Directory in admin directory must be writeable (CHMOD 755 / 777)');
 
 		if ($this->display == 'add' && is_writable(_PS_ADMIN_DIR_.'/backups/'))
 		{

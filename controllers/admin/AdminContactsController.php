@@ -78,7 +78,7 @@ class AdminContactsControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('If enabled, all messages will be saved in the "Customer Service" tab'),
+					'desc' => $this->l('If enabled, all messages will be saved in the \\"Customer Service\\" tab'),
 					'values' => array(
 						array(
 							'id' => 'customer_service_on',
