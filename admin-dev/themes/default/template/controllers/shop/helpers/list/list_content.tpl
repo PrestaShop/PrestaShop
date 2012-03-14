@@ -26,6 +26,10 @@
 
 {extends file="helpers/list/list_content.tpl"}
 
-{block name="default_field_block"}
-	<a href="{$link->getAdminLink('AdminShopUrl')}&id_shop={$tr.$identifier}&addshop_url" class="multishop_warning">{l s='Click here to set an URL for this shop'}</a>
+{block name="td_content"}
+	{if $key == 'url' && !isset($tr.$key)}
+		<a href="{$link->getAdminLink('AdminShopUrl')}&id_shop={$tr.$identifier}&addshop_url" class="multishop_warning">{l s='Click here to set an URL for this shop'}</a>
+	{else}
+		{$smarty.block.parent}
+	{/if}
 {/block}
