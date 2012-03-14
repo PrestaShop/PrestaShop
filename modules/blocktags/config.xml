@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blocktags</name>
-            <displayName><![CDATA[Bloc tags]]></displayName>
+            <displayName><![CDATA[Tags block]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Ajoute un bloc contenant les tags et un lien vers la recherche correspondante]]></description>
+            <description><![CDATA[Adds a block containing a tag cloud.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

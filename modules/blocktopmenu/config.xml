@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blocktopmenu</name>
-            <displayName><![CDATA[Menu Haut horizontal]]></displayName>
+            <displayName><![CDATA[Top horizontal menu]]></displayName>
             <version><![CDATA[1.4]]></version>
-            <description><![CDATA[Ajouter un nouveau menu en haut de votre boutique.]]></description>
+            <description><![CDATA[Add a new menu on top of your shop.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
