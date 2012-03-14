@@ -102,5 +102,5 @@
 			<div id="lost"><a href="#" onclick="displayLogin();return false;">{l s='Back to login'}</a></div>
 		</form>
 	</div>
-	<h2><a href="http://www.prestashop.com">&copy; Copyright by PrestaShop. all rights reserved.</a></h2>
+	<h2><a href="http://www.prestashop.com">&copy; 2005 - {$smarty.now|date_format:"%Y"} Copyright by PrestaShop. all rights reserved.</a></h2>
 </div>
