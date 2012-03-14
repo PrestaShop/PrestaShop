@@ -593,12 +593,16 @@ class ThemeInstallator extends Module
 
 				if ($variation != $theme_directory)
 					$theme_directory .= $variation;
-				
+
+                if (empty($theme_directory))
+                    $theme_directory = str_replace(' ', '', (string)$this->xml['name']);
+
 				$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
 
 				$res &= self::recurseCopy(_IMPORT_FOLDER_.'themes/'.$variation, $target_dir);
 				$new_theme = new Theme();
 				$new_theme->name = (string)$this->xml['name'];
+
 				$new_theme->directory = $theme_directory;
 				$res &= $new_theme->add();
 
@@ -726,13 +730,11 @@ class ThemeInstallator extends Module
 
 	private function _displayForm1()
 	{
-		$tmp = scandir(_PS_ALL_THEMES_DIR_);
 		$themeList = Theme::getThemes();
 
 		$installed_themes = '<option value="" >'.$this->l('select a theme to export').'</option>';
 		if (count($themeList) >  0)
 		{
-			$tmp = '';
 			foreach ($themeList as $theme)
 				$installed_themes .= '<option value="'.$theme->id.'" >'.$theme->name.'</option>';
 			$this->_html .= '
@@ -775,7 +777,7 @@ class ThemeInstallator extends Module
 				</form>
 			</fieldset>
 			<div class="clear">&nbsp;</div>';
-		
+
 		// Import folder is located in the module directory
 		$import_dir = scandir(_IMPORT_FOLDER_);
 		$list = array();
@@ -811,7 +813,7 @@ class ThemeInstallator extends Module
 		$theme = new Theme($id_theme);
 		if (!$theme->id)
 			throw new PrestaShopException('Unable to load theme');
-		
+
 		$this->_html .=	'<input type="hidden" name="id_theme" value="'.$id_theme.'" />';
 		if ($this->error === false && class_exists('ZipArchive', false) && ($zip = new ZipArchive()))
 		{
@@ -889,7 +891,8 @@ class ThemeInstallator extends Module
 	{
 		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright Prestashop --><theme></theme>');
 		$theme->addAttribute('version', Tools::getValue('version'));
-		$theme->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
+        $theme->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
+        $theme->addAttribute('directory', Tools::htmlentitiesUTF8(Tools::getValue('theme_directory')));
 		$author = $theme->addChild('author');
 		$author->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('author_name')));
 		$author->addAttribute('email', Tools::htmlentitiesUTF8(Tools::getValue('email')));
@@ -1144,7 +1147,7 @@ class ThemeInstallator extends Module
 	private function checkNames()
 	{
 		$author = Tools::getValue('author_name');
-		$name = Tools::getValue('theme_name');
+        $name = Tools::getValue('theme_name');
 		$count = 0;
 
 		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
@@ -1234,13 +1237,12 @@ class ThemeInstallator extends Module
 	{
 		$defaultLanguage = (int)$this->context->language->id;
 		$languages = Language::getLanguages();
-		$iso = $this->context->language->iso_code;
 		$divLangName = 'title';
 		$id_theme = (int)Tools::getValue('id_theme');
 		$theme = new Theme($id_theme);
 
 		$theme_name = Tools::getValue('theme_name') ? Tools::getValue('theme_name') : $theme->name;
-		$theme_directory = $theme->directory;
+        $theme_directory = Tools::getValue('theme_directory') ? Tools::getValue('theme_directory') : $theme->directory;
 
 		$this->_html .=	'
 		<fieldset>
