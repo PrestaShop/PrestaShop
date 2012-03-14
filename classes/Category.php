@@ -888,7 +888,7 @@ class CategoryCore extends ObjectModel
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		return $link->getCategoryLink($this->id, $this->link_rewrite);
+		return $link->getCategoryLink($this, $this->link_rewrite);
 	}
 
 	public function getName($id_lang = null)
