@@ -158,7 +158,7 @@
 				<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
 				<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 					<tr><td>
-						<br/>{l s='Does this product has an associated file ?'}<br />
+						<br/>{l s='Does this product has an associated file?'}<br />
 						<label style="width:50px"><input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
 						<label style="width:50px"><input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}</label><br /><br />
 						{if $download_product_file_missing}
@@ -184,7 +184,7 @@
 							<p class="block">
 							{if !$product->productDownload->checkFile()}
 								<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #CCCCCC">
-								<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='Mo'}</p>
+								<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
 								{if $show_file_input}
 									<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
 									<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" /></p>
@@ -211,7 +211,7 @@
 							<p class="block">
 								<label for="virtual_product_name" class="t">{l s='Filename'}</label>
 								<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentities}" />
-								<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g., Book.pdf)'}</span>
+								<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g. Book.pdf)'}</span>
 							</p>
 						</div>
 					</td></tr>
@@ -227,12 +227,12 @@
 							<p class="block">
 								<label for="virtual_product_expiration_date" class="t">{l s='Expiration date'}</label>
 								<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
-								<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
+								<span class="hint" name="help_box" style="display:none">{l s='Leave this blank for no expiration date'}</span>
 							</p>
 							<p class="block">
 								<label for="virtual_product_nb_days" class="t">{l s='Number of days'}</label>
 								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{$product->productDownload->nb_days_accessible|htmlentities}" class="" size="4" /><sup> *</sup>
-								<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='set to zero for unlimited access'})</em></span>
+								<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='Set to zero for unlimited access'})</em></span>
 							</p>
 							<p class="block">
 								<label for="virtual_product_is_shareable" class="t">{l s='is shareable'}</label>
@@ -241,7 +241,7 @@
 							</p>
 						</div>
 						{else}
-						<div class="hint clear" style="display: block;width: 70%;">{l s='You used combinations, for this reason you can\'t edit your file here, but in the Combinations tab'}</div>
+						<div class="hint clear" style="display: block;width: 70%;">{l s='You cannot edit your file here because you used combinations. Please edit it in the Combinations tab'}</div>
 						<br />
 							{$error_product_download}
 						{/if}

@@ -55,7 +55,7 @@
 					{/if}
 
 					{if $total_thread == 0}
-						<span class="message-mail">{l s='No new message'}</span>
+						<span class="message-mail">{l s='No new messages'}</span>
 					{else}
 						<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
 							{$total_thread} 

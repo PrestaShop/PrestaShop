@@ -83,7 +83,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Display manufacturers and suppliers list even if corresponding blocks are disabled'),
+					'desc' => $this->l('Display suppliers and manufacturers list even if corresponding blocks are disabled'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'

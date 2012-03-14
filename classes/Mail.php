@@ -60,23 +60,23 @@ class MailCore
 
 		if (!empty($from) && !Validate::isEmail($from))
 		{
- 			Tools::dieOrLog(Tools::displayError('Error: parameter "from" is corrupted'), $die);
+ 			Tools::dieOrLog(Tools::displayError('Error: parameter \\"from\\" is corrupted'), $die);
  			return false;
 		}
 		if (!empty($fromName) && !Validate::isMailName($fromName))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "fromName" is corrupted'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"fromName\\" is corrupted'), $die);
 	 		return false;
 		}
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"to\\" is corrupted'), $die);
 	 		return false;
 		}
 			
 		if (!is_array($templateVars))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "templateVars" is not an array'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"templateVars\\" is not an array'), $die);
 	 		return false;
 		}
 		
@@ -89,13 +89,13 @@ class MailCore
 			
 		if (!Validate::isTplName($template))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: invalid email template'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
 	 		return false;
 		}
 			
 		if (!Validate::isMailSubject($subject))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: invalid email subject'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
 	 		return false;
 		}
 
@@ -109,7 +109,7 @@ class MailCore
 				$addr = trim($addr);
 				if (!Validate::isEmail($addr))
 				{
-					Tools::dieOrLog(Tools::displayError('Error: invalid email address'), $die);
+					Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
 					return false;
 				}
 				if (is_array($toName))
@@ -179,7 +179,7 @@ class MailCore
 			}
 			else if (!file_exists($templatePath.$template.'.txt') || !file_exists($templatePath.$template.'.html'))
 			{
-				Tools::dieOrLog(Tools::displayError('Error - The following email template is missing:').' '.$templatePath.$template.'.txt', $die);
+				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$template.'.txt', $die);
 				return false;
 			}
 			$templateHtml = file_get_contents($templatePath.$template.'.html');

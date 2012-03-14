@@ -26,8 +26,8 @@
 
 <script type="text/javascript">
 
-	var msg_select_one = '{l s='Thanks to select at least one product.' js=1}';
-	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.' js=1}';
+	var msg_select_one = '{l s='Please select at least one product.' js=1}';
+	var msg_set_quantity = '{l s='Please set a quantity to add a product.' js=1}';
 
 	$(document).ready(function() {
 		if ($('#ppack').attr('checked'))
@@ -184,7 +184,7 @@
 				<input type="hidden" size="2" id="curPackItemId" />
 
 				<span onclick="addPackItem();" class="button" style="cursor: pointer;">
-					{l s='Add this product in the pack'}
+					{l s='Add this product to the pack'}
 				</span>
 
 				<p class="product_description listOfPack" style="display:{if count($product->packItems) > 0}block{else}none{/if};text-align: left;">

@@ -108,7 +108,7 @@ class AdminSearchControllerCore extends AdminController
 	{
 		if (!ip2long(trim($this->query)))
 		{
-			$this->errors[] = Tools::displayError('It seems that this is not an IP address :').' '.Tools::htmlentitiesUTF8($this->query);
+			$this->errors[] = Tools::displayError('It seems that this is not an IP address:').' '.Tools::htmlentitiesUTF8($this->query);
 			return;
 		}
 		$this->_list['customers'] = Customer::searchByIp($this->query);
@@ -196,7 +196,7 @@ class AdminSearchControllerCore extends AdminController
 			'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
 			'email' => array('title' => $this->l('E-mail address'), 'align' => 'left', 'width' => 250),
 			'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
-			'date_add' => array('title' => $this->l('Register date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+			'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
 			'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),
 			'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool', 'width' => 25),
 		));
@@ -210,8 +210,8 @@ class AdminSearchControllerCore extends AdminController
 			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-			'price_tax_excl' => array('title' => $this->l('Price tax excl'), 'align' => 'right', 'type' => 'price', 'width' => 60),
-			'price_tax_incl' => array('title' => $this->l('Price tax incl'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+			'price_tax_excl' => array('title' => $this->l('Price (tax excl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+			'price_tax_incl' => array('title' => $this->l('Price (tax incl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
 			'status' => array('title' => $this->l('Status'), 'align' => 'center', 'width' => 25),
 		));
 	}

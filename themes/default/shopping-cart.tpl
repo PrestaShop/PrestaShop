@@ -31,7 +31,7 @@
 
 {if isset($account_created)}
 	<p class="success">
-		{l s='Your account is now created.'}
+		{l s='Your account has been created.'}
 	</p>
 {/if}
 {assign var='current_step' value='summary'}
@@ -57,7 +57,7 @@
 {if isset($lastProductAdded) AND $lastProductAdded}
 	<div class="cart_last_product">
 		<div class="cart_last_product_header">
-			<div class="left">{l s='Last added product'}</div>
+			<div class="left">{l s='Last product added'}</div>
 		</div>
 		<a  class="cart_last_product_img" href="{$link->getProductLink($lastProductAdded.id_product, $lastProductAdded.link_rewrite, $lastProductAdded.category, null, null, $lastProductAdded.id_shop)|escape:'htmlall':'UTF-8'}"><img src="{$link->getImageLink($lastProductAdded.link_rewrite, $lastProductAdded.id_image, 'small')}" alt="{$lastProductAdded.name|escape:'htmlall':'UTF-8'}"/></a>
 		<div class="cart_last_product_content">
@@ -67,7 +67,7 @@
 		<br class="clear" />
 	</div>
 {/if}
-<p>{l s='Your shopping cart contains'} <span id="summary_products_quantity">{$productNumber} {if $productNumber == 1}{l s='product'}{else}{l s='products'}{/if}</span></p>
+<p>{l s='Your shopping cart contents'} <span id="summary_products_quantity">{$productNumber} {if $productNumber == 1}{l s='product'}{else}{l s='products'}{/if}</span></p>
 <div id="order-detail-content" class="table_block">
 	<table id="cart_summary" class="std">
 		<thead>
@@ -191,7 +191,7 @@
 							<p>
 								<input type="text" class="discount_name" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 							</p>
-							<p class="submit"><input type="hidden" name="submitDiscount" /><input type="submit" name="submitAddDiscount" value="{l s='ok'}" class="button" /></p>
+							<p class="submit"><input type="hidden" name="submitDiscount" /><input type="submit" name="submitAddDiscount" value="{l s='OK'}" class="button" /></p>
 						{if $displayVouchers}
 							<h4 class="title_offers">{l s='Take advantage of our offers:'}</h4>
 							<div id="display_cart_vouchers">
@@ -323,7 +323,7 @@
 	{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
 		<p>
 			<input type="checkbox" {if $multi_shipping}checked="checked"{/if} id="enable-multishipping" />
-			<label for="enable-multishipping">{l s='I want to specify a delivery address for each products ordered.'}</label>
+			<label for="enable-multishipping">{l s='I want to specify a delivery address for each individual product.'}</label>
 		</p>
 	{/if}
 {/if}

@@ -122,7 +122,7 @@ class AdminShopControllerCore extends AdminController
 
 					$this->toolbar_btn['new-url'] = array(
 							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;id_shop='.$shop->id.'&amp;addshop_url',
-							'desc' => $this->l('Add url'),
+							'desc' => $this->l('Add URL'),
 							'class' => 'addShopUrl'
 						);
 
@@ -327,7 +327,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'categories_select',
 			'name' => 'categoryBox',
-			'label' => $this->l('Associated categories :'),
+			'label' => $this->l('Associated categories:'),
 			'category_tree' => $this->initCategoriesAssociation($parent)
 		);
 		$this->fields_form['input'][] = array(
@@ -369,7 +369,7 @@ class AdminShopControllerCore extends AdminController
 		);
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save'),
 			'class' => 'button'
 		);
 
@@ -391,8 +391,8 @@ class AdminShopControllerCore extends AdminController
 			'lang' => $this->l('Langs'),
 			'manufacturer' => $this->l('Manufacturers'),
 			'module' => $this->l('Modules'),
-			'hook_module' => $this->l('Modules hook'),
-			'hook_module_exceptions' => $this->l('Modules hook exceptions'),
+			'hook_module' => $this->l('Module hooks'),
+			'hook_module_exceptions' => $this->l('Module hook exceptions'),
 			'meta_lang' => $this->l('Meta'),
 			'module_country' => $this->l('Payment module country restrictions'),
 			'module_group' => $this->l('Payment module customer group restrictions'),
@@ -427,7 +427,7 @@ class AdminShopControllerCore extends AdminController
 					'label' => $this->l('Choose data to import'),
 					'values' => $import_data
 				),
-				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
+				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way for the selected shop')
 			);
 
 		$this->fields_value = array(

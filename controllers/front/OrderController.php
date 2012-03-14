@@ -47,7 +47,7 @@ class OrderControllerCore extends ParentOrderController
 		if (!$this->context->cart->checkQuantities())
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('An item in your cart is no longer available for this quantity, you cannot proceed with your order.');
+			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity, you cannot proceed with your order.');
 		}
 
 		// Check minimal amount

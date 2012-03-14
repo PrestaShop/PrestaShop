@@ -33,12 +33,12 @@ class AdminGeolocationControllerCore extends AdminController
 
 		$this->options = array(
 			'geolocationConfiguration' => array(
-				'title' =>	$this->l('Geolocation by IP:'),
+				'title' =>	$this->l('Geolocation by IP address:'),
 				'icon' =>	'world',
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_ENABLED' => array(
-		 				'title' => $this->l('Geolocation by IP:'),
-		 				'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for many countries. See below.'),
+		 				'title' => $this->l('Geolocation by IP address:'),
+		 				'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for certain countries. See below.'),
 		 				'validation' => 'isUnsignedId',
 		 				'cast' => 'intval',
 		 				'type' => 'bool'
@@ -48,31 +48,31 @@ class AdminGeolocationControllerCore extends AdminController
 			'geolocationCountries' => array(
 				'title' =>	$this->l('Options'),
 				'icon' =>	'world',
-				'description' => $this->l('The following features are only available if you enable the Geolocation by IP feature.'),
+				'description' => $this->l('The following features are only available if you enable the Geolocation by IP address feature.'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_BEHAVIOR' => array(
 						'title' => $this->l('Geolocation behavior for restricted countries:'),
 						'type' => 'select',
 						'identifier' => 'key',
-						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors can\'t see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but can\'t make an order'))),
+						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order'))),
 					),
 		 			'PS_GEOLOCATION_NA_BEHAVIOR' => array(
-						'title' => $this->l('Geolocation behavior for undefined countries:'),
+						'title' => $this->l('Geolocation behavior for other countries:'),
 						'type' => 'select',
 						'identifier' => 'key',
 						'list' => array(array('key' => '-1', 'name' => $this->l('All features are available')),
-										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors can\'t see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but can\'t make an order')))
+										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order')))
 					),
 				),
 			),
 			'geolocationWhitelist' => array(
-				'title' =>	$this->l('Whitelist of IP addresses'),
+				'title' =>	$this->l('IP address whitelist'),
 				'icon' =>	'world',
-				'description' => $this->l('You can add many IP addresses, these addresses will always be allowed to access your shop (e.g. Google bots IP).'),
+				'description' => $this->l('You can add  IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'),
 				'fields' =>	array(
-		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Allowed IP addresses:'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
+		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses:'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
 				),
 				'submit' => array(),
 			),
@@ -140,7 +140,7 @@ class AdminGeolocationControllerCore extends AdminController
 		if (!$this->isGeoLiteCityAvailable())
 			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
-				$this->l('and decompress it into tools/geoip/ directory'));
+				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory'));
 
 		parent::initContent();
 	}

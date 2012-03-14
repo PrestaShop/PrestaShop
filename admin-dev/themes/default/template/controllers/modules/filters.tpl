@@ -30,12 +30,12 @@
 			<!--start addons login-->
 			<div class="filter-module" id="addons_login_div">
 		
-				<p>{l s='You are logged on PrestaShop Addons'}</p>
+				<p>{l s='You are logged into PrestaShop Addons'}</p>
 				
 				<div style="float:right">				
 					<label><img src="themes/default/img/module-profile.png" /> {l s='Welcome'} {$username_addons}</label>
 					<label>|</label>
-					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Logout from addons'}</a></label>
+					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Log out from PrestaShop Addons'}</a></label>
 				</div>
 
 			</div>
@@ -46,9 +46,9 @@
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			
 			<div class="warn">
-				<b>{l s='If you want to be able to fully use the AdminModules pannel and have free modules available, you should enable the following configuration on your server :'}</b><br />
+				<b>{l s='If you want to be able to fully use the AdminModules panel and have free modules available, you should enable the following configuration on your server:'}</b><br />
 				{if $check_url_fopen eq 'ko'}- {l s='Enable allow_url_fopen'}<br />{/if}
-				{if $check_openssl eq 'ko'}- {l s='Enable php openssl extension'}<br />{/if}
+				{if $check_openssl eq 'ko'}- {l s='Enable php openSSL extension'}<br />{/if}
 			</div>
 			
 		{else}
@@ -56,9 +56,9 @@
 			<!--start addons login-->
 			<div class="filter-module" id="addons_login_div">
 		
-				<p>{l s='You have a PrestaShop Addons account ?'}</p>
+				<p>{l s='Do you have a PrestaShop Addons account?'}</p>
 				<form id="addons_login_form" method="post">
-					<label>{l s='Login Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
+					<label>{l s='Login to Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
 					<label>{l s= 'Password Addons'} :</label> <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
 					<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
 					<br /><span id="addons_loading" style="color:red"></span>
@@ -88,20 +88,20 @@
 					<select name="module_type" id="module_type_filter" {if $showTypeModules ne 'allModules' && $showTypeModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All Modules'}</option>
 						<option value="nativeModules" {if $showTypeModules eq 'nativeModules'}selected="selected"{/if}>{l s='Native Modules'}</option>
-						<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partners Modules'}</option>
-						{if isset($logged_on_addons)}<option value="addonsModules" {if $showTypeModules eq 'addonsModules'}selected="selected"{/if}>{l s='Modules bought on Addons'}</option>{/if}
+						<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partner Modules'}</option>
+						{if isset($logged_on_addons)}<option value="addonsModules" {if $showTypeModules eq 'addonsModules'}selected="selected"{/if}>{l s='Modules purchased on Addons'}</option>{/if}
 						<optgroup label="{l s='Authors'}">
 							{foreach from=$list_modules_authors key=module_author item=status}
 								<option value="authorModules[{$module_author}]" {if $status eq "selected"}selected{/if}>{$module_author|truncate:20:'...'}</option>
 							{/foreach}
 						</optgroup>
-						<option value="otherModules" {if $showTypeModules eq 'otherModules'}selected="selected"{/if}>{l s='Others Modules'}</option>
+						<option value="otherModules" {if $showTypeModules eq 'otherModules'}selected="selected"{/if}>{l s='Other Modules'}</option>
 					</select>
 					&nbsp;
 					<select name="module_install" id="module_install_filter" {if $showInstalledModules ne 'installedUninstalled' && $showInstalledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
-						<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Uninstalled'}</option>
+						<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Not Installed'}</option>
 						<option value="installed" {if $showInstalledModules eq 'installed'}selected="selected"{/if}>{l s='Installed Modules'}</option>
-						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Uninstalled Modules'}</option>
+						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Not Installed Modules'}</option>
 					</select>
 					&nbsp;
 					<select name="module_status" id="module_status_filter" {if $showEnabledModules ne 'enabledDisabled' && $showEnabledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>

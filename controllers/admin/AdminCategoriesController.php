@@ -295,9 +295,9 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
+		$unidentified_group_information = sprintf($this->l('%s - All people without a validated customer account.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
-		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
+		$default_group_information = sprintf($this->l('%s - All people who created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 		$root_category = Category::getRootCategory();
 		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 		$this->fields_form = array(
@@ -426,15 +426,15 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Group access:'),
 					'name' => 'groupBox',
 					'values' => Group::getGroups(Context::getContext()->language->id),
-					'info_introduction' => $this->l('You have now three default customer groups.'),
+					'info_introduction' => $this->l('You now have three default customer groups.'),
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'desc' => $this->l('Mark all groups you want to give access to this category')
+					'desc' => $this->l('Mark all customer groups you want to give access to this category')
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -498,7 +498,7 @@ class AdminCategoriesControllerCore extends AdminController
 					$this->errors[] = Tools::displayError($this->l('Category cannot be moved here'));
 			}
 			else
-				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
+				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of itself.'));
 		}
 		parent::processAdd($token);
 	}

@@ -50,22 +50,22 @@
 					{if $need_delete_mode}
 						{l s='Do you want to delete products too?'}
 					{else}
-						{l s='Deleting this category will remove products linked with this category and without any others. Are you sure you want to continue?'}
+						{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
 					{/if}
 				</h2>
 				{if $need_delete_mode}
 				<ul class="listForm">
 				<li>
 					<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
-					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No, I want to link products without others categories with the parent category and disable them.'}</label>
+					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No, I want to link products without other categories within the parent category and then disable them.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-					<label for="deleteMode_link" style="float:none;">{l s='No, I want to link products without others categories with the parent category.'}</label>
+					<label for="deleteMode_link" style="float:none;">{l s='No, I want to link products without other categories within the parent category.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-					<label for="deleteMode_delete" style="float:none">{l s='Yes, I want to remove products linked with this category and without any others categories.'}</label>
+					<label for="deleteMode_delete" style="float:none">{l s='Yes, I want to remove products linked only within this category and no others.'}</label>
 				</li>
 				</ul>
 				{else}
@@ -83,8 +83,8 @@
 					{/if}
 				{/foreach}
 				<br />
-				<input type="submit" name="cancel" class="button" value="{l s='   Cancel   '}" />
-				<input type="submit" class="button" value="{l s='   Validate   '}" />
+				<input type="submit" name="cancel" class="button" value="{l s='Cancel'}" />
+				<input type="submit" class="button" value="{l s='Validate'}" />
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>

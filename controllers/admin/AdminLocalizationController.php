@@ -40,7 +40,7 @@ class AdminLocalizationControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_LANG_DEFAULT' => array(
 						'title' => $this->l('Default language:'),
-						'desc' => $this->l('The default language used in shop'),
+						'desc' => $this->l('The default language used in your shop'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_lang',
@@ -48,7 +48,7 @@ class AdminLocalizationControllerCore extends AdminController
 					),
 					'PS_COUNTRY_DEFAULT' => array(
 						'title' => $this->l('Default country:'),
-						'desc' => $this->l('The default country used in shop'),
+						'desc' => $this->l('The default country used in your shop'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_country',
@@ -57,9 +57,9 @@ class AdminLocalizationControllerCore extends AdminController
 					'PS_CURRENCY_DEFAULT' => array(
 						'title' => $this->l('Default currency:'),
 						'desc' =>
-							$this->l('The default currency used in shop')
+							$this->l('The default currency used in your shop')
 							.'<div class="warn">'
-								.$this->l('If you change default currency, you will have to manually edit every product price.')
+								.$this->l('If you change the default currency, you will have to manually edit every product price.')
 							.'</div>',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -76,34 +76,34 @@ class AdminLocalizationControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_WEIGHT_UNIT' => array(
 						'title' => $this->l('Weight unit:'),
-						'desc' => $this->l('The weight unit of your shop (eg. kg or lbs)'),
+						'desc' => $this->l('The default weight unit for your shop (e.g. kg or lbs)'),
 						'validation' => 'isWeightUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_DISTANCE_UNIT' => array(
 						'title' => $this->l('Distance unit:'),
-						'desc' => $this->l('The distance unit of your shop (eg. km or mi)'),
+						'desc' => $this->l('The default distance unit for your shop (e.g. km or mi)'),
 						'validation' => 'isDistanceUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_VOLUME_UNIT' => array(
 						'title' => $this->l('Volume unit:'),
-						'desc' => $this->l('The volume unit of your shop'),
+						'desc' => $this->l('The default volume unit for your shop'),
 						'validation' => 'isWeightUnit',
 						'required' => true,
 						'type' => 'text'
 					),
 					'PS_DIMENSION_UNIT' => array(
 						'title' => $this->l('Dimension unit:'),
-						'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'),
+						'desc' => $this->l('The default dimension unit for your shop (e.g. cm or in)'),
 						'validation' => 'isDistanceUnit',
 						'required' => true,
 						'type' => 'text'
 					)
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
 			),
 			'options' => array(
 				'title' =>	$this->l('Advanced'),
@@ -125,13 +125,13 @@ class AdminLocalizationControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					)
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
 			)
 		);
 
 		if (function_exists('date_default_timezone_set'))
 			$this->options['general']['fields']['PS_TIMEZONE'] = array(
-				'title' => $this->l('Time Zone:'),
+				'title' => $this->l('Time Zone.'),
 				'validation' => 'isAnything',
 				'type' => 'select',
 				'list' => Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT name FROM '._DB_PREFIX_.'timezone'),
@@ -150,10 +150,10 @@ class AdminLocalizationControllerCore extends AdminController
 			$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 
 			if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
-				$this->errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
+				$this->errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder \\"localization\\")');
 
 			if (!$selection = Tools::getValue('selection'))
-				$this->errors[] = Tools::displayError('Please select at least one content item to import.');
+				$this->errors[] = Tools::displayError('Please select at least one item to import.');
 			else
 			{
 				foreach ($selection as $selected)
@@ -222,14 +222,14 @@ class AdminLocalizationControllerCore extends AdminController
 			array(
 				'id' => 'units',
 				'val' => 'units',
-				'name' => $this->l('Units (e.g., weight, volume, distance)')
+				'name' => $this->l('Units (e.g. weight, volume, distance)')
 			)
 		);
 
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Localization pack import'),
+				'title' => $this->l('Import localization pack'),
 				'image' => '../img/admin/localization.gif'
 			),
 			'input' => array(

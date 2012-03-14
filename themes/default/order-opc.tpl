@@ -28,7 +28,7 @@
 	{capture name=path}{l s='Your shopping cart'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 	<h2 id="cart_title">{l s='Your shopping cart'}</h2>
-	<p class="warning">{l s='This store has not accepted your new order.'}</p>
+	<p class="warning">{l s='Your new order was not accepted.'}</p>
 {else}
 <script type="text/javascript">
 	// <![CDATA[
@@ -58,7 +58,7 @@
 	var txtNoCarrierIsSelected = "{l s='No carrier has been selected'}";
 	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order'}";
 	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted'}";
-	var txtTOSIsAccepted = "{l s='Terms of service is accepted'}";
+	var txtTOSIsAccepted = "{l s='Terms of service have been accepted'}";
 	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted'}";
 	var txtThereis = "{l s='There is'}";
 	var txtErrors = "{l s='error(s)'}";

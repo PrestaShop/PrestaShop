@@ -55,7 +55,7 @@ class ContactControllerCore extends FrontController
 			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
 			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
-				$this->errors[] = Tools::displayError('Please select a subject on the list.');
+				$this->errors[] = Tools::displayError('Please select a subject from the list.');
 			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file upload');
 			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) && !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))

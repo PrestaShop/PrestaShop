@@ -4,9 +4,6 @@ Il tuo messaggio:
 
 {message}
 
-Numero d'ordine : {id_order}
-
-Attaccamento : {attached_file}
 
 Risponderemo quanto prima.
 

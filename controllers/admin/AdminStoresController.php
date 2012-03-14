@@ -147,7 +147,7 @@ class AdminStoresControllerCore extends AdminController
 					'size' => 33,
 					'required' => false,
 					'hint' => $this->l('Allowed characters: letters, spaces and').' (-)',
-					'desc' => $this->l('Store name, e.g. Citycentre Mall Store')
+					'desc' => $this->l('Store name (e.g. Citycentre Mall Store)')
 				),
 				array(
 					'type' => 'text',
@@ -164,7 +164,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/ Zip Code:'),
+					'label' => $this->l('Postcode / Zip Code:'),
 					'name' => 'postcode',
 					'size' => 6,
 					'required' => true
@@ -207,7 +207,7 @@ class AdminStoresControllerCore extends AdminController
 					'required' => true,
 					'size' => 11,
 					'maxlength' => 12,
-					'desc' => $this->l('Store coords, eg. 45.265469 / -47.226478')
+					'desc' => $this->l('Store coordinates (e.g. 45.265469 / -47.226478)')
 				),
 				array(
 					'type' => 'text',
@@ -253,7 +253,7 @@ class AdminStoresControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display or not this store')
+					'desc' => $this->l('Whether or not to display this store')
 				)
 			),
 			'rightCols' => array (
@@ -261,7 +261,7 @@ class AdminStoresControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Picture:'),
 					'name' => 'image',
-					'desc' => $this->l('Store window picture')
+					'desc' => $this->l('Storefront picture')
 				)
 			),
 			'submit' => array(
@@ -340,7 +340,7 @@ class AdminStoresControllerCore extends AdminController
 					$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 					$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 					if (!preg_match($zip_regexp, $postcode))
-						$this->errors[] = Tools::displayError('Your zip/postal code is incorrect.').'<br />'.Tools::displayError('Must be typed as follows:').' '.
+						$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.').'<br />'.Tools::displayError('Must be typed as follows:').' '.
 											str_replace(
 												'C',
 												$country->iso_code,
@@ -356,9 +356,9 @@ class AdminStoresControllerCore extends AdminController
 											);
 				}
 				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('Postcode required.');
+					$this->errors[] = Tools::displayError('Postcode / Zip code required.');
 				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Your zip/postal code is incorrect.');
+					$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.');
 			}
 
 			/* Store hours */
@@ -421,7 +421,7 @@ class AdminStoresControllerCore extends AdminController
 			),
 			'PS_SHOP_DETAILS' => array(
 				'title' => $this->l('Registration:'),
-				'desc' => $this->l('Shop registration information (e.g., SIRET or RCS)'),
+				'desc' => $this->l('Shop registration information (e.g. SIRET or RCS)'),
 				'validation' => 'isGenericName',
 				'size' => 30,
 				'type' => 'textarea',
@@ -441,7 +441,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_CODE' => array(
-				'title' => $this->l('Post/Zip code:'),
+				'title' => $this->l('Postcode / Zip code:'),
 				'validation' => 'isGenericName',
 				'size' => 6,
 				'type' => 'text'

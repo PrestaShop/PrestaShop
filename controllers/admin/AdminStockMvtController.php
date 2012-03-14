@@ -40,7 +40,7 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->list_no_link = true;
-		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
+		$this->displayInformation($this->l('This interface allows you to display the stock movement for a selected warehouse.').'<br />');
 
 		$this->fieldsDisplay = array(
 			'product_reference' => array(
@@ -75,8 +75,8 @@ class AdminStockMvtControllerCore extends AdminController
 				'type' => 'select',
 				'filter_key' => 'a!sign',
 				'list' => array(
-					'1' => $this->l('Increment'),
-					'-1' => $this->l('Decrement'),
+					'1' => $this->l('Increase'),
+					'-1' => $this->l('Decrease'),
 				),
 				'icon' => array(
 					-1 => 'remove_stock.png',
@@ -89,7 +89,7 @@ class AdminStockMvtControllerCore extends AdminController
 				'filter_key' => 'a!physical_quantity'
 			),
 			'price_te' => array(
-				'title' => $this->l('Price (TE)'),
+				'title' => $this->l('Price (tax excl.)'),
 				'width' => 70,
 				'align' => 'right',
 				'type' => 'price',
@@ -235,7 +235,7 @@ class AdminStockMvtControllerCore extends AdminController
 					$item = &$this->_list[$i];
 
 					if (empty($item['product_name']))
-						$item['product_name'] = $this->l('The name of this product is not available. Maybe it has been deleted from the system.');
+						$item['product_name'] = $this->l('The name of this product is not available. It may have been deleted from the system.');
 				}
 			}
 	}

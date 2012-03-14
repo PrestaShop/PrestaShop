@@ -53,7 +53,7 @@
 					<label style="width: 100px">{l s='Module file'}</label>
 					<div class="margin-form" style="padding-left: 140px">
 						<input type="file" name="file" />
-						<p>{l s='Upload the module from your computer.'}</p>
+						<p>{l s='Upload a module from your computer.'}</p>
 					</div>
 					<div class="margin-form" style="padding-left: 140px">
 						<input type="submit" name="download" value="{l s='Upload this module'}" class="button" />

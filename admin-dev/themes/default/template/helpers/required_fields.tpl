@@ -52,7 +52,7 @@
 				</tbody>
 			</table><br />
 			<center>
-				<input style="margin-left:15px;" class="button" type="submit" value="{l s='   Save   '}" name="submitFields" />
+				<input style="margin-left:15px;" class="button" type="submit" value="{l s='Save'}" name="submitFields" />
 			</center>
 		</p>
 	</form>

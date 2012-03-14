@@ -53,7 +53,7 @@
 							count = stripHTML(textarea_value).length;
 							rest = max - count;
 							if (rest < 0)
-								textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s=' characters'} : '+rest+'</span>');
+								textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
 							else
 								textarea.parent('div').find('span.counter').html(' ');
 						}
@@ -88,7 +88,7 @@
 		var toload = new Array();
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save the pack.' slashes=1}';
 		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save the product.' slashes=1}';
-		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save the product.' slashes=1}';
+		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly URL at least for the default language before you can save the product.' slashes=1}';
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 
@@ -284,7 +284,7 @@
 			ThickboxI18nImage = "{l s='Image'}";
 			ThickboxI18nOf = "{l s='of'}";
 			ThickboxI18nClose = "{l s='Close'}";
-			ThickboxI18nOrEscKey = "{l s='(or "Esc")'}";
+			ThickboxI18nOrEscKey = "{l s='(or \\"Esc\\")'}";
 			ThickboxI18nNext = "{l s='Next >'}";
 			ThickboxI18nPrev = "{l s='< Previous'}";
 			tb_pathToImage = "../img/loadingAnimation.gif";
@@ -300,7 +300,7 @@
 			<div class="warn draft" >
 				<p>
 					<span style="float: left">
-					{l s='Your product will be saved as draft'}</span>
+					{l s='Your product will be saved as a draft'}</span>
 					<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview'}</a></span>
 					<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 					<br />

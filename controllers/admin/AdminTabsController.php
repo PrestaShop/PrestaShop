@@ -244,7 +244,7 @@ class AdminTabsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/

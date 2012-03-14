@@ -134,73 +134,73 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'title' =>	$this->l('Customer service options'),
 				'fields' =>	array(
 					'PS_SAV_IMAP_URL' => array(
-						'title' => $this->l('Imap url'),
-						'desc' => $this->l('Url for imap server (mail.server.com)'),
+						'title' => $this->l('IMAP URL'),
+						'desc' => $this->l('URL for IMAP server (mail.server.com)'),
 						'type' => 'text',
 						'size' => 40,
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_PORT' => array(
-						'title' => $this->l('Imap port'),
-						'desc' => $this->l('Port to use to connect imap server'),
+						'title' => $this->l('IMAP port'),
+						'desc' => $this->l('Port to use to connect to IMAP server'),
 						'type' => 'text',
 						'defaultValue' => 143,
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_USER' => array(
-						'title' => $this->l('Imap user'),
-						'desc' => $this->l('User to use to connect imap server'),
+						'title' => $this->l('IMAP user'),
+						'desc' => $this->l('User to use to connect to IMAP server'),
 						'type' => 'text',
 						'size' => 40,
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_PWD' => array(
-						'title' => $this->l('Imap password'),
-						'desc' => $this->l('Password to use to connect imap server'),
+						'title' => $this->l('IMAP password'),
+						'desc' => $this->l('Password to use to connect IMAP server'),
 						'type' => 'text',
 						'size' => 40,
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
-						'title' => $this->l('Deletes messages'),
-						'desc' => $this->l('Deletes message after sync. If you do not active this option, the sync will be longer'),
+						'title' => $this->l('Delete messages'),
+						'desc' => $this->l('Delete message after sync. If you do not active this option, the sync will be longer'),
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_NORSH' => array(
-						'title' => $this->l('Imap option').' (/norsh)',
+						'title' => $this->l('IMAP options').' (/norsh)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use rsh or ssh to establish a preauthenticated IMAP session'),
+						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP session'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_SSL' => array(
-						'title' => $this->l('Imap option').' (/ssl)',
+						'title' => $this->l('IMAP options').' (/ssl)',
 						'type' => 'bool',
 						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
-						'title' => $this->l('Imap option').' (/validate-cert)',
+						'title' => $this->l('IMAP options').' (/validate-cert)',
 						'type' => 'bool',
 						'desc' => $this->l('Validate certificates from TLS/SSL server'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
-						'title' => $this->l('Imap option').' (/novalidate-cert)',
+						'title' => $this->l('IMAP options').' (/novalidate-cert)',
 						'type' => 'bool',
 						'desc' => $this->l('Do not validate certificates from TLS/SSL server, needed if server uses self-signed certificates'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_TLS' => array(
-						'title' => $this->l('Imap option').' (/tls)',
+						'title' => $this->l('IMAP options').' (/tls)',
 						'type' => 'bool',
 						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_OPT_NOTLS' => array(
-						'title' => $this->l('Imap option').' (/notls)',
+						'title' => $this->l('IMAP options').' (/notls)',
 						'type' => 'bool',
-						'desc' => $this->l('do not do start-TLS to encrypt the session, even with servers that support it'),
+						'desc' => $this->l('do not use start-TLS to encrypt the session, even with servers that support it'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),
@@ -249,8 +249,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$this->l('Threads pending') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
 			$this->l('Total customer messages') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
 			$this->l('Total employee messages') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
-			$this->l('Threads unread') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
-			$this->l('Threads closed') => $all - ($unread + $pending)
+			$this->l('Unread threads') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+			$this->l('Closed threads') => $all - ($unread + $pending)
 		);
 
 		$this->tpl_list_vars = array(
@@ -358,7 +358,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = '<div class="alert error">'.Tools::displayError('Email invalid.').'</div>';
+					$this->errors[] = '<div class="alert error">'.Tools::displayError('E-mail invalid.').'</div>';
 			}
 			if (Tools::isSubmit('submitReply'))
 			{
@@ -402,7 +402,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					);
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred, your message was not sent.  Please contact your system administrator.');
+					$this->errors[] = Tools::displayError('An error occurred, your message was not sent. Please contact your system administrator.');
 			}
 		}
 
@@ -470,24 +470,24 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($next_thread)
 			$actions['next_thread'] = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
-				'name' => $this->l('Answer to the next unanswered message in this category')
+				'name' => $this->l('Reply to the next unanswered message in this category')
 			);
 		else
 			$actions['next_thread'] = array(
 				'href' => false,
-				'name' => $this->l('The other messages in this category have been answered')
+				'name' => $this->l('All other messages in this category have been answered')
 			);
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Set this message as handled')
+				'name' => $this->l('Mark this message as handled')
 			);
 
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Declare this message as "pending 1" (will be answered later)')
+				'name' => $this->l('Mark this message as \\"pending 1\\" (will be answered later)')
 			);
 		else
 			$actions['pending1'] = array(
@@ -498,7 +498,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Declare this message as "pending 2" (will be answered later)')
+				'name' => $this->l('Mark this message as \\"pending 2\\" (will be answered later)')
 			);
 		else
 			$actions['pending2'] = array(

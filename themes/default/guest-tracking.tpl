@@ -45,14 +45,14 @@
 	{else}
 		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box">
-				<p class="bold">{l s='Transform your guest account to a customer account and enjoy :'}</p>
+				<p class="bold">{l s='Transform your guest account to a customer account and enjoy:'}</p>
 				<ul class="bullet">
 					<li>{l s='Personalized and secure access'}</li>
 					<li>{l s='Fast and easy check out'}</li>
 					<li>{l s='Easier merchandise return'}</li>
 				</ul>
 				<p class="text">
-					<label>{l s='Define your password:'}</label>
+					<label>{l s='Set your password:'}</label>
 					<input type="password" name="password" />
 				</p>
 				
@@ -66,7 +66,7 @@
 {else}
 	{include file="$tpl_dir./errors.tpl"}
 	{if isset($show_login_link) && $show_login_link}
-		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account.php', true)}">{l s='Click here to log-in to your customer account'}</a><br /><br /></p>
+		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account.php', true)}">{l s='Click here to log in to your customer account'}</a><br /><br /></p>
 	{/if}
 	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std">
 		<fieldset class="description_box">

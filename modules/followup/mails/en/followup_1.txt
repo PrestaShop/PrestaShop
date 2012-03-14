@@ -1,6 +1,6 @@
 Hello {firstname} {lastname},
  
-We noticed that during your last visit on {shop_name}, you did not validate the order you had started.
+We noticed that during your last visit on {shop_name}, you did not complete the order you had started.
 
 Your cart has been saved, you can resume your order by visiting our shop:
 

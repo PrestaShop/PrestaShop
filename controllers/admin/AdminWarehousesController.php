@@ -110,9 +110,9 @@ class AdminWarehousesControllerCore extends AdminController
 		// display help informations
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the general default currency used.').'<br />');
-		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :'));
+		$this->displayInformation($this->l('Furthermore, for each warehouse, you should check:'));
 		$this->displayInformation($this->l('the management type (according to the law in your country), the valuation currency, its associated carriers and shops.').'<br />');
-		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation, the number of products and quantities stored, ...')
+		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its overall value, the number of products and quantities stored, etc.')
 								  .'<br /><br />');
 		$this->displayInformation($this->l('Be careful, products from different warehouses will need to be shipped in different packages.'));
 
@@ -137,7 +137,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		// sets the title of the toolbar
-		$this->toolbar_title = $this->l('Stock : Warehouse management');
+		$this->toolbar_title = $this->l('Stock: Warehouse management');
 
 		// sets the fields of the form
 		$this->fields_form = array(
@@ -157,7 +157,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('Reference of this warehouse'),
+					'desc' => $this->l('Reference for this warehouse'),
 				),
 				array(
 					'type' => 'text',
@@ -175,7 +175,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'phone',
 					'size' => 15,
 					'maxlength' => 16,
-					'desc' => $this->l('Phone number of this warehouse')
+					'desc' => $this->l('Phone number for this warehouse')
 				),
 				array(
 					'type' => 'text',
@@ -195,7 +195,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode/ Zip Code:'),
+					'label' => $this->l('Postcode / Zip Code:'),
 					'name' => 'postcode',
 					'size' => 10,
 					'maxlength' => 12,
@@ -224,7 +224,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('State'),
+					'label' => $this->l('State:'),
 					'name' => 'id_state',
 					'required' => true,
 					'options' => array(
@@ -280,14 +280,14 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Management type:'),
-				'hint' => $this->l('Careful ! You won\'t be able to change this value later!'),
+				'hint' => $this->l('Careful! You won\'t be able to change this value later!'),
 				'name' => 'management_type',
 				'required' => true,
 				'options' => array(
 					'query' => array(
 						array(
 							'id' => 'WA',
-							'name' => $this->l('Weight Average')
+							'name' => $this->l('Average Weight')
 						),
 						array(
 							'id' => 'FIFO',
@@ -315,7 +315,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Stock valuation currency:'),
-				'hint' => $this->l('Careful ! You won\'t be able to change this value later!'),
+				'hint' => $this->l('Careful! You won\'t be able to change this value later!'),
 				'name' => 'id_currency',
 				'required' => true,
 				'options' => array(
@@ -339,7 +339,7 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save'),
 			'class' => 'button'
 		);
 

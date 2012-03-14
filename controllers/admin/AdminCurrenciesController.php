@@ -45,7 +45,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Currency')),
 			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 80),
-			'iso_code_num' => array('title' => $this->l('ISO code num'), 'align' => 'center', 'width' => 120),
+			'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'width' => 120),
 			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false),
 			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 130, 'search' => false),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
@@ -57,7 +57,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
-				'description' => $this->l('Update your currencies exchanges rates with a real-time tool'),
+				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is.'),
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
 					'class' => 'button',
@@ -65,9 +65,9 @@ class AdminCurrenciesControllerCore extends AdminController
 				)
 			),
 			'cron' => array(
-				'title' =>	$this->l('Currency rates update'),
+				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
-				'info' => $this->l('Place this URL in crontab or call it manually daily').':<br />
+				'info' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. Place this URL in crontab or access it manually daily').':<br />
 					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
 			)
 		);
@@ -99,7 +99,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'maxlength' => 32,
 					'required' => true,
 					'hint' => $this->l('Only letters and the minus character are allowed'),
-					'desc' => $this->l('Will appear on Front Office, e.g., euro, dollar').'...',
+					'desc' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
 				),
 				array(
 					'type' => 'text',
@@ -108,7 +108,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('ISO code, e.g., USD for dollar, EUR for euro').'...',
+					'desc' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros)').'...',
 				),
 				array(
 					'type' => 'text',
@@ -117,7 +117,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('Numeric ISO code, e.g., 840 for dollar, 978 for euro').'...',
+					'desc' => $this->l('Numeric ISO code (e.g. 840 for Dollars, 978 for Euros)').'...',
 				),
 				array(
 					'type' => 'text',
@@ -126,7 +126,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 8,
 					'required' => true,
-					'desc' => $this->l('Will appear on Front Office, e.g., &euro;, $').'...',
+					'desc' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
 				),
 				array(
 					'type' => 'text',
@@ -144,11 +144,11 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' =>$this->l('Applies to all prices, e.g.,').' $1,240.15',
+					'desc' =>$this->l('Applies to all prices, e.g.').' $1,240.15',
 					'options' => array(
 						'query' => array(
-							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with dollars').')'),
-							array('key' => 2, 'name' => '0 000,00X ('.$this->l('as with euros').')'),
+							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with Dollars').')'),
+							array('key' => 2, 'name' => '0 000,00X ('.$this->l('as with Euros').')'),
 							array('key' => 3, 'name' => 'X0.000,00'),
 							array('key' => 4, 'name' => '0,000.00X'),
 						),
@@ -163,7 +163,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('Display decimals on prices'),
+					'desc' => $this->l('Display decimals in prices'),
 					'values' => array(
 						array(
 							'id' => 'decimals_on',
@@ -179,12 +179,12 @@ class AdminCurrenciesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Blank:'),
+					'label' => $this->l('Spacing:'),
 					'name' => 'blank',
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('Include a blank between sign and price, e.g.,').'<br />$1,240.15 -> $ 1,240.15',
+					'desc' => $this->l('Include a space between symbol and price, e.g.').'<br />$1,240.15 -> $ 1,240.15',
 					'values' => array(
 						array(
 							'id' => 'blank_on',
@@ -247,7 +247,7 @@ class AdminCurrenciesControllerCore extends AdminController
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->errors[] = $this->l('You can\'t delete the default currency');
+				$this->errors[] = $this->l('You cannot delete the default currency');
 			else if ($object->delete())
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 			else
@@ -267,7 +267,7 @@ class AdminCurrenciesControllerCore extends AdminController
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->errors[] = $this->l('You can\'t disable the default currency');
+				$this->errors[] = $this->l('You cannot disable the default currency');
 			else if ($object->toggleStatus())
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
 					(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);

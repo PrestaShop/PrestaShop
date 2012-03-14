@@ -28,7 +28,7 @@
 
 {block name="override_tpl"}
 	<script type="text/javascript">
-		var errorEmpty = "{l s='Please enter a name to save.'}"
+		var errorEmpty = "{l s='Please name your matching configuration to save.'}"
 	</script>
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
@@ -115,7 +115,7 @@
 		<table>
 			<tr>
 				<td colspan="3" align="center">
-					<input name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" value="{l s='Import CSV data'}" class="button" />
+					<input name="import" type="submit" onclick="return (validateImportation(new Array({$res})));" id="import" value="{l s='Import .CSV data'}" class="button" />
 				</td>
 			</tr>
 			<tr>

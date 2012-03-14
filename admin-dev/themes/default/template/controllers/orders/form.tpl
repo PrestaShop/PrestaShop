@@ -963,7 +963,7 @@
 						<tr>
 							<th height=39px" class="left">{l s='ID'}</th>
 							<th class="left">{l s='Date'}</th>
-							<th class="left">{l s='Produits'}</th>
+							<th class="left">{l s='Products'}</th>
 							<th class="left">{l s='Total paid'}</th>
 							<th class="left">{l s='Payment'}</th>
 							<th class="left">{l s='Status'}</th>
@@ -1068,7 +1068,7 @@
 			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 		</div>
 		<div class="margin-form">
-			<a href="#" id="send_email_to_customer" class="button">{l s='Send an email to the customer with the link to process the payment.'}</a>
+			<a href="#" id="send_email_to_customer" class="button">{l s='Send an e-mail to the customer with the link to process the payment.'}</a>
 		</div>
 		<div class="margin-form">
 			<a target="_blank" id="go_order_process" href="" class="button">{l s='Go on payment page to process the payment.'}</a>

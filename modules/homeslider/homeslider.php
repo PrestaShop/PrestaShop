@@ -260,7 +260,7 @@ class HomeSlider extends Module
 
 		/* Display notice if there are no slides yet */
 		if (!$slides)
-			$this->_html .= '<p style="margin-left: 40px;">'.$this->l('You did not add any slides yet.').'</p>';
+			$this->_html .= '<p style="margin-left: 40px;">'.$this->l('You have not added any slides yet.').'</p>';
 		else /* Display slides */
 		{
 			$this->_html .= '

@@ -44,7 +44,7 @@ class AdminCountriesControllerCore extends AdminController
 										'text' => $this->l('Delete selected'),
 										'confirm' => $this->l('Delete selected items?')),
 									'affectzone' => array(
-										'text' => $this->l('Affect a new zone'))
+										'text' => $this->l('Assign to a new zone'))
 									);
 
 		$this->fieldImageSettings = array(
@@ -54,10 +54,10 @@ class AdminCountriesControllerCore extends AdminController
 
 		$this->options = array(
 			'general' => array(
-				'title' =>	$this->l('Countries options'),
+				'title' =>	$this->l('Country options'),
 				'fields' =>	array(
 					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-						'title' => $this->l('Restrict countries in FO by those delivered by active carriers'),
+						'title' => $this->l('Restrict country selections in Front Office to those covered by active carriers'),
 						'cast' => 'intval',
 						'type' => 'bool',
 						'default' => '0'
@@ -166,7 +166,7 @@ class AdminCountriesControllerCore extends AdminController
 					'size' => 30,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Name of country')
+					'desc' => $this->l('Country name')
 				),
 				array(
 					'type' => 'text',
@@ -176,7 +176,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('2- or 3-letter ISO code, e.g., FR for France').'.
+					'desc' => $this->l('2- or 3-letter ISO code (e.g. US for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
 							</a>.'
@@ -189,7 +189,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('International call prefix, e.g., 33 for France.')
+					'desc' => $this->l('International call prefix, (e.g. 1 for United States)')
 				),
 				array(
 					'type' => 'select',
@@ -242,11 +242,11 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France. No verification if undefined')
+					'desc' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g. NNNNN for the United States. No verification if undefined')
 				),
 				array(
 					'type' => 'address_layout',
-					'label' => $this->l('Address layout:'),
+					'label' => $this->l('Address format:'),
 					'name' => 'address_layout',
 					'address_layout' => $address_layout,
 					'encoding_address_layout' => urlencode($address_layout),
@@ -272,7 +272,7 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display or not this country')
+					'desc' => $this->l('Display this country')
 				),
 				array(
 					'type' => 'radio',
@@ -295,7 +295,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Need tax identification number?'),
+					'label' => $this->l('Need Tax identification number?'),
 					'name' => 'need_identification_number',
 					'required' => false,
 					'class' => 't',
@@ -314,7 +314,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Display tax label:'),
+					'label' => $this->l('Display tax label (e.g. \\"Tax incl.\\"):'),
 					'name' => 'display_tax_label',
 					'required' => false,
 					'class' => 't',
@@ -356,13 +356,13 @@ class AdminCountriesControllerCore extends AdminController
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
-				$this->errors[] = Tools::displayError('This iso code already exist, you can\'t create two country with the same iso code');
+				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
 		}
 		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
-				$this->errors[] = Tools::displayError('This iso code already exist, you can\'t create two country with the same iso code');
+				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
 		}
 
 		if (!count($this->errors))

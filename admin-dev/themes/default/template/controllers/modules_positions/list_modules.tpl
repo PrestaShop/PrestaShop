@@ -57,18 +57,18 @@
 	</select>
 	<br /><br />
 	<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible}')" {if $hook_position}checked="checked"{/if} />&nbsp;
-	<label class="t" for="hook_position">{l s='Display non-positionable hook'}</label>
+	<label class="t" for="hook_position">{l s='Display non-positionable hooks'}</label>
 </form>
 </div>
 <br/>
 <div>
 
 <div id="modulePosition">
-<div class="blocLiveEdit"><h2>{l s='Live edit'}</h2>
+<div class="blocLiveEdit"><h2>{l s='LiveEdit'}</h2>
 {if $live_edit}
-	<p>{l s='You have to select a shop to use live edit'}</p>
+	<p>{l s='You have to select a shop to use LiveEdit'}</p>
 {else}
-	<p>{l s='By clicking here you will be redirected to the front office of your shop to move and delete modules directly.'}</p>
+	<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
 		<a href="{$url_live_edit}" target="_blank" class="button">{l s='Run LiveEdit'}</a>
 {/if}
 </div>
@@ -77,7 +77,7 @@
 	<input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
 
 {if !$can_move}
-	<br /><div><b>{l s='If you want to order / move following data, please go in shop context (select a shop in shop list)'}</b></div>
+	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list'}</b></div>
 {/if}
 {foreach $hooks as $hook}
 	<a name="{$hook['name']}"/>

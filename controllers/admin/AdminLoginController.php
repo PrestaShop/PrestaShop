@@ -195,7 +195,7 @@ class AdminLoginControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
 		}
 		if (_PS_MODE_DEMO_)
-			$errors[] = Tools::displayError('This functionnality has been disabled.');
+			$errors[] = Tools::displayError('This functionality has been disabled.');
 
 		if (!count($this->errors))
 		{	

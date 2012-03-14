@@ -52,11 +52,11 @@
 		<label>{l s='File'}</label>
 		<div class="margin-form">
 			<p><input type="file" name="attachment_file" /></p>
-			<p class="preference_description">{l s='Upload file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE} {l s='Mo maximum'})</p>
+			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE} {l s='MB maximum'})</p>
 		</div>
 		<div class="clear">&nbsp;</div>
 		<div class="margin-form">
-			<input type="submit" value="{l s='Download a attachment file'}" name="submitAddAttachments" class="button" />
+			<input type="submit" value="{l s='Download an attachment file'}" name="submitAddAttachments" class="button" />
 		</div>
 		<div class="small"><sup>*</sup> {l s='Required field'}</div>
 	</fieldset>

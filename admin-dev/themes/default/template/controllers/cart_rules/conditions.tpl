@@ -28,12 +28,12 @@
 		<option value="0" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 0}selected="selected"{/if}>{l s='Shipping excluded'}</option>
 		<option value="1" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 1}selected="selected"{/if}>{l s='Shipping included'}</option>
 	</select>
-	<p class="preference_description">{l s='You can choose a minimum amount for the cart either with or without the taxes, with or without shipping.'}</p>
+	<p class="preference_description">{l s='You can choose a minimum amount for the cart either with or without the taxes, and with or without shipping.'}</p>
 </div>
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-	<p class="preference_description">{l s='The cart rule will be applied to the X first customers only.'}</p>
+	<p class="preference_description">{l s='The cart rule will be applied to the first X customers only.'}</p>
 </div>
 <label>{l s='Total available for each user'}</label>
 <div class="margin-form">
@@ -138,7 +138,7 @@
 {/if}
 {if $cart_rules.unselected|@count + $cart_rules.selected|@count > 0}
 <br />
-<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} /> <strong>{l s='Other cart rules compatibility'}</strong>
+<input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} /> <strong>{l s='Compatibility with other cart rules'}</strong>
 <div id="cart_rule_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
@@ -177,7 +177,7 @@
 		{/foreach}
 	</table>
 	<a href="javascript:addProductRuleGroup();">
-		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Add a new rule group'}
+		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Product selection'}
 	</a>
 </div>
 {if $shops.unselected|@count + $shops.selected|@count > 1}

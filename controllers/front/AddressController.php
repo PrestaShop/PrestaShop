@@ -158,14 +158,14 @@ class AddressControllerCore extends FrontController
 				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = '<strong>'.Tools::displayError('Zip/ Postal code').'</strong> '
+					$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '
 											.Tools::displayError('is invalid.').'<br />'.Tools::displayError('Must be typed as follows:')
 											.' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
 			}
 			else if ($zip_code_format)
-				$this->errors[] = '<strong>'.Tools::displayError('Zip/ Postal code').'</strong> '.Tools::displayError('is required.');
+				$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = '<strong>'.Tools::displayError('Zip/ Postal code').'</strong> '.Tools::displayError('is invalid.')
+				$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is invalid.')
 										.'<br />'.Tools::displayError('Must be typed as follows:').' '
 										.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
 		}
@@ -186,7 +186,7 @@ class AddressControllerCore extends FrontController
 				AND id_address != '.(int)Tools::getValue('id_address').'
 				AND id_customer = '.(int)$this->context->customer->id.'
 				AND deleted = 0') > 0)
-			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose an other one.'), Tools::safeOutput($_POST['alias']));
+			$this->errors[] = sprintf(Tools::displayError('The alias \\"%s\\" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
 
 		// Don't continue this process if we have errors !
 		if ($this->errors && !Tools::isSubmit('ajax'))

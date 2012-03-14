@@ -114,7 +114,7 @@ combinationImages[0] = new Array();
 {/if}
 
 // Translations
-var doesntExist = '{l s='The product does not exist in this model. Please choose another.' js=1}';
+var doesntExist = '{l s='This combination does not exist for this product. Please choose another.' js=1}';
 var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
 var doesntExistNoMoreBut = '{l s='with those attributes but is available with others' js=1}';
 var uploading_in_progress = '{l s='Uploading in progress, please wait...' js=1}';
@@ -313,13 +313,13 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				</div>
 			{/if}
 			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
-				<label for="product_reference">{l s='Reference :'} </label>
+				<label for="product_reference">{l s='Reference:'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
 
 			<!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
-				<label>{l s='Quantity :'}</label>
+				<label>{l s='Quantity:'}</label>
 				<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" maxlength="3" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
 			</p>
 
@@ -598,7 +598,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{/if}
 				{if $product->text_fields|intval}
 				<div class="customizableProductsText">
-					<h3>{l s='Texts'}</h3>
+					<h3>{l s='Text'}</h3>
 					<ul id="text_fields">
 					{counter start=0 assign='customizationField'}
 					{foreach from=$customizationFields item='field' name='customizationFields'}

@@ -342,7 +342,7 @@ class HelperListCore extends Helper
 	protected function displayDuplicateLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_duplicate.tpl');
-		if (!array_key_exists('Duplicate', self::$cache_lang))
+		if (!array_key_exists('Bad SQL query', self::$cache_lang))
 			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
@@ -449,7 +449,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', 'Helper');
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
 
 		if (!array_key_exists('Name', self::$cache_lang))
 			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');

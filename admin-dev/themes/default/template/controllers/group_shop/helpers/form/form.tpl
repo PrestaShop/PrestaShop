@@ -67,7 +67,7 @@
 {block name="label"}
 
 	{if $input.type == 'text' && $input.name == 'name'}
-		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t edit GroupShop when you have more than one Shop'}</div><br />
+		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t edit GroupShop when you have more than one shop'}</div><br />
 	{/if}
 
 	{if isset($input.label)}

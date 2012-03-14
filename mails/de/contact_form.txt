@@ -1,10 +1,6 @@
 Ihre Nachricht wurde korrekt an unseren Kundendienst weitergeleitet.
  
 Ihre Nachricht: {message}
-
-Bestellnummer : {id_order}
-
-Befestigung : {attached_file}
  
 Wir werden so schnell wie möglich antworten.
  

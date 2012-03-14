@@ -85,7 +85,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
 		$this->list_modules_categories['emailing']['name'] = $this->l('E-mailing');
 		$this->list_modules_categories['front_office_features']['name'] = $this->l('Front Office Features');
-		$this->list_modules_categories['i18n_localization']['name'] = $this->l('I18n & Localization');
+		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization & Localization');
 		$this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandizing');
 		$this->list_modules_categories['migration_tools']['name'] = $this->l('Migration Tools');
 		$this->list_modules_categories['payments_gateways']['name'] = $this->l('Payments & Gateways');
@@ -97,7 +97,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping & Logistics');
 		$this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
 		$this->list_modules_categories['smart_shopping']['name'] = $this->l('Smart Shopping');
-		$this->list_modules_categories['market_place']['name'] = $this->l('Market Place');
+		$this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
 		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 
@@ -512,7 +512,7 @@ class AdminModulesControllerCore extends AdminController
 	 	// PrestaShop demo mode
 		if (_PS_MODE_DEMO_)
 		{
-			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
 
@@ -724,7 +724,7 @@ class AdminModulesControllerCore extends AdminController
 			{
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
-				$this->errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
+				$this->errors[] = sprintf(Tools::displayError('The following module(s) were not installed properly: %s'), $html_error);
 			}
 		}
 		if ($return)
@@ -804,7 +804,7 @@ class AdminModulesControllerCore extends AdminController
 			$this->translationsTab['Reset'] = $this->l('Reset');
 			$this->translationsTab['Configure'] = $this->l('Configure');
 			$this->translationsTab['Delete'] = $this->l('Delete');
-			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this ?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?');
+			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?');
 		}	
 			
 		$return = '';
@@ -1021,8 +1021,8 @@ class AdminModulesControllerCore extends AdminController
 			{
 				$object = new $module->name();
 				$module_success[] = array('name' => $module->name, 'message' => array(
-					0 => $this->l('Current version: ').$object->version,
-					1 => $this->l('No files upgrade applied (none exist)'))
+					0 => $this->l('Current version:').$object->version,
+					1 => $this->l('No file upgrades applied (none exist)'))
 				);
 				unset($object);
 			}

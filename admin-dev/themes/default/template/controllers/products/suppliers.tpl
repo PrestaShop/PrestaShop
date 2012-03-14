@@ -35,7 +35,7 @@
 		<br />
 		<p>{l s='When using the advanced stock management (see Preferences/Products), the values you fill here (prices, references) will be used in the supply orders.'}</p>
 	</div>
-	<p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
+	<p>{l s='Please choose the suppliers associated with this product, and the default one.'}</p>
 	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier">
 		<img src="../img/admin/add.gif" alt="{l s='Create new supplier'}" title="{l s='Create new supplier'}" /><span>{l s='Create new supplier'}</span>
 	</a>
@@ -73,7 +73,7 @@
 	{else}
 		<p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
 	{/if}
-	<p>{l s='Click "Save and Stay" after changing selected suppliers to display the associated product references.'}</p>
+	<p>{l s='Click \\"Save and Stay\\" after changing selected suppliers to display the associated product references.'}</p>
 	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$associated_suppliers item=supplier}
 		    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>

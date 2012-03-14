@@ -229,7 +229,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			),
 		);

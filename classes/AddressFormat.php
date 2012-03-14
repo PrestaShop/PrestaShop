@@ -120,7 +120,7 @@ class AddressFormatCore extends ObjectModel
 		$isValide = false;
 
 		if (!class_exists($className))
-			$this->_errorFormatList[] = Tools::displayError('This class name doesn\'t exist').
+			$this->_errorFormatList[] = Tools::displayError('This class name does not exist.').
 			': '.$className;
 		else
 		{
@@ -138,7 +138,7 @@ class AddressFormatCore extends ObjectModel
 			}
 
 			if (!$isValide)
-				$this->_errorFormatList[] = Tools::displayError('This property doesn\'t exist in the class or is forbidden').
+				$this->_errorFormatList[] = Tools::displayError('This property does not exist in the class or is forbidden.').
 				': '.$className.': '.$fieldName;
 
 			unset($obj);
@@ -162,26 +162,26 @@ class AddressFormatCore extends ObjectModel
 		{
 			$totalNameUsed = count($associationName);
 			if ($totalNameUsed > 2)
-				$this->_errorFormatList[] = Tools::displayError('This assocation contains too much key name');
+				$this->_errorFormatList[] = Tools::displayError('This association has too many elements.');
 			else if ($totalNameUsed == 1)
 			{
 				$associationName[0] = strtolower($associationName[0]);
 				if (in_array($associationName[0], self::$forbiddenPropertyList) ||
 					!$this->_checkValidateClassField('Address', $associationName[0], false))
-					$this->_errorFormatList[] = Tools::displayError('This name isn\'t allowed').': '.
+					$this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
 					$associationName[0];
 			}
 			else if ($totalNameUsed == 2)
 			{
 				if (empty($associationName[0]) || empty($associationName[1]))
-					$this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern').': '.$patternName;
+					$this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').': '.$patternName;
 				else
 				{
 					$associationName[0] = ucfirst($associationName[0]);
 					$associationName[1] = strtolower($associationName[1]);
 
 					if (in_array($associationName[0], self::$forbiddenClassList))
-						$this->_errorFormatList[] = Tools::displayError('This name isn\'t allowed').': '.
+						$this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
 						$associationName[0];
 					else
 					{
@@ -222,7 +222,7 @@ class AddressFormatCore extends ObjectModel
 								$usedKeyList[] = $patternName;
 							}
 							else
-								$this->_errorFormatList[] = Tools::displayError('This key is used too many times (once allowed)').
+								$this->_errorFormatList[] = Tools::displayError('This key has already been used.').
 									': '.$patternName;
 					}
 				}

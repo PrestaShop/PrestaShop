@@ -28,11 +28,11 @@
 
 {if isset($display_regenerate)}
 	<h2 class="space">{l s='Regenerate thumbnails'}</h2>
-	{l s='Regenerates thumbnails for all existing product images'}<br /><br />
+	{l s='Regenerates thumbnails for all existing images'}<br /><br />
 	<div  class="width4">
 		<div class="warn">
-			{l s='Please be patient, as this can take several minutes'}<br />
-			{l s='Be careful! Manually generated thumbnails will be erased by automatically generated thumbnails.'}
+			{l s='Please be patient, this can take several minutes'}<br />
+			{l s='Be careful! Manually uploaded thumbnails will be erased and replaced by automatically generated thumbnails.'}
 		</div>
 	</div>
 	<form action="{$current}&token={$token}" method="post">
@@ -69,7 +69,7 @@
 			<label>{l s='Erase previous images'}</label>
 			<div class="margin-form">
 				<input name="erase" type="checkbox" value="1" checked="checked" />
-				<p>{l s='Uncheck this checkbox only if your server timed out and you need to resume the regeneration.'}</p>
+				<p>{l s='Deselect this checkbox only if your server timed out and you need to resume the regeneration.'}</p>
 			</div>
 			<div class="clear"></div>
 			<center><input type="Submit" name="submitRegenerate{$table}" value="{l s='Regenerate thumbnails'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>
@@ -79,23 +79,23 @@
 
 {if isset($display_move)}
 	<br /><h2 class="space">{l s='Move images'}</h2>
-	{l s='A new storage system for product images is now used by PrestaShop. It offers better performance if your shop has a very large number of products.'}<br />
+	{l s='PrestaShop now uses a new storage system for product images. It offers better performance if your shop has a very large number of products.'}<br />
 	<br />
 	{if $safe_mode}
 		<div class="warn">
-			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the actual system.'}
+			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive \\"safe_mode\\" is activated). You should continue to use the existing system.'}
 		</div>
 	{else}
 		<form action="{$current}&token={$token}" method="post">
 			<fieldset class="width4">
 				<legend><img src="../img/admin/picture.gif" /> {l s='Move images'}</legend><br />
-				{l s='You can choose to keep your images stored in the previous system - nothing wrong with that.'}<br />
-				{l s='You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below.	Please be patient, as this can take several minutes.'}
+				{l s='You can choose to keep your images stored in the previous system - there is nothing wrong with that.'}<br />
+				{l s='You can also decide to move your images to the new storage system: in this case, click on the \\"Move images\\" button below. Please be patient, this can take several minutes.'}
 				<br /><br />
 				<div class="hint clear" style="display: block;">&nbsp;
 					{l s='After moving all of your product images, for best performance go to the '}
 					<a style="text-decoration:underline" href="{$link_ppreferences}">{l s='product preferences tab'}</a>
-					{l s=' and set "Use the legacy image filesystem" to NO.'}
+					{l s='and set \\"Use the legacy image filesystem\\" option to \\"No\\".'}
 				</div>
 				<center><input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>
 			</fieldset>

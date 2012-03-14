@@ -64,7 +64,7 @@
 </tr>
 <tr id="new_invoice" style="display:none;background-color:#e9f1f6;">
 	<td colspan="10">
-		<h3>{l s='New invoice informations'}</h3>
+		<h3>{l s='New invoice information'}</h3>
 		<label>{l s='Carrier:'}</label>
 		<div class="margin-form">
 			{$carrier->name}
@@ -72,7 +72,7 @@
 		<div class="margin-form">
 			<input type="checkbox" name="add_invoice[free_shipping]" value="1" />
 			<label class="t">{l s='Free shipping'}</label>
-			<p>{l s='If you don\'t select the "Free shipping", the normal shipping cost will be applied'}</p>
+			<p>{l s='If you don\'t select \\"Free shipping,\\" the normal shipping cost will be applied'}</p>
 		</div>
 	</td>
 </tr>

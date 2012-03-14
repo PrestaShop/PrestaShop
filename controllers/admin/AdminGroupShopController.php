@@ -128,7 +128,7 @@ class AdminGroupShopControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Share available quantities to sale:'),
+					'label' => $this->l('Share available quantities to sell:'),
 					'name' => 'share_stock',
 					'required' => true,
 					'class' => 't',
@@ -145,7 +145,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share available quantities to sale between shops of this group. When changing this option, all product available quantities for this group will be reset to 0.'),
+					'desc' => $this->l('Share available quantities to sell between shops of this group. When changing this option, all product available quantities for this group will be reset to 0.'),
 				),
 				array(
 					'type' => 'radio',
@@ -170,7 +170,7 @@ class AdminGroupShopControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save'),
 				'class' => 'button'
 			)
 		);
@@ -196,7 +196,7 @@ class AdminGroupShopControllerCore extends AdminController
 			'group' => $this->l('Groups'),
 			'manufacturer' => $this->l('Manufacturers'),
 			'supplier' => $this->l('Suppliers'),
-			'tax_rules_group' => $this->l('Tax rules groups'),
+			'tax_rules_group' => $this->l('Tax rule groups'),
 			'zone' => $this->l('Zones'),
 		);
 
@@ -264,7 +264,7 @@ class AdminGroupShopControllerCore extends AdminController
 			if (GroupShop::getTotalGroupShops() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
 			else if ($object->haveShops())
-				$this->errors[] = Tools::displayError('You cannot delete or disable a groupshop which have this shops using it.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable a groupshop which has shops using it.');
 
 			if (count($this->errors))
 				return false;
