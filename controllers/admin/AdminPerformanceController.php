@@ -242,7 +242,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('Minify HTML after \\"smarty compile\\" execution.')
+							'label' => $this->l('Minify HTML after "smarty compile" execution.')
 						),
 						array(
 							'id' => 'PS_HTML_THEME_COMPRESSION_0',
@@ -261,7 +261,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('Compress inline JavaScript in HTML after \\"smarty compile\\" execution')
+							'label' => $this->l('Compress inline JavaScript in HTML after "smarty compile" execution')
 						),
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_0',
@@ -280,7 +280,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_HIGH_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('HTML is compressed but cancels the W3C validation (only when \\"Minify HTML\\" is enabled)')
+							'label' => $this->l('HTML is compressed but cancels the W3C validation (only when "Minify HTML" is enabled)')
 						),
 						array(
 							'id' => 'PS_HIGH_HTML_THEME_COMPRESSION_0',
@@ -370,7 +370,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Ciphering'),
 				'image' => '../img/admin/computer_key.png'
 			),
-			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension \\"mcrypt\\". If you change this configuration, all cookies will be reset.'),
+			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',

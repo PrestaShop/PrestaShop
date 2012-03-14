@@ -40,7 +40,7 @@
 			<label>{l s='Priority'}</label>
 			<div class="margin-form">
 				<input type="text" name="priority" value="{$currentTab->getFieldValue($currentObject, 'priority')|intval}" />
-				<p class="preference_description">{l s='Cart rules are applied to the cart by priority. A cart rule with priority of \\"1\\" will be processed before a cart rule with a priority of \\"2\\".'}</p>
+				<p class="preference_description">{l s='Cart rules are applied to the cart by priority. A cart rule with priority of "1" will be processed before a cart rule with a priority of "2".'}</p>
 			</div>
 			<label>{l s='Status'}</label>
 			<div class="margin-form">
