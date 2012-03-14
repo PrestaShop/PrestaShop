@@ -174,8 +174,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
-						'title' => $this->l('Display "add to cart" button when product has attributes:'),
-						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes to force customers to see the product detail'),
+						'title' => $this->l('Display \\"add to cart\\" button when product has attributes:'),
+						'desc' => $this->l('Display or hide the \\"add to cart\\" button on category pages for products that have attributes to force customers to see the product detail'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

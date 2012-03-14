@@ -53,7 +53,7 @@ class AdminImagesControllerCore extends AdminController
 				'top' => '',
 				'bottom' => '',
 				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
-								  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".'),
+								  <br /><br />'.$this->l('WARNING: This feature may not be compatible with your theme or with some modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting \\"Use JPEG\\".'),
 				'fields' =>	array(
 					'PS_IMAGE_QUALITY' => array(
 						'title' => $this->l('Image quality'),
