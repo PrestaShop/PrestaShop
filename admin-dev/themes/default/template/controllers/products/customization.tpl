@@ -46,12 +46,7 @@
 		<tr>
 			<td><div class="clear">&nbsp;</div></td>
 		</tr>
-		<tr>
-			<td style="width:150px;"></td>
-			<td>
-				<input type="submit" name="submitCustomizationConfiguration" value="{l s='Update settings'}" class="button"/>
-			</td>
-		</tr>
+
 		{if $has_file_labels}
 			<tr>
 				<td colspan="2"><div class="separation"></div></td>
@@ -74,12 +69,5 @@
 				</td>
 			</tr>
 		{/if}
-		<tr>
-			<td colspan="2" style="text-align:center;">
-				{if $has_file_labels || $has_text_labels}
-					<input type="submit" name="submitProductCustomization" id="submitProductCustomization" value="{l s='Save labels'}" class="button" style="margin-top: 9px" />
-				{/if}
-			</td>
-		</tr>
 	</table>
 {/if}

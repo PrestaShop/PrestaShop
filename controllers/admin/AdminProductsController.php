@@ -858,22 +858,29 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processCustomizationConfiguration($token)
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		$product = $this->object;
+		// Get the number of existing customization fields ($product->text_fields is the updated value, not the existing value)
+		$current_customization = $product->getCustomizationFieldIds();
+		$files_count = 0;
+		$text_count = 0;
+		if (is_array($current_customization))
 		{
-			if (!$product->createLabels((int)Tools::getValue('uploadable_files') - (int)$product->uploadable_files, (int)Tools::getValue('text_fields') - (int)$product->text_fields))
-				$this->errors[] = Tools::displayError('An error occurred while creating customization fields.');
-			if (!count($this->errors) && !$product->updateLabels())
-				$this->errors[] = Tools::displayError('An error occurred while updating customization.');
-			$product->uploadable_files = (int)Tools::getValue('uploadable_files');
-			$product->text_fields = (int)Tools::getValue('text_fields');
-			$product->customizable = ((int)Tools::getValue('uploadable_files') > 0 || (int)Tools::getValue('text_fields') > 0) ? 1 : 0;
-			if (!count($this->errors) && !$product->update())
-				$this->errors[] = Tools::displayError('An error occurred while updating customization configuration.');
-			if (empty($this->errors))
-				$this->confirmations[] = $this->l('Update successfull');
+			foreach ($current_customization as $field)
+			{
+				if ($field['type'] == 1)
+					$text_count++;
+				else
+					$files_count++;
+			}
 		}
-		else
-			$this->errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
+
+		if (!$product->createLabels((int)$product->uploadable_files - $files_count, (int)$product->text_fields - $text_count))
+			$this->errors[] = Tools::displayError('An error occurred while creating customization fields.');
+		if (!count($this->errors) && !$product->updateLabels())
+			$this->errors[] = Tools::displayError('An error occurred while updating customization.');
+		$product->customizable = ($product->uploadable_files > 0 || $product->text_fields > 0) ? 1 : 0;
+		if (!count($this->errors) && !$product->update())
+			$this->errors[] = Tools::displayError('An error occurred while updating customization configuration.');
 	}
 
 	public function processProductCustomization($token)
@@ -1554,6 +1561,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->processPriceAddition($token);
 					$this->processSpecificPricePriorities($token);
 					$this->processAttachments($token);
+					$this->processCustomizationConfiguration($token);
 					$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
