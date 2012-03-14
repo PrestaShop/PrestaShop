@@ -216,10 +216,10 @@ class AdminInvoicesControllerCore extends AdminController
 		if (Tools::getValue('submitAddinvoice_date'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = $this->l('Invalid \\"From:\\" date');
+				$this->errors[] = $this->l('Invalid "From:" date');
 
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = $this->l('Invalid \\"To:\\" date');
+				$this->errors[] = $this->l('Invalid "To:" date');
 
 			if (!count($this->errors))
 			{

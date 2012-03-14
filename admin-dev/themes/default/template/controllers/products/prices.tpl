@@ -200,7 +200,7 @@ jQuery(document).ready(Customer.init);
 	<tr>
 		<td class="col-left"><label>&nbsp;</label></td>
 		<td>
-			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display \\"on sale\\" icon on product page and text on product listing'}</label>
+			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
 		</td>
 	</tr>
 	<tr>
@@ -360,7 +360,7 @@ jQuery(document).ready(Customer.init);
 				<option value="amount">{l s='Amount'}</option>
 				<option value="percentage">{l s='Percentage'}</option>
 			</select>
-			{l s='(if set to \\"amount\\", tax is included)'}
+			{l s='(if set to "amount", tax is included)'}
 		</div>
 	</div>
 

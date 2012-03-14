@@ -1438,7 +1438,7 @@ class AdminTranslationsControllerCore extends AdminController
 				<div>';
 		$str_return .= '
 				<div class="label-subject">
-					<b>'.$this->l('\\"title\\" tag:').'</b>&nbsp;'.(isset($title['en']) ? $title['en'] : '').'<br />
+					<b>'.$this->l('"title" tag:').'</b>&nbsp;'.(isset($title['en']) ? $title['en'] : '').'<br />
 					<input type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
 				</div><!-- .label-subject -->';
 		$str_return .= '

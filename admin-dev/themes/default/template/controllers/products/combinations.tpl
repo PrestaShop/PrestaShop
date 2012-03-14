@@ -181,7 +181,7 @@
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
 					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='leave blank if the price does not change'})</span>
-					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on \\"Information\\" tab'})</span>
+					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
 				</td>
 			</tr>
 			<tr>
@@ -244,7 +244,7 @@
 					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 						{if $currency->format % 2 == 0} {$currency->sign}{/if} 
-						({l s='overrides Eco-tax on \\"Information\\" tab'})
+						({l s='overrides Eco-tax on "Information" tab'})
 					</td>
 				</tr>
 			{/if}
