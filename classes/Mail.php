@@ -60,23 +60,23 @@ class MailCore
 
 		if (!empty($from) && !Validate::isEmail($from))
 		{
- 			Tools::dieOrLog(Tools::displayError('Error: parameter \\"from\\" is corrupted'), $die);
+ 			Tools::dieOrLog(Tools::displayError('Error: parameter "from" is corrupted'), $die);
  			return false;
 		}
 		if (!empty($fromName) && !Validate::isMailName($fromName))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"fromName\\" is corrupted'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter "fromName" is corrupted'), $die);
 	 		return false;
 		}
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"to\\" is corrupted'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
 	 		return false;
 		}
 			
 		if (!is_array($templateVars))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter \\"templateVars\\" is not an array'), $die);
+	 		Tools::dieOrLog(Tools::displayError('Error: parameter "templateVars" is not an array'), $die);
 	 		return false;
 		}
 		

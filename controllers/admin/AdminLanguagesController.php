@@ -339,7 +339,7 @@ class AdminLanguagesControllerCore extends AdminController
 					else
 					{
 						$this->validateRules();
-						$this->errors[] = Tools::displayError('Flag and \\"No picture\\" image fields are required.');
+						$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
 					}
 				}
 				else
@@ -408,20 +408,20 @@ class AdminLanguagesControllerCore extends AdminController
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your product folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying \\"No picture\\" image to your category folder.');
+					$this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your category folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying \\"No picture\\" image to your manufacturer folder');
+					$this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your manufacturer folder');
 				else
 				{
 					$images_types = ImageType::getImagesTypes('products');
 					foreach ($images_types as $k => $image_type)
 					{
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your product directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your product directory.');
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your category directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your category directory.');
 						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
-							$this->errors[] = Tools::displayError('An error occurred while resizing \\"No picture\\" image to your manufacturer directory.');
+							$this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your manufacturer directory.');
 					}
 				}
 				unlink($tmp_name);

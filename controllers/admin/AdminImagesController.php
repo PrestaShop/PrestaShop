@@ -591,7 +591,7 @@ class AdminImagesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('Server timed out, the watermark may not have been applied to all images.');
 				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
-						$this->errors[] = Tools::displayError('Cannot write \\"No picture\\" image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
+						$this->errors[] = Tools::displayError('Cannot write "No picture" image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
 			}
 		}
 		return (count($this->errors) > 0 ? false : true);
@@ -621,7 +621,7 @@ class AdminImagesControllerCore extends AdminController
 			$this->max_execution_time = (int)ini_get('max_execution_time');
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
-				$this->errors[] = Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \\"Move images\\" again to resume moving images');
+				$this->errors[] = Tools::displayError('Not all images have been moved, server timed out before finishing. Click on "Move images" again to resume moving images');
 			else if ($result === false)
 				$this->errors[] = Tools::displayError('Error: some or all images could not be moved.');
 		}
