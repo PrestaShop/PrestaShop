@@ -908,12 +908,15 @@ class AdminImportControllerCore extends AdminController
 				// Associate category to shop
 				if (Shop::isFeatureActive() && $info['shop'])
 				{
-					if (!is_numeric($info['shop']))
-						$info['id_shop'] = Shop::getIdByName($info['shop']);
+					$info['shop'] = explode(',', $info['shop']);
+					foreach ($info['shop'] as $shop)
+						if (!is_numeric($shop))
+							$category->addShop(Shop::getIdByName($shop));
+						else
+							$category->addShop($shop);
 				}
 				else
-					$info['shop'] = Configuration::get('PS_SHOP_DEFAULT');
-				$category->addShop($info['shop']);
+					$category->addShop(Configuration::get('PS_SHOP_DEFAULT'));
 			}
 		}
 
