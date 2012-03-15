@@ -41,6 +41,7 @@ $(function(){
 		autoHover: true,
 		auto: homeslider_loop,
 		speed: homeslider_speed,
-		pause: homeslider_pause
+		pause: homeslider_pause,
+		controls: false
 	});
 });
