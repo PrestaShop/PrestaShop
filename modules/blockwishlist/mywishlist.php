@@ -35,6 +35,8 @@ include_once(dirname(__FILE__).'/WishList.php');
 $context = Context::getContext();
 $errors = array();
 
+Tools::displayFileAsDeprecated();
+
 if ($context->customer->isLogged())
 {
 	$add = Tools::getIsset('add');
@@ -97,8 +99,8 @@ $context->smarty->assign(array(
 
 if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tpl'))
 	$context->smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tpl');
-elseif (Tools::file_exists_cache(dirname(__FILE__).'/mywishlist.tpl'))
-	$context->smarty->display(dirname(__FILE__).'/mywishlist.tpl');
+elseif (Tools::file_exists_cache(dirname(__FILE__).'/views/templates/front/mywishlist.tpl'))
+	$context->smarty->display(dirname(__FILE__).'/views/templates/front/mywishlist.tpl');
 else
 	echo Tools::displayError('No template found');
 
