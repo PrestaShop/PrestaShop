@@ -26,7 +26,7 @@
 
 <div id="wishlist_block" class="block account">
 	<h4>
-		<a href="{$base_dir_ssl}/modules/blockwishlist/mywishlist.php">{l s='Wishlist' mod='blockwishlist'}</a>
+		<a href="{$wishlist_link}">{l s='Wishlist' mod='blockwishlist'}</a>
 	</h4>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">

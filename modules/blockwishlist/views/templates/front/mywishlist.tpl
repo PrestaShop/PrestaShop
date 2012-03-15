@@ -33,7 +33,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 
 	{if $id_customer|intval neq 0}
-		<form action="{$base_dir_ssl}modules/blockwishlist/mywishlist.php" method="post" class="std" id="form_wishlist">
+		<form method="post" class="std" id="form_wishlist">
 			<fieldset>
 				<h3>{l s='New wishlist' mod='blockwishlist'}</h3>
 				<p class="text">

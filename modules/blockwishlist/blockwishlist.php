@@ -203,6 +203,9 @@ class BlockWishList extends Module
 		}
 		else
 			$this->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
+		
+		$this->smarty->assign(array('wishlist_link' => $this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
+		
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}
 
