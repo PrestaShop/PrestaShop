@@ -2318,7 +2318,7 @@ class CartCore extends ObjectModel
 		$carrier = self::$_carriers[$id_carrier];
 
 		if (!Validate::isLoadedObject($carrier))
-			die(Tools::displayError('Fatal error: \\"no default carrier\\"'));
+			die(Tools::displayError('Fatal error: "no default carrier"'));
 
 		if (!$carrier->active)
 			return $shipping_cost;

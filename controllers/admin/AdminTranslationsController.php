@@ -68,7 +68,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->content .= $this->{$method_name}(Tools::strtolower(Tools::getValue('lang')));
 			else
 			{
-				$this->errors[] = sprintf(Tools::displayError('\\"%s\\" does not exist. Maybe you typed the URL manually.'), $type);
+				$this->errors[] = sprintf(Tools::displayError('"%s" does not exist. Maybe you typed the URL manually.'), $type);
 				$this->content .= $this->initMain();
 			}
 		}
