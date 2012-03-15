@@ -141,7 +141,7 @@ class TranslateCore
 			$translations_merged[md5($file)] = true;
 		}
 
-		$string = str_replace('\'', '\\\'', $string);
+		$key = md5(str_replace('\'', '\\\'', $string));
 
 		$cache_key = $name.'|'.$string.'|'.$source;
 		if (!isset($lang_cache[$cache_key]))
@@ -151,8 +151,8 @@ class TranslateCore
 
 			// set array key to lowercase for 1.3 compatibility
 			$_MODULES = array_change_key_case($_MODULES);
-			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.md5($string);
-			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.md5($string);
+			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.$key;
+			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.$key;
 
 			if (isset($_MODULES[$currentKey]))
 				$ret = stripslashes($_MODULES[$currentKey]);
@@ -164,7 +164,7 @@ class TranslateCore
 				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
 			// if translation was not found in module, look for it in AdminController or Helpers
 			elseif (!empty($_LANGADM))
-				$ret = Translate::getGenericAdminTranslation($string, null, $_LANGADM);
+				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 			else
 				$ret = stripslashes($string);
 
