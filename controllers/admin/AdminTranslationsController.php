@@ -191,12 +191,18 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		if ($fd = fopen($path, 'w'))
 		{
-			unset($_POST['submitTranslations'.$type], $_POST['lang']);
-			unset($_POST['token']);
+			// Unset all POST which are not translations
+			unset(
+				$_POST['submitTranslations'.Tools::toCamelCase($type, true)],
+				$_POST['lang'],
+				$_POST['token']
+			);
+
 			$to_insert = array();
 			foreach ($_POST as $key => $value)
 				if (!empty($value))
 					$to_insert[$key] = $value;
+
 			// translations array is ordered by key (easy merge)
 			ksort($to_insert);
 			$tab = ($fullmark ? Tools::strtoupper($fullmark) : 'LANG').($mark ? Tools::strtoupper($mark) : '');
