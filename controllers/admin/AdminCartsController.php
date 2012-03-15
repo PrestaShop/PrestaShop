@@ -388,9 +388,9 @@ class AdminCartsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$errors = array();
-			if (!$id_cart_rule = Tools::getValue('id_cart_rule') || !$cart_rule = new CartRule((int)$id_cart_rule))
+			if (!($id_cart_rule = Tools::getValue('id_cart_rule')) || !$cart_rule = new CartRule((int)$id_cart_rule))
 				$errors[] = Tools::displayError('Invalid voucher');
-			else if ($err = $cart_rule->checkValidity($this->context))
+			elseif ($err = $cart_rule->checkValidity($this->context))
 				$errors[] = $err;
 			if (!count($errors))
 				if (!$this->context->cart->addCartRule((int)$cart_rule->id))
