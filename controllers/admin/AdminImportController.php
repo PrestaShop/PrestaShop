@@ -1273,7 +1273,14 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			// stock available
-			StockAvailable::setQuantity((int)$product->id, 0, $product->quantity);
+			if (Shop::isFeatureActive())
+			{
+				foreach ($shops as $shop)
+					StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, (int)$shop);
+			}
+			else
+				StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
+
 		}
 		$this->closeCsvFile($handle);
 	}
