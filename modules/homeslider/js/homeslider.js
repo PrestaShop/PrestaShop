@@ -31,13 +31,16 @@ $(function(){
 	if (!homeslider_pause == undefined)
 		var homeslider_pause = 6000;
 	
-	  $('#homeslider').bxSlider({
-	    infiniteLoop: homeslider_loop,
-	    hideControlOnEnd: true,
-	    pager: true,
-	    autoHover: true,
-	    auto: homeslider_loop,
-	    speed: homeslider_speed,
-	    pause: homeslider_pause
-	  });
+	if (typeof(homeslider_loop) == 'undefined') 
+		homeslider_loop = true;
+	
+	$('#homeslider').bxSlider({
+		infiniteLoop: homeslider_loop,
+		hideControlOnEnd: true,
+		pager: true,
+		autoHover: true,
+		auto: homeslider_loop,
+		speed: homeslider_speed,
+		pause: homeslider_pause
+	});
 });
