@@ -1102,7 +1102,7 @@ class CategoryCore extends ObjectModel
 		if ($list && !empty($list))
 			$this->addGroups($list);
 		else
-			$this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP')));
+			$this->addGroups(array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')));
 	}
 
 	public static function setNewGroupForHome($id_group)
