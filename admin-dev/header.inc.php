@@ -41,6 +41,7 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'jquery.cluetip.css" />
 		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/admin.css" />
+		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.css" />
 		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
 		<script type="text/javascript">
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
@@ -53,6 +54,7 @@ echo '
 		<script type="text/javascript" src="'._PS_JS_DIR_.'toggle.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'tools.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'ajax.js"></script>
+		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.js"></script>
 		<link rel="shortcut icon" href="'._PS_IMG_.'favicon.ico" />
 		'.Hook::exec('displayBackOfficeHeader').'
 		<!--[if IE]>
@@ -279,9 +281,6 @@ foreach (QuickAccess::getQuickAccesses(Context::getContext()->language->id) AS $
 echo '			</select>
 			</div>';
 
-		if (Shop::isFeatureActive())
-			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.Helper::renderShopList().'</div>';
-
 		echo '</div>';
 			echo Hook::exec('displayBackOfficeTop');
 			echo '<ul id="menu">';
@@ -338,3 +337,11 @@ echo '
 				';
 				if(defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 					echo '<div class="warn">This tab is an AdminTab</div>';
+
+if (Shop::isFeatureActive())
+{
+   echo '<div class="multishop_toolbar">
+        <span class="text_multishop">'.translate('Multishop configuration for').'</span>'.
+		Helper::renderShopList();
+    echo '</div>';
+}
