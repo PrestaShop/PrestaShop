@@ -280,7 +280,7 @@ echo '			</select>
 			</div>';
 
 		if (Shop::isFeatureActive())
-			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.generateShopList().'</div>';
+			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.Helper::renderShopList().'</div>';
 
 		echo '</div>';
 			echo Hook::exec('displayBackOfficeTop');

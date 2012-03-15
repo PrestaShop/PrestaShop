@@ -1278,7 +1278,7 @@ class AdminControllerCore extends Controller
 			'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 			'quick_access' => $quick_access,
 			'multi_shop' => Shop::isFeatureActive(),
-			'shop_list' => (Shop::isFeatureActive() ? generateShopList() : null), //@TODO refacto
+			'shop_list' => Helper::renderShopList(),
 			'shop' => $this->context->shop,
 			'group_shop' => $this->context->shop->getGroup(),
 			'tab' => $tab,
