@@ -657,7 +657,7 @@ class AdminPerformanceControllerCore extends AdminController
 				if ($algo)
 				{
 					if (!function_exists('mcrypt_encrypt'))
-						$this->errors[] = Tools::displayError('PHP \\"Mcrypt\\" extension is not activated on this server.');
+						$this->errors[] = Tools::displayError('PHP "Mcrypt" extension is not activated on this server.');
 					else
 					{
 						if (!strstr($settings, '_RIJNDAEL_KEY_'))

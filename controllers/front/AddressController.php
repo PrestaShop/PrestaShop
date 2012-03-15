@@ -186,7 +186,7 @@ class AddressControllerCore extends FrontController
 				AND id_address != '.(int)Tools::getValue('id_address').'
 				AND id_customer = '.(int)$this->context->customer->id.'
 				AND deleted = 0') > 0)
-			$this->errors[] = sprintf(Tools::displayError('The alias \\"%s\\" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
 
 		// Don't continue this process if we have errors !
 		if ($this->errors && !Tools::isSubmit('ajax'))

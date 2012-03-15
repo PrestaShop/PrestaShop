@@ -2751,7 +2751,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& !empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file \\"%s\\" is missing'), $product->productDownload->display_filename);
+			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
 		else
 			$msg = '';
 
@@ -2785,7 +2785,7 @@ class AdminProductsControllerCore extends AdminController
 				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename;
 				if (!file_exists($exists_file2) && !empty($product_download_attribute->id_product_attribute))
 				{
-					$msg = sprintf(Tools::displayError('This file \\"%s\\" is missing'), $product_download_attribute->display_filename);
+					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_download_attribute->display_filename);
 					$error .= '<p class="alert" id="file_missing">
 						<b>'.$msg.' :<br/>
 						'.realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename.'</b>

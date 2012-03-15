@@ -167,7 +167,7 @@ class Blockrss extends Module
 			}
 			catch (XML_Feed_Parser_Exception $e)
 			{
-				Tools::dieOrLog(Tools::displayError('Error: invalid RSS feed in \\"blockrss\\" module').' '.$e->getMessage(), false);
+				Tools::dieOrLog(Tools::displayError('Error: invalid RSS feed in "blockrss" module').' '.$e->getMessage(), false);
 			}
 		
 		// Display smarty
