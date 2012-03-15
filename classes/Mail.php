@@ -60,43 +60,43 @@ class MailCore
 
 		if (!empty($from) && !Validate::isEmail($from))
 		{
- 			Tools::dieOrLog(Tools::displayError('Error: parameter "from" is corrupted'), $die);
- 			return false;
+			Tools::dieOrLog(Tools::displayError('Error: parameter "from" is corrupted'), $die);
+			return false;
 		}
 		if (!empty($fromName) && !Validate::isMailName($fromName))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "fromName" is corrupted'), $die);
-	 		return false;
+			Tools::dieOrLog(Tools::displayError('Error: parameter "fromName" is corrupted'), $die);
+			return false;
 		}
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
-	 		return false;
+			Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
+			return false;
 		}
 			
 		if (!is_array($templateVars))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: parameter "templateVars" is not an array'), $die);
-	 		return false;
+			Tools::dieOrLog(Tools::displayError('Error: parameter "templateVars" is not an array'), $die);
+			return false;
 		}
 		
 		// Do not crash for this error, that may be a complicated customer name
 		if (is_string($toName))
 		{
 			if (!empty($toName) && !Validate::isMailName($toName))
-	 			$toName = null;
+				$toName = null;
 		}
 			
 		if (!Validate::isTplName($template))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
-	 		return false;
+			Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
+			return false;
 		}
 			
 		if (!Validate::isMailSubject($subject))
 		{
-	 		Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
-	 		return false;
+			Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
+			return false;
 		}
 
 		/* Construct multiple recipients list if needed */
@@ -117,7 +117,7 @@ class MailCore
 					if ($toName && is_array($toName) && Validate::isGenericName($toName[$key]))
 						$to_name = $toName[$key];
 				}
-                /* Encode accentuated chars */
+				/* Encode accentuated chars */
 				$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 			}
 			$to_plugin = $to[0];
