@@ -391,50 +391,6 @@ function simpleXMLToArray ($xml, $flattenValues = true, $flattenAttributes = tru
 }
 
 /**
- * Generate a sweet HTML list for shop selection
- *
- * @todo move in adminTab
- * @return string
- */
-function generateShopList()
-{
-	$tree = Shop::getTree();
-	$context = Context::getContext();
-
-	// Get default value
-    if (Shop::getContext() == Shop::CONTEXT_ALL)
-        $value = '';
-    else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-        $value = 'g-'.Shop::getContextGroupShopID();
-    else
-        $value = 's-'.Shop::getContextShopID();
-
-	// Generate HTML
-	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
-	$html = '<select class="shopList chosen" onchange="location.href = \''.$url.'\'+$(this).val();">';
-
-	$html .= '<option value="" class="first">'.translate('All shops').'</option>';
-	foreach ($tree as $gID => $group_data)
-	{
-		if ($context->controller->multishop_context & Shop::CONTEXT_GROUP)
-			$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
-		else
-			$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';
-
-		if ($context->controller->multishop_context & Shop::CONTEXT_SHOP)
-			foreach ($group_data['shops'] as $sID => $shopData)
-				if ($shopData['active'])
-					$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
-
-		if (!($context->controller->multishop_context & Shop::CONTEXT_GROUP))
-			$html .= '</optgroup>';
-	}
-	$html .= '</select>';
-
-	return $html;
-}
-
-/**
  * for retrocompatibility with old AdminTab, old index.php
  *
  * @return void
