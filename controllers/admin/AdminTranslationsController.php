@@ -844,7 +844,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initFormFront($lang)
 	{
-		$missing_translations = array();
+		$missing_translations_front = array();
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
 		$str_output = '';
 
@@ -880,14 +880,18 @@ class AdminTranslationsControllerCore extends AdminController
 							$new_lang[$key] = stripslashes(html_entity_decode($_LANG[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
 						else
 						{
-							$new_lang[$key] = '';
-							if (!isset($missing_translations[$prefix_key]))
-								$missing_translations[$prefix_key] = 1;
-							else
-								$missing_translations[$prefix_key]++;
+							if (!isset($new_lang[$key]))
+							{
+								$new_lang[$key] = '';
+								if (!isset($missing_translations_front[$prefix_key]))
+									$missing_translations_front[$prefix_key] = 1;
+								else
+									$missing_translations_front[$prefix_key]++;
+							}
 						}
 					}
 				}
+
 				$tabs_array[$prefix_key] = $new_lang;
 				$count += count($new_lang);
 			}
@@ -895,7 +899,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('Front Office translations'),
-			'missing_translations' => $missing_translations,
+			'missing_translations' => $missing_translations_front,
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'post_limit_exceeded' => $this->post_limit_exceed,
@@ -919,7 +923,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
 		// count will contain the number of expressions of the page
 		$count = 0;
-		$missing_translations = array();
+		$missing_translations_back = array();
 
 		// Parse BO php files for translations
 		// Add Controllers
@@ -956,17 +960,23 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					// Caution ! front has underscore between prefix key and md5, back has not
 					if (isset($_LANGADM[$prefix_key.md5($key)]))
+					{
 						$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+						$count++;
+					}
 					else
 					{
-						$tabs_array[$prefix_key][$key] = '';
-						if (!isset($missing_translations[$prefix_key]))
-							$missing_translations[$prefix_key] = 1;
-						else
-							$missing_translations[$prefix_key]++;
+						if (!isset($tabs_array[$prefix_key][$key]))
+						{
+							$tabs_array[$prefix_key][$key] = '';
+							if (!isset($missing_translations_back[$prefix_key]))
+								$missing_translations_back[$prefix_key] = 1;
+							else
+								$missing_translations_back[$prefix_key]++;
+							$count++;
+						}
 					}
 				}
-				$count += isset($tabs_array[$prefix_key]) ? count($tabs_array[$prefix_key]) : 0;
 			}
 
 		foreach (array('header.inc', 'footer.inc', 'index', 'login', 'password', 'functions') as $tab)
@@ -982,17 +992,23 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGADM[$prefix_key.md5($key)]))
+				{
 					$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+					$count++;
+				}
 				else
 				{
-					$tabs_array[$prefix_key][$key] = '';
-					if (!isset($missing_translations[$prefix_key]))
-						$missing_translations[$prefix_key] = 1;
-					else
-						$missing_translations[$prefix_key]++;
+					if (!isset($tabs_array[$prefix_key][$key]))
+					{
+						$tabs_array[$prefix_key][$key] = '';
+						if (!isset($missing_translations_back[$prefix_key]))
+							$missing_translations_back[$prefix_key] = 1;
+						else
+							$missing_translations_back[$prefix_key]++;
+						$count++;
+					}
 				}
 			}
-			$count += isset($tabs_array['index']) ? count($tabs_array['index']) : 0;
 		}
 
 		/* List templates to parse */
@@ -1050,14 +1066,21 @@ class AdminTranslationsControllerCore extends AdminController
 						$trans_key = $prefix_key.md5($english_string);
 
 						if (isset($_LANGADM[$trans_key]))
+						{
 							$new_lang[$english_string] = html_entity_decode($_LANGADM[$trans_key], ENT_COMPAT, 'UTF-8');
+							$count++;
+						}
 						else
 						{
-							$new_lang[$english_string] = '';
-							if (!isset($missing_translations[$prefix_key]))
-								$missing_translations[$prefix_key] = 1;
-							else
-								$missing_translations[$prefix_key]++;
+							if (!isset($new_lang[$english_string]))
+							{
+								$new_lang[$english_string] = '';
+								if (!isset($missing_translations_back[$prefix_key]))
+									$missing_translations_back[$prefix_key] = 1;
+								else
+									$missing_translations_back[$prefix_key]++;
+								$count++;
+							}
 						}
 					}
 				}
@@ -1065,7 +1088,6 @@ class AdminTranslationsControllerCore extends AdminController
 					$tabs_array[$prefix_key] = array_merge($tabs_array[$prefix_key], $new_lang);
 				else
 					$tabs_array[$prefix_key] = $new_lang;
-				$count += count($new_lang);
 			}
 
 		// with php then tpl files, order can be a mess
@@ -1080,7 +1102,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'tabsArray' => $tabs_array,
-			'missing_translations' => $missing_translations,
+			'missing_translations' => $missing_translations_back,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'back'
 		);
@@ -1096,6 +1118,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormErrors($lang)
 	{
 		$_ERRORS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'errors.php', '_ERRORS');
+		$count_empty = 0;
 
 		/* List files to parse */
 		$stringToTranslate = array();
@@ -1132,6 +1155,9 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$stringToTranslate[$key] = (key_exists(md5($key), $_ERRORS)) ? html_entity_decode($_ERRORS[md5($key)], ENT_COMPAT, 'UTF-8') : '';
 						$this->total_expression++;
+
+						if (empty($stringToTranslate[$key]))
+							$count_empty++;
 					}
 				}
 
@@ -1144,7 +1170,8 @@ class AdminTranslationsControllerCore extends AdminController
 			'url_submit' => self::$currentIndex.'&submitTranslationsErrors=1&token='.$this->token,
 			'auto_translate' => '',
 			'type' => 'errors',
-			'errorsArray' => $stringToTranslate
+			'errorsArray' => $stringToTranslate,
+			'count_empty' => $count_empty
 		);
 
 		$this->initToolbar();
@@ -1155,7 +1182,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormFields($lang)
 	{
 		$_FIELDS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'fields.php', '_FIELDS');
-		$missing_translations = array();
+		$missing_translations_fields = array();
 		$str_output = '';
 		$classArray = array();
 		$tabs_array = array();
@@ -1179,34 +1206,44 @@ class AdminTranslationsControllerCore extends AdminController
 			if (isset($rules['validate']))
 				foreach ($rules['validate'] as $key => $value)
 					if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
+					{
 						// @todo check key : md5($key) was initially md5(addslashes($key))
 						$tabs_array[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
+						$count++;
+					}
 					else
 					{
-						$tabs_array[$prefix_key][$key] = '';
-						if (!isset($missing_translations[$prefix_key]))
-							$missing_translations[$prefix_key] = 1;
-						else
-							$missing_translations[$prefix_key]++;
+						if (!isset($tabs_array[$prefix_key][$key]))
+						{
+							$tabs_array[$prefix_key][$key] = '';
+							if (!isset($missing_translations_fields[$prefix_key]))
+								$missing_translations_fields[$prefix_key] = 1;
+							else
+								$missing_translations_fields[$prefix_key]++;
+							$count++;
+						}
 					}
 			if (isset($rules['validateLang']))
 				foreach ($rules['validateLang'] as $key => $value)
 					if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
+					{
 						$tabs_array[$prefix_key][$key] = array_key_exists($prefix_key.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
+						$count++;
+					}
 					else
 					{
-						$tabs_array[$prefix_key][$key] = '';
-						if (!isset($missing_translations[$prefix_key]))
-							$missing_translations[$prefix_key] = 1;
-						else
-							$missing_translations[$prefix_key]++;
+						if (!isset($tabs_array[$prefix_key][$key]))
+						{
+							$tabs_array[$prefix_key][$key] = '';
+							if (!isset($missing_translations_fields[$prefix_key]))
+								$missing_translations_fields[$prefix_key] = 1;
+							else
+								$missing_translations_fields[$prefix_key]++;
+							$count++;
+						}
 					}
 		}
 
-		if (isset($classArray[$prefix_key]['validate']))
-			$count += count($classArray[$prefix_key]['validate']);
-		if (isset($classArray[$prefix_key]['validateLang']))
-			$count += count($classArray[$prefix_key]['validateLang']);
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('Field name translations'),
@@ -1217,7 +1254,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => '',
 			'tabsArray' => $tabs_array,
-			'missing_translations' => $missing_translations,
+			'missing_translations' => $missing_translations_fields,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'fields'
 		);
@@ -1803,8 +1840,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
 		$_LANG = array();
-		$missing_translations = array();
-		$str_output = '';
+		$missing_translations_pdf = array();
 
 		if (!Validate::isLangIsoCode($lang))
 			die('Invalid iso lang ('.Tools::safeOutput($lang).')');
@@ -1817,7 +1853,7 @@ class AdminTranslationsControllerCore extends AdminController
 				die('Please create a "'.Tools::strtolower($lang).'.php" file in '.realpath(_PS_ADMIN_DIR_.'/'));
 		unset($_LANGPDF);
 		@include($i18n_file);
-		$files = array();
+
 		$count = 0;
 		$prefix_key = 'PDF';
 		$tabs_array = array($prefix_key=>array());
@@ -1841,20 +1877,25 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGPDF[$prefix_key.md5($key)]))
+				{
 					// @todo check key : md5($key) was initially md5(addslashes($key))
 					$tabs_array[$prefix_key][$key] = (html_entity_decode($_LANGPDF[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+					$count++;
+				}
 				else
 				{
-					$tabs_array[$prefix_key][$key] = '';
-					if (!isset($missing_translations[$prefix_key]))
-						$missing_translations[$prefix_key] = 1;
-					else
-						$missing_translations[$prefix_key]++;
+					if (!isset($tabs_array[$prefix_key][$key]))
+					{
+						$tabs_array[$prefix_key][$key] = '';
+						if (!isset($missing_translations_pdf[$prefix_key]))
+							$missing_translations_pdf[$prefix_key] = 1;
+						else
+							$missing_translations_pdf[$prefix_key]++;
+						$count++;
+					}
 				}
 			}
 		}
-
-		$count += isset($tabs_array[$prefix_key]) ? count($tabs_array[$prefix_key]) : 0;
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
@@ -1868,7 +1909,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'pdf',
 			'tabsArray' => $tabs_array,
-			'missing_translations' => $missing_translations
+			'missing_translations' => $missing_translations_pdf
 		);
 
 		$this->initToolbar();
