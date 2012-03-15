@@ -237,12 +237,14 @@ class LanguageCore extends ObjectModel
 
 		$lPath_from = _PS_TRANSLATIONS_DIR_.(string)$iso_from.'/';
 		$tPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/';
+		$pPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/pdf/';
 		$mPath_from = _PS_MAIL_DIR_.(string)$iso_from.'/';
 
 		if ($copy)
 		{
 			$lPath_to = _PS_TRANSLATIONS_DIR_.(string)$iso_to.'/';
 			$tPath_to = _PS_ROOT_DIR_.'/themes/'.(string)$theme_to.'/';
+			$pPath_to = _PS_ROOT_DIR_.'/themes/'.(string)$theme_to.'/pdf/';
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
@@ -347,6 +349,11 @@ class LanguageCore extends ObjectModel
 		if (!$check || ($check && (string)$iso_from != 'en'))
 		{
 			$files_theme[$tPath_from.'lang/'.(string)$iso_from.'.php'] = ($copy ? $tPath_to.'lang/'.(string)$iso_to.'.php' : ++$number);
+
+			// Override for pdf files in the theme
+			if (file_exists($pPath_from.'lang/'.(string)$iso_from.'.php'))
+				$files_theme[$pPath_from.'lang/'.(string)$iso_from.'.php'] = ($copy ? $pPath_to.'lang/'.(string)$iso_to.'.php' : ++$number);
+
 			$module_theme_files = (file_exists($tPath_from.'modules/') ? scandir($tPath_from.'modules/') : array());
 			foreach ($module_theme_files as $module)
 				if ($module !== '.' && $module != '..' && $module !== '.svn' && file_exists($tPath_from.'modules/'.$module.'/'.(string)$iso_from.'.php'))
