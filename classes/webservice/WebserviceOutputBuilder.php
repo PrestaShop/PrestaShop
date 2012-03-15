@@ -579,21 +579,25 @@ class WebserviceOutputBuilderCore
 						'entity_name'	=> $ws_params['objectNodeName'],
 						'entities_name'	=> $ws_params['objectsNodeName'],
 					);
-
-				if (method_exists($object, $getter) && is_null($this->schemaToDisplay))
+					
+				if (is_array($getter))
 				{
-					$association_resources = $object->$getter();
+					$association_resources = call_user_func($getter, $object);
 					if (is_array($association_resources) && !empty($association_resources))
-					{
 						foreach ($association_resources as $association_resource)
-						{
 							$objects_assoc[] = $association_resource;
-						}
-					}
 				}
 				else
 				{
-					$objects_assoc[] = '';
+					if (method_exists($object, $getter) && is_null($this->schemaToDisplay))
+					{
+						$association_resources = $object->$getter();
+						if (is_array($association_resources) && !empty($association_resources))
+							foreach ($association_resources as $association_resource)
+								$objects_assoc[] = $association_resource;
+					}
+					else
+						$objects_assoc[] = '';
 				}
 
 				$class_name = null;
