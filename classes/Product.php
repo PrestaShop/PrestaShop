@@ -2273,6 +2273,8 @@ class ProductCore extends ObjectModel
 			if (!$id_cart && !isset($context->employee))
 				die(Tools::displayError());
 			$cur_cart = new Cart($id_cart);
+			// Store cart in context to avoid multiple instantiations in BO
+			$context->cart = $cur_cart;
 		}
 
 		$cart_quantity = 0;
