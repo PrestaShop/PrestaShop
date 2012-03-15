@@ -36,7 +36,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 	{
 		parent::__construct();
 
-        $this->context = Context::getContext();
+		$this->context = Context::getContext();
 
 		include_once($this->module->getLocalPath().'LoyaltyModule.php');
 		include_once($this->module->getLocalPath().'LoyaltyStateModule.php');
