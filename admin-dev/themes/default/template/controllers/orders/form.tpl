@@ -116,36 +116,7 @@
 			)
 			.result(function(event, data, formatted) {
 				$('#voucher').val(data.name);
-				$.ajax({
-					type:"POST",
-					url: "{$link->getAdminLink('AdminCarts')}",
-					async: true,
-					dataType: "json",
-					data : {
-						ajax: "1",
-						token: "{getAdminToken tab='AdminCarts'}",
-						tab: "AdminCarts",
-						action: "addVoucher",
-						id_cart_rule: data.id_cart_rule,
-						id_cart: id_cart,
-						id_customer: id_customer
-						},
-					success : function(res)
-					{
-						displaySummary(res);
-						$('#voucher').val('');
-						var errors = '';
-						if (res.errors.length > 0)
-						{
-							$.each(res.errors, function() {
-								errors += this+'<br/>';
-							});
-							$('#vouchers_err').html(errors).show();
-						}
-						else
-							$('#vouchers_err').hide();
-					}
-				});
+				add_cart_rule(data.id_cart_rule);
 			});
 		{if $cart->id}
 			setupCustomer('{$cart->id_customer}');
@@ -243,6 +214,40 @@
 		/*$("#new_address").fancybox({
 			onClosed: useCart(id_cart)
 		});*/
+	}
+	
+	function add_cart_rule(id_cart_rule)
+	{
+		$.ajax({
+			type:"POST",
+			url: "{$link->getAdminLink('AdminCarts')}",
+			async: true,
+			dataType: "json",
+			data : {
+				ajax: "1",
+				token: "{getAdminToken tab='AdminCarts'}",
+				tab: "AdminCarts",
+				action: "addVoucher",
+				id_cart_rule: id_cart_rule,
+				id_cart: id_cart,
+				id_customer: id_customer
+				},
+			success : function(res)
+			{
+				displaySummary(res);
+				$('#voucher').val('');
+				var errors = '';
+				if (res.errors.length > 0)
+				{
+					$.each(res.errors, function() {
+						errors += this+'<br/>';
+					});
+					$('#vouchers_err').html(errors).show();
+				}
+				else
+					$('#vouchers_err').hide();
+			}
+		});
 	}
 
 	function updateProductPrice(id_product, id_product_attribute, new_price)

@@ -152,7 +152,7 @@ abstract class ControllerCore
 		{
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->setMedia();
-			
+
 			// postProcess handles ajaxProcess
 			$this->postProcess();
 
