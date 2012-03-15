@@ -29,7 +29,8 @@
 {block name="override_tpl"}
 	
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Errors to translate'} : <b>{$count}</b>
+	{l s='Expressions to translate'} : <b>{$count}</b>.
+	<p>{l s='Total missing expresssions:'} {$count_empty} </p>
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
