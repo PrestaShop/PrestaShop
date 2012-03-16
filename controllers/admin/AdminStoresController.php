@@ -46,24 +46,13 @@ class AdminStoresControllerCore extends AdminController
 		);
 
 		$this->fieldsDisplay = array(
-			'id_store' => array(
-				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 25
-			),
-			'country' => array(
-				'title' => $this->l('Country'),
-				'width' => 100,
-				'filter_key' => 'cl!name'
-			),
-			'state' => array(
-				'title' => $this->l('State'),
-				'width' => 100,
-				'filter_key' => 'st!name'
-			),
+			'id_store' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Name'), 'width' => 120, 'filter_key' => 'a!name'),
+			'address1' => array('title' => $this->l('Address'), 'width' => 120, 'filter_key' => 'a!address1'),
 			'city' => array('title' => $this->l('City'), 'width' => 100),
 			'postcode' => array('title' => $this->l('Zip code'), 'width' => 50),
-			'name' => array('title' => $this->l('Name'), 'width' => 120, 'filter_key' => 'a!name'),
+			'state' => array('title' => $this->l('State'), 'width' => 100, 'filter_key' => 'st!name'),
+			'country' => array('title' => $this->l('Country'), 'width' => 100, 'filter_key' => 'cl!name'),
 			'phone' => array('title' => $this->l('Phone'), 'width' => 70),
 			'fax' => array('title' => $this->l('Fax'), 'width' => 70),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 70, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
