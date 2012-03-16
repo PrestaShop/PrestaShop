@@ -32,18 +32,7 @@
 {foreach from=$languages key=k item=language name="languages"}
 	{if $language.iso_code == $lang_iso}
 		<p class="selected_language">
-		{if $language.iso_code != $lang_iso}
-			{assign var=indice_lang value=$language.id_lang}
-			{if isset($lang_rewrite_urls.$indice_lang)}
-				<a href="{$lang_rewrite_urls.$indice_lang}" title="{$language.name}">
-			{else}
-				<a href="{$link->getLanguageLink($language.id_lang, $language.name)}" title="{$language.name}">
-			{/if}
-		{/if}
 			<img src="{$img_lang_dir}{$language.id_lang}.jpg" alt="{$language.iso_code}" width="16" height="11" />
-			{if $language.iso_code != $lang_iso}
-				</a>
-			{/if}
 		</p>
 	{/if}
 {/foreach}
