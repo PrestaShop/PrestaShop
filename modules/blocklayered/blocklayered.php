@@ -3353,6 +3353,8 @@ class BlockLayered extends Module
 		if (isset($category_box) && is_array($category_box))
 			foreach ($category_box as &$value)
 				$value = (int)$value;
+		else
+			$category_box = array();
 		
 		$attribute_groups = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT ag.id_attribute_group, ag.is_color_group, agl.name, COUNT(DISTINCT(a.id_attribute)) n
