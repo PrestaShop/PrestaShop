@@ -53,6 +53,9 @@ if ($context->customer->isLogged())
 		if(!isset($context->cookie->id_wishlist) OR $context->cookie->id_wishlist == '')
 		{
 			$wishlist = new WishList();
+			$wishlist->id_shop = $context->shop->id;
+			$wishlist->id_group_shop = $context->shop->id_group_shop;
+			
 			$modWishlist = new BlockWishList();
 			$wishlist->name = $modWishlist->default_wishlist_name;
 			$wishlist->id_customer = (int)($context->customer->id);
