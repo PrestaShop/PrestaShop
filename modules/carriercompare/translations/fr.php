@@ -22,3 +22,15 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_a82be0f551b8708bc08eb33cd9d
 $_MODULE['<{carriercompare}prestashop>carriercompare_3601146c4e948c32b6424d2c0a7f0118'] = 'Prix';
 $_MODULE['<{carriercompare}prestashop>carriercompare_f620c0ed0c89129c9dd8953406300061'] = 'Aucun  transporteur n\'est disponible pour cette sélection';
 $_MODULE['<{carriercompare}prestashop>carriercompare_63a6a88c066880c5ac42394a22803ca6'] = 'Rafraîchir';
+$_MODULE['<{carriercompare}prestashop>carriercompare_36126598ecb1141cd37a92f48e7727f1'] = 'Rafraîchissement de la page et mise à jour du panier...';
+$_MODULE['<{carriercompare}prestashop>carriercompare_43b6864a312731efd637b6f15716656f'] = 'Vérification des états disponibles...';
+$_MODULE['<{carriercompare}prestashop>carriercompare_c38be8e252777b47067cfe4de79b80a3'] = 'Récupération de l\'information...';
+$_MODULE['<{carriercompare}prestashop>carriercompare_8a1ac57c0cc4eb3f6b2fe4c252518c37'] = 'Mettre à jour le panier';
+$_MODULE['<{carriercompare}prestashop>carriercompare_653e78154f5596fc293bf9db65110bbd'] = 'Mettre à jour la liste des transporteurs';
+$_MODULE['<{carriercompare}prestashop>configuration_aa4c031e8f3c596aaac3ba13f5f91c75'] = 'Une erreur est survenue lors de la validation du formulaire';
+$_MODULE['<{carriercompare}prestashop>configuration_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration mise à jour';
+$_MODULE['<{carriercompare}prestashop>configuration_6408d076fa6417e7bc8ddc3cdf9a0644'] = 'Configuration globale';
+$_MODULE['<{carriercompare}prestashop>configuration_4c1f76824b0d7333652d5f64a3e07ef5'] = 'N\'importe quand';
+$_MODULE['<{carriercompare}prestashop>configuration_d82928a663ff868502586a0c515e602b'] = 'Quand toutes les informations sont complètes';
+$_MODULE['<{carriercompare}prestashop>configuration_7a23a5abbb503885bf1d6186033eca81'] = 'Défini la manière dont l\'information présentée à l\'utilisateur doit être rafraîchie';
+$_MODULE['<{carriercompare}prestashop>configuration_a4d3b161ce1309df1c4e25df28694b7b'] = 'Valider';
