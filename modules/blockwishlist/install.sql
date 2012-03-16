@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_wishlist` (
   `token` varchar(64) character set utf8 NOT NULL,
   `name` varchar(64) character set utf8 NOT NULL,
   `counter` int(10) unsigned NULL,
+  `id_shop` int(10) unsigned default 1,
+  `id_group_shop` int(10) unsigned default 1,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY  (`id_wishlist`)

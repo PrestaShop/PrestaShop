@@ -32,8 +32,8 @@ class BlockWishList extends Module
 {
 	const INSTALL_SQL_FILE = 'install.sql';
 
-    private $_html = '';
-    private $_postErrors = array();
+	private $_html = '';
+	private $_postErrors = array();
 
 	public function __construct()
 	{
