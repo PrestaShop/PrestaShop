@@ -33,6 +33,7 @@ class AdminStoresControllerCore extends AdminController
 		$this->className = 'Store';
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
+		$this->toolbar_scroll = false;
 
 		$this->context = Context::getContext();
 
@@ -106,8 +107,7 @@ class AdminStoresControllerCore extends AdminController
 						'type' => 'text',
 						'size' => '10'
 					)
-				),
-				'submit' => array()
+				)
 			)
 		);
 
@@ -116,8 +116,33 @@ class AdminStoresControllerCore extends AdminController
 		$this->_buildOrderedFieldsShop($this->_getDefaultFieldsContent());
 	}
 
+	public function renderOptions()
+	{
+		// Set toolbar options
+		$this->display = 'options';
+		$this->show_toolbar = true;
+		$this->toolbar_scroll = true;
+		$this->initToolbar();
+
+		return parent::renderOptions();
+	}
+
+	public function initToolbar()
+	{
+		parent::initToolbar();
+
+		if ($this->display == 'options')
+			unset($this->toolbar_btn['new']);
+		else
+			unset($this->toolbar_btn['save']);
+	}
+
 	public function renderList()
 	{
+		// Set toolbar options
+		$this->display = null;
+		$this->initToolbar();
+
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
