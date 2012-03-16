@@ -81,6 +81,8 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 					if(!sizeof($errors))
 					{
 						$wishlist = new WishList();
+						$wishlist->id_shop = $this->context->shop->id;
+						$wishlist->id_group_shop = $this->context->shop->id_group_shop;
 						$wishlist->name = $name;
 						$wishlist->id_customer = (int)$this->context->customer->id;
 						list($us, $s) = explode(' ', microtime());
