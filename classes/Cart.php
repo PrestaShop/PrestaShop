@@ -771,7 +771,9 @@ class CartCore extends ObjectModel
 
 		if (Context::getContext()->customer->id)
 		{
-			if ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
+			if ($id_address_delivery == 0 && (int)$this->id_address_delivery) // The $id_address_delivery is null, use the cart delivery address
+				$id_address_delivery = $this->id_address_delivery;
+			elseif ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
 				$id_address_delivery = (int)Address::getFirstCustomerAddressId((int)Context::getContext()->customer->id);
 			elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) // The $id_address_delivery must be linked with customer
 				$id_address_delivery = 0;
