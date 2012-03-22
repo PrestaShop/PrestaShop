@@ -90,7 +90,7 @@
 										<input type="hidden" name="input_supplier_reference_{$product.id_product}_{$product.id_product_attribute}" value="{$product.supplier_reference}" />
 									</td>
 									<td>
-										{$product.name_displayed}
+										{$product.name}
 										<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 									</td>
 									<td class="center">
