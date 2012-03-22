@@ -273,6 +273,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$conditions = array();
 		if (Validate::isLoadedObject(($object = parent::processSave($token))))
 		{
+			$object->deleteConditions();
 			foreach ($_POST as $key => $values)
 			{
 				if (preg_match('/^condition_group_([0-9]+)$/Ui', $key, $condition_group))
