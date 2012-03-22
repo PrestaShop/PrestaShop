@@ -29,7 +29,7 @@
 {if isset($warehouse)}
 	<div>
 			<fieldset>
-				<legend><img src="/img/t/AdminPreferences.gif" alt="" />  {l s='General informations'}</legend>
+				<legend><img src="../img/t/AdminPreferences.gif" alt="" />  {l s='General informations'}</legend>
 				<table style="width: 400px;" classe="table">
 					<tr>
 						<td>{l s='Reference:'}</td>
@@ -76,7 +76,7 @@
 		</div>
 		<div style="margin-top: 30px">
 			<fieldset>
-				<legend><img src="/img/t/AdminShop.gif" alt="" /> {l s='Shops'}</legend>
+				<legend><img src="../img/t/AdminShop.gif" alt="" /> {l s='Shops'}</legend>
 				{l s='The following are the shops associated with this warehouse.'}
 				<table style="width: 400px; margin-top:20px" classe="table">
 					<tr>
@@ -93,13 +93,13 @@
 		</div>
 		<div style="margin-top: 30px">
 			<fieldset>
-				<legend><img src="/img/t/AdminStock.gif" alt="" /> {l s='Stock'}</legend>
+				<legend><img src="../img/t/AdminStock.gif" alt="" /> {l s='Stock'}</legend>
 				<a href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='Click here if you want details on products in this warehouse'}</a>
 			</fieldset>
 		</div>
 		<div style="margin-top: 30px">
 		<fieldset>
-			<legend><img src="/img/t/AdminLogs.gif" alt="" /> {l s='History'}</legend>
+			<legend><img src="../img/t/AdminLogs.gif" alt="" /> {l s='History'}</legend>
 			<a href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='Click here if you want details on what happened in this warehouse'}</a>
 		</fieldset>
 		</div>
