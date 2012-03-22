@@ -171,7 +171,6 @@ class AdminLanguagesControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('"No-picture" image:'),
 					'name' => 'no-picture',
-					'required' => true,
 					'desc' => $this->l('Image displayed when "no picture found"')
 				),
 				array(
