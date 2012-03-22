@@ -1179,7 +1179,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		// updates receipt
-		if (Tools::isSubmit('submitFiltersupply_order_detail') && Tools::isSubmit('submitBulkUpdate') && Tools::isSubmit('id_supply_order'))
+		if (Tools::isSubmit('submitFiltersupply_order_detail') && Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessUpdateReceipt();
 
 		// use template to create a supply order
