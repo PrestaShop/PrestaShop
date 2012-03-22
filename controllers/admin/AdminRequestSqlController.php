@@ -27,6 +27,14 @@
 
 class AdminRequestSqlControllerCore extends AdminController
 {
+	/**
+	 * @var array : List of encoding type for a file
+	 */
+	public static $encoding_file = array(
+		array('value' => 1, 'name' => 'utf-8'),
+		array('value' => 2, 'name' => 'iso-8859-1')
+	);
+
 	public function __construct()
 	{
 		$this->table = 'request_sql';
@@ -42,13 +50,62 @@ class AdminRequestSqlControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'width' => 300),
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
+
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Settings'),
+				'fields' =>	array(
+					'PS_ENCODING_FILE_MANAGER_SQL' => array(
+						'title' => $this->l('Select your encoding file by default:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => self::$encoding_file,
+						'visibility' => Shop::CONTEXT_ALL
+					)
+				),
+				'submit' => array()
+			)
+		);
+
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
 
+	public function renderOptions()
+	{
+		// Set toolbar options
+		$this->display = 'options';
+		$this->show_toolbar = true;
+		$this->toolbar_scroll = true;
+		$this->initToolbar();
+
+		return parent::renderOptions();
+	}
+
+	public function initToolbar()
+	{
+		if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql'))
+			$this->toolbar_btn['edit'] = array(
+				'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int)$id_request,
+				'desc' => $this->l('Edit this request')
+			);
+
+		parent::initToolbar();
+
+		if ($this->display == 'options')
+			unset($this->toolbar_btn['new']);
+		else
+			unset($this->toolbar_btn['save']);
+	}
+
 	public function renderList()
 	{
+		// Set toolbar options
+		$this->display = null;
+		$this->initToolbar();
+
 		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
 		$this->displayInformation('
 			<strong>'.$this->l('How to create a new sql query?').'</strong>
@@ -223,6 +280,9 @@ class AdminRequestSqlControllerCore extends AdminController
 		));
 	}
 
+	/**
+	 * Genrating a export file
+	 */
 	public function generateExport()
 	{
 		$id = Tools::getValue($this->identifier);
@@ -244,7 +304,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				{
 					fputs($csv, "\n");
 					foreach ($tab_key as $name)
-						fputs($csv, '"'.Tools::safeOutput($result[$name]).'";');
+						fputs($csv, '"'.strip_tags($result[$name]).'";');
 				}
 				if (file_exists(_PS_ADMIN_DIR_.'/export/'.$file))
 				{
@@ -252,7 +312,12 @@ class AdminRequestSqlControllerCore extends AdminController
 					$upload_max_filesize = $this->returnBytes(ini_get('upload_max_filesize'));
 					if ($filesize < $upload_max_filesize)
 					{
-						header('Content-type: text/csv');
+						if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL'))
+							$charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
+						else
+							$charset = self::$encoding_file[0]['name'];
+
+						header('Content-Type: text/csv; charset='.$charset);
 						header('Cache-Control: no-store, no-cache');
 						header('Content-Disposition: attachment; filename="'.$file.'"');
 						header('Content-Length: '.$filesize);
@@ -266,6 +331,12 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * Get number of bytes
+	 *
+	 * @param $val
+	 * @return int|string
+	 */
 	public function returnBytes($val)
 	{
 	    $val = trim($val);
@@ -282,6 +353,11 @@ class AdminRequestSqlControllerCore extends AdminController
 	    return $val;
 	}
 
+	/**
+	 * Display all errors
+	 *
+	 * @param $e : array of errors
+	 */
 	public function displayError($e)
 	{
 		foreach (array_keys($e) as $key)
