@@ -100,6 +100,18 @@ class AdminGroupsControllerCore extends AdminController
 		$this->addJqueryUi('ui.sortable');
 	}
 
+	public function initToolbar()
+	{
+		if ($this->display == 'add' || $this->display == 'edit')
+			$this->toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save then add a category reduction'),
+				'force_desc' => true,
+			);
+		parent::initToolbar();
+	}
+
 	public function initProcess()
 	{
 		$this->id_object = Tools::getValue('id_'.$this->table);
