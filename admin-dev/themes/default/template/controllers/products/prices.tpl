@@ -342,15 +342,10 @@ jQuery(document).ready(Customer.init);
 			<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">
 				{$currency->suffix}
 			</span>
-			<span>
-				(
-					{l s='Current:'}
-					<span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span>
-				)
-			</span>
-			<div class="hint" style="display:block;min-height:0;">
-				{l s='You can set this value to 0 in order to apply the default price'}
-			</div>
+			<p class="preference_description">
+				{l s='You can set this value to 0 in order to apply the default price.'}
+				({l s='Current:'}<span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span>)
+			</p>
 		</div>
 
 		<label>{l s='Apply a discount of:'}</label>
@@ -361,7 +356,7 @@ jQuery(document).ready(Customer.init);
 				<option value="amount">{l s='Amount'}</option>
 				<option value="percentage">{l s='Percentage'}</option>
 			</select>
-			{l s='(if set to "amount", tax is included)'}
+			<p class="preference_description">{l s='The discount is applied after the tax'}</p>
 		</div>
 	</div>
 
@@ -390,3 +385,4 @@ jQuery(document).ready(Customer.init);
 					unitPriceWithTax('unit');
 				</script>
 			{/if}
+
