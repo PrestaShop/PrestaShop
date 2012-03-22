@@ -137,12 +137,15 @@ class AdminWarehousesControllerCore extends AdminController
 		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		// sets the title of the toolbar
-		$this->toolbar_title = $this->l('Stock: Warehouse management');
+		if (Tools::isSubmit('add'.$this->table))
+			$this->toolbar_title = $this->l('Stock: create warehouse');
+		else
+			$this->toolbar_title = $this->l('Stock: warehouse management');
 
 		// sets the fields of the form
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Warehouse management'),
+				'title' => $this->l('Warehouse informations'),
 				'image' => '../img/admin/edit.gif'
 			),
 			'input' => array(
