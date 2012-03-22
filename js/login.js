@@ -89,8 +89,8 @@ function doAjaxForgot() {
 }
 function displayErrors(errors) {
 	str_errors = '<h3>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</h3><ol>';
-	for (error in errors) //IE6 bug fix
-	if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
+	for (var error in errors) //IE6 bug fix
+		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#ajax-loader').fadeOut('slow');
 	$('#error').html(str_errors + '</ol>');
 	$('#error').fadeIn();
