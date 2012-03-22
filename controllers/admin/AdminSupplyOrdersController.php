@@ -1906,7 +1906,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$content = '<span style="width:20px; margin-right:5px;">';
 		if ($supply_order_state->editable == false)
-			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'" title="Export as PDF"><img src="../img/admin/pdf.gif" alt="invoice"/></a>';
+			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><img src="../img/admin/pdf.gif" alt=""/></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';
@@ -1914,7 +1914,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$content .= '<span style="width:20px">';
 		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
 			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&amp;id_supply_order='.(int)$supply_order->id.'
-						 &csv_order_details" title="Export as CSV">
+						 &csv_order_details" title='.$this->l('Export as CSV').'">
 						 <img src="../img/admin/excel_file.png" alt=""/></a>';
 		else
 			$content .= '-';
