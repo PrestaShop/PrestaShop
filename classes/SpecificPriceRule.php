@@ -73,19 +73,22 @@ class SpecificPriceRuleCore extends ObjectModel
 
 	public function delete()
 	{
+		$this->deleteConditions();
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id);
+		return parent::delete();
+	}
+
+	public function deleteConditions()
+	{
 		$ids_condition_group = Db::getInstance()->executeS('SELECT id_specific_price_rule_condition_group
 																		 FROM '._DB_PREFIX_.'specific_price_rule_condition_group
 																		 WHERE id_specific_price_rule='.(int)$this->id);
 		if ($ids_condition_group)
 			foreach ($ids_condition_group as $row)
 			{
-				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price_rule_condition_group
-													WHERE id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
-				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price_rule_condition
-													WHERE id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
+				Db::getInstance()->delete('specific_price_rule_condition_group', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
+				Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
 			}
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id);
-		return parent::delete();
 	}
 
 	public function addConditions($conditions)
