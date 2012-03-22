@@ -38,50 +38,92 @@ class RequestSqlCore extends ObjectModel
 		'primary' => 'id_request_sql',
 		'fields' => array(
 			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
-			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 400),
+			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 1000),
 		),
 	);
 
-	public $tested = array('required' => array ('SELECT', 'FROM'),
-							'option' => array('WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'),
-							'operator' => array('AND', '&&', 'BETWEEN', 'AND', 'BINARY', '&', '~', '|', '^', 'CASE', 'WHEN', 'END', 'DIV', '/', '<=>', '=', '>=',
-							'>', 'IS', 'NOT', 'NULL', '<<', '<=', '<', 'LIKE', '-', '%', '!=', '<>', 'REGEXP', '!', '||', 'OR', '+', '>>', 'RLIKE', 'SOUNDS', '*',
-							'-', 'XOR', 'IN'),
-							'function' => array('AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STDDEV', 'STDDEV_SAMP', 'STDDEV_POP', 'VARIANCE', 'VAR_SAMP', 'VAR_POP',
-							'GROUP_CONCAT', 'BIT_AND', 'BIT_OR', 'BIT_XOR'),
-							'unauthorized' => array('DELETE', 'ALTER', 'INSERT', 'REPLACE', 'CREATE', 'TRUNCATE', 'OPTIMIZE', 'GRANT', 'REVOKE', 'SHOW', 'HANDLER',
-							'LOAD', 'ROLLBACK', 'SAVEPOINT', 'UNLOCK', 'INSTALL', 'UNINSTALL', 'ANALZYE', 'BACKUP', 'CHECK', 'CHECKSUM', 'REPAIR', 'RESTORE', 'CACHE',
-							'DESCRIBE', 'EXPLAIN', 'USE', 'HELP', 'SET', 'DUPLICATE', 'VALUES',  'INTO', 'RENAME', 'CALL', 'PROCEDURE',  'FUNCTION', 'DATABASE', 'SERVER',
-							'LOGFILE', 'DEFINER', 'RETURNS', 'EVENT', 'TABLESPACE', 'VIEW', 'TRIGGER', 'DATA', 'DO', 'PASSWORD', 'USER', 'PLUGIN', 'FLUSH', 'KILL',
-							'RESET', 'START', 'STOP', 'PURGE', 'EXECUTE', 'PREPARE', 'DEALLOCATE', 'LOCK', 'USING', 'DROP', 'FOR', 'UPDATE', 'BEGIN', 'BY', 'ALL', 'SHARE',
-							'MODE', 'TO','KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
-							'SQL_SMALL_RESULT', 'SQL_BIG_RESULT', 'QUICK', 'SQL_BUFFER_RESULT', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS', 'WITH'));
+	/** @var array : List of params to tested */
+	public $tested = array(
+		'required' => array('SELECT', 'FROM'),
+		'option' => array('WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'),
+		'operator' => array(
+			'AND', '&&', 'BETWEEN', 'AND', 'BINARY', '&', '~', '|', '^', 'CASE', 'WHEN', 'END', 'DIV', '/', '<=>', '=', '>=',
+			'>', 'IS', 'NOT', 'NULL', '<<', '<=', '<', 'LIKE', '-', '%', '!=', '<>', 'REGEXP', '!', '||', 'OR', '+', '>>', 'RLIKE', 'SOUNDS', '*',
+			'-', 'XOR', 'IN'
+		),
+		'function' => array(
+			'AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STDDEV', 'STDDEV_SAMP', 'STDDEV_POP', 'VARIANCE', 'VAR_SAMP', 'VAR_POP',
+			'GROUP_CONCAT', 'BIT_AND', 'BIT_OR', 'BIT_XOR'
+		),
+		'unauthorized' => array(
+			'DELETE', 'ALTER', 'INSERT', 'REPLACE', 'CREATE', 'TRUNCATE', 'OPTIMIZE', 'GRANT', 'REVOKE', 'SHOW', 'HANDLER',
+			'LOAD', 'ROLLBACK', 'SAVEPOINT', 'UNLOCK', 'INSTALL', 'UNINSTALL', 'ANALZYE', 'BACKUP', 'CHECK', 'CHECKSUM', 'REPAIR', 'RESTORE', 'CACHE',
+			'DESCRIBE', 'EXPLAIN', 'USE', 'HELP', 'SET', 'DUPLICATE', 'VALUES',  'INTO', 'RENAME', 'CALL', 'PROCEDURE',  'FUNCTION', 'DATABASE', 'SERVER',
+			'LOGFILE', 'DEFINER', 'RETURNS', 'EVENT', 'TABLESPACE', 'VIEW', 'TRIGGER', 'DATA', 'DO', 'PASSWORD', 'USER', 'PLUGIN', 'FLUSH', 'KILL',
+			'RESET', 'START', 'STOP', 'PURGE', 'EXECUTE', 'PREPARE', 'DEALLOCATE', 'LOCK', 'USING', 'DROP', 'FOR', 'UPDATE', 'BEGIN', 'BY', 'ALL', 'SHARE',
+			'MODE', 'TO','KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
+			'SQL_SMALL_RESULT', 'SQL_BIG_RESULT', 'QUICK', 'SQL_BUFFER_RESULT', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS', 'WITH'
+		)
+	);
 
-	public $attributes = array('passwd' => '*******************',
-								'secure_key' => '*******************');
+	public $attributes = array(
+		'passwd' => '*******************',
+		'secure_key' => '*******************'
+	);
 
+	/** @var array : list of errors */
 	public $error_sql = array();
 
+	/**
+	 * Get list of request SQL
+	 *
+	 * @static
+	 * @return array|bool
+	 */
 	public static function getRequestSql()
 	{
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`'))
 			return false;
+
 		$request_sql = array();
 		foreach ($result as $row)
 			$request_sql[] = $row['sql'];
+
 		return $request_sql;
 	}
 
+	/**
+	 * Get list of request SQL by id request
+	 *
+	 * @static
+	 * @param $id
+	 * @return array
+	 */
 	public static function getRequestSqlById($id)
 	{
 		return Db::getInstance()->executeS(sprintf('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = %d', $id));
 	}
 
+	/**
+	 * Call the parserSQL() method in Tools class
+	 * Cut the request in table for check it
+	 *
+	 * @param $sql
+	 * @return bool
+	 */
 	public function parsingSql($sql)
 	{
 		return Tools::parserSQL($sql);
 	}
 
+	/**
+	 * Check if the parsing of the SQL request is good or not
+	 *
+	 * @param $tab
+	 * @param bool $in
+	 * @param $sql
+	 * @return bool
+	 */
 	public function validateParser($tab, $in = false, $sql)
 	{
 		if (!$tab)
@@ -100,6 +142,14 @@ class RequestSqlCore extends ObjectModel
 			return $this->validateSql($tab, $in, $sql);
 	}
 
+	/**
+	 * Cut the request for check each cutting
+	 *
+	 * @param $tab
+	 * @param $in
+	 * @param $sql
+	 * @return bool
+	 */
 	public function validateSql($tab, $in, $sql)
 	{
 		if (!$this->testedRequired($tab))
@@ -138,9 +188,15 @@ class RequestSqlCore extends ObjectModel
 		if (empty($this->_errors))
 			if (!Db::getInstance()->executeS($sql))
 				return false;
+
 		return true;
 	}
 
+	/**
+	 * Get list of all tables
+	 *
+	 * @return array
+	 */
 	public function getTables()
 	{
 		$results = Db::getInstance()->executeS('SHOW TABLES');
@@ -152,17 +208,30 @@ class RequestSqlCore extends ObjectModel
 		return $tables;
 	}
 
+	/**
+	 * Get list of all attributes by an table
+	 *
+	 * @param $table
+	 * @return array
+	 */
 	public function getAttributesByTable($table)
 	{
 		return Db::getInstance()->executeS(sprintf('DESCRIBE %s', $table));
 	}
 
+	/**
+	 * Cut an join sentence
+	 *
+	 * @param $attrs
+	 * @param $from
+	 * @return array|bool
+	 */
 	public function cutJoin($attrs, $from)
 	{
 		$attrs = explode('=', str_replace(' ', '', $attrs));
 		foreach ($attrs as $attr)
 		{
-			if ($attribut = $this->cutAttribute($attr, $from))
+			if ($attribut = $this->cutAttribute(trim($attr), $from))
 				$tab[] = $attribut;
 			else
 				return false;
@@ -170,6 +239,13 @@ class RequestSqlCore extends ObjectModel
 		return $tab;
 	}
 
+	/**
+	 * Cut an attribute with or without the alias
+	 *
+	 * @param $attr
+	 * @param $from
+	 * @return array|bool
+	 */
 	public function cutAttribute($attr, $from)
 	{
 		if (preg_match('#^((`(\()?([a-z_])+`(\))?)|((\()?([a-z_])+(\))?))\.((`(\()?([a-z_])+`(\))?)|((\()?([a-z_])+(\))?))$#i', $attr))
@@ -197,6 +273,13 @@ class RequestSqlCore extends ObjectModel
 			return false;
 	}
 
+	/**
+	 * Get name of table by alias
+	 *
+	 * @param bool $alias
+	 * @param $tables
+	 * @return array|bool
+	 */
 	public function returnNameTable($alias = false, $tables)
 	{
 		if ($alias)
@@ -220,6 +303,13 @@ class RequestSqlCore extends ObjectModel
 		}
 	}
 
+	/**
+	 * Check if an attributes existe in an table
+	 *
+	 * @param $attr
+	 * @param $table
+	 * @return bool
+	 */
 	public function attributExistInTable($attr, $table)
 	{
 		if (is_array($table) && (count($table) == 1))
@@ -231,6 +321,12 @@ class RequestSqlCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * Check if all required sentence existing
+	 *
+	 * @param $tab
+	 * @return bool
+	 */
 	public function testedRequired($tab)
 	{
 		foreach ($this->tested['required'] as $key)
@@ -242,6 +338,12 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check if an unauthorized existing in an array
+	 *
+	 * @param $tab
+	 * @return bool
+	 */
 	public function testedUnauthorized($tab)
 	{
 		foreach ($this->tested['unauthorized'] as $key)
@@ -253,6 +355,12 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "FROM" sentence
+	 *
+	 * @param $from
+	 * @return bool
+	 */
 	public function checkedFrom($from)
 	{
 		$nb = count($from);
@@ -295,6 +403,14 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "SELECT" sentence
+	 *
+	 * @param $select
+	 * @param $from
+	 * @param bool $in
+	 * @return bool
+	 */
 	public function checkedSelect($select, $from, $in = false)
 	{
 		$nb = count($select);
@@ -305,7 +421,7 @@ class RequestSqlCore extends ObjectModel
 			{
 				if ($attribut['expr_type'] == 'colref' || $attribut['expr_type'] == 'reserved')
 				{
-					if ($attr = $this->cutAttribute($attribut['base_expr'], $from))
+					if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from))
 					{
 						if (!$this->attributExistInTable($attr['attribut'], $attr['table']))
 						{
@@ -340,6 +456,14 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "WHERE" sentence
+	 *
+	 * @param $where
+	 * @param $from
+	 * @param $sql
+	 * @return bool
+	 */
 	public function checkedWhere($where, $from, $sql)
 	{
 		$nb = count($where);
@@ -348,7 +472,7 @@ class RequestSqlCore extends ObjectModel
 			$attribut = $where[$i];
 			if ($attribut['expr_type'] == 'colref' || $attribut['expr_type'] == 'reserved')
 			{
-				if ($attr = $this->cutAttribute($attribut['base_expr'], $from))
+				if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from))
 				{
 					if (!$this->attributExistInTable($attr['attribut'], $attr['table']))
 					{
@@ -387,6 +511,13 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "HAVING" sentence
+	 *
+	 * @param $having
+	 * @param $from
+	 * @return bool
+	 */
 	public function checkedHaving($having, $from)
 	{
 		$nb = count($having);
@@ -395,7 +526,7 @@ class RequestSqlCore extends ObjectModel
 			$attribut = $having[$i];
 			if ($attribut['expr_type'] == 'colref')
 			{
-				if ($attr = $this->cutAttribute($attribut['base_expr'], $from))
+				if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from))
 				{
 					if (!$this->attributExistInTable($attr['attribut'], $attr['table']))
 					{
@@ -430,12 +561,19 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "ORDER" sentence
+	 *
+	 * @param $order
+	 * @param $from
+	 * @return bool
+	 */
 	public function checkedOrder($order, $from)
 	{
 		$order = $order[0];
 		if ($order['type'] == 'expression')
 		{
-			if ($attr = $this->cutAttribute($order['base_expr'], $from))
+			if ($attr = $this->cutAttribute(trim($order['base_expr']), $from))
 			{
 				if (!$this->attributExistInTable($attr['attribut'], $attr['table']))
 				{
@@ -460,12 +598,19 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "GROUP BY" sentence
+	 *
+	 * @param $group
+	 * @param $from
+	 * @return bool
+	 */
 	public function checkedGroupBy($group, $from)
 	{
 		$group = $group[0];
 		if ($group['type'] == 'expression')
 		{
-			if ($attr = $this->cutAttribute($group['base_expr'], $from))
+			if ($attr = $this->cutAttribute(trim($group['base_expr']), $from))
 			{
 				if (!$this->attributExistInTable($attr['attribut'], $attr['table']))
 				{
@@ -490,6 +635,12 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Check a "LIMIT" sentence
+	 *
+	 * @param $limit
+	 * @return bool
+	 */
 	public function checkedLimit($limit)
 	{
 		if (!preg_match('#^[0-9]+$#', trim($limit['start'])) || !preg_match('#^[0-9]+$#', trim($limit['end'])))
