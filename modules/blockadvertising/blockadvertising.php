@@ -191,11 +191,14 @@ class BlockAdvertising extends Module
 								<a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
 								if ($this->adv_img)
 								{
-									$output .= '<img src="'.$this->context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
-									$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
+									$output .= '<img src="'.$this->context->link->protocol_content.$this->adv_img.'" 
+										alt="'.$this->adv_title.'" title="'.$this->adv_title.'" 
+										style="height:163px;margin-left: 100px;width:163px"/>';
+									$output .= '<input class="button" type="submit" name="submitDeleteImgConf" 
+										value="'.$this->l('Delete image').'" style=""/>';
 								}
 								else
-									$output .= '<div style="margin-left: 100px;width:163px;"/>'.$this->l('no image').'</div>';
+									$output .= '<div style="margin-left: 100px;width:163px;">'.$this->l('no image').'</div>';
 								$output .= '
 								</a>
 								<br/>
