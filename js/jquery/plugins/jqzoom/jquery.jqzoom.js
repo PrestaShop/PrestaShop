@@ -24,8 +24,10 @@
 			var noalt ='';
 
 			$(this).hover(function() {
-				var imageLeft = $(this).get(0).offsetLeft;
-				var imageTop =  $(this).get(0).offsetTop;
+				var imageRelativeLeft = $(this).get(0).offsetLeft;
+				var imageLeft = $($(this).get(0)).offset().left;
+				var imageRelativeTop =  $(this).get(0).offsetTop;
+				var imageTop = $($(this).get(0)).offset().top;
 				var imageWidth = $(this).get(0).offsetWidth;
 				var imageHeight = $(this).get(0).offsetHeight;
 
@@ -37,11 +39,11 @@
 					$(this).after("<div class='zoomdiv'><img class='bigimg' src='"+bigimage+"'/></div>");
 
 				if(settings.position == "right")
-					leftpos = imageLeft + imageWidth + settings.offset;
+					leftpos = imageRelativeLeft + imageWidth + settings.offset;
 				else
-					leftpos = imageLeft - settings.xzoom - settings.offset;
+					leftpos = imageRelativeLeft - settings.xzoom - settings.offset;
 
-				$("div.zoomdiv").css({top: imageTop,left: leftpos});
+				$("div.zoomdiv").css({top: imageRelativeTop,left: leftpos});
 				$("div.zoomdiv").width(settings.xzoom);
 				$("div.zoomdiv").height(settings.yzoom);
 				$("div.zoomdiv").show();
