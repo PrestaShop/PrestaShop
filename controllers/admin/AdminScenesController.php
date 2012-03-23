@@ -106,18 +106,25 @@ class AdminScenesControllerCore extends AdminController
 	public function renderForm()
 	{
 		$this->initFieldsForm();
-		$content = '';
 
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$langtags = 'name';
-		$active = $this->getFieldValue($obj, 'active');
-
-		$products = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 		$this->tpl_form_vars['products'] = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 
 		return parent::renderForm();
+	}
+
+	public function initToolbar()
+	{
+		parent::initToolbar();
+
+		if (in_array($this->display, array('add', 'edit')))
+			$this->toolbar_btn = array_merge(array('save-and-stay' => array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+			)), $this->toolbar_btn);
 	}
 
 	public function initFieldsForm()
@@ -234,10 +241,10 @@ class AdminScenesControllerCore extends AdminController
 
 			$selected_cat = array();
 			if (Tools::isSubmit('categories'))
-				foreach (Tools::getValue('categories') as $k => $row)
+				foreach (Tools::getValue('categories') as $row)
 					$selected_cat[] = $row;
 			else if ($obj->id)
-				foreach (Scene::getIndexedCategories($obj->id) as $k => $row)
+				foreach (Scene::getIndexedCategories($obj->id) as $row)
 					$selected_cat[] = $row['id_category'];
 
 			$root_category = Category::getRootCategory();
@@ -307,6 +314,7 @@ class AdminScenesControllerCore extends AdminController
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
 				$this->errors[] = Tools::displayError('You should make at least one zone');
 		}
+
 		parent::postProcess();
 	}
 }
