@@ -254,17 +254,24 @@ class AdminCartsControllerCore extends AdminController
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
 				$errors[] = Tools::displayError('Invalid quantity');
-			if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
+
+			// Don't try to use a product if not instanciated before due to errors
+			if (isset($product) && $product->id)
 			{
-				if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
-					$errors[] = Tools::displayError('There is not enough product in stock');
+				if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
+				{
+					if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
+						$errors[] = Tools::displayError('There is not enough product in stock');
+				}
+				else
+					if (!$product->checkQty((int)$qty))
+						$errors[] = Tools::displayError('There is not enough product in stock');
+				if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
+					$errors[] = Tools::displayError('Please fill in all required fields');
+				$this->context->cart->save();
 			}
 			else
-				if (!$product->checkQty((int)$qty))
-					$errors[] = Tools::displayError('There is not enough product in stock');
-			if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
-				$errors[] = Tools::displayError('Please fill in all required fields');
-			$this->context->cart->save();
+				$errors[] = Tools::displayError('Product can\'t be added to the cart');
 
 			if (!count($errors))
 			{
