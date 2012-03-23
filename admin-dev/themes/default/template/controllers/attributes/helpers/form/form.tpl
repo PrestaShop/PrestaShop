@@ -52,7 +52,7 @@
 
 {block name="script"}
 	var attributesGroups = {ldelim}{$strAttributesGroups}{rdelim};
-	
+
 	var displayColorFieldsOption = function() {
 		var val = $('#id_attribute_group').val();
 		if (attributesGroups[val])
@@ -72,7 +72,7 @@
 		$('.input_group_shop').each(function(k, item)
 		{
 			var id_group_shop = $(item).val();
-			if (shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]) > -1)
+			if (typeof shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]) > -1)
 				$(item).attr('disabled', false);
 			else
 				$(item).attr('disabled', true);

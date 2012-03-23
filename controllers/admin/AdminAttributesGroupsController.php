@@ -294,7 +294,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$associations = array();
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$associations[$row['id_attribute_group']][] = $row['id_group_shop'];
-			$this->fields_form['shop_associations'] = Tools::jsonEncode($associations);
 
 			$this->fields_form['input'][] = array(
 				'type' => 'group_shop',
@@ -303,8 +302,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'values' => Shop::getTree()
 			);
 		}
+		else
+			$associations = array();
 
-		$this->fields_form['shop_associations'] = Tools::jsonEncode(array());
+		$this->fields_form['shop_associations'] = Tools::jsonEncode($associations);
 		$this->fields_form['input'][] = array(
 			'type' => 'color',
 			'label' => $this->l('Color:'),
