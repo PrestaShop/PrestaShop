@@ -367,7 +367,7 @@ class OrderInvoiceCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
-			'.Shop::addSqlRestriction().'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			ORDER BY oi.date_add ASC
 		');
 
@@ -393,7 +393,7 @@ class OrderInvoiceCore extends ObjectModel
 				ORDER BY date_add DESC, id_order_history DESC
 				LIMIT 1
 			)
-			'.Shop::addSqlRestriction(false, 'o').'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			ORDER BY oi.`date_add` ASC
 		');
 
@@ -415,7 +415,7 @@ class OrderInvoiceCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
-			'.Shop::addSqlRestriction().'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			ORDER BY oi.delivery_date ASC
 		');
 
