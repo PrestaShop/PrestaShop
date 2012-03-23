@@ -2274,7 +2274,8 @@ class ProductCore extends ObjectModel
 				die(Tools::displayError());
 			$cur_cart = new Cart($id_cart);
 			// Store cart in context to avoid multiple instantiations in BO
-			$context->cart = $cur_cart;
+			if (!Validate::isLoadedObject($context->cart))
+				$context->cart = $cur_cart;
 		}
 
 		$cart_quantity = 0;
