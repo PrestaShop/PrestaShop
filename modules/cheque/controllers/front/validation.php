@@ -54,7 +54,7 @@ class ChequeValidationModuleFrontController extends ModuleFrontController
 		if (!Validate::isLoadedObject($customer))
 			Tools::redirect('index.php?controller=order&step=1');
 
-		$currency = Tools::isSubmit('currency_payement') ? new Currency(Tools::getValue('currency_payement')) : $this->context->currency;
+		$currency = $this->context->currency;
 		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
 		$mailVars =	array(

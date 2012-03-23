@@ -54,7 +54,7 @@ class BankwireValidationModuleFrontController extends ModuleFrontController
 		if (!Validate::isLoadedObject($customer))
 			Tools::redirect('index.php?controller=order&step=1');
 
-		$currency = Tools::getValue('currency_payement', false) ? new Currency(Tools::getValue('currency_payement')) : Context::getContext()->currency;
+		$currency = $this->context->currency;
 		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 		$mailVars = array(
 			'{bankwire_owner}' => Configuration::get('BANK_WIRE_OWNER'),

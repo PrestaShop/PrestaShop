@@ -33,6 +33,8 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/bankwire.php');
 
+$context = Context::getContext();
+$cart = $context->cart;
 $bankwire = new BankWire();
 
 if ($cart->id_customer == 0 OR $cart->id_address_delivery == 0 OR $cart->id_address_invoice == 0 OR !$bankwire->active)
@@ -54,7 +56,7 @@ $customer = new Customer((int)$cart->id_customer);
 if (!Validate::isLoadedObject($customer))
 	Tools::redirect('index.php?controller=order&step=1');
 
-$currency = Tools::getValue('currency_payement', false) ? new Currency(Tools::getValue('currency_payement')) : Context::getContext()->currency;
+$currency = $context->currency;
 $total = (float)($cart->getOrderTotal(true, Cart::BOTH));
 $mailVars = array(
 	'{bankwire_owner}' => Configuration::get('BANK_WIRE_OWNER'),

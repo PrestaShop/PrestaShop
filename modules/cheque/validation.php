@@ -58,7 +58,7 @@ $customer = new Customer($cart->id_customer);
 if (!Validate::isLoadedObject($customer))
 	Tools::redirect('index.php?controller=order&step=1');
 
-$currency = Tools::isSubmit('currency_payement') ? new Currency(Tools::getValue('currency_payement')) : $context->currency;
+$currency = $context->currency;
 $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
 
 $mailVars =	array(
