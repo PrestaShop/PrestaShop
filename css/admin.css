@@ -450,7 +450,9 @@ select optgroup option {
 	font-weight:normal;
 	margin: 0 0 10px 0;
 	line-height: 20px;
-	padding: 10px 15px;
+	padding: 13px 5px 5px 40px;
+	min-height:28px;
+	border-radius:3px;
 }
 
 #content .error-inline {
@@ -462,10 +464,8 @@ select optgroup option {
 	background: #DFF2BF url(../img/admin/icon-valid.png) no-repeat scroll 6px 6px;
 	border: 1px solid #4F8A10;
 	color:#4F8A10;
-	padding: 5px 5px 5px 40px;
-	border-radius:3px;
-	min-height:32px;
 }
+
 #content .conf img, #content .warn img, #content .error img {
 	margin:0 5px 0 0;
 }
@@ -474,10 +474,6 @@ select optgroup option {
 	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
 	border: 1px solid #CC0000;
 	color:#D8000C;
-	min-height: 32px;
-	line-height:28px;
-    padding: 5px 5px 5px 40px;
-	border-radius:3px;
 }
 
 #ajax_confirmation .error  {
@@ -507,14 +503,12 @@ select optgroup option {
 	border: 1px solid #9e6014;
 	color:#9e6014;
 	padding: 10px 5px 5px 40px;
-	border-radius:3px;
 	min-height:32px;
 }
 
 #content .warn h2 {
 	margin:0;
 }
-
 
 #content .warn ul li, #content .warn p, #content .warn a {
 	color:#9e6014;
