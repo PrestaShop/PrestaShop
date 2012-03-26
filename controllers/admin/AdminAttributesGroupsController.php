@@ -541,6 +541,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->setTypeAttribute();
 
 		parent::initProcess();
+
 		if ($this->table == 'attribute')
 		{
 			$this->display = 'editAttributes';
@@ -550,7 +551,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	
 	protected function setTypeAttribute()
 	{
-		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
+		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
