@@ -42,7 +42,6 @@ class MailalertsAccountModuleFrontController extends ModuleFrontController
 		parent::initContent();
 
 		if (!Context::getContext()->customer->isLogged())
-            //Tools::redirect('index.php?controller=auth&redirect=account&module=mailalerts&fc=module');
             Tools::redirect('index.php?controller=auth&redirect=module&module=mailalerts&action=account');
 
 		if (Context::getContext()->customer->id)
