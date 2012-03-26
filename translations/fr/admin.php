@@ -3849,6 +3849,7 @@ $_LANGADM['AdminSupplyOrdersChangeState79ea758900c3bcb857f45804c7802062'] = 'Ét
 $_LANGADM['AdminSupplyOrdersChangeStatec9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_LANGADM['AdminSupplyOrdersa05cbdb50dce094de8ecc4fee0738608'] = 'Sélectionnez votre fournisseur.';
 $_LANGADM['AdminSupplyOrdersa2108b0ea15cc69a3c4fabd9b4f9e0dc'] = 'Attention : une fois la mise à jour confirmée, vous ne pouvez pas revenir en arrière, à moins de créer de nouveaux mouvements de stock négatifs.';
+$_LANGADM['AdminSupplyOrdersa322aa8b6f2451e69ef22d92c2f40cf4'] = 'Enfin, notez que vous devez effectuer une commande par fournisseur.';
 $_LANGADM['AdminSupplyOrdersa3bc16892719ebd4d9c552bebe1b6358'] = 'Enregistrer la commande';
 $_LANGADM['AdminSupplyOrdersa7adb0d634f18509d11d206f18d23364'] = 'Cette interface vous permet de mettre à jour les quantités pour la commande en cours';
 $_LANGADM['AdminSupplyOrdersa86ed51dc97b4993b7f47c3c4cbdd5e4'] = 'Vous n\'avez pas sélectionné de produits à mettre à jour';
