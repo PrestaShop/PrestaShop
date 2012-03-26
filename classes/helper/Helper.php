@@ -25,11 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/*
- * TODO : move HTML code in template files
- * TODO : phpDoc on two last methods: includeDatepicker() & bindDatepicker()
- */
-
 class HelperCore
 {
 	public $currentIndex;
