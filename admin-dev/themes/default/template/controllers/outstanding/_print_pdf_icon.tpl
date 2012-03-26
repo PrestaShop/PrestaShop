@@ -26,5 +26,5 @@
 
 {* Generate HTML code for printing Invoice Icon with link *}
 <span style="width:20px; margin-right:5px;">
-	<a href="pdf.php?id_order_invoice={$id_invoice}&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
+	<a href="{$link->getAdminLink('AdminPdf')}&submitAction=generateInvoicePDF&id_order_invoice={$id_invoice}"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
 </span>

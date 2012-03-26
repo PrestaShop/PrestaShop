@@ -86,7 +86,7 @@ class AdminSearchControllerCore extends AdminController
 			if ($searchType == 4)
 			{
 				if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($invoice = Order::getInvoice((int)$this->query)))
-					Tools::redirectAdmin('pdf.php?id_order='.(int)($invoice['id_order']).'&pdf');
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice['id_order']));
 				$this->errors[] = Tools::displayError('No invoice found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
 			}
 

@@ -1,5 +1,7 @@
 <?php
 
-class AdminTab extends AdminTabCore
+abstract class AdminTab extends AdminTabCore
 {
+
 }
+

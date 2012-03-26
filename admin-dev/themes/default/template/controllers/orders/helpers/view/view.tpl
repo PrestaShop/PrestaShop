@@ -64,15 +64,19 @@
 <div class="bloc-command">
 	<div class="button-command">
 			{if (count($invoices_collection))}
-			<a class="button" href="pdf.php?id_order={$order->id}&pdf" target="_blank"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
+				<a class="button" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
+					<img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}
+				</a>
 			{else}
-			<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" /> {l s='No invoice'}
+				<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" /> {l s='No invoice'}
 			{/if}
 			 |
 			{if (($currentState && $currentState->delivery) || $order->delivery_number)}
-			<a class="button"  href="pdf.php?id_order={$order->id}&delivery" target="_blank"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
+				<a class="button"  href="{$link->getAdminLink('AdminPdf')}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+					<img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}
+				</a>
 			{else}
-			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
+				<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
 			{/if}
 			 |
 			<a class="button" href="javascript:window.print()"><img src="../img/admin/printer.gif" alt="{l s='Print order'}" title="{l s='Print order'}" /> {l s='Print order'}</a>

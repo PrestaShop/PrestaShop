@@ -110,7 +110,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 			if (!count($this->errors))
 			{
 				if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
-					Tools::redirectAdmin('pdf.php?deliveryslips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateDeliverySlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
 				else
 					$this->errors[] = Tools::displayError('No delivery slip found for this period');
 			}
