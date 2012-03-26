@@ -474,9 +474,6 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			// set token
-			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-
 			// Process list filtering
 			if ($this->filter)
 				$this->processFilter();
@@ -488,7 +485,7 @@ class AdminControllerCore extends Controller
 				Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
 				// Call process
-				$return = $this->{'process'.Tools::toCamelCase($this->action)}($token);
+				$return = $this->{'process'.Tools::toCamelCase($this->action)}();
 				// Hook After Action
 				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
@@ -500,16 +497,14 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Object Delete images
-	 *
-	 * @param string $token
 	 */
-	public function processDeleteImage($token)
+	public function processDeleteImage()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if (($object->deleteImage()))
 			{
-				$redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token;
+				$redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$this->token;
 				if (!$this->ajax)
 					$this->redirect_after = $redirect;
 				else
@@ -522,10 +517,8 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Object Delete
-	 *
-	 * @param string $token
 	 */
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -551,13 +544,13 @@ class AdminControllerCore extends Controller
 
 					$object->deleted = 1;
 					if ($object->update())
-						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$token;
+						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
 				elseif ($object->delete())
 				{
 					if (method_exists($object, 'cleanPositions'))
 						$object->cleanPositions();
-					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
@@ -574,26 +567,23 @@ class AdminControllerCore extends Controller
 	/**
 	 * Call the right method for creating or updating object
 	 *
-	 * @param $token
 	 * @return mixed
 	 */
-	public function processSave($token)
+	public function processSave()
 	{
 		if ($this->id_object)
 		{
 			$this->object = $this->loadObject();
-			return $this->processUpdate($token);
+			return $this->processUpdate();
 		}
 		else
-			return $this->processAdd($token);
+			return $this->processAdd();
 	}
 
 	/**
 	 * Object creation
-	 *
-	 * @param string $token
 	 */
-	public function processAdd($token)
+	public function processAdd()
 	{
 		/* Checking fields validity */
 		$this->validateRules();
@@ -617,13 +607,13 @@ class AdminControllerCore extends Controller
 				$this->updateAssoShop($object->id);
 				// Save and stay on same form
 				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
 				// Save and back to parent
 				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token;
 				// Default behavior (save and back)
 				if (empty($this->redirect_after) && $this->redirect_after !== false)
-					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token;
 			}
 		}
 
@@ -641,10 +631,8 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Object update
-	 *
-	 * @param string $token
 	 */
-	public function processUpdate($token)
+	public function processUpdate()
 	{
 		/* Checking fields validity */
 		$this->validateRules();
@@ -702,18 +690,18 @@ class AdminControllerCore extends Controller
 						// Specific scene feature
 						// @todo change stay_here submit name (not clear for redirect to scene ... )
 						if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
-							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token;
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$this->token;
 						// Save and stay on same form
 						// @todo on the to following if, we may prefer to avoid override redirect_after previous value
 						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token;
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$this->token;
 						// Save and back to parent
 						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token;
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$this->token;
 
 						// Default behavior (save and back)
 						if (empty($this->redirect_after))
-							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
+							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
 				}
 				else
@@ -736,10 +724,8 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Change object required fields
-	 *
-	 * @param string $token
 	 */
-	public function processUpdateFields($token)
+	public function processUpdateFields()
 	{
 		if (!is_array($fields = Tools::getValue('fieldsBox')))
 			$fields = array();
@@ -748,24 +734,22 @@ class AdminControllerCore extends Controller
 		if (!$object->addFieldsRequiredDatabase($fields))
 			$this->errors[] = Tools::displayError('Error in updating required fields');
 		else
-			$this->redirect_after = self::$currentIndex.'&conf=4&token='.$token;
+			$this->redirect_after = self::$currentIndex.'&conf=4&token='.$this->token;
 
 		return $object;
 	}
 
 	/**
 	 * Change object status (active, inactive)
-	 *
-	 * @param string $token
 	 */
-	public function processStatus($token)
+	public function processStatus()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->toggleStatus())
 			{
 				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
-				$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$this->token;
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating status.');
@@ -780,10 +764,8 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Change object position
-	 *
-	 * @param string $token
 	 */
-	public function processPosition($token)
+	public function processPosition()
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -795,7 +777,7 @@ class AdminControllerCore extends Controller
 		else
 		{
 			$id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
-			$redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$token;
+			$redirect = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$id_identifier_str.'&token='.$this->token;
 			$this->redirect_after = $redirect;
 		}
 		return $object;
@@ -803,8 +785,6 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Cancel all filters for this tab
-	 *
-	 * @param string $token
 	 */
 	public function processResetFilters()
 	{
@@ -839,10 +819,8 @@ class AdminControllerCore extends Controller
 
 	/**
 	 * Update options and preferences
-	 *
-	 * @param string $token
 	 */
-	protected function processUpdateOptions($token)
+	protected function processUpdateOptions()
 	{
 		$this->beforeUpdateOptions();
 
@@ -2440,10 +2418,9 @@ class AdminControllerCore extends Controller
 	/**
 	 * Delete multiple items
 	 *
-	 * @param array $boxes ids of the item to be processed
 	 * @return boolean true if succcess
 	 */
-	protected function processBulkDelete($token)
+	protected function processBulkDelete()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -2475,7 +2452,7 @@ class AdminControllerCore extends Controller
 					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
 
 				if ($result)
-					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token;
 				$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
 		}
@@ -2488,7 +2465,7 @@ class AdminControllerCore extends Controller
 			return false;
 	}
 
-	protected function processBulkAffectZone($token)
+	protected function processBulkAffectZone()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -2496,7 +2473,7 @@ class AdminControllerCore extends Controller
 			$result = $object->affectZoneToSelection(Tools::getValue($this->table.'Box'), Tools::getValue('zone_to_affect'));
 
 			if ($result)
-				$this->redirect_after = self::$currentIndex.'&conf=28&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&conf=28&token='.$this->token;
 			$this->errors[] = Tools::displayError('An error occurred while affecting a zone to the selection.');
 		}
 		else

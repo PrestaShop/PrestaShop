@@ -483,7 +483,7 @@ class AdminCategoriesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		$id_category = (int)Tools::getValue('id_category');
 		$id_parent = (int)Tools::getValue('id_parent');
@@ -500,10 +500,10 @@ class AdminCategoriesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of itself.'));
 		}
-		parent::processAdd($token);
+		parent::processAdd();
 	}
 
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if ($this->tabAccess['delete'] === '1')
 		{
@@ -573,7 +573,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 	}
 
-	public function processPosition($token)
+	public function processPosition()
 	{
 		if ($this->tabAccess['edit'] !== '1')
 			$this->errors[] = Tools::displayError('You do not have permission to edit here.');

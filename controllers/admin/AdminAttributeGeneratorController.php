@@ -95,7 +95,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	public function processGenerate($token)
+	public function processGenerate()
 	{
 		if (!is_array(Tools::getValue('options')))
 			$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');

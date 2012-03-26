@@ -398,33 +398,32 @@ class AdminFeaturesControllerCore extends AdminController
 	 * Override processAdd to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processAdd()
 	 */
-	public function processAdd($token)
+	public function processAdd()
 	{
-		parent::processAdd($token);
+		parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
 	}
 
 	/**
 	 * Override processUpdate to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processUpdate()
 	 */
-	public function processUpdate($token)
+	public function processUpdate()
 	{
-		parent::processUpdate($token);
+		parent::processUpdate();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
 	}
 
 	/**
 	 * Call the right method for creating or updating object
 	 *
-	 * @param $token
 	 * @return mixed
 	 */
-	public function processSave($token)
+	public function processSave()
 	{
 		if ($this->table == 'feature')
 		{
@@ -443,7 +442,7 @@ class AdminFeaturesControllerCore extends AdminController
 				if (preg_match('/^name_/Ui', $key))
 					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 		}
-		parent::processSave($token);
+		parent::processSave();
 	}
 
 	/**

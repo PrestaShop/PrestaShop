@@ -82,7 +82,7 @@ class AdminGeolocationControllerCore extends AdminController
 	/**
 	 * @see AdminController::processUpdateOptions()
 	 */
-	public function processUpdateOptions($token)
+	public function processUpdateOptions()
 	{
 		if ($this->isGeoLiteCityAvailable())
 			Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
@@ -115,7 +115,7 @@ class AdminGeolocationControllerCore extends AdminController
 			}
 		}
 
-		return parent::processUpdateOptions($token);
+		return parent::processUpdateOptions();
 	}
 
 	public function renderOptions()

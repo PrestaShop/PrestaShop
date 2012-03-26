@@ -297,7 +297,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processDeleteVirtualProduct($token)
+	public function processDeleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), 0)))
 			return false;
@@ -305,7 +305,7 @@ class AdminProductsControllerCore extends AdminController
 		return $product_download->deleteFile((int)$id_product_download);
 	}
 
-	public function processDeleteVirtualProductAttribute($token)
+	public function processDeleteVirtualProductAttribute()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'))))
 			return false;
@@ -316,10 +316,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Upload new attachment
 	 *
-	 * @param $token
 	 * @return void
 	 */
-	public function processAddAttachments($token)
+	public function processAddAttachments()
 	{
 		$languages = Language::getLanguages(false);
 		$is_attachment_name_valid = false;
@@ -405,10 +404,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Attach an existing attachment to the product
 	 *
-	 * @param $token
 	 * @return void
 	 */
-	public function processAttachments($token)
+	public function processAttachments()
 	{
 		if ($id = (int)Tools::getValue($this->identifier))
 		{
@@ -419,7 +417,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processDuplicate($token)
+	public function processDuplicate()
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
@@ -452,7 +450,7 @@ class AdminProductsControllerCore extends AdminController
 					Hook::exec('actionProductAdd', array('product' => $product));
 					if (in_array($product->visibility, array('both', 'search')))
 						Search::indexation(false, $product->id);
-					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
 				}
 			}
 			else
@@ -460,7 +458,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 		{
@@ -477,10 +475,10 @@ class AdminProductsControllerCore extends AdminController
 					$object->deleteImages();
 					$object->deleted = 1;
 					if ($object->update())
-						$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
+						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
 				}
 				elseif ($object->delete())
-					$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
+					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}
@@ -488,7 +486,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
-	public function processImage($token)
+	public function processImage()
 	{
 		$id_image = (int)Tools::getValue('id_image');
 		$image = new Image((int)$id_image);
@@ -516,7 +514,7 @@ class AdminProductsControllerCore extends AdminController
 					$productId = (int)Tools::getValue('id_product');
 					@unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
 					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'.jpg');
-					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
 				}
 			}
 
@@ -524,14 +522,14 @@ class AdminProductsControllerCore extends AdminController
 			elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection'))
 			{
 				$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
-				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
 			}
 		}
 		else
 			$this->errors[] = Tools::displayError('Could not find image.');
 	}
 
-	protected function processBulkDelete($token)
+	protected function processBulkDelete()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -561,7 +559,7 @@ class AdminProductsControllerCore extends AdminController
 					$id_category = (int)Tools::getValue('id_category');
 					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
 
-					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$token.$category_url;
+					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
 				}
 				$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
@@ -570,7 +568,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 	}
 
-	public function processProductAttribute($token)
+	public function processProductAttribute()
 	{
 		// Don't process if the combination fields have not been submitted
 		if (!Combination::isFeatureActive() || !Tools::getIsset('attribute'))
@@ -670,14 +668,12 @@ class AdminProductsControllerCore extends AdminController
 
 					if (!empty($is_virtual))
 						Product::updateIsVirtual($product->id);
-
-					//$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
 				}
 			}
 		}
 	}
 
-	public function processFeatures($token)
+	public function processFeatures()
 	{
 		if (!Feature::isFeatureActive())
 			return;
@@ -720,10 +716,8 @@ class AdminProductsControllerCore extends AdminController
 
 	/**
 	 * This function is never called at the moment (specific prices cannot be edited)
-	 *
-	 * @param $token
 	 */
-	public function processPricesModification($token)
+	public function processPricesModification()
 	{
 		$id_specific_prices = Tools::getValue('spm_id_specific_price');
 		$id_combinations = Tools::getValue('spm_id_product_attribute');
@@ -759,11 +753,11 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors = Tools::displayError('An error occurred while updating the specific price.');
 			}
 		if (!count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.($token ? $token : $this->token);
+			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.$this->token;
 
 	}
 
-	public function processPriceAddition($token)
+	public function processPriceAddition()
 	{
 		// Check if a specific price has been submitted
 		if (!Tools::getIsset('submitPriceAddition'))
@@ -839,7 +833,7 @@ class AdminProductsControllerCore extends AdminController
 		die(Tools::jsonEncode($json));
 	}
 
-	public function processSpecificPricePriorities($token)
+	public function processSpecificPricePriorities()
 	{
 		if (!($obj = $this->loadObject()))
 			return;
@@ -856,7 +850,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An error occurred while setting priorities.');
 	}
 
-	public function processCustomizationConfiguration($token)
+	public function processCustomizationConfiguration()
 	{
 		$product = $this->object;
 		// Get the number of existing customization fields ($product->text_fields is the updated value, not the existing value)
@@ -883,7 +877,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An error occurred while updating customization configuration.');
 	}
 
-	public function processProductCustomization($token)
+	public function processProductCustomization()
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
@@ -901,9 +895,8 @@ class AdminProductsControllerCore extends AdminController
 
 	/**
 	 * Overrides parent for custom redirect link
-	 * @param $token
 	 */
-	public function processPosition($token)
+	public function processPosition()
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -1081,10 +1074,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * postProcess handle every checks before saving products information
 	 *
-	 * @param mixed $token
 	 * @return void
 	 */
-	public function postProcess($token = null)
+	public function postProcess()
 	{
 		if (!$this->redirect_after)
 			parent::postProcess();
@@ -1444,7 +1436,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		$this->checkProduct();
 
@@ -1504,22 +1496,16 @@ class AdminProductsControllerCore extends AdminController
 					$this->redirect_after = $preview_url;
 				}
 
-				if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-					$this->redirect_after = self::$currentIndex.'&id_product='.$this->object->id
-						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-						.'&id_image='.(int)$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off')
-						.'&token='.($token ? $token : $this->token);
-
 				// Save and stay on same form
 				if ($this->display == 'edit')
 					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
 						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-						.'&addproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.($token ? $token : $this->token);
+						.'&addproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
 				else
 					// Default behavior (save and back)
 					$this->redirect_after = self::$currentIndex
 						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-						.'&conf=3&token='.($token ? $token : $this->token);
+						.'&conf=3&token='.$this->token;
 			}
 			else
 				$this->object->delete();
@@ -1528,7 +1514,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 	}
 
-	public function processUpdate($token)
+	public function processUpdate()
 	{
 		$this->checkProduct();
 		if (!empty($this->errors))
@@ -1553,15 +1539,15 @@ class AdminProductsControllerCore extends AdminController
 					$this->updateAccessories($object);
 					$this->updateDownloadProduct($object, 1);
 					$this->updateAssoShop((int)$object->id);
-					$this->processAccounting($token);
-					$this->processSuppliers($token);
-					$this->processWarehouses($token);
-					$this->processFeatures($token);
-					$this->processProductAttribute($token);
-					$this->processPriceAddition($token);
-					$this->processSpecificPricePriorities($token);
-					$this->processAttachments($token);
-					$this->processCustomizationConfiguration($token);
+					$this->processAccounting();
+					$this->processSuppliers();
+					$this->processWarehouses();
+					$this->processFeatures();
+					$this->processProductAttribute();
+					$this->processPriceAddition();
+					$this->processSpecificPricePriorities();
+					$this->processAttachments();
+					$this->processCustomizationConfiguration();
 					$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
@@ -1598,7 +1584,7 @@ class AdminProductsControllerCore extends AdminController
 								$this->confirmations[] = $this->l('Update successful');
 							else
 								// Default behavior (save and back)
-								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.($token ? $token : $this->token);
+								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
 						}
 					}
 				}
@@ -2246,7 +2232,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	* Post treatment for accounting
 	*/
-	public function processAccounting($token)
+	public function processAccounting()
 	{
 		if (Validate::isLoadedObject(($product = new Product((int)Tools::getValue('id_product')))))
 		{
@@ -2275,7 +2261,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	* Post treatment for suppliers
 	*/
-	public function processSuppliers($token)
+	public function processSuppliers()
 	{
 		if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
@@ -2428,7 +2414,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	* Post treatment for warehouses
 	*/
-	public function processWarehouses($token)
+	public function processWarehouses()
 	{
 		if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{

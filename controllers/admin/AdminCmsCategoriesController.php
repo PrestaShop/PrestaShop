@@ -75,7 +75,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 
-	public function postProcess($token = null)
+	public function postProcess()
 	{
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 		if (Tools::isSubmit('submitAdd'.$this->table))
