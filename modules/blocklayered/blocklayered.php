@@ -2159,7 +2159,7 @@ class BlockLayered extends Module
 		foreach ($_GET as $key => $value)
 			if (substr($key, 0, 8) == 'layered_')
 			{
-				preg_match('/^(.*)_[0-9|new|used|refurbished|slider]+$/', substr($key, 8, strlen($key) - 8), $res);
+				preg_match('/^(.*)_([0-9]+|new|used|refurbished|slider)$/', substr($key, 8, strlen($key) - 8), $res);
 				if (isset($res[1]))
 				{
 					$tmp_tab = explode('_', $value);
