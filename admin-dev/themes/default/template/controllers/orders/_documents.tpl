@@ -58,12 +58,15 @@
 				{l s='Credit Slip'}
 			{/if}</td>
 		<td class="document_number">
-			<a target="_blank" href="
 			{if get_class($document) eq 'OrderInvoice'}
-				pdf.php?{if isset($document->is_delivery)}delivery{else}pdf{/if}&id_order_invoice={$document->id}
+				{if isset($document->is_delivery)}
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+			   	{else}
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
-				pdf.php?id_order_slip={$document->id}
-			{/if}">
+				<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
 					#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->delivery_number}

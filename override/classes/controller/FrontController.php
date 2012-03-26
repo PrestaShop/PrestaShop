@@ -2,4 +2,6 @@
 
 class FrontController extends FrontControllerCore
 {
+
 }
+

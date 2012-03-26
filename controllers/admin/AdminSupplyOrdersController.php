@@ -1906,7 +1906,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$content = '<span style="width:20px; margin-right:5px;">';
 		if ($supply_order_state->editable == false)
-			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><img src="../img/admin/pdf.gif" alt=""/></a>';
+			$content .= '<a href="'.$this->context->link->getAdminLink('AdminPdf').'&submitAction=generateSupplyOrderFormPDF&id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><img src="../img/admin/pdf.gif" alt=""/></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';

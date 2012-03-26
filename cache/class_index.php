@@ -122,6 +122,8 @@
   'AdminPPreferencesControllerCore' => 'controllers/admin/AdminPPreferencesController.php',
   'AdminPaymentController' => 'override/controllers/admin/AdminPaymentController.php',
   'AdminPaymentControllerCore' => 'controllers/admin/AdminPaymentController.php',
+  'AdminPdfController' => '',
+  'AdminPdfControllerCore' => 'controllers/admin/AdminPdfController.php',
   'AdminPerformanceController' => 'override/controllers/admin/AdminPerformanceController.php',
   'AdminPerformanceControllerCore' => 'controllers/admin/AdminPerformanceController.php',
   'AdminPreferencesController' => 'override/controllers/admin/AdminPreferencesController.php',
