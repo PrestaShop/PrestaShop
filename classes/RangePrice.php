@@ -77,14 +77,15 @@ class RangePriceCore extends ObjectModel
 	
 	public static function isOverlapping($id_carrier, $delimiter1, $delimiter2)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT count(*)
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT count(*)
 		FROM `'._DB_PREFIX_.'range_price`
 		WHERE `id_carrier` = '.(int)$id_carrier.'
-		AND (`delimiter1` BETWEEN '.(float)$delimiter1.' AND '.(float)$delimiter2.'
-		OR `delimiter2` BETWEEN '.(float)$delimiter1.' AND '.(float)$delimiter2.'
-		OR '.(float)$delimiter1.' BETWEEN `delimiter1` AND `delimiter1`
-		OR '.(float)$delimiter2.' BETWEEN `delimiter1` AND `delimiter1`)');
+		AND ((`delimiter1` > '.(float)$delimiter1.' AND `delimiter1` <= '.(float)$delimiter2.')
+		    OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` <= '.(float)$delimiter2.')
+		    OR ('.(float)$delimiter1.' > `delimiter1` AND '.(float)$delimiter1.' < `delimiter2`)
+		    OR ('.(float)$delimiter2.' < `delimiter1` AND '.(float)$delimiter2.' > `delimiter2`)
+		    
+		)');
 	}
 	
 	/**
