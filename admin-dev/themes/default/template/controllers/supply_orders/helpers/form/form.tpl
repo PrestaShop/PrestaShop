@@ -186,7 +186,7 @@
 
 
 				//find the position of the product id in product_id array
-				var position = product_ids.indexOf(product_id);
+				var position = jQuery.inArray(product_id, product_ids);
 				if (position != -1)
 				{
 					//remove the id from the array
