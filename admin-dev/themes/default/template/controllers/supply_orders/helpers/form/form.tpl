@@ -240,7 +240,7 @@
 					ajax : '1',
 					controller : 'AdminSupplyOrders',
 					token : '{$token}',
-					action : 'searchProduct',
+					action : 'searchProduct'
 	            },
 	            parse: function(data) {
 		            if (data == null || data == 'undefined')
