@@ -197,7 +197,11 @@
 			// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 			setTimeout(function() {
 				$('#suppliers_accordion').accordion();
-			}, 500);
+				// If one second was not enough to display page, another resize is needed
+				setTimeout(function() {
+					$('#suppliers_accordion').accordion('resize');
+				}, 3000);
+			}, 1000);
 
 			// Resize the accordion once the page is visible because of the bug with accordions initialized
 			// inside a display:none block not having the correct size.
