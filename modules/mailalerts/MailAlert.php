@@ -96,7 +96,6 @@ class MailAlert extends ObjectModel
 			$shop = Context::getContext()->shop;
 
 		$customer = new Customer($id_customer);
-		$customer_email = $customer->email;
 		$products = MailAlert::getProducts($customer, $id_lang);
 		$products_number = count($products);
 

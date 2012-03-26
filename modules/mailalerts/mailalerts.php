@@ -49,6 +49,7 @@ class MailAlerts extends Module
 		$this->tab = 'administration';
 		$this->version = '2.4';
 		$this->author = 'PrestaShop';
+        $this->need_instance = 0;
 
 		parent::__construct();
 
@@ -286,7 +287,6 @@ class MailAlerts extends Module
 		foreach ($products as $key => $product)
 		{
 			$unit_price = $product['product_price_wt'];
-			$price = $product['total_price'];
 
 			$customization_text = '';
 			if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
