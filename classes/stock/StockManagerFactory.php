@@ -37,7 +37,7 @@ class StockManagerFactoryCore
 	protected static $stock_manager;
 
 	/**
-	 * Returns a StockManager that corresponds to the Product/Warehouse
+	 * Returns a StockManager
 	 *
 	 * @return StockManagerInterface
 	 */
