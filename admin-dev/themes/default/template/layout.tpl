@@ -29,7 +29,7 @@
 		{$conf}
 	</div>
 {/if}
-{if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)} {* @todo what is ??? AND $this->_includeContainer *}
+{if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
 	<div class="error">
 		<span style="float:right">
 			<a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a>
