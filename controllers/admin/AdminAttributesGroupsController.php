@@ -383,16 +383,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 * Override processAdd to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processUpdate()
 	 */
-	public function processAdd($token)
+	public function processAdd()
 	{
-		parent::processAdd($token);
+		parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
 			if ($this->display == 'add')
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
 			else
-				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
 		
 		if (count($this->errors))
@@ -403,16 +403,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 * Override processUpdate to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processUpdate()
 	 */
-	public function processUpdate($token)
+	public function processUpdate()
 	{
-		parent::processUpdate($token);
+		parent::processUpdate();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
 			if ($this->display == 'add')
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
 			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
 	}
 
@@ -564,18 +564,17 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	/**
 	 * Call the right method for creating or updating object
 	 *
-	 * @param $token
 	 * @return mixed
 	 */
-	public function processSave($token)
+	public function processSave()
 	{
 		if ($this->display == 'add' || $this->display == 'edit')
 			$this->identifier = 'id_attribute_group';
 
 		if (!$this->id_object)
-			return $this->processAdd($token);
+			return $this->processAdd();
 		else
-			return $this->processUpdate($token);
+			return $this->processUpdate();
 	}
 
 	public function postProcess()
@@ -714,10 +713,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	/**
 	 * Overrides parent to delete items from sublist
 	 *
-	 * @param $token
 	 * @return mixed
 	 */
-	public function processBulkDelete($token)
+	public function processBulkDelete()
 	{
 		// If we are deleting attributes instead of attribute_groups
 		if (Tools::getIsset('attributeBox'))
@@ -727,7 +725,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->boxes = Tools::getValue($this->table.'Box');
 		}
 
-		$result = parent::processBulkDelete($token);
+		$result = parent::processBulkDelete();
 		// Restore vars
 		$this->className = 'AttributeGroup';
 		$this->table = 'attribute_group';

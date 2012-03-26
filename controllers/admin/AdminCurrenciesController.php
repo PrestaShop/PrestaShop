@@ -240,9 +240,8 @@ class AdminCurrenciesControllerCore extends AdminController
 
 	/**
 	 * @see AdminController::processDelete()
-	 * @param $token
 	 */
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -260,9 +259,8 @@ class AdminCurrenciesControllerCore extends AdminController
 
 	/**
 	 * @see AdminController::processStatus()
-	 * @param $token
 	 */
-	public function processStatus($token)
+	public function processStatus()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -281,9 +279,8 @@ class AdminCurrenciesControllerCore extends AdminController
 
 	/**
 	 * Update currency exchange rates
-	 * @param $token
 	 */
-	public function processExchangeRates($token)
+	public function processExchangeRates()
 	{
 		if (!$this->errors[] = Currency::refreshCurrencies())
 			Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$this->token);
