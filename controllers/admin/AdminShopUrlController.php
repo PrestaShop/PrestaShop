@@ -276,16 +276,16 @@ class AdminShopUrlControllerCore extends AdminController
 			return parent::postProcess();
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
-		$return = parent::processSave($token);
+		$return = parent::processSave();
 		if (!$this->errors)
 			Tools::generateHtaccess();
 
 		return $return;
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		$object = $this->loadObject(true);
 		if ($object->id && Tools::getValue('main'))
@@ -300,17 +300,17 @@ class AdminShopUrlControllerCore extends AdminController
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
 
-		parent::processAdd($token);
+		parent::processAdd();
 	}
 
-	public function processUpdate($token)
+	public function processUpdate()
 	{
 		$this->redirect_shop_url = false;
 		$current_url = parse_url($_SERVER['REQUEST_URI']);
 		if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
 			$this->redirect_shop_url = true;
 
-		return parent::processUpdate($token);
+		return parent::processUpdate();
 	}
 
 	protected function afterUpdate($object)

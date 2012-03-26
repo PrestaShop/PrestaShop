@@ -492,7 +492,7 @@ class AdminWarehousesControllerCore extends AdminController
 	/**
 	 * @see AdminController::processAdd();
 	 */
-	public function processAdd($token)
+	public function processAdd()
 	{
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
@@ -553,14 +553,14 @@ class AdminWarehousesControllerCore extends AdminController
 			// hack for enable the possibility to update a warehouse without recreate new id
 			$this->deleted = false;
 
-			return parent::processAdd($token);
+			return parent::processAdd();
 		}
 	}
 
 	/**
 	 * @see AdminController::processDelete();
 	 */
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if (Tools::isSubmit('delete'.$this->table))
 		{
@@ -583,7 +583,7 @@ class AdminWarehousesControllerCore extends AdminController
 				$obj->setShops(array());
 				$obj->resetProductsLocations();
 
-				return parent::processDelete($token);
+				return parent::processDelete();
 			}
 		}
 	}

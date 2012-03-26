@@ -299,7 +299,7 @@ class AdminAddressesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
 		// Transform e-mail in id_customer for parent processing
 		if (Validate::isEmail(Tools::getValue('email')))
@@ -368,7 +368,7 @@ class AdminAddressesControllerCore extends AdminController
 		}
 
 		if (empty($this->errors))
-			parent::processSave($token);
+			parent::processSave();
 		else
 			// if we have errors, we stay on the form instead of going back to the list
 			$this->display = 'edit';
@@ -384,12 +384,12 @@ class AdminAddressesControllerCore extends AdminController
 		}
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		if (Tools::getValue('submitFormAjax'))
 			$this->redirect_after = false;
 
-		return parent::processAdd($token);
+		return parent::processAdd();
 	}
 
 	/**

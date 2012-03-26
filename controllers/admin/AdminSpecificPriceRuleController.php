@@ -268,10 +268,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
-		$conditions = array();
-		if (Validate::isLoadedObject(($object = parent::processSave($token))))
+		if (Validate::isLoadedObject(($object = parent::processSave())))
 		{
 			$object->deleteConditions();
 			foreach ($_POST as $key => $values)

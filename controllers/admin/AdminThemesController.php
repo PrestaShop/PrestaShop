@@ -299,7 +299,7 @@ class AdminThemesControllerCore extends AdminController
 		return $res;
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		$new_dir = Tools::getValue('directory');
 		$res = true;
@@ -317,10 +317,10 @@ class AdminThemesControllerCore extends AdminController
 			$base_theme = new Theme((int)Tools::getValue('based_on'));
 		}
 
-		return parent::processAdd($token);
+		return parent::processAdd();
 	}
 
-	public function processDelete($token)
+	public function processDelete()
 	{
 		$obj = $this->loadObject();
 		if ($obj && $obj->isUsed())
@@ -329,7 +329,7 @@ class AdminThemesControllerCore extends AdminController
 			return false;
 		}
 
-		return parent::processDelete($token);
+		return parent::processDelete();
 	}
 
 	public function initContent()

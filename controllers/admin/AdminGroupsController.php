@@ -356,14 +356,14 @@ class AdminGroupsControllerCore extends AdminController
 		return array('unauth_modules' => $unauth_modules, 'auth_modules' => $auth_modules);
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
 		if (!$this->validateDiscount(Tools::getValue('reduction')))
 			$this->errors[] = Tools::displayError('Discount value is incorrect (must be a percentage)');
 		else
 		{
 			$this->updateCategoryReduction();
-			parent::processSave($token);
+			parent::processSave();
 			$this->updateRestrictions();
 		}
 	}
@@ -452,10 +452,8 @@ class AdminGroupsControllerCore extends AdminController
 
 	/**
 	 * Toggle show prices flag
-	 *
-	 * @param string $token
 	 */
-	public function processChangeShowPricesVal($token)
+	public function processChangeShowPricesVal()
 	{
 		$group = new Group($this->id_object);
 		if (!Validate::isLoadedObject($group))

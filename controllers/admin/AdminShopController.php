@@ -207,12 +207,12 @@ class AdminShopControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->errors[] = Tools::displayError('Unable to load this shop.');
 		else if (!Shop::hasDependency($object->id))
-			return Category::deleteCategoriesFromShop($object->id) && parent::processDelete($token);
+			return Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
 		else
 			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
 
@@ -452,10 +452,8 @@ class AdminShopControllerCore extends AdminController
 
 	/**
 	 * Object creation
-	 *
-	 * @param string $token
 	 */
-	public function processAdd($token)
+	public function processAdd()
 	{
 		if (Tools::isSubmit('id_category_default'))
 			$_POST['id_category'] = (int)Tools::getValue('id_category_default');
@@ -480,13 +478,13 @@ class AdminShopControllerCore extends AdminController
 				$this->updateAssoShop($object->id);
 				// Save and stay on same form
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
 				// Save and back to parent
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token;
 				// Default behavior (save and back)
 				if (empty($this->redirect_after))
-					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token;
 			}
 		}
 

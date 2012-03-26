@@ -89,9 +89,9 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->afterAdd($current_object);
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
-		if ($cart_rule = parent::processAdd($token))
+		if ($cart_rule = parent::processAdd())
 			$this->context->smarty->assign('new_cart_rule', $cart_rule);
 		if (Tools::getValue('submitFormAjax'))
 			$this->redirect_after = false;

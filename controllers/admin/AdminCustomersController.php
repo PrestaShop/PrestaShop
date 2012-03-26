@@ -687,7 +687,7 @@ class AdminCustomersControllerCore extends AdminController
 		return parent::renderView();
 	}
 
-	public function processDelete($token)
+	public function processDelete()
 	{
 		if ($this->delete_mode == 'real')
 		{
@@ -702,10 +702,10 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 		}
 
-		parent::processDelete($token);
+		parent::processDelete();
 	}
 
-	public function processAdd($token)
+	public function processAdd()
 	{
 		if (Tools::getValue('submitFormAjax'))
 			$this->redirect_after = false;
@@ -718,7 +718,7 @@ class AdminCustomersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 		else
 		{
-			if ($customer = parent::processAdd($token))
+			if ($customer = parent::processAdd())
 			{
 				$this->context->smarty->assign('new_customer', $customer);
 				return true;
@@ -728,7 +728,7 @@ class AdminCustomersControllerCore extends AdminController
 		}
 	}
 
-	public function processUpdate($token)
+	public function processUpdate()
 	{
 		if (Validate::isLoadedObject($this->object))
 		{
@@ -743,20 +743,20 @@ class AdminCustomersControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 			}
 
-			return parent::processUpdate($token);
+			return parent::processUpdate();
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while loading object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
 		// Check that default group is selected
 		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
 			$this->errors[] = Tools::displayError('Default customer group must be selected in group box.');
 
-		return parent::processSave($token);
+		return parent::processSave();
 	}
 
 	protected function afterDelete($object, $old_id)
@@ -773,10 +773,8 @@ class AdminCustomersControllerCore extends AdminController
 	}
 	/**
 	 * Transform a guest account into a registered customer account
-	 *
-	 * @param string $token
 	 */
-	public function processGuestToCustomer($token)
+	public function processGuestToCustomer()
 	{
 		$customer = new Customer((int)Tools::getValue('id_customer'));
 		if (!Validate::isLoadedObject($customer))
@@ -791,10 +789,8 @@ class AdminCustomersControllerCore extends AdminController
 
 	/**
 	 * Toggle the newsletter flag
-	 *
-	 * @param string $token
 	 */
-	public function processChangeNewsletterVal($token)
+	public function processChangeNewsletterVal()
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
@@ -807,10 +803,8 @@ class AdminCustomersControllerCore extends AdminController
 
 	/**
 	 * Toggle newsletter optin flag
-	 *
-	 * @param string $token
 	 */
-	public function processChangeOptinVal($token)
+	public function processChangeOptinVal()
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))

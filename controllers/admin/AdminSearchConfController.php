@@ -257,7 +257,7 @@ class AdminSearchConfControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function processSave($token)
+	public function processSave()
 	{
 		$search = strval(Tools::getValue('search'));
 		$string = strval(Tools::getValue('alias'));
