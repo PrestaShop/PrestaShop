@@ -341,7 +341,7 @@ function handleSaveButtons(e)
 	if (msg.length == 0)
 	{
 		$("#disableSaveMessage").remove();
-		enableSave()
+		enableSave();
 	}
 	else
 	{
