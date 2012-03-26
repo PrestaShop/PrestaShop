@@ -119,8 +119,7 @@ class AdminSlipControllerCore extends AdminController
 			{
 				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 				if (count($order_slips))
-					Tools::redirectAdmin(
-						'pdf.php?slips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateOrderSlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
 				$this->errors[] = $this->l('No order slips found for this period');
 			}
 		}
