@@ -92,7 +92,8 @@ class HookCore extends ObjectModel
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'hook` h
-			'.($position ? 'WHERE h.`position` = 1' : '')
+			'.($position ? 'WHERE h.`position` = 1' : '').'
+			ORDER BY `title`'
 		);
 	}
 
