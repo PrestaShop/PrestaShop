@@ -24,6 +24,331 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.9 - 14192 (2012-03-15)  #
+####################################
+
+	Improved/changed features:
+
+	[*] FO : Add mobile detection and mobile theme dispatcher
+
+	[*] BO : #PSFV-481 - Refactor HelperList position management
+
+	[*] Core : update to 3.1.8
+
+	[*] MO : updated controllers for mobile theme
+	[*] MO : updated controllers for mobile theme
+
+	Fixed bugs:
+
+	[-] FO : Bugfix : Assigning subcategories to the template
+	[-] FO : BugFix : #PSFV-629 : random special product display only special products
+	[-] FO : customer discounts page fixed with cart rules
+	[-] FO : #PSFV-604 - Fix bug with undefined address on the cart (when the address is removed)
+	[-] FO : #PSFV-656 - Fix bug with number of product per page selector
+	[-] FO : #PSTEST-969 : BugFix Store icon in GMap
+	[-] FO : #PSTEST-975 - Fix bugs with promo page
+	[-] FO : #PSTEST-981 - Minimal quantity not setted correctly on combibination
+	[-] FO : #PSTEST-990 - Fix bug with bad ajax return on adding product to the cart with a new cart reduction applyed
+	[-] FO : #PSTEST-993 - price validation do not allow prixe with 10 or more decimals
+
+	[-] BO : Add french accounting translation
+	[-] BO : BugFix : #PSFV-1020 : category reduction can be deleted now
+	[-] BO : BugFix : #PSFV-648 : preferences tab spelling error : egal has to be replaced by equal
+	[-] BO : BugFix : #PSFV-664 : Category import handles multishop now
+	[-] BO : BugFix : #PSTEST-1004 : create value for an attribute fix (error js, undefined variable)
+	[-] BO : BugFix : #PSTEST-1005 : ajax call cache fix in attributes and values
+	[-] BO : Bug fix #PSTEST-1014 #PSTEST-966 - Wrong call of smarty translation function
+	[-] BO : Bug fix #PSTEST-1014 - Wrong call of smarty translation function
+	[-] BO : Bug fix #PSTEST-1015 - Wrong call of smarty translation function
+	[-] BO : BugFix : #PSTEST-1020 : category reduction are now deletable
+	[-] BO : BugFix : #PSTEST-943 : carrier position handled on carrier creation
+	[-] BO : BugFix : #PSTEST-991 : ajax search with category treeview
+	[-] BO : Configuration link does not appear if configuration is not available + fix on shop importer variable
+	[-] BO : export pack of language : add override of PDF file lang
+	[-] BO : fix bug #PSFV-529 - AdminGeolocalisation : isCleanHtml control on checkbox
+	[-] BO : fix bug #PSTEST-1002 - redirection after using attribute generator
+	[-] BO : fix bug #PSTEST-1003 - Saving product attached documents redirect to informations tab
+	[-] BO : fix bug #PSTEST-988 - Attribute values wrong toolbar title
+	[-] BO : fixed #PSTEST-939 - now you can't add tow country with the same isocode
+	[-] BO : Fixing a bug on config module file generation
+	[-] BO : Fix on module config file generation (simplexml can't load file when starts with blank space)
+	[-] BO : Mails replace space by &nbsp; in all files
+	[-] BO : Make a lot of changement on the Accounting (accouting plan / configuration / customer)
+	[-] BO : #PSFV-518 - On admin module controllers, autoload_rte flag for textarea fields doesn't work if lang flag is on "false"
+	[-] BO : #PSFV-587 - message about order and gift message does not display in BO when order is completed
+	[-] BO : #PSFV-587 - product additional shipping cost not included in order shipping summary
+	[-] BO : #PSFV-587 - product image cover does not change on product page
+	[-] BO : #PSFV-595 - Can't delete CMS Category.
+	[-] BO : #PSFV-608 - "Access denied" message in BO when login as Logistician
+	[-] BO : #PSFV-620 : BugFix blank labels between languages.
+	[-] BO : #PSFV-645 - Fields id_last_customer, id_last_customer_message and id_last_order of table ps_employee table must be int(10) and not tinyint.
+	[-] BO : #PSFV-646 - Fix problem with button save & preview
+	[-] BO : #PSFV-652 - Fix bug with price and decimal (TE/TI conversion)
+	[-] BO : #PSFV-657 : BugFix Product name encoding while editing cart rule
+	[-] BO : #PSFV-658 - Fix bug with a bad var checking
+	[-] BO : #PSFV-659 - TinyMCE editor are now resizable
+	[-] BO : #PSFV-662 - Fix bug with customer total ordered (no cents)
+	[-] BO : #PSTEST-795 : fix bug
+	[-] BO : #PSTEST-922 : fix bug UTF-8
+	[-] BO : #PSTEST-925 : BugFix - Bad redirect when creating new store / shop with submit error
+	[-] BO : #PSTEST-931 : fix bug in AdminAccess
+	[-] BO : #PSTEST-941 - css fix
+	[-] BO : #PSTEST-971 emails smtp configuration
+	[-] BO : #PSTEST-989 - Remove button "Save and add" on form add/edit attribute group
+	[-] BO : #PSTEST-989 - Remove button "Save and add" on form add/edit feature
+	[-] BO : #PSTEST-996 - Fix bug with multishipping and wrapping cost
+	[-] BO : Small fix on preactivation
+	[-] BO : Update Accounting
+	[-] BO : Update accounting for export and configuration
+	[-] BO : Update Accounting geolocalization for France
+
+	[-] Classes : fix return value when updating product attachment
+	[-] Classes : #PSCFI-4931 : BugFix Better encoding for accentuated chars in mails headers
+	[-] Classes : #PSFV-634 : BugFix Currency was not set for loyalty discounts
+
+	[-] Core : If a specific price is applied to a combination the combination impact  is no longer applied
+
+	[-] MO : BugFix : #PSFV-623 : order by category is now multishop
+	[-] MO : #PSFV-605 - Fix problem with gsitemap and multishop
+	[-] MO : #PSFV-605 - Fix problem with uri render
+	[-] MO : #PSFV-605 - Fix problem with uri render
+	[-] MO : #PSFV-622 : BugFix on products comments module
+	[-] MO : #PSFV-640 - Fatal error in HomeSlider module
+	[-] MO : #PSFV-640 - Fix bug with image upload
+	[-] MO : #PSFV-655 - Fix module stats products, with bad hard coded id
+
+	[-] TR : fix bug #PSTEST-987
+	[-] TR : #PSFV-624 : Changed 'Eire' to 'Ireland' in french country lang
+
+
+####################################
+#   v1.5.0.8 - 13860 (2012-03-05)  #
+####################################
+
+	Added Features:
+
+	[+] BO : added a new option for the products : do they appear in the catalog, in the search, both or neither
+	[+] BO : BO width can now be fixed or flexible (you can set it up in your employee account)
+	[+] BO : Preactivation Premium
+	[+] BO : Preactivation Premium - Part 2
+
+	[+] CORE : Accounting, Add a begin of the Accounting plan detail
+	[+] CORE : Module properly upgraded with message even if no file upgrade file exist, add 'upgrade' button
+	[+] Core : products and carriers tax rules are associated to shop
+
+	Improved/changed features:
+
+	[*] BO : Adding filter for modules bought on Addons
+	[*] BO : Bug fix #PSTEST-907 - Ergonomy improvement
+	[*] BO : cms meta keywords now use tagify
+	[*] BO : Filters are highlighted when used in AdminModules
+	[*] BO : improve duplicate shop form
+	[*] BO : now you can't activate friendly URL when mod_rewrite is not active
+	[*] BO : reorganization of admin tabs
+
+	[*] Classes : #PSTEST-951 - controller filename in module can now use any case and use or not "Controller" suffix
+
+	[*] MO : updated module
+	[*] MO : updated module blockcurrencies for mobile theme
+	[*] MO : updated module blockcurrencies for mobile theme
+	[*] MO : updated module blocklanguages for mobile theme
+	[*] MO : updated module blocknewsletter and module blockcms for mobile theme
+	[*] MO : updated module blocksearch for mobile theme
+	[*] MO : updated module blockwishlist for mobile theme
+	[*] MO : updated module favoriteproducts for mobile theme
+	[*] MO : updated module homeslider for mobile theme
+	[*] MO : updated modules blockcms and blocknewsletter for mobile theme
+	[*] MO : updated modules for mobile theme
+	[*] MO : updated modules for mobile theme
+	[*] MO : updated modules for mobile theme
+	[*] MO : updated modules for mobile theme
+	[*] MO : updated modules for mobile theme
+
+	Fixed bugs:
+
+	[-] Installer : BugFix : #PSTEST-938 : spelling mistake fixed
+
+	[-] FO : automatic refresh of the cart when a cart rule is added
+	[-] FO : cart rule fix (product restrictions mixing attributes and other criteria)
+	[-] FO : fix bug #PSFV-540 - JS error with homeslider and IE < 9
+	[-] FO : #PSFV-553 - Fix bugs with pager and ordering with some controllers
+	[-] FO : #PSFV-569 - Fix bug with instant search
+	[-] FO : #PSTEST-869 - Billing 	address not refreshed on multi-shipping
+
+	[-] BO : AdminModule shows when connected to Addons and have a logout button
+	[-] BO : BugFix - Alert message for new CMS pages + errors
+	[-] BO : Bug Fixed #PSTEST-695 - Are ranges defined Tax Excl or Incl? => Incl
+	[-] BO : Bug Fixed #PSTEST-822 - You can now set datetime to configure specific price boundaries
+	[-] BO : Bug fix #PSFV-437 - "Others" category module is now usable :)
+	[-] BO : BugFix : #PSFV-556 : Category problem - new category not properly assigned to root
+	[-] BO : BugFix : #PSFV-561 & #PSFV-574 : Category import is now working fine
+	[-] BO : BugFix : #PSFV-585 : New Customer Groups can't see the root categories
+	[-] BO : Bugfix : #PSFV-619 : removing the ability to add a new root category if you are not in multishop
+	[-] BO : Bug fix #PSTEST-278 - Confirmation message appear on each module when we install a selection of modules
+	[-] BO : BugFix : #PSTEST-773 : category restriction with shop context
+	[-] BO : BugFix : #PSTEST-788 : Treeview is now handled with shop context in admin category controller
+	[-] BO : BugFix : #PSTEST-934 : Employee creation : language selected is from context now
+	[-] BO : BugFix : #PSTEST-952 : Tax rules group sorted by name ASC
+	[-] BO : fix bug #PSFV-534 - Button toolbar disappear after save if errors
+	[-] BO : fix bug #PSTEST-841 - confirmation popup for product attribute deletion not working
+	[-] BO : fix bug #PSTEST-855 - some translations are not parsed
+	[-] BO : fix bug #PSTEST-898 - translations
+	[-] BO : fix bug #PSTEST-912 - broken image
+	[-] BO : fix bug #PSTEST-913 - drag and drop position change for tabs broken in AdminTabsController
+	[-] BO : fix bug #PSTEST-918 - missing field suffix
+	[-] BO : fix bug #PSTEST-919 - missing units in text
+	[-] BO : fix bug #PSTEST-932 - toolbar / save button issue
+	[-] BO : fix bug where drag and drop on tabs sub-lists is broken
+	[-] BO : fixed bug in contact message with html
+	[-] BO : fixed bug #PSFV-557 - Employees: View Customer Service message
+	[-] BO : fixed bug #PSFV-616 - SVN #13826 rewriting fatal error
+	[-] BO : Fixed bug #PSTEST-937. Add new attributes to the forbidden list and fix the layout during the creation of a new country
+	[-] BO : fixed Duplicate entry for key 'full_shop_url' when added new shop url
+	[-] BO : fixed #PSTEST-944 & #PSTEST-945 range bugs
+	[-] BO : fix image option form not saving
+	[-] BO : #PSCFI-4873 : Updated of method for translated modules. Now, you can translate only installed modules
+	[-] BO : #PSFV-411 : BugFix - Check module id in checkPaymentCurrencies()
+	[-] BO : #PSFV-414 : BugFix - Customers company validation changed to generic name
+	[-] BO : #PSFV-425 - Add german translation for the installer
+	[-] BO : #PSFV-494 : BugFix - Block top menu now display CMS categories
+	[-] BO : #PSFV-566 : BugFix - Add new CMS block
+	[-] BO : #PSFV-586 - Fix bug with importeur and img dir creation
+	[-] BO : #PSFV-597 : Hide quick access menu if no content
+	[-] BO : #PSFV-600 - Fix bug with Controller::addJqueryUI
+	[-] BO : #PSFV-610 - AdminTracking lists don't take care of PS_STOCK_MANAGEMENT value
+	[-] BO : #PSTEST-400 - Fix bug with button "Save and stay" from AdminAttributesGroups
+	[-] BO : #PSTEST-777 : Reset form when action is : save and stay
+	[-] BO : #PSTEST-778 : Bug in textures for attributes
+	[-] BO : #PSTEST-795 : Display date from and date to filters in list
+	[-] BO : #PSTEST-852 - Rename button "Save and stay" to "Save and add" on admin feature form
+	[-] BO : #PSTEST-858 - Fix bug with undefined var
+	[-] BO : #PSTEST-883 - On changing pagination item number, send the form
+	[-] BO : #PSTEST-899 - On the dashboard, change legend line height of "quick links" button
+	[-] BO : #PSTEST-914 - On admin contact preselect the default country
+	[-] BO : #PSTEST-923 - Add field description
+	[-] BO : #PSTEST-924 - Fix bug with \n and some translations
+
+	[-] MO : BugFix : max level-depth is now set to 4 (instead of 3 before, as the new root category has come)
+
+	[-] TR : BugFix : #PSTEST-846 : rename add root category button
+	[-] TR : fix bug #PSTEST-893
+
+
+####################################
+#   v1.5.0.7 - 13543 (2012-02-22)  #
+####################################
+
+	Added Features:
+
+	[+] classes : New method ->attachProduct($id_product)
+
+	Improved/changed features:
+
+	[*] FO : the free product is now removed from the cart along with the cart rule (where applicable)
+
+	[*] BO : add link to Customer messages in tab order #PSFV-514
+	[*] BO : #PSTEST-784 - selected attribute is now visible
+	[*] BO : you can now choose the combination of the free product of a cart rule
+
+	[*] Classes : table prefix is no longer required in Db::getInstance()->delete() method
+
+	Fixed bugs:
+
+	[-] Project : #PSCFI-4737 - Add no-cache to header when there are 301 to avoid caching
+
+	[-] FO : ajax cart now display cart rules correctly #PSTEST-724
+	[-] FO : #PSCFI-4733 - Pagination creates pages that should not exist (and duplicate content)
+	[-] FO : #PSCFI-4762 - When cart contains virtuals products and physicals products, use only physicals to calculate shipping cost
+	[-] FO : #PSCFI-4892 : BugFix CMS terms and conditions breadcrumb
+	[-] FO : #PSFV-522 - Bug in AddressController with Address Alias
+	[-] FO : #PSTEST-768 - Show the category image when there are no descriptions
+	[-] FO : #PSTEST-771 - Add description to supplier's product list
+	[-] FO : #PSTEST-772 - Add description to manufacturer's product list
+	[-] FO : #PSTEST-803 - Change mail links
+	[-] FO : #PSTEST-803 - Change mail links
+
+	[-] BO : AdminModules refresh native modules xml list if it's empty
+	[-] BO : Bug Fixed #PSTEST-543 - Unable to bulk delete a tax rule
+	[-] BO : Bug Fixed #PSTEST-546 - Tax Rules Creation
+	[-] BO : Bug Fixed #PSTESTS-672 An error has occured during currency creation
+	[-] BO : BugFix : #PSTEST-807 : stay on the form when an error occured
+	[-] BO : Customer Service options/sync mailbox not working - #PSFV-539
+	[-] BO : Customer Service options/sync mailbox not working - #PSFV-539
+	[-] BO : fix bug #PSFV-322 -  Action name in custom controllers is not translated
+	[-] BO : fix bug #PSFV-535 - AdminAddress : Redirection if errors on add form
+	[-] BO : fix bug #PSTEST-786 - virtual products block does not show
+	[-] BO : fixed bug #PSFV-495 - Back-office homepage is not totally translated
+	[-] BO : fixed bug #PSFV-501 - Unable to edit a customer in AdminGroups controller
+	[-] BO : fixed bug #PSFV-512 - Delivery slip PDFs have the "ITEMS MARKED AS RETURNED" text, but they shouldn't
+	[-] BO : #PSFV-492 : BugFix CMS pages & categories
+	[-] BO : #PSFV-503 - Fix bug with image generation
+	[-] BO : #PSTEST-759 - Images named advertising could be blocked by adblock
+	[-] BO : #PSTEST-769 - The default country must be pre-selected on address list
+	[-] BO : #PSTEST-775 - Change button cancel, for back to list on the attribute and feature form
+	[-] BO : #PSTEST-776 - Fix bug with attribute order change
+	[-] BO : #PSTEST-792 : Translation of scenes
+	[-] BO : small fixes on AdminCartRules #PSFV-506
+	[-] BO : the default country of shop is correctly selected by default in forms with country field #PSTEST-493
+
+	[-] MO : #PSFV-531 - Fix bug on the module Loyalty with pagination links
+	[-] MO : #PSFV-532 - Fix bug on the module Loyalty - "points" are not upgrading on changing combination
+
+	[-] WS : Add tax for orders inside order_details api entity
+	[-] WS : Fix bug from 1.4 Groups for entity customers API
+	[-] WS : Fix bug from 1.4 Groups for entity customers API
+	[-] WS : Fixed PSFV-383
+
+
+####################################
+#   v1.5.0.6 - 13367 (2012-02-15)  #
+####################################
+
+	Added Features:
+
+	[+] BO : New hooks added (helpers + order history)
+
+	Improved/changed features:
+
+	[*] MO : BlockCMS module 1.5 compliant + translations
+
+	Fixed bugs:
+
+	[-] Installer : set_time_limit is set to infinite then set to 300 seconds... Second one changed.
+
+	[-] FO : If a product is given for free in a cart rule and is already in the cart, the price is subtracted #PSTEST-715
+	[-] FO : #PSTEST-722 : Fix bug
+	[-] FO : #PSTEST-722 : Fix bug
+	[-] FO : #PSTEST-733 - Fix bug with redirection after address creation on multishipping mode
+	[-] FO : #PSTEST-742 - Bad ajax return on authentification with unknow email address
+
+	[-] BO : BugFix : #PSFV-497 : Root category in AdminTracking removed
+	[-] BO : BugFix : #PSTEST-668 : Shop association for Supplier is now for a shop and not a group shop anymore
+	[-] BO : BugFix : #PSTEST-750 : upgrade sql updated (position field added to the category_shop table)
+	[-] BO : fix bug #PSFV-421 - bug with redirection after login
+	[-] BO : Fix Bug #PSTEST-694 - Replace save button by a "return to dashboard" button
+	[-] BO : fix bug #PSTEST-719 - wrong redirection on product page
+	[-] BO : fixed small image duplication in carrier listing
+	[-] BO : fix #PSTEST-703 - missing datepicker
+	[-] BO : fix #PSTEST-718 combinations images not saved
+	[-] BO : fix PSTEST-753 - Warning Trying to get property of non-object in view.tpl sur la page commande
+	[-] BO : fix Save&Stay not working on combination page
+	[-] BO : #PSCFI-4696 - Blocklayered : option "Hide filter values with no product is matching" does'nt work
+	[-] BO : #PSCFI-4783 : Corrected some errors and added a field in order fox an export bug of csv
+	[-] BO : PSFV-435 : revert changes to tinyMCE formatting tools
+	[-] BO : #PSFV-498 - On editing attribute (group) the attribute is dupplicated
+	[-] BO : #PSTEST-691 - form.tpl must be placed on the directory helpers/form
+	[-] BO : #PSTEST-700 fix attributes value display
+	[-] BO : #PSTEST-705 fix scene image upload
+	[-] BO : #PSTEST-711 - Don't follow links for all action button from the tab catalog rule
+
+	[-] Classes : #PSTEST-275 #PSFV-304 - Method Module::getPosition() was missing
+	[-] Classes : #PSTEST-717 - Fix an infinite loop
+
+	[-] MO : #PSFV-468 - In layered navigation, when you filter on some criteria, the "see the product" for resulting products targets to the regular product URL without filters
+	[-] MO : theme installator module does not erase anymore already existing modules #PSFV-476
+
+
+####################################
 #   v1.5.0.5 - 13181 (2012-02-09)  #
 ####################################
 
