@@ -540,6 +540,11 @@ class Blocktopmenu extends Module
 	{
 		$id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
 		$category = new Category($id_category, $id_lang);
+		
+		if ($category->level_depth > 1)
+			$category_link = $category->getLink();
+		else
+			$category_link = $this->context->link->getPageLink('index');
 
 		if (is_null($category->id))
 			return;
@@ -547,7 +552,7 @@ class Blocktopmenu extends Module
 		$childrens = Category::getChildren($id_category, $id_lang);
 		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
 		$this->_menu .= '<li '.$selected.'>';
-		$this->_menu .= '<a href="'.$category->getLink().'">'.$category->name.'</a>';
+		$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
 
 		if (count($childrens))
 		{
