@@ -396,7 +396,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		
 		if (count($this->errors))
-			$this->defineObjectTypeAttribute();
+			$this->setTypeAttribute();
 	}
 
 	/**
@@ -538,7 +538,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		$this->defineObjectTypeAttribute();
+		$this->setTypeAttribute();
 
 		parent::initProcess();
 		if ($this->table == 'attribute')
@@ -548,7 +548,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 	}
 	
-	protected function defineObjectTypeAttribute()
+	protected function setTypeAttribute()
 	{
 		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
