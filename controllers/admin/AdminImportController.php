@@ -1162,6 +1162,8 @@ class AdminImportControllerCore extends AdminController
 					}
 					$product->associateTo($shops);
 				}
+				else
+					$shops = array();
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
@@ -1242,6 +1244,8 @@ class AdminImportControllerCore extends AdminController
 							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
+								// associate image to selected shops
+								$image->associateTo($shops);
 								if (!AdminImportController::copyImg($product->id, $image->id, $url))
 									$this->warnings[] = Tools::displayError('Error copying image:').$url;
 							}
