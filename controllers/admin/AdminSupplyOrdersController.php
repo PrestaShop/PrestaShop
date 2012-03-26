@@ -333,6 +333,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->l('See Catalog/Products/Your Product/Suppliers & Warehouses')
 				.'<br />'.
 				$this->l('Also, changing the currency or the supplier will reset the order.')
+				.'<br />'
+				.'<br />'.
+				$this->l('Finaly, please note that you can only order from one supplier at once.')
 			);
 			return parent::renderForm();
 		}
