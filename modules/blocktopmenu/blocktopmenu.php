@@ -32,21 +32,21 @@ class Blocktopmenu extends Module
 	private $_menu = '';
 	private $_html = '';
 
-    /*
-     * Pattern for matching config values
-     */
-    private $pattern = '/^([A-Z_]*)[0-9]+/';
+	/*
+	 * Pattern for matching config values
+	 */
+	private $pattern = '/^([A-Z_]*)[0-9]+/';
 
-    /*
-     * Name of the controller
-     * Used to set item selected or not in top menu
-     */
-    private $page_name = '';
+	/*
+	 * Name of the controller
+	 * Used to set item selected or not in top menu
+	 */
+	private $page_name = '';
 
-    /*
-     * Spaces per depth in BO
-     */
-    private $spacer_size = '5';
+	/*
+	 * Spaces per depth in BO
+	 */
+	private $spacer_size = '5';
 
 	public function __construct()
 	{
@@ -111,13 +111,13 @@ class Blocktopmenu extends Module
 
 	public function getContent()
 	{
-        $id_lang = (int)Context::getContext()->language->id;
-        $languages = $this->context->controller->getLanguages();
-        $default_language = Configuration::get('PS_LANG_DEFAULT');
+		$id_lang = (int)Context::getContext()->language->id;
+		$languages = $this->context->controller->getLanguages();
+		$default_language = Configuration::get('PS_LANG_DEFAULT');
 
-        $labels = Tools::getValue('label') ? array_filter(Tools::getValue('label'), 'strlen') : array();
-        $spacer = str_repeat('&nbsp;', $this->spacer_size);
-        $divLangName = 'link_label';
+		$labels = Tools::getValue('label') ? array_filter(Tools::getValue('label'), 'strlen') : array();
+		$spacer = str_repeat('&nbsp;', $this->spacer_size);
+		$divLangName = 'link_label';
 
 		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
@@ -130,14 +130,14 @@ class Blocktopmenu extends Module
 		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
 
-            if ((Tools::getValue('link') == '') && (!count($labels)))
-                ;
-            else if (Tools::getValue('link') == '')
-                $this->_html .= $this->displayError($this->l('Please, fill the "Link" field'));
-            else if (!count($labels))
-                $this->_html .= $this->displayError($this->l('Please add a label'));
-            else if (!isset($labels[$default_language]))
-                $this->_html .= $this->displayError($this->l('Please add a label for your default language'));
+			if ((Tools::getValue('link') == '') && (!count($labels)))
+				;
+			else if (Tools::getValue('link') == '')
+				$this->_html .= $this->displayError($this->l('Please, fill the "Link" field'));
+			else if (!count($labels))
+				$this->_html .= $this->displayError($this->l('Please add a label'));
+			else if (!isset($labels[$default_language]))
+				$this->_html .= $this->displayError($this->l('Please add a label for your default language'));
 			else
 			{
 				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
@@ -182,7 +182,7 @@ class Blocktopmenu extends Module
 
 								// BEGIN CMS
 								$this->_html .= '<optgroup label="'.$this->l('CMS').'">';
-                                $this->getCMSOptions(0, 1, $id_lang);
+								$this->getCMSOptions(0, 1, $id_lang);
 								$this->_html .= '</optgroup>';
 
 								// BEGIN SUPPLIER
@@ -213,15 +213,15 @@ class Blocktopmenu extends Module
 								$this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
 								$links = MenuTopLinks::gets($id_lang, null, (int)Shop::getContextShopID());
 								foreach ($links as $link)
-                                {
-                                    if ($link['label'] == '')
-                                    {
-                                        $link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
-                                        $this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
-                                    }
-                                    else
-                                        $this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
-                                }
+								{
+									if ($link['label'] == '')
+									{
+										$link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+										$this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
+									}
+									else
+										$this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
+								}
 								$this->_html .= '</optgroup>';
 
 								$this->_html .= '</select><br />
@@ -243,7 +243,7 @@ class Blocktopmenu extends Module
 						$("#availableItems option:selected").each(function(i){
 							var val = $(this).val();
 							var text = $(this).text();
-	                        text = text.replace(/(^\s*)|(\s*$)/gi,"");
+							text = text.replace(/(^\s*)|(\s*$)/gi,"");
 							if (val == "PRODUCT")
 							{
 								val = prompt("'.$this->l('Set ID product').'");
@@ -315,10 +315,10 @@ class Blocktopmenu extends Module
 			</form>
 		</fieldset><br />';
 
-        $links = MenuTopLinks::gets($id_lang, null, Shop::getContextShopID());
+		$links = MenuTopLinks::gets($id_lang, null, Shop::getContextShopID());
 
-        if (!count($links))
-            return $this->_html;
+		if (!count($links))
+			return $this->_html;
 
 		$this->_html .= '
 		<fieldset>
@@ -363,193 +363,193 @@ class Blocktopmenu extends Module
 
 	private function makeMenuOption()
 	{
-        $menu_item = $this->getMenuItems();
-        $id_lang = (int)$this->context->language->id;
-        $id_shop = (int)Shop::getContextShopID();
+		$menu_item = $this->getMenuItems();
+		$id_lang = (int)$this->context->language->id;
+		$id_shop = (int)Shop::getContextShopID();
 
 		foreach ($menu_item as $type => $item)
-        {
-            if (!$item)
-                continue;
+		{
+			if (!$item)
+				continue;
 
-            preg_match($this->pattern, $item, $values);
-            $id = (int)substr($item, strlen($values[1]), strlen($item));
+			preg_match($this->pattern, $item, $values);
+			$id = (int)substr($item, strlen($values[1]), strlen($item));
 
-            switch (substr($item, 0, strlen($values[1])))
-            {
-                case 'CAT':
-                    $category = new Category($id, $id_lang);
-                    if (!is_null($category->id))
-                        $this->_html .= '<option value="CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
-                    break;
+			switch (substr($item, 0, strlen($values[1])))
+			{
+				case 'CAT':
+					$category = new Category($id, $id_lang);
+					if (!is_null($category->id))
+						$this->_html .= '<option value="CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
+					break;
 
-                case 'PRD':
-                    $product = new Product($id, true, $id_lang);
-                    if (!is_null($product->id))
-                        $this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
-                    break;
+				case 'PRD':
+					$product = new Product($id, true, $id_lang);
+					if (!is_null($product->id))
+						$this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
+					break;
 
-                case 'CMS':
-                    $cms = new CMS($id, $id_lang);
-                    if (count($cms))
-                        $this->_html .= '<option value="CMS'.$id.'">'.$cms->meta_title.'</option>'.PHP_EOL;
-                    break;
+				case 'CMS':
+					$cms = new CMS($id, $id_lang);
+					if (count($cms))
+						$this->_html .= '<option value="CMS'.$id.'">'.$cms->meta_title.'</option>'.PHP_EOL;
+					break;
 
-                case 'CMS_CAT':
-                    $category = new CMSCategory($id, $id_lang);
-                    if (count($category))
-                        $this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
-                    break;
+				case 'CMS_CAT':
+					$category = new CMSCategory($id, $id_lang);
+					if (count($category))
+						$this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
+					break;
 
-                case 'MAN':
-                    $manufacturer = new Manufacturer($id, $id_lang);
-                    if (!is_null($manufacturer->id))
-                        $this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
-                    break;
+				case 'MAN':
+					$manufacturer = new Manufacturer($id, $id_lang);
+					if (!is_null($manufacturer->id))
+						$this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
+					break;
 
-                case 'SUP':
-                    $supplier = new Supplier($id, $id_lang);
-                    if (!is_null($supplier->id))
-                        $this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
-                    break;
+				case 'SUP':
+					$supplier = new Supplier($id, $id_lang);
+					if (!is_null($supplier->id))
+						$this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
+					break;
 
-                case 'LNK':
-                    $link = MenuTopLinks::get($id, $id_lang, $id_shop);
-                    if (count($link))
-                    {
-                        if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
-                        {
-                            $default_language = Configuration::get('PS_LANG_DEFAULT');
-                            $link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
-                        }
-                        $this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$link[0]['label'].'</option>';
-                    }
-                    break;
-            }
-        }
+				case 'LNK':
+					$link = MenuTopLinks::get($id, $id_lang, $id_shop);
+					if (count($link))
+					{
+						if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
+						{
+							$default_language = Configuration::get('PS_LANG_DEFAULT');
+							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+						}
+						$this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$link[0]['label'].'</option>';
+					}
+					break;
+			}
+		}
 	}
 
 	private function makeMenu()
 	{
-        $this->page_name = Dispatcher::getInstance()->getController();
+		$this->page_name = Dispatcher::getInstance()->getController();
 
-        $menu_items = $this->getMenuItems();
-        $id_lang = (int)$this->context->language->id;
-        $id_shop = (int)Shop::getContextShopID();
+		$menu_items = $this->getMenuItems();
+		$id_lang = (int)$this->context->language->id;
+		$id_shop = (int)Shop::getContextShopID();
 
 		foreach ($menu_items as $type => $item)
 		{
-            if (!$item)
-                continue;
+			if (!$item)
+				continue;
 
-            preg_match($this->pattern, $item, $value);
-            $id = (int)substr($item, strlen($value[1]), strlen($item));
+			preg_match($this->pattern, $item, $value);
+			$id = (int)substr($item, strlen($value[1]), strlen($item));
 
-            switch (substr($item, 0, strlen($value[1])))
-            {
-                case 'CAT':
-                    $this->getCategory($id);
-                    break;
+			switch (substr($item, 0, strlen($value[1])))
+			{
+				case 'CAT':
+					$this->getCategory($id);
+					break;
 
-                case 'PRD':
-                    $selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
-                    $product = new Product($id, true, $id_lang);
-                    if (!is_null($product->id))
-                        $this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
-                    break;
+				case 'PRD':
+					$selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
+					$product = new Product($id, true, $id_lang);
+					if (!is_null($product->id))
+						$this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
+					break;
 
-                case 'CMS':
-                    $selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
-                    $cms = CMS::getLinks($id_lang, array($id));
-                    if (count($cms))
-                        $this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
-                    break;
+				case 'CMS':
+					$selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
+					$cms = CMS::getLinks($id_lang, array($id));
+					if (count($cms))
+						$this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
+					break;
 
-                case 'CMS_CAT':
-                    $category = new CMSCategory($id, $id_lang);
-                    if (count($category))
-                    {
-                        $this->_menu .= '<li><a href="#">'.$category->name.'</a>';
-                        $this->getCMSMenuItems($category->id);
-                        $this->_menu .= '</li>'.PHP_EOL;
-                    }
-                    break;
+				case 'CMS_CAT':
+					$category = new CMSCategory($id, $id_lang);
+					if (count($category))
+					{
+						$this->_menu .= '<li><a href="#">'.$category->name.'</a>';
+						$this->getCMSMenuItems($category->id);
+						$this->_menu .= '</li>'.PHP_EOL;
+					}
+					break;
 
-                case 'MAN':
-                    $selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
-                    $manufacturer = new Manufacturer($id, $id_lang);
-                    if (!is_null($manufacturer->id))
-                    {
-                        if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
-                            $manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
-                        else
-                            $manufacturer->link_rewrite = 0;
-                        $link = new Link;
-                        $this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
-                    }
-                    break;
+				case 'MAN':
+					$selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
+					$manufacturer = new Manufacturer($id, $id_lang);
+					if (!is_null($manufacturer->id))
+					{
+						if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
+							$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
+						else
+							$manufacturer->link_rewrite = 0;
+						$link = new Link;
+						$this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
+					}
+					break;
 
-                case 'SUP':
-                    $selected = ($this->page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
-                    $supplier = new Supplier($id, $id_lang);
-                    if (!is_null($supplier->id))
-                    {
-                        $link = new Link;
-                        $this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
-                    }
-                    break;
+				case 'SUP':
+					$selected = ($this->page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
+					$supplier = new Supplier($id, $id_lang);
+					if (!is_null($supplier->id))
+					{
+						$link = new Link;
+						$this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
+					}
+					break;
 
-                case 'LNK':
-                    $link = MenuTopLinks::get($id, $id_lang, $id_shop);
-                    if (count($link))
-                    {
-                        if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
-                        {
-                            $default_language = Configuration::get('PS_LANG_DEFAULT');
-                            $link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
-                        }
-                        $this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
-                    }
-                    break;
-            }
+				case 'LNK':
+					$link = MenuTopLinks::get($id, $id_lang, $id_shop);
+					if (count($link))
+					{
+						if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
+						{
+							$default_language = Configuration::get('PS_LANG_DEFAULT');
+							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+						}
+						$this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
+					}
+					break;
+			}
 		}
 	}
 
-    private function getCategoryOption($id_category = 1, $id_lang = false, $recursive = true)
-    {
-        $id_lang = (int)($id_lang ? $id_lang : Shop::getContextShopID());
-        $category = new Category($id_category, $id_lang);
+	private function getCategoryOption($id_category = 1, $id_lang = false, $recursive = true)
+	{
+		$id_lang = (int)($id_lang ? $id_lang : Context::getContext()->language->id);
+		$category = new Category($id_category, $id_lang);
 
-        if (is_null($category->id))
-            return;
+		if (is_null($category->id))
+			return;
 
-        if ($recursive)
-        {
-            $childrens = Category::getChildren((int)$id_category, $id_lang);
-            $spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
-        }
+		if ($recursive)
+		{
+			$childrens = Category::getChildren((int)$id_category, $id_lang);
+			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
+		}
 
-        $this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.'</option>';
+		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.'</option>';
 
-        if (isset($childrens) && count($childrens))
-            foreach ($childrens as $children)
-                $this->getCategoryOption((int)$children['id_category'], $id_lang);
-    }
+		if (isset($childrens) && count($childrens))
+			foreach ($childrens as $children)
+				$this->getCategoryOption((int)$children['id_category'], $id_lang);
+	}
 
 	private function getCategory($id_category, $id_lang = false)
 	{
-        $id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
-        $category = new Category($id_category, $id_lang);
+		$id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
+		$category = new Category($id_category, $id_lang);
 
-        if (is_null($category->id))
+		if (is_null($category->id))
 			return;
 
-        $childrens = Category::getChildren($id_category, $id_lang);
-        $selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
+		$childrens = Category::getChildren($id_category, $id_lang);
+		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
 		$this->_menu .= '<li '.$selected.'>';
-        $this->_menu .= '<a href="'.$category->getLink().'">'.$category->name.'</a>';
+		$this->_menu .= '<a href="'.$category->getLink().'">'.$category->name.'</a>';
 
-        if (count($childrens))
+		if (count($childrens))
 		{
 			$this->_menu .= '<ul>';
 
@@ -561,71 +561,69 @@ class Blocktopmenu extends Module
 		$this->_menu .= '</li>';
 	}
 
-    private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
-    {
-        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+	private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
-        if ($depth > 3)
-            return;
+		if ($depth > 3)
+			return;
 
-        $categories = $this->getCMSCategories(false, $parent, $id_lang);
-        $pages = $this->getCMSPages($parent);
+		$categories = $this->getCMSCategories(false, $parent, $id_lang);
+		$pages = $this->getCMSPages($parent);
 
-        if (count($categories) || count($pages))
-        {
-            $this->_menu .= '<ul>';
+		if (count($categories) || count($pages))
+		{
+			$this->_menu .= '<ul>';
 
-            foreach ($categories as $category)
-            {
-                $this->_menu .= '<li>';
-                $this->_menu .= '<a href="#">'.$category['name'].'</a>';
-                $this->getCMSMenuItems($category['id_cms_category'], $depth + 1);
-                $this->_menu .= '</li>';
-            }
+			foreach ($categories as $category)
+			{
+				$this->_menu .= '<li>';
+				$this->_menu .= '<a href="#">'.$category['name'].'</a>';
+				$this->getCMSMenuItems($category['id_cms_category'], $depth + 1);
+				$this->_menu .= '</li>';
+			}
 
-            foreach ($pages as $page)
-            {
-                $cms = new CMS($page['id_cms'], $id_lang);
-                $links = $cms->getLinks($id_lang, array($cms->id));
+			foreach ($pages as $page)
+			{
+				$cms = new CMS($page['id_cms'], $id_lang);
+				$links = $cms->getLinks($id_lang, array($cms->id));
 
-                $selected = ($this->page_name == 'cms' && ((int)Tools::getValue('id_cms') == $page['id_cms'])) ? ' class="sfHoverForce"' : '';
-                $this->_menu .= '<li '.$selected.'>';
-                $this->_menu .= '<a href="'.$links[0]['link'].'">'.$cms->meta_title.'</a>';
-                $this->_menu .= '</li>';
-            }
+				$selected = ($this->page_name == 'cms' && ((int)Tools::getValue('id_cms') == $page['id_cms'])) ? ' class="sfHoverForce"' : '';
+				$this->_menu .= '<li '.$selected.'>';
+				$this->_menu .= '<a href="'.$links[0]['link'].'">'.$cms->meta_title.'</a>';
+				$this->_menu .= '</li>';
+			}
 
-            $this->_menu .= '</ul>';
-        }
-    }
+			$this->_menu .= '</ul>';
+		}
+	}
 
-    private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false)
-    {
-        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+	private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
-        $categories = $this->getCMSCategories(false, $parent, $id_lang);
-        $pages = $this->getCMSPages($parent, false, $id_lang);
+		$categories = $this->getCMSCategories(false, $parent, $id_lang);
+		$pages = $this->getCMSPages($parent, false, $id_lang);
 
-        $spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
+		$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
 
-        foreach ($categories as $category)
-        {
-            $this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
-            $this->getCMSOptions($category['id_cms_category'], $depth + 1, $id_lang);
-        }
+		foreach ($categories as $category)
+		{
+			$this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
+			$this->getCMSOptions($category['id_cms_category'], $depth + 1, $id_lang);
+		}
 
-        foreach ($pages as $page)
-            $this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
-    }
+		foreach ($pages as $page)
+			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
+	}
 
 	public function hookTop($param)
 	{
-		global $smarty;
-
 		$this->makeMenu();
 
-		$smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
-		$smarty->assign('MENU', $this->_menu);
-		$smarty->assign('this_path', $this->_path);
+		$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
+		$this->smarty->assign('MENU', $this->_menu);
+		$this->smarty->assign('this_path', $this->_path);
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
 		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
@@ -634,50 +632,50 @@ class Blocktopmenu extends Module
 		return $this->display(__FILE__, 'blocktopmenu.tpl');
 	}
 
-    private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
-    {
-        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+	private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
+	{
+		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
-        if ($recursive === false)
-        {
-            $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+		if ($recursive === false)
+		{
+			$sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
 				WHERE cl.`id_lang` = '.$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
-            return Db::getInstance()->executeS($sql);
-        }
-        else
-        {
-            $sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
+			return Db::getInstance()->executeS($sql);
+		}
+		else
+		{
+			$sql = 'SELECT bcp.`id_cms_category`, bcp.`id_parent`, bcp.`level_depth`, bcp.`active`, bcp.`position`, cl.`name`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
 				WHERE cl.`id_lang` = '.$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
-            $results = Db::getInstance()->executeS($sql);
-            foreach ($results as $result)
-            {
-                $sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], $id_lang);
-                if ($sub_categories && count($sub_categories) > 0)
-                    $result['sub_categories'] = $sub_categories;
-                $categories[] = $result;
-            }
+			$results = Db::getInstance()->executeS($sql);
+			foreach ($results as $result)
+			{
+				$sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], $id_lang);
+				if ($sub_categories && count($sub_categories) > 0)
+					$result['sub_categories'] = $sub_categories;
+				$categories[] = $result;
+			}
 
-            return isset($categories) ? $categories : false;
-        }
+			return isset($categories) ? $categories : false;
+		}
 
-    }
+	}
 
-    private function getCMSPages($id_cms_category, $id_shop = false, $id_lang = false)
-    {
-        $id_shop = ($id_shop !== false) ? $id_shop : (int)Context::getContext()->shop->id;
-        $id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+	private function getCMSPages($id_cms_category, $id_shop = false, $id_lang = false)
+	{
+		$id_shop = ($id_shop !== false) ? $id_shop : (int)Context::getContext()->shop->id;
+		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
 
-        $sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
+		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 			FROM `'._DB_PREFIX_.'cms` c
 			INNER JOIN `'._DB_PREFIX_.'cms_shop` cs
 			ON (c.`id_cms` = cs.`id_cms`)
@@ -689,6 +687,6 @@ class Blocktopmenu extends Module
 			AND c.`active` = 1
 			ORDER BY `position`';
 
-        return Db::getInstance()->executeS($sql);
-    }
+		return Db::getInstance()->executeS($sql);
+	}
 }
