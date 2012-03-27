@@ -53,7 +53,7 @@ class blocksharefb extends Module
 	public function uninstall()
 	{
 		//Delete configuration			
-		return (parent::uninstall() AND $this->unregisterHook(Hook::get('extraLeft')));
+		return (parent::uninstall() AND $this->unregisterHook(Hook::getIdByName('extraLeft')));
 	}
 	
 	public function hookExtraLeft($params)
