@@ -114,12 +114,12 @@ class CarrierCompare extends Module
 		if (method_exists('Tools', 'getShopDomainSsl'))
 			$moduleURL = $protocol.Tools::getShopDomainSsl().$endURL;
 		else
-			$moduleURL = $protocol.$_SERVER['HTTP_HOST'].$endURL;		
+			$moduleURL = $protocol.$_SERVER['HTTP_HOST'].$endURL;
 		
 		$refresh_method = Configuration::get('SE_RERESH_METHOD');
 		
 		$this->smarty->assign(array(
-			'countries' => Country::getCountries((int)$cookie->id_lang),
+			'countries' => Country::getCountries((int)$this->context->cookie->id_lang),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
 			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
 			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
@@ -246,7 +246,7 @@ class CarrierCompare extends Module
 		 * This module is only available on standard order process because
 		 * on One Page Checkout the carrier list is already available.
 		 */
-		if (!in_array($fileName, array('order.php', 'cart.php')))
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			return false;
 		/**
 		 * If visitor is logged, the module isn't available on Front office,

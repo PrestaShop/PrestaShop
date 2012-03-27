@@ -1,7 +1,14 @@
 #compare_shipping .center {text-align: center;}
 
+#compare_shipping {
+	padding: 10px;
+}
+
+#compare_shipping #availableCarriers {
+	margin-bottom: 20px;
+}
+
 #compare_shipping #availableCarriers_table {
-	width: 95%;
 	margin: auto;
 }
 
