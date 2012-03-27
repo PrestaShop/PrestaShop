@@ -881,7 +881,10 @@ class FrontControllerCore extends Controller
 	 */
 	public function isTokenValid()
 	{
-		return Configuration::get('PS_TOKEN_ENABLE') && strcasecmp(Tools::getToken(false), Tools::getValue('token')) && $this->context->customer->isLogged();
+		if (!Configuration::get('PS_TOKEN_ENABLE'))
+			return true;
+
+		return strcasecmp(Tools::getToken(false), Tools::getValue('token'));
 	}
 
 	/**
