@@ -29,8 +29,8 @@ $().ready(function() {
 	// Click on "all shop"
 	$('.input_all_shop').live('click', function() {
 		var checked = $(this).attr('checked');
-		$('.input_group_shop').attr('checked', checked);
-		$('.input_shop').attr('checked', checked);
+		$('.input_group_shop:not(:disabled)').attr('checked', checked);
+		$('.input_shop:not(:disabled)').attr('checked', checked);
 	});
 
 	// Click on a group shop
@@ -67,7 +67,7 @@ function check_group_shop_status(id_group) {
 
 function check_all_shop() {
 	var allChecked = true;
-	$('.input_group_shop').each(function(k, v) {
+	$('.input_group_shop:not(:disabled)').each(function(k, v) {
 		if (!$(v).attr('checked'))
 			allChecked = false;
 		});

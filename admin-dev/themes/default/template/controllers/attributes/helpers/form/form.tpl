@@ -75,7 +75,10 @@
 			if (typeof shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]) > -1)
 				$(item).attr('disabled', false);
 			else
+			{
 				$(item).attr('disabled', true);
+				$(item).attr('checked', false);
+			}
 		});
 	};
 	$('#id_attribute_group').change(changeAssociationGroup);
