@@ -155,8 +155,8 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
 		$ret = parent::add($autodate, $null_values);
-		if (isset($_POST['checkBoxShopAsso_category']))
-			foreach ($_POST['checkBoxShopAsso_category'] as $row)
+		if (Tools::isSubmit('checkBoxShopAsso_category'))
+			foreach (Tools::getValue('checkBoxShopAsso_category') as $row)
 			{
 				foreach ($row as $id_shop => $value)
 				{
@@ -168,6 +168,8 @@ class CategoryCore extends ObjectModel
 			foreach (Shop::getShops(true) as $shop)
 			{
 				$position = Category::getLastPosition((int)$this->id_parent, $shop['id_shop']);
+				if (!$position)
+					$position = 1;
 				$this->addPosition($position, $shop['id_shop']);
 			}
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
@@ -1439,12 +1441,10 @@ class CategoryCore extends ObjectModel
 			$id = Context::getContext()->shop->id;
 			$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 		}
-
 		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'category_shop` cs
-		SET cs.`position` = '.(int)$position.'
-		WHERE cs.`id_shop` = '.(int)$id_shop.'
-		AND cs.`id_category` = '.(int)$this->id);
+			INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`, `position`) VALUES
+			('.(int)$this->id.', '.(int)$id_shop.', '.(int)$position.')
+			ON DUPLICATE KEY UPDATE `position` = '.(int)$position);
 	}
 
 	public static function getShopsByCategory($id_category)
