@@ -536,13 +536,13 @@ font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleI
 	 * @param string $hookName Hook name
 	 * @return integer Hook ID
 	 *
-	 * @deprecated since 1.5
+	 * @deprecated since 1.5.0 use Hook::getIdByName() instead
 	 */
 	public static function get($hookName)
 	{
 		Tools::displayAsDeprecated();
-	 	if (!Validate::isHookName($hookName))
-	 		die(Tools::displayError());
+		if (!Validate::isHookName($hookName))
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT `id_hook`, `name`
