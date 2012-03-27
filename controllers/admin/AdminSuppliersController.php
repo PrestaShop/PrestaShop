@@ -399,7 +399,8 @@ class AdminSuppliersControllerCore extends AdminController
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are any pending supply order.');
 			else
 			{
-				$address = new Address($obj->id_address);
+				$id_address = Address::getAddressIdBySupplierId($obj->id);
+				$address = new Address($id_address);
 				if (Validate::isLoadedObject($address))
 				{
 					$address->deleted = 1;
@@ -417,7 +418,8 @@ class AdminSuppliersControllerCore extends AdminController
 	 */
 	protected function afterAdd($object)
 	{
-		$address = new Address($object->id_address);
+		$id_address = (int)$_POST['id_address'];
+		$address = new Address($id_address);
 		if (Validate::isLoadedObject($address))
 		{
 			$address->id_supplier = $object->id;
@@ -432,7 +434,8 @@ class AdminSuppliersControllerCore extends AdminController
 	 */
 	protected function afterUpdate($object)
 	{
-		$address = new Address($object->id_address);
+		$id_address = (int)$_POST['id_address'];
+		$address = new Address($id_address);
 		if (Validate::isLoadedObject($address))
 		{
 			if ($address->id_supplier != $object->id)
