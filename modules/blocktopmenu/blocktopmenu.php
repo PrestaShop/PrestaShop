@@ -151,7 +151,7 @@ class Blocktopmenu extends Module
 			Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_linksmenutop.',', 'LNK'.$id_linksmenutop), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
 			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
 		}
-		
+
 		$this->_html .= '
 		<fieldset>
 			<div class="multishop_info">
@@ -379,37 +379,37 @@ class Blocktopmenu extends Module
 			{
 				case 'CAT':
 					$category = new Category($id, $id_lang);
-					if (!is_null($category->id))
+					if (Validate::isLoadedObject($category))
 						$this->_html .= '<option value="CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'PRD':
 					$product = new Product($id, true, $id_lang);
-					if (!is_null($product->id))
+					if (Validate::isLoadedObject($product))
 						$this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'CMS':
 					$cms = new CMS($id, $id_lang);
-					if (count($cms))
+					if (Validate::isLoadedObject($cms))
 						$this->_html .= '<option value="CMS'.$id.'">'.$cms->meta_title.'</option>'.PHP_EOL;
 					break;
 
 				case 'CMS_CAT':
 					$category = new CMSCategory($id, $id_lang);
-					if (count($category))
+					if (Validate::isLoadedObject($category))
 						$this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'MAN':
 					$manufacturer = new Manufacturer($id, $id_lang);
-					if (!is_null($manufacturer->id))
+					if (Validate::isLoadedObject($manufacturer))
 						$this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'SUP':
 					$supplier = new Supplier($id, $id_lang);
-					if (!is_null($supplier->id))
+					if (Validate::isLoadedObject($supplier))
 						$this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
 					break;
 
@@ -540,7 +540,7 @@ class Blocktopmenu extends Module
 	{
 		$id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
 		$category = new Category($id_category, $id_lang);
-		
+
 		if ($category->level_depth > 1)
 			$category_link = $category->getLink();
 		else
