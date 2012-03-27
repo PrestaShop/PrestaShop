@@ -5,7 +5,7 @@ return array(
 		'documentation' => 'http://doc.prestashop.com/display/PS14/English+documentation',
 		'forum' => 'http://www.prestashop.com/forums/',
 		'blog' => 'http://www.prestashop.com/blog/',
-		'support' => 'http://www.prestashop.com/',
+		'support' => 'http://support.prestashop.com/en/',
 	),
 	'translations' => array(
 		'menu_welcome' => 'Welcome!',
