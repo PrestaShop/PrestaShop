@@ -122,7 +122,7 @@ class AddressControllerCore extends FrontController
 		$address->id_customer = (int)$this->context->customer->id;
 
 		// Check page token
-		if ($this->isTokenValid())
+		if ($this->context->customer->isLogged() && !$this->isTokenValid())
 			$this->errors[] = Tools::displayError('Invalid token');
 
 		// Check phone
@@ -175,7 +175,7 @@ class AddressControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 		else if (!$country->isNeedDni())
 			$address->dni = null;
-		
+
 		// Check if the alias exists
 		if (!empty($_POST['alias'])
 			&& (int)$this->context->customer->id > 0
