@@ -37,7 +37,7 @@
 {else}
 
 <h3>{l s='Bank wire payment' mod='bankwire'}</h3>
-<form action="{$this_path_ssl}validation.php" method="post">
+<form action="{$link->getModuleLink('bankwire', 'validation')}" method="post">
 <p>
 	<img src="{$this_path}bankwire.jpg" alt="{l s='bank wire' mod='bankwire'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 	{l s='You have chosen to pay by bank wire.' mod='bankwire'}
