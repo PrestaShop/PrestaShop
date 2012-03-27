@@ -60,12 +60,6 @@ class SupplierCore extends ObjectModel
 	public $active;
 
 	/**
-	 * @since 1.5.0
-	 * @var int address
-	 * */
-	public $id_address;
-
-	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -74,7 +68,6 @@ class SupplierCore extends ObjectModel
 		'multilang' => true,
 		'fields' => array(
 			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'id_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'active' => 			array('type' => self::TYPE_BOOL),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
