@@ -56,7 +56,7 @@ abstract class HTMLTemplateCore
 			'shop_name' => $shop_name
 		));
 
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/header.tpl');
+		return $this->smarty->fetch($this->getTemplate('header'));
 	}
 
 	/**
@@ -76,7 +76,7 @@ abstract class HTMLTemplateCore
 			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT')
 		));
 
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/footer.tpl');
+		return $this->smarty->fetch($this->getTemplate('footer'));
 	}
 
 	/**
@@ -102,12 +102,15 @@ abstract class HTMLTemplateCore
 	 */
 	protected function getLogo()
 	{
-		$logo = '';
+        $logo = '';
+        // TCPDF always uses the complete physical path, beware of PrestaShop virtual URI or complete path using symlinks
+        $physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE');
+			$logo = $physical_uri.Configuration::get('PS_LOGO_INVOICE');
 		else if (Configuration::get('PS_LOGO') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
+			$logo = $physical_uri.Configuration::get('PS_LOGO');
+
 		return $logo;
 	}
 
@@ -145,6 +148,28 @@ abstract class HTMLTemplateCore
 	 */
 	abstract public function getBulkFilename();
 
+    /**
+     * If the template is not present in the theme directory, it will return the default template
+     * in _PS_PDF_DIR_ directory
+     *
+     * @param $template_name
+     * @return string
+     */
+    protected function getTemplate($template_name)
+    {
+        $template = false;
+        $default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
+        $overriden_template = _PS_THEME_DIR_.'/pdf/'.$template_name.'.tpl';
+
+        if (file_exists($overriden_template))
+            $template = $overriden_template;
+        else if (file_exists($default_template))
+            $template = $default_template;
+
+        return $template;
+    }
+
+
 	/**
 	 * Translatation method
 	 * @param string $string
@@ -157,13 +182,19 @@ abstract class HTMLTemplateCore
 		if (!Validate::isLangIsoCode($iso))
 			Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
 
-		$file_name = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
-		if (!file_exists($file_name) || !include($file_name))
-			Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $file_name));
+		$override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+		$i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
+		if (file_exists($override_i18n_file))
+            $i18n_file = $override_i18n_file;
+
+      if (!include($i18n_file))
+            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
 
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
-			$key = md5(str_replace('\'', '\\\'', $string));
+
+		$key = md5(str_replace('\'', '\\\'', $string));
+
 		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
 		return $str;

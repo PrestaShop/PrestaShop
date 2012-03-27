@@ -557,8 +557,14 @@ class AdminTranslationsControllerCore extends AdminController
 		 	if ($this->tabAccess['edit'] === '1')
 		 	{
 				if (!Validate::isLanguageIsoCode(Tools::strtolower(Tools::getValue('lang'))))
-					die(Tools::displayError());
-				$this->writeTranslationFile('PDF', _PS_THEME_DIR_.'pdf/lang/'.Tools::strtolower(Tools::getValue('lang')).'.php', 'PDF');
+					throw new PrestaShopException('Invalid iso code ['.Tools::getValue('lang').']');
+
+				// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
+				if ((_THEME_NAME_ == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+					$this->writeTranslationFile('PDF', _PS_TRANSLATIONS_DIR_.Tools::strtolower(Tools::getValue('lang')).'/pdf.php', 'PDF');
+				else
+					$this->writeTranslationFile('PDF', _PS_THEME_DIR_.'pdf/lang/'.Tools::strtolower(Tools::getValue('lang')).'.php', 'PDF');
+
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1845,25 +1851,42 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormPDF()
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
-		$_LANG = array();
+        $_LANGPDF = array();
 		$missing_translations_pdf = array();
 
 		if (!Validate::isLangIsoCode($lang))
 			die('Invalid iso lang ('.Tools::safeOutput($lang).')');
 
-		$i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
-		$i18n_file = $i18n_dir.$lang.'.php';
+		$i18n_dir  = _PS_TRANSLATIONS_DIR_.$lang.'/';
+		$default_i18n_file = $i18n_dir.'pdf.php';
 
+		if ((_THEME_NAME_ != self::DEFAULT_THEME_NAME) || !_PS_MODE_DEV_)
+		{
+			$i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
+			$i18n_file = $i18n_dir.$lang.'.php';
+		}
+		else
+			$i18n_file = $default_i18n_file;
+
+        $this->checkDirAndCreate($i18n_file);
 		if (!file_exists($i18n_file))
-			if (!file_put_contents($i18n_file, "<?php\n\nglobal \$_LANGPDF;\n\$_LANGPDF = array();\n\n?>"))
-				die('Please create a "'.Tools::strtolower($lang).'.php" file in '.realpath(_PS_ADMIN_DIR_.'/'));
+			die('Please create a "'.$lang.'.php" file in '.$i18n_dir);
+
+		if (!is_writable($i18n_file))
+			die('Cannot write into the "'.$i18n_file);
+
 		unset($_LANGPDF);
 		@include($i18n_file);
+
+		// if the override's translation file is empty load the default file
+		if (!isset($_LANGPDF) || count($_LANGPDF) == 0)
+			@include($default_i18n_file);
 
 		$count = 0;
 		$prefix_key = 'PDF';
 		$tabs_array = array($prefix_key=>array());
 		$regex = '/HTMLTemplate.*::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+
 		// need to parse PDF.php in order to find $regex and add this to $tabs_array
 		// this has to be done for the core class, and eventually for the override
 		foreach (glob(_PS_CLASS_DIR_.'pdf/*.php') as $filename)
@@ -1876,12 +1899,14 @@ class AdminTranslationsControllerCore extends AdminController
 		// parse pdf template
 		/* Search language tags (eg {l s='to translate'}) */
 		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( pdf=\'true\')?\}/U';
-		foreach (glob( _PS_THEME_DIR_.'/pdf/*.tpl') as $filename)
+      $default_template_files = glob(_PS_PDF_DIR_.'*.tpl');
+      $override_template_files = glob(_PS_THEME_DIR_.'pdf/*.tpl');
+
+		foreach (array_merge($default_template_files, $override_template_files) as $filename)
 		{
 			preg_match_all($regex, file_get_contents($filename), $matches);
 			foreach ($matches[1] as $key)
 			{
-				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGPDF[$prefix_key.md5($key)]))
 				{
 					// @todo check key : md5($key) was initially md5(addslashes($key))
@@ -1962,3 +1987,4 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 }
+
