@@ -824,12 +824,14 @@ class AdminImportControllerCore extends AdminController
 			{
 				$category_parent = Category::searchByName($default_language_id, $category->parent, true);
 				if ($category_parent['id_category'])
-					$category->id_parent =	(int)$category_parent['id_category'];
+					$category->id_parent = (int)$category_parent['id_category'];
 				else
 				{
 					$category_to_create = new Category();
 					$category_to_create->name = AdminImportController::createMultiLangField($category->parent);
 					$category_to_create->active = 1;
+					$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+					$category_to_create->link_rewrite = $category_link_rewrite;
 					$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
@@ -884,7 +886,8 @@ class AdminImportControllerCore extends AdminController
 				$category->doNotRegenerateNTree = true;
 
 				// If id category AND id category already in base, trying to update
-				if ($category->id && $category->categoryExists($category->id) && $category->id != 1)
+				$categories_home_root = array(Configuration::get('PS_ROOT_CATEGORY'), Configuration::get('PS_HOME_CATEGORY'));
+				if ($category->id && $category->categoryExists($category->id) && !in_array($category->id, $categories_home_root))
 					$res = $category->update();
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('Root category cannot be modified');
@@ -2114,9 +2117,19 @@ class AdminImportControllerCore extends AdminController
 		switch ((int)$case)
 		{
 			case $this->entities[$this->l('Categories')]:
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category != 1');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category != 1');
-				Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 2');
+				Db::getInstance()->execute('
+					DELETE FROM `'._DB_PREFIX_.'category`
+					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
+					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+				Db::getInstance()->execute('
+					DELETE FROM `'._DB_PREFIX_.'category_lang`
+					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
+					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+				Db::getInstance()->execute('
+					DELETE FROM `'._DB_PREFIX_.'category_shop`
+					WHERE `id_category` NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
+					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+				Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 3');
 				foreach (scandir(_PS_CAT_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_CAT_IMG_DIR_.$d);
