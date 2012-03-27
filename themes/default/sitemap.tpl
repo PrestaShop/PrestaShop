@@ -37,8 +37,8 @@
 			<li><a href="{$link->getPageLink('best-sales')}">{l s='Top sellers'}</a></li>
 			<li><a href="{$link->getPageLink('prices-drop')}">{l s='Price drop'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}', ">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}', ">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}">{l s='Manufacturers'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}">{l s='Suppliers'}</a></li>{/if}
 		</ul>
 	</div>
 	<div class="sitemap_block">
