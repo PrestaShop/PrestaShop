@@ -355,6 +355,9 @@ class AddressCore extends ObjectModel
 		$query->from('address');
 		$query->where('id_supplier = '.(int)$id_supplier);
 		$query->where('deleted = 0');
+		$query->where('id_customer = 0');
+		$query->where('id_manufacturer = 0');
+		$query->where('id_warehouse = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }
