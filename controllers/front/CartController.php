@@ -34,7 +34,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
-	
+
 	protected $ajax_refresh = false;
 
 	/**
@@ -62,7 +62,7 @@ class CartControllerCore extends FrontController
 
 	public function postProcess()
 	{
-		if ($this->isTokenValid())
+		if ($this->context->customer->isLogged() && !$this->isTokenValid())
 			$this->errors[] = Tools::displayError('Invalid token');
 
 		// Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
@@ -122,7 +122,7 @@ class CartControllerCore extends FrontController
 	{
 		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
 			return;
-		
+
 		$old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
 		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
 
@@ -132,15 +132,15 @@ class CartControllerCore extends FrontController
 			$old_id_address_delivery,
 			$new_id_address_delivery);
 	}
-	
+
 	protected function processAllowSeperatedPackage()
 	{
 		if (!Configuration::get('PS_SHIP_WHEN_AVAILABLE'))
 			return;
-		
+
 		if (Tools::getValue('value') === false)
 			die('{"error":true, "error_message": "No value setted"}');
-		
+
 		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
 		$this->context->cart->update();
 		die('{"error":false}');
@@ -150,7 +150,7 @@ class CartControllerCore extends FrontController
 	{
 		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
 			return;
-		
+
 		if (!$this->context->cart->duplicateProduct(
 				$this->id_product,
 				$this->id_product_attribute,
@@ -237,7 +237,7 @@ class CartControllerCore extends FrontController
 				}
 			}
 		}
-		
+
 		$removed = CartRule::autoRemoveFromCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
