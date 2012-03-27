@@ -46,6 +46,7 @@ define('_PS_ADMIN_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/admin/');
 define('_PS_TRANSLATIONS_DIR_',     _PS_ROOT_DIR_.'/translations/');
 define('_PS_DOWNLOAD_DIR_',         _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',             _PS_ROOT_DIR_.'/mails/');
+define('_PS_PDF_DIR_', _PS_ROOT_DIR_.'/pdf/');
 define('_PS_ALL_THEMES_DIR_',       _PS_ROOT_DIR_.'/themes/');
 define('_PS_IMG_DIR_',              _PS_ROOT_DIR_.'/img/');
 if (!defined('_PS_MODULE_DIR_'))
@@ -146,3 +147,4 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_JQUERY_VERSION_', '1.4.4');
+

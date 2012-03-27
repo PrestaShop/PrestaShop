@@ -77,7 +77,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'customer' => $customer
 		));
 
-		return $this->smarty->fetch($this->getTemplate($country->iso_code));
+		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
 	}
 
 	/**
@@ -96,25 +96,28 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
 				'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
+                'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 				'order' => $this->order,
 				'order_invoice' => $this->order_invoice
 			));
 
-			return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/invoice.tax-tab.tpl');
+			return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
 	}
 
 	/**
 	 * Returns the invoice template associated to the country iso_code
 	 * @param string $iso_country
 	 */
-	protected function getTemplate($iso_country)
+	protected function getTemplateByCountry($iso_country)
 	{
 		$file = Configuration::get('PS_INVOICE_MODEL');
-		$template = _PS_THEME_DIR_.'/pdf/'.$file.'.tpl';
 
-		$iso_template = _PS_THEME_DIR_.'/pdf/'.$file.'.'.$iso_country.'.tpl';
-		if (file_exists($iso_template))
-			$template = $iso_template;
+        // try to fetch the iso template
+        $template = $this->getTemplate($file.'.'.$iso_country);
+
+        // else use the default one
+        if (!$template)
+            $template = $this->getTemplate($file);
 
 		return $template;
 	}
