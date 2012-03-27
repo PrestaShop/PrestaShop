@@ -1654,7 +1654,6 @@ CREATE TABLE `PREFIX_state` (
 
 CREATE TABLE `PREFIX_supplier` (
   `id_supplier` int(10) unsigned NOT NULL auto_increment,
-  `id_address` int(10) unsigned NOT NULL default 0,
   `name` varchar(64) NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
