@@ -131,7 +131,11 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 			<input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password) ?>" />
 			<sup class="required">*</sup>
 		</div>
-		<?php echo $this->displayError('admin_password') ?>
+		<?php if ($this->displayError('admin_password')): ?>
+			<?php echo $this->displayError('admin_password') ?>
+		<?php else: ?>
+			<p class="userInfos aligned"><?php echo $this->l('Must be alphanumeric string with at least 8 characters') ?></p>
+		<?php endif; ?>
 	</div>
 
 	<!-- Admin password confirm -->
