@@ -164,6 +164,9 @@ class WarehouseCore extends ObjectModel
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+		if (!is_array($res))
+			return $ids_carrier;
+
 		foreach ($res as $carriers)
 			foreach ($carriers as $carrier)
 				$ids_carrier[] = $carrier;
@@ -591,6 +594,9 @@ class WarehouseCore extends ObjectModel
 		$query->where($this->def['primary'].' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		if (!is_array($res))
+			return $ids_carrier;
 
 		foreach ($res as $carriers)
 			foreach ($carriers as $carrier)
