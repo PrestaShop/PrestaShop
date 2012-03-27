@@ -49,7 +49,7 @@ class HomeFeatured extends Module
 
 	function install()
 	{
-		if (!Configuration::updateValue('HOME_FEATURED_NBR', 8) || !parent::install() || !$this->registerHook('home') || !$this->registerHook('displayHeader'))
+		if (!Configuration::updateValue('HOME_FEATURED_NBR', 8) || !parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader'))
 			return false;
 		return true;
 	}
