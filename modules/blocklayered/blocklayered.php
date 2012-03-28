@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.2';
+		$this->version = '1.8.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -70,6 +70,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_CATEGORY_DEPTH', 1);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_QTY', 0);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', 0);
+			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', 0);
 			
 			$this->rebuildLayeredStructure();
 			
@@ -109,6 +110,7 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_FILTER_CATEGORY_DEPTH');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_QTY');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_CDT');
+		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_MNF');
 		
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
@@ -1225,15 +1227,18 @@ class BlockLayered extends Module
 		$attributes = array();
 		$features = array();
 		
+		$blacklist = array('weight', 'price');
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT'))
+			$blacklist[] = 'condition';
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY'))
+			$blacklist[] = 'quantity';
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'))
+			$blacklist[] = 'manufacturer';
+		
 		foreach ($filters as $type => $val)
 		{
 			switch($type)
 			{
-				case 'price':
-				case 'weight':
-					$smarty->assign('nobots', true);
-					$smarty->assign('nofollow', true);
-					return;
 				case 'id_attribute_group':
 					foreach ($val as $attr)
 					{
@@ -1259,7 +1264,14 @@ class BlockLayered extends Module
 					}
 					break;
 				default:
-					if (count($val) > 1) {
+					if (in_array($type, $blacklist))
+					{
+						$smarty->assign('nobots', true);
+						$smarty->assign('nofollow', true);
+						return;
+					}
+					if (count($val) > 1)
+					{
 						$smarty->assign('nobots', true);
 						$smarty->assign('nofollow', true);
 						return;
@@ -1428,6 +1440,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_CATEGORY_DEPTH', (int)Tools::getValue('ps_layered_filter_category_depth'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_QTY', (int)Tools::getValue('ps_layered_filter_index_availability'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', (int)Tools::getValue('ps_layered_filter_index_condition'));
+			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
 			
 			$html .= '
 			<div class="conf">'.
@@ -2093,6 +2106,15 @@ class BlockLayered extends Module
 							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_availability" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
 							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
 							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_availability" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY') ? 'checked="checked"' : '').' />
+						</td>
+					</tr>
+					<tr style="text-align: center;">
+						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use manufacturer filter').'</td>
+						<td>
+							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
+							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
+							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
+							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
 						</td>
 					</tr>
 				</table>
@@ -3086,9 +3108,10 @@ class BlockLayered extends Module
 		
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT'))
 			$blacklist[] = 'condition';
-			
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_QTY'))
 			$blacklist[] = 'quantity';
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'))
+			$blacklist[] = 'manufacturer';
 		
 		$nofollow = in_array($type_filter['type'], $blacklist); // true is in the blacklist
 		foreach ($filter_blocks as &$type_filter)
