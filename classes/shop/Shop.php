@@ -567,12 +567,12 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getTotalShopsByIdGroupShop($id)
 	{
-		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = %d', (int)$id));
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = '.(int)$id);
 	}
 
 	public static function getIdShopsByIdGroupShop($id)
 	{
-		$result = Db::getInstance()->executeS(sprintf('SELECT `id_shop`, `id_group_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = %d', (int)$id));
+		$result = Db::getInstance()->executeS('SELECT `id_shop`, `id_group_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = '.(int)$id);
 		$data = array();
 		foreach ($result as $group_data)
 			$data[] = (int)$group_data['id_shop'];
@@ -645,7 +645,7 @@ class ShopCore extends ObjectModel
 			SELECT `id_shop`, `%s`
 			FROM `'._DB_PREFIX_.'%s_shop`
 			WHERE `%s` = %d',
-		$identifier, $table, $identifier, $id);
+		pSQL($identifier), pSQL($table), pSQL($identifier), $id);
 
 		return Db::getInstance()->executeS($sql);
 	}
@@ -837,12 +837,12 @@ class ShopCore extends ObjectModel
 
 	public function checkIfShopExist($id)
 	{
-		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop` WHERE `id_shop` = %d', (int)$id));
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop` WHERE `id_shop` = '.(int)$id);
 	}
 
 	public function checkIfGroupShopExist($id)
 	{
-		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = %d', (int)$id));
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = '.(int)$id);
 	}
 
 	/**
