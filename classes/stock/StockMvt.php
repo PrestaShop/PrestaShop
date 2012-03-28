@@ -164,10 +164,12 @@ class StockMvtCore extends ObjectModel
 	/**
 	 * @deprecated since 1.5.0
 	 *
-	 * This method no longer exists, and have no equivalent because the missing movements have to be handled by inventories.
+	 * This method no longer exists.
+	 * There is no equivalent or replacement, considering that this should be handled by inventories.
 	 */
 	public static function addMissingMvt($id_employee)
 	{
+		// display that this method is deprecated
 		Tools::displayAsDeprecated();
 	}
 
@@ -188,6 +190,7 @@ class StockMvtCore extends ObjectModel
 		$movements = array();
 		$quantity_total = 0;
 
+		// preps query
 		$query = new DbQuery();
 		$query->select('sm.*, s.id_warehouse');
 		$query->from('stock_mvt', 'sm');
@@ -195,11 +198,18 @@ class StockMvtCore extends ObjectModel
 		$query->where('sm.sign = -1');
 		$query->where('sm.id_order = '.(int)$id_order);
 		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+
+		// if filer by warehouse
 		if (!is_null($id_warehouse))
 			$query->where('s.id_warehouse = '.(int)$id_warehouse);
+
+		// orders the movements by date
 		$query->orderBy('date_add DESC');
 
+		// gets the result
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($query);
+
+		// fills the movements array
 		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res))
 		{
 			if ($quantity_total >= $quantity)
