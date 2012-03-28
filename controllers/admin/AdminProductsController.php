@@ -2736,7 +2736,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
-			&& !empty($product->cache_default_attribute))
+			&& empty($product->cache_default_attribute))
 			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
 		else
 			$msg = '';
