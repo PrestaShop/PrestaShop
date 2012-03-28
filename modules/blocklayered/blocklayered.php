@@ -120,6 +120,7 @@ class BlockLayered extends Module
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang_value');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter_shop');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
 		return parent::uninstall();
 	}
@@ -1412,6 +1413,16 @@ class BlockLayered extends Module
 									'filter_show_limit' => (int)$limit
 								);
 							}
+					}
+					
+				
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+					{
+						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
+						if (isset($assos))
+							foreach ($assos as $asso)
+								Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
 					}
 					
 					$values_to_insert = array(
@@ -3698,7 +3709,7 @@ class BlockLayered extends Module
 				$helper->id = (int)$id_layered_filter;
 				$helper->table = 'layered_filter';
 				$helper->identifier = 'id_layered_filter';
-				$helper->base_folder = Tools::getValue('base_folder').'/themes/template/';
+				$helper->base_folder = Tools::getValue('base_folder').'/themes/default/template/helpers/form/';
 				
 				$html .= '
 				<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
@@ -3817,6 +3828,13 @@ class BlockLayered extends Module
 		`filters` TEXT NULL,
 		`n_categories` INT(10) UNSIGNED NOT NULL,
 		`date_add` DATETIME NOT NULL)');
+		
+		Db::getInstance()->execute('
+		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter_shop` (
+		`id_layered_filter` INT(10) UNSIGNED NOT NULL,
+		`id_shop` INT(11) UNSIGNED NOT NULL,
+		PRIMARY KEY (`id_layered_filter`, `id_shop`),
+		KEY `id_shop` (`id_shop`))');
 	}
 	
 	public function rebuildLayeredCache($products_ids = array(), $categories_ids = array())
@@ -3958,6 +3976,16 @@ class BlockLayered extends Module
 		{
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter(name, filters, n_categories, date_add)
 				VALUES (\''.$this->l('My template').' '.date('Y-m-d').'\', \''.pSQL(serialize($filter_data)).'\', '.count($filter_data['categories']).', NOW())');
+			
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+			{
+				$last_id = Db::getInstance()->Insert_ID();
+				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.$last_id);
+				foreach ($shop_list as $id_shop)
+					Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+						VALUES('.$last_id.', '.(int)$id_shop.')');
+			}
+			
 			$this->buildLayeredCategories();
 		}
 	}
