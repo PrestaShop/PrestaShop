@@ -70,13 +70,13 @@
 				{if $packs_to_update || $packs_to_install}
 					<div style="font-weight:bold; float:left;">{l s='Language you want to add or update:'}
 						<select id="params_import_language" name="params_import_language">
-							<optgroup label="{l s='Add a language'}">		
-								{foreach $packs_to_install as $lang_pack}
+							<optgroup label="{l s='Update a language'}">
+								{foreach $packs_to_update as $lang_pack}
 									<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 								{/foreach}
 							</optgroup>
-							<optgroup label="{l s='Update a language'}">
-								{foreach $packs_to_update as $lang_pack}
+							<optgroup label="{l s='Add a language'}">		
+								{foreach $packs_to_install as $lang_pack}
 									<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 								{/foreach}
 							</optgroup>
