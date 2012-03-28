@@ -113,7 +113,7 @@ class Blocktopmenu extends Module
 	{
 		$id_lang = (int)Context::getContext()->language->id;
 		$languages = $this->context->controller->getLanguages();
-		$default_language = Configuration::get('PS_LANG_DEFAULT');
+		$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
 
 		$labels = Tools::getValue('label') ? array_filter(Tools::getValue('label'), 'strlen') : array();
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
@@ -201,7 +201,7 @@ class Blocktopmenu extends Module
 
 								// BEGIN Categories
 								$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
-								$this->getCategoryOption(1, $id_lang);
+								$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
 								$this->_html .= '</optgroup>';
 
 								// BEGIN Products
@@ -295,10 +295,10 @@ class Blocktopmenu extends Module
 				{
 					$this->_html .= '
 					<div id="link_label_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang ? 'block' : 'none').';float: left;">
-						<input type="text" name="label['.$language['id_lang'].']" id="label_'.$language['id_lang'].'" size="70" value="'.(isset($labels[$language['id_lang']]) ? $labels[$language['id_lang']] : '').'" />
+						<input type="text" name="label['.$language['id_lang'].']" id="label_'.$language['id_lang'].'" size="70" value="'.(isset($labels[$language['id_lang']]) ? (int)$labels[$language['id_lang']] : '').'" />
 					</div>';
 				 }
-				$this->_html .= $this->displayFlags($languages, $id_lang, $divLangName, 'link_label', true);
+				$this->_html .= $this->displayFlags($languages, (int)$id_lang, $divLangName, 'link_label', true);
 
 				$this->_html .= '</div><p class="clear"> </p>
 				<label>'.$this->l('Link').'</label>
@@ -315,7 +315,7 @@ class Blocktopmenu extends Module
 			</form>
 		</fieldset><br />';
 
-		$links = MenuTopLinks::gets($id_lang, null, Shop::getContextShopID());
+		$links = MenuTopLinks::gets((int)$id_lang, null, (int)Shop::getContextShopID());
 
 		if (!count($links))
 			return $this->_html;
@@ -367,7 +367,7 @@ class Blocktopmenu extends Module
 		$id_lang = (int)$this->context->language->id;
 		$id_shop = (int)Shop::getContextShopID();
 
-		foreach ($menu_item as $type => $item)
+		foreach ($menu_item as $item)
 		{
 			if (!$item)
 				continue;
@@ -378,49 +378,49 @@ class Blocktopmenu extends Module
 			switch (substr($item, 0, strlen($values[1])))
 			{
 				case 'CAT':
-					$category = new Category($id, $id_lang);
+					$category = new Category((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($category))
 						$this->_html .= '<option value="CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'PRD':
-					$product = new Product($id, true, $id_lang);
+					$product = new Product((int)$id, true, (int)$id_lang);
 					if (Validate::isLoadedObject($product))
 						$this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'CMS':
-					$cms = new CMS($id, $id_lang);
+					$cms = new CMS((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($cms))
 						$this->_html .= '<option value="CMS'.$id.'">'.$cms->meta_title.'</option>'.PHP_EOL;
 					break;
 
 				case 'CMS_CAT':
-					$category = new CMSCategory($id, $id_lang);
+					$category = new CMSCategory((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($category))
 						$this->_html .= '<option value="CMS_CAT'.$id.'">'.$category->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'MAN':
-					$manufacturer = new Manufacturer($id, $id_lang);
+					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($manufacturer))
 						$this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'SUP':
-					$supplier = new Supplier($id, $id_lang);
+					$supplier = new Supplier((int)$id, (int)$id_lang);
 					if (Validate::isLoadedObject($supplier))
 						$this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
 					break;
 
 				case 'LNK':
-					$link = MenuTopLinks::get($id, $id_lang, $id_shop);
+					$link = MenuTopLinks::get((int)$id, (int)$id_lang, (int)$id_shop);
 					if (count($link))
 					{
 						if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
 						{
 							$default_language = Configuration::get('PS_LANG_DEFAULT');
-							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+							$link = MenuTopLinks::get($link[0]['id_linksmenutop'], (int)$default_language, (int)Shop::getContextShopID());
 						}
 						$this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$link[0]['label'].'</option>';
 					}
@@ -437,7 +437,7 @@ class Blocktopmenu extends Module
 		$id_lang = (int)$this->context->language->id;
 		$id_shop = (int)Shop::getContextShopID();
 
-		foreach ($menu_items as $type => $item)
+		foreach ($menu_items as $item)
 		{
 			if (!$item)
 				continue;
@@ -448,25 +448,25 @@ class Blocktopmenu extends Module
 			switch (substr($item, 0, strlen($value[1])))
 			{
 				case 'CAT':
-					$this->getCategory($id);
+					$this->getCategory((int)$id);
 					break;
 
 				case 'PRD':
 					$selected = ($this->page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
-					$product = new Product($id, true, $id_lang);
+					$product = new Product((int)$id, true, (int)$id_lang);
 					if (!is_null($product->id))
 						$this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS':
 					$selected = ($this->page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
-					$cms = CMS::getLinks($id_lang, array($id));
+					$cms = CMS::getLinks((int)$id_lang, array($id));
 					if (count($cms))
 						$this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
 					break;
 
 				case 'CMS_CAT':
-					$category = new CMSCategory($id, $id_lang);
+					$category = new CMSCategory((int)$id, (int)$id_lang);
 					if (count($category))
 					{
 						$this->_menu .= '<li><a href="#">'.$category->name.'</a>';
@@ -477,7 +477,7 @@ class Blocktopmenu extends Module
 
 				case 'MAN':
 					$selected = ($this->page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
-					$manufacturer = new Manufacturer($id, $id_lang);
+					$manufacturer = new Manufacturer((int)$id, (int)$id_lang);
 					if (!is_null($manufacturer->id))
 					{
 						if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
@@ -485,22 +485,22 @@ class Blocktopmenu extends Module
 						else
 							$manufacturer->link_rewrite = 0;
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink((int)$id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
 				case 'SUP':
 					$selected = ($this->page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
-					$supplier = new Supplier($id, $id_lang);
+					$supplier = new Supplier((int)$id, (int)$id_lang);
 					if (!is_null($supplier->id))
 					{
 						$link = new Link;
-						$this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
+						$this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink((int)$id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
 					}
 					break;
 
 				case 'LNK':
-					$link = MenuTopLinks::get($id, $id_lang, $id_shop);
+					$link = MenuTopLinks::get((int)$id, (int)$id_lang, (int)$id_shop);
 					if (count($link))
 					{
 						if (!isset($link[0]['label']) || ($link[0]['label'] == ''))
@@ -515,31 +515,34 @@ class Blocktopmenu extends Module
 		}
 	}
 
-	private function getCategoryOption($id_category = 1, $id_lang = false, $recursive = true)
+	private function getCategoryOption($id_category = 1, $id_lang = false, $id_shop = false, $recursive = true)
 	{
-		$id_lang = (int)($id_lang ? $id_lang : Context::getContext()->language->id);
-		$category = new Category($id_category, $id_lang);
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+		$category = new Category((int)$id_category, (int)$id_lang, (int)$id_shop);
 
 		if (is_null($category->id))
 			return;
 
 		if ($recursive)
 		{
-			$childrens = Category::getChildren((int)$id_category, $id_lang);
+			$childrens = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
 		}
 
-		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.'</option>';
+        $shop = (object) Shop::getShop((int)$category->getShopID());
+		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
 
 		if (isset($childrens) && count($childrens))
 			foreach ($childrens as $children)
-				$this->getCategoryOption((int)$children['id_category'], $id_lang);
+            {
+				$this->getCategoryOption((int)$children['id_category'], (int)$id_lang, (int)$children['id_shop']);
+            }
 	}
 
-	private function getCategory($id_category, $id_lang = false)
+	private function getCategory($id_category, $id_lang = false, $id_shop = false)
 	{
-		$id_lang = $id_lang ? $id_lang : Context::getContext()->language->id;
-		$category = new Category($id_category, $id_lang);
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
+		$category = new Category((int)$id_category, (int)$id_lang);
 
 		if ($category->level_depth > 1)
 			$category_link = $category->getLink();
@@ -549,7 +552,7 @@ class Blocktopmenu extends Module
 		if (is_null($category->id))
 			return;
 
-		$childrens = Category::getChildren($id_category, $id_lang);
+		$childrens = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
 		$this->_menu .= '<li '.$selected.'>';
 		$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
@@ -559,7 +562,7 @@ class Blocktopmenu extends Module
 			$this->_menu .= '<ul>';
 
 			foreach ($childrens as $children)
-				$this->getCategory($children['id_category'], $id_lang);
+				$this->getCategory((int)$children['id_category'], (int)$id_lang, (int)$children['id_shop']);
 
 			$this->_menu .= '</ul>';
 		}
@@ -568,13 +571,13 @@ class Blocktopmenu extends Module
 
 	private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
 	{
-		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 
 		if ($depth > 3)
 			return;
 
-		$categories = $this->getCMSCategories(false, $parent, $id_lang);
-		$pages = $this->getCMSPages($parent);
+		$categories = $this->getCMSCategories(false, (int)$parent, (int)$id_lang);
+		$pages = $this->getCMSPages((int)$parent);
 
 		if (count($categories) || count($pages))
 		{
@@ -584,14 +587,14 @@ class Blocktopmenu extends Module
 			{
 				$this->_menu .= '<li>';
 				$this->_menu .= '<a href="#">'.$category['name'].'</a>';
-				$this->getCMSMenuItems($category['id_cms_category'], $depth + 1);
+				$this->getCMSMenuItems($category['id_cms_category'], (int)$depth + 1);
 				$this->_menu .= '</li>';
 			}
 
 			foreach ($pages as $page)
 			{
-				$cms = new CMS($page['id_cms'], $id_lang);
-				$links = $cms->getLinks($id_lang, array($cms->id));
+				$cms = new CMS($page['id_cms'], (int)$id_lang);
+				$links = $cms->getLinks((int)$id_lang, array((int)$cms->id));
 
 				$selected = ($this->page_name == 'cms' && ((int)Tools::getValue('id_cms') == $page['id_cms'])) ? ' class="sfHoverForce"' : '';
 				$this->_menu .= '<li '.$selected.'>';
@@ -605,17 +608,17 @@ class Blocktopmenu extends Module
 
 	private function getCMSOptions($parent = 0, $depth = 1, $id_lang = false)
 	{
-		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 
-		$categories = $this->getCMSCategories(false, $parent, $id_lang);
-		$pages = $this->getCMSPages($parent, false, $id_lang);
+		$categories = $this->getCMSCategories(false, (int)$parent, (int)$id_lang);
+		$pages = $this->getCMSPages((int)$parent, false, (int)$id_lang);
 
 		$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$depth);
 
 		foreach ($categories as $category)
 		{
 			$this->_html .= '<option value="CMS_CAT'.$category['id_cms_category'].'" style="font-weight: bold;">'.$spacer.$category['name'].'</option>';
-			$this->getCMSOptions($category['id_cms_category'], $depth + 1, $id_lang);
+			$this->getCMSOptions($category['id_cms_category'], (int)$depth + 1, (int)$id_lang);
 		}
 
 		foreach ($pages as $page)
@@ -639,7 +642,7 @@ class Blocktopmenu extends Module
 
 	private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
 	{
-		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 
 		if ($recursive === false)
 		{
@@ -647,7 +650,7 @@ class Blocktopmenu extends Module
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.$id_lang.'
+				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
 			return Db::getInstance()->executeS($sql);
@@ -658,13 +661,13 @@ class Blocktopmenu extends Module
 				FROM `'._DB_PREFIX_.'cms_category` bcp
 				INNER JOIN `'._DB_PREFIX_.'cms_category_lang` cl
 				ON (bcp.`id_cms_category` = cl.`id_cms_category`)
-				WHERE cl.`id_lang` = '.$id_lang.'
+				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				AND bcp.`id_parent` = '.(int)$parent;
 
 			$results = Db::getInstance()->executeS($sql);
 			foreach ($results as $result)
 			{
-				$sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], $id_lang);
+				$sub_categories = $this->getCMSCategories(true, $result['id_cms_category'], (int)$id_lang);
 				if ($sub_categories && count($sub_categories) > 0)
 					$result['sub_categories'] = $sub_categories;
 				$categories[] = $result;
@@ -677,8 +680,8 @@ class Blocktopmenu extends Module
 
 	private function getCMSPages($id_cms_category, $id_shop = false, $id_lang = false)
 	{
-		$id_shop = ($id_shop !== false) ? $id_shop : (int)Context::getContext()->shop->id;
-		$id_lang = $id_lang ? $id_lang : (int)Context::getContext()->language->id;
+		$id_shop = ($id_shop !== false) ? (int)$id_shop : (int)Context::getContext()->shop->id;
+		$id_lang = $id_lang ? (int)$id_lang : (int)Context::getContext()->language->id;
 
 		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 			FROM `'._DB_PREFIX_.'cms` c
@@ -687,8 +690,8 @@ class Blocktopmenu extends Module
 			INNER JOIN `'._DB_PREFIX_.'cms_lang` cl
 			ON (c.`id_cms` = cl.`id_cms`)
 			WHERE c.`id_cms_category` = '.(int)$id_cms_category.'
-			AND cs.`id_shop` = '.$id_shop.'
-			AND cl.`id_lang` = '.$id_lang.'
+			AND cs.`id_shop` = '.(int)$id_shop.'
+			AND cl.`id_lang` = '.(int)$id_lang.'
 			AND c.`active` = 1
 			ORDER BY `position`';
 
