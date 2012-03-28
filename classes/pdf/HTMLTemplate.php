@@ -177,27 +177,7 @@ abstract class HTMLTemplateCore
 	 */
 	protected static function l($string)
 	{
-		$iso = Context::getContext()->language->iso_code;
-
-		if (!Validate::isLangIsoCode($iso))
-			Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
-
-		$override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
-		$i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
-		if (file_exists($override_i18n_file))
-            $i18n_file = $override_i18n_file;
-
-      if (!include($i18n_file))
-            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
-
-		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
-			return str_replace('"', '&quot;', $string);
-
-		$key = md5(str_replace('\'', '\\\'', $string));
-
-		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
-
-		return $str;
+		return Translate::getPdfTranslation($string);
 	}
 }
 

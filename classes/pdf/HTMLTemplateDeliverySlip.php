@@ -70,7 +70,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			'order_invoice' => $this->order_invoice
 		));
 
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/delivery-slip.tpl');
+		return $this->smarty->fetch($this->getTemplate('delivery-slip'));
 	}
 
 	/**

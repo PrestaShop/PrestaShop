@@ -184,24 +184,26 @@ class TranslateCore
 		global $_LANGPDF;
 
 		$iso = Context::getContext()->language->iso_code;
-		if (!Validate::isLanguageIsoCode($iso))
-			throw PrestaShopException('Invalid iso lang!');
 
-		$filename = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+		if (!Validate::isLangIsoCode($iso))
+			Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
 
-		if (Tools::file_exists_cache($filename))
-			@include_once($filename);
+		$override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+		$i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
+		if (file_exists($override_i18n_file))
+            $i18n_file = $override_i18n_file;
 
-		$key = 'PDF'.md5($string);
-		$lang_array = $_LANGPDF;
+      if (!include($i18n_file))
+            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
 
-		$msg = $string;
-		if (is_array($lang_array) && key_exists($key, $lang_array))
-			$msg = $lang_array[$key];
-		elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
-			$msg = $lang_array[Tools::strtolower($key)];
+		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
+			return str_replace('"', '&quot;', $string);
 
-		return $msg;
+		$key = md5(str_replace('\'', '\\\'', $string));
+
+		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+
+		return $str;
 	}
 }
 
