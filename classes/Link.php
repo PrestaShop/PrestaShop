@@ -372,7 +372,11 @@ class LinkCore
 			$id_lang = (int)Context::getContext()->language->id;
 
 		if (!is_array($request))
+		{
+			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
+			$request = html_entity_decode($request);
 			parse_str($request, $request);
+		}
 		unset($request['controller']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
@@ -434,7 +438,7 @@ class LinkCore
 				$id_object = $_GET['id_'.Dispatcher::getInstance()->getController()];
 			}
 		}
-		
+
 		if ($type && $id_object)
 			$url = $this->{'get'.$type.'Link'}($id_object, null);
 		else
@@ -445,7 +449,7 @@ class LinkCore
 				$name = Dispatcher::getInstance()->getController();
 			$url = $this->getPageLink($name);
 		}
-		
+
 		$vars = (!$array) ? '' : array();
 		$vars_nb = array('n', 'search_query');
 		$vars_sort = array('orderby', 'orderway');
