@@ -1161,6 +1161,7 @@ class AdminImportControllerCore extends AdminController
 						$shop = trim($shop);
 						if (!is_numeric($shop))
 							$shop = Shop::getIdByName($shop);
+						$product->updateCategoryDefault(new Shop($shop));
 						$shops[] = $shop;
 					}
 					$product->associateTo($shops);
