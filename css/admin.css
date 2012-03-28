@@ -908,11 +908,6 @@ table tr th .hint {
 }
 
 /* tab: AdminProducts */
-#upload-confirmation {
-	background-color: yellow;
-	font-weight:bold;
-}
-
 .productFieldComment {
 	color: #7F7F7F;
 	font-size: 0.8em;
