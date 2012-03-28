@@ -81,7 +81,7 @@ class GroupReductionCore extends ObjectModel
 	protected function _setCache()
 	{
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT ps.`id_product`
+			SELECT DISTINCT ps.`id_product`
 			FROM `'._DB_PREFIX_.'product_shop` ps
 			WHERE ps.`id_category_default` = '.(int)$this->id_category
 		);
