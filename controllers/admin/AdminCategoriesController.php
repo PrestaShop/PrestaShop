@@ -464,11 +464,7 @@ class AdminCategoriesControllerCore extends AdminController
 		);
 
 		// Added values of object Group
-		$category_groups = $obj->getGroups();
-		$category_groups_ids = array();
-		if (is_array($category_groups))
-			foreach ($category_groups as $category_group)
-				$category_groups_ids[] = $category_group['id_group'];
+		$category_groups_ids = $obj->getGroups();
 
 		$groups = Group::getGroups($this->context->language->id);
 		// if empty $carrier_groups_ids : object creation : we set the default groups
