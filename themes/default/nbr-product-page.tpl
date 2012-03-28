@@ -55,7 +55,7 @@
 				{/foreach}
 				</select>
 				<span>{l s='products by page'}</span>
-				<input type="hidden" name="controller" value="category" />
+				<input type="hidden" name="controller" value="{$page_name}" />
 				{if is_array($requestNb)}
 					{foreach from=$requestNb item=requestValue key=requestKey}
 						{if $requestKey != 'requestUrl'}
