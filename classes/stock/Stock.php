@@ -113,11 +113,12 @@ class StockCore extends ObjectModel
 	}
 
 	/**
-	 * Try to get reference, ean13 and upc information on current product
-	 * and store it in stock for stock_mvt integrity and history use
+	 * Gets reference, ean13 and upc of the current product
+	 * Stores it in stock for stock_mvt integrity and history purposes
 	 */
 	protected function getProductInformations()
 	{
+		// if combinations
 		if ((int)$this->id_product_attribute > 0)
 		{
 			$query = new DbQuery();
@@ -125,15 +126,19 @@ class StockCore extends ObjectModel
 			$query->from('product_attribute');
 			$query->where('id_product = '.(int)$this->id_product);
 			$query->where('id_product_attribute = '.(int)$this->id_product_attribute);
+			$rows = Db::getInstance()->executeS($query);
 
-			foreach (Db::getInstance()->executeS($query) as $row)
+			if (!is_array($rows))
+				return;
+
+			foreach ($rows as $row)
 			{
 				$this->reference = $row['reference'];
 				$this->ean13 = $row['ean13'];
 				$this->upc = $row['upc'];
 			}
 		}
-		else
+		else // else, simple product
 		{
 			$product = new Product((int)$this->id_product);
 			if (Validate::isLoadedObject($product))
