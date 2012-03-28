@@ -56,20 +56,24 @@
 		{*<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />*}
 	
 		<h2>{l s='Core e-mails:'}</h2>
+		<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
 		{$mail_content}
 
 		<h2>{l s='Module e-mails:'}</h2>
+		<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
 		{foreach $module_mails as $module_name => $mails}
 			{$mails['display']}
 		{/foreach}
-		
+
 		{if !empty($theme_mails)}
 			<h2>{l s='Theme e-mails:'}</h2>
+			<p class="preference_description" style="width:100%">{l s='List of emails of theme'} {$theme_name|ucfirst} {l s='which are in the folder'}" <strong>{$theme_name}/mails/{$lang|strtolower}/"</strong></p>
 			{$bool_title = false}
 			{foreach $theme_mails as $theme_or_module_name => $mails}
 				{if $theme_or_module_name != 'theme_mail' && !$bool_title}
 					{$bool_title = true}
 					<h2>{l s='E-mail modules in theme:'}</h2>
+					<p class="preference_description" style="width:100%">{l s='List of emails of theme'} {$theme_name|ucfirst} {l s='which are in the folder'}" <strong>{$theme_name}/modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
 				{/if}
 				{$mails['display']}
 			{/foreach}

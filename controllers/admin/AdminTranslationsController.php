@@ -1625,6 +1625,7 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				$theme_mails['theme_mail'] = $this->getMailFiles(_PS_THEME_DIR_.'mails/', $lang, 'theme_mail');
 				$theme_mails['theme_mail']['subject'] = $this->getSubjectMailContent(_PS_THEME_DIR_.'mails/'.$lang);
+				$theme_mails['theme_mail']['display'] = $this->displayMailContent($theme_mails['theme_mail'], $subject_mail, $obj_lang, 'theme_theme_mail', ucfirst(_THEME_NAME_));
 			}
 			if (file_exists(_PS_THEME_DIR_.'/modules'))
 			{
@@ -1634,8 +1635,8 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$theme_mails[$module_dir] = $this->getMailFiles(_PS_THEME_DIR_.'modules/'.$module_dir.'/mails/', $lang, 'theme_module_mail');
 						$theme_mails[$module_dir]['subject'] = $theme_mails['theme_mail']['subject'];
-						$title = $theme_or_module_name != 'theme_mail' ? ucfirst(_THEME_NAME_).' '.sprintf($this->l('E-mails for %s module'), '<em>'.$theme_or_module_name.'</em>') : ucfirst(_THEME_NAME_).' '.$this->l('E-mails');
-						$theme_mails[$module_dir]['display'] = $this->displayMailContent($theme_mails[$module_dir], $subject_mail, $obj_lang, 'theme_'.Tools::strtolower($theme_or_module_name), $title, ($theme_or_module_name != 'theme_mail' ? $theme_or_module_name : false));
+						$title = $module_dir != 'theme_mail' ? ucfirst(_THEME_NAME_).' '.sprintf($this->l('E-mails for %s module'), '<em>'.$module_dir.'</em>') : ucfirst(_THEME_NAME_).' '.$this->l('E-mails');
+						$theme_mails[$module_dir]['display'] = $this->displayMailContent($theme_mails[$module_dir], $subject_mail, $obj_lang, 'theme_'.Tools::strtolower($module_dir), $title, ($module_dir != 'theme_mail' ? $module_dir : false));
 					}
 				}
 			}
@@ -1672,7 +1673,8 @@ class AdminTranslationsControllerCore extends AdminController
 			'tinyMCE' => $this->getTinyMCEForMails($obj_lang->iso_code),
 			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $obj_lang, 'core', $this->l('Core e-mails')),
 			'module_mails' => $module_mails,
-			'theme_mails' => $theme_mails
+			'theme_mails' => $theme_mails,
+			'theme_name' => _THEME_NAME_
 		);
 
 		$this->initToolbar();
