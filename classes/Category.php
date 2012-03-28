@@ -524,6 +524,11 @@ class CategoryCore extends ObjectModel
 		ORDER BY c.`position`');
 	}
 
+    public function getShopID()
+    {
+        return $this->id_shop;
+    }
+
 	/**
 	  * Return current category childs
 	  *
@@ -737,20 +742,22 @@ class CategoryCore extends ObjectModel
 	 * @param bool $active
 	 * @return array
 	 */
-	public static function getChildren($id_parent, $id_lang, $active = true)
+	public static function getChildren($id_parent, $id_lang, $active = true, $id_shop = false)
 	{
 		if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
+        $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, asso_shop_category.`id_shop`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE `id_lang` = '.(int)$id_lang.'
 		AND c.`id_parent` = '.(int)$id_parent.'
+		'.(($id_shop != false) ? 'AND asso_shop_category.`id_shop` = '.(int)$id_shop : '').'
 		'.($active ? 'AND `active` = 1' : '').'
-		ORDER BY asso_shop_category.`position` ASC');
+		ORDER BY asso_shop_category.`position` ASC';
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
 	/**
