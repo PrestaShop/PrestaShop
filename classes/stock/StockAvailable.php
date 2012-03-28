@@ -430,7 +430,7 @@ class StockAvailableCore extends ObjectModel
 				else
 				{
 					$stock_available->id_shop = $id_shop;
-					$stock_available->id_group_shop = 0;
+					$stock_available->id_group_shop = Shop::getGroupFromShop($id_shop);
 				}
 
 				$stock_available->add();
