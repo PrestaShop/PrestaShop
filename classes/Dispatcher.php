@@ -406,10 +406,17 @@ class DispatcherCore
 					'append' =>		stripslashes($append),
 				);
 
+				$prepend_regexp = $append_regexp = '';
+				if ($prepend || $append)
+				{
+					$prepend_regexp = '('.preg_quote($prepend);
+					$append_regexp = preg_quote($append).')?';
+				}
+
 				if (isset($keywords[$keyword]['param']))
-					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
+					$regexp = str_replace($m[0][$i], $prepend_regexp.'(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.$append_regexp, $regexp);
 				else
-					$regexp = str_replace($m[0][$i], (($prepend) ? '('.$prepend.')?' : '').'('.$keywords[$keyword]['regexp'].')'.(($append) ? '('.$append.')?' : ''), $regexp);
+					$regexp = str_replace($m[0][$i], $prepend_regexp.'('.$keywords[$keyword]['regexp'].')'.$append_regexp, $regexp);
 
 			}
 			$keywords = $transform_keywords;
