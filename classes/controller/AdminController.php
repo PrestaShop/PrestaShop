@@ -249,6 +249,9 @@ class AdminControllerCore extends Controller
 
 	public function __construct()
 	{
+		// Has to be remove for the next Prestashop version
+		global $token;
+
 		$this->controller_type = 'admin';
 		$this->controller_name = get_class($this);
 		if (strpos($this->controller_name, 'Controller'))
@@ -264,6 +267,8 @@ class AdminControllerCore extends Controller
 
 		$this->id = Tab::getIdFromClassName($this->controller_name);
 		$this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
+
+		$token = $this->token;
 
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -1570,6 +1575,9 @@ class AdminControllerCore extends Controller
 	 */
 	public function init()
 	{
+		// Has to be removed for the next Prestashop version
+		global $currentIndex;
+
 		parent::init();
 
 		if (Tools::getValue('ajax'))
@@ -1593,6 +1601,7 @@ class AdminControllerCore extends Controller
 		if ($back = Tools::getValue('back'))
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
+		$currentIndex = $current_index;
 
 		if ((int)Tools::getValue('liteDisplaying'))
 		{
