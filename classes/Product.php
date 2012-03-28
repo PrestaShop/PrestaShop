@@ -4875,19 +4875,13 @@ class ProductCore extends ObjectModel
 			WHERE `id_product` = '.(int)$id_product);
 	}
 
-	public function updateCategoryDefault($shop = null, $insert = false)
+	public function updateCategoryDefault($shop = null)
 	{
 		if (is_null($shop))
 			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-		if ($insert)
-			return Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'product_shop`
-						VALUES ('.(int)$this->id.', '.(int)$shop->id.', '.(int)$this->id_category_default.')');
-		else
-			return Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'product_shop`
-				SET `id_category_default` = '.(int)$this->id_category_default.'
-				WHERE `id_shop` = '.(int)$shop->id.'
-				AND `id_product` = '.(int)$this->id);
+		return Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'product_shop`
+					VALUES ('.(int)$this->id.', '.(int)$shop->id.', '.(int)$this->id_category_default.')
+					ON DUPLICATE KEY UPDATE `id_category_default` = '.(int)$this->id_category_default);
 	}
 }
