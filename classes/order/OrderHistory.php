@@ -209,8 +209,6 @@ class OrderHistoryCore extends ObjectModel
 
 		// the order is valid if and only if the invoice is available and the order is not cancelled
 		$order->valid = $new_os->logable;
-		// Update id_order_state attribute in Order
-		$order->current_state = $new_os->id;
 		$order->update();
 
 		if ($new_os->invoice && !$order->invoice_number)
@@ -297,7 +295,6 @@ class OrderHistoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON oh.`id_order_state` = os.`id_order_state`
 				LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
 			WHERE oh.`id_order_history` = '.(int)$this->id.' AND os.`send_email` = 1');
-
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
 			$topic = $result['osname'];
@@ -309,7 +306,12 @@ class OrderHistoryCore extends ObjectModel
 
 			// An additional email is sent the first time a virtual item is validated
 			$virtual_products = $order->getVirtualProducts();
+
 			$new_order_state = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT'));
+			// Update id_order_state attribute in Order
+			$order->current_state = $new_order_state->id;
+			$order->update();
+
 			if ($virtual_products && (!$last_order_state || !$last_order_state->logable) && $new_order_state && $new_order_state->logable)
 			{
 				$assign = array();
