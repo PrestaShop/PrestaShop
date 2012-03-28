@@ -122,11 +122,7 @@ class LinkCore
 				$cats[] = $cat['link_rewrite'];
 			$params['categories'] = implode('/', $cats);
 		}
-
-		if ($ipa)
-			$anchor = $product->getAnchor($ipa);
-		else
-			$anchor = '';
+		$anchor = $ipa ? $product->getAnchor($ipa) : '';
 
 		return $url.$dispatcher->createUrl('product_rule', $params, $this->allow, $anchor);
 	}
