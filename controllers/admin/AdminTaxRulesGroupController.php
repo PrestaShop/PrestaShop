@@ -59,7 +59,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete_tax_rule' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -355,10 +355,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             else
                 $this->errors[] = Tools::displayError('You do not have permission to delete here.');
         }
-        else if (Tools::isSubmit('submitBulkdelete_tax_rule'))
+        else if (Tools::isSubmit('submitBulkdeletetax_rule'))
         {
             if ($this->tabAccess['delete'] === '1')
-                $this->action = 'bulk_delete_tax_rule';
+                $this->action = 'bulk_delete_tax_rules';
             else
                 $this->errors[] = Tools::displayError('You do not have permission to delete here.');
         }
@@ -440,7 +440,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             if (Validate::isLoadedObject($tax_rule))
                 $result &= $tax_rule->delete();
         }
-        
+
         Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
     }
 
@@ -455,5 +455,4 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		return $tr->validateController();
 	}
 }
-
 
