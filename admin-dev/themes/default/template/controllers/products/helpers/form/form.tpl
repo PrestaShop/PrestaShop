@@ -98,21 +98,27 @@
 			product_type = $("input[name=type_product]:checked").val();
 			$('#product-tab-content-wait').show();
 			{if $is_pack}
-				$('#pack_product').attr('checked', 'checked');
+				onTabLoad('Informations', function(){
+					$('#pack_product').attr('checked', 'checked');
+				});
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{elseif $product->is_virtual}
-				$('#virtual_product').attr('checked', 'checked');
+				onTabLoad('Informations', function(){
+					$('#virtual_product').attr('checked', 'checked');
+				});
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="Shipping"]').hide();
 				$('#condition').attr('disabled', 'disabled');
 				$('#condition option[value=new]').attr('selected', 'selected');
 			{else}
-				$('#simple_product').attr('checked', 'checked');
+				onTabLoad('Informations', function(){
+					$('#simple_product').attr('checked', 'checked');
+				});
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{/if}
 
-			$('input[name="type_product"]').click(function()
+			$('input[name="type_product"]').live('click', function()
 			{
 				// Reset settings
 				$('li.tab-row a[id*="Pack"]').hide();
@@ -151,7 +157,7 @@
 				}
 				else if (product_type == {Product::PTYPE_VIRTUAL})
 				{
-					$('li.tab-row a[id*="VirtualProduct"]').show();
+					$('li.tab-row a[id*="VirtualProduct"]').show().click();
 					$('#is_virtual_good').attr('checked', true);
 					$('#virtual_good').show();
 					$('#is_virtual').val(1);
