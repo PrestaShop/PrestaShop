@@ -561,7 +561,8 @@ class AdminProductsControllerCore extends AdminController
 
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
 				}
-				$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
+				else
+					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
 		}
 		else
