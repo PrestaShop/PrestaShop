@@ -72,7 +72,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			'tax_order_summary' => $tax_order_summary,
 			'currency' => $currency,
 		));
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/supply-order.tpl');
+
+		return $this->smarty->fetch($this->getTemplate('supply-order'));
 	}
 
 	/**
@@ -135,7 +136,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			'shop_name' => $shop_name
 		));
 
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/supply-order-header.tpl');
+		return $this->smarty->fetch($this->getTemplate('supply-order-header'));
 	}
 
 	/**
@@ -155,7 +156,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
 			'free_text' => $free_text,
 		));
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/supply-order-footer.tpl');
+		return $this->smarty->fetch($this->getTemplate('supply-order-footer'));
 	}
 
 	/**
@@ -188,3 +189,4 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
 	}
 }
+

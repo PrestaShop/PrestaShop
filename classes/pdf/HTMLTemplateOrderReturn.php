@@ -71,7 +71,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 			'invoice_address' => $formatted_invoice_address,
 			'shop_address' => AddressFormat::generateAddress($this->address, array(), '<br />', ' ')
 		));
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/order-return.tpl');
+		return $this->smarty->fetch($this->getTemplate('order-return'));
 	}
 
 	/**
@@ -92,3 +92,4 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 		return 'invoices.pdf';
 	}
 }
+
