@@ -260,16 +260,26 @@ class AdminInvoicesControllerCore extends AdminController
 				'name' => 'invoice'
 			)
 		);
-		$d = dir(_PS_THEME_DIR_.'/pdf/');
-		while (false !== ($entry = $d->read()))
+
+		$templates_override = $this->getInvoicesModelsFromDir(_PS_THEME_DIR_.'pdf/');
+		$templates_default = $this->getInvoicesModelsFromDir(_PS_PDF_DIR_);
+
+		foreach (array_merge($templates_default, $templates_override) as $template)
 		{
-			if (preg_match('`^(invoice-[a-z0-9]+)\.tpl$`', $entry, $matches))
-				$models[] = array(
-					'value' => $matches[1],
-					'name' => $matches[1]
-				);
+			$template_name = basename($template, '.tpl');
+			$models[] = array('value' => $template_name, 'name' => $template_name);
 		}
-		$d->close();
 		return $models;
 	}
+
+	protected function getInvoicesModelsFromDir($directory)
+	{
+		$templates = array();
+
+		if (is_dir($directory))
+			$templates = glob($directory.'invoice-*.tpl');
+
+		return $templates;
+	}
 }
+
