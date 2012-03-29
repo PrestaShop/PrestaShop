@@ -294,12 +294,12 @@ class EmployeeCore extends ObjectModel
 
 	public static function getTotalEmployeeShopById($id)
 	{
-		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = %d', (int)$id));
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = '.(int)$id);
 	}
 
 	public static function getEmployeeShopById($id)
 	{
-		$result = Db::getInstance()->executeS(sprintf('SELECT * FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = %d', (int)$id));
+		$result = Db::getInstance()->executeS('SELECT * FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = '.(int)$id);
 		$data = array();
 		foreach ($result as $group_data)
 			$data[] = (int)$group_data['id_shop'];

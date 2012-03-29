@@ -153,13 +153,7 @@ class GroupShopCore extends ObjectModel
 	 */
 	public static function getGroupShopById($id, $identifier, $table)
 	{
-		$sql = sprintf('
-			SELECT `id_group_shop`, `%s`
-			FROM `'._DB_PREFIX_.'%s_group_shop`
-			WHERE `%s` = %d'
-		, $identifier, $table, $identifier, $id);
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('SELECT `id_group_shop`, `'.pSQL($identifier).'` FROM `'._DB_PREFIX_.pSQL($table).'_group_shop` WHERE `'.pSQL($identifier).'` = '.(int)$id);
 	}
 
 	public function copyGroupShopData($old_id, $tables_import = false, $deleted = false)

@@ -101,7 +101,7 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public static function getRequestSqlById($id)
 	{
-		return Db::getInstance()->executeS(sprintf('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = %d', $id));
+		return Db::getInstance()->executeS('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = '.(int)$id);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public function getAttributesByTable($table)
 	{
-		return Db::getInstance()->executeS(sprintf('DESCRIBE %s', $table));
+		return Db::getInstance()->executeS('DESCRIBE '.pSQL($table));
 	}
 
 	/**
