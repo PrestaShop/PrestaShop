@@ -3167,11 +3167,11 @@ class BlockLayered extends Module
 							$nofollow = true;
 					
 					if (version_compare(_PS_VERSION_,'1.5','>'))
-						$type_filter['values'][$key]['link'] = $this->getCategoryLink($parent, ltrim($parameters, '/'));
+						$type_filter['values'][$key]['link'] = Context::getContext()->link->getCategoryLink($parent, null, null, ltrim($parameters, '/'));
 					else
 					{
 						$link = new Link();
-						$link_base = $link->getCategoryLink($id_parent, Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
+						$link_base = $link->getCategoryLink($id_parent, Category::getLinkRewrite($id_parent, $id_lang), $id_lang);
 						// Write link by mode rewriting
 						if (!Configuration::get('PS_REWRITING_SETTINGS'))
 							$type_filter['values'][$key]['link'] = $link_base.'&selected_filters='.$parameters;
@@ -3211,19 +3211,6 @@ class BlockLayered extends Module
 		
 		return $cache;
 	}
-	
-	/**
-	 * Create a link to a category with a filter params
-	 *
-	 * @param mixed $category Category object (can be an ID category, but deprecated)
-	 * @param string $selected_filters
-	 * @return string
-	 */
-	public function getCategoryLink($category, $selected_filters = '')
-	{
-		return Context::getContext()->link->getCategoryLink($category, null, null, $selected_filters);
-	}
-	
 	
 	public function cleanFilterByIdValue($attributes, $id_value)
 	{
