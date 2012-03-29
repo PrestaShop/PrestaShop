@@ -67,7 +67,7 @@ class AdminCountriesControllerCore extends AdminController
 			)
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_country' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

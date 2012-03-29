@@ -37,7 +37,7 @@ class AdminLogsControllerCore extends AdminController
 	 	$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
 			'message' => array('title' => $this->l('Message')),

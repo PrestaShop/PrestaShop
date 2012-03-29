@@ -42,7 +42,7 @@ class AdminProfilesControllerCore extends AdminController
 			'confirm' => $this->l('Delete selected items?'))
 			);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_profile' => array(
 						'title' => $this->l('ID'), 
 						'align' => 'center', 

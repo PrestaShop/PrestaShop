@@ -50,7 +50,7 @@ class AdminGroupsControllerCore extends AdminController
 			Configuration::get('PS_CUSTOMER_GROUP')
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_group' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

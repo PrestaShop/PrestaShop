@@ -71,7 +71,7 @@ class AdminEmployeesControllerCore extends AdminController
 			foreach ($profiles as $profile)
 				$this->profiles_array[$profile['name']] = $profile['name'];
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'lastname' => array('title' => $this->l('Last name'), 'width' => 'auto'),
 			'firstname' => array('title' => $this->l('First name'), 'width' => 130),

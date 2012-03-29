@@ -48,7 +48,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'dir' => 'm'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_manufacturer' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
@@ -123,7 +123,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->toolbar_title = $this->l('Addresses');
 		// reset actions and query vars
 		$this->actions = array();
-		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
+		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		$this->table = 'address';
 		$this->identifier = 'id_address';
@@ -148,7 +148,7 @@ class AdminManufacturersControllerCore extends AdminController
 		foreach ($countries as $country)
 			$this->countries_array[$country['id_country']] = $country['name'];
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_address' => array(
 				'title' => $this->l('ID'),
 				'width' => 25

@@ -52,7 +52,7 @@ class AdminGendersControllerCore extends AdminController
 			'dir' => 'genders'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_gender' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -172,7 +172,7 @@ class AdminGendersControllerCore extends AdminController
 
 	public function displayGenderType($value, $tr)
 	{
-		return $this->fieldsDisplay['type']['list'][$value];
+		return $this->fields_list['type']['list'][$value];
 	}
 
 	protected function postImage($id)
