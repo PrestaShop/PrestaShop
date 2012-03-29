@@ -43,7 +43,7 @@ class AdminReturnControllerCore extends AdminController
 			'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right'),
  		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Merchandise return (RMA) options'),
 				'fields' =>	array(

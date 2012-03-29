@@ -39,7 +39,7 @@ class AdminShippingControllerCore extends AdminController
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'handling' => array(
 				'title' =>	$this->l('Handling'),
 				'icon' => 'delivery',

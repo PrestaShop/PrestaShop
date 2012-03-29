@@ -33,7 +33,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		parent::__construct();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Invoice options'),
 				'fields' =>	array(

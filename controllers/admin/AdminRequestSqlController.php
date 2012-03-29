@@ -51,7 +51,7 @@ class AdminRequestSqlControllerCore extends AdminController
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Settings'),
 				'fields' =>	array(

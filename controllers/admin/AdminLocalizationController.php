@@ -34,7 +34,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		parent::__construct();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Configuration'),
 				'fields' =>	array(
@@ -130,7 +130,7 @@ class AdminLocalizationControllerCore extends AdminController
 		);
 
 		if (function_exists('date_default_timezone_set'))
-			$this->options['general']['fields']['PS_TIMEZONE'] = array(
+			$this->fields_options['general']['fields']['PS_TIMEZONE'] = array(
 				'title' => $this->l('Time Zone.'),
 				'validation' => 'isAnything',
 				'type' => 'select',

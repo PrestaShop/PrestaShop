@@ -34,7 +34,7 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		parent::__construct();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'products' => array(
 				'title' =>	$this->l('Products (general)'),
 				'fields' =>	array(

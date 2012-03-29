@@ -113,7 +113,7 @@ class AdminMetaControllerCore extends AdminController
 			$robots_options['submit'] = $robots_submit;
 
 		// List of options
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Set up URLs'),
 				'description' => $url_description,
@@ -154,7 +154,7 @@ class AdminMetaControllerCore extends AdminController
 		foreach (Dispatcher::getInstance()->default_routes[$routeID]['keywords'] as $keyword => $data)
 			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
 
-		$this->options['routes']['fields']['PS_ROUTE_'.$routeID] = array(
+		$this->fields_options['routes']['fields']['PS_ROUTE_'.$routeID] = array(
 			'title' =>	$title,
 			'desc' => sprintf($this->l('Keywords: %s'), implode(', ', $keywords)),
 			'validation' => 'isString',
@@ -418,7 +418,7 @@ class AdminMetaControllerCore extends AdminController
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 			$this->addAllRouteFields();
 
-		if ($this->options && is_array($this->options))
+		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
@@ -429,7 +429,7 @@ class AdminMetaControllerCore extends AdminController
 							));
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$options = $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->fields_options);
 
 			return $options;
 		}

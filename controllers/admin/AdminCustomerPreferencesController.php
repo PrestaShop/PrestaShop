@@ -45,7 +45,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 			)
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'tab-preferences',

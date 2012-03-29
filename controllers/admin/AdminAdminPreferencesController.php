@@ -41,7 +41,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 		$upload_mb = min($max_upload, $max_post);
 
 		// Options list
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'tab-preferences',

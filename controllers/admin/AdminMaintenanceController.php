@@ -34,7 +34,7 @@ class AdminMaintenanceControllerCore extends AdminController
 
 		parent::__construct();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'tab-preferences',

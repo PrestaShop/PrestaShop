@@ -52,7 +52,7 @@ class AdminCountriesControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Country options'),
 				'fields' =>	array(
