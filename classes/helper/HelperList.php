@@ -78,7 +78,7 @@ class HelperListCore extends Helper
 	 * icon   : icon determined by values
 	 * active : allow to toggle status
 	 */
-	protected $fieldsDisplay;
+	protected $fields_list;
 
 	/** @var boolean Content line is clickable if true */
 	public $no_link = false;
@@ -138,7 +138,7 @@ class HelperListCore extends Helper
 		$this->footer_tpl = $this->createTemplate($this->footer_tpl);
 
 		$this->_list = $list;
-		$this->fieldsDisplay = $fields_display;
+		$this->fields_list = $fields_display;
 
 		// Display list header (filtering, pagination and column names)
 		$tpl_vars['header'] = $this->displayListHeader();
@@ -182,7 +182,7 @@ class HelperListCore extends Helper
 		else
 			$id_category = Category::getRootCategory()->id;
 
-		if (isset($this->fieldsDisplay['position']))
+		if (isset($this->fields_list['position']))
 		{
 			$positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
 			sort($positions);
@@ -217,7 +217,7 @@ class HelperListCore extends Helper
 
 			// @todo skip action for bulk actions
 			// $this->_list[$index]['has_bulk_actions'] = true;
-			foreach ($this->fieldsDisplay as $key => $params)
+			foreach ($this->fields_list as $key => $params)
 			{
 				$tmp = explode('!', $key);
 				$key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
@@ -321,7 +321,7 @@ class HelperListCore extends Helper
 			'order_by' => $this->orderBy,
 			'order_way' => $this->orderWay,
 			'is_cms' => $this->is_cms,
-			'fields_display' => $this->fieldsDisplay,
+			'fields_display' => $this->fields_list,
 			'list' => $this->_list,
 			'actions' => $this->actions,
 			'no_link' => $this->no_link,
@@ -371,14 +371,14 @@ class HelperListCore extends Helper
 	 *       [
 	 *         {field_name: 'value'}
 	 *       ],
-	 *     fields_display: // attribute $fieldsDisplay of the admin controller
+	 *     fields_display: // attribute $fields_list of the admin controller
 	 *   }
 	 * or somethins like this:
 	 *   {
 	 *     use_parent_structure: false // If false, data need to be an html
 	 *     data:
 	 *       '<p>My html content</p>',
-	 *     fields_display: // attribute $fieldsDisplay of the admin controller
+	 *     fields_display: // attribute $fields_list of the admin controller
 	 *   }
 	 */
 	protected function displayDetailsLink($token = null, $id, $name = null)
@@ -537,7 +537,7 @@ class HelperListCore extends Helper
 		if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
-		foreach ($this->fieldsDisplay as $key => $params)
+		foreach ($this->fields_list as $key => $params)
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
@@ -570,7 +570,7 @@ class HelperListCore extends Helper
 						if (isset($_POST[$this->table.'Filter_'.$params['filter_key']])
 							&& Tools::getValue($this->table.'Filter_'.$params['filter_key']) == $option_value
 							&& Tools::getValue($this->table.'Filter_'.$params['filter_key']) != '')
-							$this->fieldsDisplay[$key]['select'][$option_value]['selected'] = 'selected';
+							$this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
 					}
 					break;
 
@@ -579,7 +579,7 @@ class HelperListCore extends Helper
 						$value = '';
 			}
 			$params['value'] = $value;
-			$this->fieldsDisplay[$key] = $params;
+			$this->fields_list[$key] = $params;
 		}
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
@@ -600,7 +600,7 @@ class HelperListCore extends Helper
 			'order_way' => $this->orderWay,
 			'order_by' => $this->orderBy,
 			'token' => $this->token,
-			'fields_display' => $this->fieldsDisplay,
+			'fields_display' => $this->fields_list,
 			'delete' => in_array('delete', $this->actions),
 			'identifier' => $this->identifier,
 			'id_cat' => $id_cat,

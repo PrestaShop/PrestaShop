@@ -94,7 +94,7 @@ class AdminControllerCore extends Controller
 	protected $list_simple_header;
 
 	/** @var array list to be generated */
-	protected $fieldsDisplay;
+	protected $fields_list;
 
 	/** @var array edit form to be generated */
 	protected $fields_form;
@@ -803,7 +803,7 @@ class AdminControllerCore extends Controller
 				$tmp_tab = explode('!', $key);
 				$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
 
-				if (array_key_exists($key, $this->fieldsDisplay))
+				if (array_key_exists($key, $this->fields_list))
 					unset($this->context->cookie->$cookie_key);
 			}
 
@@ -1045,11 +1045,11 @@ class AdminControllerCore extends Controller
 
 	protected function filterToField($key, $filter)
 	{
-		foreach ($this->fieldsDisplay as $field)
+		foreach ($this->fields_list as $field)
 			if (array_key_exists('filter_key', $field) && $field['filter_key'] == $key)
 				return $field;
-		if (array_key_exists($filter, $this->fieldsDisplay))
-			return $this->fieldsDisplay[$filter];
+		if (array_key_exists($filter, $this->fields_list))
+			return $this->fields_list[$filter];
 		return false;
 	}
 
@@ -1379,7 +1379,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderList()
 	{
-		if (!($this->fieldsDisplay && is_array($this->fieldsDisplay)))
+		if (!($this->fields_list && is_array($this->fields_list)))
 			return false;
 		$this->getList($this->context->language->id);
 
@@ -1400,7 +1400,7 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 
-		$list = $helper->generateList($this->_list, $this->fieldsDisplay);
+		$list = $helper->generateList($this->_list, $this->fields_list);
 
 		return $list;
 	}
@@ -1849,7 +1849,7 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
-		elseif (!empty($this->fields_options) && empty($this->fieldsDisplay))
+		elseif (!empty($this->fields_options) && empty($this->fields_list))
 			$this->display = 'options';
 	}
 

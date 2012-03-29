@@ -42,7 +42,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 		'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 30),
 		'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
 		'description' => array('title' => $this->l('Description'), 'width' => 500, 'maxlength' => 90, 'orderby' => false),
