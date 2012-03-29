@@ -133,9 +133,10 @@ class LinkCore
 	 * @param mixed $category Category object (can be an ID category, but deprecated)
 	 * @param string $alias
 	 * @param int $id_lang
+	 * @param string $selected_filters Url parameter to autocheck filters of the module blocklayered
 	 * @return string
 	 */
-	public function getCategoryLink($category, $alias = null, $id_lang = null)
+	public function getCategoryLink($category, $alias = null, $id_lang = null, $selected_filters = null)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -150,8 +151,19 @@ class LinkCore
 		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($category->meta_title);
+		
+		// Selected filters is used by the module blocklayered
+		$selected_filters = is_null($selected_filters) ? Tools::getValue('selected_filters') : $selected_filters;
+		
+		if (empty($selected_filters))
+			$rule = 'category_rule';
+		else
+		{
+			$rule = 'layered_rule';
+			$params['selected_filters'] = $selected_filters;
+		}
 
-		return $url.Dispatcher::getInstance()->createUrl('category_rule', $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl($rule, $params, $this->allow);
 	}
 
 	/**
