@@ -35,7 +35,7 @@ class AdminShopControllerCore extends AdminController
 		$this->className = 'Shop';
 		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_shop' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

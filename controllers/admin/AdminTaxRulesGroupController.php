@@ -40,7 +40,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_tax_rules_group' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
@@ -82,7 +82,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->toolbar_btn = null;
 		$this->list_no_link = true;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'country_name' => array(
 				'title' => $this->l('Country'),
 				'width' => 140

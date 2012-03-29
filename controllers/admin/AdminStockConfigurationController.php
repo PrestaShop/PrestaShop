@@ -42,7 +42,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		// defines fields
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_stock_mvt_reason' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -437,7 +437,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->toolbar_title = $this->l('Stock: Supply Order status');
 		$this->initToolbar();
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'name' => array(
 				'title' => $this->l('Name'),
 				'color' => 'color',
@@ -538,7 +538,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		//If there is a field product_name in the list, check if this field is null and display standard message
-		foreach ($this->fieldsDisplay as $key => $value)
+		foreach ($this->fields_list as $key => $value)
 			if ($key == 'product_name')
 			{
 				$nb_items = count($this->_list);

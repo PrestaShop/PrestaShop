@@ -32,7 +32,7 @@ class AdminTagsControllerCore extends AdminController
 		$this->table = 'tag';
 		$this->className = 'Tag';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_tag' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

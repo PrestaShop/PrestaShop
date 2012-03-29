@@ -35,7 +35,7 @@ class AdminZonesControllerCore extends AdminController
 		$this->className = 'Zone';
 	 	$this->lang = false;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

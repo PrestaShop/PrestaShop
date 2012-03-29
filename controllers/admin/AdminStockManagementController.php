@@ -38,7 +38,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->lang = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'reference' => array(
 				'title' => $this->l('Product reference'),
 				'align' => 'center',
@@ -836,7 +836,7 @@ class AdminStockManagementControllerCore extends AdminController
 			$helper->identifier = $this->identifier;
 			// Force render - no filter, form, js, sorting ...
 			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}

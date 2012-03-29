@@ -44,7 +44,7 @@ class AdminSearchEnginesControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_search_engine' => array('title' => $this->l('ID'), 'width' => 25),
 			'server' => array('title' => $this->l('Server')),
 			'getvar' => array('title' => $this->l('GET variable'), 'width' => 100)

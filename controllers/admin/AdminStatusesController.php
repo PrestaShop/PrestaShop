@@ -49,7 +49,7 @@ class AdminStatusesControllerCore extends AdminController
 			'dir' => 'os'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_order_state' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -112,7 +112,7 @@ class AdminStatusesControllerCore extends AdminController
 
 		// reset actions and query vars
 		$this->actions = array();
-		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->identifier);
+		unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->identifier);
 
 		$this->table = 'order_return_state';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
@@ -133,7 +133,7 @@ class AdminStatusesControllerCore extends AdminController
 		else
 			$this->action = '';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_order_return_state' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

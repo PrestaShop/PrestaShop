@@ -47,7 +47,7 @@ class AdminSearchConfControllerCore extends AdminController
 
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'alias' => array('title' => $this->l('Aliases'), 'width' => 'auto'),
 			'search' => array('title' => $this->l('Search'), 'width' => 100),
 			'active' => array('title' => $this->l('Status'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)

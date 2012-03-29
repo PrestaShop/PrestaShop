@@ -164,7 +164,7 @@ class AdminThemesControllerCore extends AdminController
 			),
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_theme' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

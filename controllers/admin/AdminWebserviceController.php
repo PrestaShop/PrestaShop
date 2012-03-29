@@ -40,7 +40,7 @@ class AdminWebserviceControllerCore extends AdminController
 	 	$this->delete = true;
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),
 				'align' => 'center',
