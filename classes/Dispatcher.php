@@ -64,6 +64,18 @@ class DispatcherCore
 				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
 			),
 		),
+		'layered_rule' => array(
+			'controller' =>	'category',
+			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
+				/* Selected filters is used by the module blocklayered */
+				'selected_filters' =>		array('regexp' => '.*', 'param' => 'selected_filters'),
+				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
+				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-\pL]*'),
+				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
+			),
+		),
 		'category_rule' => array(
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}',
@@ -249,8 +261,8 @@ class DispatcherCore
 					$controllers['authentication'] = $controllers['auth'];
 				if (isset($controllers['compare']))
 					$controllers['productscomparison'] = $controllers['compare'];
-                if (isset($controllers['contact']))
-                    $controllers['contactform'] = $controllers['contact'];
+				if (isset($controllers['contact']))
+					$controllers['contactform'] = $controllers['contact'];
 
 				if (!isset($controllers[$this->controller]))
 					$this->controller = $this->controller_not_found;
