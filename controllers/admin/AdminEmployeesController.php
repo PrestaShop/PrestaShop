@@ -80,7 +80,7 @@ class AdminEmployeesControllerCore extends AdminController
 			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 30),
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Employee options'),
 				'fields' =>	array(

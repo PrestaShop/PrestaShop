@@ -80,7 +80,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 																	array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')), -1);
 
 		// defines options for StockMvt
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(

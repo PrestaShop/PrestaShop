@@ -60,7 +60,7 @@ class AdminStoresControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Parameters'),
 				'fields' =>	array(
@@ -523,7 +523,7 @@ class AdminStoresControllerCore extends AdminController
 			if (!isset($fields[$key]))
 				$fields[$key] = $formFields[$key];
 
-		$this->options['contact'] = array(
+		$this->fields_options['contact'] = array(
 			'title' =>	$this->l('Contact details'),
 			'icon' =>	'tab-contact',
 			'fields' =>	$fields,

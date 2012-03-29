@@ -46,7 +46,7 @@ class AdminImagesControllerCore extends AdminController
 			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5)
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'images' => array(
 				'title' =>	$this->l('Images'),
 				'icon' =>	'tab-orders',

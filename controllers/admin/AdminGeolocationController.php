@@ -31,7 +31,7 @@ class AdminGeolocationControllerCore extends AdminController
 	{
 		parent::__construct();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'geolocationConfiguration' => array(
 				'title' =>	$this->l('Geolocation by IP address:'),
 				'icon' =>	'world',
@@ -121,7 +121,7 @@ class AdminGeolocationControllerCore extends AdminController
 	public function renderOptions()
 	{
 		// This field is not declared in class constructor because we want it to be manually post processed
-		$this->options['geolocationCountries']['fields']['countries'] = array(
+		$this->fields_options['geolocationCountries']['fields']['countries'] = array(
 								'title' => $this->l('Select countries that can access your store:'),
 								'type' => 'checkbox_table',
 								'identifier' => 'iso_code',

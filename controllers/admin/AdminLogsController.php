@@ -47,7 +47,7 @@ class AdminLogsControllerCore extends AdminController
 			'date_add' => array('title' => $this->l('Date'), 'width' => 150, 'align' => 'right', 'type' => 'datetime')
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Logs by e-mail'),
 				'fields' =>	array(

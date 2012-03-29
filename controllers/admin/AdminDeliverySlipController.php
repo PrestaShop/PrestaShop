@@ -33,7 +33,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Delivery slip options'),
 				'fields' =>	array(
