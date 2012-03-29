@@ -47,7 +47,7 @@ class AdminCategoriesControllerCore extends AdminController
  			'dir' => 'c'
  		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_category' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -104,7 +104,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 		// if we are not in a shop context, we remove the position column
 		if (Shop::getContext() != Shop::CONTEXT_SHOP)
-			unset($this->fieldsDisplay['position']);
+			unset($this->fields_list['position']);
 		// shop restriction : if category is not available for current shop, we redirect to the list from default category
 		if (!Shop::isCategoryAvailable($this->_category->id))
 		{

@@ -52,7 +52,7 @@ class AdminAddressesControllerCore extends AdminController
 		foreach ($countries as $country)
 			$this->countries_array[$country['id_country']] = $country['name'];
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
 			'lastname' => array('title' => $this->l('Last name'), 'width' => 140, 'filter_key' => 'a!lastname'),

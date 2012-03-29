@@ -51,7 +51,7 @@ class AdminCarriersControllerCore extends AdminController
 			'dir' => 's'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_carrier' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
