@@ -41,7 +41,7 @@ class AdminCurrenciesControllerCore extends AdminController
 	{
 		parent::init();
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Currency')),
 			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 80),

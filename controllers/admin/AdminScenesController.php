@@ -41,7 +41,7 @@ class AdminScenesControllerCore extends AdminController
 			array('name' => 'thumb', 'dir' => 'scenes/thumbs')
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_scene' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

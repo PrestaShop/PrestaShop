@@ -45,7 +45,7 @@ class AdminGroupShopControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_group_shop' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

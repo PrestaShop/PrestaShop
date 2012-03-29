@@ -50,7 +50,7 @@ class AdminLanguagesControllerCore extends AdminController
  			)
  		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_lang' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

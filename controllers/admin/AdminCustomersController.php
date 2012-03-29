@@ -62,7 +62,7 @@ class AdminCustomersControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

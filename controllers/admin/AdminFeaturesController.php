@@ -34,7 +34,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->className = 'Feature';
 	 	$this->lang = true;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_feature' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
@@ -130,7 +130,7 @@ class AdminFeaturesControllerCore extends AdminController
 			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
 				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
-			$this->fieldsDisplay = array(
+			$this->fields_list = array(
 				'id_feature_value' => array(
 					'title' => $this->l('ID'),
 					'width' => 25
@@ -160,7 +160,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$helper->simple_header = true;
 			$helper->show_toolbar = false;
 			$helper->bulk_actions = $this->bulk_actions;
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 			exit;

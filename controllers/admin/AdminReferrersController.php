@@ -59,7 +59,7 @@ class AdminReferrersControllerCore extends AdminController
 	{
 	 	$this->table = 'referrer';
 		$this->className = 'Referrer';
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_referrer' => array(
 				'title' => $this->l('ID'),
 				'width' => 25,

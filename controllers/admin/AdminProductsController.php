@@ -84,7 +84,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_product' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -1976,7 +1976,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		if (!Tools::getValue('id_category'))
-			unset($this->fieldsDisplay['position']);
+			unset($this->fields_list['position']);
 
 		return parent::renderList();
 	}
@@ -3330,7 +3330,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$color_by_default = '#BDE5F8';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
 			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left', 'width' => 70),
 			'weight' => array('title' => $this->l('Weight'), 'align' => 'left', 'width' => 70),
@@ -3343,10 +3343,10 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($id_product_download && !empty($product_download->display_filename))
 		{
-			$this->fieldsDisplay['Filename'] = array('title' => $this->l('Filename'), 'align' => 'center', 'width' => 70);
-			$this->fieldsDisplay['nb_downloadable'] = array('title' => $this->l('Number of downloads'), 'align' => 'center', 'width' => 70);
-			$this->fieldsDisplay['date_expiration'] = array('title' => $this->l('Number of days'), 'align' => 'center', 'width' => 70);
-			$this->fieldsDisplay['is_shareable'] = array('title' => $this->l('Share'), 'align' => 'center', 'width' => 70);
+			$this->fields_list['Filename'] = array('title' => $this->l('Filename'), 'align' => 'center', 'width' => 70);
+			$this->fields_list['nb_downloadable'] = array('title' => $this->l('Number of downloads'), 'align' => 'center', 'width' => 70);
+			$this->fields_list['date_expiration'] = array('title' => $this->l('Number of days'), 'align' => 'center', 'width' => 70);
+			$this->fields_list['is_shareable'] = array('title' => $this->l('Share'), 'align' => 'center', 'width' => 70);
 		}
 
 		if ($product->id)
@@ -3461,7 +3461,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->colorOnBackground = true;
 		$helper->override_folder = $this->tpl_folder.'combination/';
 
-		return $helper->generateList($comb_array, $this->fieldsDisplay);
+		return $helper->generateList($comb_array, $this->fields_list);
 	}
 
 	public function initFormQuantities($obj, $languages)

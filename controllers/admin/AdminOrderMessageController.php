@@ -44,7 +44,7 @@ class AdminOrderMessageControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_order_message' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
