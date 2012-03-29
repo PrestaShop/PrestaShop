@@ -591,7 +591,7 @@ class FrontControllerCore extends Controller
 
 		$matchUrl = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$matchUrl = rawurldecode($matchUrl);
-		if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', $matchUrl))
+		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonicalURL), '/').'([&?].*)?$/', $matchUrl))
 		{
 			$params = array();
 			$excludedKey = array('isolang', 'id_lang', 'controller', 'fc');

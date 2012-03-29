@@ -2150,8 +2150,7 @@ class BlockLayered extends Module
 			else
 				$url = preg_replace('/\/(?:\w*)\/(?:[0-9]+[-\w]*)([^\?]*)\??.*/', '$1', Tools::safeOutput($_SERVER['REQUEST_URI'], true));
 			
-			$url_attributes = explode('/', $url);
-			array_shift($url_attributes);
+			$url_attributes = explode('/', ltrim($url, '/'));
 			$selected_filters = array('category' => array());
 			if (!empty($url_attributes))
 			{
@@ -2477,12 +2476,17 @@ class BlockLayered extends Module
 		
 		if (is_array($cache))
 			return $cache;
+			
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$id_lang = Context::getContext()->language->id;
+		else
+			$id_lang = (int)$cookie->id_lang;
 		
 		$id_parent = (int)Tools::getValue('id_category', Tools::getValue('id_category_layered', 1));
 		if ($id_parent == 1)
 			return;
 		
-		$parent = new Category((int)$id_parent);
+		$parent = new Category((int)$id_parent, $id_lang);
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 			$id_shop = (int) Context::getContext()->shop->id;
@@ -2583,7 +2587,7 @@ class BlockLayered extends Module
 					ON a.id_attribute = lpa.id_attribute
 					INNER JOIN '._DB_PREFIX_.'attribute_lang al
 					ON al.id_attribute = a.id_attribute
-					AND al.id_lang = '.(int)$cookie->id_lang.'
+					AND al.id_lang = '.$id_lang.'
 					INNER JOIN '._DB_PREFIX_.'product as p
 					ON p.id_product = lpa.id_product
 					AND p.active = 1
@@ -2591,11 +2595,11 @@ class BlockLayered extends Module
 					ON ag.id_attribute_group = lpa.id_attribute_group
 					INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
 					ON agl.id_attribute_group = lpa.id_attribute_group
-					AND agl.id_lang = '.(int)$cookie->id_lang.'
+					AND agl.id_lang = '.$id_lang.'
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value liagl
-					ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.(int)$cookie->id_lang.')
+					ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.$id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang_value lial
-					ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.(int)$cookie->id_lang.') ';
+					ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.$id_lang.') ';
 					$sql_query['where'] = 'WHERE a.id_attribute_group = '.(int)$filter['id_value'].'
 					AND p.id_product IN (
 					SELECT id_product
@@ -2620,7 +2624,7 @@ class BlockLayered extends Module
 							ON a.id_attribute = lpa.id_attribute
 							INNER JOIN '._DB_PREFIX_.'attribute_lang al
 							ON al.id_attribute = a.id_attribute
-							AND al.id_lang = '.(int)$cookie->id_lang.'
+							AND al.id_lang = '.$id_lang.'
 							INNER JOIN '._DB_PREFIX_.'product as p
 							ON p.id_product = lpa.id_product
 							AND p.active = 1
@@ -2628,11 +2632,11 @@ class BlockLayered extends Module
 							ON ag.id_attribute_group = lpa.id_attribute_group
 							INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
 							ON agl.id_attribute_group = lpa.id_attribute_group
-							AND agl.id_lang = '.(int)$cookie->id_lang.'
+							AND agl.id_lang = '.$id_lang.'
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value liagl
-							ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.(int)$cookie->id_lang.')
+							ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang_value lial
-							ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.(int)$cookie->id_lang.')
+							ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.$id_lang.')
 							
 							WHERE a.id_attribute_group = '.(int)$filter['id_value'].'
 							
@@ -2648,13 +2652,13 @@ class BlockLayered extends Module
 					$sql_query['from'] = '
 					FROM '._DB_PREFIX_.'feature_product fp
 					INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = fp.id_product AND p.active = 1)
-					LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.$id_lang.')
 					INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
-					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.$id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang_value lifl
-					ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.(int)$cookie->id_lang.')
+					ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.$id_lang.')
 					LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
-					ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.(int)$cookie->id_lang.') ';
+					ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.$id_lang.') ';
 					$sql_query['where'] = 'WHERE p.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
 					AND p.id_product IN (
 					SELECT id_product
@@ -2674,13 +2678,13 @@ class BlockLayered extends Module
 					
 							FROM '._DB_PREFIX_.'feature_product fp
 							INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = fp.id_product AND p.active = 1)
-							LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.$id_lang.')
 							INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
-							LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang_value lifl
-							ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.(int)$cookie->id_lang.')
+							ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.$id_lang.')
 							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
-							ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.(int)$cookie->id_lang.')
+							ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.$id_lang.')
 							WHERE p.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
 							GROUP BY fv.id_feature_value';
 					}
@@ -2701,7 +2705,7 @@ class BlockLayered extends Module
 					WHERE cp.id_category = c.id_category ';
 					$sql_query['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.(int)$cookie->id_lang.')
+					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.$id_lang.')
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
@@ -3050,7 +3054,7 @@ class BlockLayered extends Module
 		LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group` liag
 		ON liag.id_attribute_group = agl.id_attribute_group
 		WHERE indexable IS NULL OR indexable = 0
-		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+		AND id_lang = '.$id_lang) as $attribute)
 			$non_indexable[] = Tools::link_rewrite($attribute['public_name']);
 		
 		// Get all non indexable features
@@ -3060,7 +3064,7 @@ class BlockLayered extends Module
 		LEFT JOIN  `'._DB_PREFIX_.'layered_indexable_feature` lif
 		ON lif.id_feature = fl.id_feature
 		WHERE indexable IS NULL OR indexable = 0
-		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
+		AND id_lang = '.$id_lang) as $attribute)
 			$non_indexable[] = Tools::link_rewrite($attribute['name']);
 
 		//generate SEO link
@@ -3070,10 +3074,7 @@ class BlockLayered extends Module
 		$param_group_selected_array = array();
 		$title_values = array();
 		$meta_values = array();
-		$link = new Link();
-		
-		$link_base = $link->getCategoryLink($id_parent, Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
-		
+
 		//get filters checked by group
 		foreach ($filter_blocks as $type_filter)
 		{
@@ -3164,11 +3165,19 @@ class BlockLayered extends Module
 					foreach ($non_indexable as $value)
 						if (strpos($parameters, '/'.$value) !== false)
 							$nofollow = true;
-					// Write link by mode rewriting
-					if (!Configuration::get('PS_REWRITING_SETTINGS'))
-						$type_filter['values'][$key]['link'] = $link_base.'&selected_filters='.$parameters;
+					
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+						$type_filter['values'][$key]['link'] = $this->getCategoryLink($parent, ltrim($parameters, '/'));
 					else
-						$type_filter['values'][$key]['link'] = $link_base.$parameters;
+					{
+						$link = new Link();
+						$link_base = $link->getCategoryLink($id_parent, Category::getLinkRewrite($id_parent, (int)($cookie->id_lang)), (int)($cookie->id_lang));
+						// Write link by mode rewriting
+						if (!Configuration::get('PS_REWRITING_SETTINGS'))
+							$type_filter['values'][$key]['link'] = $link_base.'&selected_filters='.$parameters;
+						else
+							$type_filter['values'][$key]['link'] = $link_base.$parameters;
+					}
 						
 					$type_filter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
@@ -3202,6 +3211,19 @@ class BlockLayered extends Module
 		
 		return $cache;
 	}
+	
+	/**
+	 * Create a link to a category with a filter params
+	 *
+	 * @param mixed $category Category object (can be an ID category, but deprecated)
+	 * @param string $selected_filters
+	 * @return string
+	 */
+	public function getCategoryLink($category, $selected_filters = '')
+	{
+		return Context::getContext()->link->getCategoryLink($category, null, null, $selected_filters);
+	}
+	
 	
 	public function cleanFilterByIdValue($attributes, $id_value)
 	{
