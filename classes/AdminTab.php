@@ -1896,7 +1896,7 @@ abstract class AdminTabCore
 				// Display option inputs
 				$method = 'displayOptionType'.Tools::toCamelCase($field['type'], true);
 				if (!method_exists($this, $method))
-					echo 'Option method '.get_class($this).'-&gt;'.$method.'() not found<br />';
+					$this->displayOptionTypeText($key, $field, $value);//default behavior
 				else
 					$this->$method($key, $field, $value);
 
