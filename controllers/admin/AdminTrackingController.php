@@ -83,7 +83,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowActionSkipList('delete', array(Category::getTopCategory()->id));
 		$this->addRowActionSkipList('edit', array(Category::getTopCategory()->id));
 
-		$this->fieldsDisplay = (array(
+		$this->fields_list = (array(
 			'id_category' => array('title' => $this->l('ID'), 'width' => 50),
 			'name' => array('title' => $this->l('Name')),
 			'description' => array('title' => $this->l('Description')),
@@ -119,7 +119,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
 			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name')),
@@ -160,7 +160,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
 			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name')),
@@ -201,7 +201,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
 			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name'))

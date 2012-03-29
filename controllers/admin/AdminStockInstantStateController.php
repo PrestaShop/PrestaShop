@@ -40,7 +40,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->lang = false;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
@@ -331,7 +331,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				}
 			}
 
-			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
+			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fields_list));
 		}
 		die;
 	}

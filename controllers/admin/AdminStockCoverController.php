@@ -42,7 +42,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->colorOnBackground = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
@@ -168,7 +168,7 @@ class AdminStockCoverControllerCore extends AdminController
 					$data['qty_sold'] = $qty_sold;
 			}
 
-			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
+			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fields_list));
 		}
 		die;
 	}
