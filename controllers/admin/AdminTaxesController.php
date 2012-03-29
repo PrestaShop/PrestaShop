@@ -46,7 +46,7 @@ class AdminTaxesControllerCore extends AdminController
 		if (Configuration::get('PS_USE_ECOTAX'))
 			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0');
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Tax options'),
 				'fields' =>	array(
@@ -60,7 +60,7 @@ class AdminTaxesControllerCore extends AdminController
 		);
 
 		if (Configuration::get('PS_USE_ECOTAX'))
-			$this->options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
+			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
 
 		parent::__construct();

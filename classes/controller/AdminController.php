@@ -831,7 +831,7 @@ class AdminControllerCore extends Controller
 
 		$languages = Language::getLanguages(false);
 
-		foreach ($this->options as $category_data)
+		foreach ($this->fields_options as $category_data)
 		{
 			if (!isset($category_data['fields']))
 				continue;
@@ -1459,7 +1459,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderOptions()
 	{
-		if ($this->options && is_array($this->options))
+		if ($this->fields_options && is_array($this->fields_options))
 		{
 			if ($this->display != 'options')
 				$this->show_toolbar = false;
@@ -1468,7 +1468,7 @@ class AdminControllerCore extends Controller
 			$this->setHelperDisplay($helper);
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$options = $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->fields_options);
 
 			return $options;
 		}
@@ -1849,7 +1849,7 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
-		elseif (!empty($this->options) && empty($this->fieldsDisplay))
+		elseif (!empty($this->fields_options) && empty($this->fieldsDisplay))
 			$this->display = 'options';
 	}
 

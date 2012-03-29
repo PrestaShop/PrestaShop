@@ -113,7 +113,7 @@ class AdminCarriersControllerCore extends AdminController
 			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
 		);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' => $this->l('Carrier options'),
 				'fields' => array(

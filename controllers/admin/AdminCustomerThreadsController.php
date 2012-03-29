@@ -129,7 +129,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$this->shopLinkType = 'shop';
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Customer service options'),
 				'fields' =>	array(

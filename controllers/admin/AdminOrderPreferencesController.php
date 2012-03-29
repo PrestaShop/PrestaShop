@@ -59,7 +59,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		foreach (Tax::getTaxes($this->context->language->id) as $tax)
 			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
 				'icon' =>	'tab-preferences',

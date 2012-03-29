@@ -46,7 +46,7 @@ class AdminBackupControllerCore extends AdminController
 
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->options = array(
+		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Backup options'),
 				'fields' =>	array(

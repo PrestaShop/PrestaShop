@@ -37,7 +37,7 @@ class AdminEmailsControllerCore extends AdminController
 		foreach (Contact::getContacts($this->context->language->id) as $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
-		$this->options = array(
+		$this->fields_options = array(
 			'email' => array(
 				'title' => $this->l('E-mail'),
 				'icon' => 'email',

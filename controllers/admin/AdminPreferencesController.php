@@ -98,7 +98,7 @@ class AdminPreferencesControllerCore extends AdminController
 					$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
 			}
 
-			$this->options = array(
+			$this->fields_options = array(
 				'general' => array(
 					'title' =>	$this->l('General'),
 					'icon' =>	'tab-preferences',

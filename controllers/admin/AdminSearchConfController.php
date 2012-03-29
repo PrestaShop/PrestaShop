@@ -60,7 +60,7 @@ class AdminSearchConfControllerCore extends AdminController
 			'searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
 		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(indexed) as "1" FROM '._DB_PREFIX_.'product');
 
-		$this->options = array(
+		$this->fields_options = array(
 			'indexation' => array(
 				'title' => $this->l('Indexation'),
 				'icon' => 'search',
@@ -201,7 +201,7 @@ class AdminSearchConfControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
-		if ($this->options && is_array($this->options))
+		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
@@ -212,7 +212,7 @@ class AdminSearchConfControllerCore extends AdminController
 			));
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$options = $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->fields_options);
 
 			return $options;
 		}

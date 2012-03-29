@@ -99,7 +99,7 @@ class AdminThemesControllerCore extends AdminController
 
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
 
-		$this->options = array(
+		$this->fields_options = array(
 			'theme' => array(
 				'title' => sprintf($this->l('Select theme for shop %s'), $this->context->shop->name),
 				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you want to select a theme') : '',
@@ -640,7 +640,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
-		if ($this->options && is_array($this->options))
+		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
@@ -652,7 +652,7 @@ class AdminThemesControllerCore extends AdminController
 							));
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$options = $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->fields_options);
 
 			return $options;
 		}

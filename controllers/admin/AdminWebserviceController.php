@@ -62,7 +62,7 @@ class AdminWebserviceControllerCore extends AdminController
 		);
 
 		if (file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->options = array(
+			$this->fields_options = array(
 				'general' => array(
 					'title' =>	$this->l('Configuration'),
 					'fields' =>	array(
@@ -182,7 +182,7 @@ class AdminWebserviceControllerCore extends AdminController
 	 */
 	public function renderOptions()
 	{
-		if ($this->options && is_array($this->options))
+		if ($this->fields_options && is_array($this->fields_options))
 		{
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
@@ -193,7 +193,7 @@ class AdminWebserviceControllerCore extends AdminController
 							));
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$options = $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->fields_options);
 
 			return $options;
 		}
@@ -206,7 +206,6 @@ class AdminWebserviceControllerCore extends AdminController
 		if ($this->display == 'options')
 			$this->display = '';
 	}
-
 
 	public function postProcess()
 	{
