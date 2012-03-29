@@ -384,6 +384,11 @@ class AdminMetaControllerCore extends AdminController
 		$this->checkAndUpdateRoute('category_rule');
 	}
 
+	public function updateOptionPsRouteLayeredRule()
+	{
+		$this->checkAndUpdateRoute('layered_rule');
+	}
+
 	public function updateOptionPsRouteSupplierRule()
 	{
 		$this->checkAndUpdateRoute('supplier_rule');
@@ -437,6 +442,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		$this->addFieldRoute('product_rule', $this->l('Route to products'));
 		$this->addFieldRoute('category_rule', $this->l('Route to category'));
+		$this->addFieldRoute('layered_rule', $this->l('Route to category with attribute selected_filter for the module block layered'));
 		$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
 		$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
 		$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));

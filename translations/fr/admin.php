@@ -1871,6 +1871,7 @@ $_LANGADM['AdminMeta933efccb4d6d6ce6755b290069644957'] = 'créez un fichier .hta
 $_LANGADM['AdminMeta93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_LANGADM['AdminMeta9ca94e67feafa7c087ed70257d54ce53'] = 'Mots-clés : %s';
 $_LANGADM['AdminMetaa6bb76858f8b4b61c050ad7a7ac57e06'] = 'Méta description :';
+$_LANGADM['AdminMetaaa75f9d383049a51a3fc7254fffd81fc'] = 'Route vers les catégories avec le paramètre selected_filter pour le module navigation à facette';
 $_LANGADM['AdminMetaacaa02ab1d800ce9a0b3df2e4ab8909a'] = 'Désactiver l\'option Apache MultiViews';
 $_LANGADM['AdminMetab718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_LANGADM['AdminMetab78a3223503896721cca1303f776159b'] = 'Titre';
