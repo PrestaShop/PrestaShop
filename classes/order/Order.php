@@ -1337,7 +1337,7 @@ class OrderCore extends ObjectModel
 		$order_payment->conversion_rate = ($currency ? $currency->conversion_rate : 1);
 		// if payment_method is define, we used this
 		$order_payment->payment_method = ($payment_method ? $payment_method : $this->payment);
-		$order_payment->transacation_id = $payment_transaction_id;
+		$order_payment->transaction_id = $payment_transaction_id;
 		$order_payment->amount = $amount_paid;
 		$order_payment->date_add = ($date ? $date : null);
 
