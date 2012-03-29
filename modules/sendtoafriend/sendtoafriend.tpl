@@ -29,7 +29,7 @@
 <div id="sendfriendpage">
 	<h1>{l s='Send to a friend' mod='sendtoafriend'}</h1>
 
-	<p class="bold">{l s='Send this page to a friend who might be interested in the item below.' mod='sendtoafriend'}.</p>
+	<p class="bold"><strong>{l s='Send this page to a friend who might be interested in the item below.' mod='sendtoafriend'}.</strong></p>
 	{include file="$tpl_dir/errors.tpl"}
 
 	{if isset($smarty.get.submited)}
