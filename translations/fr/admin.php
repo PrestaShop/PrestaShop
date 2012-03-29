@@ -1204,6 +1204,7 @@ $_LANGADM['AdminGroups29ea3cf72fb288e76bc4310bffabc03e'] = 'Nouvelle réduction 
 $_LANGADM['AdminGroups2dc9a383d693a2ded8b1ef832926ea93'] = 'Affichage des prix :';
 $_LANGADM['AdminGroups2e9a5410376da9d88c4623a408de2b58'] = 'Réductions actuelles :';
 $_LANGADM['AdminGroups3112209b2dd9b55cf5dbc4865dd15afd'] = 'Date de création';
+$_LANGADM['AdminGroups32f5836012c82b0db0f49281f0eea218'] = 'Non autoriser >>';
 $_LANGADM['AdminGroups34ec78fcc91ffb1e54cd85e4a0924332'] = 'Ajouter';
 $_LANGADM['AdminGroups38fb7d24e0d60a048f540ecb18e13376'] = 'Enregistrer';
 $_LANGADM['AdminGroups3b78dd28e2767e0e88e5591abd386d0f'] = 'Réduction (en %) :';
