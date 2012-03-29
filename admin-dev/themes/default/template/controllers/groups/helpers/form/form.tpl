@@ -258,7 +258,7 @@
 					<tr>
 						<td style="text-align:center">
 							<button style="width:100%;margin-top:5px" id="authorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>
-							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s=''}</button>
+							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s='Unauthorize >>'}</button>
 						</td>
 						<td style="text-align:center">
 							<button style="width:100%;margin-top:5px"id="unauthorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>
