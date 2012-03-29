@@ -25,19 +25,19 @@
 *}
 
 {if $status == 'ok'}
-	<p>{l s='Your order on' mod='cheque'} <span class="bold">{$shop_name}</span> {l s='is complete.' mod='cheque'}
+	<p>{l s='Your order on' mod='cheque'} <strong>{$shop_name}</span> {l s='is complete.' mod='cheque'}
 		<br /><br />
 		{l s='Please send us a cheque with:' mod='cheque'}
-		<br /><br />- {l s='an amount of' mod='cheque'} <span class="price">{$total_to_pay}</span>
-		<br /><br />- {l s='payable to the order of' mod='cheque'} <span class="bold">{if $chequeName}{$chequeName}{else}___________{/if}</span>
-		<br /><br />- {l s='mail to' mod='cheque'} <span class="bold">{if $chequeAddress}{$chequeAddress}{else}___________{/if}</span>
+		<br /><br />- {l s='an amount of' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
+		<br /><br />- {l s='payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
+		<br /><br />- {l s='mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
 		{if !isset($reference)}
-			<br /><br />- {l s='Do not forget to insert your order number #' mod='cheque'} <span class="bold">{$id_order}</span>
+			<br /><br />- {l s='Do not forget to insert your order number #' mod='cheque'} <strong>{$id_order}</strong>
 		{else}
-			<br /><br />- {l s='Do not forget to insert your order reference' mod='cheque'} <span class="bold">{$reference}</span>
+			<br /><br />- {l s='Do not forget to insert your order reference' mod='cheque'} <strong>{$reference}</strong>
 		{/if}
 		<br /><br />{l s='An e-mail has been sent to you with this information.' mod='cheque'}
-		<br /><br /><span class="bold">{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</span>
+		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</strong>
 		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='cheque'}</a>.
 	</p>
 {else}
