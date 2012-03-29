@@ -1417,6 +1417,7 @@ $_LANGADM['AdminImport2dc88e28e0f7168a328ddf9cde304444'] = 'Commandes aux fourni
 $_LANGADM['AdminImport2e21e83375deefc4a3620ab667157e27'] = 'Adresse 2';
 $_LANGADM['AdminImport2eca847eb03cb63596621d5480ca7c24'] = 'La référence (%s) existe déjà (ligne %d).';
 $_LANGADM['AdminImport3127e7f621d0c85f7db40e56dbec10c3'] = 'ID du Sexe (Mr = 1, Mme = 2, sinon 0)';
+$_LANGADM['AdminImport34eca23ff3c80c3f8c516b8be976c415'] = 'Catégorie racine? (0/1)';
 $_LANGADM['AdminImport358c9e7c439302610c91d2c990c66f23'] = 'Ignorez ce champ si vous n\'utilisez pas la fonction multi-boutique. Si vous laissez ce champ vide, la boutique par défaut sera utilisée';
 $_LANGADM['AdminImport3613358eb490e62266eafaf2a9eede68'] = 'Texte \"En stock\"';
 $_LANGADM['AdminImport3c1a34587e45bd9e9ae2efd9a6ecbb92'] = 'Impact sur le poids';
@@ -4361,6 +4362,7 @@ $_LANGADM['index77181afe06241c54ef771a23ee6da8f4'] = 'Derniers messages';
 $_LANGADM['index7de03e29467c9d376a57e40f2ace850f'] = 'Une modification de ce champ sera appliquée à la boutique %s';
 $_LANGADM['index8642a2f37a5d42b54ce53b1fbdd1583f'] = 'paniers';
 $_LANGADM['index86bbc77fd75ac02c21b84a37b260eadd'] = 'Panneau d\'administration';
+$_LANGADM['index87d6ef331c17f4e5d4e539e2098bf01a'] = 'Configuration multiboutique pour';
 $_LANGADM['indexa2eda4e1c4dfc9bade7150b878c57a46'] = 'Voir tous les messages';
 $_LANGADM['indexa4da6f31ab268a5310bc475e63ab92db'] = 'Je comprends les risques et je veux afficher la page';
 $_LANGADM['indexa546b4ed60fa82d6e50475370c228979'] = 'Un nouveau message a été publié sur votre boutique.';

@@ -157,6 +157,7 @@ class AdminImportControllerCore extends AdminController
 					'active' => array('label' => $this->l('Active (0/1)')),
 					'name' => array('label' => $this->l('Name *')),
 					'parent' => array('label' => $this->l('Parent category')),
+					'is_root_category' => array('label' => $this->l('Root category? (0/1)')),
 					'description' => array('label' => $this->l('Description')),
 					'meta_title' => array('label' => $this->l('Meta-title')),
 					'meta_keywords' => array('label' => $this->l('Meta-keywords')),
