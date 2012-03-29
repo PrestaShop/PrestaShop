@@ -45,7 +45,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'page' => array('title' => $this->l('Page'), 'width' => 120),
 			'title' => array('title' => $this->l('Title'), 'width' => 120),

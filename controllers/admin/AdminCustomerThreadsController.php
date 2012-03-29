@@ -58,7 +58,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'pending2' => 'status_orange.png'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_customer_thread' => array(
 				'title' => $this->l('ID'),
 				'width' => 25,

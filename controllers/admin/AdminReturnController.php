@@ -36,7 +36,7 @@ class AdminReturnControllerCore extends AdminController
 		$this->_select = 'orsl.`name`';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
 
- 		$this->fieldsDisplay = array(
+ 		$this->fields_list = array(
 			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center'),
 			'name' => array('title' => $this->l('Status'), 'width' => 'auto', 'align' => 'left'),

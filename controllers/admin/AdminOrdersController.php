@@ -62,7 +62,7 @@ class AdminOrdersControllerCore extends AdminController
 		foreach ($statuses as $status)
 			$statuses_array[$status['id_order_state']] = $status['name'];
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 		'id_order' => array(
 			'title' => $this->l('ID'),
 			'align' => 'center',

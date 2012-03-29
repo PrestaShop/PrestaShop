@@ -45,7 +45,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_request_sql' => array('title' => $this->l('ID'), 'width' => 25),
 			'name' => array('title' => $this->l('Name'), 'width' => 300),
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
