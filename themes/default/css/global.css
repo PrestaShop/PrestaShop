@@ -5,7 +5,7 @@
 @import url("grid_prestashop.css");
 
 /* ****************************************************************************
-      reset
+		reset
 **************************************************************************** */
 html{color:#000;background:#FFF;}
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0}
@@ -26,17 +26,17 @@ a {cursor:pointer}
 
 .clearfix:before,
 .clearfix:after {
-   content: ".";
-   display: block;
-   height: 0;
-   overflow: hidden
+	content: ".";
+	display: block;
+	height: 0;
+	overflow: hidden
 }
 .clearfix:after {clear: both}
 .clearfix {zoom: 1}
 
 
 /* ************************************************************************************************
-      struture
+		struture
 ************************************************************************************************ */
 #page {}
 	#header {z-index:10}
@@ -48,7 +48,7 @@ a {cursor:pointer}
 
 
 /* ************************************************************************************************
-      generic style
+		generic style
 ************************************************************************************************ */
 body{
 	font:normal 11px/14px Arial, Verdana, sans-serif;
@@ -228,8 +228,8 @@ input.exclusive_large, input.exclusive_large_disabled, a.exclusive_large, span.e
 
 /* form **************************************************************************************** */
 form.std fieldset {
-   margin:20px 0;
-   border:1px solid #ccc
+	margin:20px 0;
+	border:1px solid #ccc
 }
 
 /* table *************************************************************************************** */
@@ -245,7 +245,7 @@ table.table_block th {
 	padding:14px 12px;
 	font-size:12px;
 	color:#fff;
-    font-weight:bold;
+	 font-weight:bold;
 	text-transform:uppercase;
 	text-shadow:0 1px 0 #000;
 	background:url(../img/bg_table_th.png) repeat-x 0 0 #999
@@ -288,11 +288,11 @@ table.table_block  td {
 
 /* BLOCK customer privacy ******************************************************************* */
 .account_creation label{
-   float:left;
-   padding-top:5px;
-   width:80%;
-   text-align:left;
-   cursor:pointer
+	float:left;
+	padding-top:5px;
+	width:80%;
+	text-align:left;
+	cursor:pointer
 }
 
 /* BLOCK .footer_links (cms pages) ************************************************************* */
@@ -362,9 +362,9 @@ ul.pagination a, ul.pagination span {
 	border:1px solid #eee;
 	-moz-border-radius:2px;
 	-webkit-border-radius:2px;
-   border-radius:2px;
-   font:11px/24px Arial,Verdana,sans-serif;
-   color:#999
+	border-radius:2px;
+	font:11px/24px Arial,Verdana,sans-serif;
+	color:#999
 }
 ul.pagination a {
 	text-align:center;
@@ -395,39 +395,39 @@ ul.pagination li.disabled span {color:#ccc}
 /* CART steps *********************************************************************** */
 ul#order_step { background-color: white;}
 ul.step {
-   list-style-type:none;
+	list-style-type:none;
 	margin-bottom:30px;
-   height:52px;
-   width:757px
+	height:52px;
+	width:757px
 }
 ul.step li {
-   float:left;
-   height:52px;
-   width:151px;
-   text-align:center;
+	float:left;
+	height:52px;
+	width:151px;
+	text-align:center;
 	text-transform:uppercase;
-   background:url(../img/step_standard.gif) no-repeat center bottom transparent
+	background:url(../img/step_standard.gif) no-repeat center bottom transparent
 }
 ul.step li a, ul.step li.step_current span {
 	display:inline-block;
-   padding:8px 10px 12px;
-   color:#000;
-   background:url(../img/step_current_span.gif) no-repeat center bottom transparent
+	padding:8px 10px 12px;
+	color:#000;
+	background:url(../img/step_current_span.gif) no-repeat center bottom transparent
 }
 ul.step li.step_current {
-   font-weight:bold;
-   background:url(../img/step_current.gif) no-repeat center bottom transparent
+	font-weight:bold;
+	background:url(../img/step_current.gif) no-repeat center bottom transparent
 }
 ul.step li.step_todo span {
 	display:inline-block;
-   padding:8px 10px 6px;
-   color:#999;
+	padding:8px 10px 6px;
+	color:#999;
 	text-shadow:0 1px 0 #fff;
-   background:#eee
+	background:#eee
 }
 ul.step li.step_done {
-   font-weight:bold;
-   background:url(../img/step_done.gif) no-repeat center bottom transparent
+	font-weight:bold;
+	background:url(../img/step_done.gif) no-repeat center bottom transparent
 }
 ul.step li#step_end {background:url(../img/step_end.gif) no-repeat center bottom transparent}
 
@@ -472,10 +472,10 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	font-size: 12px
 }
 .confirmation {
-   margin: 0 0 10px;
-   padding: 10px;
-   border: 1px solid #e6db55;
-   font-size: 13px;
+	margin: 0 0 10px;
+	padding: 10px;
+	border: 1px solid #e6db55;
+	font-size: 13px;
 	background: none repeat scroll 0 0 #ffffe0;
 }
 #page .rte { background: transparent none repeat scroll 0 0 }
@@ -504,7 +504,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 
 
 /* ************************************************************************************************
-      HEADER
+		HEADER
 ************************************************************************************************ */
 #header {position:relative}
 #header_logo {
@@ -515,12 +515,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 
 #header_right {
 	position:relative;
-   float: right
+	float: right
 }
 
 
 /* ************************************************************************************************
-      BREADCRUMB
+		BREADCRUMB
 ************************************************************************************************ */
 .breadcrumb {
 	margin-bottom:20px;
@@ -534,7 +534,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 
 
 /* ************************************************************************************************
-      FOOTER
+		FOOTER
 ************************************************************************************************ */
 #footer {
 	color:#fff;
@@ -575,31 +575,31 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer .myaccount .lnk_wishlist img {display:none}
 
 /* ************************************************************************************************
-      PRODUCT PAGE
+		PRODUCT PAGE
 ************************************************************************************************ */
 
 /* BLOCK idTabs ******************************************************************************** */
 .idTabs {
-   list-style-type: none;
-   margin-top: 20px;
-   padding:0 5px;
-   border-bottom: 8px solid #f7b900
+	list-style-type: none;
+	margin-top: 20px;
+	padding:0 5px;
+	border-bottom: 8px solid #f7b900
 }
 ul.idTabs li {
-   float: left;
-   margin-right: 1px
+	float: left;
+	margin-right: 1px
 }
 .idTabs a {
-   display:block;
-   padding:10px 10px 7px 10px;
-   font-weight:bold;
-   text-decoration:none;
-   color:#fff;
-   background:#000
+	display:block;
+	padding:10px 10px 7px 10px;
+	font-weight:bold;
+	text-decoration:none;
+	color:#fff;
+	background:#000
 }
 .idTabs .selected {
-   color:#000;
-   background: url(../img/bg_li_idTabs.png) repeat-x 0 0
+	color:#000;
+	background: url(../img/bg_li_idTabs.png) repeat-x 0 0
 }
 
 #more_info_sheets {padding-top:10px}
@@ -620,14 +620,14 @@ ul.idTabs li {
 
 
 /* ************************************************************************************************
-      PAGE AUTHENTIFICATION
+		PAGE AUTHENTIFICATION
 ************************************************************************************************ */
 #authentication #left_column {display:none}
 #authentication #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      PAIMENT - PAGE ORDER
+		PAIMENT - PAGE ORDER
 ************************************************************************************************ */
 
 /* nav bottom ********************************************************************************** */
@@ -656,9 +656,9 @@ ul.idTabs li {
 table#cart_summary th {
 	padding:14px 12px;
 	color:#fff;
-    font-weight:bold;
+	 font-weight:bold;
 	text-transform:uppercase;
-    text-shadow:0 1px 0 #666;
+	 text-shadow:0 1px 0 #666;
 	background:url(../img/bg_table_th.png) repeat-x 0 -15px #999
 }
 table#cart_summary  th.cart_product {text-align:center}
@@ -814,12 +814,12 @@ table#cart_summary .cart_total_price .total_price_container {
 #order_carrier h4 {
 	padding:0 15px;
 	height: 29px;
-   font-weight: bold;
-   line-height:29px;
-   color:#fff;
-    font-weight:bold;
+	font-weight: bold;
+	line-height:29px;
+	color:#fff;
+	font-weight:bold;
 	text-transform:uppercase;
-   background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
+	background:url(../img/bg_table_th.png) repeat-x 0 -10px #999
 }
 #order_carrier span {
 	display:block;
@@ -835,10 +835,10 @@ table#cart_summary .cart_total_price .total_price_container {
 
 /* step 2 - authentification ******************************************************************* */
 #create-account_form, #authentication #login_form {
-   clear: none;
-   float: left;
-   height: 20em;
-   width: 49%;
+	clear: none;
+	float: left;
+	height: 20em;
+	width: 49%;
 }
 #create-account_form {margin-right: 11px;}
 
@@ -855,7 +855,7 @@ table#cart_summary .cart_total_price .total_price_container {
 #create-account_form h3,
 #authentication #login_form h3 {
 	padding:8px;
-   border-bottom:1px solid #ccc;
+	border-bottom:1px solid #ccc;
 	font-weight:bold;
 	font-size:12px;
 	color:#fff;
@@ -1141,7 +1141,7 @@ a.iframe {font-weight:bold}
 
 
 /* ************************************************************************************************
-      PAGE ORDER-OPC
+		PAGE ORDER-OPC
 ************************************************************************************************ */
 #order-opc #left_column {display:none}
 #order-opc #center_column{width:757px}
@@ -1206,13 +1206,13 @@ a.iframe {font-weight:bold}
 
 
 /* ************************************************************************************************
-   express checkout
+	express checkout
 ************************************************************************************************ */
 #new_account_form {clear:both;margin-bottom: 20px}
 #new_account_form h3 {
 	margin-bottom:20px;
 	padding:8px;
-   border-bottom:1px solid #ccc;
+	border-bottom:1px solid #ccc;
 	font-weight:bold;
 	font-size:12px;
 	color:#fff;
@@ -1220,8 +1220,8 @@ a.iframe {font-weight:bold}
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
 #center_column #new_account_form p {
-   margin:0;
-   padding:0 0 10px 0
+	margin:0;
+	padding:0 0 10px 0
 }
 #new_account_form p.required {color:#222}
 #new_account_form p.required sup {color:#990000}
@@ -1232,31 +1232,31 @@ a.iframe {font-weight:bold}
 #new_account_form p.select span,
 #new_account_form p.textarea label {
 	display: inline-block;
-   padding: 6px 15px;
-   width: 230px;
-   font-size: 14px;
-   text-align: right
+	padding: 6px 15px;
+	width: 230px;
+	font-size: 14px;
+	text-align: right
 }
 #new_account_form p.radio label {
-   float:none;
-   padding-right:10px;
-   width:auto;
-   font-size:14px;
+	float:none;
+	padding-right:10px;
+	width:auto;
+	font-size:14px;
 }
 #new_account_form p.checkbox label {
-   float: none;
-   width: auto;
-   font-size: 12px;
+	float: none;
+	width: auto;
+	font-size: 12px;
 }
 #new_account_form p.text input,
 #new_account_form p.password input,
 #new_account_form p.select input {
-   height:22px;
-   padding:0 5px;
-   width:360px;
-   border:1px solid #ccc;
-   font-size:12px;
-   color:#666
+	height:22px;
+	padding:0 5px;
+	width:360px;
+	border:1px solid #ccc;
+	font-size:12px;
+	color:#666
 }
 #new_account_form p.checkbox input {margin-left: 260px;}
 
@@ -1265,36 +1265,36 @@ a.iframe {font-weight:bold}
 /* ************************************************************************************************ */
 
 /* ************************************************************************************************
-      paiment - CONFIRMATION
+		paiment - CONFIRMATION
 ************************************************************************************************ */
 #orderconfirmation #left_column {display:none}
 #orderconfirmation #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      PAGE PASSWORD
+		PAGE PASSWORD
 ************************************************************************************************ */
 #form_forgotpassword fieldset {
-   padding: 10px;
+	padding: 10px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-   border-radius: 3px;
-   background: #eee
+	border-radius: 3px;
+	background: #eee
 }
 #form_forgotpassword  p.text label {
-   display: inline-block;
-   padding-right: 10px;
-   width: 174px;
-   font-weight: bold;
-   font-size: 12px;
-   text-align: right
+	display: inline-block;
+	padding-right: 10px;
+	width: 174px;
+	font-weight: bold;
+	font-size: 12px;
+	text-align: right
 }
 #form_forgotpassword  p.text input {
-   padding: 0 5px;
-   height: 20px;
-   width: 288px;
-   border: 1px solid #ccc;
-   background: url(../img/bg_input.png) repeat-x 0 0 #fff
+	padding: 0 5px;
+	height: 20px;
+	width: 288px;
+	border: 1px solid #ccc;
+	background: url(../img/bg_input.png) repeat-x 0 0 #fff
 }
 #form_forgotpassword p.submit {
 	margin-right:25px;
@@ -1309,7 +1309,7 @@ a.iframe {font-weight:bold}
 
 
 /* ************************************************************************************************
-      PAGE ADRESSES
+		PAGE ADRESSES
 ************************************************************************************************ */
 #addresses #left_column {display:none}
 #addresses #center_column{width:757px}
@@ -1322,24 +1322,24 @@ a.iframe {font-weight:bold}
 
 
 /* ************************************************************************************************
-      PAGE ADD ADRESS
+		PAGE ADD ADRESS
 ************************************************************************************************ */
 #address #left_column {display:none}
 #address #center_column{width:757px}
 
 form#add_adress {}
 #add_adress fieldset {
-   margin:0;
-   border:1px solid #ccc;
-   background:#F8F8F8
+	margin:0;
+	border:1px solid #ccc;
+	background:#F8F8F8
 }
 #add_adress h3 {
-   margin:0 0 15px 0;
-   padding:8px;
-   font-size:14px;
-   color:#fff;
-   text-transform:uppercase;
-   background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
+	margin:0 0 15px 0;
+	padding:8px;
+	font-size:14px;
+	color:#fff;
+	text-transform:uppercase;
+	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
 #center_column #add_adress p {margin:0; padding:0 0 10px 0}
 #add_adress p.required {color:#222}
@@ -1397,7 +1397,7 @@ form#add_adress {}
 
 
 /* ************************************************************************************************
-      PAGE ORDER-SPLIP
+		PAGE ORDER-SPLIP
 ************************************************************************************************ */
 #order-slip #left_column {display:none}
 #order-slip #center_column{width:757px}
@@ -1411,7 +1411,7 @@ form#add_adress {}
 
 
 /* ************************************************************************************************
-      PAGE DISCOUNT
+		PAGE DISCOUNT
 ************************************************************************************************ */
 #discount #left_column {display:none}
 #discount #center_column{width:757px}
@@ -1422,37 +1422,37 @@ form#add_adress {}
 
 
 /* ************************************************************************************************
-      PAGE ORDER FOLLOW
+		PAGE ORDER FOLLOW
 ************************************************************************************************ */
 #order-follow #left_column {display:none}
 #order-follow #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      PAGE NEW-PRODUCTS
+		PAGE NEW-PRODUCTS
 ************************************************************************************************ */
 #newproducts .sortPagiBar {margin-bottom:20px}
 
 
 /* ************************************************************************************************
-      PAGE BEST SALES
+		PAGE BEST SALES
 ************************************************************************************************ */
 #bestsales .sortPagiBar {margin-bottom:20px}
 
 /* ************************************************************************************************
-      PAGE PRICES DROP SALES
+		PAGE PRICES DROP SALES
 ************************************************************************************************ */
 #pricesdrop .sortPagiBar {margin-bottom:20px}
 
 
 /* ************************************************************************************************
-      PAGE MANUFACTURER
+		PAGE MANUFACTURER
 ************************************************************************************************ */
 #manufacturer .nbrmanufacturer {
-   margin: 15px 0 10px;
-   padding: 8px 7px;
+	margin: 15px 0 10px;
+	padding: 8px 7px;
 	font-size:12px;
-   color: #000;
+	color: #000;
 	background: none repeat scroll 0 0 #f0f0f0
 }
 
@@ -1460,32 +1460,32 @@ form#add_adress {}
 
 ul#manufacturers_list {list-style-type:none}
 ul#manufacturers_list li {
-   margin-bottom: 14px;
-   padding: 12px 8px;
+	margin-bottom: 14px;
+	padding: 12px 8px;
 	border: 1px solid #eee;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-   border-radius:3px;
+	border-radius:3px;
 }
 ul#manufacturers_list li a.lnk_img {
-   display: block;
-   float: left;
+	display: block;
+	float: left;
 }
 ul#manufacturers_list li img {
-   display: block;
-   float: left;
-   margin-right: 14px;
-   border: 1px solid #ccc;
-   vertical-align: bottom
+	display: block;
+	float: left;
+	margin-right: 14px;
+	border: 1px solid #ccc;
+	vertical-align: bottom
 }
 ul#manufacturers_list li h3 {
-   padding: 0 0 10px;
-   font-size: 13px;
-   color: #000
+	padding: 0 0 10px;
+	font-size: 13px;
+	color: #000
 }
 ul#manufacturers_list li .description {
-   overflow: hidden;
-   padding: 0;
+	overflow: hidden;
+	padding: 0;
 	font-size:12px;
 	color:#666
 }
@@ -1515,43 +1515,43 @@ ul#manufacturers_list li .right_side {float:right;}
 
 
 /* ************************************************************************************************
-      PAGE SUPPLIER
+		PAGE SUPPLIER
 ************************************************************************************************ */
 #supplier .nbrmanufacturer {
-   margin: 15px 0 10px;
-   padding: 8px 7px;
+	margin: 15px 0 10px;
+	padding: 8px 7px;
 	font-size:12px;
-   color: #000;
+	color: #000;
 	background: none repeat scroll 0 0 #f0f0f0
 }
 ul#suppliers_list {list-style-type:none}
 ul#suppliers_list li {
-   margin-bottom: 14px;
-   padding: 12px 8px;
+	margin-bottom: 14px;
+	padding: 12px 8px;
 	border: 1px solid #eee;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-   border-radius:3px;
+	border-radius:3px;
 }
 ul#suppliers_list li a.lnk_img {
-   display: block;
-   float: left;
+	display: block;
+	float: left;
 }
 ul#suppliers_list li img {
-   display: block;
-   float: left;
-   margin-right: 14px;
-   border: 1px solid #ccc;
-   vertical-align: bottom
+	display: block;
+	float: left;
+	margin-right: 14px;
+	border: 1px solid #ccc;
+	vertical-align: bottom
 }
 ul#suppliers_list li h3 {
-   padding: 0 0 10px;
-   font-size: 13px;
-   color: #000
+	padding: 0 0 10px;
+	font-size: 13px;
+	color: #000
 }
 ul#suppliers_list li .description {
-   overflow: hidden;
-   padding: 0;
+	overflow: hidden;
+	padding: 0;
 	font-size:12px;
 	color:#666
 }
@@ -1559,7 +1559,7 @@ ul#suppliers_list li .right_side {float:right;}
 
 
 /* ************************************************************************************************
-      PAGE SEARCH
+		PAGE SEARCH
 ************************************************************************************************ */
 #search h3.nbresult {
 	margin:0 0 10px 0;
@@ -1572,7 +1572,7 @@ ul#suppliers_list li .right_side {float:right;}
 
 
 /* ************************************************************************************************
-      PAGE 404
+		PAGE 404
 ************************************************************************************************ */
 #pagenotfound #left_column,
 #pagenotfound #right_column,
@@ -1598,28 +1598,28 @@ ul#suppliers_list li .right_side {float:right;}
 #pagenotfound fieldset label {color:#333}
 #pagenotfound  #search_query {
 	-moz-border-bottom-colors: none;
-   -moz-border-image: none;
-   -moz-border-left-colors: none;
-   -moz-border-right-colors: none;
-   -moz-border-top-colors: none;
-   border-bottom: 1px solid #666;
-   border-left: 1px solid #666;
-   border-right: 1px solid #fff !important;
-   border-top: 1px solid #666;
-   padding: 0 5px;
-   height: 24px;
-   width: 200px;
-   color: #ccc;
-   background: url(../../../img/bg_search_input.png) repeat-x scroll 0 0 #fff
+	-moz-border-image: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	border-bottom: 1px solid #666;
+	border-left: 1px solid #666;
+	border-right: 1px solid #fff !important;
+	border-top: 1px solid #666;
+	padding: 0 5px;
+	height: 24px;
+	width: 200px;
+	color: #ccc;
+	background: url(../../../img/bg_search_input.png) repeat-x scroll 0 0 #fff
 }
 #pagenotfound .button_small {
 	padding: 4px 7px;
-   border: medium none;
+	border: medium none;
 	-moz-border-radius:0;
 	-webkit-border-radius:0;
-   border-radius:0;
-   color: #fff;
-   text-transform: uppercase;
+	border-radius:0;
+	color: #fff;
+	text-transform: uppercase;
 	background: url("../../../img/bg_search_submit.png") repeat-x scroll 0 0 #101010
 }
 #pagenotfound .pagenotfound a {
@@ -1633,41 +1633,41 @@ ul#suppliers_list li .right_side {float:right;}
 
 
 /* ************************************************************************************************
-      addons payment cheque
+		addons payment cheque
 ************************************************************************************************ */
 #module-cheque-payment #left_column {display:none}
 #module-cheque-payment #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      addons payment bankwire
+		addons payment bankwire
 ************************************************************************************************ */
 #module-bankwire-payment #left_column {display:none}
 #module-bankwire-payment #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      addons google checkout
+		addons google checkout
 ************************************************************************************************ */
 #module-gcheckout-payment #left_column {display:none}
 #module-gcheckout-payment #center_column{width:757px}
 
 /* ************************************************************************************************
-      addons paypal
+		addons paypal
 ************************************************************************************************ */
 #module-payment-submit #left_column {display:none}
 #module-payment-submit #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      addons cashondelivery validation
+		addons cashondelivery validation
 ************************************************************************************************ */
 #module-cashondelivery-validation #left_column {display:none}
 #module-cashondelivery-validation #center_column{width:757px}
 
 
 /* ************************************************************************************************
-      addon RerversoForm
+		addon RerversoForm
 ************************************************************************************************ */
 #account-creation_form fieldset.reversoform {padding:10px !important}
 #account-creation_form fieldset.reversoform  .text label{
@@ -1693,7 +1693,7 @@ ul#suppliers_list li .right_side {float:right;}
 }
 
 /* ************************************************************************************************
-      addon referralprogram
+		addon referralprogram
 ************************************************************************************************ */
 #module-referralprogram-referralprogram-program #left_column {display:none}
 #module-referralprogram-referralprogram-program #center_column{width:757px}
@@ -1707,7 +1707,7 @@ ul#suppliers_list li .right_side {float:right;}
 #module-referralprogram-referralprogram-program form p.submit {text-align:right}
 #module-referralprogram-referralprogram-program form p.see_email {
 	padding-left:10px;
-   color: #0088cc;
+	color: #0088cc;
 	background:url(../img/arrow_right_1.png) no-repeat 0 4px;
 }
 #module-referralprogram-referralprogram-program form p.see_email a {
@@ -1716,7 +1716,7 @@ ul#suppliers_list li .right_side {float:right;}
 }
 
 /* ************************************************************************************************
-      addon loyalty
+		addon loyalty
 ************************************************************************************************ */
 #module-loyalty-default #left_column {display:none}
 #module-loyalty-default #center_column{width:757px}
@@ -1732,56 +1732,56 @@ ul#suppliers_list li .right_side {float:right;}
 
 
 /* ************************************************************************************************
-      addon Livezilla
+		addon Livezilla
 ************************************************************************************************ */
 #livezilla_lnk  {
 	margin:10px 0;
 	text-align: right
 }
 #livezilla_lnk a {
-   display:inline-block;
-   padding:6px 8px 8px 8px;
+	display:inline-block;
+	padding:6px 8px 8px 8px;
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
-   border-radius:3px;
-   font:bold 10px Arial,Verdana,sans-serif;
-   color:#fff;
-   text-shadow: 0 -1px 0 #000;
+	border-radius:3px;
+	font:bold 10px Arial,Verdana,sans-serif;
+	color:#fff;
+	text-shadow: 0 -1px 0 #000;
 	background: url(../img/bg_bt_compare.gif) repeat-x scroll 0 0 #000
 }
 #livezilla_lnk a:hover {text-decoration:none}
 
 /* ************************************************************************************************
-      addons comments products
+		addons comments products
 ************************************************************************************************ */
 form#sendComment  fieldset{
-   padding:10px;
-   border:1px solid #ccc;
+	padding:10px;
+	border:1px solid #ccc;
 	background:#eee
 }
 form#sendComment h3 {font-size:14px;}
 #new_comment_form p.text {
-    margin-bottom: 0;
-    padding-bottom: 0;
+	 margin-bottom: 0;
+	 padding-bottom: 0;
 }
 #sendComment p.text label,
 #sendComment p.textarea label {
-   display: block;
-   margin: 12px 0 4px;
-   font-weight: bold;
-   font-size: 12px;
+	display: block;
+	margin: 12px 0 4px;
+	font-weight: bold;
+	font-size: 12px;
 }
 #sendComment p.text input {
-   padding: 0 5px;
-   height: 28px;
-   width: 498px;
-   border: 1px solid #ccc;
-   background: url(../img/bg_input.png) repeat-x 0 0 #fff;
+	padding: 0 5px;
+	height: 28px;
+	width: 498px;
+	border: 1px solid #ccc;
+	background: url(../img/bg_input.png) repeat-x 0 0 #fff;
 }
 #sendComment p.textarea textarea {
-   height:80px;
-   width:508px;
-   border:1px solid #ccc;
+	height:80px;
+	width:508px;
+	border:1px solid #ccc;
 }
 #sendComment p.submit {
 	padding:0;
@@ -1813,12 +1813,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 
 
 /* ************************************************************************************************
-      xxxxx
+		xxxxx
 ************************************************************************************************ */
 
 
 /* ************************************************************************************************
-      guest tracking
+		guest tracking
 ************************************************************************************************ */
 
 #guest-tracking fieldset p:first-child {
@@ -1827,3 +1827,4 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 #guest-tracking fieldset p:last-child {
 	padding-bottom: 10px;
 }
+
