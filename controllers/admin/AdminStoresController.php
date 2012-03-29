@@ -45,7 +45,7 @@ class AdminStoresControllerCore extends AdminController
 			'dir' => 'st'
 		);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_store' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Name'), 'width' => 120, 'filter_key' => 'a!name'),
 			'address1' => array('title' => $this->l('Address'), 'width' => 120, 'filter_key' => 'a!address1'),

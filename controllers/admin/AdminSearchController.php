@@ -189,7 +189,7 @@ class AdminSearchControllerCore extends AdminController
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}
-		$this->fieldsDisplay['customers'] = (array(
+		$this->fields_list['customers'] = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
 			'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
@@ -205,7 +205,7 @@ class AdminSearchControllerCore extends AdminController
 	protected function initProductList()
 	{
 		$this->show_toolbar = false;
-		$this->fieldsDisplay['products'] = (array(
+		$this->fields_list['products'] = (array(
 			'id_product' => array('title' => $this->l('ID'), 'width' => 25),
 			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
@@ -266,7 +266,7 @@ class AdminSearchControllerCore extends AdminController
 				$helper->token = Tools::getAdminTokenLite('AdminProducts');
 
 				if ($this->_list['products'])
-					$view = $helper->generateList($this->_list['products'], $this->fieldsDisplay['products']);
+					$view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
 
 				$this->tpl_view_vars['products'] = $view;
 			}
@@ -289,7 +289,7 @@ class AdminSearchControllerCore extends AdminController
 				{
 					foreach ($this->_list['customers'] as $key => $val)
 						$this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int)$val['id_customer']);
-					$view = $helper->generateList($this->_list['customers'], $this->fieldsDisplay['customers']);
+					$view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
 				}
 				$this->tpl_view_vars['customers'] = $view;
 			}

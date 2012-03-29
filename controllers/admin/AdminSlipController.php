@@ -32,7 +32,7 @@ class AdminSlipControllerCore extends AdminController
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',

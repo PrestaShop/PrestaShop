@@ -37,7 +37,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->deleted = true;
 		$this->lang = false;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
 				'width' => 150,

@@ -53,7 +53,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->addRowAction('details');
 		$this->list_no_link = true;
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'reference' => array(
 				'title' => $this->l('Reference'),
 				'width' => 250,
@@ -493,13 +493,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->addRowAction('createsupplyorder');
 		$this->addRowAction('delete');
 		// unsets some fields
-		unset($this->fieldsDisplay['state'],
-			  $this->fieldsDisplay['date_upd'],
-			  $this->fieldsDisplay['id_pdf'],
-			  $this->fieldsDisplay['date_delivery_expected'],
-			  $this->fieldsDisplay['id_export']);
+		unset($this->fields_list['state'],
+			  $this->fields_list['date_upd'],
+			  $this->fields_list['id_pdf'],
+			  $this->fields_list['date_delivery_expected'],
+			  $this->fields_list['id_export']);
 
-		// $this->fieldsDisplay['date_add']['align'] = 'left';
+		// $this->fields_list['date_add']['align'] = 'left';
 
 		// adds filter, to gets only templates
 		unset($this->_where);
@@ -691,8 +691,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($supply_order))
 			return parent::initContent();
 
-		// re-defines fieldsDisplay
-		$this->fieldsDisplay = array(
+		// re-defines fields_list
+		$this->fields_list = array(
 			'supplier_reference' => array(
 				'title' => $this->l('Supplier Reference'),
 				'align' => 'left',
@@ -789,7 +789,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->lang = false;
 		$lang_id = (int)$this->context->language->id; //employee lang
 
-		// gets values corresponding to fieldsDisplay
+		// gets values corresponding to fields_list
 		$this->_select = '
 			a.id_supply_order_detail as id,
 			a.quantity_received as quantity_received,
@@ -831,7 +831,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->displayInformation($this->l('Please not that a green line means that you received what you expected, and a red line means that you received more than expected.').'<br />');
 
 		// generates content
-		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+		$content = $helper->generateList($this->_list, $this->fields_list);
 
 		// assigns var
 		$this->context->smarty->assign(array(
@@ -1482,9 +1482,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// gets supply order id
 			$id_supply_order = (int)Tools::getValue('id');
 
-			// creates new fieldsDisplay
-			unset($this->fieldsDisplay);
-			$this->fieldsDisplay = array(
+			// creates new fields_list
+			unset($this->fields_list);
+			$this->fields_list = array(
 				'history_date' => array(
 					'title' => $this->l('Last update'),
 					'width' => 50,
@@ -1538,7 +1538,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper->identifier = $this->identifier;
 			//$helper->colorOnBackground = true;
 			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
@@ -1551,8 +1551,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$lang_id = (int)$this->context->language->id;
 			$id_supply_order_detail = (int)Tools::getValue('id');
 
-			unset($this->fieldsDisplay);
-			$this->fieldsDisplay = array(
+			unset($this->fields_list);
+			$this->fields_list = array(
 				'date_add' => array(
 					'title' => $this->l('Last update'),
 					'width' => 50,
@@ -1591,7 +1591,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper->identifier = $this->identifier;
 			$helper->colorOnBackground = true;
 			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
@@ -1717,8 +1717,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->toolbar_title = sprintf($this->l('Details on supply order #%s'), $supply_order->reference);
 			else
 				$this->toolbar_title = sprintf($this->l('Details on supply order template #%s'), $supply_order->reference);
-			// re-defines fieldsDisplay
-			$this->fieldsDisplay = array(
+			// re-defines fields_list
+			$this->fields_list = array(
 				'supplier_reference' => array(
 					'title' => $this->l('Supplier Reference'),
 					'align' => 'center',
@@ -1865,7 +1865,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper->show_toolbar = false;
 			$helper->toolbar_btn = $this->toolbar_btn;
 
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			// display these global order informations
 			$this->tpl_view_vars = array(

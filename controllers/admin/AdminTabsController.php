@@ -43,7 +43,7 @@ class AdminTabsControllerCore extends AdminController
 
 		$this->imageType = 'gif';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_tab' => array(
 				'title' => $this->l('ID'),
 				'width' => 25
@@ -231,7 +231,7 @@ class AdminTabsControllerCore extends AdminController
 			$helper->position_identifier = $this->position_identifier;
 			// Force render - no filter, form, js, sorting ...
 			$helper->simple_header = true;
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}

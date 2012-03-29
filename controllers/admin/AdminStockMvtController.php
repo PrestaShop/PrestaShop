@@ -42,7 +42,7 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->list_no_link = true;
 		$this->displayInformation($this->l('This interface allows you to display the stock movement for a selected warehouse.').'<br />');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'product_reference' => array(
 				'title' => $this->l('Reference'),
 				'width' => 100,
@@ -225,7 +225,7 @@ class AdminStockMvtControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		//If there is a field product_name in the list, check if this field is null and display standard message
-		foreach ($this->fieldsDisplay as $key => $value)
+		foreach ($this->fields_list as $key => $value)
 			if ($key == 'product_name')
 			{
 				$nb_items = count($this->_list);

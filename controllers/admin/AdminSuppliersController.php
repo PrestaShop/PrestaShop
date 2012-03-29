@@ -43,7 +43,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'logo' => array('title' => $this->l('Logo'), 'width' => 150, 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),

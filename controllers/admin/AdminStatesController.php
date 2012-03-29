@@ -49,7 +49,7 @@ class AdminStatesControllerCore extends AdminController
 									'text' => $this->l('Affect a new zone'))
 								);
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
