@@ -39,7 +39,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->lang = true;
 		$this->_defaultOrderBy = 'position';
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_attribute_group' => array(
 				'title' => $this->l('ID'),
 				'width' => 25,
@@ -101,7 +101,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
 				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
-			$this->fieldsDisplay = array(
+			$this->fields_list = array(
 				'id_attribute' => array(
 					'title' => $this->l('ID'),
 					'width' => 40,
@@ -115,13 +115,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			);
 
 			if ($obj->group_type == 'color')
-				$this->fieldsDisplay['color'] = array(
+				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
 					'width' => 40,
 					'filter_key' => 'b!color'
 				);
 
-			$this->fieldsDisplay['position'] = array(
+			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 40,
 				'filter_key' => 'cp!position',
@@ -159,7 +159,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->show_toolbar = false;
 			$helper->bulk_actions = $this->bulk_actions;
 			$helper->position_identifier = 'id_attribute';
-			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+			$content = $helper->generateList($this->_list, $this->fields_list);
 
 			die (Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content)));
 		}

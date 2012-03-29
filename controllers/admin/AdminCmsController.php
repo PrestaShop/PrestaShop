@@ -43,7 +43,7 @@ class AdminCmsControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'link_rewrite' => array('title' => $this->l('URL'), 'width' => 'auto'),
 			'meta_title' => array('title' => $this->l('Title'), 'width' => '300', 'filter_key' => 'b!meta_title'),
@@ -194,7 +194,7 @@ class AdminCmsControllerCore extends AdminController
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
 		if (!count($this->_list))
-			echo '<tr><td class="center" colspan="'.(count($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
+			echo '<tr><td class="center" colspan="'.(count($this->fields_list) + 2).'">'.$this->l('No items found').'</td></tr>';
 
 		/* Show the content of the table */
 		$this->displayListContent($token);

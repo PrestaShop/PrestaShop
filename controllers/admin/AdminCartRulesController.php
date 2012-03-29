@@ -36,7 +36,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->addRowAction('edit');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Code')),
 			'priority' => array('title' => $this->l('Priority')),

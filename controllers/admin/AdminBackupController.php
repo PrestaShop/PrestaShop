@@ -37,7 +37,7 @@ class AdminBackupControllerCore extends AdminController
 		$this->identifier = 'filename';
 		parent::__construct();
 
-		$this->fieldsDisplay = array (
+		$this->fields_list = array (
 			'date' => array('title' => $this->l('Date'), 'type' => 'datetime', 'width' => 120, 'align' => 'right'),
 			'age' => array('title' => $this->l('Age')),
 			'filename' => array('title' => $this->l('File name'), 'width' => 200),

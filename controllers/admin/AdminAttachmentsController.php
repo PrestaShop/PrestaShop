@@ -39,7 +39,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->fieldsDisplay = array(
+		$this->fields_list = array(
 			'id_attachment' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
