@@ -103,7 +103,7 @@ class AdminControllerCore extends Controller
 	protected $fields_form_override;
 
 	/** @var array list of option forms to be generated */
-	protected $options;
+	protected $fields_options;
 
 	protected $shopLink;
 
