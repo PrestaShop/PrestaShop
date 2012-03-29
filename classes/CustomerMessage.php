@@ -86,11 +86,11 @@ class CustomerMessageCore extends ObjectModel
 				FROM '._DB_PREFIX_.'customer_message
 			');
 		else
-			return (int)Db::getInstance()->getValue(sprintf('
+			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message
-				WHERE %s
-			', $where));
+				WHERE '.$where
+			);
 	}
 
 }

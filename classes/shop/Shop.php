@@ -641,13 +641,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getShopById($id, $identifier, $table)
 	{
-		$sql = sprintf('
-			SELECT `id_shop`, `%s`
-			FROM `'._DB_PREFIX_.'%s_shop`
-			WHERE `%s` = %d',
-		pSQL($identifier), pSQL($table), pSQL($identifier), $id);
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('SELECT `id_shop`, `'.pSQL($identifier).'` FROM `'._DB_PREFIX_.pSQL($table).'_shop` WHERE `'.pSQL($identifier).'` = '.(int)$id);
 	}
 
 	public static function setContext($type, $id = null)
