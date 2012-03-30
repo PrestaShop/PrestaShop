@@ -135,7 +135,7 @@ class AdminPPreferencesControllerCore extends AdminController
 							)
 						),
 						'identifier' => 'id'
-					)				
+					)
 				)
 			),
 			'fo_product_page' => array(
@@ -212,10 +212,23 @@ class AdminPPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
+						'js' => array(
+							'on' => 'onchange="advStockManagementActivationAuthorization()"',
+							'off' => 'onchange="advStockManagementActivationAuthorization()"'
+						)
+					),
+					'UPDATE_ASM_PRODUCTS' => array(
+						'title' => $this->l('Update products:'),
+						'desc' => $this->l('Massively activate(yes) or desactivate(no) advanced stock management for all products.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization(); advStockManagementActivationAuthorization();</script>',
 				'submit' => array()
 			),
 		);
@@ -235,13 +248,50 @@ class AdminPPreferencesControllerCore extends AdminController
 		{
 			Db::getInstance()->execute(
 				'UPDATE `'._DB_PREFIX_.'product`
-				SET `advanced_stock_management` = 0
-				WHERE `advanced_stock_management` = 1');
+				 SET `advanced_stock_management` = 0
+				 WHERE `advanced_stock_management` = 1');
 
 			Db::getInstance()->execute(
 				'UPDATE `'._DB_PREFIX_.'stock_available`
-				SET `depends_on_stock` = 0, `quantity` = 0
-				WHERE `depends_on_stock` = 1');
+				 SET `depends_on_stock` = 0, `quantity` = 0
+				 WHERE `depends_on_stock` = 1');
 		}
+	}
+
+	public function postProcess()
+	{
+		// if advanced stock management is activated, and mass update of products is required
+		if (((int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 1 || Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) &&
+			Tools::isSubmit('UPDATE_ASM_PRODUCTS'))
+		{
+			// gets the value to set
+			$advanced_stock_management = (int)Tools::getValue('UPDATE_ASM_PRODUCTS');
+
+			// updates product table
+			Db::getInstance()->execute(
+				'UPDATE `'._DB_PREFIX_.'product`
+				 SET `advanced_stock_management` = '.$advanced_stock_management.'
+				 WHERE `advanced_stock_management` = '.($advanced_stock_management == 1 ? 0 : 1).'
+				 AND `cache_is_pack` = 0
+				 AND `is_virtual` = 0');
+
+			// updates stock available table
+			Db::getInstance()->execute(
+				'UPDATE `'._DB_PREFIX_.'stock_available` s
+				 LEFT JOIN
+				 	`'._DB_PREFIX_.'product` p
+				 ON
+				 (
+				 	p.`id_product` = s.`id_product`
+				 	AND p.`cache_is_pack` = 0
+				 	AND p.`is_virtual` = 0
+				 	AND p.`advanced_stock_management` = '.$advanced_stock_management.'
+				 )
+				 SET s.`depends_on_stock` = '.$advanced_stock_management.',
+				 	 s.`quantity` = 0
+				 WHERE s.`depends_on_stock` = '.($advanced_stock_management == 1 ? 0 : 1));
+		}
+		// deletes from post since it's not a configuration variable..
+		unset($_POST['UPDATE_ASM_PRODUCTS']);
 	}
 }

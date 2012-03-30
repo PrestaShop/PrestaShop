@@ -790,6 +790,23 @@ function stockManagementActivationAuthorization()
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_on').disabled = 'disabled';
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').disabled = 'disabled';
 	}
+	
+	advStockManagementActivationAuthorization();
+}
+
+function advStockManagementActivationAuthorization()
+{
+	if (getE('PS_ADVANCED_STOCK_MANAGEMENT_on').checked)
+	{
+		getE('UPDATE_ASM_PRODUCTS_on').disabled = false;
+		getE('UPDATE_ASM_PRODUCTS_off').disabled = false;
+	}
+	else
+	{
+		getE('UPDATE_ASM_PRODUCTS_off').checked = true;
+		getE('UPDATE_ASM_PRODUCTS_on').disabled = 'disabled';
+		getE('UPDATE_ASM_PRODUCTS_off').disabled = 'disabled';
+	}
 }
 
 function hookCheckboxes(id, opt, champ)
