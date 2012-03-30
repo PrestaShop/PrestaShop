@@ -78,7 +78,7 @@
 			<td class="col-left"><label>{l s='Accessories:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
-				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
+				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'htmlall':'UTF-8'}¤{/foreach}" />
 
 				<div id="ajax_choose_product">
 					<p style="clear:both;margin-top:0;">
@@ -91,7 +91,7 @@
 				<div id="divAccessories">
 					{* @todo : donot use 3 foreach, but assign var *}
 					{foreach from=$accessories item=accessory}
-						{$accessory.name|htmlentitiesUTF8}{if !empty($accessory.reference)}{$accessory.reference}{/if} 
+						{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
 						<span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;">
 							<img src="../img/admin/delete.gif" class="middle" alt="" />
 						</span><br />

@@ -155,7 +155,7 @@
 			</span>
 			<div id="header_search">
 				<form method="post" action="index.php?controller=AdminSearch&token={getAdminToken tab='AdminSearch'}">
-					<input type="text" name="bo_query" id="bo_query" value="{$bo_query|htmlentities}" />
+					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
 					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 						<option value="0">{l s='everywhere'}</option>
 						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>

@@ -62,7 +62,7 @@
 		<label>{l s='Product'}</label>
 		<div class="margin-form">
 			<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
-			<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|utf8_decode|htmlentities}" style="width:400px" />
+			<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|escape:'htmlall':'UTF-8'}" style="width:400px" />
 		</div>
 	</div>
 </div>
