@@ -221,7 +221,7 @@
 							<label for="virtual_product_name" class="t">{l s='Filename'}</label>
 						</td>
 						<td class="col-right">
-							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentities}" />
+							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|escape:'htmlall':'UTF-8'}" />
 							<p class="preference_description" name="help_box">{l s='The full filename with its extension (e.g. Book.pdf)'}</p>
 						</td>
 					</tr>
