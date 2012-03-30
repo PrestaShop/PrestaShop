@@ -150,7 +150,7 @@
 			<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
 	</div>
 	{* [begin] virtual product *}
-	<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
+	<div id="virtual_good" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
 		<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
 		<div>
 			<label>{l s='Does this product has an associated file?'}</label>
@@ -186,7 +186,7 @@
 								</td>
 								<td class="col-right">
 									<input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" />
-									<p class="product_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
+									<p class="preference_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
 								</td>
 							</tr>
 						{/if}
