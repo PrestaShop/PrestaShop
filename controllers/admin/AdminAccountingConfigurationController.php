@@ -29,7 +29,7 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 {
 	public $acc_conf = array();
 
-	public $fields_list = array();
+	public $fields_list_detail = array();
 
 	public function __construct()
 	{
@@ -69,7 +69,7 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 		ksort($fields_option);
 		$zone_shop_list = Accounting::getAccountNumberZoneShop($id_shop);
 
-		$this->fields_list['zone'] = array(
+		$this->fields_list_detail['zone'] = array(
 			'title' =>	$this->l('Account number by zone'),
 			'fields' =>	array(
 				'default_account_number' => array(
@@ -86,13 +86,13 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 		foreach ($zone_shop_list as $zone_shop)
 			$fields_option['zone_'.$zone_shop['id_zone']]['value'] = $zone_shop['account_number'];
 
-		$this->fields_list['zone']['fields'] = array_merge($this->fields_list['zone']['fields'], $fields_option);
+		$this->fields_list_detail['zone']['fields'] = array_merge($this->fields_list_detail['zone']['fields'], $fields_option);
 	}
 
 	public function initAccountingForm()
 	{
 		// Only text type available for this configuration, handle new missing type in the tpl file (as the options.tpl helper file)
-		$this->fields_list = array(
+		$this->fields_list_detail = array(
 			'general' => array(
 				'title' =>	$this->l('Export'),
 				'fields' =>	array(
@@ -176,7 +176,7 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 			'title' => $this->l('Accounting Configuration'),
 			'acc_conf' => $this->acc_conf,
-			'input_category_list' => $this->fields_list,
+			'input_category_list' => $this->fields_list_detail,
 			'table' => 'accounting',
 			'has_shop_selected' => (count(Shop::getContextListShopID()) == 1),
 			'toolbar_btn' => $this->toolbar_btn
