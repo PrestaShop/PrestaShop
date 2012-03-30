@@ -254,7 +254,7 @@ class CartCore extends ObjectModel
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 				$address_id = (int)$cart->id_address_invoice;
 			else
-				$address_id = (int)$product->id_address_delivery; // Get delivery address of the product from the the cart
+				$address_id = (int)$product->id_address_delivery; // Get delivery address of the product from the cart
 			if (!Address::addressExists($address_id))
 				$address_id = null;
 			
@@ -1292,7 +1292,7 @@ class CartCore extends ObjectModel
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 				$address_id = (int)$this->id_address_invoice;
 			else
-				$address_id = (int)$product['id_address_delivery']; // Get delivery address of the product from the the cart
+				$address_id = (int)$product['id_address_delivery']; // Get delivery address of the product from the cart
 			if (!Address::addressExists($address_id))
 				$address_id = null;
 			
