@@ -46,7 +46,7 @@
 				<div style="clear: both; padding-top:15px;" id="conf_id_{$input_name}" >
 					<label class="conf_title">{$input['title']}</label>
 					{if $input['type'] == 'text'}
-						<input type="text" name="{$input_name|htmlentities}" {if isset($input['id'])}id="{$input['id']|htmlentities}"{/if} value="{$input['value']|htmlentities}" />
+						<input type="text" name="{$input_name|htmlentities}" {if isset($input['id'])}id="{$input['id']|htmlentities}"{/if} value="{$input['value']|escape:'htmlall':'UTF-8'}" />
 					{/if}
 					<div class="margin-form">
 						{if isset($input['desc'])}<p class="preference_description">{$input['desc']}</p>{/if}

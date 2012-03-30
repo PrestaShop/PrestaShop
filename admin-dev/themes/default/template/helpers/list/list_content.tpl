@@ -98,7 +98,7 @@
 					{$tr.$key} {l s='%'}
 				{* If type is 'editable', an input is created *}
 				{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
-					<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|htmlentities}" class="{$key}" />
+					<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'htmlall':'UTF-8'}" class="{$key}" />
 				{elseif isset($params.callback)}
 					{$tr.$key}
 				{elseif isset($tr.$key) && $key == 'color'}

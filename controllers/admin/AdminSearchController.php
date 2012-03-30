@@ -234,7 +234,7 @@ class AdminSearchControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->tpl_view_vars['query'] = $this->query;
+		$this->tpl_view_vars['query'] = Tools::safeOutput($this->query);
 		$this->tpl_view_vars['show_toolbar'] = true;
 
 		if (count($this->errors))

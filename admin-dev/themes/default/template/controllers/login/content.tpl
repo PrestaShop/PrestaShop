@@ -53,7 +53,7 @@
 			<h1>{$shop_name}</h1>
 			<form action="" method="post" id="login_form" onsubmit="doAjaxLogin('{$redirect}');return false;">
 				<label for="email">{l s='E-mail address:'}</label><br />
-				<input type="text" id="email" name="email" class="input" value="{if isset($email)}{$email|htmlentities}{/if}" />
+				<input type="text" id="email" name="email" class="input" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
 				<div style="margin: 1.8em 0 0 0;">
 					<label for="passwd">{l s='Password:'}</label><br />
 					<input id="passwd" type="password" name="passwd" class="input" value="{if isset($password)}{$password}{/if}"/>
