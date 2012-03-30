@@ -109,7 +109,7 @@
 				</div>
 				<label>{l s='Reference'}</label>
 				<div class="margin-form">
-					<input type="text" size="20" name="reference" value="{$product_reference|htmlentities}"/>
+					<input type="text" size="20" name="reference" value="{$product_reference|escape:'htmlall':'UTF-8'}"/>
 				</div>
 			</div>
 			<div style="float:left; text-align:center; margin-left:20px;">

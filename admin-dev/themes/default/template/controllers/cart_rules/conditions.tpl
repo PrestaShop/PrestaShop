@@ -1,7 +1,7 @@
 <label>{l s='Limit to a single customer'}</label>
 <div class="margin-form">
 	<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
-	<input type="text" id="customerFilter" name="customerFilter" value="{$customerFilter|htmlentities}" style="width:400px" />
+	<input type="text" id="customerFilter" name="customerFilter" value="{$customerFilter|escape:'htmlall':'UTF-8'}" style="width:400px" />
 	<p class="preference_description">{l s='Optional, the cart rule will be available for everyone if you leave this field blank.'}</p>
 </div>
 <label>{l s='Validity'}</label>
