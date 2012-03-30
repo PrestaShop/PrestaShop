@@ -51,7 +51,7 @@ class OrderPaymentCore extends ObjectModel
 			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_order_invoice' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'amount' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'conversion_rate' => 	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
 			'transaction_id' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
 			'card_number' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
