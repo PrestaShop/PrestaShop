@@ -164,7 +164,7 @@ abstract class PaymentModuleCore extends Module
 						$order->gift_message = $cart->gift_message;
 						$order->conversion_rate = $currency->conversion_rate;
 						$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
-						$order->total_paid_real = $amount_paid;
+						$order->total_paid_real = 0;
 						$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
 						$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
 
@@ -524,7 +524,7 @@ abstract class PaymentModuleCore extends Module
 						// Join PDF invoice
 						if ((int)Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number)
 						{
-                            $pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
+							$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
 							$file_attachement['content'] = $pdf->render(false);
 							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang).sprintf('%06d', $order->invoice_number).'.pdf';
 							$file_attachement['mime'] = 'application/pdf';
