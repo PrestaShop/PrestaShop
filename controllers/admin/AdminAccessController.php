@@ -150,33 +150,42 @@ class AdminAccessControllerCore extends AdminController
 			$enabled = (int)Tools::getValue('enabled');
 			$id_tab = (int)Tools::getValue('id_tab');
 			$id_profile = (int)Tools::getValue('id_profile');
+			$where = '`id_tab`';
+			$join = '';
+			if (Tools::isSubmit('addFromParent'))
+			{
+				$where = 't.`id_parent`';
+				$join = 'LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)';
+			}
 
 			if ($id_tab == -1 && $perm == 'all' && $enabled == 0)
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'access`
+					UPDATE `'._DB_PREFIX_.'access` a
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != '.(int)$this->id_tab_access;
 			else if ($id_tab == -1 && $perm == 'all')
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'access`
+					UPDATE `'._DB_PREFIX_.'access` a
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
 			else if ($id_tab == -1)
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'access`
+					UPDATE `'._DB_PREFIX_.'access` a
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
 			else if ($perm == 'all')
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'access`
+					UPDATE `'._DB_PREFIX_.'access` a
+					'.$join.'
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE `id_tab` = '.(int)$id_tab.'
+					WHERE '.bqSQL($where).'  = '.(int)$id_tab.'
 						AND `id_profile` = '.(int)$id_profile;
 			else
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'access`
+					UPDATE `'._DB_PREFIX_.'access` a
+					'.$join.'
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_tab` = '.(int)$id_tab.'
+					WHERE '.bqSQL($where).' = '.(int)$id_tab.'
 						AND `id_profile` = '.(int)$id_profile;
 
 			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
