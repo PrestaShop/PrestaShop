@@ -44,7 +44,7 @@ class CombinationCore extends ObjectModel
 	public $price;
 
 	public $ecotax;
-	
+
 	public $minimal_quantity = 1;
 
 	public $quantity;
@@ -207,8 +207,18 @@ class CombinationCore extends ObjectModel
 		return parent::isCurrentlyUsed('product_attribute');
 	}
 
+	/**
+	 * For a given product_attribute reference, returns the corresponding id
+	 *
+	 * @param int $id_product
+	 * @param string $reference
+	 * @return int id
+	 */
 	public static function getIdByReference($id_product, $reference)
 	{
+		if (empty($reference))
+			return 0;
+
 		$query = new DbQuery();
 		$query->select('pa.id_product_attribute');
 		$query->from('product_attribute', 'pa');
