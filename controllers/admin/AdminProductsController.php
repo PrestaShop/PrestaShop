@@ -1895,7 +1895,6 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
-			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
 
 			// Check if Module
@@ -3949,6 +3948,7 @@ class AdminProductsControllerCore extends AdminController
 			));
 
 			$this->addJS(array(
+				_PS_JS_DIR_.'admin-product-tab.js',
 				_PS_JS_DIR_.'admin-products.js',
 				_PS_JS_DIR_.'attributesBack.js',
 				_PS_JS_DIR_.'price.js',
