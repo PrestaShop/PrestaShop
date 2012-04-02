@@ -59,6 +59,6 @@ FORUMS
 ======
 
 You can also discuss, help and contribute with PrestaShop community on our forums :
-	http://www.prestashop.com/forums/
+http://www.prestashop.com/forums/
 
 Thanks for downloading and using PrestaShop e-commerce Open-source solution !

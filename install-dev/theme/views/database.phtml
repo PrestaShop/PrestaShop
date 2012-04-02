@@ -4,11 +4,7 @@
 <div id="dbPart">
 	<h2><?php echo $this->l('Configure your database by filling out the following fields:') ?></h2>
 	<p>
-		<?php if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/README.txt')): ?>
-			<?php echo $this->l('You have to create a database, help available in <a href="langs/%1$s/README.txt" target="_blank">~/install/langs/%1$s/README.txt</a>', $this->language->getLanguageIso()) ?>
-		<?php else: ?>
-			<?php echo $this->l('You have to create a database, help available in <a href="README.txt" target="_blank">~/install/README.txt</a>') ?>
-		<?php endif; ?>
+		<?php echo $this->l('You have to create a database, help available in <a href="http://doc.prestashop.com" target="_blank">our online documentation</a>.') ?>
 	</p>
 
 	<div id="formCheckSQL">
