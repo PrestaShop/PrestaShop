@@ -48,6 +48,41 @@
 			var tabnumber = tout[4];
 			var table = 'table#table_'+id_profile;
 
+			if (perm == 'all' && $(this).parent().parent().hasClass('parent'))
+			{
+				checked = enabled ? 'checked': '';
+				$(this).parent().parent().parent().find('.child-'+id_tab+' input[type=checkbox]').attr('checked', checked);
+				$.ajax({
+					url: "{$link->getAdminLink('AdminAccess')}",
+					cache: false,
+					data : {
+						ajaxMode : '1',
+						id_tab: id_tab,
+						id_profile: id_profile,
+						perm: perm,
+						enabled: enabled,
+						submitAddAccess: '1',
+						addFromParent: '1',
+						action: 'updateAccess',
+						ajax: '1',
+						token: '{getAdminToken tab='AdminAccess'}'
+					},
+					success : function(res,textStatus,jqXHR)
+					{
+						try
+						{
+							if (res == 'ok')
+								showSuccessMessage("{l s='Update successful'}");
+							else
+								showErrorMessage("{l s='Update error'}");
+						}
+						catch(e)
+						{
+							jAlert('Technical error');
+						}
+					}
+				});
+			}
 			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table, '{$id_tab_access}');
 
 			$.ajax({
@@ -236,7 +271,7 @@
 							{if !$tab.id_parent OR $tab.id_parent == -1}
 								{assign var=is_child value=false}
 								{assign var=result_accesses value=0}
-								<tr>
+								<tr{if !$is_child} class="parent"{/if}>
 									<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$tab.name}</strong></td>
 									{foreach $perms as $perm}
 										{if $access_edit == 1}
@@ -275,7 +310,7 @@
 										{if isset($access[$child.id_tab])}
 											{assign var=is_child value=true}
 											{assign var=result_accesses value=0}
-											<tr>
+											<tr class="child-{$child.id_parent}">
 												<td{if !$is_child} class="bold"{/if}>{if $is_child} &raquo; {/if}<strong>{$child.name}</strong></td>
 												{foreach $perms as $perm}
 													{if $access_edit == 1}
