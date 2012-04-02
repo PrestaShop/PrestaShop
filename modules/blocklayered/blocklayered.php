@@ -83,11 +83,12 @@ class BlockLayered extends Module
 			$this->installIndexableAttributeTable();
 			$this->installProductAttributeTable();
 			
-			$this->indexUrl();
-			$this->indexAttribute();
-			
-			if ($products_count < 10000) // Lock price indexation if too many products
+			if ($products_count < 10000) // Lock indexation if too many products
+			{
+				$this->indexUrl();
+				$this->indexAttribute();
 				self::fullPricesIndexProcess();
+			}
 			
 			return true;
 		}
@@ -3746,16 +3747,26 @@ class BlockLayered extends Module
 		$selected_filters = $this->getSelectedFilters();
 		
 		$this->getProducts($selected_filters, $products, $nb_products, $p, $n, $pages_nb, $start, $stop, $range);
-			
-		$smarty->assign('nb_products', $nb_products);
-		$smarty->assign('category', (object)array('id' => Tools::getValue('id_category_layered', 1)));
-		$pagination_infos = array('pages_nb' => (int)($pages_nb), 'p' => (int)$p, 'n' => (int)$n, 'range' => (int)$range, 'start' => (int)$start, 'stop' => (int)$stop,
-		'n_array' => ((int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10) ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50));
-		$smarty->assign($pagination_infos);
-		$smarty->assign('comparator_max_item', (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')));
-		$smarty->assign('products', $products);
-		$smarty->assign('products_per_page', (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
-		$smarty->assign('static_token', Tools::getToken(false));
+		
+		$smarty->assign(
+			array(
+				'homeSize' => Image::getSize('home'),
+				'nb_products' => $nb_products,
+				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
+				'pages_nb' => (int)($pages_nb),
+				'p' => (int)$p,
+				'n' => (int)$n,
+				'range' => (int)$range,
+				'start' => (int)$start,
+				'stop' => (int)$stop,
+				'n_array' => ((int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10) ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50),
+				'comparator_max_item' => (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')),
+				'products' => $products,
+				'products_per_page' => (int)Configuration::get('PS_PRODUCTS_PER_PAGE'),
+				'static_token' => Tools::getToken(false),
+				'page_name' => 'category',
+			)
+		);
 		
 		// Prevent bug with old template where category.tpl contain the title of the category and category-count.tpl do not exists
 		if (file_exists(_PS_THEME_DIR_.'category-count.tpl'))
