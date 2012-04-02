@@ -178,14 +178,14 @@ class AdminAccessControllerCore extends AdminController
 					UPDATE `'._DB_PREFIX_.'access` a
 					'.$join.'
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
-					WHERE '.bqSQL($where).'  = '.(int)$id_tab.'
+					WHERE '.$where.'  = '.(int)$id_tab.'
 						AND `id_profile` = '.(int)$id_profile;
 			else
 				$sql = '
 					UPDATE `'._DB_PREFIX_.'access` a
 					'.$join.'
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE '.bqSQL($where).' = '.(int)$id_tab.'
+					WHERE '.$where.' = '.(int)$id_tab.'
 						AND `id_profile` = '.(int)$id_profile;
 
 			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
