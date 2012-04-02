@@ -154,8 +154,8 @@
 		<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
 		<div>
 			<label>{l s='Does this product has an associated file?'}</label>
-			<label class="radio_check" style="width:50px"><input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
-			<label style="width:50px;"><input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}</label>
+			<label style="width:50px"><input type="radio" value="1"  name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
+			<label style="width:50px;"><input type="radio" value="0" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}</label>
 		</div><br />
 		<div class="separation"></div>
 		{if $download_product_file_missing}
@@ -208,7 +208,7 @@
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
 								<label class="t">{l s='Link to the file:'}</label>
 							</td>
-							<td class="col-right">
+							 <td class="col-right">
 								{$product->productDownload->getHtmlLink(false, true)}
 								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
