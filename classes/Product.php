@@ -4899,7 +4899,7 @@ class ProductCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.10
 	 * @see Product::deleteAttributeCombination()
-	 * @param int $id_lang
+	 * @param int $id_product_attribute
 	 */
 	public function deleteAttributeCombinaison($id_product_attribute)
 	{
