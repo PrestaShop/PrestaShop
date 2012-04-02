@@ -189,13 +189,7 @@ abstract class PaymentModuleCore extends Module
 
 						$order->invoice_date = '0000-00-00 00:00:00';
 						$order->delivery_date = '0000-00-00 00:00:00';
-						// Amount paid by customer is not the right one -> Status = payment error
-						// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
-						// if ($order->total_paid != $order->total_paid_real)
-						// We use number_format in order to compare two string
-						if (number_format($cart_total_paid, 2) != number_format($order->total_paid_real, 2))
-							$id_order_state = Configuration::get('PS_OS_ERROR');
-
+					
 						// Creating order
 						$result = $order->add();
 
@@ -205,6 +199,13 @@ abstract class PaymentModuleCore extends Module
 							if (!$order->addOrderPayment($amount_paid))
 								throw new PrestaShopException('Can\'t save Order Payment');
 						}
+						
+						// Amount paid by customer is not the right one -> Status = payment error
+						// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+						// if ($order->total_paid != $order->total_paid_real)
+						// We use number_format in order to compare two string
+						if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($order->total_paid_real, 2))
+							$id_order_state = Configuration::get('PS_OS_ERROR');
 
 						$order_list[] = $order;
 
