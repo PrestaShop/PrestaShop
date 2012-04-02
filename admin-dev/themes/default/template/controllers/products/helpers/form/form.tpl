@@ -105,11 +105,11 @@
 			{elseif $product->is_virtual}
 				onTabLoad('Informations', function(){
 					$('#virtual_product').attr('checked', 'checked');
+					$('#condition').attr('disabled', 'disabled');
+					$('#condition option[value=new]').attr('selected', 'selected');
 				});
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="Shipping"]').hide();
-				$('#condition').attr('disabled', 'disabled');
-				$('#condition option[value=new]').attr('selected', 'selected');
 			{else}
 				onTabLoad('Informations', function(){
 					$('#simple_product').attr('checked', 'checked');
@@ -158,24 +158,25 @@
 				else if (product_type == {Product::PTYPE_VIRTUAL})
 				{
 					$('li.tab-row a[id*="VirtualProduct"]').show().click();
-					$('#is_virtual_good').attr('checked', true);
-					$('#virtual_good').show();
-					$('#is_virtual').val(1);
-					$("#virtual_good_attributes").show();
-					// If the virtual product tab has not finished loaded the changes will be made when the loading event is triggered
-					$("#product-tab-content-VirtualProduct").bind('loaded', function(){
+
+					onTabLoad('VirtualProduct', function(){
+						$('#is_virtual_good').attr('checked', true);
 						$('#virtual_good').show();
 						$('#is_virtual').val(1);
 						$("#virtual_good_attributes").show();
 					});
-					$("#product-tab-content-Quantities").bind('loaded', function(){
+
+					onTabLoad('Quantities', function(){
 						$('.stockForVirtualProduct').hide();
 					});
+
 					$('li.tab-row a[id*="Shipping"]').hide();
-					$('#condition').attr('disabled', 'disabled');
-					$('#condition option[value=refurbished]').removeAttr('selected');
-					$('#condition option[value=used]').removeAttr('selected');
-					$('.stockForVirtualProduct').hide();
+
+					onTabLoad('Informations', function(){
+						$('#condition').attr('disabled', 'disabled');
+						$('#condition option[value=refurbished]').removeAttr('selected');
+						$('#condition option[value=used]').removeAttr('selected');
+					});
 				}
 				else
 				{
