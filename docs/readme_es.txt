@@ -54,7 +54,7 @@ DOCUMENTACI�N
 =============
 
 Para cualquier documentaci�n adicional (procedimientos), por favor lea nuestra wiki:
-	http://www.prestashop.com/wiki/
+	http://doc.prestashop.com
 
 FOROS
 ======
