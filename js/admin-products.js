@@ -206,61 +206,6 @@ function editProductAttribute(url, parent)
 /* END Combination */
 
 /**
- * Get a single tab or recursively get tabs in stack then display them
- *
- * @param int id position of the tab in the product page
- * @param boolean selected is the tab selected
- * @param int index current index in the stack (or 0)
- * @param array stack list of tab ids to load (or null)
- */
-function displayTabProductById(id, selected, index, stack)
-{
-	var myurl = $('#link-'+id).attr("href")+"&ajax=1";
-	var tab_selector = $("#product-tab-content-"+id);
-	// Used to check if the tab is already in the process of being loaded
-	tab_selector.addClass('loading');
-
-	if (selected)
-		$('#product-tab-content-wait').show();
-
-	$.ajax({
-		url : myurl,
-		async : true,
-		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-		type: 'POST',
-		success : function(data)
-		{
-			tab_selector.html(data);
-			tab_selector.removeClass('not-loaded');
-
-			if (selected)
-			{
-				$("#link-"+id).addClass('selected');
-				tab_selector.show();
-			}
-		},
-		complete : function(data)
-		{
-			$("#product-tab-content-"+id).removeClass('loading');
-			if (selected)
-			{
-				$('#product-tab-content-wait').hide();
-				tab_selector.trigger('displayed');
-			}
-			tab_selector.trigger('loaded');
-			if (stack && stack[index + 1])
-				displayTabProductById(stack[index + 1], selected, index + 1, stack);
-		},
-		beforeSend : function(data)
-		{
-			// don't display the loading notification bar
-			if (typeof(ajax_running_timeout) !== 'undefined')
-				clearTimeout(ajax_running_timeout);
-		}
-	});
-}
-
-/**
  * Update the manufacturer select element with the list of existing manufacturers
  */
 function getManufacturers()
@@ -445,25 +390,42 @@ function deleteSpecificPrice(url, parent)
 	});
 }
 
-/**
- * Execute a callback function when a specific tab has finished loading or right now if the tab is already loaded
- *
- * @param tab_name name of the tab that is checked for loading
- * @param callback_function function to call
- */
-function onTabLoad(tab_name, callback_function)
+function initAccessoriesAutocomplete()
 {
-	var target_tab = $('#product-tab-content-' + tab_name);
-	if (!target_tab)
-		return false;
-	if (target_tab.hasClass('not-loaded'))
-		target_tab.bind('loaded', callback_function);
-	else
-		callback_function();
-}
+	/* function autocomplete */
+	$(document).ready(function() {
+		$('#product_autocomplete_input')
+			.autocomplete('ajax_products_list.php', {
+				minChars: 1,
+				autoFill: true,
+				max:20,
+				matchContains: true,
+				mustMatch:true,
+				scroll:false,
+				cacheLength:0,
+				formatItem: function(item) {
+					return item[1]+' - '+item[0];
+				}
+			}).result(addAccessory);
 
-/* function autocomplete */
-urlToCall = null;
+		$('#product_autocomplete_input').setOptions({
+			extraParams: {
+				excludeIds : getAccessorieIds()
+			}
+		});
+
+
+
+		function getAccessorieIds()
+		{
+			var ids = id_product + ',';
+			ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
+			ids = ids.replace(/\,$/,'');
+
+			return ids;
+		}
+	});
+}
 
 $(document).ready(function() {
 	updateCurrentText();
@@ -491,13 +453,13 @@ $(document).ready(function() {
 	});
 
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
-	onTabLoad('Seo', enableProductName);
+	new ProductTab('Seo').onDisplay(enableProductName);
 
-	// Bind to show/hide new specific price form
-	onTabLoad('Prices', toggleSpecificPrice);
+	new ProductTab('Prices').onDisplay(function(){
+		// Bind to show/hide new specific price form
+		toggleSpecificPrice();
 
-	// Bind to delete specific price link
-	onTabLoad('Prices', function(){
+		// Bind to delete specific price link
 		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(e){
 			e.preventDefault();
 			deleteSpecificPrice(this.href, $(this).parents('tr'));
@@ -505,7 +467,7 @@ $(document).ready(function() {
 	});
 
 	// Bind attribute list ajax actions (edit, default, delete)
-	onTabLoad('Combinations', function(){
+	new ProductTab('Combinations').onDisplay(function(){
 		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
 			editProductAttribute(this.href, $(this).closest('tr'));
@@ -520,5 +482,10 @@ $(document).ready(function() {
 			e.preventDefault();
 			defaultProductAttribute(this.href, $(this).closest('tr'));
 		});
+	});
+
+	new ProductTab('Associations').onDisplay(function(){
+		initAccessoriesAutocomplete();
+		getManufacturers();
 	});
 });
