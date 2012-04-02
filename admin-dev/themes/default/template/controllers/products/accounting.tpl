@@ -24,12 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-
-
-
-</script>
-
 {if isset($product->id)}
 
 	<h4>{l s='Accounting'}</h4>
