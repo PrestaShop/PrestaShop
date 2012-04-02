@@ -84,7 +84,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	<div class="field clearfix">
 		<label for="uploadedImage" class="aligned logo"><?php echo $this->l('Shop logo:') ?></label>
 		<div class="contentinput">
-			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg" alt="Logo" /></p>
+			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
 		</div>
 		<p class="userInfos aligned"><?php echo $this->l('Recommended dimensions:') ?><br />209px x 52px</p>
 
