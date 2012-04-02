@@ -118,7 +118,7 @@ class FrontControllerCore extends Controller
 			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
-		else if (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
+		elseif (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
@@ -259,12 +259,12 @@ class FrontControllerCore extends Controller
 		$module_name = Tools::getValue('module');
 		if (!empty($this->page_name))
 			$page_name = $this->page_name;
-		else if (!empty($this->php_self))
+		elseif (!empty($this->php_self))
 			$page_name = $this->php_self;
-		else if (0&&Tools::getValue('fc') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
+		elseif (Tools::getValue('fc') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
 			$page_name = 'module-payment-submit';
 		// @retrocompatibility Are we in a module ?
-		else if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
+		elseif (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
 			$page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
 		else
 		{
@@ -448,7 +448,7 @@ class FrontControllerCore extends Controller
 		// This method will be removed in 1.6
 		Tools::displayAsDeprecated();
 		$this->initHeader();
- 		$hook_header = Hook::exec('displayHeader');
+		$hook_header = Hook::exec('displayHeader');
 		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
 		{
 			// CSS compressor management
@@ -502,6 +502,13 @@ class FrontControllerCore extends Controller
 		Tools::redirectLink($this->redirect_after);
 	}
 
+	/**
+	 * 1.4 retrocompatibility - will be removed in 1.6
+	 */
+	public function displayContent()
+	{
+	}
+	
 	public function display()
 	{
 		Tools::safePostVars();
@@ -534,6 +541,14 @@ class FrontControllerCore extends Controller
 		{
 			if ($this->template)
 				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
+			else // For retrocompatibility with 1.4 controller
+			{
+				ob_start();
+				$this->displayContent();
+				$template = ob_get_contents();
+				ob_clean();
+				$this->context->smarty->assign('template', $template);
+			}
 			$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
 		}
 		else
@@ -545,6 +560,8 @@ class FrontControllerCore extends Controller
 
 			if ($this->template)
 				$this->context->smarty->display($this->template);
+			else // For retrocompatibility with 1.4 controller
+				$this->displayContent();
 
 			if ($this->display_footer)
 				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
@@ -997,7 +1014,7 @@ class FrontControllerCore extends Controller
 			if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file))
 				$template = _PS_THEME_MOBILE_DIR_.$tpl_file;
 		}
-		else if ($dirname == _PS_THEME_MOBILE_DIR_)
+		elseif ($dirname == _PS_THEME_MOBILE_DIR_)
 		{
 			if (!file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file) && file_exists(_PS_THEME_DIR_.$tpl_file))
 				$template = _PS_THEME_DIR_.$tpl_file;
