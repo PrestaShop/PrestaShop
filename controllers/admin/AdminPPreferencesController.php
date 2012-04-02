@@ -291,7 +291,11 @@ class AdminPPreferencesControllerCore extends AdminController
 				 	 s.`quantity` = 0
 				 WHERE s.`depends_on_stock` = '.($advanced_stock_management == 1 ? 0 : 1));
 		}
+
 		// deletes from post since it's not a configuration variable..
-		unset($_POST['UPDATE_ASM_PRODUCTS']);
+		if (Tools::isSubmit('UPDATE_ASM_PRODUCTS'))
+			unset($_POST['UPDATE_ASM_PRODUCTS']);
+
+		return parent::postProcess();
 	}
 }
