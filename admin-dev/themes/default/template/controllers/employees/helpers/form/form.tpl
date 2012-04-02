@@ -59,8 +59,34 @@
 	$(document).ready(function(){
 		$('select[name=id_profile]').change(function(){
 			ifSuperAdmin($(this));
-		});
 
+			$.ajax({
+				url: "{$link->getAdminLink('AdminEmployees')}",
+				cache: false,
+				data : {
+					ajax : '1',
+					action : 'getTabByIdProfile',
+					id_profile : $(this).val()
+				},
+				dataType : 'json',
+				success : function(resp,textStatus,jqXHR)
+				{
+					if (resp != false)
+					{
+						$('select[name=default_tab]').html('');
+						$.each(resp, function(key, r){
+							if (r.id_parent == 0)
+							{
+								$('select[name=default_tab]').append('<optgroup label="'+r.name+'"></optgroup>');
+								$.each(r.children, function(k, value){
+									$('select[name=default_tab]').append('<option value="'+r.id_tab+'">'+value.name+'</option>')
+								});
+							}
+						});
+					}
+				}
+			});
+		});
 		ifSuperAdmin($('select[name=id_profile]'));
 	});
 

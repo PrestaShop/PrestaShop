@@ -464,4 +464,23 @@ class TabCore extends ObjectModel
 
 		return parent::update($null_values);
 	}
+
+	public static function getTabByIdProfile($id_parent, $id_profile)
+	{
+		return Db::getInstance()->executeS('
+			SELECT t.`id_tab`, t.`id_parent`, tl.`name`, a.`id_profile`
+			FROM `'._DB_PREFIX_.'tab` t
+			LEFT JOIN `'._DB_PREFIX_.'access` a
+				ON (a.`id_tab` = t.`id_tab`)
+			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+				ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)Context::getContext()->language->id.')
+			WHERE a.`id_profile` = '.(int)$id_profile.'
+			AND t.`id_parent` = '.(int)$id_parent.'
+			AND a.`view` = 1
+			AND a.`edit` = 1
+			AND a.`delete` = 1
+			AND a.`add` = 1
+			ORDER BY t.`id_parent` ASC
+		');
+	}
 }

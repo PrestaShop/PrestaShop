@@ -421,6 +421,24 @@ class AdminEmployeesControllerCore extends AdminController
 
 		return parent::initContent();
 	}
+
+	public function ajaxProcessGetTabByIdProfile()
+	{
+		$id_profile = Tools::getValue('id_profile');
+		$tabs = Tab::getTabByIdProfile(0, $id_profile);
+		$this->tabs_list = array();
+		foreach ($tabs as $tab)
+		{
+			if (Tab::checkTabRights($tab['id_tab']))
+			{
+				$this->tabs_list[$tab['id_tab']] = $tab;
+				foreach (Tab::getTabByIdProfile($tab['id_tab'], $id_profile) as $children)
+					if (Tab::checkTabRights($children['id_tab']))
+						$this->tabs_list[$tab['id_tab']]['children'][] = $children;
+			}
+		}
+		die(Tools::jsonEncode($this->tabs_list));
+	}
 }
 
 
