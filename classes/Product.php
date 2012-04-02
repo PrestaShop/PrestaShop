@@ -2014,7 +2014,7 @@ class ProductCore extends ObjectModel
 				$tab_id_product[] = (int)$product['id_product'];
 			else
 				$tab_id_product[] = (int)$product;
-		
+
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
@@ -2459,7 +2459,7 @@ class ProductCore extends ObjectModel
 		// convert only if the specific price is in the default currency (id_currency = 0)
 		if (!$specific_price || !($specific_price['price'] > 0 && $specific_price['id_currency']))
 			$price = Tools::convertPrice($price, $id_currency);
-	
+
 		// Attribute price
 		if (!$specific_price || !$specific_price['id_product_attribute'])
 		{
@@ -4884,4 +4884,27 @@ class ProductCore extends ObjectModel
 					VALUES ('.(int)$this->id.', '.(int)$shop->id.', '.(int)$this->id_category_default.')
 					ON DUPLICATE KEY UPDATE `id_category_default` = '.(int)$this->id_category_default);
 	}
+
+	/**
+	 * @deprecated 1.5.0.10
+	 * @see Product::getAttributeCombinations()
+	 * @param int $id_lang
+	 */
+	public function getAttributeCombinaisons($id_lang)
+	{
+		Tools::displayAsDeprecated('Use Product::getAttributeCombinations($id_lang)');
+		return $this->getAttributeCombinations($id_lang);
+	}
+
+	/**
+	 * @deprecated 1.5.0.10
+	 * @see Product::deleteAttributeCombination()
+	 * @param int $id_lang
+	 */
+	public function deleteAttributeCombinaison($id_product_attribute)
+	{
+		Tools::displayAsDeprecated('Use Product::deleteAttributeCombination($id_product_attribute)');
+		return $this->deleteAttributeCombination($id_lang);
+	}
+
 }
