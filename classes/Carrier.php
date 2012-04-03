@@ -415,6 +415,7 @@ class CarrierCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)'.
 				($id_zone ? 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = '.(int)$id_zone.')' : '').'
+				'.Shop::addSqlAssociation('carrier', 'c').'
 				WHERE c.`deleted` = '.($delete ? '1' : '0').
 					($active ? ' AND c.`active` = 1' : '').
 					($id_zone ? ' AND cz.`id_zone` = '.(int)$id_zone.'
@@ -1117,6 +1118,17 @@ class CarrierCore extends ObjectModel
 		if (is_null($cart))
 			$cart = Context::getContext()->cart;
 			
+		$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
+		if ($id_address)
+		{
+			$address = new Address($id_address);
+			$id_zone = Address::getZoneById($address->id);
+		}
+		else
+		{
+			$country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+			$id_zone = $country->id_zone;
+		}
 
 		// Does the product is linked with carriers?
 		$query = new DbQuery();
@@ -1126,12 +1138,15 @@ class CarrierCore extends ObjectModel
 		$query->where('id_product = '.(int)$product->id);
 		$query->where('id_shop = '.(int)$id_shop);
 		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		
 		if (!empty($carriers))
 		{
 			$carrier_list = array();
 			foreach ($carriers as $carrier)
-				$carrier_list[] = $carrier['id_carrier'];
-			return $carrier_list;
+				if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone))
+					$carrier_list[] = $carrier['id_carrier'];
+			if (!empty($carrier_list))
+				return $carrier_list;
 		}
 
 		$carrier_list = array();
@@ -1147,17 +1162,6 @@ class CarrierCore extends ObjectModel
 		if (empty($carrier_list)) // No carriers defined, get all available carriers
 		{
 			$carrier_list = array();
-			$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
-			if ($id_address)
-			{
-				$address = new Address($id_address);
-				$id_zone = Address::getZoneById($address->id);
-			}
-			else
-			{
-				$country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
-				$id_zone = $country->id_zone;
-			}
 			$customer = new Customer($cart->id_customer);
 			$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
 			foreach ($carriers as $carrier)
