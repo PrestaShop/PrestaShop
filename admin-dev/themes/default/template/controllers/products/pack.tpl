@@ -36,12 +36,12 @@
 	<tr>
 		<td>
 			<div class="ppack">
-				<input type="checkbox" name="ppack" id="ppack" value="1" {if $is_pack}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
+				<input type="checkbox" name="ppack" id="ppack" value="1" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
 				<label class="t" for="ppack">{l s='Pack'}</label>
 			</div>
 		</td>
 		<td>
-			<div id="ppackdiv" {if !$is_pack}style="display: none;"{/if}>
+			<div id="ppackdiv" {if !($product_type == Product::PTYPE_PACK)}style="display: none;"{/if}>
 
 				<label for="curPackItemName" style="width:560px;text-align:left;">
 					{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}

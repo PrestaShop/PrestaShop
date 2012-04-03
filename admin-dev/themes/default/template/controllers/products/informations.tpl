@@ -34,11 +34,11 @@
 
 	<div>
 		<label class="text">{l s='Type:'}</label>
-		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if (isset($smarty.post.type_product) && Product::PTYPE_SIMPLE == $smarty.post.type_product)}checked="checked"{/if} />
+		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
 		<label class="radioCheck" for="simple_product">{l s='Product'}</label>
-		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $is_pack || (isset($smarty.post.type_product) && Product::PTYPE_PACK == $smarty.post.type_product)}checked="checked"{/if} />
+		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
 		<label class="radioCheck" for="pack_product">{l s='Pack'}</label>
-		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" {if (isset($smarty.post.type_product) && Product::PTYPE_VIRTUAL == $smarty.post.type_product)}checked="checked"{/if} />
+		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
 		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking and downloadable products)'}</label>
 	</div>
 

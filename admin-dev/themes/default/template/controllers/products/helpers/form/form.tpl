@@ -92,109 +92,28 @@
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 
-		var product_type;
-		{*var is_pack = {$is_pack};
-		var is_virtual = {$product->is_virtual};
-		var mce_maximum = '{l s='Maximum'}';
+		var product_type = {$product_type};
+		{*var mce_maximum = '{l s='Maximum'}';
 		var mce_characters = '{l s='characters'}';*}
 
 		$(document).ready(function()
 		{
-			product_type = $("input[name=type_product]:checked").val();
 			$('#product-tab-content-wait').show();
-			{if $is_pack}
-				tabs_manager.onLoad('Informations', function(){
-					$('#pack_product').attr('checked', 'checked');
-				});
+			//product_type = $("input[name=type_product]:checked").val();
+			if (product_type == product_type_pack)
+			{
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
-			{elseif $product->is_virtual}
-				tabs_manager.onLoad('Informations', function(){
-					$('#virtual_product').attr('checked', 'checked');
-					$('#condition').attr('disabled', 'disabled');
-					$('#condition option[value=new]').attr('selected', 'selected');
-				});
+			}
+			else if (product_type == product_type_virtual)
+			{
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="Shipping"]').hide();
-			{else}
-				tabs_manager.onLoad('Informations', function(){
-					$('#simple_product').attr('checked', 'checked');
-				});
-				$('li.tab-row a[id*="Pack"]').hide();
-				$('li.tab-row a[id*="VirtualProduct"]').hide();
-			{/if}
-
-			$('input[name="type_product"]').live('click', function()
+			}
+			else
 			{
-				// Reset settings
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
-				$('div.ppack').hide();
-				$('#is_virtual_good').removeAttr('checked');
-				$('div.is_virtual_good').hide();
-				$('#is_virtual').val(0);
-				$("#virtual_good_attributes").hide();
-				
-				// product_type is now global
-				product_type = $(this).val();
-
-				// until a product is added in the pack
-				// if product is PTYPE_PACK, save buttons will be disabled 
-				if (product_type == {Product::PTYPE_PACK})
-				{
-					//when you change the type of the product, directly go to the pack tab
-					$('li.tab-row a[id*="Pack"]').show().click();
-					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
-					$('#ppackdiv').show();
-					// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
-					$("#product-tab-content-Pack").bind('loaded', function(){
-						$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
-						$('#ppackdiv').show();
-					});
-					$("#product-tab-content-Quantities").bind('loaded', function(){
-						$('.stockForVirtualProduct').show();
-					});
-
-					$('li.tab-row a[id*="Shipping"]').show();
-					$('#condition').removeAttr('disabled');
-					$('#condition option[value=new]').removeAttr('selected');
-					$('.stockForVirtualProduct').show();
-					// if pack is enabled, if you choose pack, automatically switch to pack page
-				}
-				else if (product_type == {Product::PTYPE_VIRTUAL})
-				{
-					$('li.tab-row a[id*="VirtualProduct"]').show().click();
-
-					tabs_manager.onLoad('VirtualProduct', function(){
-						$('#is_virtual_good').attr('checked', true);
-						$('#virtual_good').show();
-						$('#is_virtual').val(1);
-						$("#virtual_good_attributes").show();
-					});
-
-					tabs_manager.onLoad('Quantities', function(){
-						$('.stockForVirtualProduct').hide();
-					});
-
-					$('li.tab-row a[id*="Shipping"]').hide();
-
-					tabs_manager.onLoad('Informations', function(){
-						$('#condition').attr('disabled', 'disabled');
-						$('#condition option[value=refurbished]').removeAttr('selected');
-						$('#condition option[value=used]').removeAttr('selected');
-					});
-				}
-				else
-				{
-					// 3rd case : product_type is PTYPE_SIMPLE (0)
-					$('li.tab-row a[id*="Shipping"]').show();
-					$('#condition').removeAttr('disabled');
-					$('#condition option[value=new]').removeAttr('selected');
-					$('.stockForVirtualProduct').show();
-				}
-				// this handle the save button displays and warnings
-				handleSaveButtons();
-
-			});
+			}
 
 			$('#desc-product-newCombination').hide();
 

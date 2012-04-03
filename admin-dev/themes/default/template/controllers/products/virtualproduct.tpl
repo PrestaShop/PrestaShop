@@ -60,7 +60,7 @@
 			$('#is_virtual_file_product').hide();
 		}
 
-		$('input[name=is_virtual_file]').live('change', function() {
+		$('input[name=is_virtual_file]').live('change', function(e) {
 			if($(this).val() == '1')
 			{
 				$('#virtual_good_more').show();

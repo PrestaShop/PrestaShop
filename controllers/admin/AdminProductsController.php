@@ -2144,9 +2144,13 @@ class AdminProductsControllerCore extends AdminController
 		if (!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
+		$product = $this->object;
+
 		// Sort the tabs that need to be preloaded by their priority number
 		asort($this->available_tabs, SORT_NUMERIC);
 		$this->tpl_form_vars['tabs_preloaded'] = $this->available_tabs;
+
+		$this->tpl_form_vars['product_type'] = $product->getType();
 
 		// getLanguages init this->_languages
 		$this->getLanguages();
@@ -2708,9 +2712,9 @@ class AdminProductsControllerCore extends AdminController
 			'languages' => $languages,
 			'default_language' => $default_language,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
-			'is_pack' => ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK,
 			'input_pack_items' => $input_pack_items,
-			'input_namepack_items' => $input_namepack_items
+			'input_namepack_items' => $input_namepack_items,
+			'product_type' => $product->getType()
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
@@ -3142,6 +3146,8 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
+
+		$data->assign('product_type', $product->getType());
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
