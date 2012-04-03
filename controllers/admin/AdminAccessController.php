@@ -35,9 +35,10 @@ class AdminAccessControllerCore extends AdminController
 
 	public function __construct()
 	{
-	 	$this->table = 'access';
+		$this->table = 'access';
 		$this->className = 'Profile';
-	 	$this->lang = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->lang = false;
 		$this->context = Context::getContext();
 
 		// Blacklist AdminLogin
@@ -235,6 +236,6 @@ class AdminAccessControllerCore extends AdminController
 	*/
 	public function getCurrentProfileId()
 	{
-	 	return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int)$_GET['id_profile'] : 1;
+		return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int)$_GET['id_profile'] : 1;
 	}
 }
