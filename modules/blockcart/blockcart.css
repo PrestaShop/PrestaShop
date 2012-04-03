@@ -1,5 +1,10 @@
 /* Special style for block cart*/
-#cart_block {
+#left_column #cart_block, #right_column #cart_block {
+}
+#header  #cart_block h4 {
+	display: none;
+}
+#header #cart_block {
 	z-index: 10;
 	display:none;
 	position: absolute;
@@ -17,11 +22,6 @@
 	background:#eee
 }
 #cart_block.cart_block_hover {display:block}
-#cart_block h4 {
-	display:none;
-	padding-left:36px;
-	background:url(img/pict_cart_block_h4.png) no-repeat 5px 0
-}
 #cart_block h4 span {
 	float: right;
 	padding-left: 10px;
