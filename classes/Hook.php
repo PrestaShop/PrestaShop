@@ -249,8 +249,8 @@ class HookCore extends ObjectModel
 			$sql = new DbQuery();
 			$sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
 			$sql->from('module', 'm');
-			$sql->leftJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
-			$sql->leftJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
+			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
+			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
 			$sql->where('(SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $shop_list).')) = '.count($shop_list));
 			$sql->where('hm.id_shop IN('.implode(', ', $shop_list).')');
 
