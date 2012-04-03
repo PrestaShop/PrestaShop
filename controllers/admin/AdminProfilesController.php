@@ -30,14 +30,15 @@ class AdminProfilesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-	 	$this->table = 'profile';
-	 	$this->className = 'Profile';
-	 	$this->lang = true;
+		$this->table = 'profile';
+		$this->className = 'Profile';
+		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowActionSkipList('delete', array(1));
 
-	 	$this->bulk_actions = array(
+		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 
 			'confirm' => $this->l('Delete selected items?'))
 			);
@@ -83,7 +84,7 @@ class AdminProfilesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-	 	/* PrestaShop demo mode */
+		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
@@ -91,7 +92,7 @@ class AdminProfilesControllerCore extends AdminController
 		}
 		/* PrestaShop demo mode*/
 
-	 	if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
+		if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
 			$this->errors[] = $this->l('For security reasons, you cannot delete the Administrator profile');
 		else
 			parent::postProcess();
