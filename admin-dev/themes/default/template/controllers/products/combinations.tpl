@@ -25,15 +25,15 @@
 *}
 
 <script type="text/javascript">
+	var msg_combination_1 = '{l s='Please choose an attribute'}';
+	var msg_combination_2 = '{l s='Please choose a value'}';
+	var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
+	var msg_new_combination = '{l s='New combination'}';
+
 	$(document).ready(function(){
 		{if $product->is_virtual}
 			$('#virtual_good_attributes').show();
 		{/if}
-
-		var msg_combination_1 = '{l s='Please choose an attribute'}';
-		var msg_combination_2 = '{l s='Please choose a value'}';
-		var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
-		var msg_new_combination = '{l s='New combination'}';
 	});
 </script>
 

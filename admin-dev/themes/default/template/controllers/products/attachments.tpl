@@ -90,40 +90,4 @@
 	</table>
 	<div class="clear">&nbsp;</div>
 	<input type="hidden" name="arrayAttachments" id="arrayAttachments" value="{foreach $attach1 as $attach}{$attach.id_attachment},{/foreach}" />
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#addAttachment").live('click', function() {
-				$("#selectAttachment2 option:selected").each(function(){
-					var val = $('#arrayAttachments').val();
-					var tab = val.split(',');
-					for (var i=0; i < tab.length; i++)
-						if (tab[i] == $(this).val())
-							return false;
-					$('#arrayAttachments').val(val+$(this).val()+',');
-				});
-				return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
-			});
-			$("#removeAttachment").live('click', function() {
-				$("#selectAttachment1 option:selected").each(function(){
-					var val = $('#arrayAttachments').val();
-					var tab = val.split(',');
-					var tabs = '';
-					for (var i=0; i < tab.length; i++)
-						if (tab[i] != $(this).val())
-						{
-							tabs = tabs+','+tab[i];
-							$('#arrayAttachments').val(tabs);
-						}
-				});
-				return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
-			});
-			$("#product").submit(function() {
-				$("#selectAttachment1 option").each(function(i) {
-					$(this).attr("selected", "selected");
-				});
-			});
-		});
-	</script>
-
 {/if}

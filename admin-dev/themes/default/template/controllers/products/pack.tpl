@@ -25,138 +25,8 @@
 *}
 
 <script type="text/javascript">
-
 	var msg_select_one = '{l s='Please select at least one product.' js=1}';
 	var msg_set_quantity = '{l s='Please set a quantity to add a product.' js=1}';
-
-	$(document).ready(function() {
-		if ($('#ppack').attr('checked'))
-		{
-			$('#ppack').attr('disabled', 'disabled');
-			$('#ppackdiv').show();
-		}
-
-		$('div.ppack').hide();
-
-		$('#curPackItemName').autocomplete('ajax_products_list.php', {
-			delay: 100,
-			minChars: 1,
-			autoFill: true,
-			max:20,
-			matchContains: true,
-			mustMatch:true,
-			scroll:false,
-			cacheLength:0,
-			// param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete
-			multipleSeparator:'||',
-			formatItem: function(item) {
-				return item[1]+' - '+item[0];
-			},
-			extraParams: {
-				excludeIds : getSelectedIds(),
-				excludeVirtuals : 1
-			}
-		}).result(function(event, item){
-			$('#curPackItemId').val(item[1]);
-		});
-
-	});
-
-	function addPackItem()
-	{
-		var curPackItemId = $('#curPackItemId').val();
-		var curPackItemName = $('#curPackItemName').val();
-		var curPackItemQty = $('#curPackItemQty').val();
-		if (curPackItemId == '' || curPackItemName == '')
-		{
-			jAlert(msg_select_one);
-			return false;
-		}
-		else if (curPackItemId == '' || curPackItemQty == '')
-		{
-			jAlert(msg_set_quantity);
-			return false;
-		}
-
-		var lineDisplay = curPackItemQty+ 'x ' +curPackItemName;
-
-		var divContent = $('#divPackItems').html();
-		divContent += lineDisplay;
-		divContent += '<span onclick="delPackItem(' + curPackItemId + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
-
-		// QTYxID-QTYxID
-		// @todo : it should be better to create input for each items and each qty
-		// instead of only one separated by x, - and ¤
-		var line = curPackItemQty+ 'x' +curPackItemId;
-
-		$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
-		$('#divPackItems').html(divContent);
-			$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
-
-		$('#curPackItemId').val('');
-		$('#curPackItemName').val('');
-		$('p.listOfPack').show();
-
-		$('#curPackItemName').setOptions({
-			extraParams: {
-				excludeIds :  getSelectedIds()
-			}
-		});
-		// show / hide save buttons
-		// if product has a name
-		handleSaveButtons();
-	}
-
-	function delPackItem(id)
-	{
-		var reg = new RegExp('-', 'g');
-		var regx = new RegExp('x', 'g');
-
-		var div = getE('divPackItems');
-		var input = getE('inputPackItems');
-		var name = getE('namePackItems');
-		var select = getE('curPackItemId');
-		var select_quantity = getE('curPackItemQty');
-
-		var inputCut = input.value.split(reg);
-		var nameCut = name.value.split(new RegExp('¤', 'g'));
-
-		input.value = '';
-		name.value = '';
-		div.innerHTML = '';
-
-		for (var i = 0; i < inputCut.length; ++i)
-			if (inputCut[i])
-			{
-				var inputQty = inputCut[i].split(regx);
-				if (inputQty[1] != id)
-				{
-					input.value += inputCut[i] + '-';
-					name.value += nameCut[i] + '¤';
-					div.innerHTML += nameCut[i] + ' <span onclick="delPackItem(' + inputQty[1] + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
-				}
-			}
-
-		$('#curPackItemName').setOptions({
-			extraParams: {
-				excludeIds :  getSelectedIds()
-			}
-		});
-
-		// if no item left in the pack, disable save buttons
-		handleSaveButtons();
-	}
-
-	function getSelectedIds()
-	{
-		var ids = '';
-		if (typeof(id_product) != 'undefined')
-			ids += id_product + ',';
-		ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
-		ids = ids.replace(/\,$/,'');
-		return ids;
-	}
-
 </script>
 
 <h4>{l s='Pack'}</h4>
@@ -183,7 +53,7 @@
 				<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
 				<input type="hidden" size="2" id="curPackItemId" />
 
-				<span onclick="addPackItem();" class="button" style="cursor: pointer;">
+				<span id="add_pack_item" class="button" style="cursor: pointer;">
 					{l s='Add this product to the pack'}
 				</span>
 
