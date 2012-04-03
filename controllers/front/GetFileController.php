@@ -87,6 +87,10 @@ class GetFileControllerCore extends FrontController
 			if (!file_exists(_PS_DOWNLOAD_DIR_.$filename))
 				$this->displayCustomError('This file no longer exists.');
 
+            if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
+                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return']))
+                $this->displayCustomError('This product has been refunded.');
+
 			$now = time();
 
 			$product_deadline = strtotime($info['download_deadline']);
@@ -291,6 +295,7 @@ class GetFileControllerCore extends FrontController
 		'This product does not exist in our store.' => Tools::displayError('This product does not exist in our store.'),
 		'This product has been deleted.' => Tools::displayError('This product has been deleted.'),
 		'This file no longer exists.'	=> Tools::displayError('This file no longer exists.'),
+        'This product has been refunded.' => Tools::displayError('This product has been refunded.'),
 		'The product deadline is in the past.' => Tools::displayError('The product deadline is in the past.'),
 		'Expiration date exceeded' => Tools::displayError('Expiration date exceeded'),
 		'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of allowed downloads.'));
