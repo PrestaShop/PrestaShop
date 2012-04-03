@@ -98,11 +98,4 @@
 			<img src="../img/admin/add.gif" alt="new_features" title="{l s='Add a new feature'}" />&nbsp;{l s='Add a new feature'}
 		</a>
 	</div>
-	
-	<script type="text/javascript">
-	$(document).ready(function(){
-		displayFlags(languages, id_language, allowEmployeeFormLang);
-	});
-	</script>
-
 {/if}

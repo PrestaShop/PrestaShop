@@ -115,31 +115,17 @@
 		<td class="col-left"><label>{l s='Options:'}</label></td>
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
-				<li><input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-			<script type="text/javascript">
-			$(document).ready(function()
-			{
-				$("#available_for_order").click(function(){
-					if ($(this).is(':checked'))
-					{
-						$('#show_price').attr('checked', 'checked');
-						$('#show_price').attr('disabled', 'disabled');
-					}
-					else
-					{
-						$('#show_price').attr('disabled', '');
-					}
-				});
-			});
-			</script>
-			<label for="available_for_order" class="t">{l s='available for order'}</label></li>
+				<li>
+					<input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
+					<label for="available_for_order" class="t">{l s='available for order'}</label>
+				</li>
 			<li>
-			<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-			<label for="show_price" class="t">{l s='show price'}</label>
+				<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
+				<label for="show_price" class="t">{l s='show price'}</label>
 			</li>
 			<li>
-			<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-			<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
+				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
+				<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
 			</li>
 		</td>
 	</tr>
@@ -251,37 +237,6 @@
 						</td>
 					</tr>
 				</table>
-			<script type="text/javascript">
-				$(function() {
-					changeTagImage();
-					$('#createImageDescription input').change(function(){
-						changeTagImage();
-					});
-
-					var i = 0;
-					$('.addImageDescription').click(function(){
-						if (i == 0){
-							$('#createImageDescription').animate({
-								opacity: 1, height: 'toggle'
-								}, 500);
-							i = 1;
-						}else{
-							$('#createImageDescription').animate({
-								opacity: 0, height: 'toggle'
-								}, 500);
-							i = 0;
-						}
-					});
-				});
-
-				function changeTagImage(){
-					var smallImage = $('input[name=smallImage]:checked').attr('value');
-					var leftRight = $('input[name=leftRight]:checked').attr('value');
-					var imageTypes = $('input[name=imageTypes]:checked').attr('value');
-					var tag = '[img-'+smallImage+'-'+leftRight+'-'+imageTypes+']';
-					$('#resultImage').val(tag);
-				}
-			</script>
 		{/if}
 		<table>
 		<tr>

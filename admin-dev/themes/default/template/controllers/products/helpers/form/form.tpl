@@ -28,7 +28,7 @@
 
 {block name="autoload_tinyMCE"}
 	// Execute when tab Informations has finished loading
-		new ProductTab('Informations').onDisplay(function(){
+	tabs_manager.onLoad('Informations', function(){
 		// change each by click to load only on click
 		$(".autoload_rte").each(function(e){
 			tinySetup({
@@ -93,17 +93,22 @@
 		var post_data = {$post_data};
 
 		var product_type;
+		{*var is_pack = {$is_pack};
+		var is_virtual = {$product->is_virtual};
+		var mce_maximum = '{l s='Maximum'}';
+		var mce_characters = '{l s='characters'}';*}
+
 		$(document).ready(function()
 		{
 			product_type = $("input[name=type_product]:checked").val();
 			$('#product-tab-content-wait').show();
 			{if $is_pack}
-				new ProductTab('Informations').onDisplay(function(){
+				tabs_manager.onLoad('Informations', function(){
 					$('#pack_product').attr('checked', 'checked');
 				});
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{elseif $product->is_virtual}
-				new ProductTab('Informations').onDisplay(function(){
+				tabs_manager.onLoad('Informations', function(){
 					$('#virtual_product').attr('checked', 'checked');
 					$('#condition').attr('disabled', 'disabled');
 					$('#condition option[value=new]').attr('selected', 'selected');
@@ -111,7 +116,7 @@
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="Shipping"]').hide();
 			{else}
-				new ProductTab('Informations').onDisplay(function(){
+				tabs_manager.onLoad('Informations', function(){
 					$('#simple_product').attr('checked', 'checked');
 				});
 				$('li.tab-row a[id*="Pack"]').hide();
@@ -159,20 +164,20 @@
 				{
 					$('li.tab-row a[id*="VirtualProduct"]').show().click();
 
-					new ProductTab('VirtualProduct').onDisplay(function(){
+					tabs_manager.onLoad('VirtualProduct', function(){
 						$('#is_virtual_good').attr('checked', true);
 						$('#virtual_good').show();
 						$('#is_virtual').val(1);
 						$("#virtual_good_attributes").show();
 					});
 
-					new ProductTab('Quantities').onDisplay(function(){
+					tabs_manager.onLoad('Quantities', function(){
 						$('.stockForVirtualProduct').hide();
 					});
 
 					$('li.tab-row a[id*="Shipping"]').hide();
 
-					new ProductTab('Informations').onDisplay(function(){
+					tabs_manager.onLoad('Informations', function(){
 						$('#condition').attr('disabled', 'disabled');
 						$('#condition option[value=refurbished]').removeAttr('selected');
 						$('#condition option[value=used]').removeAttr('selected');
@@ -215,7 +220,7 @@
 				}
 
 				if ($("#product-tab-content-"+id).hasClass('not-loaded') && !$("#product-tab-content-"+id).hasClass('loading'))
-					ProductTab.display(id, true, 0, null);
+					tabs_manager.display(id, true, 0, null);
 				else
 				{
 					$("#product-tab-content-"+id).show(0, function(){
@@ -249,7 +254,7 @@
 			if ($('#product-tab-content-Associations').hasClass('not-loaded'))
 				disableSave();
 
-			new ProductTab('Associations').onDisplay(function(){
+			tabs_manager.onLoad('Associations', function(){
 				handleSaveButtons();
 			});
 
@@ -275,7 +280,7 @@
 			{/foreach}
 
 			// Recursively load tabs starting with the first element of stack
-			ProductTab.display(tabs_to_preload[0], false, 0, tabs_to_preload);
+			tabs_manager.display(tabs_to_preload[0], false, 0, tabs_to_preload);
 
 			$('.productTabs').show();
 			$('#product_form').show();
