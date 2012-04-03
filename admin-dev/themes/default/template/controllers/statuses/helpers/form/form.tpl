@@ -49,7 +49,7 @@
 										{if $field_value == $option[$input.options.id]}selected="selected"{/if}
 									{/foreach}
 								{else}
-									{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+									{if isset($fields_value[$input.name][$language.id_lang]) && ($fields_value[$input.name][$language.id_lang] == $option[$input.options.id])}selected="selected"{/if}
 								{/if}
 							>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
