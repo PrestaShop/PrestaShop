@@ -1185,11 +1185,11 @@ class ProductCore extends ObjectModel
 	{
 		$result = Db::getInstance()->update('product_attribute', array(
 			'default_on' => 1
-		), 'id_product` = '.(int)$this->id.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+		), '`id_product` = '.(int)$this->id.' AND `id_product_attribute` = '.(int)$id_product_attribute);
 
 		$result &= Db::getInstance()->update('product', array(
 			'cache_default_attribute' => (int)$id_product_attribute,
-		), 'id_product = '.(int)$this->id);
+		), '`id_product` = '.(int)$this->id);
 
 		return $result;
 	}
