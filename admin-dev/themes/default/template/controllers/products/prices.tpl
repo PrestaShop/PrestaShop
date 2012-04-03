@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{* BEGIN CUSTOMER AUTO-COMPLETE / TO REFACTO *}
-
 <script type="text/javascript">
 var Customer = {
 	"hiddenField": jQuery('#id_customer'),

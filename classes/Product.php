@@ -4907,4 +4907,21 @@ class ProductCore extends ObjectModel
 		return $this->deleteAttributeCombination($id_lang);
 	}
 
+	/**
+	 * Get the product type (simple, virtual, pack)
+	 * @since in 1.5.0
+	 *
+	 * @return int
+	 */
+	public function getType()
+	{
+		if (!$this->id)
+			return Product::PTYPE_SIMPLE;
+		if (Pack::isPack($this->id))
+			return Product::PTYPE_PACK;
+		if ($this->is_virtual)
+			return Product::PTYPE_VIRTUAL;
+
+		return Product::PTYPE_SIMPLE;
+	}
 }
