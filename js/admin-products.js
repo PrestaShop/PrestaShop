@@ -24,6 +24,7 @@
 */
 
 // array of product tab objects containing methods and dom bindings
+// The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
 
 product_tabs['Combinations'] = {
@@ -251,7 +252,7 @@ function enableSave()
 
 function handleSaveButtons(e)
 {
-	product_type = $("input[name=type_product]:checked").val();
+	//product_type = $("input[name=type_product]:checked").val();
 	msg = [];
 	var i = 0;
 	// relative to type of product
@@ -542,6 +543,93 @@ product_tabs['Informations'] = {
 			}
 		});
 	},
+	'switchProductType' : function(){
+		if (product_type == product_type_pack)
+		{
+			$('#pack_product').attr('checked', 'checked');
+		}
+		else if (product_type == product_type_virtual)
+		{
+			$('#virtual_product').attr('checked', 'checked');
+			$('#condition').attr('disabled', 'disabled');
+			$('#condition option[value=new]').attr('selected', 'selected');
+		}
+		else
+		{
+			$('#simple_product').attr('checked', 'checked');
+		}
+
+		$('input[name="type_product"]').live('click', function()
+		{
+			// Reset settings
+			$('li.tab-row a[id*="Pack"]').hide();
+			$('li.tab-row a[id*="VirtualProduct"]').hide();
+			$('div.ppack').hide();
+			$('#is_virtual_good').removeAttr('checked');
+			$('div.is_virtual_good').hide();
+			$('#is_virtual').val(0);
+			$("#virtual_good_attributes").hide();
+
+			product_type = $(this).val();
+
+			// until a product is added in the pack
+			// if product is PTYPE_PACK, save buttons will be disabled
+			if (product_type == product_type_pack)
+			{
+				//when you change the type of the product, directly go to the pack tab
+				$('li.tab-row a[id*="Pack"]').show().click();
+				$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+				$('#ppackdiv').show();
+				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
+				$("#product-tab-content-Pack").bind('loaded', function(){
+					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+					$('#ppackdiv').show();
+				});
+				$("#product-tab-content-Quantities").bind('loaded', function(){
+					$('.stockForVirtualProduct').show();
+				});
+
+				$('li.tab-row a[id*="Shipping"]').show();
+				$('#condition').removeAttr('disabled');
+				$('#condition option[value=new]').removeAttr('selected');
+				$('.stockForVirtualProduct').show();
+				// if pack is enabled, if you choose pack, automatically switch to pack page
+			}
+			else if (product_type == product_type_virtual)
+			{
+				$('li.tab-row a[id*="VirtualProduct"]').show().click();
+
+				tabs_manager.onLoad('VirtualProduct', function(){
+					$('#is_virtual_good').attr('checked', true);
+					$('#virtual_good').show();
+					$('#is_virtual').val(1);
+					$("#virtual_good_attributes").show();
+				});
+
+				tabs_manager.onLoad('Quantities', function(){
+					$('.stockForVirtualProduct').hide();
+				});
+
+				$('li.tab-row a[id*="Shipping"]').hide();
+
+				tabs_manager.onLoad('Informations', function(){
+					$('#condition').attr('disabled', 'disabled');
+					$('#condition option[value=refurbished]').removeAttr('selected');
+					$('#condition option[value=used]').removeAttr('selected');
+				});
+			}
+			else
+			{
+				// 3rd case : product_type is PTYPE_SIMPLE (0)
+				$('li.tab-row a[id*="Shipping"]').show();
+				$('#condition').removeAttr('disabled');
+				$('#condition option[value=new]').removeAttr('selected');
+				$('.stockForVirtualProduct').show();
+			}
+			// this handle the save button displays and warnings
+			handleSaveButtons();
+		});
+	},
 	/*'setup_tinymce': function(){
 		// change each by click to load only on click
 		$(".autoload_rte").each(function(e){
@@ -577,11 +665,12 @@ product_tabs['Informations'] = {
 	'onReady' : function(){
 		product_tabs['Informations'].bindAvailableForOrder();
 		product_tabs['Informations'].bindTagImage();
+		product_tabs['Informations'].switchProductType();
 	}
 }
 
 product_tabs['Pack'] = {
-	'packFunctions' : function (){
+	'bindPackEvents' : function (){
 		if ($('#ppack').attr('checked'))
 		{
 			$('#ppack').attr('disabled', 'disabled');
@@ -710,7 +799,7 @@ product_tabs['Pack'] = {
 		}
 	},
 	'onReady' : function(){
-		product_tabs['Pack'].packFunctions();
+		product_tabs['Pack'].bindPackEvents();
 	}
 }
 

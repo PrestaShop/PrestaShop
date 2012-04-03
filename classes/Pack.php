@@ -36,6 +36,9 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return false;
 
+		if (!$id_product)
+			return false;
+
 		if (!array_key_exists($id_product, self::$cacheIsPack))
 		{
 			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$id_product);
