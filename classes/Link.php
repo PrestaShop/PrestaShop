@@ -458,13 +458,13 @@ class LinkCore
 			$url = $this->getPageLink($name);
 		}
 
-		$vars = (!$array) ? '' : array();
+		$vars = array();
 		$vars_nb = array('n', 'search_query');
 		$vars_sort = array('orderby', 'orderway');
 		$vars_pagination = array('p');
 
-		$n = 0;
 		foreach ($_GET as $k => $value)
+		{
 			if ($k != 'id_'.$type && $k != 'controller')
 			{
 				if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang'))
@@ -472,12 +472,29 @@ class LinkCore
 				$if_nb = (!$nb || ($nb && !in_array($k, $vars_nb)));
 				$if_sort = (!$sort || ($sort && !in_array($k, $vars_sort)));
 				$if_pagination = (!$pagination || ($pagination && !in_array($k, $vars_pagination)));
-				if ($if_nb && $if_sort && $if_pagination && !is_array($value))
-					!$array ? ($vars .= ((!$n++ && ($this->allow == 1 || $url == $this->url)) ? '?' : '&').urlencode($k).'='.urlencode($value)) : ($vars[urlencode($k)] = urlencode($value));
+				if ($if_nb && $if_sort && $if_pagination)
+				{
+					if (!is_array($value))
+						$vars[urlencode($k)] = urlencode($value);
+					else
+					{
+						foreach (explode('&', http_build_query(array($k => $value))) as $key => $val)
+						{
+							$data = explode('=', $val);
+							$vars[urldecode($data[0])] = $data[1];
+						}
+					}
+				}
 			}
+		}
+		
 		if (!$array)
-			return $url.$vars;
+			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars);
 		$vars['requestUrl'] = $url;
+		
+		if (!$this->allow == 1)
+			$vars['controller'] = Dispatcher::getInstance()->getController();
+		
 		if ($type && $id_object)
 			$vars['id_'.$type] = (is_object($id_object) ? (int)$id_object->id : (int)$id_object);
 		return $vars;
