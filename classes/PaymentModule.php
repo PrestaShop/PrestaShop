@@ -254,6 +254,7 @@ abstract class PaymentModuleCore extends Module
 
 					// Construct order detail table for the email
 					$products_list = '';
+					$virtual_product = true;
 					$products = $cart->getProducts();
 					foreach ($products as $key => $product)
 					{
@@ -298,6 +299,11 @@ abstract class PaymentModuleCore extends Module
 								<td style="padding: 0.6em 0.4em; text-align: center;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
 								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
 							</tr>';
+
+						// Check if is not a virutal product for the displaying of shipping
+						if (!$product['is_virtual'])
+							$virtual_product &= false;
+
 					} // end foreach ($products)
 
 					$cart_rules_list = '';
@@ -509,7 +515,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => sprintf('#%06d', (int)$order->id),
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
-						'{carrier}' => $carrier->name,
+						'{carrier}' => $virtual_product ? $this->l('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $products_list,
 						'{discounts}' => $cart_rules_list,
