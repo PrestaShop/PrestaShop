@@ -400,11 +400,11 @@ class LinkCore
 	}
 
 	/**
-	  * Create link after language change, for the change language block
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return string link
-	  */
+	 * Create link after language change, for the change language block
+	 *
+	 * @param integer $id_lang Language ID
+	 * @return string link
+	 */
 	public function getLanguageLink($id_lang, Context $context = null)
 	{
 		if (!$context)
@@ -434,6 +434,16 @@ class LinkCore
 		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
 	}
 
+	/**
+	 * Get pagination link
+	 * 
+	 * @param string $type Controller name
+	 * @param int $id_object
+	 * @param boolean $nb Show nb element per page attribute
+	 * @param boolean $sort Show sort attribute
+	 * @param boolean $pagination Show page number attribute
+	 * @param boolean $array If false return an url, if true return an array
+	 */
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
 	{
 		// If no parameter $type, try to get it by using the controller name
