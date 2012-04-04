@@ -91,6 +91,7 @@
 		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly URL at least for the default language before you can save the product.' slashes=1}';
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
+		var save_error = {if $save_error}true{else}false{/if};
 
 		var product_type = {$product_type};
 		{*var mce_maximum = '{l s='Maximum'}';
