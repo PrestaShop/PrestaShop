@@ -4904,7 +4904,7 @@ class ProductCore extends ObjectModel
 	public function deleteAttributeCombinaison($id_product_attribute)
 	{
 		Tools::displayAsDeprecated('Use Product::deleteAttributeCombination($id_product_attribute)');
-		return $this->deleteAttributeCombination($id_lang);
+		return $this->deleteAttributeCombination($id_product_attribute);
 	}
 
 	/**
