@@ -271,11 +271,13 @@ class MailCore
 		if ($id_lang == null)
 			$id_lang = (!isset($context->language) || !is_object($context->language)) ? (int)Configuration::get('PS_LANG_DEFAULT') : (int)$context->language->id;
 
-		$file_core = _PS_ROOT_DIR_.'/mails/'.$context->language->iso_code.'/lang.php';
+		$iso_code = Language::getIsoById((int)$id_lang);
+
+		$file_core = _PS_ROOT_DIR_.'/mails/'.$iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL))
 			include_once($file_core);
 
-		$file_theme = _PS_THEME_DIR_.'mails/'.$context->language->iso_code.'/lang.php';
+		$file_theme = _PS_THEME_DIR_.'mails/'.$iso_code.'/lang.php';
 		if (Tools::file_exists_cache($file_theme))
 			include_once($file_theme);
 
