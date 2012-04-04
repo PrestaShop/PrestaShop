@@ -12,7 +12,7 @@
     <keywords>los m&#xE1;s vendidos</keywords>
     <url_rewrite>mas-vendidos</url_rewrite>
   </meta>
-  <meta id="contact-form" id_shop="1">
+  <meta id="contact" id_shop="1">
     <title>Cont&#xE1;ctenos</title>
     <description>Use nuestro formulario de contacto con nosotros</description>
     <keywords>formulario de contacto, e-mail</keywords>
