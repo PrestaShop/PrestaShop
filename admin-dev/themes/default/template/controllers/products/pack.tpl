@@ -57,14 +57,14 @@
 					{l s='Add this product to the pack'}
 				</span>
 
-				<p class="product_description listOfPack" style="display:{if count($product->packItems) > 0}block{else}none{/if};text-align: left;">
+				<p class="product_description listOfPack" style="display:{if count($pack_items) > 0}block{else}none{/if};text-align: left;">
 					<br />{l s='List of products for that pack:'}
 				</p>
 
 				<div id="divPackItems">
-					{foreach from=$product->packItems item=packItem}
-						{$packItem->pack_quantity} x {$packItem->name}
-						<span class="delPackItem" name="{$packItem->id}" style="cursor: pointer;">
+					{foreach $pack_items as $pack_item}
+						{$pack_item.pack_quantity} x {$pack_item.name}
+						<span class="delPackItem" name="{$pack_item.id}" style="cursor: pointer;">
 							<img src="../img/admin/delete.gif" />
 						</span><br />
 					{/foreach}

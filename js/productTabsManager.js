@@ -82,11 +82,17 @@ function ProductTabsManager(){
 		if (selected)
 			$('#product-tab-content-wait').show();
 
+		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
+		var data;
+		if (save_error)
+			data = post_data;
+
 		$.ajax({
 			url : myurl,
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 			type: 'POST',
+			data: data,
 			success : function(data)
 			{
 				tab_selector.html(data);
