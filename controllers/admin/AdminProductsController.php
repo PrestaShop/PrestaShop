@@ -1965,6 +1965,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 		// @todo module free
 		$this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
+
 		parent::initContent();
 	}
 
@@ -2150,7 +2151,7 @@ class AdminProductsControllerCore extends AdminController
 		asort($this->available_tabs, SORT_NUMERIC);
 		$this->tpl_form_vars['tabs_preloaded'] = $this->available_tabs;
 
-		$this->tpl_form_vars['product_type'] = $product->getType();
+		$this->tpl_form_vars['product_type'] = (int)Tools::getValue('type_product', $product->getType());
 
 		// getLanguages init this->_languages
 		$this->getLanguages();
@@ -2164,6 +2165,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
 		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
+		$this->tpl_form_vars['save_error'] = !empty($this->errors);
 
 		// autoload rich text editor (tiny mce)
 		$this->tpl_form_vars['tinymce'] = true;
@@ -2687,34 +2689,83 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * Get an array of pack items for display from the product object if specified, else from POST/GET values
+	 *
+	 * @param Product $product
+	 * @return array of pack items
+	 */
+	public function getPackItems($product = null)
+	{
+		$pack_items = array();
+
+		if (!$product)
+		{
+			$names_input = Tools::getValue('namePackItems');
+			$ids_input = Tools::getValue('inputPackItems');
+			if (!$names_input || !$ids_input)
+				return array();
+			// ids is an array of string with format : QTYxID
+			$ids = array_unique(explode('-', $ids_input));
+			$names = array_unique(explode('¤', $names_input));
+
+			if (!empty($ids))
+			{
+				$length = count($ids);
+				for ($i = 0; $i < $length; $i++)
+					if (!empty($ids[$i]) && !empty($names[$i]))
+					{
+						list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
+						$exploded_name = explode('x', $names[$i]);
+						$pack_items[$i]['name'] = $exploded_name[1];
+					}
+			}
+		}
+		else
+		{
+			$i = 0;
+			foreach ($product->packItems as $pack_item)
+			{
+				$pack_items[$i]['id'] = $pack_item->id;
+				$pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
+				$pack_items[$i]['name']	= $pack_item->name;
+				$i++;
+			}
+		}
+
+		return $pack_items;
+	}
+
 	public function initFormPack($product, $languages, $default_language)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
-		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
-
-		$input_pack_items = '';
-		if (Tools::getValue('inputPackItems'))
-			$input_pack_items = Tools::getValue('inputPackItems');
-		else
-			foreach ($product->packItems as $pack_item)
-				$input_pack_items .= $pack_item->pack_quantity.'x'.$pack_item->id.'-';
-
-		$input_namepack_items = '';
+		// If pack items have been submitted, we want to display them instead of the actuel content of the pack
+		// in database. In case of a submit error, the posted data is not lost and can be sent again.
 		if (Tools::getValue('namePackItems'))
+		{
+			$input_pack_items = Tools::getValue('inputPackItems');
 			$input_namepack_items = Tools::getValue('namePackItems');
+			$pack_items = $this->getPackItems();
+		}
 		else
-			foreach ($product->packItems as $pack_item)
-				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
+		{
+			$product->packItems = Pack::getItems($product->id, $this->context->language->id);
+			$pack_items = $this->getPackItems($product);
+			$input_namepack_items = '';
+			$input_pack_items = '';
+			foreach ($pack_items as $pack_item)
+			{
+				$input_pack_items .= $pack_item['pack_quantity'].'x'.$pack_item['id'].'-';
+				$input_namepack_items .= $pack_item['pack_quantity'].' x '.$pack_item['name'].'¤';
+			}
+		}
 
 		$data->assign(array(
-			'product' => $product,
-			'languages' => $languages,
-			'default_language' => $default_language,
-			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
 			'input_pack_items' => $input_pack_items,
 			'input_namepack_items' => $input_namepack_items,
-			'product_type' => $product->getType()
+			'pack_items' => $pack_items,
+			'product_type' => (int)Tools::getValue('type_product', $product->getType())
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
@@ -3147,7 +3198,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->tags = Tag::getProductTags($product->id);
 
-		$data->assign('product_type', $product->getType());
+		$data->assign('product_type', (int)Tools::getValue('type_product', $product->getType()));
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;

@@ -31,6 +31,13 @@ class PackCore extends Product
 	protected static $cacheIsPack = array();
 	protected static $cacheIsPacked = array();
 
+	/**
+	 * Is product a pack?
+	 *
+	 * @static
+	 * @param $id_product
+	 * @return bool
+	 */
 	public static function isPack($id_product)
 	{
 		if (!Pack::isFeatureActive())
@@ -47,6 +54,13 @@ class PackCore extends Product
 		return self::$cacheIsPack[$id_product];
 	}
 
+	/**
+	 * Is product in a pack?
+	 *
+	 * @static
+	 * @param $id_product
+	 * @return bool
+	 */
 	public static function isPacked($id_product)
 	{
 		if (!Pack::isFeatureActive())
