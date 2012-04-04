@@ -12,7 +12,7 @@
     <keywords>meilleures ventes</keywords>
     <url_rewrite>meilleures-ventes</url_rewrite>
   </meta>
-  <meta id="contact-form" id_shop="1">
+  <meta id="contact" id_shop="1">
     <title>Contactez-nous</title>
     <description>Utilisez notre formulaire pour nous contacter</description>
     <keywords>contact, formulaire, e-mail</keywords>

@@ -12,7 +12,7 @@
     <keywords>Verkaufshits</keywords>
     <url_rewrite>verkaufshits</url_rewrite>
   </meta>
-  <meta id="contact-form" id_shop="1">
+  <meta id="contact" id_shop="1">
     <title>Kontaktieren Sie uns</title>
     <description>Nutzen Sie unser Kontaktformular</description>
     <keywords>Kontakt, Formular, E-Mail</keywords>
