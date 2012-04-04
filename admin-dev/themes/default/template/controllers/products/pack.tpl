@@ -64,7 +64,7 @@
 				<div id="divPackItems">
 					{foreach from=$product->packItems item=packItem}
 						{$packItem->pack_quantity} x {$packItem->name}
-						<span onclick="delPackItem({$packItem->id});" style="cursor: pointer;">
+						<span class="delPackItem" name="{$packItem->id}" style="cursor: pointer;">
 							<img src="../img/admin/delete.gif" />
 						</span><br />
 					{/foreach}
