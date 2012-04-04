@@ -3319,8 +3319,12 @@ class ProductCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'feature_value_lang`
 					WHERE `id_feature_value` = '.(int)$old_id_feature_value.'
 					AND `id_lang` = '.(int)$language['id_lang']);
-					$result3['id_feature_value'] = $new_id_feature_value;
-					$return &= Db::getInstance()->insert('feature_value_lang', $result3);
+
+					if ($result3)
+					{
+						$result3['id_feature_value'] = $new_id_feature_value;
+						$return &= Db::getInstance()->insert('feature_value_lang', $result3);
+					}
 				}
 				$row['id_feature_value'] = $new_id_feature_value;
 			}
