@@ -677,6 +677,10 @@ product_tabs['Pack'] = {
 			$('#ppackdiv').show();
 		}
 
+		$('.delPackItem').live('click', function(){
+			delPackItem($(this).attr('name'));
+		})
+
 		$('div.ppack').hide();
 
 		$('#curPackItemName').autocomplete('ajax_products_list.php', {
@@ -723,7 +727,7 @@ product_tabs['Pack'] = {
 
 			var divContent = $('#divPackItems').html();
 			divContent += lineDisplay;
-			divContent += '<span onclick="delPackItem(' + curPackItemId + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+			divContent += '<span class="delPackItem" name="' + curPackItemId + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
 
 			// QTYxID-QTYxID
 			// @todo : it should be better to create input for each items and each qty
@@ -774,7 +778,7 @@ product_tabs['Pack'] = {
 					{
 						input.value += inputCut[i] + '-';
 						name.value += nameCut[i] + '¤';
-						div.innerHTML += nameCut[i] + ' <span onclick="delPackItem(' + inputQty[1] + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+						div.innerHTML += nameCut[i] + ' <span class="delPackItem" name="' + inputQty[1] + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
 					}
 				}
 
