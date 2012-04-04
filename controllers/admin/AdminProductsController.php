@@ -2153,11 +2153,9 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->tpl_form_vars['product_type'] = (int)Tools::getValue('type_product', $product->getType());
 
-		// getLanguages init this->_languages
 		$this->getLanguages();
-		$languages = $this->_languages;
-		$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
-		$this->tpl_form_vars['defaultLanguage'] = Language::getLanguage($default_language);
+
+		$this->tpl_form_vars['defaultLanguage'] = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
 
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
 		$this->fields_form = array('');
@@ -2198,7 +2196,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_displayDraftWarning($this->object->active);
 
 			$this->initPack($this->object);
-			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
+			$this->{'initForm'.$this->tab_display}($this->object);
 			$this->tpl_form_vars['product'] = $this->object;
 			if ($this->ajax)
 				if (!isset($this->tpl_form_vars['custom_form']))
@@ -2675,14 +2673,14 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	public function initFormSeo($product, $languages, $default_language)
+	public function initFormSeo($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
 		$data->assign(array(
 			'product' => $product,
-			'languages' => $languages,
-			'default_language' => $default_language,
+			'languages' => $this->_languages,
+			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
 		));
 
@@ -2736,7 +2734,7 @@ class AdminProductsControllerCore extends AdminController
 		return $pack_items;
 	}
 
-	public function initFormPack($product, $languages, $default_language)
+	public function initFormPack($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
@@ -2771,7 +2769,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	public function initFormVirtualProduct($product, $languages, $default_language)
+	public function initFormVirtualProduct($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
@@ -3074,7 +3072,7 @@ class AdminProductsControllerCore extends AdminController
 		return $content;
 	}
 
-	public function initFormCustomization($obj, $languages, $default_language)
+	public function initFormCustomization($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
@@ -3088,11 +3086,11 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign(array(
 				'obj' => $obj,
 				'table' => $this->table,
-				'languages' => $languages,
+				'languages' => $this->_languages,
 				'has_file_labels' => $has_file_labels,
-				'display_file_labels' => $this->_displayLabelFields($obj, $labels, $languages, $default_language, Product::CUSTOMIZE_FILE),
+				'display_file_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_FILE),
 				'has_text_labels' => $has_text_labels,
-				'display_text_labels' => $this->_displayLabelFields($obj, $labels, $languages, $default_language, Product::CUSTOMIZE_TEXTFIELD),
+				'display_text_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_TEXTFIELD),
 				'uploadable_files' => (int)($this->getFieldValue($obj, 'uploadable_files') ? (int)$this->getFieldValue($obj, 'uploadable_files') : '0'),
 				'text_fields' => (int)($this->getFieldValue($obj, 'text_fields') ? (int)$this->getFieldValue($obj, 'text_fields') : '0'),
 			));
@@ -3103,7 +3101,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	public function initFormAttachments($obj, $languages, $default_language)
+	public function initFormAttachments($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
@@ -3111,7 +3109,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$attachment_name = array();
 			$attachment_description = array();
-			foreach ($languages as $language)
+			foreach ($this->_languages as $language)
 			{
 				$attachment_name[$language['id_lang']] = '';
 				$attachment_description[$language['id_lang']] = '';
@@ -3120,10 +3118,10 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign(array(
 				'obj' => $obj,
 				'table' => $this->table,
-				'languages' => $languages,
+				'languages' => $this->_languages,
 				'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
 				'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
-				'default_form_language' => $default_language,
+				'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 				'attachment_name' => $attachment_name,
 				'attachment_description' => $attachment_description,
 				'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
@@ -3301,9 +3299,9 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	public function initFormCombinations($obj, $languages, $default_language)
+	public function initFormCombinations($obj)
 	{
-		return $this->initFormAttributes($obj, $languages, $default_language);
+		return $this->initFormAttributes($obj);
 	}
 
 	public function initFormAttributes($product)
@@ -3520,7 +3518,7 @@ class AdminProductsControllerCore extends AdminController
 		return $helper->generateList($comb_array, $this->fields_list);
 	}
 
-	public function initFormQuantities($obj, $languages)
+	public function initFormQuantities($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
 
@@ -3647,7 +3645,7 @@ class AdminProductsControllerCore extends AdminController
 				'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 				'token' => $this->token,
-				'languages' => $languages,
+				'languages' => $this->_languages,
 			));
 		}
 		else
