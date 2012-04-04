@@ -614,11 +614,11 @@ class FrontControllerCore extends Controller
 			$excludedKey = array('isolang', 'id_lang', 'controller', 'fc');
 			foreach ($_GET as $key => $value)
 				if (!in_array($key, $excludedKey))
-					$params[] = $key.'='.$value;
+					$params[$key] = $value;
 
 			$strParams = '';
 			if ($params)
-				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
+				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').http_build_query($params);
 
 			header('HTTP/1.0 301 Moved');
 			header('Cache-Control: no-cache');
