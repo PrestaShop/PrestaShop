@@ -81,9 +81,9 @@
 			<p><span>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}<br /><br />
 				<ul>
 					<li>{l s='deleted the /install folder'}</li>
-					<li>{l s='renamed the /admin folder (e.g. /admin123)'}{$randomNb}</li>
+					<li>{l s='renamed the /admin folder (e.g. /admin123%d)' sprintf=$randomNb}</li>
 				</ul>
-			<br />{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin123)'}{$randomNb}</span></p>
+			<br />{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin123%d)' sprintf=$randomNb}</span></p>
 		</div>
 	{/if}
 		<div id="forgot_password" style="display:none">

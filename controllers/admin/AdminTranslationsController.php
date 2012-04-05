@@ -54,7 +54,7 @@ class AdminTranslationsControllerCore extends AdminController
 		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 		include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
 
-		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( mod=\'.+\')?( js=1)?\}/U';
+		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( mod=\'.+\')?( js=1)?\}/U';
 		// added ? after spaces because some peoples forget them. see PSCFI-2501
 		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 	}
@@ -923,7 +923,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$content = fread($fd, filesize($tpl));
 
 				/* Search language tags (eg {l s='to translate'}) */
-				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?\}/U';
+				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?\}/U';
 				preg_match_all($regex, $content, $matches);
 
 				/* Get string translation */
@@ -1112,7 +1112,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$content = fread($fd, filesize($tpl));
 
 				/* Search language tags (eg {l s='to translate'}) */
-				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( slashes=1)?\}/U';
+				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?( slashes=1)?\}/U';
 				preg_match_all($regex, $content, $matches);
 
 				/* Get string translation for each tpl file */
@@ -1950,7 +1950,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// parse pdf template
 		/* Search language tags (eg {l s='to translate'}) */
-		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( pdf=\'true\')?\}/U';
+		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?( pdf=\'true\')?\}/U';
       $default_template_files = glob(_PS_PDF_DIR_.'*.tpl');
       $override_template_files = glob(_PS_THEME_DIR_.'pdf/*.tpl');
 
