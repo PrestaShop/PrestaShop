@@ -517,7 +517,7 @@ function selectCheckbox(obj)
 	$(obj).parent().parent().find('td.cancelCheck input[type=checkbox]').attr("checked", true);
 }
 
-function toogleShippingCost(obj)
+function toggleShippingCost(obj)
 {
 	generateDiscount = $(obj).parent().find('#generateDiscount').attr("checked");
 	generateCreditSlip = $(obj).parent().find('#generateCreditSlip').attr("checked");
