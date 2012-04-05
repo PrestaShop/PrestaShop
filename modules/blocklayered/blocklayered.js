@@ -386,9 +386,20 @@ function reloadContent(params_plus)
 				$('#product_list').css('filter', '');
 
 			if ($(result.pagination).find('ul.pagination').length)
+			{
+				$('div#pagination').show();
 				$('ul.pagination').replaceWith($(result.pagination).find('ul.pagination'));
-			else
+			}
+			else if (!$('ul.pagination').length)
+			{
+				$('div#pagination').show();
 				$('div#pagination').html($(result.pagination));
+			}
+			else
+			{
+				$('ul.pagination').html('');
+				$('div#pagination').hide();
+			}
 			
 			paginationButton();
 			ajaxLoaderOn = 0;
