@@ -45,15 +45,28 @@ class CacheMemcacheCore extends Cache
 	{
 		$this->connect();
 
-		// Get keys (this code come from Doctrine 2 project)
-		$this->keys = array();
-		foreach ($this->memcache->getExtendedStats('slabs') as $server => $slabs)
+		// Get keys (this code comes from Doctrine 2 project)
+        $this->keys = array();
+        $all_slabs = $this->memcache->getExtendedStats('slabs');
+
+        foreach ($all_slabs as $server => $slabs)
+        {
             if (is_array($slabs))
+            {
                 foreach (array_keys($slabs) as $slab_id)
-                    if ($this->memcache->getExtendedStats('cachedump', (int)$slab_id))
-                        foreach ($dump as $entries)
-                            foreach ($entries as $entry)
-                                $this->keys[$entry] = 0;
+                {
+                    $dump = $this->memcache->getExtendedStats('cachedump', (int)$slab_id);
+                    if ($dump)
+                    {
+                       foreach ($dump as $entries)
+                       {
+                            if ($entries)
+                                $this->keys = array_merge($this->keys, array_keys($entries));
+                        }
+                    }
+                }
+            }
+        }
 	}
 
 	public function __destruct()
