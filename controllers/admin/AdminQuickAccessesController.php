@@ -89,7 +89,8 @@ class AdminQuickAccessesControllerCore extends AdminController
 					'name' => 'link',
 					'size' => 60,
 					'maxlength' => 128,
-					'required' => true
+					'required' => true,
+					'desc' => $this->l('If it\'s an URL that comes from your Back Office, you must NOT put a security token.')
 				),
 				array(
 					'type' => 'radio',
