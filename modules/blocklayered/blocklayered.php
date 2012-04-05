@@ -1422,7 +1422,7 @@ class BlockLayered extends Module
 						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
 						if (isset($assos))
 							foreach ($assos as $asso)
-								Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+								Db::getInstance()->execute('INSERT INTO  '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
 									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
 					}
 					
