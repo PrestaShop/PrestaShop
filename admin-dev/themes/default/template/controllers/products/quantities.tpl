@@ -40,8 +40,6 @@
 	<br />
 	<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
-
-
 	{if $show_quantities == true}
 		<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
 		<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
@@ -191,183 +189,57 @@
 			</ul>
 		</div>
 	{/if}
-<div class="separation"></div>
-<h4>{l s='Availability settings'}</h4>
-<table cellpadding="5">
-	{if !$ps_stock_management}
+	<div class="separation"></div>
+	<h4>{l s='Availability settings'}</h4>
+	<table cellpadding="5">
+		{if !$ps_stock_management}
+				<tr>
+					<td colspan="2">{l s='The stock management is disabled'}</td>
+				</tr>
+			{/if}
+			{if !$has_attribute}
 			<tr>
-				<td colspan="2">{l s='The stock management is disabled'}</td>
+				<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
+				<td style="padding-bottom:5px;">
+					<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+					<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
+				</td>
+			</tr>
+			{/if}
+		<tr>
+			<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
+			<td style="padding-bottom:5px;">
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_now
+						input_name='available_now'}
+				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+		</td>
+		</tr>
+		<tr>
+			<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
+			<td style="padding-bottom:5px;">
+					{include file="controllers/products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_later
+						input_name='available_later'}
+				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+			</td>
+		</tr>
+		{if !$countAttributes}
+			<tr>
+				<td class="col-left"><label>{l s='Available date:'}</label></td>
+				<td style="padding-bottom:5px;">
+					<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
+						style="text-align: center;" type="text" />
+					<p>{l s='The available date when this product is out of stock'}</p>
+				</td>
 			</tr>
 		{/if}
-		{if !$has_attribute}
-		<tr>
-			<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
-				<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
-			</td>
-		</tr>
-		{/if}
-	<tr>
-		<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
-		<td style="padding-bottom:5px;">
-				{include file="controllers/products/input_text_lang.tpl"
-					languages=$languages
-					input_value=$product->available_now
-					input_name='available_now'}
-			<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-	</td>
-	</tr>
-	<tr>
-		<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
-		<td style="padding-bottom:5px;">
-				{include file="controllers/products/input_text_lang.tpl"
-					languages=$languages
-					input_value=$product->available_later
-					input_name='available_later'}
-			<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-		</td>
-	</tr>
-	{if !$countAttributes}
-		<tr>
-			<td class="col-left"><label>{l s='Available date:'}</label></td>
-			<td style="padding-bottom:5px;">
-				<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
-					style="text-align: center;" type="text" />
-				<p>{l s='The available date when this product is out of stock'}</p>
-			</td>
-		</tr>
-	{/if}
-</table>
+	</table>
 
 	<script type="text/javascript">
-		$('.datepicker').datepicker({
-			prevText: '',
-			nextText: '',
-			dateFormat: 'yy-mm-dd'
-		});
-
-		var showAjaxError = function(msg)
-		{
-			$('#available_quantity_ajax_error_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').show();
-			$('#available_quantity_ajax_msg').hide();
-			$('#available_quantity_ajax_success_msg').hide();
-		};
-	
-		var showAjaxSuccess = function(msg)
-		{
-			$('#available_quantity_ajax_success_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').hide();
-			$('#available_quantity_ajax_msg').hide();
-			$('#available_quantity_ajax_success_msg').show();
-		};
-	
-		var showAjaxMsg = function(msg)
-		{
-			$('#available_quantity_ajax_msg').html(msg);
-			$('#available_quantity_ajax_error_msg').hide();
-			$('#available_quantity_ajax_msg').show();
-			$('#available_quantity_ajax_success_msg').hide();
-		};
-	
-		var ajaxCall = function(data)
-		{
-			data.ajaxProductQuantity = 1;
-			data.id_product = '{$product->id}';
-			data.token = "{$token}";
-			data.ajax = 1;
-			data.controller = "AdminProducts";
-			data.action = "productQuantity";
-			showAjaxMsg('{l s='Saving data...'}');
-			$.ajax({
-				type: "POST",
-				url: "ajax-tab.php",
-				data: data,
-				dataType: 'json',
-				async : true,
-				success: function(msg)
-				{
-					if (msg.error)
-					{
-						showAjaxError(msg.error);
-						return;
-					}
-					showAjaxSuccess('{l s='Data saved'}');
-				},
-				error: function(msg)
-				{
-					showAjaxError(msg.error);
-				}
-			});
-		};
-	
-		var refreshQtyAvaibilityForm = function()
-		{
-			if ($('#depends_on_stock_0').attr('checked'))
-			{
-				$('.available_quantity').find('input').show();
-				$('.available_quantity').find('span').hide();
-			}
-			else
-			{
-				$('.available_quantity').find('input').hide();
-				$('.available_quantity').find('span').show();
-			}
-		};
-	
-		$('.depends_on_stock').click(function(e)
-		{
-			refreshQtyAvaibilityForm();
-			ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
-			if($(this).val() == 0)
-				$('.available_quantity input').trigger('change');
-		});
-
-		$('.advanced_stock_management').click(function(e)
-		{
-			var val = 0;
-			if ($(this).attr('checked'))
-				val = 1;
-			
-			ajaxCall( { actionQty: 'advanced_stock_management', value: val } );
-			if (val == 1)
-			{
-				$(this).val(1);
-				$('#depends_on_stock_1').attr('disabled', false);
-			}
-			else
-			{
-				$(this).val(0);
-				$('#depends_on_stock_1').attr('disabled', true);
-				$('#depends_on_stock_0').attr('checked', true);
-				ajaxCall( { actionQty: 'depends_on_stock', value: 0} );
-				refreshQtyAvaibilityForm();
-			}
-			refreshQtyAvaibilityForm();
-		});
-	
-		// bind enter key event on search field
-		$('.available_quantity').find('input').bind('keypress', function(e) {
-			var code = (e.keyCode ? e.keyCode : e.which);
-			if(code == 13) { //Enter keycode
-				e.stopPropagation();//Stop event propagation
-				return false;
-			}
-		});
-	
-		$('.available_quantity').find('input').change(function(e, init_val)
-		{
-			ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
-		});
-	
-		$('.out_of_stock').click(function(e)
-		{
-			refreshQtyAvaibilityForm();
-			ajaxCall( { actionQty: 'out_of_stock', value: $(this).val() } );
-		});
-	
-		refreshQtyAvaibilityForm();
+		var quantities_ajax_success = '{l s='Data saved'}';
+		var quantities_ajax_waiting = '{l s='Saving data...'}';
 	</script>
-
 {/if}

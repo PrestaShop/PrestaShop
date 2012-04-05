@@ -27,8 +27,9 @@
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
 
-product_tabs['Combinations'] = {
-	'bindEdit' : function(){
+product_tabs['Combinations'] = new function(){
+	var self = this;
+	this.bindEdit = function(){
 		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
 			editProductAttribute(this.href, $(this).closest('tr'));
@@ -120,8 +121,9 @@ product_tabs['Combinations'] = {
 				}
 			});
 		}
-	},
-	'bindDefault' : function(){
+	};
+
+	this.bindDefault = function(){
 		$('table[name=list_table]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
 			defaultProductAttribute(this.href, $(this).closest('tr'));
@@ -161,8 +163,9 @@ product_tabs['Combinations'] = {
 				}
 			});
 		}
-	},
-	'bindDelete' : function() {
+	};
+
+	this.bindDelete = function() {
 		$('table[name=list_table]').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
 			deleteProductAttribute(this.href, $(this).closest('tr'));
@@ -191,8 +194,9 @@ product_tabs['Combinations'] = {
 				}
 			});
 		}
-	},
-	'bindToggleAddCombination' : function (){
+	};
+
+	this.bindToggleAddCombination = function (){
 		$('#desc-product-newCombination').click(function() {
 			if ($('.process-icon-newCombination').hasClass('toolbar-new'))
 				removeButtonCombination('add');
@@ -217,13 +221,14 @@ product_tabs['Combinations'] = {
 				$('#desc-product-newCombination div').html(msg_new_combination);
 			}
 		});
-	},
-	'onReady' : function(){
-		product_tabs['Combinations'].bindEdit();
-		product_tabs['Combinations'].bindDefault();
-		product_tabs['Combinations'].bindDelete();
-		product_tabs['Combinations'].bindToggleAddCombination();
-	}
+	};
+
+	this.onReady = function(){
+		self.bindEdit();
+		self.bindDefault();
+		self.bindDelete();
+		self.bindToggleAddCombination();
+	};
 }
 
 /**
@@ -322,19 +327,22 @@ function handleSaveButtonsForPack()
 		return "";
 }
 
-product_tabs['Seo'] = {
+product_tabs['Seo'] = new function(){
+	var self = this;
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
-	'enableProductName' : function (){
+	this.enableProductName = function (){
 		$('.copy2friendlyUrl').removeAttr('disabled');
-	},
-	'onReady' : function() {
-		product_tabs['Seo'].enableProductName();
-	}
+	};
+
+	this.onReady = function() {
+		self.enableProductName();
+	};
 }
 
-product_tabs['Prices'] = {
+product_tabs['Prices'] = new function(){
+	var self = this;
 	// Bind to show/hide new specific price form
-	'toggleSpecificPrice' : function (){
+	this.toggleSpecificPrice = function (){
 		$('#show_specific_price').click(function()
 		{
 			$('#add_specific_price').slideToggle();
@@ -355,7 +363,8 @@ product_tabs['Prices'] = {
 			$('#show_specific_price').show();
 			return false;
 		});
-	},
+	};
+
 	/**
 	 * Ajax call to delete a specific price
 	 *
@@ -363,7 +372,7 @@ product_tabs['Prices'] = {
 	 * @param token
 	 * @param parent
 	 */
-	'deleteSpecificPrice' : function (url, parent){
+	this.deleteSpecificPrice = function (url, parent){
 		$.ajax({
 			url: url,
 			data: {
@@ -383,23 +392,26 @@ product_tabs['Prices'] = {
 					showErrorMessage(data.message);
 			}
 		});
-	},
+	};
+
 	// Bind to delete specific price link
-	'bindDelete' : function(){
+	this.bindDelete = function(){
 		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(e){
 			e.preventDefault();
-			product_tabs['Prices'].deleteSpecificPrice(this.href, $(this).parents('tr'));
+			self.deleteSpecificPrice(this.href, $(this).parents('tr'));
 		})
-	},
-	'onReady' : function(){
-		product_tabs['Prices'].toggleSpecificPrice();
-		product_tabs['Prices'].deleteSpecificPrice();
-		product_tabs['Prices'].bindDelete();
-	}
+	};
+
+	this.onReady = function(){
+		self.toggleSpecificPrice();
+		self.deleteSpecificPrice();
+		self.bindDelete();
+	};
 }
 
-product_tabs['Associations'] = {
-	'initAccessoriesAutocomplete' : function (){
+product_tabs['Associations'] = new function(){
+	var self = this;
+	this.initAccessoriesAutocomplete = function (){
 		$('#product_autocomplete_input')
 			.autocomplete('ajax_products_list.php', {
 				minChars: 1,
@@ -428,11 +440,11 @@ product_tabs['Associations'] = {
 
 			return ids;
 		}
-	},
+	};
 	/**
 	 * Update the manufacturer select element with the list of existing manufacturers
 	 */
-	'getManufacturers' : function(){
+	this.getManufacturers = function(){
 		$.ajax({
 				url: 'ajax-tab.php',
 				cache: false,
@@ -456,15 +468,17 @@ product_tabs['Associations'] = {
 					$("select#id_manufacturer").replaceWith("<p id=\"id_manufacturer\">[TECHNICAL ERROR] ajaxProductManufacturers: "+textStatus+"</p>");
 				}
 		});
-	},
-	'onReady' : function(){
-		product_tabs['Associations'].initAccessoriesAutocomplete();
-		product_tabs['Associations'].getManufacturers();
+	};
+
+	this.onReady = function(){
+		self.initAccessoriesAutocomplete();
+		self.getManufacturers();
 	}
 }
 
-product_tabs['Attachments'] = {
-	'bindAttachmentEvents' : function (){
+product_tabs['Attachments'] = new function(){
+	var self = this;
+	this.bindAttachmentEvents = function (){
 		$("#addAttachment").live('click', function() {
 			$("#selectAttachment2 option:selected").each(function(){
 				var val = $('#arrayAttachments').val();
@@ -495,14 +509,16 @@ product_tabs['Attachments'] = {
 				$(this).attr("selected", "selected");
 			});
 		});
-	},
-	'onReady' : function(){
-		product_tabs['Attachments'].bindAttachmentEvents();
-	}
+	};
+
+	this.onReady = function(){
+		self.bindAttachmentEvents();
+	};
 }
 
-product_tabs['Informations'] = {
-	'bindAvailableForOrder' : function (){
+product_tabs['Informations'] = new function(){
+	var self = this;
+	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function(){
 			if ($(this).is(':checked'))
 			{
@@ -514,8 +530,9 @@ product_tabs['Informations'] = {
 				$('#show_price').attr('disabled', '');
 			}
 		});
-	},
-	'bindTagImage' : function (){
+	};
+
+	this.bindTagImage = function (){
 		function changeTagImage(){
 			var smallImage = $('input[name=smallImage]:checked').attr('value');
 			var leftRight = $('input[name=leftRight]:checked').attr('value');
@@ -542,8 +559,9 @@ product_tabs['Informations'] = {
 				i = 0;
 			}
 		});
-	},
-	'switchProductType' : function(){
+	};
+
+	this.switchProductType = function(){
 		if (product_type == product_type_pack)
 		{
 			$('#pack_product').attr('checked', 'checked');
@@ -629,7 +647,7 @@ product_tabs['Informations'] = {
 			// this handle the save button displays and warnings
 			handleSaveButtons();
 		});
-	},
+	};
 	/*'setup_tinymce': function(){
 		// change each by click to load only on click
 		$(".autoload_rte").each(function(e){
@@ -662,15 +680,16 @@ product_tabs['Informations'] = {
 			});
 		});
 	},*/
-	'onReady' : function(){
-		product_tabs['Informations'].bindAvailableForOrder();
-		product_tabs['Informations'].bindTagImage();
-		product_tabs['Informations'].switchProductType();
-	}
+	this.onReady = function(){
+		self.bindAvailableForOrder();
+		self.bindTagImage();
+		self.switchProductType();
+	};
 }
 
-product_tabs['Pack'] = {
-	'bindPackEvents' : function (){
+product_tabs['Pack'] = new function(){
+	var self = this;
+	this.bindPackEvents = function (){
 		if ($('#ppack').attr('checked'))
 		{
 			$('#ppack').attr('disabled', 'disabled');
@@ -801,16 +820,140 @@ product_tabs['Pack'] = {
 			ids = ids.replace(/\,$/,'');
 			return ids;
 		}
-	},
-	'onReady' : function(){
-		product_tabs['Pack'].bindPackEvents();
+	};
+
+	this.onReady = function(){
+		self.bindPackEvents();
 	}
 }
 
-product_tabs['Features'] = {
-	'onReady' : function(){
+product_tabs['Features'] = new function(){
+	this.onReady = function(){
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
+}
+
+product_tabs['Quantities'] = new function(){
+	var self = this;
+	this.ajaxCall = function(data){
+		data.ajaxProductQuantity = 1;
+		data.id_product = id_product;
+		data.token = token;
+		data.ajax = 1;
+		data.controller = "AdminProducts";
+		data.action = "productQuantity";
+		showAjaxMsg(quantities_ajax_waiting);
+		$.ajax({
+			type: "POST",
+			url: "ajax-tab.php",
+			data: data,
+			dataType: 'json',
+			async : true,
+			success: function(msg)
+			{
+				if (msg.error)
+				{
+					showAjaxError(msg.error);
+					return;
+				}
+				showAjaxSuccess(quantities_ajax_success);
+			},
+			error: function(msg)
+			{
+				showAjaxError(msg.error);
+			}
+		});
+
+		function showAjaxError(msg)
+		{
+			$('#available_quantity_ajax_error_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').show();
+			$('#available_quantity_ajax_msg').hide();
+			$('#available_quantity_ajax_success_msg').hide();
+		}
+
+		function showAjaxSuccess(msg)
+		{
+			$('#available_quantity_ajax_success_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').hide();
+			$('#available_quantity_ajax_msg').hide();
+			$('#available_quantity_ajax_success_msg').show();
+		}
+
+		function showAjaxMsg(msg)
+		{
+			$('#available_quantity_ajax_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').hide();
+			$('#available_quantity_ajax_msg').show();
+			$('#available_quantity_ajax_success_msg').hide();
+		}
+	};
+
+	this.refreshQtyAvailabilityForm = function()
+	{
+		if ($('#depends_on_stock_0').attr('checked'))
+		{
+			$('.available_quantity').find('input').show();
+			$('.available_quantity').find('span').hide();
+		}
+		else
+		{
+			$('.available_quantity').find('input').hide();
+			$('.available_quantity').find('span').show();
+		}
+	};
+
+	this.onReady = function(){
+		$('#available_date').datepicker({
+			prevText: '',
+			nextText: '',
+			dateFormat: 'yy-mm-dd'
+		});
+
+		$('.depends_on_stock').click(function(e)
+		{
+			self.refreshQtyAvailabilityForm();
+			self.ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
+			if($(this).val() == 0)
+				$('.available_quantity input').trigger('change');
+		});
+
+		$('.advanced_stock_management').click(function(e)
+		{
+			var val = 0;
+			if ($(this).attr('checked'))
+				val = 1;
+
+			self.ajaxCall({actionQty: 'advanced_stock_management', value: val});
+			if (val == 1)
+			{
+				$(this).val(1);
+				$('#depends_on_stock_1').attr('disabled', false);
+			}
+			else
+			{
+				$(this).val(0);
+				$('#depends_on_stock_1').attr('disabled', true);
+				$('#depends_on_stock_0').attr('checked', true);
+				self.ajaxCall({actionQty: 'depends_on_stock', value: 0});
+				self.refreshQtyAvailabilityForm();
+			}
+			self.refreshQtyAvailabilityForm();
+		});
+
+		$('.available_quantity').find('input').change(function(e, init_val)
+		{
+			self.ajaxCall({actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val()});
+		});
+
+		$('.out_of_stock').click(function(e)
+		{
+			self.refreshQtyAvailabilityForm();
+			self.ajaxCall({actionQty: 'out_of_stock', value: $(this).val()});
+		});
+
+		self.refreshQtyAvailabilityForm();
+	};
 }
 
 var tabs_manager = new ProductTabsManager();
