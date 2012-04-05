@@ -49,39 +49,6 @@ function str2url(str,encoding,ucfirst)
 	return str;
 }
 
-function strToAltImgAttr(str,encoding,ucfirst)
-{
-	str = str.replace(/[\u0105\u0104\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5]/g,'a');
-	str = str.replace(/[\u00E7\u010D\u0107\u0106]/g,'c');
-	str = str.replace(/[\u010F]/g,'d');
-	str = str.replace(/[\u00E8\u00E9\u00EA\u00EB\u011B\u0119\u0118]/g,'e');
-	str = str.replace(/[\u00EC\u00ED\u00EE\u00EF]/g,'i');
-	str = str.replace(/[\u0142\u0141]/g,'l');
-	str = str.replace(/[\u00F1\u0148]/g,'n');
-	str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6\u00F8\u00D3]/g,'o');
-	str = str.replace(/[\u0159]/g,'r');
-	str = str.replace(/[\u015B\u015A\u0161]/g,'s');
-	str = str.replace(/[\u00DF]/g,'ss');
-	str = str.replace(/[\u0165]/g,'t');
-	str = str.replace(/[\u00F9\u00FA\u00FB\u00FC\u016F]/g,'u');
-	str = str.replace(/[\u00FD\u00FF]/g,'y');
-	str = str.replace(/[\u017C\u017A\u017B\u0179\u017E]/g,'z');
-	str = str.replace(/[\u00E6]/g,'ae');
-	str = str.replace(/[\u0153]/g,'oe');
-	str = str.replace(/[\u013E\u013A]/g,'l');
-	str = str.replace(/[\u0155]/g,'r');
-
-	str = str.replace(/[^a-zA-Z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
-	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
-
-	if (ucfirst == 1) {
-		var first_char = str.charAt(0);
-		str = first_char.toUpperCase()+str.slice(1);
-	}
-
-	return str;
-}
-
 function copy2friendlyURL()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
@@ -263,12 +230,6 @@ function getE(name)
 	return elem;
 }
 
-function changeFormParam(pForm, url, gid)
-{
-	pForm.action = url;
-	pForm.elements["groupid"].value = gid;
-}
-
 function addAccessory(event, data, formatted)
 {
 	if (data == null)
@@ -330,26 +291,6 @@ function delAccessory(id)
 	});
 }
 
-function dontChange(srcText)
-{
-	if (srcText == '')
-		return false;
-	if (window.search_texts)
-		for (var i in search_texts)
-			if (srcText == search_texts[i])
-				return false;
-	return true;
-}
-
-function queryType()
-{
-	var search_type = getE('bo_search_type').value;
-	var bo_query = getE('bo_query');
-
-	if (!dontChange(bo_query.value))
-		bo_query.value = search_texts[search_type];
-}
-
 function formSubmit(e, button)
 {
 	var key;
@@ -367,29 +308,6 @@ function noComma(elem)
 }
 
 /* Help boxes */
-function addLoadEvent(func) {
-  var oldonload = window.onload;
-  if (typeof window.onload != 'function') {
-    window.onload = func;
-  } else {
-    window.onload = function() {
-      oldonload();
-      func();
-    }
-  }
-}
-
-function helpboxParser(current)
-{
- 	// While the span exists and we didn't find the right one, for each attribute, if attribute is "name" and has value == "help_box"
-	for (var j = 0; j < current.parentNode.getElementsByTagName('span').length; j++)
-		for(var k = 0; k < current.parentNode.getElementsByTagName('span')[j].attributes.length; k++)
-			if (current.parentNode.getElementsByTagName('span')[j].attributes[k].name === 'name' && current.parentNode.getElementsByTagName('span')[j].attributes[k].nodeValue === 'help_box')
-				return j;
-
-	return -1;
-}
-
 if (typeof helpboxes != 'undefined' && helpboxes)
 {
 	$(function()
@@ -456,23 +374,6 @@ if (typeof helpboxes != 'undefined' && helpboxes)
 			$('span.title_box').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
 		}
 	});
-}
-
-/**
- * Deprecated
- *
- * @param id_product
- * @param id_image
- */
-function changePic(id_product, id_image)
-{
- 	if (id_image == -1)
- 	{
- 		getE('pic').style.display = 'none';
- 		return;
- 	}
- 	getE('pic').style.display = 'block';
-	getE('pic').src = '../img/p/'+parseInt(id_product)+'-'+parseInt(id_image)+'.jpg';
 }
 
 /* Code generator for Affiliation and vourchers */
@@ -584,38 +485,10 @@ function replaceFeature(toReplace, selector)
 	$('#feature_name_' + selector).attr('name', '');
 }
 
-/* Manage default category on page: edit product */
-function checkDefaultCategory(category_id)
-{
-	var oldCheckbox = $('.id_category_default');
-	oldCheckbox.removeClass('id_category_default');
-	var checkbox = $('#categoryBox_'+category_id);
-	checkbox.attr('checked', 'checked');
-	checkbox.addClass('id_category_default');
-}
-
-function checkDefaultGroup(group_id)
-{
-	var oldCheckbox = $('.id_group_default');
-	oldCheckbox.removeClass('id_group_default');
-	var checkbox = $('#groupBox_'+group_id);
-	checkbox.attr('checked', 'checked');
-	checkbox.addClass('id_group_default');
-}
-
 function chooseTypeTranslation(id_lang)
 {
 	getE('translation_lang').value = id_lang;
 	document.getElementById('typeTranslationForm').submit();
-}
-
-
-function showDiv(select_id, while_id, dest)
-{
-	var select = document.getElementById(select_id);
-	if (select.options[select.selectedIndex].value == while_id)
-		return toggle(getE(dest), true);
-	return toggle(getE(dest));
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
@@ -655,98 +528,6 @@ function toogleShippingCost(obj)
 	}
 	else
 		$(obj).parent().find('#spanShippingBack').css('display', 'block');
-}
-
-function removeLabel(label, fieldType, type)
-{
-	$(label).remove();
-	if (fieldType == 0)
-	{
-		if (type == 0)
-			customizationUploadableFileNumber--;
-		else
-			uploadableFileLabel--;
-	}
-	else
-	{
-		if (type == 0)
-			customizationTextFieldNumber--;
-		else
-			textFieldLabel--;
-	}
-}
-
-function browseAndRemoveLabels(newCustomizationFieldNumber, customizationFieldNumber, fieldType, type)
-{
-	var $current = $('body').find('div[id^="' + (type == 0 ? 'label' : 'newLabel') + 'Container_' + fieldType + '_"]');
-	var ids = new Array();
-	var pos = $current.length - 1;
-
-	$current.each(function() {
-		ids[pos--] = $(this).attr('id');
-	});
-
-	for (var i = 0; i < $current.length; i++)
-		if (customizationFieldNumber > newCustomizationFieldNumber)
-		{
-			removeLabel($('#'+ids[i]), fieldType, type);
-			customizationFieldNumber--;
-		}
-	return customizationFieldNumber;
-}
-
-function displayCustomizationProperties(type, force)
-{
-	var newCustomizationFieldNumber = Math.abs(type == 0 ? parseInt($('#uploadable_files').val()) : parseInt($('#text_fields').val()));
-	var customizationFieldNumber = Math.abs(type == 0 ? (parseInt(customizationUploadableFileNumber) + parseInt(uploadableFileLabel)) : (parseInt(customizationTextFieldNumber) + parseInt(textFieldLabel)));
-	var label = type == 0 ? parseInt(uploadableFileLabel) : parseInt(textFieldLabel);
-	var target = type == 0 ? '#customizationFileProperties' : '#customizationTextFieldProperties';
-	/* Add some fields */
-	if (newCustomizationFieldNumber > customizationFieldNumber || force)
-	{
-		var content = '';
-		var j = label;
-
-		for (var i = 0; i < newCustomizationFieldNumber - customizationFieldNumber; i++, j++)
-		{
-			var fieldsName = 'newLabel_' + type + '_' + j;
-			var fieldsContainerName = 'newLabelContainer_' + type + '_' + j;
-			content += '<div id="' + fieldsContainerName + '">';
-			/* Generates input field */
-			for (k = 0; k < languages.length; k++)
-				content += '<div id="' + fieldsName + '_' + languages[k][0] + '" style="display: ' + (parseInt(languages[k][0]) == parseInt(defaultLanguage) ? 'block' : 'none') + '; clear: left; float: left;">' + newLabel + ' #' + (j + 1) + ' <input type="text" name="' + fieldsName + '_' + languages[k][0] + '" value="" /></div>';
-			/* Generates language selector & require checkbox */
-			content += '<div class="display_flags"><img src="../img/l/' + parseInt(defaultLanguage) + '.jpg" class="pointer" id="language_current_' + fieldsName + '" onclick="showLanguages(\'' + fieldsName + '\');" alt="" /></div><div style="float: left; margin-left: 16px;"><input type="checkbox" name="require_' + type + '_' + j + '" value="1" /> ' + required + '</div><div id="languages_' + fieldsName + '" class="language_flags">' + choose_language + '<br /><br />';
-			/* Generate language flags */
-			for (k = 0; k < languages.length; k++)
-				content += '<img src="../img/l/' + parseInt(languages[k][0]) + '.jpg" class="pointer" alt="' + languages[k][2] + '" title="' + languages[k][2] + '" onclick="changeLanguage(\'' + fieldsName + '\', \'' + fieldsName + '\', ' + parseInt(languages[k][0]) + ', \'' + languages[k][1] + '\');" />';
-			content += '</div></div>';
-			if (type == 0)
-				uploadableFileLabel++;
-			else
-				textFieldLabel++;
-		}
-		$(target).append(content);
-	}
-	/* Remove */
-	else
-	{
-		customizationFieldNumber = browseAndRemoveLabels(newCustomizationFieldNumber, customizationFieldNumber, type, 1);
-		browseAndRemoveLabels(newCustomizationFieldNumber, customizationFieldNumber, type, 0);
-	}
-}
-
-function showAttributeColorGroup(name, container)
-{
-	var id_list;
-	var value;
-
-	id_list = document.getElementById(name);
-	value = id_list.options[id_list.selectedIndex].value;
-	if (attributesGroups[value])
-		$('#colorAttributeProperties').fadeIn();
-	else
-		$('#colorAttributeProperties').fadeOut();
 }
 
 function orderOverwriteMessage(sl, text)
@@ -841,7 +622,6 @@ function disableZipFormat()
 		$('.zip_code_format').show();
 }
 
-
 function spreadFees(id_range)
 {
 	newVal = $('#fees_all_'+id_range).val().replace(/,/g, '.');
@@ -880,8 +660,6 @@ function submitAddcmsAndPreview()
 	$('#previewSubmitAddcmsAndPreview').attr('name','submitAddcmsAndPreview');
 	$('#cms').submit();
 }
-
-
 
 function checkMultishopDefaultValue(obj, key)
 {
