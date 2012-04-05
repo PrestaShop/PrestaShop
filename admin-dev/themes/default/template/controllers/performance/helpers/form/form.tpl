@@ -174,9 +174,9 @@
 					async: false,
 					success: function(data)
 					{
-						if (data)
+						if (data && $.isArray(data))
 						{
-							var color = data != 0 ? 'green' : 'red';
+							var color = data[0] != 0 ? 'green' : 'red';
 							$('#formMemcachedServerStatus').show();
 							$('input:text[name=memcachedIp]').css('background', color);
 							$('input:text[name=memcachedPort]').css('background', color);
