@@ -123,9 +123,18 @@ class SearchCore
 
 		if (!$indexation)
 		{
-			$alias = new Alias(null, $string);
-			if (Validate::isLoadedObject($alias))
-				$string = $alias->search;
+			$words = explode(' ', $string);
+			$processed_words = array();
+			// search for aliases for each word of the query
+			foreach ($words as $word)
+			{
+				$alias = new Alias(null, $word);
+				if (Validate::isLoadedObject($alias))
+					$processed_words[] = $alias->search;
+				else
+					$processed_words[] = $word;
+			}
+			$string = implode(' ', $processed_words);
 		}
 
 		if ($indexation)
