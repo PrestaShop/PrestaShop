@@ -362,6 +362,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		Context::getContext()->shop = new Shop(1);
 		Configuration::loadConfiguration();
+		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration
 		Configuration::updateGlobalValue('PS_SHOP_DOMAIN', 				Tools::getHttpHost());
@@ -370,7 +371,7 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', 			$this->language->getLanguageIso());
 		Configuration::updateGlobalValue('PS_SHOP_NAME', 				$data['shop_name']);
 		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 			$data['shop_activity']);
-		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',			Country::getByIso($data['shop_country']));
+		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',			$id_country);
 		Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', 			$data['shop_country']);
 		Configuration::updateGlobalValue('PS_TIMEZONE', 				$data['shop_timezone']);
 		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',	(int)$data['configuration_agrement']);
@@ -393,6 +394,9 @@ class InstallModelInstall extends InstallAbstractModel
 			Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
 			Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
 		}
+
+		// Active only the country selected by the merchant
+		Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET active = 0 WHERE id_country != '.(int)$id_country);
 
 		// Set localization configuration
 		$version = str_replace('.', '', _PS_VERSION_);
