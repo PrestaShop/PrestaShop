@@ -329,13 +329,12 @@ function handleSaveButtonsForPack()
 
 product_tabs['Seo'] = new function(){
 	var self = this;
-	// Enable writing of the product name when the friendly url field in tab SEO is loaded
-	this.enableProductName = function (){
-		$('.copy2friendlyUrl').removeAttr('disabled');
-	};
 
 	this.onReady = function() {
-		self.enableProductName();
+		// Enable writing of the product name when the friendly url field in tab SEO is loaded
+		$('.copy2friendlyUrl').removeAttr('disabled');
+
+		displayFlags(languages, id_language, allowEmployeeFormLang);
 	};
 }
 
@@ -424,23 +423,84 @@ product_tabs['Associations'] = new function(){
 				formatItem: function(item) {
 					return item[1]+' - '+item[0];
 				}
-			}).result(addAccessory);
+			}).result(self.addAccessory);
 
 		$('#product_autocomplete_input').setOptions({
 			extraParams: {
-				excludeIds : getAccessorieIds()
+				excludeIds : self.getAccessoriesIds()
 			}
 		});
-
-		function getAccessorieIds()
-		{
-			var ids = id_product + ',';
-			ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
-			ids = ids.replace(/\,$/,'');
-
-			return ids;
-		}
 	};
+
+	this.getAccessoriesIds = function()
+	{
+		var ids = id_product + ',';
+		ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
+		ids = ids.replace(/\,$/,'');
+
+		return ids;
+	}
+
+	this.addAccessory = function(event, data, formatted)
+	{
+		if (data == null)
+			return false;
+		var productId = data[1];
+		var productName = data[0];
+
+		var $divAccessories = $('#divAccessories');
+		var $inputAccessories = $('#inputAccessories');
+		var $nameAccessories = $('#nameAccessories');
+
+		/* delete product from select + add product line to the div, input_name, input_ids elements */
+		$divAccessories.html($divAccessories.html() + productName + ' <span class="delAccessory" name="' + productId + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />');
+		$nameAccessories.val($nameAccessories.val() + productName + '¤');
+		$inputAccessories.val($inputAccessories.val() + productId + '-');
+		$('#product_autocomplete_input').val('');
+		$('#product_autocomplete_input').setOptions({
+			extraParams: {excludeIds : self.getAccessoriesIds()}
+		});
+	};
+
+	this.delAccessory = function(id)
+	{
+		var div = getE('divAccessories');
+		var input = getE('inputAccessories');
+		var name = getE('nameAccessories');
+
+		// Cut hidden fields in array
+		var inputCut = input.value.split('-');
+		var nameCut = name.value.split('¤');
+
+		if (inputCut.length != nameCut.length)
+			return jAlert('Bad size');
+
+		// Reset all hidden fields
+		input.value = '';
+		name.value = '';
+		div.innerHTML = '';
+		for (i in inputCut)
+		{
+			// If empty, error, next
+			if (!inputCut[i] || !nameCut[i])
+				continue ;
+
+			// Add to hidden fields no selected products OR add to select field selected product
+			if (inputCut[i] != id)
+			{
+				input.value += inputCut[i] + '-';
+				name.value += nameCut[i] + '¤';
+				div.innerHTML += nameCut[i] + ' <span class="delAccessory" name="' + inputCut[i] + '" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+			}
+			else
+				$('#selectAccessories').append('<option selected="selected" value="' + inputCut[i] + '-' + nameCut[i] + '">' + inputCut[i] + ' - ' + nameCut[i] + '</option>');
+		}
+
+		$('#product_autocomplete_input').setOptions({
+			extraParams: {excludeIds : self.getAccessoriesIds()}
+		});
+	};
+
 	/**
 	 * Update the manufacturer select element with the list of existing manufacturers
 	 */
@@ -473,7 +533,10 @@ product_tabs['Associations'] = new function(){
 	this.onReady = function(){
 		self.initAccessoriesAutocomplete();
 		self.getManufacturers();
-	}
+		$('#divAccessories').delegate('.delAccessory', 'click', function(){
+			self.delAccessory($(this).attr('name'));
+		});
+	};
 }
 
 product_tabs['Attachments'] = new function(){
@@ -954,6 +1017,127 @@ product_tabs['Quantities'] = new function(){
 
 		self.refreshQtyAvailabilityForm();
 	};
+}
+
+product_tabs['Suppliers'] = new function(){
+	var self = this;
+
+	this.manageDefaultSupplier = function() {
+		var default_is_ok = false;
+		var availables_radio_buttons = [];
+		var radio_buttons = $('input[name="default_supplier"]');
+
+		for (i=0; i<radio_buttons.length; i++)
+		{
+			var item = $(radio_buttons[i]);
+
+			if (item.is(':disabled'))
+			{
+				if (item.is(':checked'))
+				{
+					item.attr("checked", "");
+					default_is_ok = false;
+				}
+			}
+			else
+			{
+				availables_radio_buttons.push(item);
+			}
+		}
+
+		if (default_is_ok == false)
+		{
+			for (i=0; i<availables_radio_buttons.length; i++)
+			{
+				var item = $(availables_radio_buttons[i]);
+
+				if (item.is(':disabled') == false)
+				{
+					item.attr("checked", "checked");
+					default_is_ok = true;
+				}
+				break;
+			}
+		}
+	};
+
+	this.onReady = function(){
+		$('.supplierCheckBox').click(function() {
+			var check = $(this);
+			var checkbox = $('#default_supplier_'+check.val());
+			if (this.checked)
+			{
+				//enable default radio button associated
+				checkbox.attr("disabled","");
+			}
+			else
+			{
+				//enable default radio button associated
+				checkbox.attr("disabled","disabled");
+			}
+			//manage default supplier check
+			manageDefaultSupplier();
+		});
+
+		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
+		setTimeout(function() {
+			$('#suppliers_accordion').accordion();
+			// If one second was not enough to display page, another resize is needed
+			setTimeout(function() {
+				$('#suppliers_accordion').accordion('resize');
+			}, 3000);
+		}, 1000);
+
+		// Resize the accordion once the page is visible because of the bug with accordions initialized
+		// inside a display:none block not having the correct size.
+		$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
+			$('#suppliers_accordion').accordion("resize");
+		});
+	};
+}
+
+product_tabs['VirtualProduct'] = new function(){
+	var self = this;
+
+	this.onReady = function(){
+		$(".datepicker").datepicker({
+			prevText: '',
+			nextText: '',
+			dateFormat: 'yy-mm-dd'
+		});
+
+		if ($('#is_virtual_good').attr('checked'))
+		{
+			$('#virtual_good').show();
+			$('#virtual_good_more').show();
+		}
+
+		$('.is_virtual_good').hide();
+
+		if ( $('input[name=is_virtual_file]:checked').val() == 1)
+		{
+			$('#virtual_good_more').show();
+			$('#is_virtual_file_product').show();
+		}
+		else
+		{
+			$('#virtual_good_more').hide();
+			$('#is_virtual_file_product').hide();
+		}
+
+		$('input[name=is_virtual_file]').live('change', function(e) {
+			if($(this).val() == '1')
+			{
+				$('#virtual_good_more').show();
+				$('#is_virtual_file_product').show();
+			}
+			else
+			{
+				$('#virtual_good_more').hide();
+				$('#is_virtual_file_product').hide();
+			}
+		});
+	}
 }
 
 var tabs_manager = new ProductTabsManager();
