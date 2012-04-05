@@ -83,11 +83,5 @@
 		</td>
 	</tr>
 </table>
-	
-<script type="text/javascript">
-	$(document).ready(function(){
-		displayFlags(languages, id_language, allowEmployeeFormLang);
-	});
-</script>
 
 

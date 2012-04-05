@@ -92,7 +92,7 @@
 					{* @todo : donot use 3 foreach, but assign var *}
 					{foreach from=$accessories item=accessory}
 						{$accessory.name|escape:'htmlall':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
-						<span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;">
+						<span class="delAccessory" name="{$accessory.id_product}" style="cursor: pointer;">
 							<img src="../img/admin/delete.gif" class="middle" alt="" />
 						</span><br />
 					{/foreach}
