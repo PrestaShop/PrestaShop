@@ -2910,6 +2910,7 @@ $_LANGADM['AdminQuickAccesses3e053943605d9e4bf7dd7588ea19e9d2'] = 'Caractères i
 $_LANGADM['AdminQuickAccesses49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_LANGADM['AdminQuickAccesses4e140ba723a03baa6948340bf90e2ef6'] = 'Nom :';
 $_LANGADM['AdminQuickAccesses4edbdc3e1b62db73d670ee1231c14c8b'] = 'Ouvrir dans une nouvelle fenêtre :';
+$_LANGADM['AdminQuickAccesses71176bd24b115000ff6ab86377c54e8e'] = 'Si c\'est une URL qui vient du Back Office, vous ne devez pas mettre le token de sécurité.';
 $_LANGADM['AdminQuickAccesses97e7c9a7d06eac006a28bf05467fcc8b'] = 'Lien';
 $_LANGADM['AdminQuickAccessesb718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_LANGADM['AdminQuickAccessesb9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
