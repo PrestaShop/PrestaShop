@@ -641,7 +641,7 @@ class FrontControllerCore extends Controller
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
 
 					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
-					$record = geoip_record_by_addr($gi, '81.57.72.226');//Tools::getRemoteAddr());
+					$record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
 
 					if (is_object($record))
 					{
