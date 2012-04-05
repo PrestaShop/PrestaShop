@@ -93,9 +93,7 @@
 				{l s='You can also decide to move your images to the new storage system: in this case, click on the "Move images" button below. Please be patient, this can take several minutes.'}
 				<br /><br />
 				<div class="hint clear" style="display: block;">&nbsp;
-					{l s='After moving all of your product images, for best performance go to the '}
-					<a style="text-decoration:underline" href="{$link_ppreferences}">{l s='product preferences tab'}</a>
-					{l s='and set "Use the legacy image filesystem" option to "No".'}
+					{l s='After moving all your product images, for best performance, set the "Use the legacy image filesystem" option above to "No".'}
 				</div>
 				<center><input type="Submit" name="submitMoveImages{$table}" value="{l s='Move images'}" class="button space" onclick="return confirm('{l s='Are you sure?'}');" /></center>
 			</fieldset>

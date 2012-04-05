@@ -47,7 +47,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_COMPARATOR_MAX_ITEM' => array(
-						'title' => $this->l('Maximum number of items for comparison:'),
+						'title' => $this->l('Set the maximum number of products that can be selected for comparison:'),
 						'desc' => $this->l('Set the threshold at which a message will announce the product is close to being out of stock.').' '.$this->l('Set to 0 to disable this feature'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
