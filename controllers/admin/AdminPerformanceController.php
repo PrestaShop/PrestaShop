@@ -503,13 +503,13 @@ class AdminPerformanceControllerCore extends AdminController
 	public function initContent()
 	{
 		if (!extension_loaded('memcache'))
-			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').' 
+			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').'
 				<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
 		if (!extension_loaded('apc'))
-			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').' 
+			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').'
 				<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
 		if (!extension_loaded('xcache'))
-			$this->warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').' 
+			$this->warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').'
 				<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 
 		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
@@ -759,6 +759,30 @@ class AdminPerformanceControllerCore extends AdminController
 		else
 			return parent::postProcess();
 	}
-}
 
+    public function ajaxProcess()
+    {
+        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server')
+        {
+            $host = pSQL(Tools::getValue('sHost', ''));
+            $port = (int)Tools::getValue('sPort', 0);
+
+            if ($host != '' && $port != 0)
+            {
+                $res = 0;
+
+                if (function_exists('memcache_get_server_status') &&
+                    function_exists('memcache_connect') &&
+                    @fsockopen($host, $port))
+                {
+                    $memcache = @memcache_connect($host, $port);
+                    $res = @memcache_get_server_status($memcache, $host, $port);
+                }
+                die(Tools::jsonEncode(array($res)));
+            }
+        }
+        die;
+    }
+
+}
 

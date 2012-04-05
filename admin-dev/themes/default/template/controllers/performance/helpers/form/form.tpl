@@ -89,6 +89,7 @@
 					</div>
 					<div class="margin-form">
 						<input type="submit" value="{l s='   Add Server   '}" name="submitAddServer" class="button" />
+                        <input type="button" value="{l s='   Test Server   '}" id="testMemcachedServer" class="button" />
 					</div>
 				</form>
 			</div>
@@ -145,11 +146,46 @@
 		$('#caching_system').change(function() {
 			showMemcached();
 		});
-	
+
 		$('#addMemcachedServer').click(function() {
 			$('#formMemcachedServer').show();
 			return false;
 		});
+
+        $('#testMemcachedServer').click(function() {
+            var host = $('input:text[name=memcachedIp]').val();
+            var port = $('input:text[name=memcachedPort]').val();
+            if (host && port)
+            {
+                $.ajax({
+                    url: 'index.php',
+                    data:
+                    {
+                        controller: 'adminperformance',
+                        token: '{$token}',
+                        action: 'test_server',
+                        sHost: host,
+                        sPort: port,
+                        ajax: true
+                    },
+                    context: document.body,
+                    dataType: 'json',
+                    context: this,
+                    async: false,
+                    success: function(data)
+                    {
+                        if (data)
+                        {
+                            var color = data != 0 ? 'green' : 'red';
+                            $('#formMemcachedServerStatus').show();
+                            $('input:text[name=memcachedIp]').css('background', color);
+                            $('input:text[name=memcachedPort]').css('background', color);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
 
 		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_console"]').change(function(){
 			$('#smarty_up').val(1);
