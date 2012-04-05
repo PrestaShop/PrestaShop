@@ -2417,6 +2417,7 @@ $_LANGADM['AdminPerformanceb718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_LANGADM['AdminPerformanceb9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
 $_LANGADM['AdminPerformancebafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_LANGADM['AdminPerformancebb3656a5447418f8f2644f3ac91b5c6f'] = 'Plusieurs fonctionnalités peuvent être désactivées afin d\'optimiser les performances.';
+$_LANGADM['AdminPerformancebf250f3e5b17efa3d4004b6958bde303'] = 'Tester le serveur';
 $_LANGADM['AdminPerformancec12c5b5693a651c1a235e9040315ad33'] = 'Cela oblige Smarty à (re)compiler les templates à chaque chargement. C\'est très pratique pour le développement et le débogage. Il ne doit jamais être utilisé dans un environnement de production.';
 $_LANGADM['AdminPerformancec3674e01e1bc9327453afff9bee212be'] = 'Le système CacheFS doit être utilisé uniquement lorsque les infrastructures ne contiennent qu\'un seul serveur frontal. Demandez à votre hébergeur, pour plus d\'informations.';
 $_LANGADM['AdminPerformancec424b7b67d7e3099a8f297bfc59bbc11'] = 'Nom du quatrième domaine de votre boutique, (par exemple, myshop-media-server-1.com). Si vous n\'avez pas un autre domaine, laissez ce champ vide';
