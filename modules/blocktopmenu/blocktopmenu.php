@@ -525,18 +525,18 @@ class Blocktopmenu extends Module
 
 		if ($recursive)
 		{
-			$childrens = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
+			$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 			$spacer = str_repeat('&nbsp;', $this->spacer_size * (int)$category->level_depth);
 		}
 
-        $shop = (object) Shop::getShop((int)$category->getShopID());
+		$shop = (object) Shop::getShop((int)$category->getShopID());
 		$this->_html .= '<option value="CAT'.(int)$category->id.'">'.(isset($spacer) ? $spacer : '').$category->name.' ('.$shop->name.')</option>';
 
-		if (isset($childrens) && count($childrens))
-			foreach ($childrens as $children)
-            {
-				$this->getCategoryOption((int)$children['id_category'], (int)$id_lang, (int)$children['id_shop']);
-            }
+		if (isset($children) && count($children))
+			foreach ($children as $child)
+			{
+				$this->getCategoryOption((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+			}
 	}
 
 	private function getCategory($id_category, $id_lang = false, $id_shop = false)
@@ -552,17 +552,17 @@ class Blocktopmenu extends Module
 		if (is_null($category->id))
 			return;
 
-		$childrens = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
+		$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
 		$this->_menu .= '<li '.$selected.'>';
 		$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
 
-		if (count($childrens))
+		if (count($children))
 		{
 			$this->_menu .= '<ul>';
 
-			foreach ($childrens as $children)
-				$this->getCategory((int)$children['id_category'], (int)$id_lang, (int)$children['id_shop']);
+			foreach ($children as $child)
+				$this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
 
 			$this->_menu .= '</ul>';
 		}
