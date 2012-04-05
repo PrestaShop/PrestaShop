@@ -86,39 +86,4 @@
 		{/foreach}
 	</div>
 	<p>&nbsp;</p>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.check_all_warehouse').click(function() {
-				var check = $(this);
-				//get all checkboxes of current warehouse
-				var checkboxes = $('input[name*="'+check.val()+'"]');
-				
-				for (i=0; i<checkboxes.length; i++)
-				{
-					var item = $(checkboxes[i]);
-
-					if (item.is(':checked'))
-					{
-						item.attr("checked", "");
-					}
-					else
-					{
-						item.attr("checked", "checked");
-					}
-				}
-			});
-
-		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
-		setTimeout(function() {
-			$('#warehouse_accordion').accordion();
-		}, 500);
-
-		// Resize the accordion once the page is visible because of the bug with accordions initialized
-		// inside a display:none block not having the correct size.
-		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
-			$('#warehouse_accordion').accordion("resize");
-		});
-		});
-	</script>
 {/if}
