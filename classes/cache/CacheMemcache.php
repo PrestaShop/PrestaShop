@@ -62,7 +62,7 @@ class CacheMemcacheCore extends Cache
                        {
                             if ($entries)
                                 $this->keys = array_merge($this->keys, array_keys($entries));
-                        }
+                       }
                     }
                 }
             }
