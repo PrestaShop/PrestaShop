@@ -33,8 +33,6 @@
 	var uploadableFileLabel = 0;
 	var textFieldLabel = 0;
 
-
-
 	function uploadFile()
 	{
 		$.ajaxFileUpload (
