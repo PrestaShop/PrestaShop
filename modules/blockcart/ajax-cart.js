@@ -217,7 +217,10 @@ var ajaxCart = {
 					$picture.css({'position': 'absolute', 'top': pictureOffsetOriginal.top, 'left': pictureOffsetOriginal.left});
 
 				var pictureOffset = $picture.offset();
-				var cartBlockOffset = $('#shopping_cart').offset();
+				if ($('#cart_block').offset().top && $('#cart_block').offset().left)
+					var cartBlockOffset = $('#cart_block').offset();
+				else
+					var cartBlockOffset = $('#shopping_cart').offset();
 
 				// Check if the block cart is activated for the animation
 				if (cartBlockOffset != undefined && $picture.size())
