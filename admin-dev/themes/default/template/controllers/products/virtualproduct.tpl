@@ -25,7 +25,6 @@
 *}
 
 <script type="text/javascript">
-
 	var newLabel = '{l s='New label'}';
 	var choose_language = '{l s='Choose language:'}';
 	var required = '{l s='required'}';
@@ -34,45 +33,7 @@
 	var uploadableFileLabel = 0;
 	var textFieldLabel = 0;
 
-	$(document).ready(function(){
-		$(".datepicker").datepicker({
-			prevText: '',
-			nextText: '',
-			dateFormat: 'yy-mm-dd'
-		});
 
-		if ($('#is_virtual_good').attr('checked'))
-		{
-			$('#virtual_good').show();
-			$('#virtual_good_more').show();
-		}
-
-		$('.is_virtual_good').hide();
-
-		if ( $('input[name=is_virtual_file]:checked').val() == 1)
-		{
-			$('#virtual_good_more').show();
-			$('#is_virtual_file_product').show();
-		}
-		else
-		{
-			$('#virtual_good_more').hide();
-			$('#is_virtual_file_product').hide();
-		}
-
-		$('input[name=is_virtual_file]').live('change', function(e) {
-			if($(this).val() == '1')
-			{
-				$('#virtual_good_more').show();
-				$('#is_virtual_file_product').show();
-			}
-			else
-			{
-				$('#virtual_good_more').hide();
-				$('#is_virtual_file_product').hide();
-			}
-		});
-	});
 
 	function uploadFile()
 	{
