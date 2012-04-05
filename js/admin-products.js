@@ -388,7 +388,7 @@ product_tabs['Prices'] = {
 	'bindDelete' : function(){
 		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(e){
 			e.preventDefault();
-			deleteSpecificPrice(this.href, $(this).parents('tr'));
+			product_tabs['Prices'].deleteSpecificPrice(this.href, $(this).parents('tr'));
 		})
 	},
 	'onReady' : function(){
