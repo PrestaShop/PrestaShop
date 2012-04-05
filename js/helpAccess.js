@@ -27,7 +27,12 @@ function displayHelpButton(label, iso_user, country_iso_code, _PS_VERSION_){
                 $('ul.cc_button').append(msg.content);
                 $('.help-context-'+help_class_name).fadeIn("fast").show();
             }
-        }
+        },
+		beforeSend: function(data)
+ 		{
+ 			// don't display the loading notification bar
+ 			clearTimeout(ajax_running_timeout);
+ 		}
     });
 }
 
