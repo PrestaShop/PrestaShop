@@ -31,11 +31,12 @@ $smarty->debugging_ctrl = 'NONE';
 function smartyTranslate($params, &$smarty)
 {
 	$htmlentities = !isset($params['js']);
-    $pdf = isset($params['pdf']);
+	$pdf = isset($params['pdf']);
 	$addslashes = isset($params['slashes']);
+	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : false;
 
-    if ($pdf)
-    	return Translate::getPdfTranslation($params['s']);
+	if ($pdf)
+		return Translate::getPdfTranslation($params['s']);
 
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
@@ -64,5 +65,5 @@ function smartyTranslate($params, &$smarty)
 			$class = null;
 	}
 
-	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities);
+	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf);
 }

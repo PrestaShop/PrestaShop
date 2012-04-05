@@ -39,7 +39,7 @@ class TranslateCore
 	 * @param bool $htmlentities
 	 * @return string
 	 */
-	public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
+	public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = false)
 	{
 		static $modules_tabs = null;
 
@@ -73,6 +73,15 @@ class TranslateCore
 			$str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
+
+		if ($sprintf)
+		{
+			if (!is_array($sprintf))
+				$sprintf = array($sprintf);
+
+			$str = vsprintf($str, $sprintf);
+		}
+
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
