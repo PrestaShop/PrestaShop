@@ -1,0 +1,9 @@
+Hi {firstname} {lastname},
+
+A new command has been generated to you.
+
+Go on {order_link} to finalize the payment.
+
+{shop_name} - {shop_url}
+
+{shop_url} réalisé par PrestaShop™
