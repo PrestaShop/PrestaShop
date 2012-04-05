@@ -760,28 +760,28 @@ class AdminPerformanceControllerCore extends AdminController
 			return parent::postProcess();
 	}
 
-    public function ajaxProcess()
-    {
-        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server')
-        {
-            $host = pSQL(Tools::getValue('sHost', ''));
-            $port = (int)Tools::getValue('sPort', 0);
+	public function ajaxProcess()
+	{
+		if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server')
+		{
+			$host = pSQL(Tools::getValue('sHost', ''));
+			$port = (int)Tools::getValue('sPort', 0);
 
-            if ($host != '' && $port != 0)
-            {
-                $res = 0;
+			if ($host != '' && $port != 0)
+			{
+				$res = 0;
 
-                if (function_exists('memcache_get_server_status') &&
-                    function_exists('memcache_connect') &&
-                    @fsockopen($host, $port))
-                {
-                    $memcache = @memcache_connect($host, $port);
-                    $res = @memcache_get_server_status($memcache, $host, $port);
-                }
-                die(Tools::jsonEncode(array($res)));
-            }
-        }
-        die;
+				if (function_exists('memcache_get_server_status') &&
+					function_exists('memcache_connect') &&
+					@fsockopen($host, $port))
+				{
+					$memcache = @memcache_connect($host, $port);
+					$res = @memcache_get_server_status($memcache, $host, $port);
+				}
+				die(Tools::jsonEncode(array($res)));
+			}
+		}
+		die;
     }
 
 }
