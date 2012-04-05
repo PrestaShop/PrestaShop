@@ -292,8 +292,12 @@ class AdminLocalizationControllerCore extends AdminController
 	public function beforeUpdateOptions()
 	{
 		$lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
+
 		if (!$lang->active)
-			$this->errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
+		{
+			$lang->active = 1;
+			$lang->save();
+		}
 	}
 
 	public function updateOptionPsCurrencyDefault($value)
