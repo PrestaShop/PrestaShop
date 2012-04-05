@@ -120,9 +120,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'list' => $cms_tab,
 						'identifier' => 'id',
 						'cast' => 'intval'
-					),
-				),
-				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
+					)
+				)
 			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
