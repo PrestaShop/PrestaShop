@@ -231,7 +231,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
 					'rows' => 5,
