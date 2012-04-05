@@ -76,7 +76,7 @@ function doAjaxForgot() {
 				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
 				} else {
-					window.location.href = jsonData.redirect;
+					alert(jsonData.confirm);
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
