@@ -307,7 +307,7 @@
 				<td style="width:150px">&nbsp;</td>
 				<td style="padding-bottom:5px;">
 					<span id="ResetSpan" style="float:left;margin-left:8px;display:none;">
-						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="init_elems();getE('id_product_attribute').value = 0;" class="button" value="{l s='Cancel modification'}" />
+						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="getE('id_product_attribute').value = 0;" class="button" value="{l s='Cancel modification'}" />
 					</span>
 					<span class="clear"></span>
 				</td>
