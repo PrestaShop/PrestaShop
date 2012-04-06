@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 13512 $
+*  @version  Release: $Revision: 14437 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -76,14 +76,14 @@ class BlockLayered extends Module
 			
 			$products_count = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'product`');
 			
-			if ($products_count < 10000) // Lock price indexation if too many products
-				$this->rebuildLayeredCache();
+			if ($products_count < 20000) // Lock template filter creation if too many products
+			$this->rebuildLayeredCache();
 			self::installPriceIndexTable();
 			$this->installFriendlyUrlTable();
 			$this->installIndexableAttributeTable();
 			$this->installProductAttributeTable();
 			
-			if ($products_count < 10000) // Lock indexation if too many products
+			if ($products_count < 5000) // Lock indexation if too many products
 			{
 				$this->indexUrl();
 				$this->indexAttribute();
@@ -1422,7 +1422,7 @@ class BlockLayered extends Module
 						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
 						if (isset($assos))
 							foreach ($assos as $asso)
-								Db::getInstance()->execute('INSERT INTO  '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
+								Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
 									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
 					}
 					
@@ -3902,7 +3902,10 @@ class BlockLayered extends Module
 			$features_by_id[(int)$row['id_feature_value']] = (int)$row['id_feature'];
 
 		$result = self::query('
-		SELECT p.id_product, GROUP_CONCAT(DISTINCT fv.id_feature_value) features, GROUP_CONCAT(DISTINCT cp.id_category) categories, GROUP_CONCAT(DISTINCT pac.id_attribute) attributes
+		SELECT p.id_product,
+		GROUP_CONCAT(DISTINCT fv.id_feature_value) features,
+		GROUP_CONCAT(DISTINCT cp.id_category) categories,
+		GROUP_CONCAT(DISTINCT pac.id_attribute) attributes
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 		LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
@@ -3914,6 +3917,12 @@ class BlockLayered extends Module
 		AND p.id_product IN ('.implode(',', $products_ids).')' : '').' AND (fv.custom IS NULL OR fv.custom = 0)
 		GROUP BY p.id_product');
 
+		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$shop_list = Shop::getShops(false, null, true);
+		else
+			$shop_list = array(0);
+		
 		$to_insert = false;
 		while ($product = $db->nextRow($result))
 		{
@@ -3924,15 +3933,11 @@ class BlockLayered extends Module
 				$c = array_flip(explode(',', $product['categories']));
 			if (!empty($product['features']))
 				$f = array_flip(explode(',', $product['features']));
-
-			if (version_compare(_PS_VERSION_,'1.5','>'))
-				$shop_list = Shop::getShops(false, null, true);
-			else
-				$shop_list = array(0);
 			
 			$filter_data['shop_list'] = $shop_list;
 			
 			foreach ($shop_list as $id_shop)
+			{
 				foreach ($c as $id_category => $category)
 				{
 					if (!in_array($id_category, $filter_data['categories']))
@@ -3991,6 +3996,7 @@ class BlockLayered extends Module
 						$to_insert = true;
 					}
 				}
+			}
 		}
 		if ($to_insert)
 		{
@@ -4002,7 +4008,7 @@ class BlockLayered extends Module
 				$last_id = Db::getInstance()->Insert_ID();
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.$last_id);
 				foreach ($shop_list as $id_shop)
-					Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
 						VALUES('.$last_id.', '.(int)$id_shop.')');
 			}
 			
