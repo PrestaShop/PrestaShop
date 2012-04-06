@@ -68,13 +68,11 @@
 							<td style="width:40%">{$key|stripslashes}</td>
 							<td>= {*todo : md5 is already calculated in AdminTranslationsController*}
 								{if $key|strlen < $textarea_sized}
-									<input type="text" 
-										style="width: 450px" 
+									<input type="text" style="width: 450px{if empty($value)};background:#FBB{/if}"
 										name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
 										value="{$value|regex_replace:'/"/':'&quot;'|stripslashes}" />
 								{else}
-									<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
-										style="width: 450px" 
+									<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value)};background:#FBB{/if}"
 									name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
 									>{$value|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
 								{/if}
