@@ -1714,7 +1714,7 @@ class AdminControllerCore extends Controller
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
 
-		$this->id_object = (int)Tools::getValue('id_'.$this->table);
+		$this->id_object = (int)Tools::getValue($this->identifier);
 
 		/* Delete object image */
 		if (isset($_GET['deleteImage']))
@@ -1793,7 +1793,7 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		elseif (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
+		elseif (isset($_GET['update'.$this->table]) && isset($_GET[$this->identifier]))
 		{
 			$this->display = 'edit';
 			if ($this->tabAccess['edit'] !== '1')

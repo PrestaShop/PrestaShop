@@ -193,7 +193,7 @@
 
 <form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
-		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
+		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
 
 	{assign var=tabsize value=count($tabs)}

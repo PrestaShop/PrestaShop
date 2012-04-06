@@ -44,7 +44,7 @@
 {block name="defaultForm"}
 <form id="{$table}_form" class="defaultForm {$name_controller}" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
-		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
+		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
 	{foreach $fields as $f => $fieldset}
 		<fieldset id="fieldset_{$f}">
@@ -247,7 +247,7 @@
 											<div id="image">
 												{$fields_value.image}
 												<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-												<a href="{$current}&id_{$table}={$form_id}&token={$token}&deleteImage=1">
+												<a href="{$current}&{$identifier}={$form_id}&token={$token}&deleteImage=1">
 													<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
 												</a>
 											</div><br />
