@@ -54,8 +54,9 @@ function ProductTabsManager(){
 	this.onLoad = function (tab_name, callback)
 	{
 		container = $('#product-tab-content-' + tab_name);
+		// Some containers are not loaded depending on the shop configuration
 		if (container.length === 0)
-			throw 'Could not find container for tab name: ' + tab_name;
+			return;
 
 		// onReady() is always called after the dom has been created for the tab (similar to $(document).ready())
 		if (container.hasClass('not-loaded'))
