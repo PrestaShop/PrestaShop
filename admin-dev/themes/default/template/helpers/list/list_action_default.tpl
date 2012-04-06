@@ -23,6 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" class="default" title="{$action}">
+<a href="{$href}" class="default" title="{$action}" {if isset($name)}name="{$name}{/if}">
 	<img src="../img/admin/asterisk.gif" alt="{$action}" />
 </a>
