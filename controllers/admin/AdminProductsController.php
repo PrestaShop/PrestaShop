@@ -2083,7 +2083,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->toolbar_btn['preview'] = array(
 							'short' => 'Preview',
 							'href' => $url_preview,
-							'desc' => $this->l('prevdesc'),
+							'desc' => $this->l('Preview'),
 							'target' => true,
 							'class' => 'previewUrl'
 						);
