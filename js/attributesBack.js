@@ -211,6 +211,8 @@ function check_unit_impact()
 
 function init_elems()
 {
+	var impact = getE('attribute_price_impact');
+	var impact2 = getE('attribute_weight_impact');
 	var elem = getE('product_att_list');
 
 	if (elem.length)
