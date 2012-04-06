@@ -66,14 +66,13 @@ abstract class HTMLTemplateCore
 	public function getFooter()
 	{
 		$shop_address = $this->getShopAddress();
-
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
 			'shop_fax' => Configuration::get('PS_SHOP_FAX'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 			'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
-			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT')
+			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id)
 		));
 
 		return $this->smarty->fetch($this->getTemplate('footer'));
