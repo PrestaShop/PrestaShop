@@ -80,6 +80,11 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		$this->toolbar_btn['save-and-stay'] = array(
+			'short' => 'SaveAndStay',
+			'href' => '#',
+			'desc' => $this->l('Save and stay'),
+		);
 		$this->toolbar_btn['save'] = array(
 			'href' => '#',
 			'desc' => $this->l('Update translations')
@@ -191,9 +196,16 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		if ($fd = fopen($path, 'w'))
 		{
+			// Get value of button save and stay
+			$save_and_stay = Tools::getValue('submitTranslations'.Tools::toCamelCase($type, true).'AndStay');
+
+			// Get language
+			$lang = strtolower(Tools::getValue('lang'));
+
 			// Unset all POST which are not translations
 			unset(
 				$_POST['submitTranslations'.Tools::toCamelCase($type, true)],
+				$_POST['submitTranslations'.Tools::toCamelCase($type, true).'AndStay'],
 				$_POST['lang'],
 				$_POST['token']
 			);
@@ -211,7 +223,11 @@ class AdminTranslationsControllerCore extends AdminController
 				fwrite($fd, '$_'.$tab.'[\''.pSQL($key, true).'\'] = \''.pSQL($value, true).'\';'."\n");
 			fwrite($fd, "\n?>");
 			fclose($fd);
-			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+
+			if ($save_and_stay)
+				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.'&lang='.$lang.'&type='.$type);
+			else
+				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
 		else
 			die('Cannot write language file');
@@ -669,6 +685,7 @@ class AdminTranslationsControllerCore extends AdminController
 					$this->all_iso_lang[] = $language['iso_code'];
 
 				$lang = Tools::strtolower($_POST['lang']);
+
 				if (!Validate::isLanguageIsoCode($lang))
 					die(Tools::displayError());
 				if (!$modules = scandir(_PS_MODULE_DIR_))
@@ -688,7 +705,11 @@ class AdminTranslationsControllerCore extends AdminController
 
 					foreach ($arr_find_and_write as $key => $value)
 						$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
-					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+
+					if (Tools::getValue('submitTranslationsModulesAndStay'))
+						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.'&lang='.$lang.'&type=modules');
+					else
+						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
 			}
 			else
@@ -721,7 +742,7 @@ class AdminTranslationsControllerCore extends AdminController
 	protected function submitTranslationsMails($id_lang)
 	{
 		$obj_lang = new Language($id_lang);
-		$params_redirect = (Tools::isSubmit('submitTranslationsMailsAndStay') ? '&lang='.Tools::getValue('lang').'&type='.Tools::getValue('type') : '');
+		$params_redirect = (Tools::isSubmit('submitTranslationsMailsAndStay') ? '&lang='.Tools::strtolower($_POST['lang']).'&type='.Tools::getValue('type') : '');
 
 		$arr_mail_content = array();
 		$arr_mail_path = array();
@@ -795,7 +816,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// Update subjects
 		$array_subjects = array();
-		if ($subjects = Tools::getValue('subject') && is_array($subjects))
+		if (($subjects = Tools::getValue('subject')) && is_array($subjects))
 		{
 			$array_subjects['core_and_modules'] = array('translations'=>array(), 'path'=>$arr_mail_path['core_mail'].'lang.php');
 			if (isset($arr_mail_path['theme_mail']))
@@ -965,7 +986,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'post_limit_exceeded' => $this->post_limit_exceed,
-			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
+			'url_submit' => self::$currentIndex.'&submitTranslationsFront=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'tabsArray' => $tabs_array,
 			'textarea_sized' => TEXTAREA_SIZED,
