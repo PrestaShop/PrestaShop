@@ -3439,24 +3439,21 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($comb_array as $id_product_attribute => $product_attribute)
 				{
 					$list = '';
-					$js_list = '';
 
 					/* In order to keep the same attributes order */
 					asort($product_attribute['attributes']);
 
 					foreach ($product_attribute['attributes'] as $attribute)
-					{
 						$list .= htmlspecialchars($attribute[0]).' - '.htmlspecialchars($attribute[1]).', ';
-						$js_list .= '\''.htmlspecialchars($attribute[0]).' : '.htmlspecialchars($attribute[1]).'\', \''.$attribute[2].'\', ';
-					}
+
 					$list = rtrim($list, ', ');
-					$js_list = rtrim($js_list, ', ');
 					$comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 					$comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
 					$comb_array[$id_product_attribute]['attributes'] = $list;
+
 					if ($product_attribute['default_on'])
 					{
-						$this->list_skip_actions['default'][] = $product_attribute['id_product_attribute'];
+						$comb_array[$id_product_attribute]['name'] = 'is_default';
 						$comb_array[$id_product_attribute]['color'] = $color_by_default;
 					}
 

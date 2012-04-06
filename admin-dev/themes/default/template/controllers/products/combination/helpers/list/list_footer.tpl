@@ -34,17 +34,4 @@
 			<li>{l s='A default combination must be designated for each product.'}</li>
 		</ul>
 	</div>
-
-	<script type="text/javascript">
-		var impact = getE('attribute_price_impact');
-		var impact2 = getE('attribute_weight_impact');
-
-		var s_attr_group = $('#span_new_group');
-		var s_attr_name = $('#span_new_attr');
-		var s_impact = $('#span_impact');
-		var s_impact2 = $('#span_weight_impact');
-
-		init_elems();
-	</script>
-
 {/block}

@@ -55,7 +55,7 @@ product_tabs['Combinations'] = new function(){
 					$('#add_new_combination').show();
 					$('#attribute_quantity').show();
 					$('#product_att_list').html('');
-					removeButtonCombination('update');
+					self.removeButtonCombination('update');
 					$.scrollTo('#add_new_combination', 1200, { offset: -100 });
 					var wholesale_price = Math.abs(data[0]['wholesale_price']);
 					var price = Math.abs(data[0]['price']);
@@ -123,103 +123,103 @@ product_tabs['Combinations'] = new function(){
 		}
 	};
 
+	this.defaultProductAttribute = function(url, item){
+		$.ajax({
+			url: url,
+			data: {
+				id_product: id_product,
+				action: 'defaultProductAttribute',
+				ajax: true
+			},
+			context: document.body,
+			dataType: 'json',
+			context: this,
+			async: false,
+			success: function(data) {
+				if (data.status == 'ok')
+				{
+					showSuccessMessage(data.message);
+
+					// Reset previous default attribute display
+					var previous = $('a[name=is_default]');
+					previous.closest('tr').attr('style', '');
+					previous.show();
+					previous.attr('name', '');
+
+					// Update new default attribute display
+					$(item).closest('tr').css('background','#BDE5F8');
+					$(item).hide();
+					$(item).attr('name', 'is_default');
+				}
+				else
+					showErrorMessage(data.message);
+			}
+		});
+	};
+
 	this.bindDefault = function(){
+		$('a[name=is_default]').hide();
 		$('table[name=list_table]').delegate('a.default', 'click', function(e){
 			e.preventDefault();
-			defaultProductAttribute(this.href, $(this).closest('tr'));
+			self.defaultProductAttribute(this.href, this);
 		});
+	};
 
-		function defaultProductAttribute (url, parent){
-			$.ajax({
-				url: url,
-				data: {
-					id_product: id_product,
-					action: 'defaultProductAttribute',
-					ajax: true
-				},
-				context: document.body,
-				dataType: 'json',
-				context: this,
-				async: false,
-				success: function(data) {
-					if (data.status == 'ok')
-					{
-						showSuccessMessage(data.message);
-						$('table.table').find('tr').attr('style', function() {
-							var style = $(this).attr('style');
-							if (style)
-							{
-								$(this).attr('style', '');
-								var ids = $(this).find('a.edit').attr('ids');
-								var token = $(this).find('a.edit').attr('token');
-								$(this).find('a.edit').after("<a title=\"Default\" onclick=\"javascript:defaultProductAttribute('"+ids+"', '"+token+"', $(this).parent('td').parent('tr'));\" class=\"pointer default\"><img alt=\"Default\" src=\"../img/admin/asterisk.gif\"></a>");
-							}
-						});
-						parent.find('a.default').hide();
-						parent.css('background','#BDE5F8');
-					}
-					else
-						showErrorMessage(data.message);
+	this.deleteProductAttribute = function(url, parent){
+		$.ajax({
+			url: url,
+			data: {
+				id_product: id_product,
+				action: 'deleteProductAttribute',
+				ajax: true
+			},
+			context: document.body,
+			dataType: 'json',
+			context: this,
+			async: false,
+			success: function(data) {
+				if (data.status == 'ok')
+				{
+					showSuccessMessage(data.message);
+					parent.remove();
 				}
-			});
-		}
+				else
+					showErrorMessage(data.message);
+			}
+		});
 	};
 
 	this.bindDelete = function() {
 		$('table[name=list_table]').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
-			deleteProductAttribute(this.href, $(this).closest('tr'));
+			self.deleteProductAttribute(this.href, $(this).closest('tr'));
 		});
+	};
 
-		function deleteProductAttribute(url, parent){
-			$.ajax({
-				url: url,
-				data: {
-					id_product: id_product,
-					action: 'deleteProductAttribute',
-					ajax: true
-				},
-				context: document.body,
-				dataType: 'json',
-				context: this,
-				async: false,
-				success: function(data) {
-					if (data.status == 'ok')
-					{
-						showSuccessMessage(data.message);
-						parent.remove();
-					}
-					else
-						showErrorMessage(data.message);
-				}
-			});
-		}
+	this.removeButtonCombination = function(item)
+	{
+		$('#add_new_combination').show();
+		$('.process-icon-newCombination').removeClass('toolbar-new');
+		$('.process-icon-newCombination').addClass('toolbar-cancel');
+		$('#desc-product-newCombination div').html($('#ResetBtn').val());
+		$('id_product_attribute').val(0);
+		init_elems();
+	};
+
+	this.addButtonCombination = function(item)
+	{
+		$('#add_new_combination').hide();
+		$('.process-icon-newCombination').removeClass('toolbar-cancel');
+		$('.process-icon-newCombination').addClass('toolbar-new');
+		$('#desc-product-newCombination div').html(msg_new_combination);
 	};
 
 	this.bindToggleAddCombination = function (){
 		$('#desc-product-newCombination').click(function() {
 			if ($('.process-icon-newCombination').hasClass('toolbar-new'))
-				removeButtonCombination('add');
+				self.removeButtonCombination('add');
 			else
-				addButtonCombination('add');
-
-			function removeButtonCombination(item)
-			{
-				$('#add_new_combination').show();
-				$('.process-icon-newCombination').removeClass('toolbar-new');
-				$('.process-icon-newCombination').addClass('toolbar-cancel');
-				$('#desc-product-newCombination div').html($('#ResetBtn').val());
-				$('id_product_attribute').val(0);
-				init_elems();
-			}
-
-			function addButtonCombination(item)
-			{
-				$('#add_new_combination').hide();
-				$('.process-icon-newCombination').removeClass('toolbar-cancel');
-				$('.process-icon-newCombination').addClass('toolbar-new');
-				$('#desc-product-newCombination div').html(msg_new_combination);
-			}
+				self.addButtonCombination('add');
 		});
 	};
 

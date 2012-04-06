@@ -197,6 +197,7 @@ class HelperListCore extends Helper
 		{
 			$id = $tr[$this->identifier];
 			$name = isset($tr['name']) ? $tr['name'] : null;
+
 			if ($this->shopLinkType)
 				$this->_list[$index]['short_shop_name'] = Tools::strlen($tr['shop_name']) > 15 ? Tools::substr($tr['shop_name'], 0, 15).'...' : $tr['shop_name'];
 
@@ -481,9 +482,10 @@ class HelperListCore extends Helper
 			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token)),
 			'action' => self::$cache_lang['Default'],
-			'id' => $id,
+			'name' => Tools::safeOutput($name),
+			'id' => Tools::safeOutput($id),
 		)));
 
 		return $tpl->fetch();
