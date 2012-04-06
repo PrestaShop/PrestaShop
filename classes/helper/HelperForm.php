@@ -153,6 +153,7 @@ class HelperFormCore extends Helper
 			'current' => $this->currentIndex,
 			'token' => $this->token,
 			'table' => $this->table,
+			'identifier' => $this->identifier,
 			'name_controller' => $this->name_controller,
 			'languages' => $this->languages,
 			'defaultFormLanguage' => $this->default_form_language,
