@@ -263,12 +263,12 @@ class CurrencyCore extends ObjectModel
 		AND `id_currency` = '.(int)($id_currency));
 	}
 
-    /**
-     * @static
-     * @param $iso_code
-     * @param int $id_shop
-     * @return int
-     */
+	/**
+	 * @static
+	 * @param $iso_code
+	 * @param int $id_shop
+	 * @return int
+	 */
 	public static function getIdByIsoCode($iso_code, $id_shop = 0)
 	{
 		$query = Currency::getIdByQuery($id_shop);
