@@ -271,12 +271,10 @@ class CurrencyCore extends ObjectModel
      */
 	public static function getIdByIsoCode($iso_code, $id_shop = 0)
 	{
-        $query = Currency::getIdByQuery($id_shop);
-        $query->where('iso_code = \''.pSQL($iso_code).'\'');
+		$query = Currency::getIdByQuery($id_shop);
+		$query->where('iso_code = \''.pSQL($iso_code).'\'');
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
-
-		return (int)$result['id_currency'];
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 	}
 
     /**
