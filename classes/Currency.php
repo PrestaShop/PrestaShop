@@ -241,8 +241,8 @@ class CurrencyCore extends ObjectModel
 
 	public static function checkPaymentCurrencies($id_module, $id_shop = null)
 	{
-        if (empty($id_module))
-            return false;
+		if (empty($id_module))
+			return false;
 
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
@@ -285,33 +285,31 @@ class CurrencyCore extends ObjectModel
      */
 	public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
 	{
-        $query = Currency::getIdByQuery($id_shop);
-        $query->where('iso_code_num = \''.pSQL($iso_code_num).'\'');
+		$query = Currency::getIdByQuery($id_shop);
+		$query->where('iso_code_num = \''.pSQL($iso_code_num).'\'');
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
-
-		return (int)$result['id_currency'];
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 	}
 
-    /**
-     * @static
-     * @param int $id_shop
-     * @return DbQuery
-     */
-    public static function getIdByQuery($id_shop = 0)
-    {
-        $query = new DbQuery();
-        $query->select('c.id_currency');
-        $query->from('currency', 'c');
-        $query->where('deleted = 0');
+	/**
+	 * @static
+	 * @param int $id_shop
+	 * @return DbQuery
+	 */
+	public static function getIdByQuery($id_shop = 0)
+	{
+		$query = new DbQuery();
+		$query->select('c.id_currency');
+		$query->from('currency', 'c');
+		$query->where('deleted = 0');
 
-        if (Shop::isFeatureActive() && $id_shop > 0)
-        {
-            $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
-            $query->where('id_shop = '.(int)$id_shop);
-        }
-        return $query;
-    }
+		if (Shop::isFeatureActive() && $id_shop > 0)
+		{
+			$query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
+			$query->where('id_shop = '.(int)$id_shop);
+		}
+		return $query;
+	}
 
 	/**
 	 * Refresh the currency conversion rate
