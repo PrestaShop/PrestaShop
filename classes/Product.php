@@ -3282,6 +3282,28 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->insert('product_download', $data);
 	}
 
+	public static function duplicateAttachments($id_product_old, $id_product_new)
+	{
+		// Get all ids attachments of the old product
+		$sql = 'SELECT `id_attachment` FROM `'._DB_PREFIX_.'product_attachment` WHERE `id_product` = '.(int)$id_product_old;
+		$results = Db::getInstance()->executeS($sql);
+
+		if (!$results)
+			return true;
+
+		$data = array();
+
+		// Prepare data of table product_attachment
+		foreach ($results as $row)
+			$data[] = array(
+				'id_product' => (int)$id_product_new,
+				'id_attachment' => (int)$row['id_attachment']
+			);
+
+		// Duplicate product attachement
+		return Db::getInstance()->insert('product_attachment', $data);
+	}
+
 	/**
 	* Duplicate features when duplicating a product
 	*
