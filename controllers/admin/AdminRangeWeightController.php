@@ -40,8 +40,8 @@ class AdminRangeWeightControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_range_weight' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'left', 'width' => 'auto', 'filter_key' => 'ca!name'),
-			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'float' => true, 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'),
-			'delimiter2' => array('title' => $this->l('To'), 'width' => 86, 'float' => true, 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'));
+			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'type' => 'float', 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'),
+			'delimiter2' => array('title' => $this->l('To'), 'width' => 86, 'type' => 'float', 'suffix' => Configuration::get('PS_WEIGHT_UNIT'), 'align' => 'right'));
 
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';

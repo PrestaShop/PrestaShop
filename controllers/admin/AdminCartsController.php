@@ -68,7 +68,6 @@ class AdminCartsControllerCore extends AdminController
 				'align' => 'right',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
-				'currency' => true
 			),
 			'carrier' => array(
 				'title' => $this->l('Carrier'),
