@@ -287,7 +287,7 @@ class CartCore extends ObjectModel
 			return array();
 			
 		$cache_key = 'Cart::getCartRules'.$this->id;
-		if (!Cache::isStored('Cart::getCartRules'.$this->id))
+		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
 				SELECT *
