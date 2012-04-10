@@ -86,26 +86,6 @@
 {/if}
 
 <div class="adresses_bloc clearfix">
-<p class="bold">{l s='Order:'} <span class="color-myaccount">{l s='#'}{$order->id|string_format:"%06d"}</span></p>
-{if $carrier->id}<p class="bold">{l s='Carrier:'} {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</p>{/if}
-<p class="bold">{l s='Payment method:'} <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></p>
-{if $invoice AND $invoiceAllowed}
-<p>
-	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a PDF file'}</a>
-	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a PDF file'}</a>
-	{/if}
-</p>
-{/if}
-{if $order->recyclable && isset($isRecyclable) && $isRecyclable}
-<p><img src="{$img_dir}icon/recyclable.gif" alt="" class="icon" />&nbsp;{l s='You have given permission to receive your order in recycled packaging.'}</p>
-{/if}
-{if $order->gift}
-	<p><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You requested gift-wrapping for your order.'}</p>
-	<p>{l s='Message:'} {$order->gift_message|nl2br}</p>
-{/if}
 <br />
 <ul class="address item" {if $order->isVirtual()}style="display:none;"{/if}>
 	<li class="address_title">{l s='Invoice'}</li>
