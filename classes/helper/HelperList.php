@@ -39,9 +39,6 @@ class HelperListCore extends Helper
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
 
-	/** @var array Temporary SQL table WHERE clause determinated by filter fields */
-	protected $_tmpTableFilter = '';
-
 	/** @var array Number of results in list per page (used in select field) */
 	protected $_pagination = array(20, 50, 100, 300);
 
@@ -283,11 +280,11 @@ class HelperListCore extends Helper
 							'alt' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
 						);
 				}
-				else if (isset($params['float']))
+				else if (isset($params['type']) && $params['type'] == 'float')
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
 				else if (isset($params['type']) && $params['type'] == 'price')
 				{
-					$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
+					$currency = (isset($params['currency']) && $params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
 					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
 				}
 				else if (isset($params['type']) && $params['type'] == 'date')
