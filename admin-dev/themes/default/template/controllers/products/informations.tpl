@@ -198,7 +198,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left"><label>{l s='Where to place it?'}</label></td>
+						<td class="col-left"><label>{l s='Position:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<ul class="listForm">
 								<li><input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
@@ -217,7 +217,7 @@
 							<ul class="listForm">
 							{foreach from=$imagesTypes key=key item=type}
 								<li><input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-									<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
+									<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px {l s='by'} {$type.height}px)</span></label>
 								</li>
 							{/foreach}
 							</ul>
@@ -228,7 +228,7 @@
 						<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input type="text" id="resultImage" name="resultImage" />
-							<p class="preference_description">{l s='The tag is to copy/paste in the description.'}</p>
+							<p class="preference_description">{l s='The tag to copy/paste into the description.'}</p>
 						</td>
 					</tr>
 					<tr>
