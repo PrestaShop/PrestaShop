@@ -48,7 +48,7 @@ class AdminCmsControllerCore extends AdminController
 			'link_rewrite' => array('title' => $this->l('URL'), 'width' => 'auto'),
 			'meta_title' => array('title' => $this->l('Title'), 'width' => '300', 'filter_key' => 'b!meta_title'),
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 			);
 
 		$this->_category = AdminCmsContentController::getCurrentCMSCategory();
@@ -77,14 +77,14 @@ class AdminCmsControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('CMS Category'),
+				'title' => $this->l('CMS Page'),
 				'image' => '../img/admin/tab-categories.gif'
 			),
 			'input' => array(
 				// custom template
 				array(
 					'type' => 'select_category',
-					'label' => $this->l('Parent CMS Category'),
+					'label' => $this->l('CMS Category'),
 					'name' => 'id_cms_category',
 					'options' => array(
 						'html' => $html_categories,
@@ -137,7 +137,7 @@ class AdminCmsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Enable:'),
+					'label' => $this->l('Displayed:'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
