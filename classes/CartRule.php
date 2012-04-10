@@ -682,7 +682,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
 		{
 			if (!$this->carrier_restriction)
-				$reduction_value += $context->cart->getTotalShippingCost(null, $useTax = true, $context->country);
+				$reduction_value += $context->cart->getTotalShippingCost(null, $useTax, $context->country);
 			else
 			{
 				$data = Db::getInstance()->executeS('
@@ -699,7 +699,6 @@ class CartRuleCore extends ObjectModel
 
 		if ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_REDUCTION)
 		{
-
 			// Discount (%) on the whole order
 			if ($this->reduction_percent && $this->reduction_product == 0)
 				$reduction_value += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
