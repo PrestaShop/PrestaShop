@@ -438,6 +438,7 @@ class AdminProductsControllerCore extends AdminController
 			&& Product::duplicateTags($id_product_old, $product->id)
 			&& Product::duplicateDownload($id_product_old, $product->id)
 			&& Product::duplicateTaxRulesGroup((int)$id_product_old, (int)$product->id)
+			&& Product::duplicateAttachments((int)$id_product_old, (int)$product->id)
 			&& $product->duplicateShops($id_product_old))
 			{
 				if ($product->hasAttributes())
