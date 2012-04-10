@@ -47,9 +47,16 @@
 	</td>
 	<td class="cart_quantity"{if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0} style="text-align: center;"{/if}>
 		{if isset($cannotModify) AND $cannotModify == 1}
-			<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
+			<span style="float:left">
+					{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}
+				{else}
+					{$product.cart_quantity-$quantityDisplayed}
+				{/if}
+			</span>
 		{else}
-			{if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0}<span id="cart_quantity_custom_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}" >{$product.customizationQuantityTotal}</span>{/if}
+			{if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0}
+				<span id="cart_quantity_custom_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}" >{$product.customizationQuantityTotal}</span>
+			{/if}
 			{if !isset($customizedDatas.$productId.$productAttributeId) OR $quantityDisplayed > 0}
 				<div id="cart_quantity_button" class="cart_quantity_button" style="float:left;">
 				<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
@@ -68,10 +75,6 @@
 				
 			{/if}
 		{/if}
-		</div>
-	{if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0}
-		<span id="cart_quantity_custom_{$product.id_product}_{$product.id_product_attribute}" >{$product.customizationQuantityTotal}</span>
-	{/if}
 	</td>
 	<td class="cart_total">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}">
