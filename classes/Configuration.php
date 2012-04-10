@@ -124,8 +124,12 @@ class ConfigurationCore extends ObjectModel
 					'shop' => array(),
 				);
 
-			// Do not remove (int) cast
-			Configuration::set($row['name'], array($lang => $row['value']), (int)$row['id_group_shop'], (int)$row['id_shop']);
+			if ($row['id_shop'])
+				self::$_CONF[$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
+			else if ($row['id_shop_group'])
+				self::$_CONF[$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
+			else
+				self::$_CONF[$lang]['global'][$row['name']] = $row['value'];
 		}
 	}
 
