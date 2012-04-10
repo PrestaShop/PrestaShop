@@ -280,12 +280,13 @@ class CartCore extends ObjectModel
 		return $this->getCartRules();
 	}
 
-	public function getCartRules()
+	public function getCartRules($filter = CartRule::FILTER_ACTION_ALL)
 	{
 		// If the cart has not been saved, then there can't be any cart rule applied
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
 			
+		$cache_key = 'Cart::getCartRules'.$this->id;
 		if (!Cache::isStored('Cart::getCartRules'.$this->id))
 		{
 			$result = Db::getInstance()->executeS('
@@ -298,25 +299,26 @@ class CartCore extends ObjectModel
 				)
 				WHERE `id_cart` = '.(int)$this->id
 			);
-
-			// Define virtual context to prevent case where the cart is not the in the global context
-			$virtual_context = Context::getContext()->cloneContext();
-			$virtual_context->cart = $this;
-			
-			foreach ($result as &$row)
-			{
-				$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
-				$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context);
-				$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context);
-
-				// Retro compatibility < 1.5.0.2
-				$row['id_discount'] = $row['id_cart_rule'];
-				$row['description'] = $row['name'];
-			}
-			
-			Cache::store('Cart::getCartRules'.$this->id, $result);
+			Cache::store($cache_key, $result);
 		}
-		return Cache::retrieve('Cart::getCartRules'.$this->id);
+		$result = Cache::retrieve($cache_key);
+		
+		// Define virtual context to prevent case where the cart is not the in the global context
+		$virtual_context = Context::getContext()->cloneContext();
+		$virtual_context->cart = $this;
+		
+		foreach ($result as &$row)
+		{
+			$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
+			$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
+			$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
+			
+			// Retro compatibility < 1.5.0.2
+			$row['id_discount'] = $row['id_cart_rule'];
+			$row['description'] = $row['name'];
+		}
+
+		return $result;
 	}
 
 	public function getDiscountsCustomer($id_cart_rule)
@@ -1247,6 +1249,8 @@ class CartCore extends ObjectModel
 		if (!in_array($type, $array_type))
 			die(Tools::displayError());
 
+		$with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING));
+		
 		// if cart rules are not used
 		if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive())
 			return 0;
@@ -1259,7 +1263,7 @@ class CartCore extends ObjectModel
 		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if (!in_array($type, array(Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING)))
+		if ($with_shipping)
 		{
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
@@ -1375,10 +1379,20 @@ class CartCore extends ObjectModel
 
 		$order_total_discount = 0;
 		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
-		{
-			$result = $this->getCartRules();
-			foreach ($result as $row)
-				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes, $virtual_context), 2);
+		{			
+			if ($with_shipping)
+				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
+			else
+				$cart_rules = array_merge($this->getCartRules(CartRule::FILTER_ACTION_REDUCTION), $this->getCartRules(CartRule::FILTER_ACTION_GIFT));
+				
+			foreach ($cart_rules as $cart_rule)
+				if ($with_shipping)
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_ALL), 2);
+				else
+				{
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION), 2);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_GIFT), 2);
+				}
 
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
