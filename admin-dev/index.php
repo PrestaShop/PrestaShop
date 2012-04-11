@@ -25,7 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+$timer_start = microtime(true);
 define('_PS_ADMIN_DIR_', getcwd());
+
 require(dirname(__FILE__).'/../config/config.inc.php');
 require(dirname(__FILE__).'/functions.php');
 

@@ -31,7 +31,7 @@
 				<div id="footer">
 					<div class="footerLeft">
 						<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
-						<span>{l s='Load time: '}{$end_time}s</span>
+						<span>{l s='Load time: '}{number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 					</div>
 					<div class="footerRight">
 						{if $iso_is_fr}
