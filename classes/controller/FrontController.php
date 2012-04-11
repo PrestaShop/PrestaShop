@@ -869,6 +869,7 @@ class FrontControllerCore extends Controller
 		$context = Context::getContext();
 		if (!isset($context->customer))
 			return array();
+		
 		if (!is_array(self::$currentCustomerGroups))
 		{
 			self::$currentCustomerGroups = array();
