@@ -42,7 +42,7 @@ function smartyTranslate($params, &$smarty)
 
 	// If the template is part of a module
 	if (!empty($params['mod']))
-		return Translate::getModuleTranslation($params['mod'], $params['s'], Tools::substr(basename($filename), 0, -4));
+		return Translate::getModuleTranslation($params['mod'], $params['s'], basename($filename, '.tpl'));
 
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
@@ -67,3 +67,4 @@ function smartyTranslate($params, &$smarty)
 
 	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf);
 }
+
