@@ -37,11 +37,15 @@ function smartyTranslate($params, &$smarty)
 
 	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
+
 	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
+	if (isset($smarty->source) && preg_match('#/override/#', $smarty->source->filepath))
+		$key = 'override_'.$key;
+
 	$lang_array = $_LANG;
 	if ($params['mod'])
 		return Translate::getModuleTranslation($params['mod'], $params['s'], Tools::substr(basename($filename), 0, -4));
-	else if ($params['pdf']) 
+	else if ($params['pdf'])
 		return Translate::getPdfTranslation($params['s']);
 
 	if ($lang_array != null && isset($lang_array[$key]))
@@ -56,3 +60,4 @@ function smartyTranslate($params, &$smarty)
 
 	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
 }
+

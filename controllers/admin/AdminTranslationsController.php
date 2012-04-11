@@ -941,7 +941,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($templates_per_directory as $template_dir => $templates)
 		{
 			$prefix = '';
-			if ($template_dir == _THEME_OVERRIDE_DIR_)
+			if ($template_dir == _PS_THEME_OVERRIDE_DIR_)
 				$prefix = 'override_';
 
 			foreach ($templates as $template)
