@@ -162,17 +162,17 @@ class TranslateCore
 			if (version_compare(_PS_VERSION_, '1.3.0.0') <= 0)
 				$_MODULES = array_change_key_case($_MODULES);
 
-			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.$key;
-			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.$key;
+			$currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source.'_'.$key);
+			$defaultKey = strtolower('<{'.$name.'}prestashop>'.$source.'_'.$key);
 
 			if (isset($_MODULES[$currentKey]))
 				$ret = stripslashes($_MODULES[$currentKey]);
-			elseif (isset($_MODULES[Tools::strtolower($currentKey)]))
-				$ret = stripslashes($_MODULES[Tools::strtolower($currentKey)]);
+			elseif (isset($_MODULES[$currentKey]))
+				$ret = stripslashes($_MODULES[$currentKey]);
 			elseif (isset($_MODULES[$defaultKey]))
 				$ret = stripslashes($_MODULES[$defaultKey]);
-			elseif (isset($_MODULES[Tools::strtolower($defaultKey)]))
-				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
+			elseif (isset($_MODULES[$defaultKey]))
+				$ret = stripslashes($_MODULES[$defaultKey]);
 			// if translation was not found in module, look for it in AdminController or Helpers
 			elseif (!empty($_LANGADM))
 				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
