@@ -39,7 +39,8 @@ function smartyTranslate($params, &$smarty)
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
 	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
-	if (isset($smarty->source) && preg_match('#/override/#', $smarty->source->filepath))
+
+	if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false))
 		$key = 'override_'.$key;
 
 	$lang_array = $_LANG;
