@@ -147,8 +147,9 @@ class SupplierCore extends ObjectModel
 		}
 
 		$nb_suppliers = count($suppliers);
+		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS')
 		for ($i = 0; $i < $nb_suppliers; $i++)
-			if ((int)Configuration::get('PS_REWRITING_SETTINGS'))
+			if ($rewrite_settings)
 				$suppliers[$i]['link_rewrite'] = Tools::link_rewrite($suppliers[$i]['name'], false);
 			else
 				$suppliers[$i]['link_rewrite'] = 0;
@@ -190,7 +191,7 @@ class SupplierCore extends ObjectModel
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-		
+
 		if ($p < 1) $p = 1;
 	 	if (empty($order_by) || $order_by == 'position') $order_by = 'name';
 	 	if (empty($order_way)) $order_way = 'ASC';
@@ -256,7 +257,7 @@ class SupplierCore extends ObjectModel
 					AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
+				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product`
 					AND ptrgs.id_shop='.(int)Context::getContext()->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -298,7 +299,7 @@ class SupplierCore extends ObjectModel
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-			
+
 		$sql = '
 			SELECT p.`id_product`,
 				   pl.`name`
