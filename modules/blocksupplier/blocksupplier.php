@@ -60,8 +60,10 @@ class BlockSupplier extends Module
 
 	function hookDisplayLeftColumn($params)
 	{
+		$id_lang = (int)Context::getContext()->language->id;
+
 		$this->smarty->assign(array(
-			'suppliers' => Supplier::getSuppliers(false),
+			'suppliers' => Supplier::getSuppliers(false, $id_lang),
 			'link' => $this->context->link,
 			'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),
 			'text_list_nb' => Configuration::get('SUPPLIER_DISPLAY_TEXT_NB'),
@@ -96,7 +98,7 @@ class BlockSupplier extends Module
 		}
 		return $output.$this->displayForm();
 	}
-	
+
 	public function displayForm()
 	{
 		$output = '
@@ -124,16 +126,15 @@ class BlockSupplier extends Module
 		</form>';
 		return $output;
 	}
-	
+
 	function hookDisplayRightColumn($params)
 	{
 		return $this->hookDisplayLeftColumn($params);
 	}
-	
+
 	function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocksupplier.css', 'all');
 	}
 }
-
 
