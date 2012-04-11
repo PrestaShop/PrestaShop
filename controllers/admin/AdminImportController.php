@@ -423,7 +423,6 @@ class AdminImportControllerCore extends AdminController
 			$warnings = array();
 			foreach ($this->warnings as $warning)
 				$warnings[] = $warning;
-			$this->displayWarning($warnings);
 		}
 
 		$files_to_import = scandir(_PS_ADMIN_DIR_.'/import/');
@@ -574,7 +573,13 @@ class AdminImportControllerCore extends AdminController
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		if ($this->display == 'import')
-			$this->content .= $this->renderView();
+			if (Tools::getValue('csv'))
+				$this->content .= $this->renderView();
+			else
+			{
+				$this->errors[] = $this->l('You must upload a file for go to the next step');
+				$this->content .= $this->renderForm();
+			}
 		else
 			$this->content .= $this->renderForm();
 
@@ -1240,28 +1245,36 @@ class AdminImportControllerCore extends AdminController
 				{
 					$product_has_images = (bool)Image::getImages($this->context->language->id, (int)$product->id);
 					foreach ($product->image as $key => $url)
+					{
+						$error = false;
 						if (!empty($url))
 						{
 							$image = new Image();
 							$image->id_product = (int)$product->id;
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
-							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							if (!file_exists($url))
+								$error = true;
+							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops
 								$image->associateTo($shops);
 								if (!AdminImportController::copyImg($product->id, $image->id, $url))
-									$this->warnings[] = Tools::displayError('Error copying image:').$url;
+									$this->warnings[] = Tools::displayError('Error copying image:').' '.$url;
 							}
 							else
-							{
-								$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
-									' '.Tools::displayError('Cannot be saved');
-								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
-									Db::getInstance()->getMsgError();
-							}
+								$error = true;
 						}
+						else
+							$error = true;
+
+						if ($error)
+						{
+							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d : the picture cannot be saved : %2$s'), $image->id_product, $url);
+							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
+						}
+					}
 				}
 				if (isset($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
@@ -1347,8 +1360,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
-						' '.Tools::displayError('Cannot be saved');
+					$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').' '.Tools::displayError('Cannot be saved');
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
@@ -2240,45 +2252,51 @@ class AdminImportControllerCore extends AdminController
 		}
 		else if (Tools::getValue('import'))
 		{
-			if (Tools::getValue('truncate'))
-				$this->truncateTables((int)Tools::getValue('entity'));
-
-			switch ((int)Tools::getValue('entity'))
+			// Check if the CSV file exist
+			if (Tools::getValue('csv'))
 			{
-				case $this->entities[$this->l('Categories')]:
-					$this->categoryImport();
-				break;
-				case $this->entities[$this->l('Products')]:
-					$this->productImport();
-				break;
-				case $this->entities[$this->l('Customers')]:
-					$this->customerImport();
-				break;
-				case $this->entities[$this->l('Addresses')]:
-					$this->addressImport();
-				break;
-				case $this->entities[$this->l('Combinations')]:
-					$this->attributeImport();
-				break;
-				case $this->entities[$this->l('Manufacturers')]:
-					$this->manufacturerImport();
-				break;
-				case $this->entities[$this->l('Suppliers')]:
-					$this->supplierImport();
-				break;
-				// @since 1.5.0
-				case $this->entities[$this->l('SupplyOrders')]:
-					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->supplyOrdersImport();
-				break;
-				// @since 1.5.0
-				case $this->entities[$this->l('SupplyOrdersDetails')]:
-					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->supplyOrdersDetailsImport();
-				break;
-				default:
-					$this->errors[] = $this->l('Please select what you would like to import');
+				if (Tools::getValue('truncate'))
+					$this->truncateTables((int)Tools::getValue('entity'));
+
+				switch ((int)Tools::getValue('entity'))
+				{
+					case $this->entities[$this->l('Categories')]:
+						$this->categoryImport();
+						break;
+					case $this->entities[$this->l('Products')]:
+						$this->productImport();
+						break;
+					case $this->entities[$this->l('Customers')]:
+						$this->customerImport();
+						break;
+					case $this->entities[$this->l('Addresses')]:
+						$this->addressImport();
+						break;
+					case $this->entities[$this->l('Combinations')]:
+						$this->attributeImport();
+						break;
+					case $this->entities[$this->l('Manufacturers')]:
+						$this->manufacturerImport();
+						break;
+					case $this->entities[$this->l('Suppliers')]:
+						$this->supplierImport();
+						break;
+					// @since 1.5.0
+					case $this->entities[$this->l('SupplyOrders')]:
+						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+							$this->supplyOrdersImport();
+						break;
+					// @since 1.5.0
+					case $this->entities[$this->l('SupplyOrdersDetails')]:
+						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+							$this->supplyOrdersDetailsImport();
+						break;
+					default:
+						$this->errors[] = $this->l('Please select what you would like to import');
+				}
 			}
+			else
+				$this->errors[] = $this->l('You must upload a file for go to the next step');
 		}
 
 		parent::postProcess();
