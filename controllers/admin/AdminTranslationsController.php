@@ -929,55 +929,67 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$missing_translations_front = array();
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
-		$str_output = '';
 
 		/* List templates to parse */
-		$templates = array_merge(scandir(_PS_THEME_DIR_), scandir(_PS_ALL_THEMES_DIR_));
+		$templates_per_directory = array(
+			_PS_THEME_DIR_ => scandir(_PS_THEME_DIR_),
+			_PS_THEME_OVERRIDE_DIR_ => scandir(_PS_THEME_OVERRIDE_DIR_),
+			_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_)
+		);
 		$count = 0;
 		$tabs_array = array();
-		foreach ($templates as $template)
-			if (preg_match('/^(.*).tpl$/', $template) && (file_exists($tpl = _PS_THEME_DIR_.$template) || file_exists($tpl = _PS_ALL_THEMES_DIR_.$template)))
+		foreach ($templates_per_directory as $template_dir => $templates)
+		{
+			$prefix = '';
+			if ($template_dir == _THEME_OVERRIDE_DIR_)
+				$prefix = 'override_';
+
+			foreach ($templates as $template)
 			{
-				$prefix_key = substr(basename($template), 0, -4);
-				$new_lang = array();
-				$fd = fopen($tpl, 'r');
-				$content = fread($fd, filesize($tpl));
-
-				/* Search language tags (eg {l s='to translate'}) */
-				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?\}/U';
-				preg_match_all($regex, $content, $matches);
-
-				/* Get string translation */
-				foreach ($matches[1] as $key)
+				if (preg_match('/^(.*).tpl$/', $template) && (file_exists($tpl = $template_dir.$template)))
 				{
-					if (empty($key))
+					$prefix_key = $prefix.substr(basename($template), 0, -4);
+					$new_lang = array();
+					$fd = fopen($tpl, 'r');
+					$content = fread($fd, filesize($tpl));
+
+					/* Search language tags (eg {l s='to translate'}) */
+					$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?\}/U';
+					preg_match_all($regex, $content, $matches);
+
+					/* Get string translation */
+					foreach ($matches[1] as $key)
 					{
-						$this->errors[] = $this->l('Empty string found, please edit:').' <br />'._PS_THEME_DIR_.''.$template;
-						$new_lang[$key] = '';
-					}
-					else
-					{
-						// Caution ! front has underscore between prefix key and md5, back has not
-						if (isset($_LANG[$prefix_key.'_'.md5($key)]))
-							// @todo check if stripslashes is needed, it wasn't present in 1.4
-							$new_lang[$key] = stripslashes(html_entity_decode($_LANG[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+						if (empty($key))
+						{
+							$this->errors[] = $this->l('Empty string found, please edit:').' <br />'.$template_dir.''.$template;
+							$new_lang[$key] = '';
+						}
 						else
 						{
-							if (!isset($new_lang[$key]))
+							// Caution ! front has underscore between prefix key and md5, back has not
+							if (isset($_LANG[$prefix_key.'_'.md5($key)]))
+								// @todo check if stripslashes is needed, it wasn't present in 1.4
+								$new_lang[$key] = stripslashes(html_entity_decode($_LANG[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+							else
 							{
-								$new_lang[$key] = '';
-								if (!isset($missing_translations_front[$prefix_key]))
-									$missing_translations_front[$prefix_key] = 1;
-								else
-									$missing_translations_front[$prefix_key]++;
+								if (!isset($new_lang[$key]))
+								{
+									$new_lang[$key] = '';
+									if (!isset($missing_translations_front[$prefix_key]))
+										$missing_translations_front[$prefix_key] = 1;
+									else
+										$missing_translations_front[$prefix_key]++;
+								}
 							}
 						}
 					}
-				}
 
-				$tabs_array[$prefix_key] = $new_lang;
-				$count += count($new_lang);
+					$tabs_array[$prefix_key] = $new_lang;
+					$count += count($new_lang);
+				}
 			}
+		}
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),

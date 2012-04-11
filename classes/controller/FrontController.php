@@ -536,11 +536,12 @@ class FrontControllerCore extends Controller
 		if ($this->context->getMobileDevice() == false && Tools::isSubmit('live_edit'))
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
 
-		// handle 1.4 theme (with layout.tpl missing)
-		if ($this->context->getMobileDevice() != false || file_exists(_PS_THEME_DIR_.'layout.tpl'))
+
+        $layout = $this->getLayout();
+		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
+				$this->context->smarty->display($layout);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
@@ -980,13 +981,72 @@ class FrontControllerCore extends Controller
 	 * This is overrided to manage is behaviour
 	 * if a customer access to the site with mobile device.
 	 */
-	public function setTemplate($template)
+	public function setTemplate($default_template)
 	{
 		if ($this->context->getMobileDevice() != false)
-			$this->setMobileTemplate($template);
+			$this->setMobileTemplate($default_template);
 		else
-			parent::setTemplate($template);
+        {
+            $template = $this->getOverrideTemplate();
+
+            if ($template)
+			    parent::setTemplate($template);
+            else
+                parent::setTemplate($default_template);
+        }
 	}
+
+    /**
+	 * Returns the template corresponding to the current page.
+	 * By default this method return false but could easily be overridden in a specific controller
+	 *
+     * @since 1.5
+     * @return bool
+     */
+    public function getOverrideTemplate()
+    {
+        return false;
+    }
+
+	/**
+	 * Returns the layout corresponding to the current page by using the override system
+	 * Ex:
+	 * On the url: http://localhost/index.php?id_product=1&controller=product, this method will
+	 * check if the layout exists in the following files (in that order), and return the first found:
+	 * - /themes/default/override/layout-product-1.tpl
+	 * - /themes/default/override/layout-product.tpl
+	 * - /themes/default/layout.tpl
+	 *
+	 * @since 1.5
+	 * @return bool|string
+	 */
+    public function getLayout()
+    {
+		$entity = Tools::getValue('controller');
+		$id_item = (int)Tools::getValue('id_'.$entity);
+
+		$layout_dir = _PS_THEME_DIR_;
+		$layout_override_dir  = _PS_THEME_OVERRIDE_DIR_;
+		if ($this->context->getMobileDevice() != false)
+		{
+			$layout_dir = _PS_THEME_MOBILE_DIR_;
+			$layout_override_dir = _PS_THEME_MOBILE_OVERRIDE_DIR_;
+		}
+
+		$layout = false;
+		if ($entity)
+		{
+			if ($id_item > 0 && file_exists($layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl'))
+				$layout = $layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl';
+			elseif (file_exists($layout_override_dir.'layout-'.$entity.'.tpl'))
+				$layout = $layout_override_dir.'layout-'.$entity.'.tpl';
+		}
+
+		if (!$layout && file_exists($layout_dir.'layout.tpl'))
+			$layout = $layout_dir.'layout.tpl';
+
+		return $layout;
+    }
 
 	/**
 	 * This checks if the template set is available for mobile themes,
