@@ -38,14 +38,15 @@ function smartyTranslate($params, &$smarty)
 	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
-	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
+	$basename = basename($filename, '.tpl');
+	$key = $basename.'_'.md5($string);
 
 	if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false))
 		$key = 'override_'.$key;
 
 	$lang_array = $_LANG;
 	if ($params['mod'])
-		return Translate::getModuleTranslation($params['mod'], $params['s'], Tools::substr(basename($filename), 0, -4));
+		return Translate::getModuleTranslation($params['mod'], $params['s'], $basename);
 	else if ($params['pdf'])
 		return Translate::getPdfTranslation($params['s']);
 
