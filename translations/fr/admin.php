@@ -1540,6 +1540,7 @@ $_LANGADM['AdminImporte92cfa244b5eb9025d07522080468445'] = 'Écotaxe';
 $_LANGADM['AdminImportea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_LANGADM['AdminImporteafce46b9013f4d12336785c388b664c'] = 'Exemple de fichier de adresses';
 $_LANGADM['AdminImporteb931783a286222455893fb956d52cc9'] = 'Vous pouvez lire des informations sur l\'import CSV sur :';
+$_LANGADM['AdminImportec135b63c4cd152420ce2c5c37666b88'] = 'Vous devez télécharger un fichier pour aller à la prochaine étape.';
 $_LANGADM['AdminImportec136b444eede3bc85639fac0dd06229'] = 'Fournisseur';
 $_LANGADM['AdminImportecc2c839377d44e39486e231322de623'] = 'ID règles de taxes';
 $_LANGADM['AdminImportecde3e896afb64e9a48781b8363b9a03'] = 'Caractéristique(Nom:Valeur:Position)';
