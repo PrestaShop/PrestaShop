@@ -32,14 +32,14 @@ define('_THEME_DIR_',      _THEMES_DIR_._THEME_NAME_.'/');
 define('_THEME_IMG_DIR_',  _THEME_DIR_.'img/');
 define('_THEME_CSS_DIR_',  _THEME_DIR_.'css/');
 define('_THEME_JS_DIR_',   _THEME_DIR_.'js/');
-define('_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'override/');
+define('_PS_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'override/');
 
 /* For mobile devices */
 if (file_exists(_PS_THEME_DIR_.'mobile/'))
 {
 	define('_PS_THEME_MOBILE_DIR_', _PS_THEME_DIR_.'mobile/');
 	define('_THEME_MOBILE_DIR_', _THEMES_DIR_._THEME_NAME_.'/mobile/');
-	define('_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
+	define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
 }
 else
 {
