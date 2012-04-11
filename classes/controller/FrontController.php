@@ -508,7 +508,7 @@ class FrontControllerCore extends Controller
 	public function displayContent()
 	{
 	}
-	
+
 	public function display()
 	{
 		Tools::safePostVars();
@@ -867,7 +867,7 @@ class FrontControllerCore extends Controller
 			return array();
 
 		$context = Context::getContext();
-		if (!$context->customer->id)
+		if (!isset($context->customer))
 			return array();
 		if (!is_array(self::$currentCustomerGroups))
 		{
