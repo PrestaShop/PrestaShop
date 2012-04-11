@@ -391,7 +391,7 @@ class AddressFormatCore extends ObjectModel
 			$params['address'],
 			(isset($params['patternRules']) ? $params['patternRules'] : array()),
 			(isset($params['newLine']) ? $params['newLine'] : "\r\n"),
-			(isset($params['separator']) ? $params['separator'] : ''),
+			(isset($params['separator']) ? $params['separator'] : ' '),
 			(isset($params['style']) ? $params['style'] : array())
 		);
 	}
