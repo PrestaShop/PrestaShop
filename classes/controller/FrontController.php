@@ -541,7 +541,7 @@ class FrontControllerCore extends Controller
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->display($layout);
+				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
@@ -550,7 +550,7 @@ class FrontControllerCore extends Controller
 				ob_clean();
 				$this->context->smarty->assign('template', $template);
 			}
-			$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
+			$this->context->smarty->display($layout);
 		}
 		else
 		{
