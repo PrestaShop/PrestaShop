@@ -39,7 +39,7 @@
 {/if}
 
 {if $module_confirmation}
-	<div class="module_confirmation conf confirm"><img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />
+	<div class="module_confirmation conf confirm">
 		{l s='Your .CSV file has been sucessfully imported into your shop.'}
 	</div>
 {/if}
@@ -134,31 +134,30 @@
 	
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
-		<label class="clear">{l s='What kind of Entity would you like to import ?'} </label>
-		<div class="margin-form">
-			<select name="entity" id="entity">
-				{foreach $entities AS $entity => $i}
-					<option value="{$i}"
-						{if $entity == $i}selected="selected"{/if}>
-						{$entity}
-					</option>
-				{/foreach}
-			</select>
-		</div>
 
 			<label class="clear">{l s='Your CSV file'} ({count($files_to_import)} {if count($files_to_import) > 1} {l s='files'}{else}{l s='file'}{/if}{l s='):'}</label>
 			<div class="margin-form">
-			{if count($files_to_import)}
-				<select name="csv">
-					{foreach $files_to_import AS $filename}
-						<option value="{$filename}">{$filename}</option>
-					{/foreach}
-				</select>
-			{/if}
-				&nbsp;&nbsp;
+				{if count($files_to_import)}
+					<select name="csv">
+						{foreach $files_to_import AS $filename}
+							<option value="{$filename}">{$filename}</option>
+						{/foreach}
+					</select>
+				{/if}
+				&nbsp;
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
-			<br />
+
+			<label class="clear">{l s='What kind of Entity would you like to import ?'} </label>
+			<div class="margin-form">
+				<select name="entity" id="entity">
+					{foreach $entities AS $entity => $i}
+						<option value="{$i}" {if $entity == $i}selected="selected"{/if}>
+							{$entity}
+						</option>
+					{/foreach}
+				</select>
+			</div>
 				
 			<label class="clear">{l s='Language of the file:'}</label>
 			<div class="margin-form">
@@ -192,7 +191,8 @@
 				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
 			</div>
 			<div class="space margin-form">
-				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button"/>
+				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
+				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file for go to the next step.'}</span>{/if}
 			</div>
 			<div class="warn import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
@@ -205,9 +205,8 @@
 			<div class="warn" style="margin-top: 20px;">
 				<p>{l s='There is no CSV file available, please upload one using the \'Upload\' button above.'}</p>
 				<ul>
-				<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>	
-					<li>
-				{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
+					<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>
+					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
 				</ul>
 			</div>
 		{/if}
