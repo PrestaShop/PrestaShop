@@ -1548,9 +1548,9 @@ class AdminProductsControllerCore extends AdminController
 					$this->processProductAttribute();
 					$this->processPriceAddition();
 					$this->processSpecificPricePriorities();
-					$this->processAttachments();
 					$this->processCustomizationConfiguration();
 					$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
+					$this->processAttachments();
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 					elseif (!$object->updateCategories(Tools::getValue('categoryBox'), true))
