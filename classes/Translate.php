@@ -159,7 +159,9 @@ class TranslateCore
 				return str_replace('"', '&quot;', $string);
 
 			// set array key to lowercase for 1.3 compatibility
-			$_MODULES = array_change_key_case($_MODULES);
+			if (version_compare(_PS_VERSION_, '1.3.0.0') <= 0)
+				$_MODULES = array_change_key_case($_MODULES);
+
 			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.$key;
 			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.$key;
 
