@@ -35,6 +35,7 @@
 		<meta name="keywords" content="{$meta_keywords|escape:html:'UTF-8'}" />
 {/if}
 		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+		<meta http-equiv="content-language" content="{$meta_language}" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,{if isset($nofollow) && $nofollow}no{/if}follow" />
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />

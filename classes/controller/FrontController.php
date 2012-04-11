@@ -294,6 +294,11 @@ class FrontControllerCore extends Controller
 				$display_tax_label = $country->display_tax_label;
 		}
 
+		$languages = Language::getLanguages(true, $this->context->shop->id);
+		$meta_language = array();
+		foreach ($languages as $lang)
+			$meta_language[] = $lang['iso_code'];
+
 		$this->context->smarty->assign(array(
 			// Usefull for layout.tpl
 			'mobile_device' => $this->context->getMobileDevice(),
@@ -312,7 +317,8 @@ class FrontControllerCore extends Controller
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace('\'', '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
-			'languages' => Language::getLanguages(true, $this->context->shop->id),
+			'languages' => $languages,
+			'meta_language' => implode('-', $meta_language),
 			'priceDisplay' => Product::getTaxCalculationMethod(),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
