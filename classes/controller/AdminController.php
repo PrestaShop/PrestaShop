@@ -249,6 +249,8 @@ class AdminControllerCore extends Controller
 
 	public function __construct()
 	{
+		global $timer_start;
+		$this->timer_start = $timer_start;
 		// Has to be remove for the next Prestashop version
 		global $token;
 
@@ -289,6 +291,7 @@ class AdminControllerCore extends Controller
 			28 => $this->l('Zone assigned to the selection successfully'),
 			29 => $this->l('Upgrade successful')
 		);
+
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
@@ -411,8 +414,7 @@ class AdminControllerCore extends Controller
 
 				if ($field = $this->filterToField($key, $filter))
 				{
-					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
-					if (($type == 'date' || $type == 'datetime') && is_string($value))
+					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));					if (($type == 'date' || $type == 'datetime') && is_string($value))
 						$value = unserialize($value);
 					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
 
@@ -1369,7 +1371,7 @@ class AdminControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'ps_version' => _PS_VERSION_,
-			'end_time' => number_format(microtime(true) - $this->timerStart, 3, '.', ''),
+			'timer_start' => $this->timer_start,
 			'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
 		));
 	}
@@ -1587,8 +1589,6 @@ class AdminControllerCore extends Controller
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$this->context->link = new Link($protocol_link, $protocol_content);
-
-		$this->timerStart = microtime(true);
 
 		if (isset($_GET['logout']))
 			$this->context->employee->logout();
