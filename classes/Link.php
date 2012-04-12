@@ -485,7 +485,7 @@ class LinkCore
 				if ($if_nb && $if_sort && $if_pagination)
 				{
 					if (!is_array($value))
-						$vars[urlencode($k)] = urlencode($value);
+						$vars[urlencode($k)] = $value;
 					else
 					{
 						foreach (explode('&', http_build_query(array($k => $value))) as $key => $val)
