@@ -154,8 +154,14 @@ function smartyRegisterFunction($smarty, $type, $function, $params)
 	if (!in_array($type, array('function', 'modifier')))
 		return false;
 
+	$lazy_register = SmartyLazyRegister::getInstance();
+	$lazy_register->register($params);
+
+	if (is_array($params))
+		$params = $params[1];
+
 	// SmartyLazyRegister allows to only load external class when they are needed
-	$smarty->registerPlugin($type, $function, array(new SmartyLazyRegister($function, $params), $params[1]));
+	$smarty->registerPlugin($type, $function, array($lazy_register, $params));
 }
 
 function smartyHook($params, &$smarty)
@@ -173,18 +179,43 @@ function smartyHook($params, &$smarty)
  */
 class SmartyLazyRegister
 {
-	public function __construct($function, $params)
+	protected $registry = array();
+	protected static $instance;
+
+	/**
+	 * Register a function or method to be dynamically called later
+	 * @param $params function name or array(object name, method name)
+	 */
+	public function register($params)
 	{
-		$this->function = $function;
-		$this->params = $params;
+		if (is_array($params))
+			$this->registry[$params[1]] = $params;
+		else
+			$this->registry[$params] = $params;
 	}
 
+	/**
+	 * Dynamically call static function or method
+	 *
+	 * @param $name function name
+	 * @param $arguments function argument
+	 * @return mixed function return
+	 */
 	public function __call($name, $arguments)
 	{
+		$item = $this->registry[$name];
+
 		// case 1: call to static method - case 2 : call to static function
-		if (is_array($this->params))
-			return call_user_func_array($this->params[0].'::'.$this->params[1], array($arguments[0], &$arguments[1]));
+		if (is_array($item[1]))
+			return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
 		else
-			return call_user_func_array($this->params, array($arguments[0], &$arguments[1]));
+			return call_user_func_array($item, array($arguments[0], &$arguments[1]));
+	}
+
+	public static function getInstance()
+	{
+		if (!self::$instance)
+			self::$instance = new SmartyLazyRegister();
+		return self::$instance;
 	}
 }
