@@ -24,16 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbarBox">
-{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-	<div class="pageTitle">
-		<h3>
-				<span id="current_obj" style="font-weight: normal;">
-				{$title|default:'&nbsp;'}
-				</span>
-		</h3>
-	</div>
-</div>
+{if $show_toolbar}
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
 
 {if !$has_shop_selected}
 <div class="hint" style="display:block">{l s='Please select the shop you want to configure'}</div>

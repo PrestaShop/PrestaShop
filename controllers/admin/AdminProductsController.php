@@ -2133,7 +2133,7 @@ class AdminProductsControllerCore extends AdminController
 		parent::initToolbarTitle();
 			if ($product = $this->loadObject(true))
 				if ((bool)$product->id)
-					$this->toolbar_title .= ' ('.$product->name[$this->context->language->id].')';
+					$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$product->name[$this->context->language->id].')';
 	}
 
 	/**
