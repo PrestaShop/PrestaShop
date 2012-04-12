@@ -211,32 +211,34 @@
 							</label>
 						</td>
 					</tr>
-					{foreach from=$product.customizedDatas item='customization' key='customizationId'}
-					<tr class="alternate_item">
-						{if $return_allowed}<td class="order_cb"><input type="checkbox" id="cb_{$product.id_order_detail|intval}" name="customization_ids[{$product.id_order_detail|intval}][]" value="{$customizationId|intval}" /></td>{/if}
-						<td colspan="2">
-						{foreach from=$customization.datas key='type' item='datas'}
-							{if $type == $CUSTOMIZE_FILE}
-							<ul class="customizationUploaded">
-								{foreach from=$datas item='data'}
-									<li><img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
-								{/foreach}
-							</ul>
-							{elseif $type == $CUSTOMIZE_TEXTFIELD}
-							<ul class="typedText">{counter start=0 print=false}
-								{foreach from=$datas item='data'}
-									{assign var='customizationFieldName' value="Text #"|cat:$data.id_customization_field}
-									<li>{$data.name|default:$customizationFieldName}{l s=':'} {$data.value}</li>
-								{/foreach}
-							</ul>
-							{/if}
+					{foreach $product.customizedDatas  as $customizationPerAddress}
+						{foreach $customizationPerAddress as $customizationId => $customization}
+						<tr class="alternate_item">
+							{if $return_allowed}<td class="order_cb"><input type="checkbox" id="cb_{$product.id_order_detail|intval}" name="customization_ids[{$product.id_order_detail|intval}][]" value="{$customizationId|intval}" /></td>{/if}
+							<td colspan="2">
+							{foreach from=$customization.datas key='type' item='datas'}
+								{if $type == $CUSTOMIZE_FILE}
+								<ul class="customizationUploaded">
+									{foreach from=$datas item='data'}
+										<li><img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
+									{/foreach}
+								</ul>
+								{elseif $type == $CUSTOMIZE_TEXTFIELD}
+								<ul class="typedText">{counter start=0 print=false}
+									{foreach from=$datas item='data'}
+										{assign var='customizationFieldName' value="Text #"|cat:$data.id_customization_field}
+										<li>{$data.name|default:$customizationFieldName}{l s=':'} {$data.value}</li>
+									{/foreach}
+								</ul>
+								{/if}
+							{/foreach}
+							</td>
+							<td>
+								<input class="order_qte_input" name="customization_qty_input[{$customizationId|intval}]" type="text" size="2" value="{$customization.quantity|intval}" /><label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$customization.quantity|intval}</span></label>
+							</td>
+							<td colspan="2"></td>
+						</tr>
 						{/foreach}
-						</td>
-						<td>
-							<input class="order_qte_input" name="customization_qty_input[{$customizationId|intval}]" type="text" size="2" value="{$customization.quantity|intval}" /><label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$customization.quantity|intval}</span></label>
-						</td>
-						<td colspan="2"></td>
-					</tr>
 					{/foreach}
 				{/if}
 				<!-- Classic products -->

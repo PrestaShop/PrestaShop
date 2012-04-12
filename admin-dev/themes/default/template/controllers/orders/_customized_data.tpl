@@ -23,9 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if ($product.customizedDatas)}
-	<tr>
+{if $product.customizedDatas}
+	<tr class="customized customized-{$product.id_order_detail}">
+		<input type="hidden" class="edit_product_id_order_detail" value="{$product.id_order_detail}" />
 		<td align="center">{if ($product.image->id)}{$product.image_tag}{else}'--'{/if}</td>
 		<td>
 			<a href="index.php?controller=adminproducts&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminProducts'}">
@@ -34,76 +34,89 @@
 			{if ($product['product_supplier_reference'])}{l s='Ref Supplier:'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
-		<td align="center">{displayPrice price=$product['product_price_wt'] currency=$currency->id}</td>
+		<td align="center">
+			<span class="product_price_show">{displayPrice price=$product['product_price_wt'] currency=$currency->id}</span>
+			{if $can_edit}
+			<span class="product_price_edit" style="display:none;">
+				<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
+				{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
+				{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax incl.'}
+			</span>
+			{/if}
+		</td>
 		<td align="center" class="productQuantity">{$product['customizationQuantityTotal']}</td>
 		{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
 		{if ($order->hasBeenDelivered())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
-		<td align="center" class="productQuantity"> - </td>
-		<td align="center">
+		<td align="center" class=""> - </td>
+		<td align="center" class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id}
 		{else}
 			{displayPrice price=Tools::ps_round($product['product_price_wt'] * $product['customizationQuantityTotal'], 2) currency=$currency->id}
 		{/if}
 		</td>
-		<td align="center" class="cancelCheck">--</td>
-		<td align="center" class="cancelQuantity">--</td>
+		<td class="edit_product_fields" colspan="2" style="display:none">&nbsp;</td>
+		<td class="partial_refund_fields current-edit" style="text-align:left;display:none"></td>
+		<td class="product_action" style="text-align:right">
+			<a href="#" class="edit_product_change_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
+			<input type="submit" class="button" name="submitProductChange" value="{l s='Update'}"  style="display: none;" />
+			<a href="#" class="cancel_product_change_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
+			<a href="#" class="delete_product_line"><img src="../img/admin/delete.gif" alt="{l s='Delete'}" /></a>
+		</td>
 	</tr>
-	{foreach from=$product.customizedDatas key=customizationId item=customization}
-		<tr>
-			<td colspan="2">
-		{foreach from=$customization.datas key=type item=datas}
-			{if ($type == Product::CUSTOMIZE_FILE)}
-				<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">
-				{foreach from=$datas item=data}
-					<li style="display: inline; margin: 2px;">
-						<a href="displayImage.php?img={$data['value']}&name={$order->id}-file{$data@iteration}" target="_blank"><img src="'{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" /></a>
-					</li>
-				{/foreach}
-				</ul>
-			{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
-				<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
-				{foreach from=$datas item=data}
-					<li>{if $data['name']}{$data['name']}{else}{l s='Text #'}{$data@iteration}{/if}{l s=':'} {$data['value']}</li>
-				{/foreach}
-				</ul>
-			{/if}
+	{foreach $product.customizedDatas as $customizationPerAddress}
+		{foreach $customizationPerAddress as $customizationId => $customization}
+			<tr class="customized customized-{$product.id_order_detail}">
+				<input type="hidden" class="edit_product_id_order_detail" value="{$product.id_order_detail}" />
+				<td colspan="2">
+			{foreach $customization.datas as $type => $datas}
+				{if ($type == Product::CUSTOMIZE_FILE)}
+					<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">
+					{foreach from=$datas item=data}
+						<li style="display: inline; margin: 2px;">
+							<a href="displayImage.php?img={$data['value']}&name={$order->id}-file{$data@iteration}" target="_blank"><img src="'{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" /></a>
+						</li>
+					{/foreach}
+					</ul>
+				{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
+					<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
+					{foreach from=$datas item=data}
+						<li>{if $data['name']}{$data['name']}{else}{l s='Text #'}{$data@iteration}{/if}{l s=':'} {$data['value']}</li>
+					{/foreach}
+					</ul>
+				{/if}
+			{/foreach}
+				</td>
+				<td align="center">-
+				</td>
+				<td align="center" class="productQuantity">
+					<span class="product_quantity_show">{$customization['quantity']}</span>
+					{if $can_edit}
+					<span class="product_quantity_edit" style="display:none;">
+						<input type="text" name="product_quantity[{$customizationId}]" class="edit_product_quantity" value="{$customization['quantity']|htmlentities}" size="2" />
+					</span>
+					{/if}
+				</td>
+				{if ($order->hasBeenPaid())}<td align="center">{$customization['quantity_refunded']}</td>{/if}
+				{if ($order->hasBeenDelivered())}<td align="center">{$customization['quantity_returned']}</td>{/if}
+				<td align="center">
+				-
+				</td>
+				<td align="center" class="total_product">
+					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id}
+					{else}
+						{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id}
+					{/if}
+				</td>
+				<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
+					<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProductQuantity[{$k}]" value="0" /> 0/{$customization['quantity']-$product['product_quantity_refunded']}</div>
+					<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</div>
+				</td>
+				<td class="edit_product_fields" colspan="2" style="display:none"></td>
+				<td class="product_action" style="text-align:right">
+				</td>
+			</tr>
 		{/foreach}
-			</td>
-			<td align="center">-</td>
-			<td align="center" class="productQuantity">{$customization['quantity']}</td>
-			{if ($order->hasBeenPaid())}<td align="center">{$customization['quantity_refunded']}</td>{/if}
-			{if ($order->hasBeenDelivered())}<td align="center">{$customization['quantity_returned']}</td>{/if}
-			<td align="center">-</td>
-			<td align="center">
-			{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-				{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id}
-			{else}
-				{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id}
-			{/if}
-			</td>
-			<td align="center" class="cancelCheck">
-				<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$customization['quantity_returned']}" />
-				<input type="hidden" name="totalQty" id="totalQty" value="{$customization['quantity']}" />
-				<input type="hidden" name="productName" id="productName" value="{$product['product_name']}" />
-			{if ((!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN')) && (int)(($customization['quantity_returned']) < (int)($customization['quantity'])))}
-				<input type="checkbox" name="id_customization[{$customizationId}]" id="id_customization[{$customizationId}]" value="{$product['id_order_detail']}" onchange="setCancelQuantity(this, '{$customizationId}', '{$customization['quantity'] - $customization['quantity_refunded']}')" '.{if (($customization['quantity_returned'] + $customization['quantity_refunded']) >= $customization['quantity'])}disabled="disabled"{/if} />
-			{else}
-				--
-			{/if}
-			</td>
-			<td class="cancelQuantity">
-			{if (($customization['quantity_returned'] + $customization['quantity_refunded']) >= $customization['quantity'])}
-				<input type="hidden" name="cancelCustomizationQuantity[{$customizationId}]" value="0" />
-			{elseif (!$order->hasBeenDelivered() || Configuration::get('PS_ORDER_RETURN'))}
-				<input type="text" id="cancelQuantity_{$customizationId}" name="cancelCustomizationQuantity[{$customizationId}]" size="2" onclick="selectCheckbox(this);" value="" />
-			{/if}
-			{if ($order->hasBeenDelivered())}
-				{$customization['quantity_returned']}/{$customization['quantity']-$customization['quantity_refunded']}
-			{elseif ($order->hasBeenPaid())}
-				{$customization['quantity_returned']}/{$customization['quantity']}
-			{/if}
-			</td>
-		</tr>
 	{/foreach}
 {/if}
