@@ -484,7 +484,7 @@ class AdminCarriersControllerCore extends AdminController
 								'id_carrier' => (int)$current_carrier->id,
 								'carrier' => $new_carrier
 							));
-
+							$new_carrier->deleteImage();
 							$this->postImage($new_carrier->id);
 							$this->changeZones($new_carrier->id);
 							$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));

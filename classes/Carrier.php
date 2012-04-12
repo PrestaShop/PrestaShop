@@ -174,6 +174,7 @@ class CarrierCore extends ObjectModel
 			$this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
 		if ($this->name == '0')
 			$this->name = Configuration::get('PS_SHOP_NAME');
+		$this->image_dir = _PS_SHIP_IMG_DIR_;
 	}
 
 	public function add($autodate = true, $null_values = false)
