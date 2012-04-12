@@ -156,6 +156,9 @@ class OrderInvoiceCore extends ObjectModel
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
+			
+			$row['id_address_delivery'] = $order->id_address_delivery;
+			
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
