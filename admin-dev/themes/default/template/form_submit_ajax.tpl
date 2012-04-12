@@ -51,7 +51,7 @@
 				data : form_datas,
 				success : function(res)
 				{
-					$('html').html(res);
+					document.write(res);
 				}
 			});
 		});
