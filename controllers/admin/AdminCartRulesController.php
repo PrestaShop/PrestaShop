@@ -137,6 +137,7 @@ class AdminCartRulesControllerCore extends AdminController
 					$values = array();
 					foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
 						$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
+					$values = array_unique($values);
 					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
 				}
 			}
