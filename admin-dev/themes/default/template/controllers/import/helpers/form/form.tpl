@@ -24,19 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $show_toolbar}
-	<div class="toolbar-placeholder">
-		<div class="toolbarBox{if $toolbar_scroll} toolbarHead{/if}">
-				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-				<div class="pageTitle">
-				<h3>
-					<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-				</h3>
-				</div>
-			<div class="leadin">{block name="leadin"}{/block}</div>
-		</div>
-	</div>
-{/if}
+{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
+<div class="leadin">{block name="leadin"}{/block}</div>
 
 {if $module_confirmation}
 	<div class="module_confirmation conf confirm">

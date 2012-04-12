@@ -58,14 +58,10 @@
 	});
 </script>
 
-<div class="toolbarBox">
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-	<div class="pageTitle">
-	<h3>
-		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-	</h3>
-	</div>
-</div>
+
+{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
+<div class="leadin">{block name="leadin"}{/block}</div>
+
 
 {if $generate}
 	<div class="module_confirmation conf confirm">

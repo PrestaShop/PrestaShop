@@ -504,36 +504,29 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initToolbarTitle()
 	{
-		// Breadcrumbs
-		$tabs = array();
-		$tabs = Tab::recursiveTab($this->id, $tabs);
-		$tabs = array_reverse($tabs);
+		$this->initBreadcrumbs();
 
-		$bread = '';
+		$bread_extended = $this->breadcrumbs;
+
 		switch ($this->display)
 		{
 			case 'edit':
-				$tabs[] = array('name' => $this->l('Edit new Attribute'));
+				$bread_extended[] = $this->l('Edit new Attribute');
 				break;
 
 			case 'add':
-				$tabs[] = array('name' => $this->l('Add new Attribute'));
+				$bread_extended[] = $this->l('Add new Attribute');
 				break;
 
 			case 'editAttributes':
 				if ($this->id_attribute)
-					$tabs[] = array('name' => $this->l('Edit Value'));
+					$bread_extended[] = $this->l('Edit Value');
 				else
-					$tabs[] = array('name' => $this->l('Add new Value'));
+					$bread_extended[] = $this->l('Add new Value');
 				break;
 		}
-		// note : this should use a tpl file
-		foreach ($tabs as $key => $item)
-			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
 
-		$bread = rtrim($bread, ': ');
-
-		$this->toolbar_title = $bread;
+		$this->toolbar_title = $bread_extended;
 	}
 
 	public function initProcess()

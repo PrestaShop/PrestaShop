@@ -41,7 +41,7 @@ class AdminControllerCore extends Controller
 
 	public $layout = 'layout.tpl';
 
-	public $meta_title = 'Administration panel';
+	protected $meta_title;
 
 	public $template = 'content.tpl';
 
@@ -258,7 +258,6 @@ class AdminControllerCore extends Controller
 		$this->controller_name = get_class($this);
 		if (strpos($this->controller_name, 'Controller'))
 			$this->controller_name = substr($this->controller_name, 0, -10);
-
 		parent::__construct();
 
 		if ($this->multishop_context == -1)
@@ -314,42 +313,41 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Set breadcrumbs array for the controller page
+	 */
+	public function initBreadcrumbs()
+	{
+		$tabs = array();
+		$tabs = Tab::recursiveTab($this->id, $tabs);
+		$tabs = array_reverse($tabs);
+		foreach ($tabs as $tab)
+			$this->breadcrumbs[] = $tab['name'];
+	}
+
+	/**
 	 * set default toolbar_title to admin breadcrumb
 	 *
 	 * @return void
 	 */
 	public function initToolbarTitle()
 	{
-		// Breadcrumbs
-		$tabs = array();
-		$tabs = Tab::recursiveTab($this->id, $tabs);
-		$tabs = array_reverse($tabs);
+		$bread_extended = array_unique($this->breadcrumbs);
 
-		$bread = '';
 		switch ($this->display)
 		{
 			case 'edit':
-				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('Edit %s'), $current_tab['name']));
+				$bread_extended[] = $this->l('Edit');
 				break;
 
 			case 'add':
-				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('Add %s'), $current_tab['name']));
+				$bread_extended[] = $this->l('Add new');
 				break;
 
 			case 'view':
-				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('View %s'), $current_tab['name']));
+				$bread_extended[] = $this->l('View');
 				break;
 		}
-		// note : this should use a tpl file
-		foreach ($tabs as $key => $item)
-			$bread .= '<span class="breadcrumb item-'.$key.' ">'.Tools::safeOutput($item['name']).'</span> : ';
-
-		$bread = rtrim($bread, ': ');
-
-		$this->toolbar_title = $bread;
+		$this->toolbar_title = $bread_extended;
 	}
 
 	/**
@@ -1081,6 +1079,10 @@ class AdminControllerCore extends Controller
 	{
 		$this->context->smarty->assign('display_header', $this->display_header);
 		$this->context->smarty->assign('display_footer', $this->display_footer);
+
+		// Use page title from meta_title if it has been set else from the breadcrumbs array
+		if (!$this->meta_title)
+			$this->meta_title = isset($this->breadcrumbs[1]) ? $this->breadcrumbs[1] : $this->breadcrumbs[0];
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
@@ -1556,7 +1558,7 @@ class AdminControllerCore extends Controller
 	 * non-static method which uses AdminController::translate()
 	 *
 	 * @param mixed $string term or expression in english
-	 * @param string $class name of the class, without "Controller" suffix
+	 * @param string $class name of the class
 	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
@@ -1681,6 +1683,8 @@ class AdminControllerCore extends Controller
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
+
+		$this->initBreadcrumbs();
 	}
 
 	/**

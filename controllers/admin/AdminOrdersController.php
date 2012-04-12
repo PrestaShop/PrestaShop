@@ -166,7 +166,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => $this->l('Orders: create order'),
+			'title' => array($this->l('Orders'), $this->l('create order')),
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}

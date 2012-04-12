@@ -24,16 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbarBox">
-		{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-		<div class="pageTitle">
-			<h3>
-				<span id="current_obj" style="font-weight: normal;">
-					{$title|default:'&nbsp;'}
-				</span>
-			</h3>
-		</div>
-</div>
+{if $show_toolbar}
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
 
 <div id="account_list">
 	{foreach from=$account_number_list item=detail key=name}

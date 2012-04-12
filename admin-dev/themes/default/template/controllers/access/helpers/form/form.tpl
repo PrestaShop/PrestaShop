@@ -168,18 +168,10 @@
 
 </script>
 
-
-<div class="toolbarBox">
 {if $show_toolbar}
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-	<div class="pageTitle">
-	<h3>{block name=pageTitle}
-		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-		{/block}</h3>
-	</div>
-{/if}
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 	<div class="leadin">{block name="leadin"}{/block}</div>
-</div>
+{/if}
 
 <div class="productTabs">
 	<ul class="tab">

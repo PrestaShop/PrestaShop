@@ -360,6 +360,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'modules' => $modules,
 			'show_toolbar' => true,
 			'toolbar_btn' => $this->toolbar_btn,
+			'toolbar_scroll' => $this->toolbar_scroll,
 			'title' => $this->toolbar_title,
 			'table' => 'hook_module',
 		));
