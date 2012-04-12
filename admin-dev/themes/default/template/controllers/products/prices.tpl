@@ -336,14 +336,10 @@ jQuery(document).ready(Customer.init);
 			<span id="spm_currency_sign_pre_0" style="font-weight:bold; color:#000000; font-size:12px">
 				{$currency->prefix}
 			</span>
-			<input type="text" name="sp_price" value="0" size="11" />
+			<input type="text" name="sp_price" value="{$product->price|string_format:'%.2f'}" size="11" />
 			<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">
 				{$currency->suffix}
 			</span>
-			<p class="preference_description">
-				{l s='You can set this value to 0 in order to apply the default price.'}
-				({l s='Current:'}<span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span>)
-			</p>
 		</div>
 
 		<label>{l s='Apply a discount of:'}</label>

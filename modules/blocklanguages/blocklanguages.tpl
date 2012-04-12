@@ -42,9 +42,9 @@
 			{if $language.iso_code != $lang_iso}
 				{assign var=indice_lang value=$language.id_lang}
 				{if isset($lang_rewrite_urls.$indice_lang)}
-					<a href="{$lang_rewrite_urls.$indice_lang}" title="{$language.name}">
+					<a href="{$lang_rewrite_urls.$indice_lang|escape:htmlall}" title="{$language.name}">
 				{else}
-					<a href="{$link->getLanguageLink($language.id_lang)}" title="{$language.name}">
+					<a href="{$link->getLanguageLink($language.id_lang)|escape:htmlall}" title="{$language.name}">
 
 				{/if}
 			{/if}
