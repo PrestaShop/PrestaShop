@@ -153,7 +153,9 @@ function smartyRegisterFunction($smarty, $type, $function, $params)
 {
 	if (!in_array($type, array('function', 'modifier')))
 		return false;
-	$smarty->registerPlugin($type, $function, $params);
+
+	// SmartyLazyRegister allows to only load external class when they are needed
+	$smarty->registerPlugin($type, $function, array(new SmartyLazyRegister($function, $params), $params[1]));
 }
 
 function smartyHook($params, &$smarty)
@@ -163,5 +165,26 @@ function smartyHook($params, &$smarty)
 		$hook_params = $params;
 		unset($hook_params['h']);
 		return Hook::exec($params['h'], $hook_params);
+	}
+}
+
+/**
+ * Used to delay loading of external classes with smarty->register_plugin
+ */
+class SmartyLazyRegister
+{
+	public function __construct($function, $params)
+	{
+		$this->function = $function;
+		$this->params = $params;
+	}
+
+	public function __call($name, $arguments)
+	{
+		// case 1: call to static method - case 2 : call to static function
+		if (is_array($this->params))
+			return call_user_func_array($this->params[0].'::'.$this->params[1], array($arguments[0], &$arguments[1]));
+		else
+			return call_user_func_array($this->params, array($arguments[0], &$arguments[1]));
 	}
 }
