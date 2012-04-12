@@ -68,7 +68,7 @@ smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
 smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
 smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
-smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate');
+smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
 
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
@@ -149,19 +149,25 @@ function smartyPackJSinHTML($tpl_output, &$smarty)
     return $tpl_output;
 }
 
-function smartyRegisterFunction($smarty, $type, $function, $params)
+function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
 {
 	if (!in_array($type, array('function', 'modifier')))
 		return false;
 
-	$lazy_register = SmartyLazyRegister::getInstance();
-	$lazy_register->register($params);
+	// lazy is better if the function is not called on every page
+	if ($lazy)
+	{
+		$lazy_register = SmartyLazyRegister::getInstance();
+		$lazy_register->register($params);
 
-	if (is_array($params))
-		$params = $params[1];
+		if (is_array($params))
+			$params = $params[1];
 
-	// SmartyLazyRegister allows to only load external class when they are needed
-	$smarty->registerPlugin($type, $function, array($lazy_register, $params));
+		// SmartyLazyRegister allows to only load external class when they are needed
+		$smarty->registerPlugin($type, $function, array($lazy_register, $params));
+	}
+	else
+		$smarty->registerPlugin($type, $function, $params);
 }
 
 function smartyHook($params, &$smarty)
