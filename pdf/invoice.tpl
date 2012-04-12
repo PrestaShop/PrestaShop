@@ -98,12 +98,12 @@
 			<table style="width: 100%; font-size: 8pt;">
 				<tr style="line-height:4px;">
 					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 45%">{l s='Product / Reference' pdf='true'}</td>
-                    <!-- unit price tax excluded is mandatory -->
+					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
-					    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'} <br />{l s='(Tax Excl.)' pdf='true'}</td>
-   					{/if}
-				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'}</td>
-				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Discount' pdf='true'}</td>
+						<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'} <br />{l s='(Tax Excl.)' pdf='true'}</td>
+					{/if}
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Discount' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">{l s='Total' pdf='true'}</td>
 				</tr>
@@ -111,11 +111,11 @@
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
 					<td style="text-align: left; width: 45%">{$order_detail.product_name}</td>
-                    <!-- unit price tax excluded is mandatory -->
+					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
-					    <td style="text-align: right; width: 10%">
+						<td style="text-align: right; width: 10%">
 						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
-                        </td>
+						</td>
 					{/if}
 					<td style="text-align: right; width: 10%">
 					{if $tax_excluded_display}
@@ -125,13 +125,13 @@
 					{/if}
 					</td>
 					<td style="text-align: right; width: 10%">
-                    {if (isset($order_detail.reduction_amount) && $order_detail.reduction_amount > 0)}
-                        -{displayPrice currency=$order->id_currency price=$order_detail.reduction_amount}
-                    {else if (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
-                        -{$order_detail.reduction_percent}%
-                    {else}
-                    --
-                    {/if}
+					{if (isset($order_detail.reduction_amount) && $order_detail.reduction_amount > 0)}
+						-{displayPrice currency=$order->id_currency price=$order_detail.reduction_amount}
+					{else if (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
+						-{$order_detail.reduction_percent}%
+					{else}
+					--
+					{/if}
 					</td>
 					<td style="text-align: center; width: 10%">{$order_detail.product_quantity}</td>
 					<td style="width: 15%; text-align: right;  width: 15%">
@@ -142,25 +142,27 @@
 					{/if}
 					</td>
 				</tr>
-					{foreach $order_detail.customizedDatas as $customization}
-						<tr style="line-height:6px;background-color:{$bgcolor}; ">
-							<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
-								{foreach $customization.datas as $customization_types}
-									<blockquote>
-									{foreach $customization_types as $customization_infos name=custo_foreach}
-										{$customization_infos.name}: {$customization_infos.value}
-										{if !$smarty.foreach.custo_foreach.last}<br />
-										{else}
-										<div style="line-height:0.4pt">&nbsp;</div>
-										{/if}
+					{foreach $order_detail.customizedDatas as $customizationPerAddress}
+						{foreach $customizationPerAddress as $customizationId => $customization}
+							<tr style="line-height:6px;background-color:{$bgcolor}; ">
+								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
+									{foreach $customization.datas as $customization_types}
+										<blockquote>
+										{foreach $customization_types as $customization_infos name=custo_foreach}
+											{$customization_infos.name}: {$customization_infos.value}
+											{if !$smarty.foreach.custo_foreach.last}<br />
+											{else}
+											<div style="line-height:0.4pt">&nbsp;</div>
+											{/if}
+										{/foreach}
+										</blockquote>
 									{/foreach}
-									</blockquote>
-								{/foreach}
-							</td>
-							<td style="text-align: right; width: 15%"></td>
-							<td style="text-align: center; width: 10%; vertical-align: top">({$customization.quantity})</td>
-							<td style="width: 15%; text-align: right;"></td>
-						</tr>
+								</td>
+								<td style="text-align: right; width: 15%"></td>
+								<td style="text-align: center; width: 10%; vertical-align: top">({$customization.quantity})</td>
+								<td style="width: 15%; text-align: right;"></td>
+							</tr>
+						{/foreach}
 					{/foreach}
 				{/foreach}
 			</table>
@@ -248,20 +250,20 @@
 {if isset($order_invoice->note) && $order_invoice->note}
 <div style="line-height: 1pt">&nbsp;</div>
 <table style="width: 100%">
-    <tr>
-        <td style="width: 15%"></td>
-        <td style="width: 85%">{$order_invoice->note|nl2br}</td>
-    </tr>
+	<tr>
+		<td style="width: 15%"></td>
+		<td style="width: 85%">{$order_invoice->note|nl2br}</td>
+	</tr>
 </table>
 {/if}
 
 {if isset($HOOK_DISPLAY_PDF)}
 <div style="line-height: 1pt">&nbsp;</div>
 <table style="width: 100%">
-    <tr>
-        <td style="width: 15%"></td>
-        <td style="width: 85%">{$HOOK_DISPLAY_PDF}</td>
-    </tr>
+	<tr>
+		<td style="width: 15%"></td>
+		<td style="width: 85%">{$HOOK_DISPLAY_PDF}</td>
+	</tr>
 </table>
 {/if}
 
