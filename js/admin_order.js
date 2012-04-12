@@ -145,6 +145,14 @@ function addProductRefreshTotal()
 function editProductRefreshTotal(element)
 {
 	element = element.parent().parent().parent();
+	var element_list = [];
+	
+	// Customized product
+	if(element.hasClass('customized'))
+	{
+		var element_list = $('.customized-' + element.find('.edit_product_id_order_detail').val());
+		element = $(element_list[0]);
+	}
 
 	var quantity = parseInt(element.find('td .edit_product_quantity').val());
 	if (quantity < 1 || isNaN(quantity))
@@ -156,9 +164,33 @@ function editProductRefreshTotal(element)
 
 	if (price < 0 || isNaN(price))
 		price = 0;
+	
+	// Customized product
+	if (element_list.length)
+	{
+		console.log(element_list);
+		var qty = 0;
+		$.each(element_list, function(i, elm) {
+			if($(elm).find('.edit_product_quantity').length)
+			{
+				qty += parseInt($(elm).find('.edit_product_quantity').val());
+				subtotal = makeTotalProductCaculation($(elm).find('.edit_product_quantity').val(), price);
+				$(elm).find('.total_product').html(formatCurrency(subtotal, currency_format, currency_sign, currency_blank));
+				console.log('res');
+				console.log($(elm).find('.total_product'));
+			}
+		});
+		
+		var total = makeTotalProductCaculation(qty, price);
+		element.find('td.total_product').html(formatCurrency(total, currency_format, currency_sign, currency_blank));
+		element.find('td.productQuantity').html(qty);
+	}
+	else
+	{
+		var total = makeTotalProductCaculation(quantity, price);
+		element.find('td.total_product').html(formatCurrency(total, currency_format, currency_sign, currency_blank));
+	}
 
-	var total = makeTotalProductCaculation(quantity, price);
-	element.find('td.total_product').html(formatCurrency(total, currency_format, currency_sign, currency_blank));
 }
 
 function makeTotalProductCaculation(quantity, price)
@@ -187,10 +219,15 @@ function refreshProductLineView(element, view)
 {
 	var new_product_line = $(view);
 	new_product_line.find('td').hide();
+	
+	var element_list = [];
+	if (element.parent().parent().find('.edit_product_id_order_detail').length)
+		var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
 
 	var current_product_line = element.parent().parent();
 	current_product_line.before(new_product_line);
 	current_product_line.remove();
+	element_list.remove();
 
 	new_product_line.find('td').each(function() {
 		if (!$(this).is('.product_invoice'))
@@ -509,32 +546,39 @@ function init()
 		$('.edit_product_fields').show();
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
-
-		query = 'ajax=1&token='+token+'&action=loadProductInformation&id_order_detail='+
-			$(this).parent().parent().find('input.edit_product_id_order_detail').val()+'&id_address='+id_address+'&id_order='+id_order;
 		var element = $(this);
 		$.ajax({
 			type: 'POST',
 			url: admin_order_tab_link,
 			cache: false,
 			dataType: 'json',
-			data : query,
+			data : {
+				ajax: 1,
+				token: token,
+				action: 'loadProductInformation',
+				id_order_detail: $(this).parent().parent().find('input.edit_product_id_order_detail').val(),
+				id_address: id_address,
+				id_order: id_order
+			},
 			success : function(data)
 			{
 				if (data.result)
 				{
 					current_product = data;
-					element.parent().parent().css('background-color', '#E8EDC2');
+					
+					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
 
-					element.parent().parent().find('td .product_price_show').hide();
-					element.parent().parent().find('td .product_quantity_show').hide();
-					element.parent().parent().find('td .product_price_edit').parent().attr('align', 'left');
-					element.parent().parent().find('td .product_price_edit').show();
-					element.parent().parent().find('td .product_quantity_edit').show();
+					element_list.css('background-color', '#E8EDC2');
 
-					element.parent().parent().find('td.cancelCheck').hide();
-					element.parent().parent().find('td.cancelQuantity').hide();
-					element.parent().parent().find('td.product_invoice').show();
+					element_list.find('td .product_price_show').hide();
+					element_list.find('td .product_quantity_show').hide();
+					element_list.find('td .product_price_edit').parent().attr('align', 'left');
+					element_list.find('td .product_price_edit').show();
+					element_list.find('td .product_quantity_edit').show();
+
+					element_list.find('td.cancelCheck').hide();
+					element_list.find('td.cancelQuantity').hide();
+					element_list.find('td.product_invoice').show();
 
 					element.parent().children('.delete_product_line').hide();
 					element.parent().children('.edit_product_change_link').hide();
@@ -554,23 +598,25 @@ function init()
 
 	$('.cancel_product_change_link').click(function() {
 		current_product = null;
-		$('.edit_product_fields').show();
-		$(this).parent().parent().css('background-color', '#FFF');
+		$('.edit_product_fields').hide();
+		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 
-		$(this).parent().parent().find('td .product_price_show').show();
-		$(this).parent().parent().find('td .product_quantity_show').show();
-		$(this).parent().parent().find('td .product_price_edit').parent().attr('align', 'center');
-		$(this).parent().parent().find('td .product_price_edit').hide();
-		$(this).parent().parent().find('td .product_quantity_edit').hide();
+		element_list.css('background-color', '#FFF');
 
-		$(this).parent().parent().find('td.product_invoice').hide();
-		$(this).parent().parent().find('td.cancelCheck').show();
-		$(this).parent().parent().find('td.cancelQuantity').show();
+		element_list.find('td .product_price_show').show();
+		element_list.find('td .product_quantity_show').show();
+		element_list.find('td .product_price_edit').parent().attr('align', 'center');
+		element_list.find('td .product_price_edit').hide();
+		element_list.find('td .product_quantity_edit').hide();
 
-		$(this).parent().children('.delete_product_line').show();
-		$(this).parent().children('.edit_product_change_link').show();
-		$(this).parent().children('input[name=submitProductChange]').hide();
-		$(this).parent().children('.cancel_product_change_link').hide();
+		element_list.find('td.product_invoice').hide();
+		element_list.find('td.cancelCheck').show();
+		element_list.find('td.cancelQuantity').show();
+
+		element_list.find('.delete_product_line').show();
+		element_list.find('.edit_product_change_link').show();
+		element_list.find('input[name=submitProductChange]').hide();
+		element_list.find('.cancel_product_change_link').hide();
 		$('.standard_refund_fields').hide();
 		return false;
 	});
@@ -591,9 +637,11 @@ function init()
 		if (confirm(txt_confirm))
 		{
 			var element = $(this);
+			
+			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 
 			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&'+
-				element.parent().parent().find('input:visible, select:visible, input.edit_product_id_order_detail').serialize();
+				element_list.parent().parent().find('input:visible, select:visible, input.edit_product_id_order_detail').serialize();
 
 			$.ajax({
 				type: 'POST',
