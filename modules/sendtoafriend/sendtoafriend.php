@@ -43,9 +43,6 @@ class sendToAFriend extends Module
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
 
-		 // Get the context for the module
-		$this->context = Context::getContext();
-
 		parent::__construct();
 
 		if (!$dontTranslate)
