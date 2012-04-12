@@ -32,49 +32,48 @@ include_once(dirname(__FILE__).'/../../classes/Product.php');
 
 $module = new SendToAFriend();
 
-if (Tools::getValue('action') == 'sendToMyFriend' AND
-		Tools::getValue('secure_key') == $module->secure_key
-		AND Context::getContext()->cookie->id_customer)
+if (Tools::getValue('action') == 'sendToMyFriend' && Tools::getValue('secure_key') == $module->secure_key)
 {
-		$friendInfos = Tools::jsonDecode(Tools::getValue('friend'));
+		$friend_infos = Tools::jsonDecode(Tools::getValue('friend'));
 		$friendName = "";
 		$friendMail = "";
 		$id_product = null;
-		foreach ($friendInfos as $entry)
+		foreach ($friend_infos as $entry)
 		{
 			if ($entry->key == "friend_name")
 				$friendName = $entry->value;
-			elseif ($entry->key == "friend_email")
+			else if ($entry->key == "friend_email")
 				$friendMail = $entry->value;
-			elseif ($entry->key == "id_product")
+			else if ($entry->key == "id_product")
 				$id_product = $entry->value;
 		}
-		if (!$friendName OR !$friendMail OR !$id_product)
+		if (!$friendName || !$friendMail || !$id_product)
 			die('0');
 
 		/* Email generation */
-		$product = new Product((int)$id_product, false, Context::getContext()->language->id);
-		$productLink = Context::getContext()->link->getProductLink($product);
-		$subject = (Context::getContext()->cookie->customer_firstname ? Context::getContext()->cookie->customer_firstname.' '.Context::getContext()->cookie->customer_lastname : $module->l('A friend')).' '.$module->l('sent you a link to').' '.$product->name;
+		$product = new Product((int)$id_product, false, $module->context->language->id);
+		$productLink = $module->context->link->getProductLink($product);
+		$customer = $module->context->cookie->customer_firstname ? $module->context->cookie->customer_firstname.' '.$module->context->cookie->customer_lastname : $module->l('A friend', 'sendtoafriend_ajax');
+
 		$templateVars = array(
-					'{product}' => $product->name,
-					'{product_link}' => $productLink,
-					'{customer}' => (Context::getContext()->cookie->customer_firstname ? Context::getContext()->cookie->customer_firstname.' '.Context::getContext()->cookie->customer_lastname : $module->l('A friend')),
-					'{name}' => Tools::safeOutput($friendName)
+			'{product}' => $product->name,
+			'{product_link}' => $productLink,
+			'{customer}' => $customer,
+			'{name}' => Tools::safeOutput($friendName)
 		);
 
 		/* Email sending */
-		if (!Mail::Send((int)Context::getContext()->cookie->id_lang,
+		if (!Mail::Send((int)$module->context->cookie->id_lang,
 				'send_to_a_friend',
-				Mail::l('A friend sent you a link to', (int)Context::getContext()->cookie->id_lang).' '.$product->name,
+				sprintf(Mail::l('%1$s sent you a link to %2$s', (int)$module->context->cookie->id_lang), $customer, $product->name),
 				$templateVars, $friendMail,
-				NULL,
-				(Context::getContext()->cookie->email ? Context::getContext()->cookie->email : NULL),
-				(Context::getContext()->cookie->customer_firstname ? Context::getContext()->cookie->customer_firstname.' '.Context::getContext()->cookie->customer_lastname : NULL),
-				NULL,
-				NULL,
+				null,
+				($module->context->cookie->email ? $module->context->cookie->email : null),
+				($module->context->cookie->customer_firstname ? $module->context->cookie->customer_firstname.' '.$module->context->cookie->customer_lastname : null),
+				null,
+				null,
 				dirname(__FILE__).'/mails/'))
 			die('0');
 		die('1');
 }
-die('1');
+die('0');

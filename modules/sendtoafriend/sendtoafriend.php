@@ -32,6 +32,7 @@ class sendToAFriend extends Module
 {
 	private $_html = '';
 	private $_postErrors = array();
+	public $context;
 
 	function __construct($dontTranslate = false)
  	{
@@ -42,9 +43,12 @@ class sendToAFriend extends Module
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
 
+		 // Get the context for the module
+		$this->context = Context::getContext();
+
 		parent::__construct();
 
-		if(!$dontTranslate)
+		if (!$dontTranslate)
 		{
 			$this->displayName = $this->l('Send to a Friend module');
 			$this->description = $this->l('Allows customers to send a product link to a friend.');
@@ -53,29 +57,25 @@ class sendToAFriend extends Module
 
 	public function install()
 	{
-	 	return (parent::install() AND $this->registerHook('extraLeft')
-	 			AND $this->registerHook('header'));
+	 	return (parent::install() && $this->registerHook('extraLeft') && $this->registerHook('header'));
 	}
 
 	public function uninstall()
 	{
-		return (parent::uninstall() AND $this->unregisterHook('header') AND $this->unregisterHook('extraLeft'));
+		return (parent::uninstall() && $this->unregisterHook('header') && $this->unregisterHook('extraLeft'));
 	}
 
 	public function hookExtraLeft($params)
 	{
 		/* Product informations */
 		$product = new Product((int)Tools::getValue('id_product'), false, $this->context->language->id);
-		$productLink = $this->context->link->getProductLink($product);
-		$image = Product::getCover((int)($_GET['id_product']));
+		$image = Product::getCover((int)$product->id);
 
 
-		Context::getContext()->smarty->assign(array(
-			'stf_id_product' => (int)Tools::getValue('id_product'),
-			'stf_product' => new Product((int)Tools::getValue('id_product'), false, $this->context->language->id),
-			'stf_product_link' => $productLink,
-			'stf_product_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
-			'stf_secure_key' => $this->secure_key,
+		$this->context->smarty->assign(array(
+			'stf_product' => $product,
+			'stf_product_cover' => (int)$product->id.'-'.(int)$image['id_image'],
+			'stf_secure_key' => $this->secure_key
 		));
 
 		return $this->display(__FILE__, 'sendtoafriend-extra.tpl');

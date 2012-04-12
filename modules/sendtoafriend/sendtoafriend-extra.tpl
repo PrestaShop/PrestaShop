@@ -33,7 +33,7 @@ $('document').ready(function(){
 	$('#sendEmail').click(function(){
 		var datas = [];
 		$('#fancybox-content').find('input').each(function(index){
-			var o = {}
+			var o = {};
 			o.key = $(this).attr('name');
 			o.value = $(this).val();
 			if (o.value != '')
@@ -52,10 +52,7 @@ $('document').ready(function(){
 			});
 		}
 		else
-		{
-			$('#send_friend_form_error').show();
-			$('#send_friend_form_error').text('{/literal}{l s="You did not fill required fields" mod=sendtoafriend}{literal}');
-		}
+			$('#send_friend_form_error').text('{/literal}{l s="You did not fill required fields" mod='sendtoafriend'}{literal}');
 	});
 });
 {/literal}
@@ -90,7 +87,7 @@ $('document').ready(function(){
 					<p class="txt_required"><sup class="required">*</sup> {l s='Required fields' mod='sendtoafriend'}</p>
 				</div>
 				<p class="submit">
-					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$stf_id_product}'></input>
+					<input id="id_product_comment_send" name="id_product" type="hidden" value="{$stf_product->id}" />
 					<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='sendtoafriend'}</a>&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;
 					<input id="sendEmail" class="button" name="sendEmail" type="submit" value="{l s='Send' mod='sendtoafriend'}" />
 				</p>
