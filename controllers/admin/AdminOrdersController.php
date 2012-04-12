@@ -1573,12 +1573,26 @@ class AdminOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('product_invoice'))
 			$order_invoice = new OrderInvoice(Tools::getValue('product_invoice'));
 
+		// Check fields validity
 		$this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
+		
+		// If multiple product_quantity, the order details concern a product customized
+		$product_quantity = 0;
+		if (is_array(Tools::getValue('product_quantity')))
+			foreach (Tools::getValue('product_quantity') as $id_customization => $qty)
+			{
+				// Update quantity of each customization
+				Db::getInstance()->update('customization', array('quantity' => $qty), 'id_customization = '.(int)$id_customization);
+				// Calculate the real quantity of the product
+				$product_quantity += $qty;
+			}
+		else
+			$product_quantity = Tools::getValue('product_quantity');
 
 		$product_price_tax_incl = Tools::ps_round(Tools::getValue('product_price_tax_incl'), 2);
 		$product_price_tax_excl = Tools::ps_round(Tools::getValue('product_price_tax_excl'), 2);
-		$total_products_tax_incl = $product_price_tax_incl * Tools::getValue('product_quantity');
-		$total_products_tax_excl = $product_price_tax_excl * Tools::getValue('product_quantity');
+		$total_products_tax_incl = $product_price_tax_incl * $product_quantity;
+		$total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
 		// Calculate differences of price (Before / After)
 		$diff_price_tax_incl = $total_products_tax_incl - $order_detail->total_price_tax_incl;
@@ -1639,7 +1653,7 @@ class AdminOrdersControllerCore extends AdminController
 			$res &= $order->update();
 		}
 
-		$order_detail->product_quantity = Tools::getValue('product_quantity');
+		$order_detail->product_quantity = $product_quantity;
 		// Save order detail
 		$res &= $order_detail->update();
 		// Save order invoice
@@ -1677,16 +1691,23 @@ class AdminOrdersControllerCore extends AdminController
 				'result' => $res,
 				'error' => Tools::displayError('Error occurred while editing this product line')
 			)));
+		
+		
+		if (is_array(Tools::getValue('product_quantity')))
+			$view = $this->createTemplate('_customized_data.tpl')->fetch();
+		else
+			$view = $this->createTemplate('_product_line.tpl')->fetch();
 
 		die(Tools::jsonEncode(array(
 			'result' => $res,
-			'view' => $this->createTemplate('_product_line.tpl')->fetch(),
+			'view' => $view,
 			'can_edit' => $this->tabAccess['add'],
 			'invoices_collection' => $invoice_collection,
 			'order' => $order,
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
-			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch()
+			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
+			'customized_product' => is_array(Tools::getValue('product_quantity'))
 		)));
 	}
 
@@ -1806,11 +1827,18 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Invalid price')
 			)));
 
-		if (!Validate::isUnsignedInt(Tools::getValue('product_quantity')))
+		if (!is_array(Tools::getValue('product_quantity')) && !Validate::isUnsignedInt(Tools::getValue('product_quantity')))
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Invalid quantity')
 			)));
+		elseif (is_array(Tools::getValue('product_quantity')))
+			foreach (Tools::getValue('product_quantity') as $qty)
+				if (!Validate::isUnsignedInt($qty))
+					die(Tools::jsonEncode(array(
+						'result' => false,
+						'error' => Tools::displayError('Invalid quantity')
+					)));
 	}
 
 	protected function doDeleteProductLinveValidation(OrderDetail $order_detail, Order $order)
