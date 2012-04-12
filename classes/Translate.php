@@ -123,7 +123,10 @@ class TranslateCore
 	public static function getModuleTranslation($module, $string, $source)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
+
 		static $lang_cache = array();
+		// $_MODULES is a cache of translations for all module.
+		// $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
 		static $translations_merged = array();
 
 		if ($module instanceof Module)
@@ -138,15 +141,16 @@ class TranslateCore
 		}
 
 		// @retrocompatibility with translations files in module root
+		// @since 1.5 modules have a translations/ folder
 		if (Tools::file_exists_cache($local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
 			$file = $local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
 		else
 			$file = $local_path.'/'.Context::getContext()->language->iso_code.'.php';
 
-		if (Tools::file_exists_cache($file) && include_once($file))
+		// Load translations file if it has not been already done
+		if (!isset($translations_merged[md5($file)]) && Tools::file_exists_cache($file) && include_once($file))
 		{
-			if (!isset($translations_merged[md5($file)]))
-				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 			$translations_merged[md5($file)] = true;
 		}
 
@@ -158,15 +162,11 @@ class TranslateCore
 			if ($_MODULES == null)
 				return str_replace('"', '&quot;', $string);
 
-			$currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source.'_'.$key);
-			$defaultKey = strtolower('<{'.$name.'}prestashop>'.$source.'_'.$key);
+			$currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
+			$defaultKey = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
 			if (isset($_MODULES[$currentKey]))
 				$ret = stripslashes($_MODULES[$currentKey]);
-			elseif (isset($_MODULES[$currentKey]))
-				$ret = stripslashes($_MODULES[$currentKey]);
-			elseif (isset($_MODULES[$defaultKey]))
-				$ret = stripslashes($_MODULES[$defaultKey]);
 			elseif (isset($_MODULES[$defaultKey]))
 				$ret = stripslashes($_MODULES[$defaultKey]);
 			// if translation was not found in module, look for it in AdminController or Helpers
