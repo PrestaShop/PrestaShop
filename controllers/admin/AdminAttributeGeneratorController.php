@@ -249,6 +249,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			'attribute_groups' => $attribute_groups,
 			'attribute_js' => $js_attributes,
 			'toolbar_btn' => $this->toolbar_btn,
+			'toolbar_scroll' => true,
 			'title' => $this->toolbar_title,
 		));
 	}

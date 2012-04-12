@@ -25,18 +25,7 @@
 *}
 
 {if $show_toolbar}
-	<div class="toolbar-placeholder">
-		<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
-				{include file="toolbar.tpl"}
-				<div class="pageTitle">
-				<h3>
-					{block name=pageTitle}
-						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-					{/block}
-				</h3>
-				</div>
-		</div>
-	</div>
+	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 

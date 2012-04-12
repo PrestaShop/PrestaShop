@@ -49,7 +49,6 @@ class HelperViewCore extends Helper
 		$this->tpl->assign(array(
 			'title' => $this->title,
 			'current' => $this->currentIndex,
-			'title' => $this->title,
 			'token' => $this->token,
 			'table' => $this->table,
 			'show_toolbar' => $this->show_toolbar,

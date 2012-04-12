@@ -409,11 +409,6 @@ class AdminModulesControllerCore extends AdminController
 		}
 	}
 
-
-
-
-
-
 	/*
 	** Filter Configuration Methods
 	** Set and reset filter configuration
@@ -435,9 +430,6 @@ class AdminModulesControllerCore extends AdminController
 		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee, 'enabledDisabled');
 		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
 	}
-
-
-
 
 	/*
 	** Post Process Filter
@@ -469,11 +461,6 @@ class AdminModulesControllerCore extends AdminController
 		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
-
-
-
-
-
 
 	/*
 	** Post Process Module CallBack
@@ -875,11 +862,9 @@ class AdminModulesControllerCore extends AdminController
 			return false;
 		}
 
-
 		// Filter on interest
 		if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0)
 				return true;
-
 
 		// Filter on favorites
 		if (Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee) == 'favorites')
@@ -904,7 +889,6 @@ class AdminModulesControllerCore extends AdminController
 				return true;
 		}
 
-
 		// Filter on module type and author
 		$show_type_modules = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
 		if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules))
@@ -924,7 +908,6 @@ class AdminModulesControllerCore extends AdminController
 				return true;
 		}
 
-
 		// Filter on install status
 		$show_installed_modules = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
 		if ($show_installed_modules == 'installed' && !$module->id)
@@ -940,7 +923,6 @@ class AdminModulesControllerCore extends AdminController
 		if ($show_enabled_modules == 'disabled' && $module->active)
 			return true;
 
-
 		// Filter on country
 		$show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
 		if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
@@ -948,7 +930,6 @@ class AdminModulesControllerCore extends AdminController
 				&& !in_array(strtolower($this->iso_default_country), $module->limited_countries))
 				|| (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries)))))
 			return true;
-
 
 		// Module has not been filtered		
 		return false;
@@ -989,7 +970,6 @@ class AdminModulesControllerCore extends AdminController
 				unset($v['favorite']);
 			$modules_preferences[$v['module']] = $v;
 		}
-
 
 		// Retrieve Modules List
 		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons);
