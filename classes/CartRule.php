@@ -500,7 +500,7 @@ class CartRuleCore extends ObjectModel
 				$cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
 
 			// If a product is given for free in this rule and already in the cart, the price is subtracted
-			if ($this->gift_product)
+			if ($this->gift_product && $alreadyInCart)
 			{
 				$in_cart = (bool)Db::getInstance()->getValue('
 				SELECT id_product
