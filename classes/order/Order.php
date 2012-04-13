@@ -429,6 +429,9 @@ class OrderCore extends ObjectModel
 	 * Get order history
 	 *
 	 * @param integer $id_lang Language id
+	 * @param integer $id_order_state Filter a specific order state
+	 * @param integer $no_hidden Filter no hidden status
+	 * @param integer $filters Flag to use specific field filter
 	 *
 	 * @return array History entries ordered by date DESC
 	 */
@@ -436,6 +439,24 @@ class OrderCore extends ObjectModel
 	{
 		if (!$id_order_state)
 			$id_order_state = 0;
+		
+		$logable = false;
+		$delivery = false;
+		$paid = false;
+		$shipped = false;
+		if ($filters > 0)
+		{
+			if ($filters & OrderState::FLAG_NO_HIDDEN)
+				$no_hidden = true;
+			if ($filters & OrderState::FLAG_DELIVERY)
+				$delivery = true;
+			if ($filters & OrderState::FLAG_LOGABLE)
+				$logable = true;
+			if ($filters & OrderState::FLAG_PAID)
+				$paid = true;
+			if ($filters & OrderState::FLAG_SHIPPED)
+				$shipped = true;
+		}
 
 		if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state]) || $no_hidden)
 		{
@@ -449,6 +470,10 @@ class OrderCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = oh.`id_employee`
 			WHERE oh.id_order = '.(int)($this->id).'
 			'.($no_hidden ? ' AND os.hidden = 0' : '').'
+			'.($logable ? ' AND os.logable = 1' : '').'
+			'.($delivery ? ' AND os.delivery = 1' : '').'
+			'.($paid ? ' AND os.paid = 1' : '').'
+			'.($shipped ? ' AND os.shipped = 1' : '').'
 			'.((int)($id_order_state) ? ' AND oh.`id_order_state` = '.(int)($id_order_state) : '').'
 			ORDER BY oh.date_add DESC, oh.id_order_history DESC');
 			if ($no_hidden)
@@ -730,17 +755,17 @@ class OrderCore extends ObjectModel
 
 	public function hasBeenDelivered()
 	{
-		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_DELIVERED')));
+		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_DELIVERY));
 	}
 
 	public function hasBeenPaid()
 	{
-		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PAYMENT')));
+		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_PAID));
 	}
 
 	public function hasBeenShipped()
 	{
-		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_SHIPPING')));
+		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_SHIPPED));
 	}
 
 	public function isInPreparation()
