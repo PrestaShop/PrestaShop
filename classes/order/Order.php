@@ -435,7 +435,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * @return array History entries ordered by date DESC
 	 */
-	public function getHistory($id_lang, $id_order_state = false, $no_hidden = false)
+	public function getHistory($id_lang, $id_order_state = false, $no_hidden = false, $filters = false)
 	{
 		if (!$id_order_state)
 			$id_order_state = 0;
