@@ -51,7 +51,8 @@
 				data : form_datas,
 				success : function(res)
 				{
-					document.write(res);
+					// Replace de body by the new one
+					$('body').html(res.replace(/^.*<body>/, '').replace(/<\/body>.*$/, ''));
 				}
 			});
 		});
