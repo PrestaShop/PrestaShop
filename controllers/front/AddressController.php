@@ -201,25 +201,7 @@ class AddressControllerCore extends FrontController
 			if (Customer::customerHasAddress($this->context->customer->id, (int)$address_old->id))
 			{
 				if ($address_old->isUsed())
-				{
 					$address_old->delete();
-					if (!Tools::isSubmit('ajax'))
-					{
-						$to_update = false;
-						if ($this->context->cart->id_address_invoice == $address_old->id)
-						{
-							$to_update = true;
-							$this->context->cart->id_address_invoice = 0;
-						}
-						if ($this->context->cart->id_address_delivery == $address_old->id)
-						{
-							$to_update = true;
-							$this->context->cart->id_address_delivery = 0;
-						}
-						if ($to_update)
-							$this->context->cart->update();
-					}
-				}
 				else
 				{
 					$address->id = (int)($address_old->id);
@@ -231,12 +213,26 @@ class AddressControllerCore extends FrontController
 		// Save address
 		if ($result = $address->save())
 		{
-			// In order to select this new address : order-address.tpl
-			if ((bool)Tools::getValue('select_address', false) || ($this->ajax && Tools::getValue('type') == 'invoice'))
+			// Update id address of the current cart if necessary
+			if ($address_old->isUsed())
 			{
-				// This new adress is for invoice_adress, select it
-				$this->context->cart->id_address_invoice = (int)$address->id;
+				if ($this->context->cart->id_address_invoice == $address_old->id)
+				{
+					$to_update = true;
+					$this->context->cart->id_address_invoice = (int)$address->id;
+				}
+				if ($this->context->cart->id_address_delivery == $address_old->id)
+				{
+					$to_update = true;
+					$this->context->cart->id_address_delivery = (int)$address->id;
+				}
 				$this->context->cart->update();
+				
+				$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
+				SET `id_address_delivery` = '.(int)$address->id.'
+				WHERE  `id_cart` = '.(int)$this->context->cart->id.'
+					AND `id_address_delivery` = '.(int)$address_old->id;
+				Db::getInstance()->execute($sql);
 			}
 
 			if ($this->ajax)
