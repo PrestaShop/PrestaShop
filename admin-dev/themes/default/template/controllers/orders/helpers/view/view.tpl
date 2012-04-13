@@ -536,7 +536,7 @@
 						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
 						<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
 						<th colspan="2" style="display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products'}" />
-							{if ($order->hasBeenDelivered())}
+							{if ($order->hasBeenDelivered() || $order->hasBeenShipped())}
 								{l s='Return'}
 							{elseif ($order->hasBeenPaid())}
 								{l s='Refund'}
