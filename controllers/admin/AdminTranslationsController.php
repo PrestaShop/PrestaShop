@@ -37,6 +37,15 @@ class AdminTranslationsControllerCore extends AdminController
 	protected static $tpl_regexp = '';
 	protected static $php_regexp = '';
 
+	/** @var array : List of folder which must be ignored */
+	protected static $ignore_folder = array('.', '..', '.svn', '.htaccess');
+
+	/** @var array : List of translation type : FRONT, BACK, ERRRORS... */
+	protected $translations_type = array();
+
+	/** @var : List of all languages */
+	protected $languages;
+
 	/**
 	 * Is true if number of var exceed the suhosin request or post limit
 	 *
@@ -57,6 +66,20 @@ class AdminTranslationsControllerCore extends AdminController
 		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( mod=\'.+\')?( js=1)?\}/U';
 		// added ? after spaces because some peoples forget them. see PSCFI-2501
 		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+
+		// Set translations type
+		$this->translations_type = array(
+			'front' => $this->l('Front Office translations'),
+			'back' => $this->l('Back Office translations'),
+			'errors' => $this->l('Error message translations'),
+			'fields' => $this->l('Field name translations'),
+			'modules' => $this->l('Installed module translations'),
+			'pdf' => $this->l('PDF translations'),
+			'mails' => $this->l('E-mail template translations'),
+		);
+
+		// Get all Languages
+		$this->languages = Language::getLanguages(false);
 	}
 
 	public function initContent()
@@ -97,17 +120,6 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initMain()
 	{
-		// Block modify
-		$translations = array(
-			'front' => $this->l('Front Office translations'),
-			'back' => $this->l('Back Office translations'),
-			'errors' => $this->l('Error message translations'),
-			'fields' => $this->l('Field name translations'),
-			'modules' => $this->l('Installed module translations'),
-			'pdf' => $this->l('PDF translations'),
-			'mails' => $this->l('E-mail template translations'),
-		);
-
 		// Block add/update
 		$packs_to_install = array();
 		$packs_to_update = array();
@@ -125,8 +137,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'theme_lang_dir' =>_THEME_LANG_DIR_,
 			'token' => $this->token,
-			'languages' => Language::getLanguages(false),
-			'translations' => $translations,
+			'languages' => $this->languages,
+			'translations' => $this->translations_type,
 			'packs_to_install' => $packs_to_install,
 			'packs_to_update' => $packs_to_update,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
@@ -321,7 +333,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// Add mails files
 		foreach ($arr_mails_needed as $mail_to_add)
-			if ($mail_to_add !== '.' && $mail_to_add !== '..' && $mail_to_add !== '.svn')
+			if (!in_array($mail_to_add, self::$ignore_folder))
 				@copy(_PS_MAIL_DIR_.'en/'.$mail_to_add, _PS_MAIL_DIR_.$iso_code.'/'.$mail_to_add);
 
 
@@ -333,13 +345,13 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($modules as $module)
 		{
-			if (!in_array($module, array('.', '..', '.svn', '.htaccess')) && file_exists(_PS_MODULE_DIR_.$module.'/mails/en/'))
+			if (!in_array($module, self::$ignore_folder) && file_exists(_PS_MODULE_DIR_.$module.'/mails/en/'))
 			{
 				$arr_files = scandir(_PS_MODULE_DIR_.$module.'/mails/en/');
 
 				foreach ($arr_files as $file)
 				{
-					if (!in_array($file, array('.', '..', '.svn', '.htaccess')))
+					if (!in_array($file, self::$ignore_folder))
 					{
 						if (file_exists(_PS_MODULE_DIR_.$module.'/mails/en/'.$file))
 							$module_mail_en[] = _PS_MODULE_DIR_.$module.'/mails/ISO_CODE/'.$file;
@@ -680,8 +692,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$array_lang_src = Language::getLanguages(false);
-				foreach ($array_lang_src as $language)
+				foreach ($this->languages as $language)
 					$this->all_iso_lang[] = $language['iso_code'];
 
 				$lang = Tools::strtolower($_POST['lang']);
@@ -933,7 +944,7 @@ class AdminTranslationsControllerCore extends AdminController
 		/* List templates to parse */
 		$templates_per_directory = array(
 			_PS_THEME_DIR_ => scandir(_PS_THEME_DIR_),
-			_PS_THEME_OVERRIDE_DIR_ => scandir(_PS_THEME_OVERRIDE_DIR_),
+			_PS_THEME_OVERRIDE_DIR_ => file_exists(_PS_THEME_OVERRIDE_DIR_) ? scandir(_PS_THEME_OVERRIDE_DIR_) : array(),
 			_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_)
 		);
 		$count = 0;
@@ -993,7 +1004,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('Front Office translations'),
+			'translation_type' => $this->translations_type['front'],
 			'missing_translations' => $missing_translations_front,
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
@@ -1190,7 +1201,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('Back Office translations'),
+			'translation_type' => $this->translations_type['back'],
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'post_limit_exceeded' => $this->post_limit_exceed,
@@ -1236,7 +1247,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$count = 0;
 
 				foreach ($modules as $module)
-					if (is_dir(_PS_MODULE_DIR_.$module) && $module != '.' && $module != '..' && $module != '.svn')
+					if (is_dir(_PS_MODULE_DIR_.$module) && !in_array($module, self::$ignore_folder))
 						$dirToParse[] = _PS_MODULE_DIR_.$module.'/';
 			}
 		foreach ($dirToParse as $dir)
@@ -1258,7 +1269,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('Error translations'),
+			'translation_type' => $this->translations_type['errors'],
 			'count' => $this->total_expression,
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'post_limit_exceeded' => $this->post_limit_exceed,
@@ -1341,7 +1352,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('Field name translations'),
+			'translation_type' => $this->translations_type['fields'],
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'post_limit_exceeded' => $this->post_limit_exceed,
@@ -1696,7 +1707,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('E-mail template translations'),
+			'translation_type' => $this->translations_type['mails'],
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'post_limit_exceeded' => $this->post_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsMails=1&token='.$this->token,
@@ -1741,7 +1752,7 @@ class AdminTranslationsControllerCore extends AdminController
 					}
 				}
 			}
-			if ($filename != '.svn' && $filename != '.' && $filename != '..' && is_dir(($directory.'/'.$filename)))
+			if (!in_array($filename, self::$ignore_folder) && is_dir(($directory.'/'.$filename)))
 				 $subject_mail = AdminTranslationsController::getSubjectMail($directory.'/'.$filename, $subject_mail);
 		}
 		return $subject_mail;
@@ -1858,9 +1869,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		global $_MODULES;
 
-		$array_lang_src = Language::getLanguages(false);
-
-		foreach ($array_lang_src as $language)
+		foreach ($this->languages as $language)
 			$this->all_iso_lang[] = $language['iso_code'];
 
 		if (!file_exists(_PS_MODULE_DIR_))
@@ -1897,7 +1906,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$this->tpl_view_vars = array(
 				'default_theme_name' => self::DEFAULT_THEME_NAME,
 				'lang' => Tools::strtoupper($lang),
-				'translation_type' => $this->l('Installed module translations'),
+				'translation_type' => $this->translations_type['modules'],
 				'count' => $this->total_expression,
 				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 				'post_limit_exceeded' => $this->post_limit_exceed,
@@ -2015,7 +2024,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
-			'translation_type' => $this->l('PDF translations'),
+			'translation_type' => $this->translations_type['pdf'],
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'post_limit_exceeded' => $this->post_limit_exceed,
@@ -2042,7 +2051,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$dir = opendir(_PS_ALL_THEMES_DIR_);
 		while ($folder = readdir($dir))
-			if ($folder != '.' && $folder != '..' && is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$folder) && file_exists(_PS_ALL_THEMES_DIR_.'/'.$folder.'/preview.jpg'))
+			if (!in_array($folder, self::$ignore_folder) && is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$folder) && file_exists(_PS_ALL_THEMES_DIR_.'/'.$folder.'/preview.jpg'))
 				$themes[$folder]['name'] = $folder;
 		closedir($dir);
 		return isset($themes) ? $themes : array();
@@ -2060,7 +2069,7 @@ class AdminTranslationsControllerCore extends AdminController
 		// copied (and kind of) adapted from AdminImages.php
 		foreach ($to_parse as $file)
 		{
-			if ($file != '.' && $file != '..' && $file != '.svn')
+			if (!in_array($file, self::$ignore_folder))
 			{
 				if (preg_match('#'.preg_quote($fileext, '#').'$#i', $file))
 					$list[] = $dir.$file;
