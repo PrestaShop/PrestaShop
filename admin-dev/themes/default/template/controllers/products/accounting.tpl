@@ -25,7 +25,7 @@
 *}
 
 {if isset($product->id)}
-
+	<input type="hidden" name="submitted_tabs[]" value="Accounting" />
 	<h4>{l s='Accounting'}</h4>
 	<div class="separation"></div>
 	{if !empty($error)}

@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<input type="hidden" name="submitted_tabs[]" value="Shipping" />
 <h4 class="tab">1. {l s='Info.'}</h4>
 <h4>{l s='Shipping'}</h4>
 

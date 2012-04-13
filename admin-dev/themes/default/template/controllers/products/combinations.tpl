@@ -38,6 +38,7 @@
 </script>
 
 {if isset($product->id)}
+	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
 	<script type="text/javascript">
 		var attrs = new Array();
 		var modifyattributegroup = "{l s='Modify this attribute combination' js=1}";

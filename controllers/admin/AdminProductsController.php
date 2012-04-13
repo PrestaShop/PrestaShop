@@ -70,6 +70,8 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $position_identifier = 'id_product';
 
+	protected $submitted_tabs;
+
 	public function __construct()
 	{
 		$this->table = 'product';
@@ -1459,7 +1461,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->updateDownloadProduct($this->object);
 			$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
 
-			if (!count($this->errors))
+			if (empty($this->errors))
 			{
 				$languages = Language::getLanguages(false);
 				if (!$this->object->updateCategories(Tools::getValue('categoryBox')))
@@ -1511,16 +1513,33 @@ class AdminProductsControllerCore extends AdminController
 			}
 			else
 				$this->object->delete();
+				// if errors : stay on edit page
+				$this->display = 'edit';
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 	}
 
+	protected function isTabSubmitted($tab_name)
+	{
+		if (!is_array($this->submitted_tabs))
+			$this->submitted_tabs = Tools::getValue('submitted_tabs');
+
+		if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs))
+			return true;
+
+		return false;
+	}
+
 	public function processUpdate()
 	{
 		$this->checkProduct();
+
 		if (!empty($this->errors))
+		{
+			//$this->display = 'edit';
 			return false;
+		}
 
 		$id = (int)Tools::getValue('id_'.$this->table);
 		/* Update an existing product */
@@ -1537,27 +1556,43 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
-					$this->addCarriers();
-					$this->updateAccessories($object);
+					if ($this->isTabSubmitted('Shipping'))
+						$this->addCarriers();
+					if ($this->isTabSubmitted('Associations'))
+					{
+						$this->updateAccessories($object);
+						$this->updateAssoShop((int)$object->id);
+					}
+
+					if ($this->isTabSubmitted('Accounting'))
+						$this->processAccounting();
+					if ($this->isTabSubmitted('Suppliers'))
+						$this->processSuppliers();
+					if ($this->isTabSubmitted('Warehouses'))
+						$this->processWarehouses();
+					if ($this->isTabSubmitted('Features'))
+						$this->processFeatures();
+					if ($this->isTabSubmitted('Combinations'))
+						$this->processProductAttribute();
+					if ($this->isTabSubmitted('Prices'))
+					{
+						$this->processPriceAddition();
+						$this->processSpecificPricePriorities();
+						$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
+					}
+					if ($this->isTabSubmitted('Customization'))
+						$this->processCustomizationConfiguration();
+					if ($this->isTabSubmitted('Attachments'))
+						$this->processAttachments();
+
+					$this->updatePackItems($object);
 					$this->updateDownloadProduct($object, 1);
-					$this->updateAssoShop((int)$object->id);
-					$this->processAccounting();
-					$this->processSuppliers();
-					$this->processWarehouses();
-					$this->processFeatures();
-					$this->processProductAttribute();
-					$this->processPriceAddition();
-					$this->processSpecificPricePriorities();
-					$this->processCustomizationConfiguration();
-					$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
-					$this->processAttachments();
-					if (!$this->updatePackItems($object))
-						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
-					elseif (!$object->updateCategories(Tools::getValue('categoryBox'), true))
+					$this->updateTags(Language::getLanguages(false), $object);
+
+					if (!$object->updateCategories(Tools::getValue('categoryBox'), true))
 						$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-					elseif (!$this->updateTags(Language::getLanguages(false), $object))
-						$this->errors[] = Tools::displayError('An error occurred while adding tags.');
-					elseif (empty($this->errors))
+
+					if (empty($this->errors))
 					{
 						if (in_array($object->visibility, array('both', 'search')))
 							Search::indexation(false, $object->id);
@@ -1589,6 +1624,9 @@ class AdminProductsControllerCore extends AdminController
 								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
 						}
 					}
+					// if errors : stay on edit page
+					else
+						$this->display = 'edit';
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
@@ -1742,7 +1780,8 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file))
-			&& Tools::getValue('virtual_product_expiration_date_attribute') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date_attribute')))
+					&& Tools::getValue('virtual_product_expiration_date_attribute') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date_attribute'))
+			)
 			{
 				if (!Tools::getValue('virtual_product_expiration_date'))
 				{
@@ -1881,15 +1920,17 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function updateTags($languages, $product)
 	{
-		$tagError = true;
+		$tag_success = true;
 		/* Reset all tags for THIS product */
 		if (!Tag::deleteTagsForProduct((int)$product->id))
-			return false;
+			$this->errors[] = Tools::displayError('An error occurred while deleting previous tags.');
 		/* Assign tags to this product */
 		foreach ($languages as $language)
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
-				$tagError &= Tag::addTags($language['id_lang'], (int)$product->id, $value);
-		return $tagError;
+				$tag_success &= Tag::addTags($language['id_lang'], (int)$product->id, $value);
+
+		if (!$tag_success)
+			$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 	}
 
 	public function initContent($token = null)
@@ -2132,7 +2173,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		parent::initToolbarTitle();
 			if ($product = $this->loadObject(true))
-				if ((bool)$product->id)
+				if ((bool)$product->id && $this->display != 'list')
 					$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$product->name[$this->context->language->id].')';
 	}
 
@@ -3959,11 +4000,10 @@ class AdminProductsControllerCore extends AdminController
 						if ($qty > 0 && isset($item_id))
 						{
 							if (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
-							return false;
+								$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 						}
 					}
 		}
-		return true;
 	}
 
 	public function getL($key)
