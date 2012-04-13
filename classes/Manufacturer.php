@@ -222,8 +222,10 @@ class ManufacturerCore extends ObjectModel
 		}
 
 		$total_manufacturers = count($manufacturers);
+		$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
+
 		for ($i = 0; $i < $total_manufacturers; $i++)
-			if ((int)Configuration::get('PS_REWRITING_SETTINGS'))
+			if ($rewrite_settings)
 				$manufacturers[$i]['link_rewrite'] = Tools::link_rewrite($manufacturers[$i]['name'], false);
 			else
 				$manufacturers[$i]['link_rewrite'] = 0;
