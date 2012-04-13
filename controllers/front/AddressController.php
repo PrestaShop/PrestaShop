@@ -214,7 +214,7 @@ class AddressControllerCore extends FrontController
 		if ($result = $address->save())
 		{
 			// Update id address of the current cart if necessary
-			if ($address_old->isUsed())
+			if (isset($address_old) && $address_old->isUsed())
 			{
 				if ($this->context->cart->id_address_invoice == $address_old->id)
 				{
