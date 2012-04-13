@@ -825,7 +825,9 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			if ($order->hasInvoice())
+			if (!Configuration::get('PS_INVOICE'))
+				$this->errors[] = Tools::displayError('Invoice management has been disabled');
+			elseif ($order->hasInvoice())
 				$this->errors[] = Tools::displayError('This order already has an invoice');
 			else
 			{
@@ -1179,6 +1181,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
+			'invoice_management_active' => Configuration::get('PS_INVOICE')
 		);
 
 		return parent::renderView();
