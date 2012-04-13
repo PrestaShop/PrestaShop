@@ -10,3 +10,6 @@ ALTER TABLE `PREFIX_employee` ADD `default_tab` int(10) unsigned NOT NULL defaul
 DROP TABLE `PREFIX_subdomain`;
 
 /* PHP:migrate_tabs_15(); */;
+
+DROP TABLE IF EXISTS `PREFIX_order_tax`;
+
