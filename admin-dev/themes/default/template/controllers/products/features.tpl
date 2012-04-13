@@ -25,7 +25,7 @@
 *}
 
 {if isset($product->id)}
-	
+	<input type="hidden" name="submitted_tabs[]" value="Features" />
 	<h4>{l s='Assign features to this product:'}</h4>
 	<div class="separation"></div>
 				<ul>

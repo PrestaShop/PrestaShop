@@ -101,6 +101,7 @@
 
 </script>
 
+<input type="hidden" name="submitted_tabs[]" value="VirtualProduct" />
 <h4>{l s='Virtual Product (services, booking and downloadable products)'}</h4>
 <div class="separation"></div>
 <div>

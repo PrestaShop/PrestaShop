@@ -26,7 +26,7 @@
 
 <input type="hidden" name="warehouse_loaded" value="1">
 {if isset($product->id)}
-
+	<input type="hidden" name="submitted_tabs[]" value="Warehouses" />
 	<h4>{l s='Product location in warehouses'}</h4>
 				<div class="separation"></div>
 				<div class="hint" style="display:block; position:'auto';">

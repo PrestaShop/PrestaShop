@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<input type="hidden" name="submitted_tabs[]" value="Associations" />
 <div class="Associations">
 	<h4>{l s='Associations'}</h4>
 	<div class="separation"></div>
