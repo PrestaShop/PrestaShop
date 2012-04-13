@@ -46,7 +46,7 @@ class HelperFormCore extends Helper
 	public $title = null;
 
 	/** @var string Used to override default 'submitAdd' parameter in form action attribute */
-	public $submit_action = '';
+	public $submit_action;
 
 	public $token;
 	public $languages = null;
@@ -69,7 +69,7 @@ class HelperFormCore extends Helper
 	public function generate()
 	{
 		$this->tpl = $this->createTemplate($this->base_tpl);
-		if ($this->submit_action == '')
+		if (is_null($this->submit_action))
 			$this->submit_action = 'submitAdd'.$this->table;
 
 		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
