@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<input type="hidden" name="submitted_tabs[]" value="Seo" />
 <h4>{l s='SEO'}</h4>
 <div class="separation"></div>
 

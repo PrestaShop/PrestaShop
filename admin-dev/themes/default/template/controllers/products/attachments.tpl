@@ -25,7 +25,7 @@
 *}
 
 {if isset($obj->id)}
-
+	<input type="hidden" name="submitted_tabs[]" value="Attachments" />
 	<h4>{l s='Attachment'}</h4>
 	<div class="separation"></div>
 	<fieldset style="border:none;">

@@ -26,7 +26,7 @@
 
 <input type="hidden" name="supplier_loaded" value="1">
 {if isset($product->id)}
-
+	<input type="hidden" name="submitted_tabs[]" value="Suppliers" />
 	<h4>{l s='Suppliers of the current product'}</h4>
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">

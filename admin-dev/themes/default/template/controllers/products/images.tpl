@@ -25,6 +25,7 @@
 *}
 
 {if isset($id_product) && isset($product)}
+	<input type="hidden" name="submitted_tabs[]" value="Images" />
 	<h4 class="tab" >2. {l s='Images'} (<span id="countImage">{$countImages}</span>)</h4>
 	<h4>{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}</h4>	<div class="separation"></div><br />
 
