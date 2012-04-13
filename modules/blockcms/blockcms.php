@@ -262,6 +262,8 @@ class BlockCms extends Module
 		}
 
 		$helper = $this->initForm();
+		$helper->submit_action = '';
+		$helper->title = $this->l('CMS Block configuration');
 
 		$helper->fields_value = $this->fields_value;
 		$this->_html .= $helper->generateForm($this->fields_form);
@@ -649,7 +651,6 @@ class BlockCms extends Module
 	{
 		$this->_html = '';
 		$this->_postProcess();
-		$this->_html .= '<h2>'.$this->l('CMS Block configuration').'</h2>';
 
 		if (Tools::isSubmit('addBlockCMS') || Tools::isSubmit('editBlockCMS'))
 			$this->displayAddForm();
