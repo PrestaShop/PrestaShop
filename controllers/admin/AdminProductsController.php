@@ -1456,8 +1456,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->addCarriers();
 			$this->updateAssoShop((int)$this->object->id);
 			$this->updateAccessories($this->object);
-			if (!$this->updatePackItems($this->object))
-				$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
+			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
 			$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
 
