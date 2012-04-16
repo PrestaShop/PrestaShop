@@ -179,7 +179,9 @@ class AdminAccountingConfigurationControllerCore extends AdminController
 			'input_category_list' => $this->fields_list_detail,
 			'table' => 'accounting',
 			'has_shop_selected' => (count(Shop::getContextListShopID()) == 1),
-			'toolbar_btn' => $this->toolbar_btn
+			'toolbar_btn' => $this->toolbar_btn,
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_scroll' => $this->toolbar_scroll
 		));
 		parent::initContent();
 	}
