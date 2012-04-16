@@ -48,7 +48,7 @@
 		<tr>
 			<td colspan="2" style="text-align:center;">
 				<input type="hidden" name="resizer" value="auto" />
-					{if Tools::getValue('id_image')}<input type="hidden" name="id_image" value="{Tools::getValue('id_image')}" />{/if}
+					{if Tools::getValue('id_image')}<input type="hidden" name="id_image" value="{Tools::getValue('id_image')|intval}" />{/if}
 			</td>
 		</tr>
 		<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>

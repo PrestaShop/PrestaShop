@@ -107,8 +107,8 @@ class AdminTaxesControllerCore extends AdminController
 		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,
-			'url_enable' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-				((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token),
+			'url_enable' => self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.
+				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token),
 			'confirm' => isset($confirm) ? $confirm : null,
 		));
 

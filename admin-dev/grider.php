@@ -41,8 +41,9 @@ $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
 $id_employee = (int)(Tools::getValue('id_employee'));
 $id_lang = (int)(Tools::getValue('id_lang'));
 
-if (Context::getContext()->employee->id != $id_employee)
-	die;
+
+if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employee != $id_employee)
+    die(Tools::displayError());
 
 if (!Validate::isModuleName($module))
 	die(Tools::displayError());
