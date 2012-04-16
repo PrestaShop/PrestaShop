@@ -963,6 +963,8 @@ class AdminControllerCore extends Controller
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
 				if (empty($back))
 					$back = self::$currentIndex.'&token='.$this->token;
+				if (!Validate::isCleanHtml($back))
+					die(Tools::displayError());
 				if (!$this->lite_display)
 					$this->toolbar_btn['back'] = array(
 						'href' => $back,

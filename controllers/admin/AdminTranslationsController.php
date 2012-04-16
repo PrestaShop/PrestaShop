@@ -684,7 +684,11 @@ class AdminTranslationsControllerCore extends AdminController
 		else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
 		{
 		 	if ($this->tabAccess['edit'] === '1' && ($id_lang = Language::getIdByIso(Tools::getValue('lang'))) > 0)
+		 	{
+				if (!Validate::isLanguageIsoCode(Tools::strtolower($id_lang)))
+					die(Tools::displayError());
 		 		$this->submitTranslationsMails($id_lang);
+		 	}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
@@ -791,7 +795,11 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($module_name_pipe_pos)
 					{
 						$module_name = substr($mail_name, 0, $module_name_pipe_pos);
+						if (!Validate::isModuleName($module_name))
+							die(Tools::displayError());
 						$mail_name = substr($mail_name, $module_name_pipe_pos + 1);
+						if (!Validate::isTplName($mail_name))
+							die(Tools::displayError());
 					}
 
 					if ($type_content == 'html')
@@ -939,6 +947,8 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormFront($lang)
 	{
 		$missing_translations_front = array();
+		if (!Validate::isLangIsoCode($lang))
+			die(Tools::displayError());
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
 
 		/* List templates to parse */
@@ -1026,6 +1036,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initFormBack($lang)
 	{
+		if (!Validate::isLangIsoCode($lang))
+			die(Tools::displayError());
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
 		// count will contain the number of expressions of the page
 		$count = 0;
@@ -1223,6 +1235,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initFormErrors($lang)
 	{
+		if (!Validate::isLangIsoCode($lang))
+			die(Tools::displayError());
 		$_ERRORS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'errors.php', '_ERRORS');
 		$count_empty = 0;
 
@@ -1287,6 +1301,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initFormFields($lang)
 	{
+		if (!Validate::isLangIsoCode($lang))
+			die(Tools::displayError());
 		$_FIELDS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'fields.php', '_FIELDS');
 		$missing_translations_fields = array();
 		$str_output = '';
