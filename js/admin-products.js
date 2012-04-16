@@ -203,7 +203,7 @@ product_tabs['Combinations'] = new function(){
 		$('.process-icon-newCombination').addClass('toolbar-cancel');
 		$('#desc-product-newCombination div').html($('#ResetBtn').val());
 		$('id_product_attribute').val(0);
-		init_elems();
+		self.init_elems();
 	};
 
 	this.addButtonCombination = function(item)
