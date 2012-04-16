@@ -286,7 +286,7 @@ class ShopCore extends ObjectModel
 		{
 			// If in admin, we can access to the shop without right URL
 			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-			$shop->physical_uri = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/';
+			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
 			return $shop;
 		}
