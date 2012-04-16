@@ -315,7 +315,6 @@ class AdminOrdersControllerCore extends AdminController
 						$history->id_order = $order->id;
 						$history->id_employee = (int)$this->context->employee->id;
 						$history->changeIdOrderState($order_state->id, $order->id);
-
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
@@ -333,7 +332,19 @@ class AdminOrdersControllerCore extends AdminController
 							);
 						// Save all changes
 						if ($history->addWithemail(true, $templateVars))
+						{
+							// synchronizes quantities if needed..
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+							{
+								foreach ($order->getProducts() as $product)
+								{
+									if (StockAvailable::dependsOnStock($product['product_id']))
+										StockAvailable::synchronize($product['product_id']);
+								}
+							}
+
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+						}
 						$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 					}
 					else
@@ -1579,7 +1590,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Check fields validity
 		$this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
-		
+
 		// If multiple product_quantity, the order details concern a product customized
 		$product_quantity = 0;
 		if (is_array(Tools::getValue('product_quantity')))
@@ -1695,8 +1706,8 @@ class AdminOrdersControllerCore extends AdminController
 				'result' => $res,
 				'error' => Tools::displayError('Error occurred while editing this product line')
 			)));
-		
-		
+
+
 		if (is_array(Tools::getValue('product_quantity')))
 			$view = $this->createTemplate('_customized_data.tpl')->fetch();
 		else
