@@ -244,7 +244,7 @@ class ShopCore extends ObjectModel
 				$excluded_uris[] = $directory;
 
 		// Find current shop from URL
-		if (!$id_shop = Tools::getValue('id_shop') && !defined('_PS_ADMIN_DIR_'))
+		if (!($id_shop = Tools::getValue('id_shop')) && !defined('_PS_ADMIN_DIR_'))
 		{
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
 					FROM '._DB_PREFIX_.'shop_url su
