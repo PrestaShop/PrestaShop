@@ -295,27 +295,27 @@ function getParentCategoriesIdAndOpen(id_category)
 {
 	category_to_check = id_category;
 	$.ajax({
-        type: 'POST',
-        url: 'ajax.php',
-        async: true,
-        dataType: 'json',
-        data: 'ajax=true&getParentCategoriesId=true&id_category=' + id_category ,
-        success: function(jsonData) {
-            for(var i= 0; i < jsonData.length; i++)
-			    if (jsonData[i].id_category != 1)
-			    	arrayCatToExpand.push(jsonData[i].id_category);
-			readyToExpand = true;   	
+		type: 'POST',
+		url: 'ajax.php',
+		async: true,
+		dataType: 'json',
+		data: 'ajax=true&getParentCategoriesId=true&id_category=' + id_category ,
+		success: function(jsonData) {
+			for(var i= 0; i < jsonData.length; i++)
+				if (jsonData[i].id_category != 1)
+					arrayCatToExpand.push(jsonData[i].id_category);
+			readyToExpand = true;
 			interval = setInterval(openParentCategories, 10);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
-        }
-    });
+			intervalCheck = setInterval(checkCategory, 20);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		}
+	});
 }
 
 function openParentCategories()
 {
-	intervalCheck = setInterval(checkCategory, 20);
 	if (id_tree >= arrayCatToExpand.length && !readyToExpand)
 	{
 		clearInterval(interval);
@@ -323,7 +323,7 @@ function openParentCategories()
 		interval = null;
 		readyToExpand = false;
 	}
-	
+
 	if (readyToExpand)
 	{
 		if ($('li#'+arrayCatToExpand[id_tree]+'.hasChildren').length > 0)
