@@ -189,7 +189,7 @@ abstract class PaymentModuleCore extends Module
 
 						$order->invoice_date = '0000-00-00 00:00:00';
 						$order->delivery_date = '0000-00-00 00:00:00';
-					
+
 						// Creating order
 						$result = $order->add();
 
@@ -199,7 +199,7 @@ abstract class PaymentModuleCore extends Module
 							if (!$order->addOrderPayment($amount_paid))
 								throw new PrestaShopException('Can\'t save Order Payment');
 						}
-						
+
 						// Amount paid by customer is not the right one -> Status = payment error
 						// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
 						// if ($order->total_paid != $order->total_paid_real)
@@ -551,6 +551,21 @@ abstract class PaymentModuleCore extends Module
 								null,
 								$file_attachement
 							);
+					}
+
+					// updates stock in shops
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					{
+						$product_list = $order->getProducts();
+						foreach ($product_list as $product)
+						{
+							// if the available quantities depends on the physical stock
+							if (StockAvailable::dependsOnStock($product['product_id']))
+							{
+								// synchronizes
+								StockAvailable::synchronize($product['product_id']);
+							}
+						}
 					}
 				}
 				else
