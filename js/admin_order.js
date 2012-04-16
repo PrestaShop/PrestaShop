@@ -168,7 +168,6 @@ function editProductRefreshTotal(element)
 	// Customized product
 	if (element_list.length)
 	{
-		console.log(element_list);
 		var qty = 0;
 		$.each(element_list, function(i, elm) {
 			if($(elm).find('.edit_product_quantity').length)
@@ -176,8 +175,6 @@ function editProductRefreshTotal(element)
 				qty += parseInt($(elm).find('.edit_product_quantity').val());
 				subtotal = makeTotalProductCaculation($(elm).find('.edit_product_quantity').val(), price);
 				$(elm).find('.total_product').html(formatCurrency(subtotal, currency_format, currency_sign, currency_blank));
-				console.log('res');
-				console.log($(elm).find('.total_product'));
 			}
 		});
 		
@@ -223,6 +220,8 @@ function refreshProductLineView(element, view)
 	var element_list = [];
 	if (element.parent().parent().find('.edit_product_id_order_detail').length)
 		var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
+	if (!element_list.length)
+			element_list = $(element.parent().parent());
 
 	var current_product_line = element.parent().parent();
 	current_product_line.before(new_product_line);
@@ -567,6 +566,8 @@ function init()
 					current_product = data;
 					
 					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
+					if (!element_list.length)
+						element_list = element.parent().parent();
 
 					element_list.css('background-color', '#E8EDC2');
 
@@ -600,6 +601,8 @@ function init()
 		current_product = null;
 		$('.edit_product_fields').hide();
 		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
+		if (!element_list.length)
+			element_list = $($(this).parent().parent());
 
 		element_list.css('background-color', '#FFF');
 
@@ -640,8 +643,12 @@ function init()
 			
 			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 
-			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&'+
-				element_list.parent().parent().find('input:visible, select:visible, input.edit_product_id_order_detail').serialize();
+			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&';
+
+			if (element_list.length)
+				query += element_list.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
+			else
+				query += element.parent().parent().find('input:visible, select:visible, .edit_product_id_order_detail').serialize();
 
 			$.ajax({
 				type: 'POST',
