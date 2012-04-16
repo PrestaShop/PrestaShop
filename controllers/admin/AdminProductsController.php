@@ -1593,6 +1593,8 @@ class AdminProductsControllerCore extends AdminController
 
 					if (empty($this->errors))
 					{
+						Hook::exec('actionProductUpdate', array('product' => $object));
+
 						if (in_array($object->visibility, array('both', 'search')))
 							Search::indexation(false, $object->id);
 
