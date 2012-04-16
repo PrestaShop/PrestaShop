@@ -480,29 +480,29 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
-				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
 				'name' => $this->l('Mark this message as handled')
 			);
 
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
-				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
 				'name' => $this->l('Mark this message as "pending 1" (will be answered later)')
 			);
 		else
 			$actions['pending1'] = array(
-				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
 				'name' => $this->l('Disable pending status')
 			);
 
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
-				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
 				'name' => $this->l('Mark this message as "pending 2" (will be answered later)')
 			);
 		else
 			$actions['pending2'] = array(
-				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
+				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
 				'name' => $this->l('Disable pending status')
 			);
 

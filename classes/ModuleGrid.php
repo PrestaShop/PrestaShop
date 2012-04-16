@@ -67,6 +67,8 @@ abstract class ModuleGridCore extends Module
 
 	public function create($render, $type, $width, $height, $start, $limit, $sort, $dir)
 	{
+		if (!Validate::isModuleName($render))
+			die(Tools::displayError());
 		if (!Tools::file_exists_cache($file = dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			die(Tools::displayError());
 		require_once($file);
@@ -95,6 +97,8 @@ abstract class ModuleGridCore extends Module
 	{
 		if (!($render = Configuration::get('PS_STATS_GRID_RENDER')))
 			return Tools::displayError('No grid engine selected');
+		if (!Validate::isModuleName($render))
+			die(Tools::displayError());
 		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Grid engine selected is unavailable.');
 
