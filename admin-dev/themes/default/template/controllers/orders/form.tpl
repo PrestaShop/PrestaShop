@@ -60,7 +60,7 @@
 		$('#id_lang').change(function() {
 			updateLang();
 		});
-		$('#delivery_option,#carrier_recycled_package,#order_gift,#gift_message').change(function() {
+		$('#delivery_option,#carrier_recycled_package,#order_gift,#gift_message,#id_address_delivery').change(function() {
 			updateDeliveryOption();
 		});
 		$('#shipping_price').change(function() {
