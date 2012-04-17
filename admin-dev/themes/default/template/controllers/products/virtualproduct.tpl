@@ -47,16 +47,21 @@
 					var result = data.getAttribute("result");
 					var msg = data.getAttribute("msg");
 					var fileName = data.getAttribute("filename");
-					$("#upload-confirmation").show();
 					if (result == "error")
-						$("#upload-confirmation td").html('<div class="error">{l s='Error:'} ' + msg + '</div>');
+					{
+						$("#upload-confirmation").hide();
+						$("#upload-error td").html('<div class="error">{l s='Error:'} ' + msg + '</div>');
+						$("#upload-error").show();
+					}
 					else
 					{
-						$('#upload_input').hide();
+						$('#upload-error').hide();
 						$('#file_missing').hide();
 						$('#virtual_product_name').attr('value', fileName);
+						$("#upload-confirmation .error").remove();
 						$('#upload-confirmation div').prepend('<span>{l s='The file'}&nbsp;"<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">'+fileName+'</a>"&nbsp;{l s='has successfully been uploaded'}' +
 							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" /></span>');
+						$("#upload-confirmation").show();
 					}
 				}
 			}
@@ -147,6 +152,9 @@
 							<p class="preference_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
 						</td>
 					</tr>
+					<tr id="upload-error" style="display:none">
+						<td colspan=2></td>
+					</tr>
 					<tr id="upload-confirmation" style="display:none">
 						<td colspan=2>
 							{if $up_filename}
@@ -226,4 +234,5 @@
 			</table>
 		</div>
 	</div>
+	<div style="clear:both"></div>
 </div>
