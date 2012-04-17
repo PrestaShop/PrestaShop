@@ -650,17 +650,62 @@ class AdminOrdersControllerCore extends AdminController
 						// Generate voucher
 						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
 						{
-							// @todo generate a voucher using cartrules
-							if (true || !$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip for order #'), Tools::isSubmit('shippingBack')))
+							$cartrule = new CartRule();
+							$languages = Language::getLanguages($order);
+							foreach ($languages as $language)
+							{
+								$voucher->description[$language['id_lang']] = $this->l('Credit Slip for order #').(int)($order->id);
+								// Define a temporary name
+								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+							}
+							// Define a temporary code
+							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+							$cartrule->quantity = 1;
+							$cartrule->quantity_per_user = 1;
+							// Specific to the customer
+							$cartrule->id_customer = $order->id_customer;
+							$now = time();
+							$cartrule->date_from = date('Y-m-d H:i:s', $now);
+							$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cartrule->active = 1;
+							
+							// Calculate the amount of the discount
+							$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
+							// Totals are stored in the order currency (or at least should be)
+							$total = $order->getTotalProductsWithTaxes($products);
+							$discounts = $order->getDiscounts(true);
+							$total_tmp = $total;
+							foreach ($discounts as $discount)
+							{
+								if ($discount['id_discount_type'] == Discount::PERCENT)
+									$total -= $total_tmp * ($discount['value'] / 100);
+								elseif ($discount['id_discount_type'] == Discount::AMOUNT)
+									$total -= ($discount['value'] * ($total_tmp / $order->total_products_wt));
+							}
+							if (Tools::isSubmit('shippingBack'))
+								$total += $order->total_shipping;
+							
+							$cartrule->reduction_amount = $total;
+							
+							if (!$cartrule->add())
 								$this->errors[] = Tools::displayError('Cannot generate voucher');
 							else
 							{
-								$currency = $this->context->currency;
-								$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
-								$params['{voucher_num}'] = $voucher->name;
-								@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order', (int)$order->id_lang),
-								$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-								null, _PS_MAIL_DIR_, true);
+								// Update the voucher code and name
+								foreach ($languages as $language)
+									$cartrule->name[$language['id_lang']] = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
+								$cartrule->code = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
+								if (!$cartrule->update())
+									$this->errors[] = Tools::displayError('Cannot generate voucher');
+								else
+								{
+									$currency = $this->context->currency;
+									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
+									$params['{voucher_num}'] = $cartrule->code;
+									@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order', (int)$order->id_lang),
+									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
+									null, _PS_MAIL_DIR_, true);
+								}
 							}
 						}
 					}
