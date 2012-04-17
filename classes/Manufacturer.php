@@ -337,7 +337,7 @@ class ManufacturerCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i
@@ -359,7 +359,6 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
 				'.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					AND product_attribute_shop.`default_on` = 1
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg

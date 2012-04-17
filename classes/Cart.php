@@ -457,7 +457,7 @@ class CartCore extends ObjectModel
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
-			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa'));
+			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
 			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}

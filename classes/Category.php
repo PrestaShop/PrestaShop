@@ -647,7 +647,7 @@ class CategoryCore extends ObjectModel
 					ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1').'
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
@@ -675,7 +675,6 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
-					AND product_attribute_shop.default_on = 1
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
