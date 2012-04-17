@@ -1570,7 +1570,7 @@ class AdminProductsControllerCore extends AdminController
 					{
 						$this->processPriceAddition();
 						$this->processSpecificPricePriorities();
-						$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
+						$this->object->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
 					}
 					if ($this->isTabSubmitted('Customization'))
 						$this->processCustomizationConfiguration();
