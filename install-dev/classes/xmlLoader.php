@@ -691,7 +691,7 @@ class InstallXmlLoader
 				$columns[$table][$row['Field']] = $this->checkIfTypeIsText($row['Type']);
 		}
 
-		$exclude = array_merge(array('id_'.$table, 'date_add', 'date_upd', 'position', 'deleted', 'id_lang'), $exclude);
+		$exclude = array_merge(array('id_'.$table, 'date_add', 'date_upd', 'deleted', 'id_lang'), $exclude);
 
 		$list = array();
 		foreach ($columns[$table] as $k => $v)

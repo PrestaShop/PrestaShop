@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_category>
-  <fields id="name" class="Category" sql="a.id_category = 1">
+  <fields id="name" class="Category" sql="a.id_category &lt;= 2">
     <field name="id_parent" relation="category"/>
     <field name="active"/>
   </fields>
