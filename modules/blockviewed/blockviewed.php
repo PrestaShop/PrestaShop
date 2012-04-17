@@ -102,13 +102,13 @@ class BlockViewed extends Module
 
 			$productIds = implode(',', $productsViewed);
 			$productsImages = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT i.id_image, p.id_product, il.legend, p.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
+			SELECT i.id_image, p.id_product, il.legend, product_shop.active, pl.name, pl.description_short, pl.link_rewrite, cl.link_rewrite AS category_rewrite
 			FROM '._DB_PREFIX_.'product p
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = p.id_product'.Shop::addSqlRestrictionOnLang('pl').')
 			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = p.id_product AND i.cover = 1)
 			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (il.id_image = i.id_image)
 			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = asso_shop_product.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 			WHERE p.id_product IN ('.$productIds.')
 			AND pl.id_lang = '.(int)($params['cookie']->id_lang).'
 			AND cl.id_lang = '.(int)($params['cookie']->id_lang)

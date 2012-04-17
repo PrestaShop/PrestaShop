@@ -189,6 +189,7 @@ class AdminStockCoverControllerCore extends AdminController
 		// query
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, SUM(s.usable_quantity) as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
+						'.Shop::addSqlAssociation('product_attribute', 'pa').'
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
 
 		self::$currentIndex .= '&coverage_period='.(int)$this->getCurrentCoveragePeriod().'&warn_days='.(int)$this->getCurrentWarning();

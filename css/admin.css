@@ -1730,6 +1730,10 @@ a.blue:hover {
 	    width: 200px;
 	}
 
+.multishop_product_checkbox{
+	position: absolute;
+}
+
 a.action_module_delete {
 	color: #CB1C00;
 	text-decoration: underline;
@@ -1796,19 +1800,9 @@ p.preference_description .light-warning {
 }
 
 .preference_default_multishop{
-	float: right;
-	margin-right: 40px;
-}
-
-.preference_default_multishop input{
-	margin-top: -3px;
-}
-
-.preference_default_multishop label{
-	float: none;
-	font-size: 12px;
-	color: #666666;
-	font-style: italic;
+	float: left;
+	padding-right: 5px;
+	margin-top: 4px;
 }
 
 .multishop_warning, .warning_mod_rewrite{
@@ -1818,6 +1812,10 @@ p.preference_description .light-warning {
     font-weight: bold;
     padding-left: 22px;
     padding-top: 1px;
+}
+
+label.conf_title{
+	width: 235px;
 }
 
 .isDisabled{

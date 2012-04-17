@@ -270,9 +270,9 @@ class EmployeeCore extends ObjectModel
 			break;
 
 			case Shop::CONTEXT_GROUP:
-				if ($context->shop->checkIfGroupShopExist(Shop::getContextGroupShopID()))
+				if ($context->shop->checkIfShopGroupExist(Shop::getContextShopGroupID()))
 				{
-					$shops = $context->shop->getIdShopsByIdGroupShop(Shop::getContextGroupShopID());
+					$shops = $context->shop->getIdShopsByIdShopGroup(Shop::getContextShopGroupID());
 					foreach ($shops as $shop)
 						if (!in_array($shop, Employee::getEmployeeShopById($id_employee)))
 							return false;

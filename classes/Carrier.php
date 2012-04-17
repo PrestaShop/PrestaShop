@@ -114,7 +114,7 @@ class CarrierCore extends ObjectModel
 		'table' => 'carrier',
 		'primary' => 'id_carrier',
 		'multilang' => true,
-		'multishop' => true,
+		'multilang_shop' => true,
 		'fields' => array(
 			/* Classic fields */
 			'id_reference' => 			array('type' => self::TYPE_INT),
@@ -714,9 +714,9 @@ class CarrierCore extends ObjectModel
 		$where = '`id_carrier` = '.(int)$this->id.' AND (`id_'.$range_table.'` IS NOT NULL OR `id_'.$range_table.'` = 0) ';
 
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$where .= 'AND id_shop IS NULL AND id_group_shop IS NULL';
+			$where .= 'AND id_shop IS NULL AND id_shop_group IS NULL';
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$where .= 'AND id_shop IS NULL AND id_group_shop = '.(int)Shop::getContextGroupShopID();
+			$where .= 'AND id_shop IS NULL AND id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$where .= 'AND id_shop = '.(int)Shop::getContextShopID();
 
@@ -737,16 +737,16 @@ class CarrierCore extends ObjectModel
 		$keys = array_keys($price_list[0]);
 		if (!in_array('id_shop', $keys))
 			$keys[] = 'id_shop';
-		if (!in_array('id_group_shop', $keys))
-			$keys[] = 'id_group_shop';
+		if (!in_array('id_shop_group', $keys))
+			$keys[] = 'id_shop_group';
 
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` ('.implode(', ', $keys).') VALUES ';
 		foreach ($price_list as $values)
 		{
 			if (!isset($values['id_shop']))
 				$values['id_shop'] = (Shop::getContext() == Shop::CONTEXT_SHOP) ? Shop::getContextShopID() : null;
-			if (!isset($values['id_group_shop']))
-				$values['id_group_shop'] = (Shop::getContext() != Shop::CONTEXT_ALL) ? Shop::getContextGroupShopID() : null;
+			if (!isset($values['id_shop_group']))
+				$values['id_shop_group'] = (Shop::getContext() != Shop::CONTEXT_ALL) ? Shop::getContextShopGroupID() : null;
 
 			$sql .= '(';
 			foreach ($values as $v)
@@ -805,8 +805,8 @@ class CarrierCore extends ObjectModel
 					$range_weight_id = ($range == 'range_weight') ? $range_id : 'NULL';
 
 					Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_shop`, `id_group_shop`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) (
-							SELECT '.(int)$this->id.', `id_shop`, `id_group_shop`, '.(int)$range_price_id.', '.(int)$range_weight_id.', `id_zone`, `price`
+						INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_shop`, `id_shop_group`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) (
+							SELECT '.(int)$this->id.', `id_shop`, `id_shop_group`, '.(int)$range_price_id.', '.(int)$range_weight_id.', `id_zone`, `price`
 							FROM `'._DB_PREFIX_.'delivery`
 							WHERE `id_carrier` = '.(int)$old_id.'
 							AND `id_'.$range.'` = '.(int)$val['id_range'].'
@@ -1002,12 +1002,12 @@ class CarrierCore extends ObjectModel
 	public static function sqlDeliveryRangeShop($range_table, $alias = 'd')
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$where = 'AND d2.id_shop IS NULL AND d2.id_group_shop IS NULL';
+			$where = 'AND d2.id_shop IS NULL AND d2.id_shop_group IS NULL';
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$where = 'AND ((d2.id_group_shop IS NULL OR d2.id_group_shop = '.Shop::getContextGroupShopID().') AND d2.id_shop IS NULL)';
+			$where = 'AND ((d2.id_shop_group IS NULL OR d2.id_shop_group = '.Shop::getContextShopGroupID().') AND d2.id_shop IS NULL)';
 		else
-			$where = 'AND (d2.id_shop = '.Shop::getContextShopID().' OR (d2.id_group_shop = '.Shop::getContextGroupShopID().'
-					AND d2.id_shop IS NULL) OR (d2.id_group_shop IS NULL AND d2.id_shop IS NULL))';
+			$where = 'AND (d2.id_shop = '.Shop::getContextShopID().' OR (d2.id_shop_group = '.Shop::getContextShopGroupID().'
+					AND d2.id_shop IS NULL) OR (d2.id_shop_group IS NULL AND d2.id_shop IS NULL))';
 
 		$sql = 'AND '.$alias.'.id_delivery = (
 					SELECT d2.id_delivery
@@ -1016,7 +1016,7 @@ class CarrierCore extends ObjectModel
 						AND d2.id_zone = '.$alias.'.id_zone
 						AND d2.id_'.$range_table.' = '.$alias.'.id_'.$range_table.'
 						'.$where.'
-					ORDER BY d2.id_shop DESC, d2.id_group_shop DESC
+					ORDER BY d2.id_shop DESC, d2.id_shop_group DESC
 					LIMIT 1
 				)';
 		return $sql;

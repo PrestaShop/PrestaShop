@@ -23,18 +23,74 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if $check_product_association_ajax}
+{assign var=class_input_ajax value='check_product_name '}
+{else}
+{assign var=class_input_ajax value=''}
+{/if}
 <input type="hidden" name="submitted_tabs[]" value="Informations" />
 <div id="step1">
 	<h4 class="tab">1. {l s='Info.'}</h4>
 	<h4>{l s='Product global information'}</h4>
 	<script type="text/javascript">
 		{$combinationImagesJs}
+		{if $check_product_association_ajax}
+				var search_term = '';
+				$('document').ready( function() {
+					$(".check_product_name")
+						.autocomplete(
+							'{$link->getAdminLink('AdminProducts', true)}', {
+								minChars: 3,
+								max: 10,
+								width: $(".check_product_name").width(),
+								selectFirst: false,
+								scroll: false,
+								dataType: "json",
+								formatItem: function(data, i, max, value, term) {
+									search_term = term;
+									// adding the little
+									if ($('.ac_results').find('.separation').length == 0)
+										$('.ac_results').css('background-color', '#EFEFEF')
+											.prepend('<div style="color:#585A69; padding:2px 5px">{l s='Use a product from the list'}<div class="separation"></div></div>');
+									return value;
+								},
+								parse: function(data) {
+									var mytab = new Array();
+									for (var i = 0; i < data.length; i++)
+										mytab[mytab.length] = { data: data[i], value: data[i].name };
+									return mytab;
+								},
+								extraParams: {
+									ajax: 1,
+									action: 'checkProductName',
+									id_lang: {$id_lang}
+								}
+							}
+						)
+						.result(function(event, data, formatted) {
+							// keep the searched term in the input
+							$('#name_{$id_lang}').val(search_term);
+							jConfirm('{l s='Do you want to use this product?'}&nbsp;<strong>'+data.name+'</strong>', '{l s='Confirmation'}', function(confirm){
+								if (confirm == true)
+									document.location.href = '{$link->getAdminLink('AdminProducts', true)}&updateproduct&id_product='+data.id_product;
+								else
+									return false;
+							});
+						});
+				});
+		{/if}
 	</script>
+
+	{if isset($display_common_field) && $display_common_field}
+		<div class="warn" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+	{/if}
+
+	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
+
 	<div class="separation"></div>
 
 	<div>
-		<label class="text">{l s='Type:'}</label>
+		<label class="text">{$bullet_common_field} {l s='Type:'}</label>
 		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
 		<label class="radioCheck" for="simple_product">{l s='Product'}</label>
 		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
@@ -48,35 +104,37 @@
 	<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 	{* global information *}
 		<tr>
-			<td class="col-left"><label>{l s='Name:'}</label></td>
+			<td class="col-left">
+				{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
+				<label>{l s='Name:'}</label>
+			</td>
 			<td style="padding-bottom:5px;" class="translatable">
 			{foreach from=$languages item=language}
 				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-					<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if}
+						<input class="{$class_input_ajax}{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if}
 						id="name_{$language.id_lang}" name="name_{$language.id_lang}"
 						value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
 					<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
 					</span>
 				</div>
 			{/foreach}
-
 			</td>
 		</tr>
 		<tr>
-			<td class="col-left"><label>{l s='Reference:'}</label></td>
+			<td class="col-left"><label>{$bullet_common_field} {l s='Reference:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 				<span class="hint" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
 			</td>
 		</tr>
 		<tr>
-			<td class="col-left"><label>{l s='EAN13 or JAN:'}</label></td>
+			<td class="col-left"><label>{$bullet_common_field} {l s='EAN13 or JAN:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
 			</td>
 		</tr>
 		<tr>
-			<td class="col-left"><label>{l s='UPC:'}</label></td>
+			<td class="col-left"><label>{$bullet_common_field} {l s='UPC:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
 			</td>
@@ -86,6 +144,7 @@
 	<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 	<tr>
 		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
 			<label class="text">{l s='Status:'}</label>
 		</td>
 		<td style="padding-bottom:5px;">
@@ -102,7 +161,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="col-left"><label>{l s='Visibility:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
+			<label>{l s='Visibility:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<select name="visibility" id="visibility">
 				<option value="both" {if $product->visibility == 'both'}selected="selected"{/if} >{l s='Everywhere'}</option>
@@ -113,7 +175,19 @@
 		</td>
 	</tr>
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
-		<td class="col-left"><label>{l s='Options:'}</label></td>
+		<td class="col-left">
+			{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
+				<div class="multishop_product_checkbox">
+					<ul class="listForm">
+						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}</li>
+						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}</li>
+						<li>{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}</li>
+					</ul>
+				</div>
+			{/if}
+
+			<label>{l s='Options:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
 				<li>
@@ -128,10 +202,14 @@
 				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
 				<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
 			</li>
+			</ul>
 		</td>
 	</tr>
 	<tr>
-		<td class="col-left"><label>{l s='Condition:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
+			<label>{l s='Condition:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<select name="condition" id="condition">
 				<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
@@ -140,13 +218,16 @@
 			</select>
 		</td>
 	</tr>
-	</ul>
 </table>
 
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 		<table cellspacing="0" cellpadding="5" border="0">
 			<tr>
-				<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
+				<td class="col-left">
+					{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
+					<label>{l s='Short description:'}<br /></label>
+					<p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p>
+				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl"
 						languages=$languages
@@ -157,7 +238,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="col-left"><label>{l s='Description:'}<br /></label><p class="product_description">({l s='appears in the body of the product page'})</p></td>
+				<td class="col-left">
+					{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
+					<label>{l s='Description:'}<br /></label>
+					<p class="product_description">({l s='appears in the body of the product page'})</p>
+				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl" languages=$languages
 						input_name='description'
@@ -257,4 +342,3 @@
 	</table>
 	<br />
 </div>
-

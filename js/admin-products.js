@@ -441,12 +441,12 @@ function handleSaveButtons(e)
 	// common for all products
 	// name[defaultlangid]
 	$("#disableSaveMessage").remove();
-	if ($("#name_"+defaultLanguage.id_lang).val() == "")
+	if ($("#name_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage.id_lang+']\']').attr('checked')))
 	{
 		msg[i++] = empty_name_msg;
 	}
 	// check friendly_url_[defaultlangid] only if name is ok
-	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "")
+	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name]['+defaultLanguage.id_lang+']\']').attr('checked')))
 		msg[i++] = empty_link_rewrite_msg;
 
 	if (msg.length == 0)
@@ -505,6 +505,9 @@ product_tabs['Seo'] = new function(){
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
 		displayFlags(languages, id_language, allowEmployeeFormLang);
+
+		if (display_multishop_checkboxes)
+			multishopCheckAllProductFieldsSeo();
 	};
 }
 
@@ -575,6 +578,9 @@ product_tabs['Prices'] = new function(){
 		self.toggleSpecificPrice();
 		self.deleteSpecificPrice();
 		self.bindDelete();
+
+		if (display_multishop_checkboxes)
+			multishopCheckAllProductFieldsPrice();
 	};
 }
 
@@ -753,7 +759,7 @@ product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function(){
-			if ($(this).is(':checked'))
+			if ($(this).is(':checked') || !$('input[name=\'multishop_check[show_price]\']').attr('checked'))
 			{
 				$('#show_price').attr('checked', 'checked');
 				$('#show_price').attr('disabled', 'disabled');
@@ -917,6 +923,27 @@ product_tabs['Informations'] = new function(){
 		self.bindAvailableForOrder();
 		self.bindTagImage();
 		self.switchProductType();
+
+		if (display_multishop_checkboxes)
+		{
+			multishopCheckAllProductFieldsInformations();
+			var active_click = function()
+			{
+				if (!$('input[name=\'multishop_check[active]\']').attr('checked'))
+				{
+					$('.draft').hide();
+					showOptions(true);
+				}
+				else
+				{
+					var checked = $('#active_on').attr('checked');
+					toggleDraftWarning(checked);
+					showOptions(checked);
+				}
+			};
+			$('input[name=\'multishop_check[active]\']').click(active_click);
+			active_click();
+		}
 	};
 }
 
@@ -1426,6 +1453,87 @@ function ajaxAction (url, action, success_callback, failure_callback){
 		}
 	});
 };
+
+var load_tinymce_multishop = {};
+function multishopCheckProductField(checked, id, type)
+{
+	checked = !checked;
+	switch (type)
+	{
+		case 'tinymce' :
+			$('#'+id).attr('disabled', checked);
+			if (typeof load_tinymce_multishop[id] == 'undefined')
+				load_tinymce_multishop[id] = checked;
+			else
+			{
+				if (checked)
+					tinyMCE.get(id).hide();
+				else
+					tinyMCE.get(id).show();
+			}
+			break;
+
+		case 'radio' :
+			$('input[name=\''+id+'\']').attr('disabled', checked);
+			break;
+
+		case 'show_price' :
+			if ($('input[name=\'available_for_order\']').attr('checked'))
+				checked = true;
+			$('input[name=\''+id+'\']').attr('disabled', checked);
+			break;
+
+		case 'price' :
+			$('#priceTE').attr('disabled', checked);
+			$('#priceTI').attr('disabled', checked);
+			break;
+
+		case 'unit_price' :
+			$('#unit_price').attr('disabled', checked);
+			$('#unity').attr('disabled', checked);
+			break;
+
+		default :
+			$('#'+id).attr('disabled', checked);
+			break;
+	}
+}
+
+function multishopCheckAllProductFieldsInformations()
+{
+	multishopCheckProductField($('input[name=\'multishop_check[active]\']').attr('checked'), 'active', 'radio');
+	multishopCheckProductField($('input[name=\'multishop_check[visibility]\']').attr('checked'), 'visibility');
+	multishopCheckProductField($('input[name=\'multishop_check[available_for_order]\']').attr('checked'), 'available_for_order');
+	multishopCheckProductField($('input[name=\'multishop_check[show_price]\']').attr('checked'), 'show_price', 'show_price');
+	multishopCheckProductField($('input[name=\'multishop_check[online_only]\']').attr('checked'), 'online_only');
+	multishopCheckProductField($('input[name=\'multishop_check[condition]\']').attr('checked'), 'condition');
+	$.each(languages, function(k, v)
+	{
+		multishopCheckProductField($('input[name=\'multishop_check[name]['+v.id_lang+']\']').attr('checked'), 'name_'+v.id_lang);
+		multishopCheckProductField($('input[name=\'multishop_check[description_short]['+v.id_lang+']\']').attr('checked'), 'description_short_'+v.id_lang, 'tinymce');
+		multishopCheckProductField($('input[name=\'multishop_check[description]['+v.id_lang+']\']').attr('checked'), 'description_'+v.id_lang, 'tinymce');
+	});
+}
+
+function multishopCheckAllProductFieldsPrice(checked)
+{
+	multishopCheckProductField($('input[name=\'multishop_check[wholesale_price]\']').attr('checked'), 'wholesale_price');
+	multishopCheckProductField($('input[name=\'multishop_check[price]\']').attr('checked'), 'price', 'price');
+	multishopCheckProductField($('input[name=\'multishop_check[id_tax_rules_group]\']').attr('checked'), 'id_tax_rules_group');
+	multishopCheckProductField($('input[name=\'multishop_check[unit_price]\']').attr('checked'), 'unit_price', 'unit_price');
+	multishopCheckProductField($('input[name=\'multishop_check[on_sale]\']').attr('checked'), 'on_sale');
+}
+
+function multishopCheckAllProductFieldsSeo(checked)
+{
+	$.each(languages, function(k, v)
+	{
+		multishopCheckProductField($('input[name=\'multishop_check[meta_title]['+v.id_lang+']\']').attr('checked'), 'meta_title_'+v.id_lang);
+		multishopCheckProductField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').attr('checked'), 'meta_description_'+v.id_lang);
+		multishopCheckProductField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').attr('checked'), 'meta_keywords_'+v.id_lang);
+		multishopCheckProductField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').attr('checked'), 'link_rewrite_'+v.id_lang);
+	});
+}
 
 var tabs_manager = new ProductTabsManager();
 tabs_manager.setTabs(product_tabs);

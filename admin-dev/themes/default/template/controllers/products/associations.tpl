@@ -66,12 +66,6 @@
 			</td>
 		</tr>
 	</table>
-	{if $feature_shop_active}
-		<div class="separation"></div>
-		{* @todo use asso_shop from Helper *}
-		<label>{l s='Shop association:'}</label>
-		{$displayAssoShop}
-	{/if}
 
 <div class="separation"></div>
 	<table>

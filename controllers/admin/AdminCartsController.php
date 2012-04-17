@@ -585,7 +585,7 @@ class AdminCartsControllerCore extends AdminController
 			$specific_price = new SpecificPrice();
 			$specific_price->id_cart = (int)$this->context->cart->id;
 			$specific_price->id_shop = 0;
-			$specific_price->id_group_shop = 0;
+			$specific_price->id_shop_group = 0;
 			$specific_price->id_currency = 0;
 			$specific_price->id_country = 0;
 			$specific_price->id_group = 0;

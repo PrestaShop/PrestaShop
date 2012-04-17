@@ -54,11 +54,12 @@ class StatsCatalog extends Module
 
 	public function getQuery1()
 	{
-		$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS total, SUM(p.`price`) / COUNT(`price`) AS average_price, COUNT(DISTINCT i.`id_image`) AS images
+		$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS total, SUM(product_shop.`price`) / COUNT(`product_shop.price`) AS average_price, COUNT(DISTINCT i.`id_image`) AS images
 				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON i.`id_product` = p.`id_product`
 				'.$this->_join.'
-				WHERE p.`active` = 1
+				WHERE product_shop.`active` = 1
 					'.$this->_where;
 		return DB::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
@@ -66,12 +67,13 @@ class StatsCatalog extends Module
 	public function getTotalPageViewed()
 	{
 		$sql = 'SELECT SUM(pv.`counter`) AS viewed
-				FROM `'._DB_PREFIX_.'product` p 
+				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'page` pa ON p.`id_product` = pa.`id_object`
 				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON (pt.`id_page_type` = pa.`id_page_type` AND pt.`name` = \'product.php\')
 				LEFT JOIN `'._DB_PREFIX_.'page_viewed` pv ON pv.`id_page` = pa.`id_page`
 				'.$this->_join.'
-				WHERE p.`active` = 1
+				WHERE product_shop.`active` = 1
 					'.$this->_where;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		return isset($result['viewed']) ? $result['viewed'] : 0;
@@ -84,9 +86,10 @@ class StatsCatalog extends Module
 				LEFT JOIN `'._DB_PREFIX_.'page` pa ON pv.`id_page` = pa.`id_page`
 				LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = pa.`id_page_type`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = pa.`id_object`
+				'.Shop::addSqlAssociation('product', 'p').'
 				'.$this->_join.'
 				WHERE pt.`name` = \'product.php\'
-					AND p.`active` = 1
+					AND product_shop.`active` = 1
 					'.$this->_where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
@@ -110,10 +113,11 @@ class StatsCatalog extends Module
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.`id_order` = od.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = od.`product_id`
+				'.Shop::addSqlAssociation('product', 'p').'
 				'.$this->_join.'
 				WHERE o.valid = 1
 					'.$this->_where.'
-					AND p.`active` = 1
+					AND product_shop.`active` = 1
 				GROUP BY p.`id_product`';
 		$precalc = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -123,10 +127,11 @@ class StatsCatalog extends Module
 
 		$sql = 'SELECT p.id_product, pl.name, pl.link_rewrite
 				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				'.$this->_join.'
-				WHERE p.`active` = 1
+				WHERE product_shop.`active` = 1
 					'.(count($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
 					'.$this->_where;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

@@ -31,7 +31,7 @@ class CustomerCore extends ObjectModel
 
 	public $id_shop;
 
-	public $id_group_shop;
+	public $id_shop_group;
 
 	/** @var string Secure key */
 	public $secure_key;
@@ -183,7 +183,7 @@ class CustomerCore extends ObjectModel
 			'note' => 						array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000, 'copy_post' => false),
 			'is_guest' =>					array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
 			'id_shop' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
-			'id_group_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
+			'id_shop_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
 			'id_default_group' => 			array('type' => self::TYPE_INT, 'copy_post' => false),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
@@ -197,7 +197,7 @@ class CustomerCore extends ObjectModel
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
-		$this->id_group_shop = ($this->id_group_shop) ? $this->id_group_shop : Context::getContext()->shop->id_group_shop;
+		$this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));

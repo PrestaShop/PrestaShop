@@ -131,9 +131,10 @@ class SupplierCore extends ObjectModel
 					SELECT DISTINCT(ps.`id_product`)
 					FROM `'._DB_PREFIX_.'product_supplier` ps
 					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
 					AND ps.id_product_attribute = 0'.
-					($active ? ' AND p.`active` = 1' : '').
+					($active ? ' AND product_shop.`active` = 1' : '').
 					($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
@@ -209,10 +210,11 @@ class SupplierCore extends ObjectModel
 				SELECT DISTINCT(ps.`id_product`)
 				FROM `'._DB_PREFIX_.'product_supplier` ps
 				JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 				AND ps.id_product_attribute = 0'.
-				($active ? ' AND p.`active` = 1' : '').'
-				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
+				($active ? ' AND product_shop.`active` = 1' : '').'
+				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 				AND p.`id_product` IN (
 					SELECT cp.`id_product`
 					FROM `'._DB_PREFIX_.'category_group` cg
@@ -231,7 +233,7 @@ class SupplierCore extends ObjectModel
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
-		$sql = 'SELECT p.*, stock.out_of_stock,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
 					IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`,
 					pl.`description_short`,
@@ -249,6 +251,7 @@ class SupplierCore extends ObjectModel
 					(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice,
 					m.`name` AS manufacturer_name
 				FROM `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
 					AND ps.id_product_attribute = 0)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
@@ -257,9 +260,7 @@ class SupplierCore extends ObjectModel
 					AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product`
-					AND ptrgs.id_shop='.(int)Context::getContext()->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0
 					AND tr.`zipcode_from` = 0)
@@ -270,8 +271,8 @@ class SupplierCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				'.Product::sqlStock('p').'
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.
-					($active ? ' AND p.`active` = 1' : '').'
-					'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
+					($active ? ' AND product_shop.`active` = 1' : '').'
+					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -304,6 +305,7 @@ class SupplierCore extends ObjectModel
 			SELECT p.`id_product`,
 				   pl.`name`
 			FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				p.`id_product` = pl.`id_product`
 				AND pl.`id_lang` = '.(int)$id_lang.'
@@ -312,7 +314,7 @@ class SupplierCore extends ObjectModel
 				ps.`id_product` = p.`id_product`
 				AND ps.`id_supplier` = '.(int)$this->id.'
 			)
-			'.($front ? ' WHERE p.`visibility` IN ("both", "catalog")' : '').'
+			'.($front ? ' WHERE product_shop.`visibility` IN ("both", "catalog")' : '').'
 			GROUP BY p.`id_product`';
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

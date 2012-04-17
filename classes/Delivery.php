@@ -34,7 +34,7 @@ class DeliveryCore extends ObjectModel
 	public $id_shop;
 
 	/** @var int **/
-	public $id_group_shop;
+	public $id_shop_group;
 
 	/** @var integer */
 	public $id_carrier;
@@ -63,7 +63,7 @@ class DeliveryCore extends ObjectModel
 			'id_range_weight' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_zone' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_shop' => 		array('type' => self::TYPE_INT),
-			'id_group_shop' => 	array('type' => self::TYPE_INT),
+			'id_shop_group' => 	array('type' => self::TYPE_INT),
 			'price' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 		),
 	);
@@ -88,10 +88,10 @@ class DeliveryCore extends ObjectModel
 		else
 			$fields['id_shop'] = null;
 
-		if ($this->id_group_shop)
-			$fields['id_group_shop'] = (int)$this->id_group_shop;
+		if ($this->id_shop_group)
+			$fields['id_shop_group'] = (int)$this->id_shop_group;
 		else
-			$fields['id_group_shop'] = null;
+			$fields['id_shop_group'] = null;
 
 		return $fields;
 	}

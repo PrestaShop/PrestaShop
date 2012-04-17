@@ -172,6 +172,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('p.id_product');
 		$query->from('product', 'p');
+		$query->join(Shop::addSqlAssociation('product', 'p'));
 		$query->groupBy('p.id_product');
 
 		$attributes = false;
@@ -221,11 +222,12 @@ class SpecificPriceRuleCore extends ObjectModel
 		{
 			$query->select('pa.id_product_attribute');
 			$query->leftJoin('product_attribute', 'pa', 'p.id_product = pa.id_product');
+			$query->join(Shop::addSqlAssociation('product_attribute', 'pa'));
 			$query->leftJoin('product_attribute_combination', 'pac', 'pa.id_product_attribute = pac.id_product_attribute');
 			$query->groupBy('pa.id_product_attribute');
 		}
 		else
-			$query->select('NULL id_product_attribute');
+			$query->select('NULL as id_product_attribute');
 
 		if ($features)
 			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');

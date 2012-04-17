@@ -32,7 +32,7 @@ class ConfigurationCore extends ObjectModel
 	/** @var string Key */
 	public $name;
 
-	public $id_group_shop;
+	public $id_shop_group;
 	public $id_shop;
 
 	/** @var string Value */
@@ -53,7 +53,7 @@ class ConfigurationCore extends ObjectModel
 		'multilang' => true,
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
-			'id_group_shop' => 	array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+			'id_shop_group' => 	array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
 			'id_shop' => 		array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
 			'value' => 			array('type' => self::TYPE_STRING),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -107,7 +107,7 @@ class ConfigurationCore extends ObjectModel
 	public static function loadConfiguration()
 	{
 		self::$_CONF = array();
-		$sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_group_shop, c.id_shop
+		$sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
 				FROM `'._DB_PREFIX_.'configuration` c
 				LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.id_configuration = cl.id_configuration)';
 		if (!$results = Db::getInstance()->executeS($sql))
@@ -126,8 +126,8 @@ class ConfigurationCore extends ObjectModel
 
 			if ($row['id_shop'])
 				self::$_CONF[$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-			else if ($row['id_group_shop'])
-				self::$_CONF[$lang]['group'][$row['id_group_shop']][$row['name']] = $row['value'];
+			else if ($row['id_shop_group'])
+				self::$_CONF[$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
 			else
 				self::$_CONF[$lang]['global'][$row['name']] = $row['value'];
 		}
@@ -173,12 +173,12 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopID
 	  * @return array Values in multiple languages
 	  */
-	public static function getInt($key, $id_group_shop = null, $id_shop = null)
+	public static function getInt($key, $id_shop_group = null, $id_shop = null)
 	{
 		$languages = Language::getLanguages();
 		$resultsArray = array();
 		foreach ($languages as $language)
-			$resultsArray[$language['id_lang']] = Configuration::get($key, $language['id_lang'], $id_group_shop, $id_shop);
+			$resultsArray[$language['id_lang']] = Configuration::get($key, $language['id_lang'], $id_shop_group, $id_shop);
 		return $resultsArray;
 	}
 
@@ -230,11 +230,11 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopGroupID
 	  * @param int $shopID
 	  */
-	public static function set($key, $values, $id_group_shop = null, $id_shop = null)
+	public static function set($key, $values, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
-		Configuration::getShopFromContext($id_group_shop, $id_shop);
+		Configuration::getShopFromContext($id_shop_group, $id_shop);
 
 		if (!is_array($values))
 			$values = array($values);
@@ -243,8 +243,8 @@ class ConfigurationCore extends ObjectModel
 		{
 			if ($id_shop)
 				self::$_CONF[$lang]['shop'][$id_shop][$key] = $value;
-			else if ($id_group_shop)
-				self::$_CONF[$lang]['group'][$id_group_shop][$key] = $value;
+			else if ($id_shop_group)
+				self::$_CONF[$lang]['group'][$id_shop_group][$key] = $value;
 			else
 				self::$_CONF[$lang]['global'][$key] = $value;
 		}
@@ -325,7 +325,7 @@ class ConfigurationCore extends ObjectModel
 					if ($shopID)
 						$newConfig->id_shop = (int)$shopID;
 					if ($shopGroupID)
-						$newConfig->id_group_shop = (int)$shopGroupID;
+						$newConfig->id_shop_group = (int)$shopGroupID;
 					if (!$lang)
 						$newConfig->value = $value;
 					$result &= $newConfig->add(true, true);
@@ -382,22 +382,22 @@ class ConfigurationCore extends ObjectModel
 	public static function deleteFromContext($key)
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$id_shop = $id_group_shop = null;
+			$id_shop = $id_shop_group = null;
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
-			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop_group = Shop::getContextShopGroupID();
 			$id_shop = null;
 		}
 		else
 		{
-			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop_group = Shop::getContextShopGroupID();
 			$id_shop = Shop::getContextShopID();
 		}
 
-		if (!$id_shop && !$id_group_shop)
+		if (!$id_shop && !$id_shop_group)
 			return;
 
-		$id = Configuration::getIdByName($key, $id_group_shop, $id_shop);
+		$id = Configuration::getIdByName($key, $id_shop_group, $id_shop);
 		$sql = 'DELETE FROM '._DB_PREFIX_.'configuration
 				WHERE id_configuration = '.$id;
 		Db::getInstance()->execute($sql);
@@ -417,21 +417,21 @@ class ConfigurationCore extends ObjectModel
 	public static function hasContext($key, $id_lang, $context)
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$id_shop = $id_group_shop = null;
+			$id_shop = $id_shop_group = null;
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
-			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop_group = Shop::getContextShopGroupID();
 			$id_shop = null;
 		}
 		else
 		{
-			$id_group_shop = Shop::getContextGroupShopID();
+			$id_shop_group = Shop::getContextShopGroupID();
 			$id_shop = Shop::getContextShopID();
 		}
 
 		if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $id_lang, null, $id_shop))
 			return true;
-		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_group_shop))
+		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_shop_group))
 			return true;
 		else if ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang))
 			return true;
@@ -469,36 +469,36 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	 * Fill $id_group_shop and $id_shop vars from correct context
+	 * Fill $id_shop_group and $id_shop vars from correct context
 	 *
-	 * @param int $id_group_shop
+	 * @param int $id_shop_group
 	 * @param int $id_shop
 	 */
-	protected static function getShopFromContext(&$id_group_shop, &$id_shop)
+	protected static function getShopFromContext(&$id_shop_group, &$id_shop)
 	{
 		if (!Shop::isFeatureActive())
 			return;
 
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$shop_id = $group_shop_id = null;
+			$shop_id = $shop_group_id = null;
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
-			$group_shop_id = Shop::getContextGroupShopID();
+			$shop_group_id = Shop::getContextShopGroupID();
 			$shop_id = null;
 		}
 		else
 		{
-			$group_shop_id = Shop::getContextGroupShopID();
+			$shop_group_id = Shop::getContextShopGroupID();
 			$shop_id = Shop::getContextShopID();
 		}
 
 		if (is_null($id_shop))
 			$id_shop = $shop_id;
-		if (is_null($id_group_shop))
-			$id_group_shop = $group_shop_id;
+		if (is_null($id_shop_group))
+			$id_shop_group = $shop_group_id;
 
 		$id_shop = (int)$id_shop;
-		$id_group_shop = (int)$id_group_shop;
+		$id_shop_group = (int)$id_shop_group;
 	}
 
 	/**
@@ -513,9 +513,9 @@ class ConfigurationCore extends ObjectModel
 		if ($shopID)
 			return ' AND id_shop = '.$shopID;
 		else if ($shopGroupID)
-			return ' AND id_group_shop = '.$shopGroupID.' AND id_shop IS NULL';
+			return ' AND id_shop_group = '.$shopGroupID.' AND id_shop IS NULL';
 		else
-			return ' AND id_group_shop IS NULL AND id_shop IS NULL';
+			return ' AND id_shop_group IS NULL AND id_shop IS NULL';
 	}
 
 	/**

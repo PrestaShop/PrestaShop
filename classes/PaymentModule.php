@@ -152,7 +152,7 @@ abstract class PaymentModuleCore extends Module
 						$order->reference = $reference;
 
 						$order->id_shop = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id : $cart->id_shop);
-						$order->id_group_shop = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id_group_shop : $cart->id_group_shop);
+						$order->id_shop_group = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id_shop_group : $cart->id_shop_group);
 
 						$customer = new Customer($order->id_customer);
 						$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));

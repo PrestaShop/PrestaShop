@@ -43,6 +43,8 @@ class CombinationCore extends ObjectModel
 
 	public $price;
 
+	public $unit_price_impact;
+
 	public $ecotax;
 
 	public $minimal_quantity = 1;
@@ -61,21 +63,25 @@ class CombinationCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'product_attribute',
 		'primary' => 'id_product_attribute',
+		'multishop' => true,
 		'fields' => array(
 			'id_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'location' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
 			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-			'wholesale_price' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 27),
-			'price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'size' => 20),
-			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
 			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
 			'weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
-			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'default_on' => 		array('type' => self::TYPE_INT, 'validate' => 'isBool'),
-			'available_date' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'reference' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
+
+			/* Shop fields */
+			'wholesale_price' =>	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
+			'price' => 				array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
+			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
+			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
+			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
+			'default_on' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isBool'),
+			'available_date' => 	array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 		),
 	);
 
@@ -93,18 +99,20 @@ class CombinationCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!parent::delete() || $this->deleteAssociations() === false)
+		if (!parent::delete())
+			return false;
+
+		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 		return true;
 	}
 
 	public function deleteAssociations()
 	{
-		if (Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `id_product_attribute` = '.(int)$this->id) === false)
-			return false;
-		return true;
+		$result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int)$this->id);
+		$result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = '.(int)$this->id);
+
+		return $result;
 	}
 
 	public function setAttributes($ids_attribute)
@@ -226,5 +234,22 @@ class CombinationCore extends ObjectModel
 		$query->where('pa.id_product = '.(int)$id_product);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * Retrive the price of combination
+	 *
+	 * @since 1.5.0
+	 * @param int $id_product_attribute
+	 * @return float mixed
+	 */
+	public static function getPrice($id_product_attribute)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT product_attribute_shop.`price`
+			FROM `'._DB_PREFIX_.'product_attribute` pa
+			'.Shop::addSqlAssociation('product_attribute', 'pa').'
+			WHERE pa.`id_product_attribute` = '.(int)$id_product_attribute
+		);
 	}
 }

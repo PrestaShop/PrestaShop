@@ -884,7 +884,7 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 
 				// Set default value
-				if (!Tools::getValue($field) && isset($values['default']))
+				if (Tools::getValue($field) === false && isset($values['default']))
 					$_POST[$field] = $values['default'];
 			}
 
@@ -1269,7 +1269,7 @@ class AdminControllerCore extends Controller
 			'multi_shop' => Shop::isFeatureActive(),
 			'shop_list' => Helper::renderShopList(),
 			'shop' => $this->context->shop,
-			'group_shop' => $this->context->shop->getGroup(),
+			'shop_group' => $this->context->shop->getGroup(),
 			'tab' => $tab,
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
@@ -1675,7 +1675,7 @@ class AdminControllerCore extends Controller
 		if (!($this->multishop_context & Shop::getContext()))
 		{
 			if (Shop::getContext() == Shop::CONTEXT_SHOP && !($this->multishop_context & Shop::CONTEXT_SHOP))
-				Shop::setContext(Shop::CONTEXT_GROUP, Shop::getContextGroupShopID());
+				Shop::setContext(Shop::CONTEXT_GROUP, Shop::getContextShopGroupID());
 			if (Shop::getContext() == Shop::CONTEXT_GROUP && !($this->multishop_context & Shop::CONTEXT_GROUP))
 				Shop::setContext(Shop::CONTEXT_ALL);
 		}
@@ -1940,35 +1940,20 @@ class AdminControllerCore extends Controller
 			$where_shop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
-		if ($this->multishop_context)
-		{
-			$assos = Shop::getAssoTables();
-			$assos_group = GroupShop::getAssoTables();
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-			{
-				$filter_key = $assos[$this->table]['type'];
-				$idenfier_shop = Shop::getContextListShopID();
-			}
-			elseif (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
-			{
-				$filter_key = $assos_group[$this->table]['type'];
-				$idenfier_shop = array(Shop::getContextGroupShopID());
-			}
-		}
-
 		$filter_shop = '';
-		if (isset($filter_key))
+		if ($this->multishop_context && Shop::isTableAssociated($this->table))
 		{
+				$idenfier_shop = Shop::getContextListShopID();
 			if (!$this->_group)
 				$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
 			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
-			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filter_key).'`? *sa#', $this->_join);
+			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
 			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $test_join)
 			{
-				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_'.$filter_key.'` sa ';
-				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_'.$filter_key.' IN ('.implode(', ', $idenfier_shop).'))';
+				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_shop` sa ';
+				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $idenfier_shop).'))';
 			}
 		}
 
@@ -2055,15 +2040,11 @@ class AdminControllerCore extends Controller
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
 					if (!isset($this->fields_value[$input['name']]))
-						if (isset($input['type']) && ($input['type'] == 'group_shop' || $input['type'] == 'shop'))
+						if (isset($input['type']) && $input['type'] == 'shop')
 						{
 							if ($obj->id)
 							{
-								if ($input['type'] == 'group_shop')
-									$result = GroupShop::getGroupShopById((int)$obj->id, $this->identifier, $this->table);
-								else
 									$result = Shop::getShopById((int)$obj->id, $this->identifier, $this->table);
-
 								foreach ($result as $row)
 									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row[$this->identifier];
 							}
@@ -2299,14 +2280,14 @@ class AdminControllerCore extends Controller
 	 */
 	protected function getAssoShop($table, $id_object = false)
 	{
-		$shop_asso = Shop::getAssoTables();
-		$group_shop_asso = GroupShop::getAssoTables();
-		if (isset($shop_asso[$table]) && $shop_asso[$table]['type'] == 'shop')
+		if (Shop::isTableAssociated($table))
 			$type = 'shop';
-		elseif (isset($group_shop_asso[$table]) && $group_shop_asso[$table]['type'] == 'group_shop')
-			$type = 'group_shop';
 		else
 			return;
+
+		$shops = Shop::getShops(true, null, true);
+		if (count($shops) == 1)
+			return array($shops[0], 'shop');
 
 		$assos = array();
 		if (Tools::isSubmit('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table))
@@ -2332,6 +2313,10 @@ class AdminControllerCore extends Controller
 	protected function updateAssoShop($id_object = false, $new_id_object = false)
 	{
 		if (!Shop::isFeatureActive())
+			return;
+
+		$def = ObjectModel::getDefinition($this->className);
+		if (!empty($def['multishop']))
 			return;
 
 		$assos_data = $this->getAssoShop($this->table, $id_object);

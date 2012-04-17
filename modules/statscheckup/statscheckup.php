@@ -123,7 +123,7 @@ class StatsCheckUp extends Module
 			$orderBy = 'nbSales DESC';
 
 		// Get products stats
-		$sql = 'SELECT p.id_product, p.active, pl.name, (
+		$sql = 'SELECT p.id_product, product_shop.active, pl.name, (
 					SELECT COUNT(*)
 					FROM '._DB_PREFIX_.'image i
 					'.Shop::addSqlAssociation('image', 'i').'
@@ -138,10 +138,10 @@ class StatsCheckUp extends Module
 				) as nbSales,
 				IFNULL(stock.quantity, 0) as stock
 				FROM '._DB_PREFIX_.'product p
+				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-				'.Shop::addSqlAssociation('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->executeS($sql);
 

@@ -111,6 +111,10 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 			.siblings('div:not(.displayed_flag):not(.clear)').hide();
 		$('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
 	});
+
+	// For multishop checkboxes
+	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
+
 	$('.language_flags').hide();
 	if (employee_cookie)
 		$.post("ajax.php", { form_language_id: id_language_new });
@@ -575,17 +579,17 @@ function clearAllFees(id_range)
 function toggleDraftWarning(show)
 {
 	if (show)
-		$('.draft').slideDown('slow');
+		$('.draft').hide();
 	else
-		$('.draft').slideUp('slow');
+		$('.draft').show();
 }
 
 function showOptions(show)
 {
 	if (show)
-		$('tr#product_options').slideDown('slow');
+		$('tr#product_options').show();
 	else
-		$('tr#product_options').slideUp('slow');
+		$('tr#product_options').hide();
 }
 
 function submitAddProductAndPreview()
@@ -598,6 +602,16 @@ function submitAddcmsAndPreview()
 {
 	$('#previewSubmitAddcmsAndPreview').attr('name','submitAddcmsAndPreview');
 	$('#cms').submit();
+}
+
+function checkAllMultishopDefaultValue(item)
+{
+	$(item).parent().find('input[name^=\'configUseDefault\']').each(function(k, v)
+	{
+		$(v).attr('checked', item.checked);
+		var name = $(v).attr('name');
+		checkMultishopDefaultValue(v, name.substr(17, name.length - 18));
+	})
 }
 
 function checkMultishopDefaultValue(obj, key)

@@ -62,10 +62,12 @@ class StatsStock extends Module
 
 		$sql = 'SELECT p.id_product, p.reference, pl.name,
 				IFNULL((
-					SELECT AVG(pa.wholesale_price)
-					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
-					AND wholesale_price != 0
-				), p.wholesale_price) as wholesale_price,
+					SELECT AVG(product_attribute_shop.wholesale_price)
+					FROM '._DB_PREFIX_.'product_attribute pa
+					'.Shop::addSqlAssociation('product_attribute', 'pa').'
+					WHERE p.id_product = pa.id_product
+					AND product_attribute_shop.wholesale_price != 0
+				), product_shop.wholesale_price) as wholesale_price,
 				IFNULL(stock.quantity, 0) as quantity
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'

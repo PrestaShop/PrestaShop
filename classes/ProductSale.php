@@ -50,7 +50,7 @@ class ProductSaleCore
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ps.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
-				WHERE p.`active` = 1';
+				WHERE product_shop.`active` = 1';
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 	}
 
@@ -73,7 +73,7 @@ class ProductSaleCore
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
-		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
@@ -90,14 +90,12 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
-					AND ptrgs.id_shop='.(int)Context::getContext()->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`)
+				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p').'
-				WHERE p.`active` = 1
+				WHERE product_shop.`active` = 1
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -145,9 +143,9 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-					ON cl.`id_category` = asso_shop_product.`id_category_default`
+					ON cl.`id_category` = product_shop.`id_category_default`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
-				WHERE p.`active` = 1
+				WHERE product_shop.`active` = 1
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg

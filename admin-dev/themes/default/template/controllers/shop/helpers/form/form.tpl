@@ -27,7 +27,7 @@
 
 {block name="label"}
 	{if $input.type == 'text' && $input.name == 'name'}
-		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t change the GroupShop when you have more than one Shop'}</div><br />
+		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t change the shop group when you have more than one Shop'}</div><br />
 	{/if}
 	{$smarty.block.parent}
 {/block}
@@ -42,7 +42,7 @@
 			</div>
 		{/foreach}
 		<div class="clear">&nbsp;</div>
-	{elseif $input.type == 'textGroupShop'}
+	{elseif $input.type == 'textShopGroup'}
 		{$input.value}
 	{else}
 		{if $input.type == 'select' && $input.name == 'id_category'}

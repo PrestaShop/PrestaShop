@@ -1392,7 +1392,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Create new cart
 		$cart = new Cart();
-		$cart->id_group_shop = $order->id_group_shop;
+		$cart->id_shop_group = $order->id_shop_group;
 		$cart->id_shop = $order->id_shop;
 		$cart->id_customer = $order->id_customer;
 		$cart->id_carrier = $order->id_carrier;
@@ -1421,7 +1421,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$specific_price = new SpecificPrice();
 			$specific_price->id_shop = 0;
-			$specific_price->id_group_shop = 0;
+			$specific_price->id_shop_group = 0;
 			$specific_price->id_currency = 0;
 			$specific_price->id_country = 0;
 			$specific_price->id_group = 0;

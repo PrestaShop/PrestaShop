@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_product_attribute>
-  <fields>
+  <fields class="Combination">
     <field name="id_product" relation="product"/>
     <field name="reference"/>
     <field name="supplier_reference"/>

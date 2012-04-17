@@ -25,12 +25,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminGroupShopControllerCore extends AdminController
+class AdminShopGroupControllerCore extends AdminController
 {
 	public function __construct()
 	{
-		$this->table = 'group_shop';
-		$this->className = 'GroupShop';
+		$this->table = 'shop_group';
+		$this->className = 'ShopGroup';
 		$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
@@ -46,7 +46,7 @@ class AdminGroupShopControllerCore extends AdminController
 			$this->deleted = false;
 
 		$this->fields_list = array(
-			'id_group_shop' => array(
+			'id_shop_group' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'width' => 25,
@@ -74,12 +74,12 @@ class AdminGroupShopControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('GroupShop')
+				'title' => $this->l('ShopGroup')
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('GroupShop name:'),
+					'label' => $this->l('Shop group name:'),
 					'name' => 'name',
 					'required' => true
 				),
@@ -200,60 +200,32 @@ class AdminGroupShopControllerCore extends AdminController
 			'zone' => $this->l('Zones'),
 		);
 
-		if (!$this->object->id)
-			$this->fields_import_form = array(
-				'legend' => array(
-					'title' => $this->l('Import data from another group shop')
-				),
-				'label' => $this->l('Duplicate data from group shop'),
-				'checkbox' => array(
-					'type' => 'checkbox',
-					'label' => $this->l('Duplicate data from group shop'),
-					'name' => 'useImportData',
-					'value' => 1
-				),
-				'select' => array(
-					'type' => 'select',
-					'name' => 'importFromShop',
-					'options' => array(
-						'query' => Shop::getTree(),
-						'name' => 'name'
-					)
-				),
-				'allcheckbox' => array(
-					'type' => 'checkbox',
-					'values' => $import_data
-				),
-				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
-			);
-
 		$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$this->tpl_form_vars = array(
 			'disabled' => $disabled,
-			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
-			'defaultGroup' => $default_shop->id_group_shop,
+			'checked' => (Tools::getValue('addshop_group') !== false) ? true : false,
+			'defaultGroup' => $default_shop->id_shop_group,
 		);
-		if (isset($this->fields_import_form))
-			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
+
 		$this->fields_value = array(
 			'active' => true
-			);
+		);
 		return parent::renderForm();
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-		$group_shop_delete_list = array();
+		$shop_group_delete_list = array();
 
 		// test store authorized to remove
-		foreach ($this->_list as $group_shop)
+		foreach ($this->_list as $shop_group)
 		{
-			$shops = Shop::getShops(true, $group_shop['id_group_shop']);
+			$shops = Shop::getShops(true, $shop_group['id_shop_group']);
 			if (!empty($shops))
-				$group_shop_delete_list[] = $group_shop['id_group_shop'];
+				$shop_group_delete_list[] = $shop_group['id_shop_group'];
 		}
-		$this->addRowActionSkipList('delete', $group_shop_delete_list);
+		$this->addRowActionSkipList('delete', $shop_group_delete_list);
 	}
 
 	public function postProcess()
@@ -261,10 +233,10 @@ class AdminGroupShopControllerCore extends AdminController
 		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
 			$object = $this->loadObject();
-			if (GroupShop::getTotalGroupShops() == 1)
-				$this->errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
+			if (ShopGroup::getTotalShopGroup() == 1)
+				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
 			else if ($object->haveShops())
-				$this->errors[] = Tools::displayError('You cannot delete or disable a groupshop which has shops using it.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group which has shops using it.');
 
 			if (count($this->errors))
 				return false;
@@ -272,22 +244,16 @@ class AdminGroupShopControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	protected function afterAdd($new_group_shop)
+	protected function afterAdd($new_shop_group)
 	{
-		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
-			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
-
 		//Reset available quantitites
-		StockAvailable::resetProductFromStockAvailableByGroupShop($new_group_shop);
+		StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
 	}
 
-	protected function afterUpdate($new_group_shop)
+	protected function afterUpdate($new_shop_group)
 	{
-		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
-			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
-
 		//Reset available quantitites
-		StockAvailable::resetProductFromStockAvailableByGroupShop($new_group_shop);
+		StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
 	}
 }
 

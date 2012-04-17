@@ -295,7 +295,7 @@
       <class_name>AdminShop</class_name>
     </tab>
     <tab id="Group_Shops" id_parent="Shops" active="1">
-      <class_name>AdminGroupShop</class_name>
+      <class_name>AdminShopGroup</class_name>
     </tab>
     <tab id="Shop_Urls" id_parent="Shops" active="1">
       <class_name>AdminShopUrl</class_name>

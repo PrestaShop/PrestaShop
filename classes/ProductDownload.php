@@ -128,9 +128,10 @@ class ProductDownloadCore extends ObjectModel
 
 	public function delete($delete = false)
 	{
-		if ($delete)
+		$result = parent::delete();
+		if ($result && $delete)
 			return $this->deleteFile();
-		return true;
+		return $result;
 	}
 
 	/**

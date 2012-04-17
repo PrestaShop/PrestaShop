@@ -153,7 +153,7 @@ class StatsBestProducts extends ModuleGrid
 				ROUND(AVG(od.product_price / o.conversion_rate), 2) as avgPriceSold,
 				IFNULL(stock.quantity, 0) as quantity,
 				IFNULL(SUM(od.product_quantity), 0) AS totalQuantitySold,
-				ROUND(IFNULL(IFNULL(SUM(od.product_quantity), 0) / (1 + LEAST(TO_DAYS('.$arrayDateBetween[1].'), TO_DAYS(NOW())) - GREATEST(TO_DAYS('.$arrayDateBetween[0].'), TO_DAYS(p.date_add))), 0), 2) as averageQuantitySold,
+				ROUND(IFNULL(IFNULL(SUM(od.product_quantity), 0) / (1 + LEAST(TO_DAYS('.$arrayDateBetween[1].'), TO_DAYS(NOW())) - GREATEST(TO_DAYS('.$arrayDateBetween[0].'), TO_DAYS(product_shop.date_add))), 0), 2) as averageQuantitySold,
 				ROUND(IFNULL(SUM((od.product_price * od.product_quantity) / o.conversion_rate), 0), 2) AS totalPriceSold,
 				(
 					SELECT IFNULL(SUM(pv.counter), 0)
@@ -170,7 +170,7 @@ class StatsBestProducts extends ModuleGrid
 				LEFT JOIN '._DB_PREFIX_.'order_detail od ON od.product_id = p.id_product
 				LEFT JOIN '._DB_PREFIX_.'orders o ON od.id_order = o.id_order
 				'.Product::sqlStock('p', 0).'
-				WHERE p.active = 1
+				WHERE product_shop.active = 1
 					AND o.valid = 1
 					AND o.invoice_date BETWEEN '.$dateBetween.'
 				GROUP BY od.product_id';

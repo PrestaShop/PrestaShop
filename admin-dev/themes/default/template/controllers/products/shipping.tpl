@@ -28,31 +28,35 @@
 <h4 class="tab">1. {l s='Info.'}</h4>
 <h4>{l s='Shipping'}</h4>
 
+{if isset($display_common_field) && $display_common_field}
+	<div class="hint" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
+{/if}
+
 <div class="separation"></div>
 
 <table>
 	<tr>
 		<td class="col-left"><label>{l s='Width (package):'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
+			<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
 		<td class="col-left"><label>{l s='Height (package):'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
+			<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 		</td>
 	</tr>
 	<tr>
 	<td class="col-left"><label>{l s='Depth (package):'}</label></td>
 	<td style="padding-bottom:5px;">
-	<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
+	<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_dimension_unit}
 	</td>
 	</tr>
 	<tr>
 	<td class="col-left"><label>{l s='Weight (package):'}</label></td>
 	<td style="padding-bottom:5px;">
-	<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_weight_unit}
+	<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />{$bullet_common_field}  {$ps_weight_unit}
 	</td>
 	</tr>
 	<tr>

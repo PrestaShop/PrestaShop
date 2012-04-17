@@ -123,7 +123,7 @@ class PageCore extends ObjectModel
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
 				'id_shop' =>		(int)$context->shop->id,
-				'id_group_shop' =>	(int)$context->shop->id_group_shop,
+				'id_shop_group' =>	(int)$context->shop->id_shop_group,
 			));
 	}
 }

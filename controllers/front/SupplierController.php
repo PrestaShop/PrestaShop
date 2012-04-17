@@ -74,7 +74,7 @@ class SupplierControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToGroupShop())
+		if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop())
 		{
 			$this->productSort(); // productSort must be called before assignOne
 			$this->assignOne();

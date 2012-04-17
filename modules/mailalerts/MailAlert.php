@@ -213,8 +213,9 @@ class MailAlert extends ObjectModel
 			SELECT ma.`id_product`, p.`quantity` AS product_quantity, pl.`name`, ma.`id_product_attribute`
 			FROM `'._DB_PREFIX_.self::$definition['table'].'` ma
 			JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
+			'.Shop::addSqlAssociation('product', 'p').'
 			JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product`
-			WHERE p.`active` = 1
+			WHERE product_shop.`active` = 1
 			AND (ma.`id_customer` = '.(int)$customer->id.'
 			OR ma.`customer_email` = \''.pSQL($customer->email).'\')
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestriction(false, 'ma');
@@ -235,6 +236,7 @@ class MailAlert extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pac.`id_product_attribute` = '.(int)$id_product_attribute;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

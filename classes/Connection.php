@@ -43,7 +43,7 @@ class ConnectionCore extends ObjectModel
 	public $id_shop;
 
 	/** @var int */
-	public $id_group_shop;
+	public $id_shop_group;
 
 	/** @var string */
 	public $date_add;
@@ -60,7 +60,7 @@ class ConnectionCore extends ObjectModel
 			'ip_address' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'http_referer' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
 			'id_shop' => 		array('type' => self::TYPE_INT, 'required' => true),
-			'id_group_shop' => 	array('type' => self::TYPE_INT, 'required' => true),
+			'id_shop_group' => 	array('type' => self::TYPE_INT, 'required' => true),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate')
 		),
 	);
@@ -73,8 +73,8 @@ class ConnectionCore extends ObjectModel
 	{
 		if (!$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
-		if (!$this->id_group_shop)
-			$this->id_group_shop = Context::getContext()->shop->id_group_shop;
+		if (!$this->id_shop_group)
+			$this->id_shop_group = Context::getContext()->shop->id_shop_group;
 
 		$fields = parent::getFields();
 		return $fields;
@@ -145,7 +145,7 @@ class ConnectionCore extends ObjectModel
 			$connection->id_page = Page::getCurrentId();
 			$connection->ip_address = Tools::getRemoteAddr() ? ip2long(Tools::getRemoteAddr()) : '';
 			$connection->id_shop = Context::getContext()->shop->id;
-			$connection->id_group_shop = Context::getContext()->shop->id_group_shop;
+			$connection->id_shop_group = Context::getContext()->shop->id_shop_group;
 			$connection->date_add = $cookie->date_add;
 			if (Validate::isAbsoluteUrl($referer))
 				$connection->http_referer = $referer;

@@ -54,7 +54,7 @@ class Pagesnotfound extends Module
 		CREATE TABLE `'._DB_PREFIX_.'pagenotfound` (
 			id_pagenotfound INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
-			id_group_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
+			id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			request_uri VARCHAR(256) NOT NULL,
 			http_referer VARCHAR(256) NOT NULL,
 			date_add DATETIME NOT NULL,
@@ -173,8 +173,8 @@ class Pagesnotfound extends Module
 			$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 			if (empty($http_referer) || Validate::isAbsoluteUrl($http_referer))
 				Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_group_shop`)
-					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_group_shop.')
+					INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_shop_group`)
+					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.')
 				');
 		}
 	}

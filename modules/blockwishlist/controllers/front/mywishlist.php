@@ -82,7 +82,7 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 					{
 						$wishlist = new WishList();
 						$wishlist->id_shop = $this->context->shop->id;
-						$wishlist->id_group_shop = $this->context->shop->id_group_shop;
+						$wishlist->id_shop_group = $this->context->shop->id_shop_group;
 						$wishlist->name = $name;
 						$wishlist->id_customer = (int)$this->context->customer->id;
 						list($us, $s) = explode(' ', microtime());

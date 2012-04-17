@@ -223,10 +223,10 @@ class InstallModelInstall extends InstallAbstractModel
 	public function createShop($shop_name)
 	{
 		// Create default group shop
-		$group_shop = new GroupShop();
-		$group_shop->name = 'Default';
-		$group_shop->active = true;
-		if (!$group_shop->add())
+		$shop_group = new ShopGroup();
+		$shop_group->name = 'Default';
+		$shop_group->active = true;
+		if (!$shop_group->add())
 		{
 			$this->setError($this->language->l('Cannot create group shop'));
 			return false;
@@ -235,7 +235,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// Create default shop
 		$shop = new Shop();
 		$shop->active = true;
-		$shop->id_group_shop = $group_shop->id;
+		$shop->id_shop_group = $shop_group->id;
 		$shop->id_category = 2;
 		$shop->id_theme = 1;
 		$shop->name = $shop_name;
