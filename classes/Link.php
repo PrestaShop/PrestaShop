@@ -382,7 +382,7 @@ class LinkCore
 		if (!is_array($request))
 		{
 			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
-			$request = html_entity_decode($request);
+			$request = urlencode(html_entity_decode($request));
 			parse_str($request, $request);
 		}
 		unset($request['controller']);
