@@ -267,7 +267,7 @@ class WebserviceRequestCore
 			'taxes' => array('description' => 'The tax rate', 'class' => 'Tax'),
 			'stock_movements' => array('description' => 'Stock movements', 'class' => 'StockMvtWS', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'stock_movement_reasons' => array('description' => 'Stock movement reason', 'class' => 'StockMvtReason'),
-			'warehouses' => array('description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'warehouses' => array('description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => array('DELETE')),
 			'stocks' => array('description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'available_quantities' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'warehouse_product_locations' => array('description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
