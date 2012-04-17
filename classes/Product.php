@@ -1101,7 +1101,7 @@ class ProductCore extends ObjectModel
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
 		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'wholesale_price' => (float)$wholesale_price,
-		), 'id_product_attribute = '.(int)$id_product_attribute);
+		), 'a.id_product_attribute = '.(int)$id_product_attribute);
 
 		if (!$id_product_attribute || !$result)
 			return false;
@@ -1144,11 +1144,11 @@ class ProductCore extends ObjectModel
 	{
 		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'default_on' => 1
-		), '`id_product` = '.(int)$this->id.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+		), '`id_product` = '.(int)$this->id.' AND a.`id_product_attribute` = '.(int)$id_product_attribute);
 
 		$result &= ObjectModel::updateMultishopTable('product', array(
 			'cache_default_attribute' => (int)$id_product_attribute,
-		), '`id_product` = '.(int)$this->id);
+		), '`a.id_product` = '.(int)$this->id);
 
 		return $result;
 	}
@@ -2762,7 +2762,7 @@ class ProductCore extends ObjectModel
 		if (!$mini)
 			return false;
 
-		if (!ObjectModel::updateMultishopTable('Combination', array('default_on' => 1), 'id_product_attribute = '.(int)$mini['id_attr']))
+		if (!ObjectModel::updateMultishopTable('Combination', array('default_on' => 1), 'a.id_product_attribute = '.(int)$mini['id_attr']))
 			return false;
 		return true;
 	}
@@ -3821,7 +3821,7 @@ class ProductCore extends ObjectModel
 					return false;
 			}
 
-		if ($has_required_fields && !ObjectModel::updateMultishopTable('product', array('customizable' => 2), 'id_product = '.(int)$this->id))
+		if ($has_required_fields && !ObjectModel::updateMultishopTable('product', array('customizable' => 2), 'a.id_product = '.(int)$this->id))
 			return false;
 
 		if (!$this->_deleteOldLabels())

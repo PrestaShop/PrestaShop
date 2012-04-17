@@ -246,7 +246,7 @@ class AdminPPreferencesControllerCore extends AdminController
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 &&
 			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 		{
-			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), '`advanced_stock_management` = 1');
+			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'a.`advanced_stock_management` = 1');
 
 			Db::getInstance()->execute(
 				'UPDATE `'._DB_PREFIX_.'stock_available`
