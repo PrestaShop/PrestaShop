@@ -155,6 +155,11 @@ class AdminOrdersControllerCore extends AdminController
 		unset($this->toolbar_btn['save']);
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
 		$cart = new Cart((int)Tools::getValue('id_cart'));
+
+		$defaults_order_state = array('cheque' => (int)Configuration::get('PS_OS_CHEQUE'),
+												'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
+												'cashondelivery' => (int)Configuration::get('PS_OS_PREPARATION'),
+												'other' => (int)Configuration::get('PS_OS_PAYMENT'));
 		$this->context->smarty->assign(array(
 			'recyclable_pack' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
 			'gift_wrapping' => (int)Configuration::get('PS_GIFT_WRAPPING'),
@@ -163,6 +168,7 @@ class AdminOrdersControllerCore extends AdminController
 			'langs' => Language::getLanguages(true, Context::getContext()->shop->id),
 			'payment_modules' => PaymentModule::getInstalledPaymentModules(),
 			'order_states' => OrderState::getOrderStates((int)Context::getContext()->language->id),
+			'defaults_order_state' => $defaults_order_state,
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
