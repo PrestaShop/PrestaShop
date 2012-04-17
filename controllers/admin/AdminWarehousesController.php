@@ -346,8 +346,8 @@ class AdminWarehousesControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		// loads current address for this warehouse - if possible
 		$address = null;
+		// loads current address for this warehouse - if possible
 		if ($obj->id_address > 0)
 			$address = new Address($obj->id_address);
 
@@ -460,7 +460,7 @@ class AdminWarehousesControllerCore extends AdminController
 		{
 			// depending on the management type, translates the management type
 			$item = &$this->_list[$i];
-			switch ($item['management_type'])
+			switch ($item['management_type']) // management type can be either WA/FIFO/LIFO
 			{
 				case 'WA':
 					$item['management_type'] = $this->l('WA');
@@ -559,14 +559,14 @@ class AdminWarehousesControllerCore extends AdminController
 				$this->errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
 			else if (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
 				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
-			else // can be deleted
+			else // else, it can be deleted
 			{
 				// sets the address of the warehouse as deleted
 				$address = new Address($obj->id_address);
 				$address->deleted = 1;
 				$address->save();
 
-				// removes associations
+				// removes associations with carriers/shops/products location
 				$obj->setCarriers(array());
 				$obj->setShops(array());
 				$obj->resetProductsLocations();
@@ -581,6 +581,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function processUpdate()
 	{
+		// loads object
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -590,7 +591,6 @@ class AdminWarehousesControllerCore extends AdminController
 
 		// handles carriers associations
 		$obj->setCarriers(Tools::getValue('ids_carriers'), array());
-
 
 		return parent::processUpdate();
 	}
