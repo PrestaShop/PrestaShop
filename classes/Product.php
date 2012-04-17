@@ -1099,7 +1099,7 @@ class ProductCore extends ObjectModel
 			$reference, $ean13, $default, $location, $upc, $minimal_quantity);
 
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
-		$result = ObjectModel::updateMultishopTable('product_attribute', array(
+		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'wholesale_price' => (float)$wholesale_price,
 		), 'id_product_attribute = '.(int)$id_product_attribute);
 
@@ -1135,14 +1135,14 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteDefaultAttributes()
 	{
-		return ObjectModel::updateMultishopTable('product_attribute', array(
+		return ObjectModel::updateMultishopTable('Combination', array(
 			'default_on' => 0,
 		), 'id_product = '.(int)$this->id);
 	}
 
 	public function setDefaultAttribute($id_product_attribute)
 	{
-		$result = ObjectModel::updateMultishopTable('product_attribute', array(
+		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'default_on' => 1
 		), '`id_product` = '.(int)$this->id.' AND `id_product_attribute` = '.(int)$id_product_attribute);
 
@@ -2762,7 +2762,7 @@ class ProductCore extends ObjectModel
 		if (!$mini)
 			return false;
 
-		if (!ObjectModel::updateMultishopTable('product_attribute', array('default_on' => 1), 'id_product_attribute = '.(int)$mini['id_attr']))
+		if (!ObjectModel::updateMultishopTable('Combination', array('default_on' => 1), 'id_product_attribute = '.(int)$mini['id_attr']))
 			return false;
 		return true;
 	}
