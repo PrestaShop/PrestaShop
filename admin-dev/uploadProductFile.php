@@ -53,5 +53,5 @@ if (isset($_FILES['virtual_product_file']) AND is_uploaded_file($_FILES['virtual
 else
 {
 	header('HTTP/1.1 500 Error');
-	echo '<return result="error" msg="Unknown error" filename="'.ProductDownload::getNewFilename().'" />';
+	echo '<return result="error" msg="Could not upload file" filename="'.ProductDownload::getNewFilename().'" />';
 }
