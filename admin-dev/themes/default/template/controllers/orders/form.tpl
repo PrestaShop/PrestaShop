@@ -35,6 +35,10 @@
 	var id_lang = '';
 	var txt_show_carts = '{l s='Show carts and orders for this customer'}';
 	var txt_hide_carts = '{l s='Hide carts and orders for this customer'}';
+	var defaults_order_state = new Array();
+	{foreach from=$defaults_order_state key='module' item='id_order_state'}
+		defaults_order_state['{$module}'] = '{$id_order_state}';
+	{/foreach}
 	$(document).ready(function() {
 		$('#customer').typeWatch({
 			captureLength: 1,
@@ -47,6 +51,12 @@
 			highlight: true,
 			wait: 100,
 			callback: function(){ searchProducts(); }
+		});
+		$('#payment_module_name').change(function() {
+			var id_order_state = defaults_order_state[this.value];
+			if (typeof(id_order_state) == 'undefined')
+				id_order_state = defaults_order_state['other'];
+			$('#id_order_state').val(id_order_state);
 		});
 		$("#id_address_delivery").change(function() {
 			updateAddresses();
@@ -85,6 +95,7 @@
 			return false;
 		});
 		$('#show_old_carts').click();
+		$('#payment_module_name').change();
 		$.ajaxSetup({ type:"post" });
 		$("#voucher").autocomplete('{$link->getAdminLink('AdminCartRules')}', {
 					minChars: 3,
