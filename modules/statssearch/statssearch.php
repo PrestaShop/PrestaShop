@@ -66,7 +66,7 @@ class StatsSearch extends ModuleGraph
 		CREATE TABLE `'._DB_PREFIX_.'statssearch` (
 			id_statssearch INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
-		  	id_group_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
+		  	id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			keywords VARCHAR(255) NOT NULL,
 			results INT(6) NOT NULL DEFAULT 0,
 			date_add DATETIME NOT NULL,
@@ -86,8 +86,8 @@ class StatsSearch extends ModuleGraph
 	 */
 	public function hookSearch($params)
 	{
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'statssearch` (`id_shop`, `id_group_shop`, `keywords`, `results`, `date_add`)
-				VALUES ('.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_group_shop.', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'statssearch` (`id_shop`, `id_shop_group`, `keywords`, `results`, `date_add`)
+				VALUES ('.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
 		Db::getInstance()->execute($sql);
 	}
 

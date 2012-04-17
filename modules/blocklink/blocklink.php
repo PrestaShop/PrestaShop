@@ -318,7 +318,8 @@ class BlockLink extends Module
 				<div class="margin-form"><input type="text" name="url" id="url" value="'.(isset($links) && isset($links['url']) ? $links['url'] : '').'" /><sup> *</sup></div>
 				<label>'.$this->l('Open in a new window:').'</label>
 				<div class="margin-form"><input type="checkbox" name="newWindow" id="newWindow" '.((isset($links) && $links['new_window']) ? 'checked="checked"' : '').' /></div>';
-				if (Shop::isFeatureActive())
+				$shops = Shop::getShops(true, null, true);
+				if (Shop::isFeatureActive() && count($shops) > 1)
 				{
 					$helper = new HelperForm();
 					$helper->id = (int)Tools::getValue('id_link');

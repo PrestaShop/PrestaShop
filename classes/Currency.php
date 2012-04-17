@@ -65,7 +65,7 @@ class CurrencyCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'currency',
 		'primary' => 'id_currency',
-        'multishop' => true,
+        'multilang_shop' => true,
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'iso_code' => 		array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),

@@ -111,7 +111,7 @@ class AdminZonesControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
-				'type' => 'group_shop',
+				'type' => 'shop',
 				'label' => $this->l('Group shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);

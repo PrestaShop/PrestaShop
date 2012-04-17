@@ -30,7 +30,7 @@
  */
 class ShopCore extends ObjectModel
 {
-	public	$id_group_shop;
+	public	$id_shop_group;
 	public	$id_theme;
 	public	$name;
 	public	$active = true;
@@ -45,7 +45,7 @@ class ShopCore extends ObjectModel
 	public $domain_ssl;
 
 	/**
-	 * @var GroupShop
+	 * @var ShopGroup
 	 */
 	protected $group;
 
@@ -61,7 +61,7 @@ class ShopCore extends ObjectModel
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 			'id_theme' => 		array('type' => self::TYPE_INT, 'required' => true),
 			'id_category' => 	array('type' => self::TYPE_INT, 'required' => true),
-			'id_group_shop' => 	array('type' => self::TYPE_INT, 'required' => true),
+			'id_shop_group' => 	array('type' => self::TYPE_INT, 'required' => true),
 		),
 	);
 
@@ -88,6 +88,7 @@ class ShopCore extends ObjectModel
 		'module_country' => array('type' => 'fk_shop'),
 		'module_group' => array('type' => 'fk_shop'),
 		'product' => array('type' => 'shop'),
+		'product_attribute' => array('type' => 'shop'),
 		'product_lang' => array('type' => 'fk_shop'),
 		'referrer' => array('type' => 'shop'),
 		'scene' => array('type' => 'shop'),
@@ -95,13 +96,20 @@ class ShopCore extends ObjectModel
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
 		'stock_available' => array('type' => 'fk_shop'),
-		'product_tax_rules_group_shop' => array('type' => 'fk_shop'),
 		'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
+		'attribute' => array('type' => 'shop'),
+		'feature' => array('type' => 'shop'),
+		'group' => array('type' => 'shop'),
+		'attribute_group' => array('type' => 'shop'),
+		'tax_rules_group' => array('type' => 'shop'),
+		'zone' => array('type' => 'shop'),
+		'manufacturer' => array('type' => 'shop'),
+		'supplier' => array('type' => 'shop'),
 	);
 
 	protected $webserviceParameters = array(
 		'fields' => array(
-			'id_group_shop' => array('xlink_resource' => 'shop_groups'),
+			'id_shop_group' => array('xlink_resource' => 'shop_groups'),
 			'id_category' => array(),
 			'id_theme' => array(),
 		),
@@ -109,7 +117,7 @@ class ShopCore extends ObjectModel
 
     protected static $context;
     protected static $context_id_shop;
-    protected static $context_id_group_shop;
+    protected static $context_id_shop_group;
 
 	/**
 	 * There are 3 kinds of shop context : shop, group shop and general
@@ -371,12 +379,12 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get group of current shop
 	 *
-	 * @return GroupShop
+	 * @return ShopGroup
 	 */
 	public function getGroup()
 	{
 		if (!$this->group)
-			$this->group = new GroupShop($this->id_group_shop);
+			$this->group = new ShopGroup($this->id_shop_group);
 		return $this->group;
 	}
 
@@ -425,6 +433,17 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
+	 * Check if given table is associated to shop
+	 *
+	 * @param string $table
+	 * @return bool
+	 */
+	public static function isTableAssociated($table)
+	{
+		return isset(self::$asso_tables[$table]) && self::$asso_tables[$table]['type'] == 'shop';
+	}
+
+	/**
 	 * Load list of groups and shops, and cache it
 	 *
 	 * @param bool $refresh
@@ -451,9 +470,9 @@ class ShopCore extends ObjectModel
 		}
 
 		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri'.$select.'
-				FROM '._DB_PREFIX_.'group_shop gs
+				FROM '._DB_PREFIX_.'shop_group gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
-					ON s.id_group_shop = gs.id_group_shop
+					ON s.id_shop_group = gs.id_shop_group
 				LEFT JOIN '._DB_PREFIX_.'shop_url su
 					ON s.id_shop = su.id_shop AND su.main = 1
 				'.$from.'
@@ -466,19 +485,19 @@ class ShopCore extends ObjectModel
 		{
 			foreach ($results as $row)
 			{
-				if (!isset(self::$shops[$row['id_group_shop']]))
-					self::$shops[$row['id_group_shop']] = array(
-						'id' =>				$row['id_group_shop'],
+				if (!isset(self::$shops[$row['id_shop_group']]))
+					self::$shops[$row['id_shop_group']] = array(
+						'id' =>				$row['id_shop_group'],
 						'name' => 			$row['group_name'],
 						'share_customer' =>	$row['share_customer'],
 						'share_order' =>	$row['share_order'],
-						'totalShops' =>		Shop::getTotalShopsByIdGroupShop($row['id_group_shop']),
+						'totalShops' =>		Shop::getTotalShopsByIdShopGroup($row['id_shop_group']),
 						'shops' => 			array(),
 					);
 
-				self::$shops[$row['id_group_shop']]['shops'][$row['id_shop']] = array(
+				self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = array(
 					'id_shop' =>		$row['id_shop'],
-					'id_group_shop' =>	$row['id_group_shop'],
+					'id_shop_group' =>	$row['id_shop_group'],
 					'name' =>			$row['shop_name'],
 					'id_theme' =>		$row['id_theme'],
 					'id_category' =>	$row['id_category'],
@@ -495,17 +514,17 @@ class ShopCore extends ObjectModel
 	 * Get shops list
 	 *
 	 * @param bool $active
-	 * @param int $id_group_shop
+	 * @param int $id_shop_group
 	 * @param bool $get_as_list_id
 	 */
-	public static function getShops($active = true, $id_group_shop = null, $get_as_list_id = false)
+	public static function getShops($active = true, $id_shop_group = null, $get_as_list_id = false)
 	{
 		Shop::cacheShops();
 
 		$results = array();
 		foreach (self::$shops as $group_id => $group_data)
 			foreach ($group_data['shops'] as $id => $shop_data)
-				if ((!$active || $shop_data['active']) && (!$id_group_shop || $id_group_shop == $group_id))
+				if ((!$active || $shop_data['active']) && (!$id_shop_group || $id_shop_group == $group_id))
 				{
 					if ($get_as_list_id)
 						$results[$id] = $id;
@@ -565,14 +584,14 @@ class ShopCore extends ObjectModel
 	/**
 	 * @return int Total of shops
 	 */
-	public static function getTotalShopsByIdGroupShop($id)
+	public static function getTotalShopsByIdShopGroup($id)
 	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = '.(int)$id);
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_shop_group` = '.(int)$id);
 	}
 
-	public static function getIdShopsByIdGroupShop($id)
+	public static function getIdShopsByIdShopGroup($id)
 	{
-		$result = Db::getInstance()->executeS('SELECT `id_shop`, `id_group_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_group_shop` = '.(int)$id);
+		$result = Db::getInstance()->executeS('SELECT `id_shop`, `id_shop_group` FROM `'._DB_PREFIX_.'shop` WHERE `id_shop_group` = '.(int)$id);
 		$data = array();
 		foreach ($result as $group_data)
 			$data[] = (int)$group_data['id_shop'];
@@ -624,7 +643,7 @@ class ShopCore extends ObjectModel
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$list = Shop::getShops(true, Shop::getContextGroupShopID(), true);
+			$list = Shop::getShops(true, Shop::getContextShopGroupID(), true);
 		else
 			$list = Shop::getShops(true, null, true);
 
@@ -650,17 +669,17 @@ class ShopCore extends ObjectModel
 		{
 			case self::CONTEXT_ALL :
 				self::$context_id_shop = null;
-				self::$context_id_group_shop = null;
+				self::$context_id_shop_group = null;
 			break;
 
 			case self::CONTEXT_GROUP :
 				self::$context_id_shop = null;
-				self::$context_id_group_shop = (int)$id;
+				self::$context_id_shop_group = (int)$id;
 			break;
 
 			case self::CONTEXT_SHOP :
 				self::$context_id_shop = (int)$id;
-				self::$context_id_group_shop = Shop::getGroupFromShop($id);
+				self::$context_id_shop_group = Shop::getGroupFromShop($id);
 			break;
 
 			default :
@@ -680,9 +699,9 @@ class ShopCore extends ObjectModel
 		return self::$context_id_shop;
 	}
 
-	public static function getContextGroupShopID()
+	public static function getContextShopGroupID()
 	{
-		return self::$context_id_group_shop;
+		return self::$context_id_shop_group;
 	}
 
 	/**
@@ -690,29 +709,17 @@ class ShopCore extends ObjectModel
 	 *
 	 * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
 	 * @param string $alias
-	 * @param string $type shop|group_shop
 	 */
-	public static function addSqlRestriction($share = false, $alias = null, $type = 'shop')
+	public static function addSqlRestriction($share = false, $alias = null)
 	{
-		if ($type != 'shop' && $type != 'group_shop')
-			$type = 'shop';
-
 		if ($alias)
 			$alias .= '.';
 
 		$restriction = '';
-		if ($type == 'group_shop')
-		{
-			if (Shop::getContext() != Shop::CONTEXT_ALL)
-				$restriction = ' AND '.$alias.'id_group_shop = '.Shop::getContextGroupShopID().' ';
-		}
-		else
-		{
 			if (Shop::getContext() != Shop::CONTEXT_ALL)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
 			//else if ($share == Shop::SHARE_STOCK)
 			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
-		}
 
 		return $restriction;
 	}
@@ -728,7 +735,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlAssociation($table, $alias, $inner_join = true)
 	{
-		$table_alias = ' asso_shop_'.$table;
+		$table_alias = $table.'_shop';
 		if (strpos($table, '.') !== false)
 			list($table_alias, $table) = explode('.', $table);
 
@@ -781,9 +788,6 @@ class ShopCore extends ObjectModel
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
 	{
-		if (isset($tables_import['product']))
-			$tables_import['product_tax_rules_group_shop'] = true;
-			
 		if (isset($tables_import['carrier']))
 			$tables_import['carrier_tax_rules_group_shop'] = true;
 
@@ -795,7 +799,7 @@ class ShopCore extends ObjectModel
 			// Special case for stock_available if current shop is in a share stock group
 			if ($table_name == 'stock_available')
 			{
-				$group = new GroupShop($this->id_group_shop);
+				$group = new ShopGroup($this->id_shop_group);
 				if ($group->share_stock && $group->haveShops())
 					continue;
 			}
@@ -815,9 +819,9 @@ class ShopCore extends ObjectModel
 					if (isset($row['primary']))
 						unset($res[$row['primary']]);
 
-					$keys = implode(', ', array_keys($res));
-					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` ('.$keys.', '.$id.')
-								(SELECT '.$keys.', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
+					$keys = implode('`, `', array_keys($res));
+					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, '.$id.')
+								(SELECT `'.$keys.'`, '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
 								WHERE `'.$id.'` = '.(int)$old_id.')';
 					Db::getInstance()->execute($sql);
 				}
@@ -834,9 +838,9 @@ class ShopCore extends ObjectModel
 		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop` WHERE `id_shop` = '.(int)$id);
 	}
 
-	public function checkIfGroupShopExist($id)
+	public function checkIfShopGroupExist($id)
 	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = '.(int)$id);
+		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop_group` WHERE `id_shop_group` = '.(int)$id);
 	}
 
 	/**
@@ -905,6 +909,7 @@ class ShopCore extends ObjectModel
 		return (bool)Db::getInstance()->getValue('
 		SELECT p.`id_product`
 		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'category_product` cp
 			ON p.`id_product` = cp.`id_product`
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs

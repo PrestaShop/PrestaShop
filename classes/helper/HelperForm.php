@@ -137,8 +137,10 @@ class HelperFormCore extends Helper
 						break;
 
 						case 'shop' :
-						case 'group_shop' :
 							$params['html'] = $this->renderAssoShop($params['type']);
+							$shops = Shop::getShops(true, null, true);
+							if (count($shops) == 1)
+								unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 						break;
 					}
 				}
@@ -186,69 +188,59 @@ class HelperFormCore extends Helper
 	/**
 	 * Render an area to determinate shop association
 	 *
-	 * @param string $type 'shop' or 'group_shop'
-	 *
 	 * @return string
 	 */
-	public function renderAssoShop($type = 'shop')
+	public function renderAssoShop()
 	{
 		if (!Shop::isFeatureActive())
 			return;
 
-		if ($type != 'shop' && $type != 'group_shop')
-			$type = 'shop';
-
 		$assos = array();
 		if ((int)$this->id)
 		{
-			$sql = 'SELECT `id_'.$type.'`, `'.bqSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.$type.'`
+			$sql = 'SELECT `id_shop`, `'.bqSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`
 					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
 
 			foreach (Db::getInstance()->executeS($sql) as $row)
-				$assos[$row['id_'.$type]] = $row['id_'.$type];
+				$assos[$row['id_shop']] = $row['id_shop'];
 		}
 		else
 		{
 			switch (Shop::getContext())
 			{
 				case Shop::CONTEXT_SHOP :
-					if ($type == 'shop')
 						$assos[Shop::getContextShopID()] = Shop::getContextShopID();
-					else
-						$assos[Shop::getContextGroupShopID()] = Shop::getContextGroupShopID();
 				break;
 
 				case Shop::CONTEXT_GROUP :
-					if ($type == 'shop')
-						foreach (Shop::getShops(false, Shop::getContextGroupShopID(), true) as $id_shop)
+					foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop)
 							$assos[$id_shop] = $id_shop;
-					else
-						$assos[Shop::getContextGroupShopID()] = Shop::getContextGroupShopID();
 				break;
 
 				default :
-					if ($type == 'shop')
 						foreach (Shop::getShops(false, null, true) as $id_shop)
 							$assos[$id_shop] = $id_shop;
-					else
-						foreach (Shop::getTree() as $group_shop)
-							$assos[$group_shop['id']] = $group_shop['id'];
 				break;
 			}
 		}
 
 		$tpl = $this->createTemplate('assoshop.tpl');
+		$tree = Shop::getTree();
+		$nb_shop = 0;
+		foreach ($tree as $value)
+			$nb_shop += count($value['shops']);
 		$tpl->assign(array(
 				'input' => array(
-					'type' => $type,
-					'values' => Shop::getTree(),
+					'type' => 'shop',
+					'values' => $tree,
 				),
 				'fields_value' => array(
 					'shop' => $assos
 				),
 				'form_id' => $this->id,
-				'table' => $this->table
+				'table' => $this->table,
+				'nb_shop' => $nb_shop
 			));
 		return $tpl->fetch();
 	}

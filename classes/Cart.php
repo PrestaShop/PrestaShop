@@ -29,7 +29,7 @@ class CartCore extends ObjectModel
 {
 	public $id;
 
-	public $id_group_shop;
+	public $id_shop_group;
 
 	public $id_shop;
 
@@ -98,7 +98,7 @@ class CartCore extends ObjectModel
 		'table' => 'cart',
 		'primary' => 'id_cart',
 		'fields' => array(
-			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop_group' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_address_delivery' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_address_invoice' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -385,27 +385,26 @@ class CartCore extends ObjectModel
 
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
-						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, ps.`id_category_default`, p.`id_supplier`,
-						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
+						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, product_shop.`id_category_default`, p.`id_supplier`,
+						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`, product_shop.`available_for_order`, product_shop.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
 						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery, p.`wholesale_price`,
-						p.advanced_stock_management');
+						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery,
+						product_shop.`wholesale_price`, product_shop.advanced_stock_management');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
 
 		// Build JOIN
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
+		$sql->join(Shop::addSqlAssociation('product', 'p'));
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('product_tax_rules_group_shop', 'ptrgs', 
-			'p.`id_product` = ptrgs.`id_product` AND cp.`id_shop` = ptrgs.`id_shop`');
 		
 		$sql->leftJoin('tax_rule', 'tr', '
-			ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 			AND tr.`id_country` = '.(int)$id_country.'
 			AND tr.`id_state` = 0
 			AND tr.`zipcode_from` = 0'
@@ -415,12 +414,9 @@ class CartCore extends ObjectModel
 			t.`id_tax` = tl.`id_tax`
 			AND tl.`id_lang` = '.(int)$this->id_lang
 		);
-		$sql->leftJoin('product_shop', 'ps', '
-			ps.`id_product` = p.`id_product`
-			AND ps.`id_shop` = '.(int)Context::getContext()->shop->id
-		);
+
 		$sql->leftJoin('category_lang', 'cl', '
-			ps.`id_category_default` = cl.`id_category`
+			product_shop.`id_category_default` = cl.`id_category`
 			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl')
 		);
 
@@ -432,7 +428,6 @@ class CartCore extends ObjectModel
 		if ($id_product)
 			$sql->where('cp.`id_product` = '.(int)$id_product);
 		$sql->where('p.`id_product` IS NOT NULL');
-		$sql->where('ps.`id_shop` = '.(int)Context::getContext()->shop->id);
 
 		// Build GROUP BY
 		$sql->groupBy('unique_id');
@@ -450,26 +445,26 @@ class CartCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->select(
-				'pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr,
+			$sql->select('
+				product_attribute_shop.`price` AS price_attribute, product_attribute_shop.`ecotax` AS ecotax_attr,
 				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
 				IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
 				(p.`weight`+ pa.`weight`) weight_attribute,
 				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
 				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
 				pai.`id_image` as pai_id_image, il.`legend` as pai_legend,
-				IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity,
-				pa.`ecotax` AS ecotax_attr'
-			);
+				IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity
+			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
+			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa'));
 			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
 		else
 			$sql->select(
 				'p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`,
-				p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity'
+				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity'
 			);
 
 		$result = Db::getInstance()->executeS($sql);
@@ -2756,7 +2751,7 @@ class CartCore extends ObjectModel
 		$cart = new Cart($this->id);
 		$cart->id = null;
 		$cart->id_shop = $this->id_shop;
-		$cart->id_group_shop = $this->id_group_shop;
+		$cart->id_shop_group = $this->id_shop_group;
 		$cart->add();
 
 		if (!Validate::isLoadedObject($cart))

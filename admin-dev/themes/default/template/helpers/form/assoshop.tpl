@@ -29,30 +29,30 @@ $().ready(function() {
 	// Click on "all shop"
 	$('.input_all_shop').live('click', function() {
 		var checked = $(this).attr('checked');
-		$('.input_group_shop:not(:disabled)').attr('checked', checked);
+		$('.input_shop_group:not(:disabled)').attr('checked', checked);
 		$('.input_shop:not(:disabled)').attr('checked', checked);
 	});
 
 	// Click on a group shop
-	$('.input_group_shop').live('click', function() {
+	$('.input_shop_group').live('click', function() {
 		$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
 		check_all_shop();
 	});
 
 	// Click on a shop
 	$('.input_shop').live('click', function() {
-		check_group_shop_status($(this).val());
+		check_shop_group_status($(this).val());
 		check_all_shop();
 	});
 
 	// Initialize checkbox
-	$('.input_group_shop').each(function(k, v) {
-		check_group_shop_status($(v).val());
+	$('.input_shop_group').each(function(k, v) {
+		check_shop_group_status($(v).val());
 		check_all_shop();
 	});
 });
 
-function check_group_shop_status(id_group) {
+function check_shop_group_status(id_group) {
 	var groupChecked = true;
 	var total = 0;
 	$('.input_shop[value='+id_group+']').each(function(k, v) {
@@ -62,12 +62,12 @@ function check_group_shop_status(id_group) {
 	});
 
 	if (total > 0)
-		$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
+		$('.input_shop_group[value='+id_group+']').attr('checked', groupChecked);
 }
 
 function check_all_shop() {
 	var allChecked = true;
-	$('.input_group_shop:not(:disabled)').each(function(k, v) {
+	$('.input_shop_group:not(:disabled)').each(function(k, v) {
 		if (!$(v).attr('checked'))
 			allChecked = false;
 		});
@@ -78,26 +78,22 @@ function check_all_shop() {
 <div class="assoShop">
 	<table class="table" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
-			<th>{if $input.type == 'group_shop'}{l s='Group shop'}{else}{l s='Shop'}{/if}</th>
+			<th>{l s='Shop'}</th>
 		</tr>
-		<tr {if $input.type == 'group_shop'}class="alt_row"{/if}>
+		<tr>
 			<td>
-				<label class="t"><input class="input_all_shop" type="checkbox" /> <b>{if $input.type == 'group_shop'}{l s='All group shops'}{else}{l s='All shops'}{/if}</b></label>
+				<label class="t"><input class="input_all_shop" type="checkbox" /> <b>{l s='All shops'}</b></label>
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
-			{if ($input.type == 'group_shop' && isset($fields_value.shop[$groupID]))}
-				{assign var=groupChecked value=true}
-			{else}
 				{assign var=groupChecked value=false}
-			{/if}
 			<tr {if $input.type == 'shop'}class="alt_row"{/if}>
 				<td>
 					<img style="vertical-align:middle;" alt="" src="../img/admin/lv2_b.gif" />
 					<label class="t">
-						<input class="input_group_shop"
+						<input class="input_shop_group"
 							type="checkbox"
-							name="checkBoxGroupShopAsso_{$table}[{$form_id}][{$groupID}]"
+							name="checkBoxShopGroupAsso_{$table}[{$form_id}][{$groupID}]"
 							value="{$groupID}"
 							{if $groupChecked} checked="checked"{/if} />
 						<b>{l s='Group:'} {$groupData['name']}</b>

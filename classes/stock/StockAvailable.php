@@ -43,7 +43,7 @@ class StockAvailableCore extends ObjectModel
 	public $id_shop;
 
 	/** @var int the group shop associated to the current product and corresponding quantity */
-	public $id_group_shop;
+	public $id_shop_group;
 
 	/** @var int the quantity available for sale */
 	public $quantity = 0;
@@ -64,7 +64,7 @@ class StockAvailableCore extends ObjectModel
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop_group' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'depends_on_stock' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'out_of_stock' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
@@ -79,7 +79,7 @@ class StockAvailableCore extends ObjectModel
  			'id_product' => array('xlink_resource' => 'products'),
  			'id_product_attribute' => array('xlink_resource' => 'combinations'),
  			'id_shop' => array('xlink_resource' => 'shops'),
- 			'id_group_shop' => array('xlink_resource' => 'shop_groups'),
+ 			'id_shop_group' => array('xlink_resource' => 'shop_groups'),
  		),
  		'hidden_fields' => array(
  		),
@@ -415,22 +415,22 @@ class StockAvailableCore extends ObjectModel
 				$stock_available->id_product_attribute = (int)$id_product_attribute;
 				$stock_available->quantity = (int)$quantity;
 
-				// if we are in group_shop context
+				// if we are in shop_group context
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
-					$group_shop = $context->shop->getGroup();
+					$shop_group = $context->shop->getGroup();
 
 					// if quantities are shared between shops of the group
-					if ($group_shop->share_stock)
+					if ($shop_group->share_stock)
 					{
 						$stock_available->id_shop = 0;
-						$stock_available->id_group_shop = (int)$group_shop->id;
+						$stock_available->id_shop_group = (int)$shop_group->id;
 					}
 				}
 				else
 				{
 					$stock_available->id_shop = $id_shop;
-					$stock_available->id_group_shop = Shop::getGroupFromShop($id_shop);
+					$stock_available->id_shop_group = Shop::getGroupFromShop($id_shop);
 				}
 
 				$stock_available->add();
@@ -468,13 +468,13 @@ class StockAvailableCore extends ObjectModel
 	 * If stocks are shared, remoe all old available quantities for all shops of the group
 	 * Else remove all available quantities for the current group
 	 *
-	 * @param GroupShop $group_shop the GroupShop object
+	 * @param ShopGroup $shop_group the ShopGroup object
 	 */
-	public static function resetProductFromStockAvailableByGroupShop($group_shop)
+	public static function resetProductFromStockAvailableByShopGroup(ShopGroup $shop_group)
 	{
-		if ($group_shop->share_stock)
+		if ($shop_group->share_stock)
 		{
-			$shop_list = Shop::getIdShopsByIdGroupShop($group_shop->id);
+			$shop_list = Shop::getIdShopsByIdShopGroup($shop_group->id);
 
 			if (count($shop_list) > 0)
 			{
@@ -490,7 +490,7 @@ class StockAvailableCore extends ObjectModel
 		{
 			return Db::getInstance()->execute('
 				DELETE FROM '._DB_PREFIX_.'stock_available
-				WHERE id_group_shop = '.$group_shop->id
+				WHERE id_shop_group = '.$shop_group->id
 			);
 		}
 	}
@@ -561,20 +561,20 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = $context->shop->id;
 
-		// if we are in group_shop context
-		$group_shop = $context->shop->getGroup();
+		// if we are in $shop_group context
+		$shop_group = $context->shop->getGroup();
 
 		// if quantities are shared between shops of the group
-		if ($group_shop->share_stock)
+		if ($shop_group->share_stock)
 		{
 			if (is_object($sql))
 			{
-				$sql->where(pSQL($alias).'id_group_shop = '.(int)$group_shop->id);
+				$sql->where(pSQL($alias).'id_shop_group = '.(int)$shop_group->id);
 				$sql->where(pSQL($alias).'id_shop = 0');
 			}
 			else
 			{
-				$sql = ' AND '.pSQL($alias).'id_group_shop = '.(int)$group_shop->id.' ';
+				$sql = ' AND '.pSQL($alias).'id_shop_group = '.(int)$shop_group->id.' ';
 				$sql .= ' AND '.pSQL($alias).'id_shop = 0 ';
 			}
 		}
@@ -582,9 +582,9 @@ class StockAvailableCore extends ObjectModel
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
 			if (is_object($sql))
-				$sql->where(pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $group_shop->id, true)).')');
+				$sql->where(pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $shop_group->id, true)).')');
 			else
-				$sql = ' AND '.pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $group_shop->id, true)).') ';
+				$sql = ' AND '.pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $shop_group->id, true)).') ';
 		}
 		// if no group specific restriction, set simple shop restriction
 		else
@@ -614,18 +614,18 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = $context->shop->id;
 
-		$group_shop = $context->shop->getGroup();
+		$shop_group = $context->shop->getGroup();
 
 		// if quantities are shared between shops of the group
-		if ($group_shop->share_stock)
+		if ($shop_group->share_stock)
 		{
-			$params['id_group_shop'] = (int)$group_shop->id;
+			$params['id_shop_group'] = (int)$shop_group->id;
 			$params['id_shop'] = 0;
 
 			$group_ok = true;
 		}
 		else
-			$params['id_group_shop'] = 0;
+			$params['id_shop_group'] = 0;
 
 		// if no group specific restriction, set simple shop restriction
 		if (!$group_ok)
@@ -650,7 +650,7 @@ class StockAvailableCore extends ObjectModel
 				id_product,
 				id_product_attribute,
 				id_shop,
-				id_group_shop,
+				id_shop_group,
 				quantity,
 				depends_on_stock,
 				out_of_stock

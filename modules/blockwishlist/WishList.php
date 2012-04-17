@@ -52,7 +52,7 @@ class WishList extends ObjectModel
 	public $id_shop;
 	
 	/** @var string Object last modification date */
-	public $id_group_shop;
+	public $id_shop_group;
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -66,7 +66,7 @@ class WishList extends ObjectModel
 			'date_add' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'id_shop' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_group_shop' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop_group' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 		)
 	);
 
@@ -109,8 +109,8 @@ class WishList extends ObjectModel
 	{
 		if (Shop::getContextShopID())
 			$shop_restriction = 'AND id_shop = '.(int)Shop::getContextShopID();
-		elseif (Shop::getContextGroupShopID())
-			$shop_restriction = 'AND id_group_shop = '.(int)Shop::getContextGroupShopID();
+		elseif (Shop::getContextShopGroupID())
+			$shop_restriction = 'AND id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$shop_restriction = '';
 
@@ -174,8 +174,8 @@ class WishList extends ObjectModel
 	{
 		if (Shop::getContextShopID())
 			$shop_restriction = 'AND id_shop = '.(int)Shop::getContextShopID();
-		elseif (Shop::getContextGroupShopID())
-			$shop_restriction = 'AND id_group_shop = '.(int)Shop::getContextGroupShopID();
+		elseif (Shop::getContextShopGroupID())
+			$shop_restriction = 'AND id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$shop_restriction = '';
 
@@ -276,7 +276,7 @@ class WishList extends ObjectModel
 		'.Shop::addSqlAssociation('product', 'p').'
 		JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = wp.`id_product`'.Shop::addSqlRestrictionOnLang('pl').'
 		JOIN `'._DB_PREFIX_.'wishlist` w ON w.`id_wishlist` = wp.`id_wishlist`
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = asso_shop_product.`id_category_default` AND cl.id_lang='.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = product_shop.`id_category_default` AND cl.id_lang='.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 		WHERE w.`id_customer` = '.(int)($id_customer).'
 		AND pl.`id_lang` = '.(int)($id_lang).'
 		AND wp.`id_wishlist` = '.(int)($id_wishlist).
@@ -298,6 +298,7 @@ class WishList extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)($id_lang).')
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				WHERE pac.`id_product_attribute` = '.(int)($products[$i]['id_product_attribute']));
 				$products[$i]['attributes_small'] = '';
 				if ($result)
@@ -322,8 +323,8 @@ class WishList extends ObjectModel
 	{
 		if (Shop::getContextShopID())
 			$shop_restriction = 'AND id_shop = '.(int)Shop::getContextShopID();
-		elseif (Shop::getContextGroupShopID())
-			$shop_restriction = 'AND id_group_shop = '.(int)Shop::getContextGroupShopID();
+		elseif (Shop::getContextShopGroupID())
+			$shop_restriction = 'AND id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$shop_restriction = '';
 		

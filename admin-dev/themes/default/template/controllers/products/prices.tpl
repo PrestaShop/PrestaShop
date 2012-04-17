@@ -106,18 +106,27 @@ jQuery(document).ready(Customer.init);
 <div class="hint" style="display:block;min-height:0;">
 	{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 </div>
+
+{include file="controllers/products/multishop/check_fields.tpl" product_tab="Price"}
+
 <div class="separation"></div>
 <table>
 	<tr>
-		<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
+			<label>{l s='Pre-tax wholesale price:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
-			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
+			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{$product->wholesale_price|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
 			<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
 		</td>
 	</tr>
 
 	<tr>
-		<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
+			<label>{l s='Pre-tax retail price:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<input type="hidden"  id="priceTEReal" name="price" value="{$product->price}" />
 			{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price_displayed" type="text" value="{$product->price|string_format:'%.2f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}
@@ -125,7 +134,10 @@ jQuery(document).ready(Customer.init);
 		</td>
 	</tr>
 	<tr>
-		<td class="col-left"><label>{l s='Tax rule:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
+			<label>{l s='Tax rule:'}</label>
+		</td>
 		<td style="padding-bottom:5px;">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
@@ -177,7 +189,10 @@ jQuery(document).ready(Customer.init);
 		</td>
 	</tr>
 	<tr id="tr_unit_price">
-		<td class="col-left"><label>{l s='Unit price:'}</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
+			<label>{l s='Unit price:'}</label>
+		</td>
 		<td>
 			{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}"
 				onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
@@ -197,7 +212,10 @@ jQuery(document).ready(Customer.init);
 		</td>
 	</tr>
 	<tr>
-		<td class="col-left"><label>&nbsp;</label></td>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
+			<label>&nbsp;</label>
+		</td>
 		<td>
 			<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
 		</td>

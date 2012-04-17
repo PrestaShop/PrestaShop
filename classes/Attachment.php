@@ -135,12 +135,9 @@ class AttachmentCore extends ObjectModel
 				if ((int)$id_attachment > 0)
 					$ids[] = array('id_product' => (int)$id_product, 'id_attachment' => (int)$id_attachment);
 
-			Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'product
-				SET cache_has_attachments = '.(count($ids) ? '1' : '0').'
-				WHERE id_product = '.(int)$id_product.'
-				LIMIT 1
-			');
+			Db::getInstance()->update('product', array(
+				'cache_has_attachments' => count($ids) ? 1 : 0
+			), 'id_product = '.(int)$id_product);
 
 			if (!empty($ids))
 				$result2 = Db::getInstance()->insert('product_attachment', $ids);

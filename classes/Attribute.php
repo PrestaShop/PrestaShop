@@ -88,15 +88,10 @@ class AttributeCore extends ObjectModel
 			foreach ($result as $row)
 				$combination_ids[] = (int)$row['id_product_attribute'];
 
-			if (Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `'.$this->def['primary'].'` = '.(int)$this->id) === false)
-				return false;
-
-			if (Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'product_attribute`
-				WHERE `id_product_attribute` IN ('.implode(', ', $combination_ids).')') === false)
-				return false;
+			$combinations = new Collection('Combination');
+			$combinations->where('id_product', '=', $this->id);
+			foreach ($combinations as $combination)
+				$combination->delete();
 		}
 
 		/* Reinitializing position */
@@ -241,8 +236,9 @@ class AttributeCore extends ObjectModel
 	{
 		$minimal_quantity = Db::getInstance()->getValue('
 			SELECT `minimal_quantity`
-			FROM `'._DB_PREFIX_.'product_attribute`
-			WHERE `id_product_attribute` = '.(int)$id_product_attribute
+			FROM `'._DB_PREFIX_.'product_attribute_shop` pas
+			WHERE `id_shop` = '.(int)Context::getContext()->shop->id.'
+			AND `id_product_attribute` = '.(int)$id_product_attribute
 		);
 
 		if ($minimal_quantity > 1)

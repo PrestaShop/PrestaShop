@@ -284,7 +284,7 @@
 								{elseif $input.type == 'group'}
 									{assign var=groups value=$input.values}
 									{include file='helpers/form/form_group.tpl'}
-								{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
+								{elseif $input.type == 'shop'}
 									{$input.html}
 								{elseif $input.type == 'categories'}
 									{include file='helpers/form/form_category.tpl' categories=$input.values}

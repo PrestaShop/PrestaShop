@@ -32,7 +32,7 @@ function module_blockwishlist_multishop()
 	{
 		$res = Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'wishlist`
 		ADD `id_shop` INTEGER NOT NULL default \'1\' AFTER `counter`,
-		ADD `id_group_shop` INTEGER NOT NULL default \'1\' AFTER `id_shop`');
+		ADD `id_shop_group` INTEGER NOT NULL default \'1\' AFTER `id_shop`');
 		
 		return $res;
 	}

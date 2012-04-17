@@ -47,7 +47,7 @@ class AdminShopControllerCore extends AdminController
 				'filter_key' => 'a!name',
 				'width' => 200,
 			),
-			'group_shop_name' => array(
+			'shop_group_name' => array(
 				'title' => $this->l('Group Shop'),
 				'width' => 150,
 				'filter_key' => 'gs!name'
@@ -154,10 +154,10 @@ class AdminShopControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->_select = 'gs.name group_shop_name, cl.name category_name, CONCAT(\'http://\', su.domain, su.physical_uri, su.virtual_uri) AS url';
+		$this->_select = 'gs.name shop_group_name, cl.name category_name, CONCAT(\'http://\', su.domain, su.physical_uri, su.virtual_uri) AS url';
 		$this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'group_shop` gs
-				ON (a.id_group_shop = gs.id_group_shop)
+			LEFT JOIN `'._DB_PREFIX_.'shop_group` gs
+				ON (a.id_shop_group = gs.id_shop_group)
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')
 			LEFT JOIN '._DB_PREFIX_.'shop_url su
@@ -237,7 +237,7 @@ class AdminShopControllerCore extends AdminController
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$this->_where .= ' AND a.id_group_shop = '.(int)Shop::getContextGroupShopID();
+			$this->_where .= ' AND a.id_shop_group = '.(int)Shop::getContextShopGroupID();
 
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 		$shop_delete_list = array();
@@ -272,35 +272,35 @@ class AdminShopControllerCore extends AdminController
 
 		if (Shop::getTotalShops() > 1 && $obj->id)
 		{
-			$group_shop = new GroupShop($obj->id_group_shop);
+			$shop_group = new ShopGroup($obj->id_shop_group);
 			$this->fields_form['input'][] = array(
 				'type' => 'hidden',
-				'name' => 'id_group_shop',
-				'default' => $group_shop->name
+				'name' => 'id_shop_group',
+				'default' => $shop_group->name
 			);
 			$this->fields_form['input'][] = array(
-				'type' => 'textGroupShop',
+				'type' => 'textShopGroup',
 				'label' => $this->l('Group Shop:'),
-				'name' => 'id_group_shop',
-				'value' => $group_shop->name
+				'name' => 'id_shop_group',
+				'value' => $shop_group->name
 			);
 		}
 		else
 		{
 			$options = array();
-			foreach (GroupShop::getGroupShops() as $group)
+			foreach (ShopGroup::getShopGroups() as $group)
 				$options[] = array(
-					'id_group_shop' =>	$group->id,
+					'id_shop_group' =>	$group->id,
 					'name' =>			$group->name,
 				);
 
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Group Shop:'),
-				'name' => 'id_group_shop',
+				'name' => 'id_shop_group',
 				'options' => array(
 					'query' => $options,
-					'id' => 'id_group_shop',
+					'id' => 'id_shop_group',
 					'name' => 'name',
 				),
 			);
@@ -431,10 +431,10 @@ class AdminShopControllerCore extends AdminController
 			);
 
 		$this->fields_value = array(
-            'id_group_shop' => (Tools::getValue('id_group_shop') ? Tools::getValue('id_group_shop') :
-                (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
+            'id_shop_group' => (Tools::getValue('id_shop_group') ? Tools::getValue('id_shop_group') :
+                (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
             'id_category' => (Tools::getValue('id_category') ? Tools::getValue('id_category') :
-                (isset($obj->id_group_shop)) ? $obj->id_group_shop : Shop::getContextGroupShopID()),
+                (isset($obj->id_shop_group)) ? $obj->id_shop_group : Shop::getContextShopGroupID()),
 			'id_theme_checked' => (isset($obj->id_theme) ? $obj->id_theme : $id_theme)
 		);
 

@@ -2,7 +2,7 @@
 <entity_delivery>
   <fields class="Delivery" sql="a.id_carrier = 1">
     <field name="id_shop"/>
-    <field name="id_group_shop"/>
+    <field name="id_shop_group"/>
     <field name="id_carrier" relation="carrier"/>
     <field name="id_range_price" relation="range_price"/>
     <field name="id_range_weight" relation="range_weight"/>

@@ -58,11 +58,21 @@
 			<p>{$categoryData['info']}</p>
 		{/if}
 
+		{if $use_multishop}
+			<input type="checkbox" style="vertical-align: text-top" checked="checked" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Uncheck / check all'}</b> {l s='(uncheck boxes if you want to set a custom value for this shop or group shop context)'}
+			<div class="separation"></div>
+		{/if}
+
 		{foreach $categoryData['fields'] AS $key => $field}
 				{if $field['type'] == 'hidden'}
 					<input type="hidden" name="{$key}" value="{$field['value']}" />
 				{else}
 					<div style="clear: both; padding-top:15px;" id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
+					{if ($field['multishop_default'])}
+						<div class="preference_default_multishop">
+							<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+						</div>
+					{/if}
 					{block name="label"}
 						{if isset($field['title'])}
 							<label class="conf_title">
@@ -170,13 +180,6 @@
 						{/if}
 						{if isset($field['hint'])}<span class="hint" name="help_box">{$field['hint']}<span class="hint-pointer">&nbsp;</span></span>{/if}
 					{/block}{* end block input *}
-					{if ($field['multishop_default'])}
-						<div class="preference_default_multishop">
-							<label>
-								<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" /> {l s='Use default value'}
-							</label>
-						</div>
-					{/if}
 					{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
 					{if $field['is_invisible']}<p class="warn">{l s='You can\'t change the value of this configuration field in the context of this shop'}</p>{/if}
 					</div>

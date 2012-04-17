@@ -348,7 +348,7 @@ class HelperCore
 
 	public static function renderShopList()
 	{
-		if (!Shop::isFeatureActive())
+		if (!Shop::isFeatureActive() || count(Shop::getShops(false, null, true)) < 2)
 			return null;
 
 		$tree = Shop::getTree();
@@ -358,7 +358,7 @@ class HelperCore
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$value = '';
 		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-			$value = 'g-'.Shop::getContextGroupShopID();
+			$value = 'g-'.Shop::getContextShopGroupID();
 		else
 			$value = 's-'.Shop::getContextShopID();
 
@@ -369,7 +369,7 @@ class HelperCore
 		$html .= '<option value="" class="first">'.translate('All shops').'</option>';
 		foreach ($tree as $gID => $group_data)
 		{
-			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP)
+			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP) && count($group_data['shops']) > 1)
 				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
 				$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';

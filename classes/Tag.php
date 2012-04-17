@@ -139,8 +139,8 @@ class TagCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE t.`id_lang` = '.(int)$id_lang.'
-		AND p.`active` = 1
-		AND p.`id_product` IN (
+		AND product_shop.`active` = 1
+		AND product_shop.`id_product` IN (
 			SELECT cp.`id_product`
 			FROM `'._DB_PREFIX_.'category_group` cg
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
@@ -179,8 +179,9 @@ class TagCore extends ObjectModel
 		SELECT pl.name, pl.id_product
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product'.Shop::addSqlRestrictionOnLang('pl').'
+		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE pl.id_lang = '.(int)$id_lang.'
-		AND p.active = 1
+		AND product_shop.active = 1
 		'.($this->id ? ('AND p.id_product '.$in.' (SELECT pt.id_product FROM `'._DB_PREFIX_.'product_tag` pt WHERE pt.id_tag = '.(int)$this->id.')') : '').'
 		ORDER BY pl.name');
 	}
@@ -191,7 +192,7 @@ class TagCore extends ObjectModel
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
-			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET indexed = 0 WHERE id_product IN ('.implode(',', $array).')');
+			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'id_product IN ('.implode(',', $array).')');
 			$ids = array();
 			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';

@@ -33,7 +33,7 @@ class OrderCore extends ObjectModel
 	/** @var integer Invoice address id */
 	public $id_address_invoice;
 
-	public $id_group_shop;
+	public $id_shop_group;
 
 	public $id_shop;
 
@@ -165,7 +165,7 @@ class OrderCore extends ObjectModel
 			'id_address_invoice' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_cart' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_currency' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_group_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_shop' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_customer' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
@@ -490,6 +490,7 @@ class OrderCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail` od
 		LEFT JOIN `'._DB_PREFIX_.'product` p
 		ON p.id_product = od.product_id
+		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE od.`id_order` = '.(int)($this->id));
 	}
 

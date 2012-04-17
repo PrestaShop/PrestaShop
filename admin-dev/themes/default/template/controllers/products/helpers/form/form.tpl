@@ -40,8 +40,18 @@
 				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
 				theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
 				setup : function(ed) {
-
 					{* Count the total number of the field *}
+
+					ed.onInit.add(function(ed)
+					{
+						if (typeof load_tinymce_multishop[ed.id] != 'undefined')
+						{
+							if (typeof load_tinymce_multishop[ed.id])
+								ed.hide();
+							else
+								ed.show();
+						}
+					});
 
 					ed.onKeyUp.add(function(ed, e) {
 						tinyMCE.triggerSave();
@@ -94,8 +104,12 @@
 		var save_error = {if $save_error}true{else}false{/if};
 
 		var product_type = {$product_type};
-		{*var mce_maximum = '{l s='Maximum'}';
-		var mce_characters = '{l s='characters'}';*}
+		{*var mce_maximum = '{l s='Maximum'}';*}
+		{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
+			var display_multishop_checkboxes = true;
+		{else}
+			var display_multishop_checkboxes = false;
+		{/if}
 
 		$(document).ready(function()
 		{

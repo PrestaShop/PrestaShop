@@ -963,7 +963,6 @@ class AdminImportControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject(new TaxRulesGroup($product->id_tax_rules_group)))
 				{
-					$product->setTaxRulesGroup((int)$product->id_tax_rules_group, true);
 					$address = $this->context->shop->getAddress();
 					$tax_manager = TaxManagerFactory::getManager($address, $product->id_tax_rules_group);
                     $product_tax_calculator = $tax_manager->getTaxCalculator();
@@ -1123,9 +1122,10 @@ class AdminImportControllerCore extends AdminController
 				if (Tools::getValue('match_ref') == 1 && $product->reference && Product::existsRefInDatabase($product->reference))
 				{
 					$datas = Db::getInstance()->getRow('
-						SELECT `date_add`, `id_product`
-						FROM `'._DB_PREFIX_.'product`
-						WHERE `reference` = "'.$product->reference.'"
+						SELECT product_shop.`date_add`, p.`id_product`
+						FROM `'._DB_PREFIX_.'product` p
+						'.Shop::addSqlAssociation('product', 'p').'
+						WHERE p.`reference` = "'.$product->reference.'"
 					');
 					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
@@ -1133,7 +1133,11 @@ class AdminImportControllerCore extends AdminController
 				} // Else If id product && id product already in base, trying to update
 				else if ($product->id && Product::existsInDatabase((int)$product->id, 'product'))
 				{
-					$datas = Db::getInstance()->getRow('SELECT `date_add` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$product->id);
+					$datas = Db::getInstance()->getRow('
+						SELECT product_shop.`date_add`
+						FROM `'._DB_PREFIX_.'product` p
+						'.Shop::addSqlAssociation('product', 'p').'
+						WHERE p.`id_product` = '.(int)$product->id);
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				}
@@ -1167,7 +1171,6 @@ class AdminImportControllerCore extends AdminController
 						$shop = trim($shop);
 						if (!is_numeric($shop))
 							$shop = Shop::getIdByName($shop);
-						$product->updateCategoryDefault(new Shop($shop));
 						$shops[] = $shop;
 					}
 					$product->associateTo($shops);
@@ -1587,7 +1590,7 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
-				$customer->id_group_shop = Shop::getGroupFromShop($customer->id_shop);
+				$customer->id_shop_group = Shop::getGroupFromShop($customer->id_shop);
 
 				if ($customer->id && $customer->customerIdExists($customer->id))
 					$res = $customer->update();
@@ -1791,10 +1794,10 @@ class AdminImportControllerCore extends AdminController
 						{
 							$shop = trim($shop);
 							if (!is_numeric($shop))
-								$shop = GroupShop::getIdByName($shop);
+								$shop = ShopGroup::getIdByName($shop);
 							$shops[] = $shop;
 						}
-						$manufacturer->associateTo($shops, 'group_shop');
+						$manufacturer->associateTo($shops);
 					}
 				}
 			}
@@ -1852,10 +1855,10 @@ class AdminImportControllerCore extends AdminController
 						{
 							$shop = trim($shop);
 							if (!is_numeric($shop))
-								$shop = GroupShop::getIdByName($shop);
+								$shop = ShopGroup::getIdByName($shop);
 							$shops[] = $shop;
 						}
-						$supplier->associateTo($shops, 'group_shop');
+						$supplier->associateTo($shops);
 					}
 				}
 			}
@@ -2156,6 +2159,7 @@ class AdminImportControllerCore extends AdminController
 				break;
 			case $this->entities[$this->l('Products')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
@@ -2177,6 +2181,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Combinations')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group`');
