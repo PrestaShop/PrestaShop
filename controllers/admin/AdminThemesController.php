@@ -486,18 +486,19 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO'], 300000))
 				$this->errors[] = $error;
+
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmp_name))
 				return false;
-			if (($id_shop == Configuration::get('PS_SHOP_DEFAULT') || $id_shop == 0) && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo.jpg'))
+
+			$logo_name = 'logo-'.(int)$id_shop.'.jpg';
+			if (($id_shop == Configuration::get('PS_SHOP_DEFAULT') || $id_shop == 0))
+				$logo_name = 'logo.jpg';
+
+			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
 				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-				
-			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			else
-				Configuration::updateValue('PS_LOGO', 'logo-'.(int)$id_shop.'.jpg');
-			
-			Configuration::updateGlobalValue('PS_LOGO', 'logo.jpg');
+
+			Configuration::updateValue('PS_LOGO', $logo_name);
 
 			unlink($tmp_name);
 		}
