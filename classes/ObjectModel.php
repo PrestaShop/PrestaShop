@@ -256,7 +256,7 @@ abstract class ObjectModelCore
 		$fields = $this->formatFields(self::FORMAT_COMMON);
 
 		// For retro compatibility, get common fields for default shop
-		if ($this->id_shop == Configuration::get('PS_SHOP_DEFAULT'))
+		if (!empty($this->def['multishop']) && $this->id_shop == Configuration::get('PS_SHOP_DEFAULT'))
 			$fields = array_merge($fields, $this->getFieldsShop());
 
 		// Ensure that we get something to insert
