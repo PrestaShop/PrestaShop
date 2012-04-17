@@ -257,12 +257,16 @@ class AdminCartRulesControllerCore extends AdminController
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'products':
-				// Todo: Consider optimization
 				$products = array('selected' => array(), 'unselected' => array());
 				$results = Db::getInstance()->executeS('
-				SELECT name, id_product as id
-				FROM '._DB_PREFIX_.'product_lang pl
+				SELECT name, p.id_product as id
+				FROM '._DB_PREFIX_.'product p
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					ON (p.`id_product` = pl.`id_product`
+					AND pl.`id_lang` = '.(int)(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
+				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE id_lang = '.(int)Context::getContext()->language->id.'
+				AND asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
 				ORDER BY name');
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
@@ -295,7 +299,6 @@ class AdminCartRulesControllerCore extends AdminController
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
-				// Todo: Consider optimization
 				$categories = array('selected' => array(), 'unselected' => array());
 				$results = Db::getInstance()->executeS('
 				SELECT name, id_category as id
@@ -322,16 +325,16 @@ class AdminCartRulesControllerCore extends AdminController
 
 		if (Tools::isSubmit('customerFilter'))
 		{
-			$q = trim(Tools::getValue('q'));
+			$search_query = trim(Tools::getValue('q'));
 			$customers = Db::getInstance()->executeS('
 			SELECT `id_customer`, `email`, CONCAT(`firstname`, \' \', `lastname`) as cname
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `deleted` = 0 AND is_guest = 0 AND active = 1
 			AND (
-				`id_customer` = '.(int)$q.'
-				OR `email` LIKE "%'.pSQL($q).'%"
-				OR `firstname` LIKE "%'.pSQL($q).'%"
-				OR `lastname` LIKE "%'.pSQL($q).'%"
+				`id_customer` = '.(int)$search_query.'
+				OR `email` LIKE "%'.pSQL($search_query).'%"
+				OR `firstname` LIKE "%'.pSQL($search_query).'%"
+				OR `lastname` LIKE "%'.pSQL($search_query).'%"
 			)
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
@@ -351,7 +354,6 @@ class AdminCartRulesControllerCore extends AdminController
 		{
 			foreach ($products as &$product)
 			{
-				// Formatted price
 				$combinations = array();
 				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
 				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
