@@ -178,7 +178,7 @@ class AdminCarriersControllerCore extends AdminController
 		);
 		$this->_select = 'b.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier
-							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` 
+							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier`
 								AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
 
@@ -550,6 +550,13 @@ class AdminCarriersControllerCore extends AdminController
 					$id = (int)Tools::getValue('id_'.$this->table);
 					Warehouse::removeCarrier($id);
 				}
+				else if (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
+				{
+					$ids = Tools::getValue($this->table.'Box');
+					array_walk($ids, 'intval');
+					foreach ($ids as $id)
+						Warehouse::removeCarrier($id);
+				}
 				parent::postProcess();
 			}
 		}
@@ -592,7 +599,7 @@ class AdminCarriersControllerCore extends AdminController
 
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
-		
+
 		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
 	}
 
@@ -637,7 +644,7 @@ class AdminCarriersControllerCore extends AdminController
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-		
+
 		foreach ($this->_list as $key => $list)
 			if ($list['name'] == '0')
 				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
