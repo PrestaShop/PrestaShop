@@ -2578,5 +2578,31 @@ class AdminControllerCore extends Controller
 
 		return $this->context->smarty->createTemplate($this->context->smarty->getTemplateDir(0).$tpl_name, $this->context->smarty);
 	}
+
+	/**
+	 * Shortcut to set up a json success payload
+	 *
+	 * @param $message success message
+	 */
+	public function jsonConfirmation($message)
+	{
+		$this->json = true;
+		$this->confirmations[] = $message;
+		if ($this->status === '')
+			$this->status = 'ok';
+	}
+
+	/**
+	 * Shortcut to set up a json error payload
+	 *
+	 * @param $message error message
+	 */
+	public function jsonError($message)
+	{
+		$this->json = true;
+		$this->errors[] = $message;
+		if ($this->status === '')
+			$this->status = 'error';
+	}
 }
 

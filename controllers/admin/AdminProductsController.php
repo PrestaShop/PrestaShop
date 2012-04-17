@@ -299,12 +299,18 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processDeleteVirtualProduct()
+	public function ajaxProcessDeleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), 0)))
-			return false;
-		$product_download = new ProductDownload((int)$id_product_download);
-		return $product_download->deleteFile((int)$id_product_download);
+			$this->jsonError($this->l('Cannot retrieve file'));
+		else
+		{
+			$product_download = new ProductDownload((int)$id_product_download);
+			if (!$product_download->deleteFile((int)$id_product_download))
+				$this->jsonError($this->l('Cannot delete file'));
+			else
+				$this->jsonConfirmation($this->_conf[1]);
+		}
 	}
 
 	public function processDeleteVirtualProductAttribute()
@@ -1237,7 +1243,6 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateProductImageShopAsso()
 	{
-		$this->json = true;
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
 				$res = Db::getInstance()->execute(
@@ -1251,15 +1256,13 @@ class AdminProductsControllerCore extends AdminController
 				);
 
 		if ($res)
-			$this->confirmations[] = $this->_conf[27];
+			$this->jsonConfirmation($this->_conf[27]);
 		else
-			$this->errors[] = Tools::displayError('Error on picture shop association');
-		$this->status = 'ok';
+			$this->jsonError(Tools::displayError('Error on picture shop association'));
 	}
 
 	public function ajaxProcessUpdateImagePosition()
 	{
-		$this->json = true;
 		$res = false;
 		if ($json = Tools::getValue('json'))
 		{
@@ -1274,15 +1277,13 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 		if ($res)
-			$this->confirmations[] = $this->_conf[25];
+			$this->jsonConfirmation($this->_conf[25]);
 		else
-			$this->errors[] = Tools::displayError('Error on moving picture');
-		$this->status = 'ok';
+			$this->jsonError(Tools::displayError('Error on moving picture'));
 	}
 
 	public function ajaxProcessUpdateCover()
 	{
-		$this->json = true;
 		Image::deleteCover((int)Tools::getValue('id_product'));
 		$img = new Image((int)Tools::getValue('id_image'));
 		$img->cover = 1;
@@ -1291,14 +1292,13 @@ class AdminProductsControllerCore extends AdminController
 		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'.jpg');
 
 		if ($img->update())
-			$this->confirmations[] = $this->_conf[26];
+			$this->jsonConfirmation($this->_conf[26]);
 		else
-			$this->errors[] = Tools::displayError('Error on moving picture');
+			$this->jsonError(Tools::displayError('Error on moving picture'));
 	}
 
 	public function ajaxProcessDeleteProductImage()
 	{
-		$this->json = true;
 		$this->display = 'content';
 		$res = true;
 		/* Delete product image */
@@ -1320,11 +1320,9 @@ class AdminProductsControllerCore extends AdminController
 			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg');
 
 		if ($res)
-			$this->confirmations[] = $this->_conf[7];
+			$this->jsonConfirmation($this->_conf[7]);
 		else
-			$this->errors[] = Tools::displayError('Error on deleting product image');
-
-		$this->status = 'ok';
+			$this->jsonError(Tools::displayError('Error on deleting product image'));
 	}
 
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
@@ -2842,15 +2840,9 @@ class AdminProductsControllerCore extends AdminController
 
 		if (empty($product->cache_default_attribute))
 		{
-			$data->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) || $product->productDownload->id > 0);
 			// found in informations and combination : to merge
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
 			$display_filename = ($product->productDownload->id > 0) ? $product->productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
-
-			if (!$product->productDownload->id || !$product->productDownload->active)
-				$hidden = 'display:none;';
-			else
-				$hidden = '';
 
 			$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
 			$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
@@ -2883,6 +2875,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$data->assign($this->tpl_form_vars);
 		$data->assign('link', $this->context->link);
+		$data->assign('is_file', $product->productDownload->checkFile());
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}

@@ -25,7 +25,7 @@
 *}
 {if isset($json)}
 {
-	"status":"{$status}",
+	"status" : "{$status}",
 	"confirmations" : {$confirmations},
 	"informations" : {$informations},
 	"error" : {$errors},
