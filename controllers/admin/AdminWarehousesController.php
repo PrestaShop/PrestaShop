@@ -538,18 +538,6 @@ class AdminWarehousesControllerCore extends AdminController
 				}
 			}
 
-			// if updating
-			if ($obj->id > 0)
-			{
-				// handles shops associations
-				if (Tools::isSubmit('ids_shops'))
-					$obj->setShops(Tools::getValue('ids_shops'));
-
-				// handles carriers associations
-				if (Tools::isSubmit('ids_carriers'))
-					$obj->setCarriers(Tools::getValue('ids_carriers'));
-			}
-
 			// hack for enable the possibility to update a warehouse without recreate new id
 			$this->deleted = false;
 
@@ -586,6 +574,25 @@ class AdminWarehousesControllerCore extends AdminController
 				return parent::processDelete();
 			}
 		}
+	}
+
+	/**
+	 * @see AdminController::processUpdate();
+	 */
+	public function processUpdate()
+	{
+		if (!($obj = $this->loadObject(true)))
+			return;
+
+		// handles shops associations
+		if (Tools::isSubmit('ids_shops'))
+			$obj->setShops(Tools::getValue('ids_shops'));
+
+		// handles carriers associations
+		$obj->setCarriers(Tools::getValue('ids_carriers'), array());
+
+
+		return parent::processUpdate();
 	}
 
 	/**
