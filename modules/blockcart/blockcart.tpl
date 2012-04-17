@@ -32,8 +32,8 @@
 var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
 var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
-var freeShippingTranslation = '<b>{l s='Free shipping!' mod='blockcart' js=1}</b>';
-var freeProductTranslation = '<b>{l s='Free!' mod='blockcart' js=1}</b>';
+var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
+var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart'}';
 var img_dir = '{$img_dir}';
 </script>
@@ -106,10 +106,9 @@ var img_dir = '{$img_dir}';
 		</dl>
 	{/if}
 		<p {if $products}class="hidden"{/if} id="cart_block_no_products">{l s='No products' mod='blockcart'}</p>
-
+	{if $discounts|@count > 0}
 		<table id="vouchers">
 			<tbody>
-				{if $discounts|@count > 0}
 					{foreach from=$discounts item=discount}
 						{if $discount.value_real > 0}
 						<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
@@ -120,10 +119,10 @@ var img_dir = '{$img_dir}';
 						</tr>
 						{/if}
 					{/foreach}
-				{/if}
 			</tbody>
 		</table>
-
+		{/if}
+		
 		<p id="cart-prices">
 			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
 			<span>{l s='Shipping' mod='blockcart'}</span>
