@@ -2482,7 +2482,7 @@ class AdminProductsControllerCore extends AdminController
 									$where = '
 										id_product = '.(int)$product->id.'
 										AND id_product_attribute = '.(int)$attribute['id_product_attribute'];
-									ObjectModel::updateMultishopTable('product_attribute', $data, $where);
+									ObjectModel::updateMultishopTable('Combination', $data, $where);
 								}
 								else
 								{
