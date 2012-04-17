@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+{if $infos|@count > 0}
 <!-- MODULE Block reinsurance -->
 <div id="reinsurance_block" class="clearfix">
 	<ul class="width{$nbblocks}">	
@@ -33,3 +33,4 @@
 	</ul>
 </div>
 <!-- /MODULE Block reinsurance -->
+{/if}

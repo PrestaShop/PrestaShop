@@ -239,3 +239,12 @@ $(document).ready(function() {
 		}
 	}
 });
+
+
+// Use it to simulate target blank link
+$(function(){
+    $('a.js-new-window').click(function(){
+        window.open(this.href);
+        return false;
+    });
+});

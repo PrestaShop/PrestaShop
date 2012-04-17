@@ -78,7 +78,7 @@
 #cart_block #cart_block_total {
 	float:right
 }
-#cart_block #cart_block_shipping_cost {font-weight:normal}
+#cart_block #cart_block_shipping_cost {font-weight:bold}
 
 #cart_block #cart-buttons .button_small {display:none;}
 #cart_block #cart-buttons  #button_order_cart {
