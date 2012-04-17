@@ -1273,7 +1273,7 @@ product_tabs['Suppliers'] = new function(){
 				checkbox.attr("disabled","disabled");
 			}
 			//manage default supplier check
-			manageDefaultSupplier();
+			self.manageDefaultSupplier();
 		});
 
 		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
