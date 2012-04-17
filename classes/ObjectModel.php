@@ -1129,12 +1129,13 @@ abstract class ObjectModelCore
 	 * @param string $classname
 	 * @param array $data
 	 * @param string $where
+	 * @param string $specific_where Only executed for common table
 	 * @return bool
 	 */
-	public static function updateMultishopTable($classname, $data, $where)
+	public static function updateMultishopTable($classname, $data, $where, $specific_where = '')
 	{
 		$def = ObjectModel::getDefinition($classname);
-		$common_data = $shop_data = array();
+		$update_data = array();
 		$is_default_shop = Context::getContext()->shop->id == Configuration::get('PS_SHOP_DEFAULT');
 		foreach ($data as $field => $value)
 		{
@@ -1144,21 +1145,18 @@ abstract class ObjectModelCore
 			if (!empty($def['fields'][$field]['shop']))
 			{
 				if ($is_default_shop)
-					$common_data[$field] = $value;
-				$shop_data[$field] = $value;
+					$update_data[] = "a.$field = '$value'";
+				$update_data[] = "{$def['table']}_shop.$field = '$value'";
 			}
 			else
-				$common_data[$field] = $value;
+				$update_data[] = "a.$field = '$value'";
 		}
 
-		$result = true;
-		if ($common_data)
-			$result &= Db::getInstance()->update($def['table'], $common_data, $where);
-
-		if ($shop_data)
-			$result &= Db::getInstance()->update($def['table'].'_shop', $shop_data, $where.' AND id_shop = '.(int)Context::getContext()->shop->id);
-
-		return $result;
+		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
+				'.Shop::addSqlAssociation($def['table'], 'a').'
+				SET '.implode(', ', $update_data).'
+				WHERE '.$where;
+		return Db::getInstance()->execute($sql);
 	}
 
 	/**
