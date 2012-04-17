@@ -50,6 +50,7 @@ class FavoriteProducts extends Module
 				|| !$this->registerHook('displayMyAccountBlock')
 				|| !$this->registerHook('displayCustomerAccount')
 				|| !$this->registerHook('displayLeftColumnProduct')
+				|| !$this->registerHook('extraLeft')
 				|| !$this->registerHook('displayHeader'))
 					return false;
 

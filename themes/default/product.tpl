@@ -299,7 +299,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 									{/if}
 									{/foreach}
 								</ul>
-								<input type="hidden" id="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" >
+								<input type="hidden" id="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
 								{foreach from=$group.attributes key=id_attribute item=group_attribute}
 									<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
