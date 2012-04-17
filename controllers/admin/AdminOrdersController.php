@@ -1733,7 +1733,7 @@ class AdminOrdersControllerCore extends AdminController
 		$order_detail = new OrderDetail(Tools::getValue('id_order_detail'));
 		$order = new Order(Tools::getValue('id_order'));
 
-		$this->doDeleteProductLinveValidation($order_detail, $order);
+		$this->doDeleteProductLineValidation($order_detail, $order);
 
 		// Update OrderInvoice of this OrderDetail
 		if ($order_detail->id_order_invoice != 0)
@@ -1741,8 +1741,8 @@ class AdminOrdersControllerCore extends AdminController
 			$order_invoice = new OrderInvoice($order_detail->id_order_invoice);
 			$order_invoice->total_paid_tax_excl -= $order_detail->total_price_tax_incl;
 			$order_invoice->total_paid_tax_incl -= $order_detail->total_price_tax_excl;
-			$order_invoice->total_products -= $order_detail->total_price_tax_incl;
-			$order_invoice->total_products_wt -= $order_detail->total_price_tax_excl;
+			$order_invoice->total_products -= $order_detail->total_price_tax_excl;
+			$order_invoice->total_products_wt -= $order_detail->total_price_tax_incl;
 			$res &= $order_invoice->update();
 		}
 
@@ -1750,8 +1750,8 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_paid -= $order_detail->total_price_tax_incl;
 		$order->total_paid_tax_incl -= $order_detail->total_price_tax_incl;
 		$order->total_paid_tax_excl -= $order_detail->total_price_tax_excl;
-		$order->total_products -= $order_detail->total_price_tax_incl;
-		$order->total_products_wt -= $order_detail->total_price_tax_excl;
+		$order->total_products -= $order_detail->total_price_tax_excl;
+		$order->total_products_wt -= $order_detail->total_price_tax_incl;
 
 		$res &= $order->update();
 
@@ -1795,6 +1795,7 @@ class AdminOrdersControllerCore extends AdminController
 
 	protected function doEditProductValidation(OrderDetail $order_detail, Order $order, OrderInvoice $order_invoice = null)
 	{
+		elog($order_detail->id);
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
 				'result' => false,
@@ -1856,7 +1857,7 @@ class AdminOrdersControllerCore extends AdminController
 					)));
 	}
 
-	protected function doDeleteProductLinveValidation(OrderDetail $order_detail, Order $order)
+	protected function doDeleteProductLineValidation(OrderDetail $order_detail, Order $order)
 	{
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
