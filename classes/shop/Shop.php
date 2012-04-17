@@ -730,10 +730,10 @@ class ShopCore extends ObjectModel
 	 * @param string $table Table name (E.g. product, module, etc.)
 	 * @param string $alias Alias of table
 	 * @param bool $inner_join Use or not INNER JOIN
-	 * @param Context $context
+	 * @param string $on
 	 * @return string
 	 */
-	public static function addSqlAssociation($table, $alias, $inner_join = true)
+	public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null)
 	{
 		$table_alias = $table.'_shop';
 		if (strpos($table, '.') !== false)
@@ -745,7 +745,8 @@ class ShopCore extends ObjectModel
 
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
 					ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-					AND '.$table_alias.'.id_shop IN('.implode(', ', Shop::getContextListShopID()).') ';
+					AND '.$table_alias.'.id_shop IN('.implode(', ', Shop::getContextListShopID()).') '
+					.(($on) ? ' AND '.$on : '');
 		return $sql;
 	}
 
