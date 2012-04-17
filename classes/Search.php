@@ -574,7 +574,7 @@ class SearchCore
 	protected static function setProductsAsIndexed(&$products)
 	{
 		if (count($products))
-			ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'id_product IN ('.implode(',', $products).')');
+			ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'a.id_product IN ('.implode(',', $products).')');
 	}
 
 	/** $queryArray3 is automatically emptied in order to be reused immediatly */
