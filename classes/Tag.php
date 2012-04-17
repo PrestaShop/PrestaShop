@@ -192,7 +192,7 @@ class TagCore extends ObjectModel
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
-			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'id_product IN ('.implode(',', $array).')');
+			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $array).')');
 			$ids = array();
 			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';

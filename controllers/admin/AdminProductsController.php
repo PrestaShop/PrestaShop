@@ -2480,8 +2480,8 @@ class AdminProductsControllerCore extends AdminController
 										'wholesale_price' => (float)Tools::convertPrice($price, $id_currency)
 									);
 									$where = '
-										id_product = '.(int)$product->id.'
-										AND id_product_attribute = '.(int)$attribute['id_product_attribute'];
+										a.id_product = '.(int)$product->id.'
+										AND a.id_product_attribute = '.(int)$attribute['id_product_attribute'];
 									ObjectModel::updateMultishopTable('Combination', $data, $where);
 								}
 								else
