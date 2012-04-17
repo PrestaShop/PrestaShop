@@ -139,17 +139,22 @@ class CrossSelling extends Module
 
 			$list_product_ids = join(',', $pIds);
 			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, p.show_price, cl.link_rewrite category, p.ean13
-			FROM '._DB_PREFIX_.'order_detail od
-			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = asso_shop_product.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
-			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
-			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$this->context->language->id.' AND cl.id_lang = '.(int)$this->context->language->id.'
-			AND od.product_id NOT IN ('.$list_product_ids.') AND i.cover = 1 AND p.active = 1
-			ORDER BY RAND()
-			LIMIT 10');
+				SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
+				FROM '._DB_PREFIX_.'order_detail od
+				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+				WHERE od.id_order IN ('.$list.')
+					AND pl.id_lang = '.(int)$this->context->language->id.'
+					AND cl.id_lang = '.(int)$this->context->language->id.'
+					AND od.product_id NOT IN ('.$list_product_ids.')
+					AND i.cover = 1
+					AND product_shop.active = 1
+				ORDER BY RAND()
+				LIMIT 10
+			');
 
 			$taxCalc = Product::getTaxCalculationMethod();
 			foreach ($orderProducts AS &$orderProduct)
@@ -188,16 +193,22 @@ class CrossSelling extends Module
 			$list = rtrim($list, ',');
 
 			$orderProducts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, p.show_price, cl.link_rewrite category, p.ean13
-			FROM '._DB_PREFIX_.'order_detail od
-			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
-			LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
-			LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
-			WHERE od.id_order IN ('.$list.') AND pl.id_lang = '.(int)$this->context->language->id.' AND cl.id_lang = '.(int)$this->context->language->id.'
-			AND od.product_id != '.(int)$params['product']->id.' AND i.cover = 1 AND p.active = 1
-			ORDER BY RAND()
-			LIMIT 10');
+				SELECT DISTINCT od.product_id, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price, cl.link_rewrite category, p.ean13
+				FROM '._DB_PREFIX_.'order_detail od
+				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+				WHERE od.id_order IN ('.$list.')
+					AND pl.id_lang = '.(int)$this->context->language->id.'
+					AND cl.id_lang = '.(int)$this->context->language->id.'
+					AND od.product_id != '.(int)$params['product']->id.'
+					AND i.cover = 1
+					AND product_shop.active = 1
+				ORDER BY RAND()
+				LIMIT 10
+			');
 
 			$taxCalc = Product::getTaxCalculationMethod();
 			foreach ($orderProducts AS &$orderProduct)

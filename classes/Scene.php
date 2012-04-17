@@ -245,7 +245,8 @@ class SceneCore extends ObjectModel
 		SELECT s.*
 		FROM `'._DB_PREFIX_.'scene_products` s
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
-		WHERE s.id_scene = '.(int)$this->id.($only_active ? ' AND p.active = 1' : ''));
+		'.Shop::addSqlAssociation('product', 'p').'
+		WHERE s.id_scene = '.(int)$this->id.($only_active ? ' AND product_shop.active = 1' : ''));
 
 		if (!$lite_result && $products)
 			foreach ($products as &$product)

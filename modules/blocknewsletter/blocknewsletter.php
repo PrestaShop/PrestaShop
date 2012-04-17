@@ -71,7 +71,7 @@ class Blocknewsletter extends Module
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'newsletter` (
 			`id` int(6) NOT NULL AUTO_INCREMENT,
 			`id_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
-			`id_group_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
+			`id_shop_group` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			`email` varchar(255) NOT NULL,
 			`newsletter_date_add` DATETIME NULL,
 			`ip_registration_newsletter` varchar(15) NOT NULL,
@@ -312,10 +312,10 @@ class Blocknewsletter extends Module
 	 */
 	protected function registerGuest($email, $active = true)
 	{
-		$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_group_shop, email, newsletter_date_add, ip_registration_newsletter, http_referer, active)
+		$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_shop_group, email, newsletter_date_add, ip_registration_newsletter, http_referer, active)
 				VALUES
 				('.$this->context->shop->id.',
-				'.$this->context->shop->id_group_shop.',
+				'.$this->context->shop->id_shop_group.',
 				\''.pSQL($email).'\',
 				NOW(),
 				\''.pSQL(Tools::getRemoteAddr()).'\',

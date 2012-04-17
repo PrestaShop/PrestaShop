@@ -26,11 +26,15 @@
 
 <input type="hidden" name="submitted_tabs[]" value="Seo" />
 <h4>{l s='SEO'}</h4>
+
+{include file="controllers/products/multishop/check_fields.tpl" product_tab="Seo"}
+
 <div class="separation"></div>
 
 <table>
 	<tr>
 		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}
 			<label>{l s='Meta title:'}</label>
 		</td>
 		<td>
@@ -43,6 +47,7 @@
 	</tr>
 	<tr>
 		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}
 			<label>{l s='Meta description:'}</label>
 		</td>
 		<td>
@@ -56,6 +61,7 @@
 	</tr>
 	<tr>
 		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}
 			<label>{l s='Meta keywords:'}</label>
 		</td>
 		<td>
@@ -67,6 +73,7 @@
 	</tr>
 	<tr>
 		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="default" multilang="true"}
 			<label>{l s='Friendly URL:'}</label>
 		</td>
 		<td>
@@ -84,5 +91,3 @@
 		</td>
 	</tr>
 </table>
-
-

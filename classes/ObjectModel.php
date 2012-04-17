@@ -39,6 +39,13 @@ abstract class ObjectModelCore
 	const TYPE_NOTHING = 7;
 
 	/**
+	 * List of data to format
+	 */
+	const FORMAT_COMMON = 1;
+	const FORMAT_LANG = 2;
+	const FORMAT_SHOP = 3;
+
+	/**
 	 * List of association types
 	 */
 	const HAS_ONE = 1;
@@ -122,6 +129,11 @@ abstract class ObjectModelCore
 	protected $def;
 
 	/**
+	 * @var array List of specific fields to update (all fields if null)
+	 */
+	protected $update_fields = null;
+
+	/**
 	 * Returns object validation rules (fields validity)
 	 *
 	 * @param string $class Child class name for static use (optional)
@@ -155,13 +167,13 @@ abstract class ObjectModelCore
 		if (!is_null($id_lang))
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
-		if ($id_shop && $this->isLangMultishop())
+		if ($id_shop && $this->isMultishop())
 		{
 			$this->id_shop = (int)$id_shop;
 			$this->get_shop_from_context = false;
 		}
 
-		if ($this->isLangMultishop() && !$this->id_shop)
+		if ($this->isMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
 
 	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
@@ -176,12 +188,19 @@ abstract class ObjectModelCore
 				$sql = new DbQuery();
 				$sql->from($this->def['table'], 'a');
 				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
+
+				// Get lang informations
 				if ($id_lang)
 				{
 					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
 					if ($this->id_shop)
 						$sql->where('b.id_shop = '.$this->id_shop);
 				}
+
+				// Get shop informations
+				if (!empty($this->def['multishop']))
+					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
+
 				Cache::store($cache_id, Db::getInstance()->getRow($sql));
 			}
 
@@ -234,7 +253,29 @@ abstract class ObjectModelCore
 	public function getFields()
 	{
 		$this->validateFields();
-		$fields = $this->formatFields();
+		$fields = $this->formatFields(self::FORMAT_COMMON);
+
+		// For retro compatibility, get common fields for default shop
+		if ($this->id_shop == Configuration::get('PS_SHOP_DEFAULT'))
+			$fields = array_merge($fields, $this->getFieldsShop());
+
+		// Ensure that we get something to insert
+		if (!$fields)
+			$fields[$this->def['primary']] = $this->id;
+		return $fields;
+	}
+
+	/**
+	 * Prepare fields for multishop
+	 * Fields are not validated here, we considere they are already validated in getFields() method, this
+	 * not the best solution but this is the only one possible for retro compatibility.
+	 *
+	 * @since 1.5.0
+	 * @return array All object fields
+	 */
+	public function getFieldsShop()
+	{
+		$fields = $this->formatFields(self::FORMAT_SHOP);
 		if (!$fields)
 			$fields[$this->def['primary']] = $this->id;
 		return $fields;
@@ -253,23 +294,35 @@ abstract class ObjectModelCore
 			return $this->getTranslationsFieldsChild();
 
 		$this->validateFieldsLang();
+		$is_lang_multishop = $this->isLangMultishop();
 
 		$fields = array();
 		if (is_null($this->id_lang))
 			foreach (Language::getLanguages(false) as $language)
-				$fields[$language['id_lang']] = $this->formatFields($language['id_lang']);
+			{
+				$fields[$language['id_lang']] = $this->formatFields(self::FORMAT_LANG, $language['id_lang']);
+				$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
+				if ($this->id_shop && $is_lang_multishop)
+					$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop;
+			}
 		else
-			$fields = array($this->id_lang => $this->formatFields($this->id_lang));
+		{
+			$fields = array($this->id_lang => $this->formatFields(self::FORMAT_LANG, $this->id_lang));
+			$fields['id_lang'] = $this->id_lang;
+			if ($this->id_shop && $is_lang_multishop)
+				$fields['id_shop'] = (int)$this->id_shop;
+		}
 
 		return $fields;
 	}
 
 	/**
 	 * @since 1.5.0
+	 * @param int $type FORMAT_COMMON or FORMAT_LANG or FORMAT_SHOP
 	 * @param int $id_lang If this parameter is given, only take lang fields
 	 * @return array
 	 */
-	protected function formatFields($id_lang = null)
+	protected function formatFields($type, $id_lang = null)
 	{
 		$fields = array();
 
@@ -277,23 +330,21 @@ abstract class ObjectModelCore
 		if (isset($this->id))
 			$fields[$this->def['primary']] = $this->id;
 
-		// Set id_lang field for multilang fields and id_shop for multishop field
-		if ($id_lang)
-		{
-			$fields['id_lang'] = $id_lang;
-			if ($this->id_shop && $this->isLangMultishop())
-				$fields['id_shop'] = (int)$this->id_shop;
-		}
-
 		foreach ($this->def['fields'] as $field => $data)
 		{
-			// If $id_lang take only language fields, else take only classic fields
-			if (($id_lang && empty($data['lang'])) || (!$id_lang && !empty($data['lang'])))
+			// Only get fields we need for the type
+			// E.g. if only lang fields are filtered, ignore fields without lang => true
+			if (($type == self::FORMAT_LANG && empty($data['lang']))
+				|| ($type == self::FORMAT_SHOP && empty($data['shop']))
+				|| ($type == self::FORMAT_COMMON && (!empty($data['shop']) || !empty($data['lang']))))
+				continue;
+
+			if (is_array($this->update_fields) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang]))))
 				continue;
 
 			// Get field value, if value is multilang and field is empty, use value from default lang
 			$value = $this->$field;
-			if ($id_lang && is_array($value))
+			if ($type == self::FORMAT_LANG && $id_lang && is_array($value))
 			{
 				if (!empty($value[$id_lang]))
 					$value = $value[$id_lang];
@@ -392,10 +443,28 @@ abstract class ObjectModelCore
 
 		// Get object id in database
 		$this->id = Db::getInstance()->Insert_ID();
+
+		// Database insertion for multishop fields related to the object
+		if (!empty($this->def['multishop']))
+		{
+			$fields = $this->getFieldsShop();
+			$fields[$this->def['primary']] = (int)$this->id;
+			$fields['id_shop'] = (int)$this->id_shop;
+			if ($null_values)
+				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, true);
+			else
+				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields);
+		}
+		else if (!Shop::isFeatureActive() && Shop::isTableAssociated($this->def['table']))
+			$result &= $this->associateTo(Context::getContext()->shop->id);
+
+		if (!$result)
+			return false;
+
 		$assos = Shop::getAssoTables();
 
 		// Database insertion for multilingual fields related to the object
-		if (isset($this->def['multilang']) && $this->def['multilang'])
+		if (!empty($this->def['multilang']))
 		{
 			$fields = $this->getFieldsLang();
 			$shops = Shop::getShops(true, null, true);
@@ -418,16 +487,6 @@ abstract class ObjectModelCore
 					else
 						$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 				}
-		}
-
-		if (!Shop::isFeatureActive())
-		{
-			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
-				$result &= $this->associateTo(Context::getContext()->shop->id, 'shop');
-
-			$assos = GroupShop::getAssoTables();
-			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
-				$result &= $this->associateTo(Context::getContext()->shop->id_group_shop, 'group_shop');
 		}
 
 		// @hook actionObject*AddAfter
@@ -460,8 +519,25 @@ abstract class ObjectModelCore
 			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, true);
 		else
 			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+
 		if (!$result)
 			return false;
+
+		// Database insertion for multishop fields related to the object
+		if (!empty($this->def['multishop']))
+		{
+			$fields = $this->getFieldsShop();
+			$fields[$this->def['primary']] = (int)$this->id;
+			foreach (Shop::getContextListShopID() as $id_shop)
+			{
+				$fields['id_shop'] = $id_shop;
+				$where = 'id_product = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
+				if (Db::getInstance()->getValue('SELECT id_product FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
+					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
+				else
+					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
+			}
+		}
 
 		// Database update for multilingual fields related to the object
 		if (isset($this->def['multilang']) && $this->def['multilang'])
@@ -525,23 +601,25 @@ abstract class ObjectModelCore
 		Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
 
 		$this->clearCache();
+		$result = true;
+
+		// Remove association to multishop table
+		if (!empty($this->def['multishop']))
+			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', Shop::getContextListShopID()).')');
+		else if (Shop::isTableAssociated($this->def['table']))
+			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		// Database deletion
-		$result = Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+		$has_multishop_entries = !empty($this->def['multishop']) ? $this->hasMultishopEntries() : false;
+		if ($result && !$has_multishop_entries)
+			$result &= Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+
 		if (!$result)
 			return false;
 
 		// Database deletion for multilingual fields related to the object
-		if (isset($this->def['multilang']) && $this->def['multilang'])
-			Db::getInstance()->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
-
-		$assos = Shop::getAssoTables();
-		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
-			Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
-
-		$assos = GroupShop::getAssoTables();
-		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
-			Db::getInstance()->delete($this->def['table'].'_group_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
+		if (!empty($this->def['multilang']) && !$has_multishop_entries)
+			$result &= Db::getInstance()->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
@@ -653,6 +731,9 @@ abstract class ObjectModelCore
 			if (!empty($data['lang']))
 				continue;
 
+			if (is_array($this->update_fields) && empty($this->update_fields[$field]))
+				continue;
+
 			$message = $this->validateField($field, $this->$field);
 			if ($message !== true)
 			{
@@ -685,6 +766,9 @@ abstract class ObjectModelCore
 
 			foreach ($values as $id_lang => $value)
 			{
+				if (is_array($this->update_fields) && empty($this->update_fields[$field][$id_lang]))
+					continue;
+
 				$message = $this->validateField($field, $value, $id_lang);
 				if ($message !== true)
 				{
@@ -967,10 +1051,9 @@ abstract class ObjectModelCore
 	 * This function associate an item to its context
 	 *
 	 * @param int|array $id_shops
-	 * @param string $type
 	 * @return boolean
 	 */
-	public function associateTo($id_shops, $type = 'shop')
+	public function associateTo($id_shops)
 	{
 		if (!$this->id)
 			return;
@@ -981,34 +1064,16 @@ abstract class ObjectModelCore
 		$data = array();
 		foreach ($id_shops as $id_shop)
 		{
-			if (($type == 'shop' && !$this->isAssociatedToShop($id_shop)) || ($type == 'group_shop' && !$this->isAssociatedToGroupShop($id_shop)))
+			if (!$this->isAssociatedToShop($id_shop))
 				$data[] = array(
 					$this->def['primary'] => (int)$this->id,
-					'id_'.$type => (int)$id_shop,
+					'id_shop' => (int)$id_shop,
 				);
 		}
 
 		if ($data)
-			return Db::getInstance()->insert($this->def['table'].'_'.$type, $data);
+			return Db::getInstance()->insert($this->def['table'].'_shop', $data);
 		return true;
-	}
-
-	/**
-	 * Check if current object is associated to a group shop
-	 *
-	 * @since 1.5.0
-	 * @param int $id_group_shop
-	 * @return bool
-	 */
-	public function isAssociatedToGroupShop($id_group_shop = null)
-	{
-		if (is_null($id_group_shop))
-			$id_group_shop = Context::getContext()->shop->id_group_shop;
-
-		$sql = 'SELECT id_group_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_group_shop`
-				WHERE `'.$this->def['primary'].'`='.(int)$this->id.' AND id_group_shop='.(int)$id_group_shop;
-		return (bool)Db::getInstance()->getValue($sql);
 	}
 
 	/**
@@ -1016,8 +1081,7 @@ abstract class ObjectModelCore
 	 */
 	public function duplicateShops($id)
 	{
-		$asso = Shop::getAssoTables();
-		if (!isset($asso[$this->def['table']]) || $asso[$this->def['table']]['type'] != 'shop')
+		if (!Shop::isTableAssociated($this->def['table']))
 			return false;
 
 		$sql = 'SELECT id_shop
@@ -1034,9 +1098,67 @@ abstract class ObjectModelCore
 		return false;
 	}
 
+	/**
+	 * Check if there is entries in associated shop table for current entity
+	 *
+	 * @since 1.5.0
+	 * @return bool
+	 */
+	public function hasMultishopEntries()
+	{
+		if (empty($this->def['multishop']))
+			return false;
+
+		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
+	}
+
+	public function isMultishop()
+	{
+		return !empty($this->def['multishop']) || !empty($this->def['multilang_shop']);
+	}
+
 	public function isLangMultishop()
 	{
-		return isset($this->def['multishop']) && $this->def['multishop'] && isset($this->def['multilang']) && $this->def['multilang'];
+		return !empty($this->def['multilang']) && !empty($this->def['multilang_shop']);
+	}
+
+	/**
+	 * Update a table and splits the common datas and the shop datas
+	 *
+	 * @since 1.5.0
+	 * @param string $classname
+	 * @param array $data
+	 * @param string $where
+	 * @return bool
+	 */
+	public static function updateMultishopTable($classname, $data, $where)
+	{
+		$def = ObjectModel::getDefinition($classname);
+		$common_data = $shop_data = array();
+		$is_default_shop = Context::getContext()->shop->id == Configuration::get('PS_SHOP_DEFAULT');
+		foreach ($data as $field => $value)
+		{
+			if (!isset($def['fields'][$field]))
+				continue;
+
+			if (!empty($def['fields'][$field]['shop']))
+			{
+				if ($is_default_shop)
+					$common_data[$field] = $value;
+				$shop_data[$field] = $value;
+			}
+			else
+				$common_data[$field] = $value;
+		}
+
+		$result = true;
+		if ($common_data)
+			$result &= Db::getInstance()->update($def['table'], $common_data, $where);
+
+		if ($shop_data)
+			$result &= Db::getInstance()->update($def['table'].'_shop', $shop_data, $where.' AND id_shop = '.(int)Context::getContext()->shop->id);
+
+		return $result;
 	}
 
 	/**
@@ -1275,5 +1397,17 @@ abstract class ObjectModelCore
 		}
 		else
 			throw new PrestaShopException('Could not load field from definition.');
+	}
+
+	/**
+	 * Set a list of specific fields to update
+	 * array(field1 => true, field2 => false, langfield1 => array(1 => true, 2 => false))
+	 *
+	 * @since 1.5.0
+	 * @param array $fields
+	 */
+	public function setFieldsToUpdate(array $fields)
+	{
+		$this->update_fields = $fields;
 	}
 }

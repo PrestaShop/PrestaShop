@@ -232,8 +232,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
-				'type' => 'group_shop',
-				'label' => $this->l('Group Shop association:'),
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -290,14 +290,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			// We get all associated shops for all attribute groups, because we will disable group shops
 			// for attributes that the selected attribute group don't support
-			$sql = 'SELECT id_attribute_group, id_group_shop FROM '._DB_PREFIX_.'attribute_group_group_shop';
+			$sql = 'SELECT id_attribute_group, id_shop FROM '._DB_PREFIX_.'attribute_group_shop';
 			$associations = array();
 			foreach (Db::getInstance()->executeS($sql) as $row)
-				$associations[$row['id_attribute_group']][] = $row['id_group_shop'];
+				$associations[$row['id_attribute_group']][] = $row['id_shop_group'];
 
 			$this->fields_form['input'][] = array(
-				'type' => 'group_shop',
-				'label' => $this->l('Group Shop association:'),
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 				'values' => Shop::getTree()
 			);

@@ -61,14 +61,17 @@ class FavoriteProduct extends ObjectModel
 				pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
 			FROM `'._DB_PREFIX_.'favorite_product` fp
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = fp.`id_product`)
+			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 				ON p.`id_product` = pl.`id_product`
 				AND pl.`id_lang` = '.(int)$id_lang
 				.Shop::addSqlRestrictionOnLang('pl').'
-			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
+			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-			WHERE p.`active` = 1
+			WHERE product_shop.`active` = 1
+				AND product_attribute_shop.`default_on` = 1
 				'.($id_customer ? ' AND fp.id_customer = '.(int)$id_customer : '').'
 				'.Shop::addSqlRestriction(false, 'fp')
 		);

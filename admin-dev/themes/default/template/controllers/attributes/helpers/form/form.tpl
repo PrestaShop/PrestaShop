@@ -69,10 +69,10 @@
 	var changeAssociationGroup = function()
 	{
 		var id_attribute_group = $('#id_attribute_group').val();
-		$('.input_group_shop').each(function(k, item)
+		$('.input_shop_group').each(function(k, item)
 		{
-			var id_group_shop = $(item).val();
-			if (typeof shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_group_shop, shop_associations[id_attribute_group]) > -1)
+			var id_shop_group = $(item).val();
+			if (typeof shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_shop_group, shop_associations[id_attribute_group]) > -1)
 				$(item).attr('disabled', false);
 			else
 			{

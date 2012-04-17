@@ -198,13 +198,11 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->_category = new Category();
 
-		$this->_join = '
+		$this->_join = Shop::addSqlAssociation('product', 'a').'
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (a.`id_product` = ptrgs.`id_product`
-				AND ptrgs.id_shop='.(int)$this->context->shop->id.')
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
@@ -444,10 +442,7 @@ class AdminProductsControllerCore extends AdminController
 			&& Pack::duplicate($id_product_old, $product->id)
 			&& Product::duplicateCustomizationFields($id_product_old, $product->id)
 			&& Product::duplicateTags($id_product_old, $product->id)
-			&& Product::duplicateDownload($id_product_old, $product->id)
-			&& Product::duplicateTaxRulesGroup((int)$id_product_old, (int)$product->id)
-			&& Product::duplicateAttachments((int)$id_product_old, (int)$product->id)
-			&& $product->duplicateShops($id_product_old))
+			&& Product::duplicateDownload($id_product_old, $product->id))
 			{
 				if ($product->hasAttributes())
 					Product::updateDefaultAttribute($product->id);
@@ -1452,11 +1447,9 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->object->add())
 		{
 			$this->addCarriers();
-			$this->updateAssoShop((int)$this->object->id);
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
-			$this->object->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
 
 			if (empty($this->errors))
 			{
@@ -1551,6 +1544,9 @@ class AdminProductsControllerCore extends AdminController
 				$this->copyFromPost($object, $this->table);
 				$object->indexed = 0;
 
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+					$object->setFieldsToUpdate((array)Tools::getValue('multishop_check'));
+
 				if ($object->update())
 				{
 					if ($this->isTabSubmitted('Shipping'))
@@ -1558,7 +1554,6 @@ class AdminProductsControllerCore extends AdminController
 					if ($this->isTabSubmitted('Associations'))
 					{
 						$this->updateAccessories($object);
-						$this->updateAssoShop((int)$object->id);
 					}
 
 					if ($this->isTabSubmitted('Accounting'))
@@ -1646,72 +1641,121 @@ class AdminProductsControllerCore extends AdminController
 		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$languages = Language::getLanguages(false);
 
-		/* Check required fields */
+		// Check required fields
 		foreach ($rules['required'] as $field)
+		{
+			if (!$this->isProductFieldUpdated($field))
+				continue;
+
 			if (($value = Tools::getValue($field)) == false && $value != '0')
 			{
 				if (Tools::getValue('id_'.$this->table) && $field == 'passwd')
 					continue;
 				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
 			}
+		}
 
-		/* Check multilingual required fields */
+		// Check multilingual required fields
 		foreach ($rules['requiredLang'] as $fieldLang)
-			if (!Tools::getValue($fieldLang.'_'.$default_language->id))
+			if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang.'_'.$default_language->id))
 				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$default_language->name;
 
-		/* Check fields sizes */
+		// Check fields sizes
 		foreach ($rules['size'] as $field => $maxLength)
-			if ($value = Tools::getValue($field) && Tools::strlen($value) > $maxLength)
+			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)) && Tools::strlen($value) > $maxLength)
 				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
 
-		if (Tools::getIsset('description_short'))
+		if (Tools::getIsset('description_short') && $this->isProductFieldUpdated('description_short'))
 		{
 			$saveShort = Tools::getValue('description_short');
 			$_POST['description_short'] = strip_tags(Tools::getValue('description_short'));
 		}
 
-		/* Check description short size without html */
+		// Check description short size without html
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if ($limit <= 0) $limit = 400;
 		foreach ($languages as $language)
-			if ($value = Tools::getValue('description_short_'.$language['id_lang']))
+			if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_'.$language['id_lang'])))
 				if (Tools::strlen(strip_tags($value)) > $limit)
 					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : '.$limit.' '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
-		/* Check multilingual fields sizes */
+
+		// Check multilingual fields sizes
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
 				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']) && Tools::strlen($value) > $maxLength)
 					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
-		if (isset($_POST['description_short']))
+		if ($this->isProductFieldUpdated('description_short') && isset($_POST['description_short']))
 			$_POST['description_short'] = $saveShort;
 
-		/* Check fields validity */
+		// Check fields validity
 		foreach ($rules['validate'] as $field => $function)
-			if ($value = Tools::getValue($field))
+			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)))
 				if (!Validate::$function($value))
 					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
 
-		/* Check multilingual fields validity */
+		// Check multilingual fields validity
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
-				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']))
+				if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
 					if (!Validate::$function($value))
 						$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
 
-		/* Categories */
-		$productCats = '';
+		// Categories
 		if (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox')))
 			$this->errors[] = $this->l('product must be in at least one Category');
 
 		if (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox')))
 			$this->errors[] = $this->l('product must be in the default category');
 
-		/* Tags */
+		// Tags
 		foreach ($languages as $language)
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
 				if (!Validate::isTagsList($value))
 					$this->errors[] = $this->l('Tags list').' ('.$language['name'].') '.$this->l('is invalid');
+	}
+
+	/**
+	 * Check if a field is edited (if the checkbox is checked)
+	 * This method will do something only for multishop with a context all / group
+	 *
+	 * @param string $field Name of field
+	 * @param int $id_lang
+	 * @return bool
+	 */
+	protected function isProductFieldUpdated($field, $id_lang = null)
+	{
+		// Cache this condition to improve performances
+		static $is_activated = null;
+		if (is_null($is_activated))
+			$is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP;
+
+		if (!$is_activated)
+			return true;
+
+		if (is_null($id_lang))
+			return !empty($_POST['multishop_check'][$field]);
+		else
+			return !empty($_POST['multishop_check'][$field][$id_lang]);
+	}
+
+	/**
+	 * If multishop is activated and context is all / group, set to empty all fields values not checked
+	 */
+	protected function cleanMultishopFields()
+	{
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit')
+		{
+			$this->object = $this->loadObject();
+			foreach (Product::$definition['fields'] as $field => $data)
+				if (!empty($data['shop']) || !empty($data['lang']))
+				{
+					if (is_array($this->object->$field))
+						foreach ($this->object->$field as $k => $v)
+							$this->object->{$field}[$k] = '';
+					else
+						$this->object->$field = '';
+				}
+		}
 	}
 
 	protected function _removeTaxFromEcotax()
@@ -2171,9 +2215,9 @@ class AdminProductsControllerCore extends AdminController
 	public function initToolbarTitle()
 	{
 		parent::initToolbarTitle();
-			if ($product = $this->loadObject(true))
-				if ((bool)$product->id && $this->display != 'list')
-					$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$product->name[$this->context->language->id].')';
+		if ($product = $this->loadObject(true))
+			if ((bool)$product->id && $this->display != 'list')
+				$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$this->product_name.')';
 	}
 
 	/**
@@ -2183,10 +2227,33 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
+		// This nice code (irony) is here to store the product name, because the row after will erase product name in multishop context
+		$this->product_name = $this->object->name[$this->context->language->id];
+
+		$this->cleanMultishopFields();
 		if (!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
 		$product = $this->object;
+
+		// Product for multishop
+		$this->context->smarty->assign('bullet_common_field', '');
+		if (Shop::isFeatureActive() && $this->display == 'edit')
+		{
+			if (Shop::getContext() != Shop::CONTEXT_SHOP)
+			{
+				$this->context->smarty->assign(array(
+					'display_multishop_checkboxes' => true,
+					'multishop_check' => Tools::getValue('multishop_check'),
+				));
+			}
+
+			if (Shop::getContext() != Shop::CONTEXT_ALL)
+			{
+				$this->context->smarty->assign('bullet_common_field', '<img src="themes/'.$this->context->employee->bo_theme.'/img/bullet_orange.png" style="vertical-align: bottom" />');
+				$this->context->smarty->assign('display_common_field', true);
+			}
+		}
 
 		// Sort the tabs that need to be preloaded by their priority number
 		asort($this->available_tabs, SORT_NUMERIC);
@@ -2199,6 +2266,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['defaultLanguage'] = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
 
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
+		$this->tpl_form_vars['display_multishop_checkboxes'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit');
 		$this->fields_form = array('');
 		$this->display = 'edit';
 		$this->tpl_form_vars['token'] = $this->token;
@@ -2407,14 +2475,14 @@ class AdminProductsControllerCore extends AdminController
 							{
 								if ((int)$attribute['id_product_attribute'] > 0)
 								{
-									Db::getInstance()->execute('
-										UPDATE '._DB_PREFIX_.'product_attribute
-										SET supplier_reference = "'.pSQL($reference).'",
-										wholesale_price = '.(float)Tools::convertPrice($price, $id_currency).'
-										WHERE id_product = '.(int)$product->id.'
-										AND id_product_attribute = '.(int)$attribute['id_product_attribute'].'
-										LIMIT 1
-									');
+									$data = array(
+										'supplier_reference' => pSQL($reference),
+										'wholesale_price' => (float)Tools::convertPrice($price, $id_currency)
+									);
+									$where = '
+										id_product = '.(int)$product->id.'
+										AND id_product_attribute = '.(int)$attribute['id_product_attribute'];
+									ObjectModel::updateMultishopTable('product_attribute', $data, $where);
 								}
 								else
 								{
@@ -2607,8 +2675,6 @@ class AdminProductsControllerCore extends AdminController
 			$helper->id = null;
 		$helper->table = $this->table;
 		$helper->identifier = $this->identifier;
-
-		$data->assign('displayAssoShop', $helper->renderAssoShop());
 
 		// Accessories block
 		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
@@ -3234,12 +3300,18 @@ class AdminProductsControllerCore extends AdminController
 
 		$data->assign('product_type', (int)Tools::getValue('type_product', $product->getType()));
 
+		$check_product_association_ajax = false;
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
+			$check_product_association_ajax = true;
+
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
 		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
 		$category_box = Tools::getValue('categoryBox', array());
+		$data->assign('check_product_association_ajax', $check_product_association_ajax);
+		$data->assign('id_lang', $this->context->language->id);
 		$data->assign('product', $product);
 		$data->assign('token', $this->token);
 		$data->assign('currency', $currency);
@@ -3583,7 +3655,7 @@ class AdminProductsControllerCore extends AdminController
 
 			$show_quantities = true;
 			$shop_context = Shop::getContext();
-			$group_shop = $this->context->shop->getGroup();
+			$shop_group = $this->context->shop->getGroup();
 
 			// if we are in all shops context, it's not possible to manage quantities at this level
 			if ($shop_context == Shop::CONTEXT_ALL)
@@ -3592,14 +3664,14 @@ class AdminProductsControllerCore extends AdminController
 			elseif ($shop_context == Shop::CONTEXT_GROUP)
 			{
 				// if quantities are not shared between shops of the group, it's not possible to manage them at group level
-				if (!$group_shop->share_stock)
+				if (!$shop_group->share_stock)
 					$show_quantities = false;
 			}
 			// if we are in shop context
 			else
 			{
 				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
-				if ($group_shop->share_stock)
+				if ($shop_group->share_stock)
 					$show_quantities = false;
 			}
 
@@ -4047,7 +4119,7 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
 				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js',
 				_PS_JS_DIR_.'admin-categories-tree.js',
-				_PS_JS_DIR_.'/jquery/ui/jquery.ui.progressbar.min.js',
+				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
 				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
 			));
 
@@ -4074,42 +4146,19 @@ class AdminProductsControllerCore extends AdminController
 			$this->tpl_form_vars['warning_unavailable_product'] = $content;
 	}
 
-	protected function updateAssoShop($id_object = false, $new_id_object = false)
+	public function ajaxProcessCheckProductName()
 	{
-		$assos_data = $this->getAssoShop($this->table, $id_object);
-		$assos = $assos_data[0];
-		$type = $assos_data[1];
-
-		$product_shop = Product::getShopsByProduct($id_object);
-
-		if (!$type)
-			return;
-
-		if ($new_id_object)
-			$object = new Product($new_id_object);
-		else
-			$object = new Product($id_object);
-		$delete = $insert = '';
-		foreach ($assos as $asso)
-		{
-			$passed = false;
-			$delete .= (int)$asso['id_'.$type].',';
-			foreach ($product_shop as $product)
-				if ($product['id_shop'] == $asso['id_'.$type])
-					$passed = true;
-			if (!$passed)
-				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].', '.(int)$object->id_category_default.'),';
+		$search = Tools::getValue('q');
+		$id_lang = Tools::getValue('id_lang');
+		$limit = Tools::getValue('limit');
+		$result = Db::getInstance()->executeS('
+			SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
+			FROM `'._DB_PREFIX_.'product` p
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+				ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
+			WHERE pl.`name` LIKE "%'.pSQL($search).'%"
+			GROUP BY pl.`id_product`
+			LIMIT '.(int)$limit);
+		die(Tools::jsonEncode($result));
 		}
-		$delete = rtrim($delete, ',');
-		$insert = rtrim($insert, ',');
-
-		if (!empty($delete))
-			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
-				($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
-
-		if (!empty($insert))
-			Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`, `id_category_default`)
-				VALUES '.pSQL($insert));
 	}
-}

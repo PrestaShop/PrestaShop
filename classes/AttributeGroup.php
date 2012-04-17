@@ -91,6 +91,7 @@ class AttributeGroupCore extends ObjectModel
 		$attribute_combinations = Db::getInstance()->executeS('
 			SELECT pac.`id_attribute`, pa.`id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute` pa
+			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 				ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
 		');
@@ -98,12 +99,14 @@ class AttributeGroupCore extends ObjectModel
 		foreach ($attribute_combinations as $attribute_combination)
 			if ((int)$attribute_combination['id_attribute'] == 0)
 				$to_remove[] = (int)$attribute_combination['id_product_attribute'];
-		if (!empty($to_remove) && Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'product_attribute`
-			WHERE `id_product_attribute`
-				IN ('.implode(', ', $to_remove).')') === false)
-			return false;
-		return true;
+		$return = true;
+		if (!empty($to_remove))
+			foreach ($to_remove as $remove)
+			{
+				$combination = new Combination($remove);
+				$return &= $combination->delete();
+			}
+		return $return;
 	}
 
 	public function delete()

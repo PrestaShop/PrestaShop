@@ -51,6 +51,7 @@ class HelperOptionsCore extends Helper
 		if (!isset($languages))
 			$languages = Language::getLanguages(false);
 
+		$use_multishop = false;
 		foreach ($option_list as $category => $category_data)
 		{
 			if (!is_array($category_data))
@@ -125,7 +126,12 @@ class HelperOptionsCore extends Helper
 				}
 
 				// Multishop default value
-				$field['multishop_default'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible);
+				$field['multishop_default'] = false;
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible)
+				{
+					$field['multishop_default'] = true;
+					$use_multishop = true;
+				}
 
 				// Assign the modifications back to parent array
 				$category_data['fields'][$key] = $field;
@@ -151,6 +157,7 @@ class HelperOptionsCore extends Helper
 			'languages' => isset($languages) ? $languages : null,
 			'currency_left_sign' => $this->context->currency->getSign('left'),
 			'currency_right_sign' => $this->context->currency->getSign('right'),
+			'use_multishop' => $use_multishop,
 		));
 
 		return parent::generate();

@@ -32,7 +32,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$id_cart = 0;
 	public	$id_product_attribute;
 	public	$id_shop;
-	public	$id_group_shop;
+	public	$id_shop_group;
 	public	$id_currency;
 	public	$id_country;
 	public	$id_group;
@@ -51,7 +51,7 @@ class SpecificPriceCore extends ObjectModel
 		'table' => 'specific_price',
 		'primary' => 'id_specific_price',
 		'fields' => array(
-			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop_group' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_cart' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
@@ -74,7 +74,7 @@ class SpecificPriceCore extends ObjectModel
 		'objectsNodeName' => 'specific_prices',
 		'objectNodeName' => 'specific_price',
 	        'fields' => array(
-			'id_group_shop' => 			array('xlink_resource' => 'shop_groups'),
+			'id_shop_group' => 			array('xlink_resource' => 'shop_groups'),
 			'id_shop' => 				array('xlink_resource' => 'shops', 'required' => true),
 			'id_cart' => 				array('xlink_resource' => 'carts', 'required' => true),
 			'id_product' => 			array('xlink_resource' => 'products', 'required' => true),

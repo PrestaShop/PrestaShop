@@ -232,7 +232,7 @@ class FrontControllerCore extends Controller
 			$cart->id_lang = (int)($this->context->cookie->id_lang);
 			$cart->id_currency = (int)($this->context->cookie->id_currency);
 			$cart->id_guest = (int)($this->context->cookie->id_guest);
-			$cart->id_group_shop = (int)$this->context->shop->id_group_shop;
+			$cart->id_shop_group = (int)$this->context->shop->id_shop_group;
 			$cart->id_shop = $this->context->shop->id;
 			if ($this->context->cookie->id_customer)
 			{

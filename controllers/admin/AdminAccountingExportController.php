@@ -486,7 +486,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				odt.`total_amount` AS tax_total_amount,
 				od.`product_id` AS id_product,
 				od.`product_attribute_id` as id_product_attribute,
-				p.`advanced_stock_management`
+				product_shop.`advanced_stock_management`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` customer ON customer.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
@@ -497,6 +497,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON t.`id_tax` = odt.`id_tax`
 				LEFT JOIN `'._DB_PREFIX_.'country` country ON country.`id_country` = a.`id_country`
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = od.`product_id`
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'accounting_product_zone_shop` acc_pzs
 					ON (acc_pzs.`id_shop` = o.`id_shop`
 					AND acc_pzs.`id_zone` = country.`id_zone`

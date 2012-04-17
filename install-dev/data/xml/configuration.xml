@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_configuration>
-  <fields id="name" sql="a.name &lt;&gt; 'PS_LANG_DEFAULT' AND a.id_shop IS NULL AND a.id_group_shop IS NULL" null="1">
+  <fields id="name" sql="a.name &lt;&gt; 'PS_LANG_DEFAULT' AND a.id_shop IS NULL AND a.id_shop_group IS NULL" null="1">
     <field name="name"/>
     <field name="value"/>
   </fields>

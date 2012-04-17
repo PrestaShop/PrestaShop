@@ -98,7 +98,7 @@ abstract class AdminTabCore
 
 	public $optionTitle = null;
 
-	/** @var string shop | group_shop */
+	/** @var string shop */
 	public $shopLinkType;
 
 	/** @var bool */
@@ -923,12 +923,8 @@ abstract class AdminTabCore
 
 	protected static function getAssoShop($table, $id_object = false)
 	{
-		$shopAsso = Shop::getAssoTables();
-		$groupShopAsso = GroupShop::getAssoTables();
-		if (isset($shopAsso[$table]) && $shopAsso[$table]['type'] == 'shop')
+		if (Shop::isTableAssociated($table))
 			$type = 'shop';
-		else if (isset($groupShopAsso[$table]) && $groupShopAsso[$table]['type'] == 'group_shop')
-			$type = 'group_shop';
 		else
 			return;
 
@@ -1312,15 +1308,6 @@ abstract class AdminTabCore
 		{
 			$filterKey = $assos[$this->table]['type'];
 			$idenfierShop = Shop::getContextListShopID();
-		}
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-		{
-			$assos = GroupShop::getAssoTables();
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
-			{
-				$filterKey = $assos[$this->table]['type'];
-				$idenfierShop = array(Shop::getContextGroupShopID());
-			}
 		}
 
 		$filterShop = '';
@@ -2328,19 +2315,16 @@ abstract class AdminTabCore
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
 
-	protected function displayAssoShop($type = 'shop')
+	protected function displayAssoShop()
 	{
 		if (!Shop::isFeatureActive() || (!$this->_object && Shop::getContext() != Shop::CONTEXT_ALL))
 			return;
 
-		if ($type != 'shop' && $type != 'group_shop')
-			$type = 'shop';
-
 		$assos = array();
-		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
+		$sql = 'SELECT id_shop, `'.pSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`';
 		foreach (Db::getInstance()->executeS($sql) as $row)
-			$assos[$row['id_'.$type]][] = $row[$this->identifier];
+			$assos[$row['id_shop']][] = $row[$this->identifier];
 
 		$html = <<<EOF
 			<script type="text/javascript">
@@ -2350,12 +2334,12 @@ abstract class AdminTabCore
 				$('.input_all_shop').click(function()
 				{
 					var checked = $(this).attr('checked');
-					$('.input_group_shop').attr('checked', checked);
+					$('.input_shop_group').attr('checked', checked);
 					$('.input_shop').attr('checked', checked);
 				});
 
 				// Click on a group shop
-				$('.input_group_shop').click(function()
+				$('.input_shop_group').click(function()
 				{
 					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
 					check_all_shop();
@@ -2364,19 +2348,19 @@ abstract class AdminTabCore
 				// Click on a shop
 				$('.input_shop').click(function()
 				{
-					check_group_shop_status($(this).val());
+					check_shop_group_status($(this).val());
 					check_all_shop();
 				});
 
 				// Initialize checkbox
 				$('.input_shop').each(function(k, v)
 				{
-					check_group_shop_status($(v).val());
+					check_shop_group_status($(v).val());
 					check_all_shop();
 				});
 			});
 
-			function check_group_shop_status(id_group)
+			function check_shop_group_status(id_group)
 			{
 				var groupChecked = true;
 				$('.input_shop[value='+id_group+']').each(function(k, v)
@@ -2384,13 +2368,13 @@ abstract class AdminTabCore
 					if (!$(v).attr('checked'))
 						groupChecked = false;
 				});
-				$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
+				$('.input_shop_group[value='+id_group+']').attr('checked', groupChecked);
 			}
 
 			function check_all_shop()
 			{
 				var allChecked = true;
-				$('.input_group_shop').each(function(k, v)
+				$('.input_shop_group').each(function(k, v)
 				{
 					if (!$(v).attr('checked'))
 						allChecked = false;
@@ -2403,28 +2387,24 @@ EOF;
 		$html .= '<div class="assoShop">';
 		$html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
 					<tr><th>'.$this->l('Shop').'</th></tr>';
-		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
+		$html .= '<tr><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
 		foreach (Shop::getTree() as $groupID => $groupData)
 		{
-			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->_object->id, $assos[$groupID])) || !$this->_object->id));
-			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
-			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
+			$html .= '<tr class="alt_row">';
+			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_shop_group" type="checkbox" name="checkBoxShopGroupAsso_'.$this->table.'_'.$this->_object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
 			$html .= '</tr>';
 
-			if ($type == 'shop')
+			$total = count($groupData['shops']);
+			$j = 0;
+			foreach ($groupData['shops'] as $shopID => $shopData)
 			{
-				$total = count($groupData['shops']);
-				$j = 0;
-				foreach ($groupData['shops'] as $shopID => $shopData)
-				{
-					$checked = ((isset($assos[$shopID]) && in_array($this->_object->id, $assos[$shopID])) || !$this->_object->id);
-					$html .= '<tr>';
-					$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
-					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
-					$html .= $shopData['name'].'</label></td>';
-					$html .= '</tr>';
-					$j++;
-				}
+				$checked = ((isset($assos[$shopID]) && in_array($this->_object->id, $assos[$shopID])) || !$this->_object->id);
+				$html .= '<tr>';
+				$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
+				$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->_object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
+				$html .= $shopData['name'].'</label></td>';
+				$html .= '</tr>';
+				$j++;
 			}
 		}
 		$html .= '</table></div>';

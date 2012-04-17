@@ -1244,6 +1244,7 @@ class shopimporter extends ImportModule
 				break;
 			case 'combination' :
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
 				break;
 			case 'category' :
@@ -1257,6 +1258,7 @@ class shopimporter extends ImportModule
 			break;
 			case 'product' :
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product');
@@ -1264,6 +1266,7 @@ class shopimporter extends ImportModule
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');

@@ -94,7 +94,7 @@ class CategoryCore extends ObjectModel
 		'table' => 'category',
 		'primary' => 'id_category',
 		'multilang' => true,
-		'multishop' => true,
+		'multilang_shop' => true,
 		'fields' => array(
 			'nleft' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'nright' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
@@ -629,28 +629,29 @@ class CategoryCore extends ObjectModel
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)$this->id.
-					($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').
-					($active ? ' AND p.`active` = 1' : '').
+					($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
+					($active ? ' AND product_shop.`active` = 1' : '').
 					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`,
 					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default,
-					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
+					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
 						DAY)) > 0 AS new,
-					(p.`price` * IF(t.`rate`,((100 + (t.`rate`))/100),1)) AS orderprice
+					(product_shop.`price` * IF(t.`rate`,((100 + (t.`rate`))/100),1)) AS orderprice
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-				ON (p.`id_product` = pa.`id_product` AND default_on = 1)
+				ON (p.`id_product` = pa.`id_product`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-					ON (asso_shop_product.`id_category_default` = cl.`id_category`
+					ON (product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product`
@@ -661,10 +662,8 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il
 					ON (i.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'product_tax_rules_group_shop` ptrgs ON (p.`id_product` = ptrgs.`id_product` 
-					AND ptrgs.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr
-					ON (ptrgs.`id_tax_rules_group` = tr.`id_tax_rules_group`
+					ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)$context->country->id.'
 					AND tr.`id_state` = 0
 					AND tr.`zipcode_from` = 0)
@@ -675,12 +674,14 @@ class CategoryCore extends ObjectModel
 					AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
-				AND cp.`id_category` = '.(int)$this->id
-					.($active ? ' AND p.`active` = 1' : '')
-					.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '')
+				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
+					AND product_attribute_shop.default_on = 1
+					AND cp.`id_category` = '.(int)$this->id
+					.($active ? ' AND product_shop.`active` = 1' : '')
+					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
+		$sql .= 'GROUP BY p.`id_product`';
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
@@ -747,15 +748,14 @@ class CategoryCore extends ObjectModel
 		if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 
-        $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, asso_shop_category.`id_shop`
+        $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE `id_lang` = '.(int)$id_lang.'
 		AND c.`id_parent` = '.(int)$id_parent.'
-		'.(($id_shop != false) ? 'AND asso_shop_category.`id_shop` = '.(int)$id_shop : '').'
 		'.($active ? 'AND `active` = 1' : '').'
-		ORDER BY asso_shop_category.`position` ASC';
+		ORDER BY category_shop.`position` ASC';
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}

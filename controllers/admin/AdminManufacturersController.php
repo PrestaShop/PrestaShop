@@ -324,8 +324,8 @@ class AdminManufacturersControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
-				'type' => 'group_shop',
-				'label' => $this->l('GroupShop association:'),
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}

@@ -53,7 +53,7 @@ class ManufacturerControllerCore extends FrontController
 		if ($id_manufacturer = Tools::getValue('id_manufacturer'))
 		{
 			$this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
-			if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToGroupShop())
+			if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToShop())
 			{
 				header('HTTP/1.1 404 Not Found');
 				header('Status: 404 Not Found');
@@ -72,7 +72,7 @@ class ManufacturerControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToGroupShop())
+		if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop())
 		{
 			$this->productSort();
 			$this->assignOne();
@@ -106,8 +106,8 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
-			$id_current_group_shop = Shop::getContextGroupShopID();
-			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_group_shop);
+			$id_current_shop_group = Shop::getContextShopGroupID();
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_shop_group);
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);
 

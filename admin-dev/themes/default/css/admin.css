@@ -18,6 +18,7 @@ fieldset{background-color:#EBEDF4; border:1px solid #CCCED7; color:#585A69; font
 .Bloc {background-color:#EBEDF4; border:1px solid #CCCED7;font-size:1.1em;margin:0;padding:1em}
 legend{background:#EBEDF4;border:1px solid #CCCED7;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #ccc; background-color:#fff;}
+input[type="text"]:disabled,input[type="password"]:disabled,input[type="file"]:disabled,textarea:disabled {border:1px solid #ccc; background-color:#dedede; color: #444444;}
 select { border:1px solid #ccc; font-size: 12px;}
 select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"], option[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url('../img/header_module.png');padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
@@ -182,9 +183,9 @@ a.module_toggle_all{color: #268CCD;}
 .multishop_toolbar select.shopList { width: 300px; }
 .multishop_toolbar a.chzn-single { background: url('../img/icon-multishop.png') no-repeat 5px 5px; padding: 1px 2px 2px 25px; font-weight: bold; }
 
-.multishop_toolbar .chzn-container .first{font-weight: bold;background-color: #408BD5;color: #ffffff;}
-.multishop_toolbar .chzn-container .group{font-weight: bold;font-style: italic;padding-left: 15px;background-color: #C6DEFC;}
-.multishop_toolbar .chzn-container .shop{padding-left: 30px;background-color: #EAF2FC;}
+.multishop_toolbar .chzn-container .chzn-results .first{font-weight: bold;background-color: #408BD5;color: #ffffff;}
+.multishop_toolbar .chzn-container .chzn-results .group{font-weight: bold;font-style: italic;padding-left: 15px;background-color: #C6DEFC;}
+.multishop_toolbar .chzn-container .chzn-results .shop{padding-left: 30px;background-color: #EAF2FC;}
 
 /*toolbarBox*/
 .toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}

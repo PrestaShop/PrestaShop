@@ -54,7 +54,7 @@ if ($context->customer->isLogged())
 		{
 			$wishlist = new WishList();
 			$wishlist->id_shop = $context->shop->id;
-			$wishlist->id_group_shop = $context->shop->id_group_shop;
+			$wishlist->id_shop_group = $context->shop->id_shop_group;
 			
 			$modWishlist = new BlockWishList();
 			$wishlist->name = $modWishlist->default_wishlist_name;

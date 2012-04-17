@@ -58,7 +58,7 @@ class AdminSearchConfControllerCore extends AdminController
 		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.
 			substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($current_file_name['0'])).
 			'searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
-		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(indexed) as "1" FROM '._DB_PREFIX_.'product');
+		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p'));
 
 		$this->fields_options = array(
 			'indexation' => array(

@@ -28,7 +28,7 @@ function set_stock_available()
 			//add stock available for attributes
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'stock_available`
-				(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
+				(`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`)
 				VALUES
 				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", "1", "0", "'.(int)$attribute['quantity'].'", "0", "'.(int)$row['out_of_stock'].'")
 			');
@@ -43,7 +43,7 @@ function set_stock_available()
 		//Add stock available for product
 		Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'stock_available`
-			(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
+			(`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`)
 			VALUES
 			("'.(int)$row['id_product'].'", "0", "1", "0", "'.(int)$quantity.'", "0", "'.(int)$row['out_of_stock'].'")
 		');

@@ -167,7 +167,7 @@ CREATE TABLE `PREFIX_carrier_zone` (
 
 CREATE TABLE `PREFIX_cart` (
   `id_cart` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
+  `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
   `delivery_option` varchar(100),
@@ -192,7 +192,7 @@ CREATE TABLE `PREFIX_cart` (
   KEY `id_lang` (`id_lang`),
   KEY `id_currency` (`id_currency`),
   KEY `id_guest` (`id_guest`),
-  KEY `id_group_shop` (`id_group_shop`),
+  KEY `id_shop_group` (`id_shop_group`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -414,7 +414,7 @@ CREATE TABLE `PREFIX_compare_product` (
 
 CREATE TABLE `PREFIX_configuration` (
   `id_configuration` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED DEFAULT NULL,
+  `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
   `name` varchar(32) NOT NULL,
   `value` text,
@@ -423,7 +423,7 @@ CREATE TABLE `PREFIX_configuration` (
   PRIMARY KEY  (`id_configuration`),
   KEY `name` (`name`),
   KEY `id_shop` (`id_shop`),
-  KEY `id_group_shop` (`id_group_shop`)
+  KEY `id_shop_group` (`id_shop_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_configuration_lang` (
@@ -436,7 +436,7 @@ CREATE TABLE `PREFIX_configuration_lang` (
 
 CREATE TABLE `PREFIX_connections` (
   `id_connections` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
+  `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_guest` int(10) unsigned NOT NULL,
   `id_page` int(10) unsigned NOT NULL,
@@ -528,7 +528,7 @@ CREATE TABLE `PREFIX_currency` (
 
 CREATE TABLE `PREFIX_customer` (
   `id_customer` int(10) unsigned NOT NULL auto_increment,
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
+  `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_gender` int(10) unsigned NOT NULL,
   `id_default_group` int(10) unsigned NOT NULL DEFAULT '1',
@@ -563,7 +563,7 @@ CREATE TABLE `PREFIX_customer` (
   KEY `customer_login` (`email`,`passwd`),
   KEY `id_customer_passwd` (`id_customer`,`passwd`),
   KEY `id_gender` (`id_gender`),
-  KEY `id_group_shop` (`id_group_shop`),
+  KEY `id_shop_group` (`id_shop_group`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -667,7 +667,7 @@ CREATE TABLE `PREFIX_date_range` (
 CREATE TABLE `PREFIX_delivery` (
   `id_delivery` int(10) unsigned NOT NULL auto_increment,
   `id_shop` INT UNSIGNED NULL DEFAULT NULL,
-  `id_group_shop` INT UNSIGNED NULL DEFAULT NULL,
+  `id_shop_group` INT UNSIGNED NULL DEFAULT NULL,
   `id_carrier` int(10) unsigned NOT NULL,
   `id_range_price` int(10) unsigned default NULL,
   `id_range_weight` int(10) unsigned default NULL,
@@ -1022,7 +1022,7 @@ CREATE TABLE `PREFIX_operating_system` (
 CREATE TABLE `PREFIX_orders` (
   `id_order` int(10) unsigned NOT NULL auto_increment,
   `reference` VARCHAR(9),
-  `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
+  `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
@@ -1072,7 +1072,7 @@ CREATE TABLE `PREFIX_orders` (
   KEY `id_currency` (`id_currency`),
   KEY `id_address_delivery` (`id_address_delivery`),
   KEY `id_address_invoice` (`id_address_invoice`),
-  KEY `id_group_shop` (`id_group_shop`),
+  KEY `id_shop_group` (`id_shop_group`),
   KEY `id_shop` (`id_shop`),
   INDEX `date_add`(`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1308,7 +1308,7 @@ CREATE TABLE `PREFIX_page_type` (
 
 CREATE TABLE `PREFIX_page_viewed` (
   `id_page` int(10) unsigned NOT NULL,
-  `id_group_shop` INT UNSIGNED NOT NULL DEFAULT '1',
+  `id_shop_group` INT UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT UNSIGNED NOT NULL DEFAULT '1',
   `id_date_range` int(10) unsigned NOT NULL,
   `counter` int(10) unsigned NOT NULL,
@@ -1338,6 +1338,7 @@ CREATE TABLE `PREFIX_product` (
   `id_supplier` int(10) unsigned default NULL,
   `id_manufacturer` int(10) unsigned default NULL,
   `id_category_default` int(10) unsigned default NULL,
+  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL default '0',
   `online_only` tinyint(1) unsigned NOT NULL default '0',
   `ean13` varchar(13) default NULL,
@@ -1383,6 +1384,38 @@ CREATE TABLE `PREFIX_product` (
   KEY `date_add` (`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
+  `id_product` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  `id_category_default` int(10) unsigned DEFAULT NULL,
+  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
+  `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `ecotax` decimal(17,6) NOT NULL DEFAULT '0.000000',
+  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
+  `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `unity` varchar(255) DEFAULT NULL,
+  `unit_price_ratio` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `additional_shipping_cost` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `customizable` tinyint(2) NOT NULL DEFAULT '0',
+  `text_fields` tinyint(4) NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
+  `available_date` date NOT NULL,
+  `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
+  `show_price` tinyint(1) NOT NULL DEFAULT '1',
+  `indexed` tinyint(1) NOT NULL DEFAULT '0',
+  `visibility` enum('both','catalog','search','none') NOT NULL DEFAULT 'both',
+  `cache_default_attribute` int(10) unsigned DEFAULT NULL,
+  `advanced_stock_management` tinyint(1) default '0' NOT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_product`, `id_shop`),
+  KEY `id_category_default` (`id_category_default`),
+  KEY `date_add` (`date_add`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_product_attribute` (
   `id_product_attribute` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(10) unsigned NOT NULL,
@@ -1406,6 +1439,19 @@ CREATE TABLE `PREFIX_product_attribute` (
   KEY `supplier_reference` (`supplier_reference`),
   KEY `product_default` (`id_product`,`default_on`),
   KEY `id_product_id_product_attribute` (`id_product_attribute` , `id_product`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_product_attribute_shop` (
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  `wholesale_price` decimal(20,6) NOT NULL default '0.000000',
+  `price` decimal(20,6) NOT NULL default '0.000000',
+  `ecotax` decimal(17,6) NOT NULL default '0.00',
+  `unit_price_impact` decimal(17,2) NOT NULL default '0.00',
+  `default_on` tinyint(1) unsigned NOT NULL default '0',
+  `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
+  `available_date` date NOT NULL,
+  PRIMARY KEY  (`id_product_attribute`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_attribute_combination` (
@@ -1620,7 +1666,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_cart` INT(11) UNSIGNED NOT NULL,
 	`id_product` INT UNSIGNED NOT NULL,
 	`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-	`id_group_shop` INT(11) UNSIGNED NOT NULL,
+	`id_shop_group` INT(11) UNSIGNED NOT NULL,
 	`id_currency` INT UNSIGNED NOT NULL,
 	`id_country` INT UNSIGNED NOT NULL,
 	`id_group` INT UNSIGNED NOT NULL,
@@ -1866,27 +1912,27 @@ CREATE TABLE `PREFIX_import_match` (
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
-  `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `PREFIX_shop_group` (
+  `id_shop_group` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `share_customer` TINYINT(1) NOT NULL,
   `share_order` TINYINT(1) NOT NULL,
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_group_shop`)
+  PRIMARY KEY (`id_shop_group`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `id_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_group_shop` int(11) unsigned NOT NULL,
+  `id_shop_group` int(11) unsigned NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_theme` INT(1) UNSIGNED NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_shop`),
-  KEY `id_group_shop` (`id_group_shop`),
+  KEY `id_shop_group` (`id_shop_group`),
   KEY `id_category` (`id_category`),
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
@@ -1976,74 +2022,66 @@ CREATE TABLE `PREFIX_image_shop` (
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_attribute_group_shop` (
+CREATE TABLE `PREFIX_attribute_shop` (
 `id_attribute` INT(11) UNSIGNED NOT NULL,
-`id_group_shop` INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_attribute`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT(11) UNSIGNED NOT NULL,
+	PRIMARY KEY (`id_attribute`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_feature_group_shop` (
+CREATE TABLE `PREFIX_feature_shop` (
 `id_feature` INT(11) UNSIGNED NOT NULL,
-`id_group_shop` INT(11) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_feature`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT(11) UNSIGNED NOT NULL ,
+	PRIMARY KEY (`id_feature`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_group_group_shop` (
+CREATE TABLE `PREFIX_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_group`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+	PRIMARY KEY (`id_group`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_attribute_group_group_shop` (
+CREATE TABLE `PREFIX_attribute_group_shop` (
 `id_attribute_group` INT( 11 ) UNSIGNED NOT NULL ,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_attribute_group`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+	PRIMARY KEY (`id_attribute_group`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_tax_rules_group_group_shop` (
+CREATE TABLE `PREFIX_tax_rules_group_shop` (
 	`id_tax_rules_group` INT( 11 ) UNSIGNED NOT NULL,
-	`id_group_shop` INT( 11 ) UNSIGNED NOT NULL,
-	PRIMARY KEY (`id_tax_rules_group`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+	PRIMARY KEY (`id_tax_rules_group`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_zone_group_shop` (
+CREATE TABLE `PREFIX_zone_shop` (
 `id_zone` INT( 11 ) UNSIGNED NOT NULL ,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_zone`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+	PRIMARY KEY (`id_zone`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_manufacturer_group_shop` (
+CREATE TABLE `PREFIX_manufacturer_shop` (
 `id_manufacturer` INT( 11 ) UNSIGNED NOT NULL ,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL ,
-	PRIMARY KEY (`id_manufacturer`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+	PRIMARY KEY (`id_manufacturer`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_supplier_group_shop` (
+CREATE TABLE `PREFIX_supplier_shop` (
 `id_supplier` INT( 11 ) UNSIGNED NOT NULL,
-`id_group_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_supplier`, `id_group_shop`),
-	KEY `id_group_shop` (`id_group_shop`)
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_supplier`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_store_shop` (
 `id_store` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_store`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_product_shop` (
-`id_product` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-`id_category_default` INT( 11 ) UNSIGNED DEFAULT NULL,
-PRIMARY KEY ( `id_shop` , `id_product` ),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
@@ -2165,13 +2203,13 @@ CREATE TABLE `PREFIX_stock_available` (
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
-`id_group_shop` INT(11) UNSIGNED NOT NULL,
+`id_shop_group` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(10) NOT NULL DEFAULT '0',
 `depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 `out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_stock_available`),
   KEY `id_shop` (`id_shop`),
-  KEY `id_group_shop` (`id_group_shop`),
+  KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -2291,15 +2329,6 @@ CREATE TABLE `PREFIX_product_supplier` (
   UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_supplier_rates` (
-`id_product_supplier` INT(11) UNSIGNED NOT NULL,
-`id_currency` INT(11) UNSIGNED NOT NULL,
-`quantity_min` INT(11) UNSIGNED NOT NULL,
-`quantity_max` INT(11) UNSIGNED NOT NULL,
-`price_te` DECIMAL(20,6) DEFAULT '0.000000',
-  PRIMARY KEY (`id_product_supplier`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `PREFIX_accounting_export` (
   `id_accounting_export` int(11) NOT NULL AUTO_INCREMENT,
   `begin_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -2408,13 +2437,6 @@ CREATE TABLE `PREFIX_module_preference` (
   `favorite` tinyint(1) default NULL,
   PRIMARY KEY (`id_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `module`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_product_tax_rules_group_shop` (
-	`id_product` INT(11) UNSIGNED NOT NULL,
-	`id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
-	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-	PRIMARY KEY ( `id_product` , `id_tax_rules_group` , `id_shop` )
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
  CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (

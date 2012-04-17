@@ -73,6 +73,7 @@ class TranslateCore
 			$str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
+		$str = str_replace('"', '&quot;', $str);
 
 		if ($sprintf)
 		{
@@ -82,7 +83,7 @@ class TranslateCore
 			$str = vsprintf($str, $sprintf);
 		}
 
-		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
+		return ($addslashes ? addslashes($str) : stripslashes($str));
 	}
 
 	/**

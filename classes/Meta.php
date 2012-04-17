@@ -41,7 +41,7 @@ class MetaCore extends ObjectModel
 		'table' => 'meta',
 		'primary' => 'id_meta',
 		'multilang' => true,
-		'multishop' => true,
+		'multilang_shop' => true,
 		'fields' => array(
 			'page' => 			array('type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 64),
 

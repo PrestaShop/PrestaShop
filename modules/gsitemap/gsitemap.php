@@ -137,14 +137,14 @@ XML;
 	/**
 	 * Generate a sitemap for a shop
 	 *
-	 * @param int $shopID
+	 * @param int $id_shop
 	 * @param string $filename
 	 * @return bool
 	 */
-	private function generateSitemap($shopID, $filename = '', $replaceUrl = array())
+	private function generateSitemap($id_shop, $filename = '', $replace_url = array())
 	{
 		$langs = Language::getLanguages();
-		$shop = new Shop($shopID);
+		$shop = new Shop($id_shop);
 		if (!$shop->id)
 			return false;
 
@@ -164,25 +164,26 @@ XML;
 			$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__, '1.00', 'daily', date('Y-m-d'));
 
 		/* Product Generator */
-		$sql = 'SELECT p.id_product, pl.link_rewrite, DATE_FORMAT(IF(date_upd,date_upd,date_add), \'%Y-%m-%d\') date_upd, pl.id_lang, cl.`link_rewrite` category, ean13, i.id_image, il.legend legend_image, (
+		$sql = 'SELECT p.id_product, pl.link_rewrite, DATE_FORMAT(IF(ps.date_upd,ps.date_upd,ps.date_add), \'%Y-%m-%d\') date_upd, pl.id_lang, cl.`link_rewrite` category, ean13, i.id_image, il.legend legend_image, (
 					SELECT MIN(level_depth)
 					FROM '._DB_PREFIX_.'product p2
+					'.Shop::addSqlAssociation('product', 'p2').'
 					LEFT JOIN '._DB_PREFIX_.'category_product cp2 ON p2.id_product = cp2.id_product
 					LEFT JOIN '._DB_PREFIX_.'category c2 ON cp2.id_category = c2.id_category
-					WHERE p2.id_product = p.id_product AND p2.`active` = 1 AND c2.`active` = 1) AS level_depth
+					WHERE p2.id_product = p.id_product AND product_shop.`active` = 1 AND c2.`active` = 1) AS level_depth
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON ps.id_product = p.id_product
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_shop ='.$shopID.')
-				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (ps.id_category_default = cl.id_category AND pl.id_lang = cl.id_lang AND cl.id_shop = '.$shopID.')
+				LEFT JOIN '._DB_PREFIX_.'product_shop ps ON (ps.id_product = p.id_product AND ps.id_shop = '.(int)$id_shop.')
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product)
+				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (ps.id_category_default = cl.id_category AND pl.id_lang = cl.id_lang AND cl.id_shop = '.(int)$id_shop.')
 				LEFT JOIN '._DB_PREFIX_.'image i ON p.id_product = i.id_product
 				LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image)
 				LEFT JOIN '._DB_PREFIX_.'lang l ON (pl.id_lang = l.id_lang)
 				WHERE l.`active` = 1
-					AND p.`active` = 1
-					AND ps.id_shop = '.$shopID.'
+					AND ps.`active` = 1
+					AND ps.id_shop = '.(int)$id_shop.'
 				'.(Configuration::get('GSITEMAP_ALL_PRODUCTS') ? '' : 'HAVING level_depth IS NOT NULL').'
 				ORDER BY pl.id_product, pl.id_lang ASC';
-		
+
 		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
 
 		// array used to know which product/image was already added (blacklist)
@@ -301,14 +302,14 @@ XML;
 			foreach($pages as $page => $ssl)
 				$this->_addSitemapNode($xml, $this->context->link->getPageLink($page, $ssl), '0.5', 'monthly');
 
-		$xmlString = $xml->asXML();
+		$xml_string = $xml->asXML();
 
 		// Replace URL in XML strings by real shops URL
-		if ($replaceUrl)
-			$xmlString = str_replace(array(Tools::getShopDomain(true).'/', Tools::getShopDomainSsl(true).'/'), $replaceUrl, $xmlString);
+		if ($replace_url)
+			$xml_string = str_replace(array(Tools::getShopDomain(true).'/', Tools::getShopDomainSsl(true).'/'), $replace_url, $xml_string);
 
 		$fp = fopen($filename, 'w');
-		fwrite($fp, $xmlString);
+		fwrite($fp, $xml_string);
 		fclose($fp);
 
 		return file_exists($filename);

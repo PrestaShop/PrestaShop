@@ -111,6 +111,7 @@ class OrderInvoiceCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail` od
 		LEFT JOIN `'._DB_PREFIX_.'product` p
 		ON p.id_product = od.product_id
+		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE od.`id_order` = '.(int)$this->id_order.'
 		AND od.`id_order_invoice` = '.(int)$this->id);
 	}
