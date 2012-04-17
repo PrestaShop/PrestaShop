@@ -177,6 +177,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							if ($this->context->customer->isLogged(true))
 							{
 								$address_delivery = new Address((int)(Tools::getValue('id_address_delivery')));
+								$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 								$address_invoice = ((int)(Tools::getValue('id_address_delivery')) == (int)(Tools::getValue('id_address_invoice')) ? $address_delivery : new Address((int)(Tools::getValue('id_address_invoice'))));
 								if ($address_delivery->id_customer != $this->context->customer->id || $address_invoice->id_customer != $this->context->customer->id)
 									$this->errors[] = Tools::displayError('This address is not yours.');
