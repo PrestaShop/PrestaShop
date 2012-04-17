@@ -370,9 +370,11 @@ class LinkCore
 	 * @param bool $ssl
 	 * @param int $id_lang
 	 * @param string|array $request
-	 * @param Context $context
+	 * @param bool $request_url_encode Use URL encode
+	 *
+	 * @return string Page link
 	 */
-	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null)
+	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false)
 	{
 		$controller = str_replace('.php', '', $controller);
 
@@ -382,7 +384,9 @@ class LinkCore
 		if (!is_array($request))
 		{
 			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
-			$request = urlencode(html_entity_decode($request));
+			$request = html_entity_decode($request);
+			if ($request_url_encode)
+				$request = urlencode($request);
 			parse_str($request, $request);
 		}
 		unset($request['controller']);
