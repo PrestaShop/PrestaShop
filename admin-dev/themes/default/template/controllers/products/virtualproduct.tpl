@@ -52,11 +52,11 @@
 						$("#upload-confirmation td").html('<div class="error">{l s='Error:'} ' + msg + '</div>');
 					else
 					{
-						$('#upload_input').remove();
+						$('#upload_input').hide();
 						$('#file_missing').hide();
 						$('#virtual_product_name').attr('value', fileName);
-						$('#upload-confirmation div').prepend('{l s='The file'}&nbsp;"<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">'+fileName+'</a>"&nbsp;{l s='has successfully been uploaded'}' +
-							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
+						$('#upload-confirmation div').prepend('<span>{l s='The file'}&nbsp;"<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">'+fileName+'</a>"&nbsp;{l s='has successfully been uploaded'}' +
+							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" /></span>');
 					}
 				}
 			}
@@ -138,31 +138,28 @@
 					<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="{$product->productDownload->id}" />
 				{/if}
 				<table cellpadding="5" style="float: left; margin-left: 10px;">
-					{if !$product->productDownload->checkFile()}
-						{if $show_file_input}
-							<tr id="upload_input">
-								<td class="col-left">
-									<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
-								</td>
-								<td class="col-right">
-									<input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" />
-									<p class="preference_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
-								</td>
-							</tr>
-						{/if}
-						<tr id="upload-confirmation" style="display:none">
-							<td colspan=2>
-								{if $up_filename}
-									<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
-								{/if}
-								<div class="conf">
-									<a id="delete_downloadable_product" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
-										<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
-									</a>
-								</div>
-							</td>
-						</tr>
-					{else}
+					<tr id="upload_input" {if $is_file}style="display:none"{/if}>
+						<td class="col-left">
+							<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
+						</td>
+						<td class="col-right">
+							<input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" />
+							<p class="preference_description">{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='MB'}</p>
+						</td>
+					</tr>
+					<tr id="upload-confirmation" style="display:none">
+						<td colspan=2>
+							{if $up_filename}
+								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
+							{/if}
+							<div class="conf">
+								<a class="delete_virtual_product" id="delete_downloadable_product" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
+								</a>
+							</div>
+						</td>
+					</tr>
+					{if $is_file}
 						<tr>
 							<td class="col-left">
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
@@ -170,7 +167,7 @@
 							</td>
 							 <td class="col-right">
 								{$product->productDownload->getHtmlLink(false, true)}
-								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red delete_virtual_product">
 									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 							</td>
