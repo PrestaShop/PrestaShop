@@ -1307,6 +1307,29 @@ product_tabs['VirtualProduct'] = new function(){
 				$('#is_virtual_file_product').hide();
 			}
 		});
+
+		// Bind file deletion
+		$(('#product-tab-content-VirtualProduct')).delegate('a.delete_virtual_product', 'click', function(e){
+			e.preventDefault();
+			if (!$('#virtual_product_id').val())
+			{
+				$('#upload_input').show();
+				$('#virtual_product_name').val('');
+				$('#virtual_product_file').val('');
+				$('#upload-confirmation').hide().find('span').remove();
+			}
+			else
+			{
+				var object = this;
+				ajaxAction(this.href, 'deleteVirtualProduct', function(){
+					$(object).closest('tr').remove();
+					$('#upload_input').show();
+					$('#virtual_product_name').val('');
+					$('#virtual_product_file').val('');
+					$('#virtual_product_id').remove();
+				});
+			}
+		});
 	}
 }
 
@@ -1364,6 +1387,45 @@ function refreshImagePositions(imageTable)
 	imageTable.find("tr td.dragHandle:first a:first").hide();
 	imageTable.find("tr td.dragHandle:last a:last").hide();
 }
+
+/**
+ * Generic ajax call for actions expecting a json return
+ *
+ * @param url
+ * @param action
+ * @param success_callback called if the return status is 'ok' (optional)
+ * @param failure_callback called if the return status is not 'ok' (optional)
+ */
+function ajaxAction (url, action, success_callback, failure_callback){
+	$.ajax({
+		url: url,
+		data: {
+			id_product: id_product,
+			action: action,
+			ajax: true
+		},
+		dataType: 'json',
+		context: this,
+		async: false,
+		success: function(data) {
+			if (data.status == 'ok')
+			{
+				showSuccessMessage(data.confirmations);
+				if (typeof success_callback == 'function')
+					success_callback();
+			}
+			else
+			{
+				showErrorMessage(data.error);
+				if (typeof failure_callback == 'function')
+					failure_callback();
+			}
+		},
+		error : function(data){
+			showErrorMessage(("[TECHNICAL ERROR]"));
+		}
+	});
+};
 
 var tabs_manager = new ProductTabsManager();
 tabs_manager.setTabs(product_tabs);
