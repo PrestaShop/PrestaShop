@@ -57,11 +57,11 @@
 			<h3 style="padding:0;margin:0;">{l s='List of Themes - Click to access theme translation:'}</h3>
 			<ul style="list-style-type:none;padding:0;margin:0 0 10px 0;">
 				{foreach array_keys($modules_translations) as $theme}
-					<li><a href="#{$theme}" class="link">- {if $theme === 'default'}{l s='default'}{else}$theme{/if}</a></li>
+					<li><a href="#{$theme}" class="link">- {if $theme === 'default'}{l s='default'}{else}{$theme}{/if}</a></li>
 				{/foreach}
 			</ul>
 		{/if}
-	
+
 		{foreach $modules_translations as $theme_name => $theme}
 			<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{if $theme_name === $default_theme_name}{l s='default'}{else}{$theme_name}{/if} </h2>
 			{foreach $theme as $module_name => $module}
