@@ -1697,24 +1697,28 @@ class AdminControllerCore extends Controller
 		// Filter memorization
 		if (isset($_POST) && !empty($_POST) && isset($this->table))
 			foreach ($_POST as $key => $value)
+			{
 				if (is_array($this->table))
 				{
 					foreach ($this->table as $table)
-						if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
+						if (stripos($key, $table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
 							$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 				}
-				elseif (strncmp($key, $this->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
+				elseif (stripos($key, $this->table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
 					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
+			}
 		if (isset($_GET) && !empty($_GET) && isset($this->table))
 			foreach ($_GET as $key => $value)
+			{
 				if (is_array($this->table))
 				{
 					foreach ($this->table as $table)
-						if (strncmp($key, $table.'OrderBy', 7) === 0 || strncmp($key, $table.'Orderway', 8) === 0)
+						if (stripos($key, $table.'OrderBy') === 0 || stripos($key, $table.'Orderway') === 0)
 							$this->context->cookie->$key = $value;
 				}
-				elseif (strncmp($key, $this->table.'OrderBy', 7) === 0 || strncmp($key, $this->table.'Orderway', 12) === 0)
+				elseif (stripos($key, $this->table.'OrderBy') === 0 || stripos($key, $this->table.'Orderway') === 0)
 					$this->context->cookie->$key = $value;
+			}
 
 		// Manage list filtering
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
