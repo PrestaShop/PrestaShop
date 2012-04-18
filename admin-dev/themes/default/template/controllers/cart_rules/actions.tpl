@@ -89,7 +89,7 @@
 			</select>
 		</div>
 		<div class="clear">&nbsp;</div>
-		<div id="gift_attributes_list" {if $gift_product_attribute_select == ''}style="display:none"{/if}>
+		<div id="gift_attributes_list" {if !$hasAttribute}style="display:none"{/if}>
 			<label>{l s='Available combinations'}</label>
 			<div id="gift_attributes_list_select">
 				{$gift_product_attribute_select}
