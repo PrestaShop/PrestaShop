@@ -49,30 +49,7 @@ function initTableDnD(table)
 				var ids = row.id.split('_');
 				var tableDrag = table;
 				var params = '';
-				if (table.id == 'cms_category')
-					params = {
-						ajaxCMSCategoriesPositions: true,
-						id_cms_category_parent: ids[1],
-						id_cms_category_to_move: ids[2],
-						way: way,
-						token: token
-					};
-				if (table.id == 'category')
-					params = {
-						ajaxCategoriesPositions: true,
-						id_category_parent: ids[1],
-						id_category_to_move: ids[2],
-						way: way,
-						token: token
-					};
-				if (table.id == 'cms')
-					params = {
-						ajaxCMSPositions: true,
-						id_cms_category: ids[1],
-						id_cms: ids[2],
-						way: way,
-						token: token
-					};
+
 				if (table.id == 'cms_block_0')
 					params = {
 						ajaxCMSBlockPositions: true,
@@ -89,81 +66,73 @@ function initTableDnD(table)
 						way: way,
 						token: token
 					};
-				if (come_from == 'AdminModulesPositions')
+
+				if (table.id == 'category')
 					params = {
-						ajaxModulesPositions: true,
+						action: 'updatePositions',
+						id_category_parent: ids[1],
+						id_category_to_move: ids[2],
+						way: way
+					};
+				else if (table.id == 'cms_category')
+					params = {
+						action: 'updateCmsCategoriesPositions',
+						id_cms_category_parent: ids[1],
+						id_cms_category_to_move: ids[2],
+						way: way
+					};
+				else if (table.id == 'cms')
+					params = {
+						action: 'updateCmsPositions',
+						id_cms_category: ids[1],
+						id_cms: ids[2],
+						way: way
+					};
+				else if (come_from == 'AdminModulesPositions')
+					params = {
+						action: 'updatePositions',
 						id_hook: ids[0],
 						id_module: ids[1],
-						way: way,
-						token: token
+						way: way
 					};
-				if (table.id == 'product') {
+				else if (table.id.indexOf('attribute') != -1 && table.id != 'attribute_group') {
 					params = {
-						ajaxProductsPositions: true,
+						action: 'updateAttributesPositions',
+						id_attribute_group: ids[1],
+						id_attribute: ids[2],
+						way: way
+					};
+				}
+				else if (table.id == 'attribute_group') {
+					params = {
+						action: 'updateGroupsPositions',
+						id_attribute_group: ids[2],
+						way: way
+					}
+				}
+				else if (table.id == 'product') {
+					params = {
+						action: 'updatePositions',
 						id_category: ids[1],
 						id_product: ids[2],
-						way: way,
-						token: token
+						way: way
 					};
 				}
-				if (table.id == 'imageTable') {
+
+				if (!params) {
 					params = {
-						ajaxProductImagesPositions: true,
-						id_image: ids[1],
-						way: way,
-						token: token
-					};
-				}
-				if (table.id.indexOf('attribute') != -1 && table.id != 'attribute_group') {
-					params = {
-						ajaxAttributesPositions: true,
-						id_attribute_group: ids[2],
-						id_attribute: ids[3],
-						way: way,
-						token: token
-					};
-				}
-				
-				if (table.id == 'attribute_group') {
-					params = {
-						ajaxGroupsAttributesPositions: true,
-						id_attribute_group: ids[2],
-						way: way,
-						token: token
-					}
-				}
-				
-				if (table.id == 'feature') {
-					params = {
-						ajaxFeaturesPositions: true,
-						id_feature : ids[2],
-						way: way,
-						token: token
-					}
-				}
-				
-				if (table.id == 'carrier') {
-					params = {
-						ajaxCarriersPositions: true,
-						id_carrier : ids[2],
-						way: way,
-						token: token
+						action : 'updatePositions',
+						id : ids[2],
+						way: way
 					}
 				}
 
-				if (table.id == 'tab') {
-					params = {
-						ajaxTabsPositions: true,
-						id_tab : ids[2],
-						way: way,
-						token: token
-					}
-				}
+				params['ajax'] = 1;
 
 				$.ajax({
 					type: 'POST',
 					async: false,
-					url: 'ajax.php?' + $.tableDnD.serialize(),
+					url: currentIndex + '&token=' + token + '&' + $.tableDnD.serialize(),
 					data: params,
 					success: function(data) {
 						if (come_from == 'AdminModulesPositions') 
@@ -176,24 +145,6 @@ function initTableDnD(table)
 								tableDrag.find('td.dragHandle a:hidden').show();
 								tableDrag.find('td.dragHandle:first a:even').hide();
 								tableDrag.find('td.dragHandle:last a:odd').hide();
-						}
-						else if (table.id == 'imageTable')
-						{
-							var reg = /_[0-9]$/g;
-							var up_reg  = new RegExp('imgPosition=[0-9]+&');
-							tableDrag.find('tbody tr').each(function(i) {
-								// Update link position
-								// Up links
-								$(this).find('td.dragHandle a:first').attr('href', $(this).find('td.dragHandle a:first').attr('href').replace(up_reg, 'imgPosition='+ i +'&'));//, 'imgPosition='+ (i - 1) +'&'));
-								// Down links
-								$(this).find('td.dragHandle a:last').attr('href', $(this).find('td.dragHandle a:last').attr('href').replace(up_reg, 'imgPosition='+ (i + 2) +'&'));
-								// Position image cell
-								$(this).find('td.positionImage').html(i + 1);
-							
-							});
-							tableDrag.find('tr td.dragHandle a:hidden').show();
-							tableDrag.find('tr td.dragHandle:first a:first').hide();
-							tableDrag.find('tr td.dragHandle:last a:last').hide();
 						}
 						else
 						{

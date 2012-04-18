@@ -4178,4 +4178,31 @@ class AdminProductsControllerCore extends AdminController
 			LIMIT '.(int)$limit);
 		die(Tools::jsonEncode($result));
 	}
+
+	public function ajaxProcessUpdatePositions()
+	{
+		$way = (int)(Tools::getValue('way'));
+		$id_product = (int)(Tools::getValue('id_product'));
+		$id_category = (int)(Tools::getValue('id_category'));
+		$positions = Tools::getValue('product');
+
+		if (is_array($positions))
+			foreach ($positions as $position => $value)
+			{
+				$pos = explode('_', $value);
+
+				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
+				{
+					if ($product = new Product((int)$pos[2]))
+						if (isset($position) && $product->updatePosition($way, $position))
+							echo 'ok position '.(int)$position.' for product '.(int)$pos[2].'\r\n';
+						else
+							echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
+					else
+						echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
+
+					break;
+				}
+			}
+	}
 }

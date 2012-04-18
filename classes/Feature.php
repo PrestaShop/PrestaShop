@@ -263,12 +263,12 @@ class FeatureCore extends ObjectModel
 	 * @param integer $position
 	 * @return boolean Update result
 	 */
-	public function updatePosition($way, $position)
+	public function updatePosition($way, $position, $id_feature)
 	{
 		if (!$res = Db::getInstance()->executeS('
 			SELECT `position`, `id_feature`
 			FROM `'._DB_PREFIX_.'feature`
-			WHERE `id_feature` = '.(int)Tools::getValue('id_feature', 1).'
+			WHERE `id_feature` = '.(int)($id_feature ? $id_feature : 1).'
 			ORDER BY `position` ASC'
 		))
 			return false;
