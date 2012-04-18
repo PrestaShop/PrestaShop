@@ -130,7 +130,7 @@
     'An error occured during installation...' => 'Während der Installation ist ein Fehler aufgetreten',
     'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.' => 'Um zum vorherigen Schritt zu gelangen, können Sie die Links in der Linken Spalte nutzen, oder den Installationsprozess komplett neu starten wenn Sie <a href="%s">HIER klicken</a>.',
     'Your installation is finished!' => 'Die Installation ist abgeschlossen!',
-    'You have just finished installing and configuring your shop. Thank you for using PrestaShop!' => 'Sie haben soeben Ihren Shop erfolgreich installiert. Danke dass Sie Prestashop nutzen',
+    'You have just finished installing your shop. Thank you for using PrestaShop!' => 'Sie haben soeben Ihren Shop erfolgreich installiert. Danke dass Sie Prestashop nutzen',
     'Please remember your login information:' => 'Merken Sie sich Ihre Log-In-Daten',
     'WARNING: For security purposes, you must delete the "install" folder.' => 'HINWEIS: Aus Sicherheitsgründen löschen Sie bitte den Ordner \'/install\'.',
     'Back Office' => 'Back Office',

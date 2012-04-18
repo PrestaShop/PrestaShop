@@ -134,7 +134,7 @@ return array(
 		'An error occured during installation...' => 'Une erreur est survenue durant l\'installation',
 		'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.' => 'Vous pouvez utiliser les liens à gauche pour revenir aux étapes précédentes, ou redémarrer l\'installation en <a href="%s">cliquant ici</a>.',
 		'Your installation is finished!' => 'L\'installation est finie !',
-		'You have just finished installing and configuring your shop. Thank you for using PrestaShop!' => 'Vous venez d’installer et de configurer votre boutique en ligne, nous vous en remercions',
+		'You have just finished installing your shop. Thank you for using PrestaShop!' => 'Vous venez d’installer votre boutique en ligne, nous vous en remercions.',
 		'Please remember your login information:' => 'Merci de conserver les informations de connexion suivantes :',
 		'WARNING: For security purposes, you must delete the "install" folder.' => 'ATTENTION : pour plus de sécurité, merci de supprimer le dossier \'/install\'.',
 		'Back Office' => 'Administration',

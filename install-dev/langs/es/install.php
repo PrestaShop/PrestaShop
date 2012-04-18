@@ -130,7 +130,7 @@
     'An error occured during installation...' => NULL,
     'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.' => NULL,
     'Your installation is finished!' => '¡La instalación está terminada!',
-    'You have just finished installing and configuring your shop. Thank you for using PrestaShop!' => NULL,
+    'You have just finished installing your shop. Thank you for using PrestaShop!' => NULL,
     'Please remember your login information:' => NULL,
     'WARNING: For security purposes, you must delete the "install" folder.' => 'ATENCION : para más seguridad, por favor borre la carpeta \'/install\'.',
     'Back Office' => 'Back Office',
