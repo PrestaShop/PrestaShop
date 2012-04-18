@@ -27,7 +27,7 @@
 {capture name=path}{l s='Our stores'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
-<script src="http://maps.google.com/maps/api/js?sensor=true">// DEBUG </script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 
 <h1>{l s='Our stores'}</h1>
 
@@ -92,7 +92,7 @@
 	<p class="clearfix">
 		<input type="button" class="button" onclick="searchLocations();" value="{l s='Search'}" style="display: inline;" /> 
 	</p>
-	<div><select id="locationSelect"></select></div>
+	<div><select id="locationSelect"><option></option></select></div>
     <div id="map"></div>
 	<table cellpadding="0" cellspacing="0" border="0" id="stores-table" class="table_block">
 		<tr>
