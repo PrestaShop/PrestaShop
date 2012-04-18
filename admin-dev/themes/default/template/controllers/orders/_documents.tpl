@@ -122,7 +122,7 @@
 	<tr>
 		<td colspan="5" class="center">
 			<h3>{l s='No document is available'}</h3>
-			{if $invoice_management_active}
+			{if isset($invoice_management_active) && $invoice_management_active}
 			<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
 			{/if}
 		</td>
