@@ -2376,7 +2376,7 @@ class ProductCore extends ObjectModel
 				{
 					$sql->select('product_attribute_shop.`price` AS attribute_price');
 					$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = '.(int)$id_product_attribute);
-					$sql->join(Shop::addSqlAssociation('product_attribute', 'pa'));
+					$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
 				}
 				else
 					$sql->select(
