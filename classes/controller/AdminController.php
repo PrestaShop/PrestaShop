@@ -1208,13 +1208,24 @@ class AdminControllerCore extends Controller
 			// retrocompatibility : change png to gif if icon not exists
 			if (!$img_exists_cache)
 				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-			$img = $img_exists_cache ? $img_cache_url : _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+
+			if ($img_exists_cache)
+				$path_img = $img = $img_exists_cache;
+			else
+			{
+				$path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+				$img = _PS_IMG_.'t/'.$tab['class_name'].'.png';
+			}
+
 
 			if (trim($tab['module']) != '')
-				$img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+			{
+				$path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+				$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+			}
 
 			// retrocompatibility
-			if (!file_exists($img))
+			if (!file_exists($path_img))
 				$img = str_replace('png', 'gif', $img);
 			// tab[class_name] does not contains the "Controller" suffix
 			$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
@@ -1662,7 +1673,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
-		elseif (Shop::getTotalShops(false) != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		elseif ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
 		{
 			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
 			if (count($shops))
