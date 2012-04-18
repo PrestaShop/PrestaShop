@@ -62,10 +62,10 @@ require_once(dirname(__FILE__).'/autoload.php');
 
 if (_PS_DEBUG_PROFILING_)
 {
-	include_once(_PS_ROOT_DIR_.'/override/classes/controller/_Controller.php');
-	include_once(_PS_ROOT_DIR_.'/override/classes/_ObjectModel.php');
-	include_once(_PS_ROOT_DIR_.'/override/classes/_Hook.php');
-	include_once(_PS_ROOT_DIR_.'/override/classes/db/_Db.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
+	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
+	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 }
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
