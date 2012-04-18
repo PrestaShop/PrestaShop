@@ -757,40 +757,27 @@ class WebserviceRequestCore
 
 	protected function shopExists($params)
 	{
-		// Case no shop specified
-		if (!isset($params['id_shop']))
+		if (isset($params['id_shop']))
 		{
-			self::$shopIDs[] = Configuration::get('PS_SHOP_DEFAULT');
+			if ($params['id_shop'] != 'all' && is_numeric($params['id_shop']))
+			{
+				Shop::setContext(Shop::CONTEXT_SHOP, (int)$params['id_shop']);
+				self::$shopIDs[] = (int)$params['id_shop'];
+				return true;
+			}
+			else if ($params['id_shop'] == 'all')
+			{
+				Shop::setContext(Shop::CONTEXT_ALL);
+				self::$shopIDs = Shop::getShops(true, null, true);
+				return true;
+			}
+		}
+		else if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop']))
+		{
+			Shop::setContext(Shop::CONTEXT_GROUP, (int)$params['id_group_shop']);
 			return true;
 		}
 
-		if ($params['id_shop'][0] == '[' && $params['id_shop'][strlen($params['id_shop']) - 1] == ']')
-			$shops = explode(',', substr($params['id_shop'], 1, strlen($params['id_shop']) - 2));
-		else
-			$shops[] = $params['id_shop'];
-		if ($params['id_shop'] != 'all')
-			foreach ($shops as $id)
-			{
-				if (!is_numeric($id))
-				{
-					$this->setError(404, 'Bad syntax for id_shop parameter (eg : all, 1, [1,2,3])', 130);
-					return false;
-				}
-			}
-		$allshops = Shop::getShops(true);
-		$counter = 0;
-		foreach ($allshops as $shop)
-		{
-			if ($params['id_shop'] == 'all')
-				self::$shopIDs[] = $shop['id_shop'];
-			elseif (in_array($shop['id_shop'], $shops))
-			{
-				$counter++;
-				self::$shopIDs[] = $shop['id_shop'];
-			}
-		}
-		if ($counter == count($shops) || $params['id_shop'] == 'all')
-			return true;
 		$this->setError(404, 'This shop id doesn\'t exist', 129);
 		return false;
 	}
