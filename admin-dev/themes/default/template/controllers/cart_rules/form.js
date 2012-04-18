@@ -112,8 +112,10 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('#apply_discount_percent_div').show(400);
 		if ($('#apply_discount_to_product').attr('checked'))
 			toggleApplyDiscountTo();
-		$('#apply_discount_to_cheapest').removeAttr('disabled');
-		$('#apply_discount_to_selection').removeAttr('disabled');
+		$('#apply_discount_to_cheapest').show();
+		$('*[for=apply_discount_to_cheapest]').show();
+		$('#apply_discount_to_selection').show();
+		$('*[for=apply_discount_to_selection]').show();
 	}
 	else
 	{
@@ -126,9 +128,11 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('#apply_discount_amount_div').show(400);
 		if ($('#apply_discount_to_product').attr('checked'))
 			toggleApplyDiscountTo();
-		$('#apply_discount_to_cheapest').attr('disabled', 'disabled');
+		$('#apply_discount_to_cheapest').hide();
+		$('*[for=apply_discount_to_cheapest]').hide();
 		$('#apply_discount_to_cheapest').removeAttr('checked');
-		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection').hide();
+		$('*[for=apply_discount_to_selection]').hide();
 		$('#apply_discount_to_selection').removeAttr('checked');
 	}
 	else
