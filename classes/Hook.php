@@ -313,34 +313,35 @@ class HookCore extends ObjectModel
 	 * Execute modules for specified hook
 	 *
 	 * @param string $hook_name Hook Name
-	 * @param array $hookArgs Parameters for the functions
+	 * @param array $hook_args Parameters for the functions
 	 * @param int $id_module Execute hook for this module only
 	 * @return string modules output
 	 */
-	public static function exec($hook_name, $hookArgs = array(), $id_module = null)
+	public static function exec($hook_name, $hook_args = array(), $id_module = null)
 	{
 		// Check arguments validity
-		$context = Context::getContext();
-		if (($id_module && !Validate::isUnsignedId($id_module)) || !Validate::isHookName($hook_name))
+		if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name))
 			throw new PrestaShopException('Invalid id_module or hook_name');
+
+		// If no modules associated to hook_name or recompatible hook name, we stop the function
+		if (!$module_list = Hook::getHookModuleExecList($hook_name))
+			return '';
 
 		// Check if hook exists
 		if (!$id_hook = Hook::getIdByName($hook_name))
 			return false;
-		$retro_hook_name = Hook::getRetroHookName($hook_name);
 
 		// Store list of executed hooks on this page
 		Hook::$executed_hooks[$id_hook] = $hook_name;
 
 		$live_edit = false;
-		if (!isset($hookArgs['cookie']) || !$hookArgs['cookie'])
-			$hookArgs['cookie'] = $context->cookie;
-		if (!isset($hookArgs['cart']) || !$hookArgs['cart'])
-			$hookArgs['cart'] = $context->cart;
+		$context = Context::getContext();
+		if (!isset($hook_args['cookie']) || !$hook_args['cookie'])
+			$hook_args['cookie'] = $context->cookie;
+		if (!isset($hook_args['cart']) || !$hook_args['cart'])
+			$hook_args['cart'] = $context->cart;
 
-		// If no modules associated to hook_name or recompatible hook name, we stop the function
-		if (!$module_list = Hook::getHookModuleExecList($hook_name))
-			return '';
+		$retro_hook_name = Hook::getRetroHookName($hook_name);
 
 		// Look on modules list
 		$altern = 0;
@@ -365,13 +366,13 @@ class HookCore extends ObjectModel
 			$hook_retro_callable = is_callable(array($moduleInstance, 'hook'.$retro_hook_name));
 			if (($hook_callable || $hook_retro_callable) && Module::preCall($moduleInstance->name))
 			{
-				$hookArgs['altern'] = ++$altern;
+				$hook_args['altern'] = ++$altern;
 
 				// Call hook method
 				if ($hook_callable)
-					$display = $moduleInstance->{'hook'.$hook_name}($hookArgs);
+					$display = $moduleInstance->{'hook'.$hook_name}($hook_args);
 				else if ($hook_retro_callable)
-					$display = $moduleInstance->{'hook'.$retro_hook_name}($hookArgs);
+					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
 				// Live edit
 				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
 				{
