@@ -32,11 +32,11 @@
 // if FB class is already loaded, just enable it. else, enable it only if fb.php exists and is loaded
 if (!defined('PS_USE_FIREPHP') AND class_exists('FB'))
 	define('PS_USE_FIREPHP',true);
-elseif (file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'fb.php'))
+elseif (file_exists(_PS_TOOL_DIR_.'FirePHP/fb.php'))
 {
 	if (!defined('PS_USE_FIREPHP'))
 	{
-		require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'fb.php');
+		require_once(_PS_TOOL_DIR_.'FirePHP/fb.php');
 		define('PS_USE_FIREPHP',true);
 	}
 	else
