@@ -391,4 +391,21 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $content;
 	}
+
+	public function ajaxProcessUpdatePositions()
+	{
+		$id_module = (int)(Tools::getValue('id_module'));
+		$id_hook = (int)(Tools::getValue('id_hook'));
+		$way = (int)(Tools::getValue('way'));
+		$positions = Tools::getValue(strval($id_hook));
+		$position = (is_array($positions)) ? array_search($id_hook.'_'.$id_module, $positions) : null;
+		$module = Module::getInstanceById($id_module);
+		if (Validate::isLoadedObject($module))
+			if ($module->updatePosition($id_hook, $way, $position))
+				die(true);
+			else
+				die('{"hasError" : true, "errors" : "Can not update module position"}');
+		else
+			die('{"hasError" : true, "errors" : "This module can not be loaded"}');
+	}
 }

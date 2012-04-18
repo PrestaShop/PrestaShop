@@ -1100,5 +1100,4 @@ class AdminModulesControllerCore extends AdminController
 		}
 		$smarty->assign($tpl_vars);
 	}
-
 }

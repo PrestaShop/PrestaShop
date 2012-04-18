@@ -65,6 +65,7 @@
 		var token_admin_orders = '{getAdminToken tab='AdminOrders' slashes=1 }';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1 }';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1 }';
+		var currentIndex = '{$currentIndex}';
 	</script>
 {/if}
 
