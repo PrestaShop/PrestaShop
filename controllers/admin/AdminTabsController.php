@@ -281,4 +281,37 @@ class AdminTabsControllerCore extends AdminController
 			return;
 		@rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');
 	}
+
+	public function ajaxProcessUpdatePositions()
+	{
+		$way = (int)(Tools::getValue('way'));
+		$id_tab = (int)(Tools::getValue('id'));
+		$positions = Tools::getValue('tab');
+
+		// when changing positions in a tab sub-list, the first array value is empty and needs to be removed
+		if (!$positions[0])
+		{
+			unset($positions[0]);
+			// reset indexation from 0
+			$positions = array_merge($positions);
+		}
+
+		foreach ($positions as $position => $value)
+		{
+			$pos = explode('_', $value);
+
+			if (isset($pos[2]) && (int)$pos[2] === $id_tab)
+			{
+				if ($tab = new Tab((int)$pos[2]))
+					if (isset($position) && $tab->updatePosition($way, $position))
+						echo 'ok position '.(int)$position.' for tab '.(int)$pos[1].'\r\n';
+					else
+						echo '{"hasError" : true, "errors" : "Can not update tab '.(int)$id_tab.' to position '.(int)$position.' "}';
+				else
+					echo '{"hasError" : true, "errors" : "This tab ('.(int)$id_tab.') can t be loaded"}';
+
+				break;
+			}
+		}
+	}
 }

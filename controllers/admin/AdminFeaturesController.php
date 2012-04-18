@@ -471,4 +471,33 @@ class AdminFeaturesControllerCore extends AdminController
 		}
 	}
 
+	public function ajaxProcessUpdatePositions()
+	{
+		$way = (int)Tools::getValue('way');
+		$id_feature = (int)Tools::getValue('id');
+		$positions = Tools::getValue('feature');
+
+		$new_positions = array();
+		foreach ($positions as $k => $v)
+			if (!empty($v))
+				$new_positions[] = $v;
+
+		foreach ($new_positions as $position => $value)
+		{
+			$pos = explode('_', $value);
+
+			if (isset($pos[2]) && (int)$pos[2] === $id_feature)
+			{
+				if ($feature = new Feature((int)$pos[2]))
+					if (isset($position) && $feature->updatePosition($way, $position, $id_feature))
+						echo 'ok position '.(int)$position.' for feature '.(int)$pos[1].'\r\n';
+					else
+						echo '{"hasError" : true, "errors" : "Can not update feature '.(int)$id_feature.' to position '.(int)$position.' "}';
+				else
+					echo '{"hasError" : true, "errors" : "This feature ('.(int)$id_feature.') can t be loaded"}';
+
+				break;
+			}
+		}
+	}
 }

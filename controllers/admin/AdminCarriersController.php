@@ -649,6 +649,32 @@ class AdminCarriersControllerCore extends AdminController
 			if ($list['name'] == '0')
 				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
 	}
+
+	public function ajaxProcessUpdatePositions()
+	{
+		$way = (int)(Tools::getValue('way'));
+		$id_carrier = (int)(Tools::getValue('id'));
+		$positions = Tools::getValue($this->table);
+
+		foreach ($positions as $position => $value)
+		{
+			$pos = explode('_', $value);
+
+			if (isset($pos[2]) && (int)$pos[2] === $id_carrier)
+			{
+				if ($carrier = new Carrier((int)$pos[2]))
+					if (isset($position) && $carrier->updatePosition($way, $position))
+						echo 'ok position '.(int)$position.' for carrier '.(int)$pos[1].'\r\n';
+					else
+						echo '{"hasError" : true, "errors" : "Can not update carrier '.(int)$id_carrier.' to position '.(int)$position.' "}';
+				else
+					echo '{"hasError" : true, "errors" : "This carrier ('.(int)$id_carrier.') can t be loaded"}';
+
+				break;
+			}
+		}
+	}
+
 }
 
 

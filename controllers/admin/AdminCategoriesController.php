@@ -651,6 +651,37 @@ class AdminCategoriesControllerCore extends AdminController
 				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
 				VALUES '.pSQL($insert));
 	}
-}
 
+	public function ajaxProcessUpdatePositions()
+	{
+		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
+		$id_category_parent = (int)(Tools::getValue('id_category_parent'));
+		$way = (int)(Tools::getValue('way'));
+		$positions = Tools::getValue('category');
+		if (is_array($positions))
+			foreach ($positions as $key => $value)
+			{
+				$pos = explode('_', $value);
+				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move))
+				{
+					$position = $key + 1;
+					break;
+				}
+			}
+
+		$category = new Category($id_category_to_move);
+		if (Validate::isLoadedObject($category))
+		{
+			if (isset($position) && $category->updatePosition($way, $position))
+			{
+				Hook::exec('actionCategoryUpdate');
+				die(true);
+			}
+			else
+				die('{"hasError" : true, errors : "Can not update categories position"}');
+		}
+		else
+			die('{"hasError" : true, "errors" : "This category can not be loaded"}');
+	}
+}
 

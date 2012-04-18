@@ -430,7 +430,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			return;
 		}
 
-
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
@@ -544,7 +543,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	
 	protected function setTypeAttribute()
 	{
-		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
+		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
@@ -577,11 +576,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			return;
 
 		// If it's an attribute, load object Attribute()
-		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
+		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
 		{
-			/* Hook */
-			Hook::exec('actionObjectAttributeAddBefore');
-
 			// Override var of Controller
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
@@ -609,6 +605,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			}
 			else if (Tools::isSubmit('submitAddattribute'))
 			{
+				Hook::exec('actionObjectAttributeAddBefore');
 				$this->action = 'save';
 				$id_attribute = (int)Tools::getValue('id_attribute');
 				// Adding last position to the attribute if not exist
@@ -627,9 +624,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else
 		{
-			/* Hook */
-			Hook::exec('actionObjectAttributeGroupAddBefore');
-
 			if (Tools::getValue('submitDel'.$this->table))
 			{
 				if ($this->tabAccess['delete'] === '1')
@@ -651,6 +645,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			}
 			else if (Tools::isSubmit('submitAdd'.$this->table))
 			{
+				Hook::exec('actionObjectAttributeGroupAddBefore');
 				$id_attribute_group = (int)Tools::getValue('id_attribute_group');
 				// Adding last position to the attribute if not exist
 				if ($id_attribute_group <= 0)
@@ -727,4 +722,63 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		return $result;
 	}
 
+	/* Modify group attribute position */
+	public function ajaxProcessUpdateGroupsPositions()
+	{
+		$way = (int)Tools::getValue('way');
+		$id_attribute_group = (int)Tools::getValue('id_attribute_group');
+		$positions = Tools::getValue('attribute_group');
+
+		$new_positions = array();
+		foreach ($positions as $k => $v)
+			if (count(explode('_', $v)) == 4)
+				$new_positions[] = $v;
+
+		foreach ($new_positions as $position => $value)
+		{
+			$pos = explode('_', $value);
+
+			if (isset($pos[2]) && (int)$pos[2] === $id_attribute_group)
+			{
+				if ($group_attribute = new AttributeGroup((int)$pos[2]))
+					if (isset($position) && $group_attribute->updatePosition($way, $position))
+						echo 'ok position '.(int)$position.' for group attribute '.(int)$pos[2].'\r\n';
+					else
+						echo '{"hasError" : true, "errors" : "Can not update group attribute '.(int)$id_attribute_group.' to position '.(int)$position.' "}';
+				else
+					echo '{"hasError" : true, "errors" : "This group attribute ('.(int)$id_attribute_group.') can t be loaded"}';
+
+				break;
+			}
+		}
+	}
+
+	/* Modify attribute position */
+	public function ajaxProcessUpdateAttributesPositions()
+	{
+		$way = (int)Tools::getValue('way');
+		$id_attribute = (int)Tools::getValue('id_attribute');
+		$id_attribute_group = (int)Tools::getValue('id_attribute_group');
+		$positions = Tools::getValue('attribute');
+
+		if (is_array($positions))
+			foreach ($positions as $position => $value)
+			{
+				$pos = explode('_', $value);
+
+				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_attribute_group && (int)$pos[2] === $id_attribute))
+				{
+					if ($attribute = new Attribute((int)$pos[2]))
+						if (isset($position) && $attribute->updatePosition($way, $position))
+							echo 'ok position '.(int)$position.' for attribute '.(int)$pos[2].'\r\n';
+						else
+							echo '{"hasError" : true, "errors" : "Can not update attribute '.(int)$id_attribute.' to position '.(int)$position.' "}';
+					else
+						echo '{"hasError" : true, "errors" : "This attribute ('.(int)$id_attribute.') can t be loaded"}';
+
+					break;
+				}
+			}
+
+	}
 }
