@@ -272,7 +272,7 @@ class EmployeeCore extends ObjectModel
 			case Shop::CONTEXT_GROUP:
 				if ($context->shop->checkIfShopGroupExist(Shop::getContextShopGroupID()))
 				{
-					$shops = $context->shop->getIdShopsByIdShopGroup(Shop::getContextShopGroupID());
+					$shops = Shop::getShops(false, Shop::getContextShopGroupID(), true);
 					foreach ($shops as $shop)
 						if (!in_array($shop, Employee::getEmployeeShopById($id_employee)))
 							return false;
@@ -283,7 +283,7 @@ class EmployeeCore extends ObjectModel
 
 			case Shop::CONTEXT_ALL:
 				if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
-					$context->shop->getTotalShopsWhoExists() == Employee::getTotalEmployeeShopById($id_employee))
+					Shop::getTotalShops(false) == Employee::getTotalEmployeeShopById($id_employee))
 					return true;
 				else
 					return false;
