@@ -106,28 +106,6 @@ class AdminShopGroupControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Share orders:'),
-					'name' => 'share_order',
-					'required' => true,
-					'class' => 't',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'share_order_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'share_order_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
-						)
-					),
-					'desc' =>
-						$this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and available quantities)')
-				),
-				array(
-					'type' => 'radio',
 					'label' => $this->l('Share available quantities to sell:'),
 					'name' => 'share_stock',
 					'required' => true,
@@ -146,6 +124,28 @@ class AdminShopGroupControllerCore extends AdminController
 						)
 					),
 					'desc' => $this->l('Share available quantities to sell between shops of this group. When changing this option, all product available quantities for this group will be reset to 0.'),
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Share orders:'),
+					'name' => 'share_order',
+					'required' => true,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'share_order_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'share_order_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'desc' =>
+					$this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and available quantities)')
 				),
 				array(
 					'type' => 'radio',
