@@ -1208,17 +1208,17 @@ class AdminControllerCore extends Controller
 			// retrocompatibility : change png to gif if icon not exists
 			if (!$img_exists_cache)
 				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-			$img = $img_exists_cache ? $img_cache_url : _PS_IMG_.'t/'.$tab['class_name'].'.png';
+			$img = $img_exists_cache ? $img_cache_url : _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
 
 			if (trim($tab['module']) != '')
-				$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+				$img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
 
 			// retrocompatibility
-			if (!file_exists(dirname(_PS_ROOT_DIR_).$img))
+			if (!file_exists($img))
 				$img = str_replace('png', 'gif', $img);
 			// tab[class_name] does not contains the "Controller" suffix
 			$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
-			$tabs[$index]['img'] = $img;
+			$tabs[$index]['img'] = str_replace(_PS_ROOT_DIR_, '', $img);
 			$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
