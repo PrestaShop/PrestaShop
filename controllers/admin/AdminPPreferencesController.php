@@ -246,7 +246,7 @@ class AdminPPreferencesControllerCore extends AdminController
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 &&
 			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 		{
-			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'a.`advanced_stock_management` = 1');
+			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'product_shop.`advanced_stock_management` = 1');
 
 			Db::getInstance()->execute(
 				'UPDATE `'._DB_PREFIX_.'stock_available`
@@ -270,7 +270,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				array(
 					'advanced_stock_management' => $advanced_stock_management
 				),
-				'`advanced_stock_management` = '.($advanced_stock_management == 1 ? 0 : 1).'
+				'product_shop.`advanced_stock_management` = '.($advanced_stock_management == 1 ? 0 : 1).'
 				 AND `cache_is_pack` = 0
 				 AND `is_virtual` = 0'
 			);
@@ -288,8 +288,8 @@ class AdminPPreferencesControllerCore extends AdminController
 				 	`'._DB_PREFIX_.'product_shop` product_shop
 				 ON
 				 (
-				 	product_shop.`cache_is_pack` = 0
-				 	AND product_shop.`is_virtual` = 0
+				 	p.`cache_is_pack` = 0
+				 	AND p.`is_virtual` = 0
 				 	AND product_shop.`advanced_stock_management` = '.$advanced_stock_management.'
 				 )
 				 SET s.`depends_on_stock` = '.$advanced_stock_management.',
