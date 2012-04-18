@@ -2036,7 +2036,19 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($id_category = (int)Tools::getValue('id_category'))
 				self::$currentIndex .= '&id_category='.(int)$id_category;
-			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->id);
+
+			// If products from all categories are displayed, we don't want to use sorting by position
+			if (!$id_category)
+			{
+				$this->_defaultOrderBy = $this->identifier;
+				if ($this->context->cookie->{$this->table.'Orderby'} == 'position')
+				{
+					unset($this->context->cookie->{$this->table.'Orderby'});
+					unset($this->context->cookie->{$this->table.'Orderway'});
+				}
+			}
+
+			$this->getList($this->context->language->id, null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->id);
 
 			$id_category = (int)Tools::getValue('id_category', 1);
 			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
@@ -2216,7 +2228,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		parent::initToolbarTitle();
 		if ($product = $this->loadObject(true))
-			if ((bool)$product->id && $this->display != 'list')
+			if ((bool)$product->id && $this->display != 'list' && isset($this->toolbar_title[2]))
 				$this->toolbar_title[2] = $this->toolbar_title[2].' ('.$this->product_name.')';
 	}
 
@@ -4165,5 +4177,5 @@ class AdminProductsControllerCore extends AdminController
 			GROUP BY pl.`id_product`
 			LIMIT '.(int)$limit);
 		die(Tools::jsonEncode($result));
-		}
 	}
+}
