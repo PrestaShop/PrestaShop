@@ -465,7 +465,7 @@
 						html_carts += '<a href="#" title="{l s='Use this cart'}" class="use_cart" rel="'+this.id_cart+'"><img src="../img/admin/duplicate.png" /></a></td></tr>';
 					});
 					$.each(res.orders, function() {
-						html_orders += '<tr><td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+this.nb_products+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
+						html_orders += '<tr><td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
 						html_orders += '<td><a title="{l s='View this order'}" class="fancybox" href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#"><img src="../img/admin/details.gif" /></a>';
 						html_orders += '<a href="#" "title="{l s='Duplicate this order'}" class="duplicate_order" rel="'+this.id_order+'"><img src="../img/admin/duplicate.png" /></a></td></tr>';
 					});
