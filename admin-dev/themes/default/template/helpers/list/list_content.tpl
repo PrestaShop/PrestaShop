@@ -49,7 +49,7 @@
 						id="td_{if !empty($id_category)}{$id_category}{else}0{/if}_{$tr.$identifier}"
 					{/if}
 					class="{if !$no_link}pointer{/if}
-					{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
+					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.align)} {$params.align}{/if}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
 						onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
