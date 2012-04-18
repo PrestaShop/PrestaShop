@@ -59,7 +59,7 @@
 		{/if}
 
 		{if $use_multishop}
-			<input type="checkbox" style="vertical-align: text-top" checked="checked" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Uncheck / check all'}</b> {l s='(uncheck boxes if you want to set a custom value for this shop or group shop context)'}
+			<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check / uncheck all'}</b> {l s='(check boxes if you want to set a custom value for this shop or group shop context)'}
 			<div class="separation"></div>
 		{/if}
 
@@ -70,7 +70,7 @@
 					<div style="clear: both; padding-top:15px;" id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
 					{if ($field['multishop_default'])}
 						<div class="preference_default_multishop">
-							<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+							<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} {/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 						</div>
 					{/if}
 					{block name="label"}
