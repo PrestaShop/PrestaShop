@@ -68,7 +68,7 @@ class ShopCore extends ObjectModel
 	/** @var array List of shops cached */
 	protected static $shops;
 
-	private	static $asso_tables = array(
+	public static $asso_tables = array(
 		'carrier' => array('type' => 'shop'),
 		'carrier_lang' => array('type' => 'fk_shop'),
 		'category' => array('type' => 'shop'),
