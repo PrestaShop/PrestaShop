@@ -712,6 +712,9 @@ product_tabs['Associations'] = new function(){
 		$('#divAccessories').delegate('.delAccessory', 'click', function(){
 			self.delAccessory($(this).attr('name'));
 		});
+
+		if (display_multishop_checkboxes)
+			multishopCheckAllProductFieldsAssociations();
 	};
 }
 
@@ -1533,6 +1536,11 @@ function multishopCheckAllProductFieldsSeo(checked)
 		multishopCheckProductField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').attr('checked'), 'meta_keywords_'+v.id_lang);
 		multishopCheckProductField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').attr('checked'), 'link_rewrite_'+v.id_lang);
 	});
+}
+
+function multishopCheckAllProductFieldsAssociations(checked)
+{
+	multishopCheckProductField($('input[name=\'multishop_check[id_category_default]\']').attr('checked'), 'id_category_default');
 }
 
 var tabs_manager = new ProductTabsManager();

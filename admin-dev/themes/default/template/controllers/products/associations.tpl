@@ -27,6 +27,8 @@
 <input type="hidden" name="submitted_tabs[]" value="Associations" />
 <div class="Associations">
 	<h4>{l s='Associations'}</h4>
+
+	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Associations"}
 	<div class="separation"></div>
 		<div id="no_default_category" class="hint">
 		{l s='Please select a default category.'}
@@ -54,6 +56,7 @@
 		</tr>
 		<tr>
 			<td class="col-left">
+				{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
 				<label for="id_category_default">{l s='Default category:'}</label>
 			</td>
 			<td class="col-right">
