@@ -119,7 +119,7 @@ try
 	}
 	else if ($context->employee->id_profile == _PS_ADMIN_PROFILE_)
 		$shop_id = '';
-	else if ($context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$context->employee->id))
+	else if (Shop::getTotalShops(false) != Employee::getTotalEmployeeShopById((int)$context->employee->id))
 	{
 		$shops = Employee::getEmployeeShopById((int)$context->employee->id);
 		if (count($shops))

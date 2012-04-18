@@ -474,7 +474,7 @@ class StockAvailableCore extends ObjectModel
 	{
 		if ($shop_group->share_stock)
 		{
-			$shop_list = Shop::getIdShopsByIdShopGroup($shop_group->id);
+			$shop_list = Shop::getShops(false, $shop_group->id, true);
 
 			if (count($shop_list) > 0)
 			{

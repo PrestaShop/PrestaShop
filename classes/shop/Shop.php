@@ -491,7 +491,6 @@ class ShopCore extends ObjectModel
 						'name' => 			$row['group_name'],
 						'share_customer' =>	$row['share_customer'],
 						'share_order' =>	$row['share_order'],
-						'totalShops' =>		Shop::getTotalShopsByIdShopGroup($row['id_shop_group']),
 						'shops' => 			array(),
 					);
 
@@ -571,31 +570,6 @@ class ShopCore extends ObjectModel
 	public static function getTotalShops($active = true)
 	{
 		return count(Shop::getShops($active));
-	}
-
-	/**
-	 * @return int Total of shops
-	 */
-	public static function getTotalShopsWhoExists()
-	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop`');
-	}
-
-	/**
-	 * @return int Total of shops
-	 */
-	public static function getTotalShopsByIdShopGroup($id)
-	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'shop` WHERE `id_shop_group` = '.(int)$id);
-	}
-
-	public static function getIdShopsByIdShopGroup($id)
-	{
-		$result = Db::getInstance()->executeS('SELECT `id_shop`, `id_shop_group` FROM `'._DB_PREFIX_.'shop` WHERE `id_shop_group` = '.(int)$id);
-		$data = array();
-		foreach ($result as $group_data)
-			$data[] = (int)$group_data['id_shop'];
-		return $data;
 	}
 
 	/**

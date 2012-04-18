@@ -88,16 +88,20 @@ class ConfigurationCore extends ObjectModel
 	 * Return ID a configuration key
 	 *
 	 * @param string $key
-	 * @param int $shopGroupID
-	 * @param int $shopID
+	 * @param int $id_shop_group
+	 * @param int $id_shop
 	 */
-	public static function getIdByName($key, $shopGroupID = null, $shopID = null)
+	public static function getIdByName($key, $id_shop_group = null, $id_shop = null)
 	{
-		Configuration::getShopFromContext($shopGroupID, $shopID);
+		if (is_null($id_shop))
+			$id_shop = Shop::getContextShopID();
+		if (is_null($id_shop_group))
+			$id_shop_group = Shop::getContextShopGroupID();
+
 		$sql = 'SELECT id_configuration
 				FROM '._DB_PREFIX_.'configuration
 				WHERE name = \''.pSQL($key).'\''
-					.Configuration::sqlRestriction($shopGroupID, $shopID);
+					.Configuration::sqlRestriction($id_shop_group, $id_shop);
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
@@ -140,37 +144,41 @@ class ConfigurationCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return string Value
 	  */
-	public static function get($key, $langID = null, $shopGroupID = null, $shopID = null)
+	public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
-		Configuration::getShopFromContext($shopGroupID, $shopID);
-		$langID = (int)$langID;
-		if (!isset(self::$_CONF[$langID]))
-			$langID = 0;
+		$id_lang = (int)$id_lang;
+		if (is_null($id_shop))
+			$id_shop = Shop::getContextShopID();
+		if (is_null($id_shop_group))
+			$id_shop_group = Shop::getContextShopGroupID();
+
+		if (!isset(self::$_CONF[$id_lang]))
+			$id_lang = 0;
 
 		// If conf if not initialized, try manual query
 		if (!self::$_CONF)
 			return Db::getInstance()->getValue('SELECT `value` FROM '._DB_PREFIX_.'configuration WHERE `name` = \''.pSQL($key).'\'');
 
-		if ($shopID && Configuration::hasKey($key, $langID, null, $shopID))
-			return self::$_CONF[$langID]['shop'][$shopID][$key];
-		else if ($shopGroupID && Configuration::hasKey($key, $langID, $shopGroupID))
-			return self::$_CONF[$langID]['group'][$shopGroupID][$key];
-		else if (Configuration::hasKey($key, $langID))
-			return self::$_CONF[$langID]['global'][$key];
+		if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop))
+			return self::$_CONF[$id_lang]['shop'][$id_shop][$key];
+		else if ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
+			return self::$_CONF[$id_lang]['group'][$id_shop_group][$key];
+		else if (Configuration::hasKey($key, $id_lang))
+			return self::$_CONF[$id_lang]['global'][$key];
 		return false;
 	}
 	
-	public static function getGlobalValue($key, $langID = null)
+	public static function getGlobalValue($key, $id_lang = null)
 	{
-		return Configuration::get($key, $langID, 0, 0);
+		return Configuration::get($key, $id_lang, 0, 0);
 	}
 
 	/**
 	  * Get a single configuration value (in multiple languages)
 	  *
 	  * @param string $key Key wanted
-	  * @param int $shopGroupID
-	  * @param int $shopID
+	  * @param int $id_shop_group
+	  * @param int $id_shop
 	  * @return array Values in multiple languages
 	  */
 	public static function getInt($key, $id_shop_group = null, $id_shop = null)
@@ -189,17 +197,20 @@ class ConfigurationCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Values
 	  */
-	public static function getMultiple($keys, $langID = null, $shopGroupID = null, $shopID = null)
+	public static function getMultiple($keys, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
 	 	if (!is_array($keys))
 	 		throw new PrestaShopException('keys var is not an array');
 
-		$langID = (int)$langID;
-		Configuration::getShopFromContext($shopGroupID, $shopID);
+		$id_lang = (int)$id_lang;
+		if (is_null($id_shop))
+			$id_shop = Shop::getContextShopID();
+		if (is_null($id_shop_group))
+			$id_shop_group = Shop::getContextShopGroupID();
 
 	 	$results = array();
 	 	foreach ($keys as $key)
-	 		$results[$key] = Configuration::get($key, $langID, $shopGroupID, $shopID);
+	 		$results[$key] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
 		return $results;
 	}
 
@@ -208,18 +219,18 @@ class ConfigurationCore extends ObjectModel
 	 *
 	 * @param string $key
 	 * @param int $id_lang
-	 * @param int $shopGroupID
-	 * @param int $shopID
+	 * @param int $id_shop_group
+	 * @param int $id_shop
 	 * @return bool
 	 */
-	public static function hasKey($key, $langID = null, $shopGroupID = null, $shopID = null)
+	public static function hasKey($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
-		$langID = (int)$langID;
-		if ($shopID)
-			return isset(self::$_CONF[$langID]['shop'][$shopID]) && array_key_exists($key, self::$_CONF[$langID]['shop'][$shopID]);
-		else if ($shopGroupID)
-			return isset(self::$_CONF[$langID]['group'][$shopGroupID]) && array_key_exists($key, self::$_CONF[$langID]['group'][$shopGroupID]);
-		return isset(self::$_CONF[$langID]['global']) && array_key_exists($key, self::$_CONF[$langID]['global']);
+		$id_lang = (int)$id_lang;
+		if ($id_shop)
+			return isset(self::$_CONF[$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_CONF[$id_lang]['shop'][$id_shop]);
+		else if ($id_shop_group)
+			return isset(self::$_CONF[$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_CONF[$id_lang]['group'][$id_shop_group]);
+		return isset(self::$_CONF[$id_lang]['global']) && array_key_exists($key, self::$_CONF[$id_lang]['global']);
 	}
 
 	/**
@@ -227,14 +238,18 @@ class ConfigurationCore extends ObjectModel
 	  *
 	  * @param string $key Key wanted
 	  * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
-	  * @param int $shopGroupID
-	  * @param int $shopID
+	  * @param int $id_shop_group
+	  * @param int $id_shop
 	  */
 	public static function set($key, $values, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
-		Configuration::getShopFromContext($id_shop_group, $id_shop);
+
+		if (is_null($id_shop))
+			$id_shop = Shop::getContextShopID();
+		if (is_null($id_shop_group))
+			$id_shop_group = Shop::getContextShopGroupID();
 
 		if (!is_array($values))
 			$values = array($values);
@@ -269,15 +284,19 @@ class ConfigurationCore extends ObjectModel
 	  * @param string $key Key
 	  * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
 	  * @param boolean $html Specify if html is authorized in value
-	  * @param int $shopGroupID
-	  * @param int $shopID
+	  * @param int $id_shop_group
+	  * @param int $id_shop
 	  * @return boolean Update result
 	  */
-	public static function updateValue($key, $values, $html = false, $shopGroupID = null, $shopID = null)
+	public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
-		Configuration::getShopFromContext($shopGroupID, $shopID);
+
+		if (is_null($id_shop))
+			$id_shop = Shop::getContextShopID();
+		if (is_null($id_shop_group))
+			$id_shop_group = Shop::getContextShopGroupID();
 
 		if (!is_array($values))
 			$values = array($values);
@@ -285,11 +304,11 @@ class ConfigurationCore extends ObjectModel
 		$result = true;
 		foreach ($values as $lang => $value)
 		{
-			if ($value === Configuration::get($key, $lang, $shopGroupID, $shopID))
+			if ($value === Configuration::get($key, $lang, $id_shop_group, $id_shop))
 				continue;
 
 			// If key already exists, update value
-			if (Configuration::hasKey($key, $lang, $shopGroupID, $shopID))
+			if (Configuration::hasKey($key, $lang, $id_shop_group, $id_shop))
 			{
 				if (!$lang)
 				{
@@ -297,7 +316,7 @@ class ConfigurationCore extends ObjectModel
 					$result &= Db::getInstance()->update('configuration', array(
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
-					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($shopGroupID, $shopID), true, true);
+					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), true, true);
 				}
 				else
 				{
@@ -310,7 +329,7 @@ class ConfigurationCore extends ObjectModel
 									SELECT c.id_configuration
 									FROM '._DB_PREFIX_.'configuration c
 									WHERE c.name = \''.pSQL($key).'\''
-										.Configuration::sqlRestriction($shopGroupID, $shopID)
+										.Configuration::sqlRestriction($id_shop_group, $id_shop)
 								.')';
 					$result &= Db::getInstance()->execute($sql);
 				}
@@ -318,14 +337,14 @@ class ConfigurationCore extends ObjectModel
 			// If key does not exists, create it
 			else
 			{
-				if (!$configID = Configuration::getIdByName($key, $shopGroupID, $shopID))
+				if (!$configID = Configuration::getIdByName($key, $id_shop_group, $id_shop))
 				{
 					$newConfig = new Configuration();
 					$newConfig->name = $key;
-					if ($shopID)
-						$newConfig->id_shop = (int)$shopID;
-					if ($shopGroupID)
-						$newConfig->id_shop_group = (int)$shopGroupID;
+					if ($id_shop)
+						$newConfig->id_shop = (int)$id_shop;
+					if ($id_shop_group)
+						$newConfig->id_shop_group = (int)$id_shop_group;
 					if (!$lang)
 						$newConfig->value = $value;
 					$result &= $newConfig->add(true, true);
@@ -343,7 +362,7 @@ class ConfigurationCore extends ObjectModel
 				}
 			}
 
-			Configuration::set($key, $value, $shopGroupID, $shopID);
+			Configuration::set($key, $value, $id_shop_group, $id_shop);
 		}
 
 		return $result;
@@ -469,51 +488,18 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	 * Fill $id_shop_group and $id_shop vars from correct context
+	 * Add SQL restriction on shops for configuration table
 	 *
 	 * @param int $id_shop_group
 	 * @param int $id_shop
-	 */
-	protected static function getShopFromContext(&$id_shop_group, &$id_shop)
-	{
-		if (!Shop::isFeatureActive())
-			return;
-
-		if (Shop::getContext() == Shop::CONTEXT_ALL)
-			$shop_id = $shop_group_id = null;
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-		{
-			$shop_group_id = Shop::getContextShopGroupID();
-			$shop_id = null;
-		}
-		else
-		{
-			$shop_group_id = Shop::getContextShopGroupID();
-			$shop_id = Shop::getContextShopID();
-		}
-
-		if (is_null($id_shop))
-			$id_shop = $shop_id;
-		if (is_null($id_shop_group))
-			$id_shop_group = $shop_group_id;
-
-		$id_shop = (int)$id_shop;
-		$id_shop_group = (int)$id_shop_group;
-	}
-
-	/**
-	 * Add SQL restriction on shops for configuration table
-	 *
-	 * @param int $shopGroupID
-	 * @param int $shopID
 	 * @return string
 	 */
-	protected static function sqlRestriction($shopGroupID, $shopID)
+	protected static function sqlRestriction($id_shop_group, $id_shop)
 	{
-		if ($shopID)
-			return ' AND id_shop = '.$shopID;
-		else if ($shopGroupID)
-			return ' AND id_shop_group = '.$shopGroupID.' AND id_shop IS NULL';
+		if ($id_shop)
+			return ' AND id_shop = '.$id_shop;
+		else if ($id_shop_group)
+			return ' AND id_shop_group = '.$id_shop_group.' AND id_shop IS NULL';
 		else
 			return ' AND id_shop_group IS NULL AND id_shop IS NULL';
 	}
