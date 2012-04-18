@@ -1218,7 +1218,7 @@ class AdminControllerCore extends Controller
 				$img = str_replace('png', 'gif', $img);
 			// tab[class_name] does not contains the "Controller" suffix
 			$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
-			$tabs[$index]['img'] = str_replace(_PS_ROOT_DIR_, '', $img);
+			$tabs[$index]['img'] = $img;
 			$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
