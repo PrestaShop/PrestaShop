@@ -215,25 +215,7 @@ class AddressControllerCore extends FrontController
 		{
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
-			{
-				if ($this->context->cart->id_address_invoice == $address_old->id)
-				{
-					$to_update = true;
-					$this->context->cart->id_address_invoice = (int)$address->id;
-				}
-				if ($this->context->cart->id_address_delivery == $address_old->id)
-				{
-					$to_update = true;
-					$this->context->cart->id_address_delivery = (int)$address->id;
-				}
-				$this->context->cart->update();
-				
-				$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-				SET `id_address_delivery` = '.(int)$address->id.'
-				WHERE  `id_cart` = '.(int)$this->context->cart->id.'
-					AND `id_address_delivery` = '.(int)$address_old->id;
-				Db::getInstance()->execute($sql);
-			}
+				$this->context->cart->updateAddressId($address_old->id, $address->id);
 
 			if ($this->ajax)
 			{
