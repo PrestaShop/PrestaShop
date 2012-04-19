@@ -436,7 +436,7 @@ class BlockCms extends Module
 		return $helper;
 	}
 
-	private function changePosition()
+	protected function changePosition()
 	{
 		if (!Validate::isInt(Tools::getValue('position')) ||
 			(Tools::getValue('location') != BlockCMSModel::LEFT_COLUMN &&
@@ -638,8 +638,9 @@ class BlockCms extends Module
 		else if (Tools::isSubmit('deleteBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Deletion successful'));
 		else if (Tools::isSubmit('id_cms_block') && Tools::isSubmit('way') && Tools::isSubmit('position') && Tools::isSubmit('location'))
-			$this->changePosition()
-            ;
+			$this->changePosition();
+		else if (Tools::isSubmit('updatePositions'))
+			$this->updatePositionsDnd();
         if (count($this->_errors))
         {
             foreach ($this->_errors as $err)
@@ -727,4 +728,21 @@ class BlockCms extends Module
 		return $this->display(__FILE__, 'blockmobilecms.tpl');
 	}
 
+	protected function updatePositionsDnd()
+	{
+		if (Tools::getValue('cms_block_0'))
+			$positions = Tools::getValue('cms_block_0');
+		elseif (Tools::getValue('cms_block_1'))
+			$positions = Tools::getValue('cms_block_1');
+		else
+			$positions = array();
+
+		foreach ($positions as $position => $value)
+		{
+			$pos = explode('_', $value);
+
+			if (isset($pos[2]))
+				BlockCMSModel::updateCMSBlockPosition($pos[2], $position);
+		}
+	}
 }
