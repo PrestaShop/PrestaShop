@@ -247,6 +247,11 @@ class AdminControllerCore extends Controller
 
 	public $multishop_context = -1;
 
+	/**
+	 * Current breadcrumb position as an array of tab names
+	 */
+	protected $breadcrumbs;
+
 	public function __construct()
 	{
 		global $timer_start;
