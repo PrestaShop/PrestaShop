@@ -513,11 +513,13 @@ class AdminShopControllerCore extends AdminController
 		return $object;
 	}
 
-	public function initCategoriesAssociation($id_root = 1)
+	public function initCategoriesAssociation($id_root = null)
 	{
+		if (is_null($id_root))
+			$id_root = Configuration::get('PS_ROOT_CATEGORY');
 		$id_shop = (int)Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);
-		$selected_cat = Shop::getCategories($id_shop);
+		$selected_cat = Shop::getCategories();
 		if (empty($selected_cat))
 		{
 			// get first category root and preselect all these children
