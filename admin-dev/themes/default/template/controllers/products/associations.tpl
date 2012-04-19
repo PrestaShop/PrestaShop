@@ -36,17 +36,12 @@
 	<table>
 		<tr>
 			<td class="col-left">
+				{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
 				<label for="category_block">{l s='Associated categories:'}</label>
 			</td>
 			<td class="col-right">
 				<div id="category_block">
-					{if !$is_shop_context}
-					<div class="warn">
-					{/if}
 					{$category_tree}
-					{if !$is_shop_context}
-					</div>
-					{/if}
 				</div>
 			</td>
 		</tr>
@@ -56,12 +51,10 @@
 		<tr>
 			<td></td>
 			<td class="col-right">
-				{if $is_shop_context}
 					<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')}&addcategory">
 						<img src="../img/admin/add.gif" alt="{l s='Create new category'}" title="{l s='Create new category'}" />
 						<span>{l s='Create new category'}</span>
 					</a>
-				{/if}
 			</td>
 		</tr>
 		<tr>

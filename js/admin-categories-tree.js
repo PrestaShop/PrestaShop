@@ -35,15 +35,15 @@ var id_category_root = 0;
 
 function buildTreeView()
 {
-	use_shop_context = false;
+	use_shop_context = 0;
 	if (buildTreeView.arguments[0])
-		use_shop_context = true;
+		use_shop_context = 1;
 	$("#categories-treeview").treeview({
 		url : 'ajax.php',
 		toggle: function () { callbackToggle($(this)); },
 		ajax : {
 			type: 'POST',
-			async: true,
+			async: false,
 			data: {
 				getChildrenCategories : true,
 				use_shop_context : use_shop_context,
@@ -57,7 +57,10 @@ function buildTreeView()
 	$('#categories-treeview li#'+id_category_root).
 		removeClass('collapsable lastCollapsable').
 		addClass('last static');
-	
+
+	disabled = $('#categories-treeview li:first input[type=checkbox]').attr('disabled');
+	$('#categories-treeview input[type=checkbox]').attr('disabled', disabled);
+
 	$('#expand_all').click( function () {
 		expandAllCategories();
 		return false;
@@ -78,6 +81,12 @@ function buildTreeView()
 		needUncheckAll = true;
 		uncheckAllCategories();
 		return false;
+	});
+
+	// check if checkboxes need to be disabled or not
+	$('.expandable').click(function(){
+		disabled = $('#categories-treeview li:first input[type=checkbox]').attr('disabled');
+		$('#categories-treeview input[type=checkbox]').attr('disabled', disabled);
 	});
 }
 
