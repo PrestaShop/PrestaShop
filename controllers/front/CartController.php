@@ -227,13 +227,26 @@ class CartControllerCore extends FrontController
 					$minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
 					$this->errors[] = Tools::displayError('You must add', false).' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity', false);
 				}
-				else if (!$updateQuantity)
+				elseif (!$updateQuantity)
 					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', false);
-				else
+				elseif ((int)Tools::getValue('allow_refresh'))
 				{
+					// If the cart rules has changed, we need to refresh the whole cart
 					$cart_rules2 = $this->context->cart->getCartRules();
-					if (count($cart_rules2) != count($cart_rules) && (int)Tools::getValue('allow_refresh'))
+					if (count($cart_rules2) != count($cart_rules))
 						$this->ajax_refresh = true;
+					else
+					{
+						$rule_list = array();
+						foreach ($cart_rules2 as $rule)
+							$rule_list[] = $rule['id_cart_rule'];
+						foreach ($cart_rules as $rule)
+							if (!in_array($rule['id_cart_rule'], $rule_list))
+							{
+								$this->ajax_refresh = true;
+								break;
+							}
+					}
 				}
 			}
 		}

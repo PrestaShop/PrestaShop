@@ -724,7 +724,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules'.$this->id);
 	
 		if ((int)$cartRule->gift_product)
-			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute);
+			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 0, 'up', null, false);
 
 		return true;
 	}
@@ -761,7 +761,7 @@ class CartCore extends ObjectModel
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
 	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
-		$id_address_delivery = 0, $operator = 'up', Shop $shop = null)
+		$id_address_delivery = 0, $operator = 'up', Shop $shop = null, $auto_add_cart_rule = true)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -853,7 +853,7 @@ class CartCore extends ObjectModel
 					);
 			}
 			/* Add product to the cart */
-			else
+			elseif ($operator == 'up')
 			{
 				$sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 						FROM '._DB_PREFIX_.'product p
@@ -893,7 +893,8 @@ class CartCore extends ObjectModel
 		$this->update(true);
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
-		CartRule::autoAddToCart($context);
+		if ($auto_add_cart_rule)
+			CartRule::autoAddToCart($context);
 
 		if ($product->customizable)
 			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery, $operator);
@@ -1049,7 +1050,7 @@ class CartCore extends ObjectModel
 		
 		$cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
 		if ((int)$cart_rule->gift_product)
-			$this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, null, 'down');
+			$this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, null, 'down', null, false);
 		
 		return $result;
 	}
