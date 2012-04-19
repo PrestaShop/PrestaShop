@@ -29,7 +29,7 @@ class AdminCartsControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'cart';
+		$this->table = 'cart';
 		$this->className = 'Cart';
 		$this->lang = false;
 		$this->requiredDatabase = true;
@@ -44,7 +44,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(NOW(), co.`date_add`)) < 1800)';
 
- 		$this->fields_list = array(
+		$this->fields_list = array(
 			'id_cart' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
@@ -149,7 +149,7 @@ class AdminCartsControllerCore extends AdminController
 				$image = Db::getInstance()->getRow('SELECT id_image
 																FROM '._DB_PREFIX_.'product_attribute_image
 																WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
-		 	if (!isset($image['id_image']))
+			if (!isset($image['id_image']))
 				$image = Db::getInstance()->getRow('SELECT id_image
 																FROM '._DB_PREFIX_.'image
 																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');

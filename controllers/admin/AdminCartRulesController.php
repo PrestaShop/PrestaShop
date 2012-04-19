@@ -168,8 +168,11 @@ class AdminCartRulesControllerCore extends AdminController
 			{
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
 				Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-					SELECT id_cart_rule, '.(int)$incompatibleRule['id_cart_rule'].' FROM `'._DB_PREFIX_.'cart_rule` WHERE active = 1 AND id_cart_rule != '.(int)$currentObject->id.'
+				INSERT IGNORE INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+					SELECT id_cart_rule, '.(int)$incompatibleRule['id_cart_rule'].' FROM `'._DB_PREFIX_.'cart_rule`
+					WHERE active = 1
+					AND id_cart_rule != '.(int)$currentObject->id.'
+					AND id_cart_rule != '.(int)$incompatibleRule['id_cart_rule'].'
 				)');
 			}
 		}
@@ -474,6 +477,7 @@ class AdminCartRulesControllerCore extends AdminController
 			}
 		}
 
+		$product = new Product($current_object->gift_product);
 		$this->context->smarty->assign(
 			array(
 				'show_toolbar' => true,
@@ -502,7 +506,8 @@ class AdminCartRulesControllerCore extends AdminController
 				'currentIndex' => self::$currentIndex,
 				'currentToken' => $this->token,
 				'currentObject' => $current_object,
-				'currentTab' => $this
+				'currentTab' => $this,
+				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
 

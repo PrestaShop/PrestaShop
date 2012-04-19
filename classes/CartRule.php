@@ -361,22 +361,23 @@ class CartRuleCore extends ObjectModel
 	 * Check if this cart rule can be applied
 	 *
 	 * @param Context $context
-	 * @param bool $alreadyInCart
+	 * @param bool $alreadyInCart Check if the voucher is already on the cart
+	 * @param bool $display_error Display error
 	 * @return bool|mixed|string
 	 */
-	public function checkValidity(Context $context, $alreadyInCart = false)
+	public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true)
 	{
 		if (!CartRule::isFeatureActive())
 			return false;
 
 		if (!$this->active)
-			return Tools::displayError('This voucher is disabled');
+			return (!$display_error) ? false : Tools::displayError('This voucher is disabled');
 		if (!$this->quantity)
-			return Tools::displayError('This voucher has already been used');
+			return (!$display_error) ? false : Tools::displayError('This voucher has already been used');
 		if (strtotime($this->date_from) > time())
-			return Tools::displayError('This voucher is not valid yet');
+			return (!$display_error) ? false : Tools::displayError('This voucher is not valid yet');
 		if (strtotime($this->date_to) < time())
-			return Tools::displayError('This voucher has expired');
+			return (!$display_error) ? false : Tools::displayError('This voucher has expired');
 
 		if ($context->cart->id_customer)
 		{
@@ -394,7 +395,7 @@ class CartRuleCore extends ObjectModel
 				LIMIT 1
 			)');
 			if ($quantityUsed + 1 > $this->quantity_per_user)
-				return Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
+				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
 		}
 
 		$otherCartRules = $context->cart->getCartRules();
@@ -402,8 +403,8 @@ class CartRuleCore extends ObjectModel
 			foreach ($otherCartRules as $otherCartRule)
 			{
 				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
-					return Tools::displayError('This voucher is already in your cart');
-				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'])
+					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
+				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
 				{
 					$combinable = Db::getInstance()->getValue('
 					SELECT id_cart_rule_1
@@ -413,7 +414,7 @@ class CartRuleCore extends ObjectModel
 					if (!$combinable)
 					{
 						$cart_rule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
-						return Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
+						return (!$display_error) ? false : Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
 					}
 				}
 			}
@@ -427,7 +428,7 @@ class CartRuleCore extends ObjectModel
 			WHERE crg.id_cart_rule = '.(int)$this->id.'
 			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= 1'));
 			if (!$id_cart_rule)
-				return Tools::displayError('You cannot use this voucher');
+				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
 
 		// Check if the customer delivery address is usable with the cart rule
@@ -439,7 +440,7 @@ class CartRuleCore extends ObjectModel
 			WHERE crc.id_cart_rule = '.(int)$this->id.'
 			AND crc.id_country = (SELECT a.id_country FROM '._DB_PREFIX_.'address a WHERE a.id_address = '.(int)$context->cart->id_address_delivery.' LIMIT 1)');
 			if (!$id_cart_rule)
-				return Tools::displayError('You cannot use this voucher in your country of delivery');
+				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher in your country of delivery');
 		}
 
 		// Check if the carrier chosen by the customer is usable with the cart rule
@@ -451,7 +452,7 @@ class CartRuleCore extends ObjectModel
 			WHERE crc.id_cart_rule = '.(int)$this->id.'
 			AND crc.id_carrier = '.(int)$context->cart->id_carrier);
 			if (!$id_cart_rule)
-				return Tools::displayError('You cannot use this voucher with this carrier');
+				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with this carrier');
 		}
 
 		// Check if the cart rules appliy to the shop browsed by the customer
@@ -463,23 +464,25 @@ class CartRuleCore extends ObjectModel
 			WHERE crs.id_cart_rule = '.(int)$this->id.'
 			AND crs.id_shop = '.(int)$context->shop->id);
 			if (!$id_cart_rule)
-				return Tools::displayError('You cannot use this voucher');
+				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
 
 		// Check if the products chosen by the customer are usable with the cart rule
 		if ($this->product_restriction)
 		{
-			$r = $this->checkProductRestrictions($context, false);
-			if ($r !== false)
+			$r = $this->checkProductRestrictions($context, false, $display_error);
+			if ($r !== false && $display_error)
 				return $r;
+			elseif (!$r && !$display_error)
+				return false;
 		}
 
 		// Check if the cart rule is only usable by a specific customer, and if the current customer is the right one
 		if ($this->id_customer && $context->cart->id_customer != $this->id_customer)
 		{
 			if (!Context::getContext()->customer->isLogged())
-				return Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in');
-			return Tools::displayError('You cannot use this voucher');
+				return (!$display_error) ? false : (Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in'));
+			return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
 
 		if ($this->minimum_amount)
@@ -528,11 +531,13 @@ class CartRuleCore extends ObjectModel
 			}
 
 			if ($cartTotal < $minimum_amount)
-				return Tools::displayError('You have not reached the minimum amount required to use this voucher');
+				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
+		if (!$display_error)
+			return true;
 	}
 
-	protected function checkProductRestrictions(Context $context, $return_products = false)
+	protected function checkProductRestrictions(Context $context, $return_products = false, $display_error = true)
 	{
 		$selectedProducts = array();
 
@@ -568,7 +573,7 @@ class CartRuleCore extends ObjectModel
 									$matchingProductsList[] = $cartAttribute['id_product'].'-'.$cartAttribute['id_product_attribute'];
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
-								return Tools::displayError('You cannot use this voucher with these products');
+								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'products':
@@ -586,7 +591,7 @@ class CartRuleCore extends ObjectModel
 									$matchingProductsList[] = $cartProduct['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
-								return Tools::displayError('You cannot use this voucher with these products');
+								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'categories':
@@ -605,7 +610,7 @@ class CartRuleCore extends ObjectModel
 									$matchingProductsList[] = $cartCategory['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
-								return Tools::displayError('You cannot use this voucher with these products');
+								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'manufacturers':
@@ -624,7 +629,7 @@ class CartRuleCore extends ObjectModel
 									$matchingProductsList[] = $cartManufacturer['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
-								return Tools::displayError('You cannot use this voucher with these products');
+								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 						case 'suppliers':
@@ -643,13 +648,13 @@ class CartRuleCore extends ObjectModel
 									$matchingProductsList[] = $cartSupplier['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
-								return Tools::displayError('You cannot use this voucher with these products');
+								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
 							break;
 					}
 
 					if (!count($eligibleProductsList))
-						return Tools::displayError('You cannot use this voucher with these products');
+						return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
 				}
 				$selectedProducts = array_merge($selectedProducts, $eligibleProductsList);
 			}
@@ -657,7 +662,7 @@ class CartRuleCore extends ObjectModel
 
 		if ($return_products)
 			return $selectedProducts;
-		return false;
+		return ($display_error) ? true : false;
 	}
 
 	/**
@@ -938,7 +943,6 @@ class CartRuleCore extends ObjectModel
 		AND cr.quantity > 0
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
 		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
-		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		AND (
 			cr.id_customer = 0
 			'.($context->customer->id ? 'OR cr.id_customer = '.(int)$context->cart->id_customer : '').'
@@ -975,8 +979,15 @@ class CartRuleCore extends ObjectModel
 
 		// Todo: consider optimization (we can avoid many queries in checkValidity)
 		foreach ($cartRules as $cartRule)
-			if (!$cartRule->checkValidity($context))
-				$context->cart->addCartRule($cartRule->id);
+			if (Db::getInstance()->getValue('SELECT count(*)
+					FROM '._DB_PREFIX_.'cart_cart_rule
+					WHERE id_cart = '.(int)$context->cart->id.'
+					AND id_cart_rule = '.(int)$cartRule->id))
+				$context->cart->removeCartRule($cartRule->id);
+		
+		foreach ($cartRules as $cartRule)
+			if ($cartRule->checkValidity($context, true, false))
+					$context->cart->addCartRule($cartRule->id);
 	}
 
 	/**
@@ -1007,13 +1018,13 @@ class CartRuleCore extends ObjectModel
 
 function cartrule_products_intersect($a, $b)
 {
-    if ($a == $b)
-        return 0;
+	if ($a == $b)
+		return 0;
 
 	$asplit = explode('-', $a);
 	$bsplit = explode('-', $b);
-    if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1]))
-        return 0;
+	if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1]))
+		return 0;
 
 	return 1;
 }
