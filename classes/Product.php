@@ -1124,7 +1124,8 @@ class ProductCore extends ObjectModel
 				$obj->default_on = $default_value;
 				$default_value = 0;
 			}
-			$return[] = $obj->insert();
+			$obj->add();
+			$return[] = $obj->id;
 		}
 
 		return $return;
