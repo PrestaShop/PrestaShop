@@ -610,6 +610,8 @@ product_tabs['Associations'] = new function(){
 
 	this.getAccessoriesIds = function()
 	{
+		if ($('#inputAccessories').val() === undefined)
+			return '';
 		var ids = id_product + ',';
 		ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
 		ids = ids.replace(/\,$/,'');
@@ -1076,6 +1078,8 @@ product_tabs['Pack'] = new function(){
 
 		function getSelectedIds()
 		{
+			if ($('#inputPackItems').val() === undefined)
+				return '';
 			var ids = '';
 			if (typeof(id_product) != 'undefined')
 				ids += id_product + ',';
