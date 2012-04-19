@@ -36,6 +36,22 @@ class MailCore
 	const TYPE_TEXT = 2;
 	const TYPE_BOTH = 3;
 
+	/**
+	 * Send Email
+	 * 
+	 * @param int $id_lang Language of the email (to translate the template)
+	 * @param string $template Template
+	 * @param string $subject
+	 * @param string $templateVars
+	 * @param string $to
+	 * @param string $toName
+	 * @param string $from
+	 * @param string $fromName
+	 * @param array $fileAttachment Array with three parameters (content, mime and name). You can use an array of array to attach multiple files
+	 * @param bool $modeSMTP
+	 * @param string $templatePath
+	 * @param bool $die
+	 */
 	public static function Send($id_lang, $template, $subject, $templateVars, $to,
 		$toName = null, $from = null, $fromName = null, $fileAttachment = null, $modeSMTP = null, $templatePath = _PS_MAIL_DIR_, $die = false)
 	{
@@ -203,8 +219,17 @@ class MailCore
 				$message->attach(new Swift_Message_Part($templateTxt, 'text/plain', '8bit', 'utf-8'));
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)
 				$message->attach(new Swift_Message_Part($templateHtml, 'text/html', '8bit', 'utf-8'));
-			if ($fileAttachment && isset($fileAttachment['content']) && isset($fileAttachment['name']) && isset($fileAttachment['mime']))
-				$message->attach(new Swift_Message_Attachment($fileAttachment['content'], $fileAttachment['name'], $fileAttachment['mime']));
+			if ($fileAttachment && !empty($fileAttachment))
+			{
+				// Multiple attachments?
+				if (!is_array(current($fileAttachment)))
+					$fileAttachment = array($fileAttachment);
+					
+				foreach ($fileAttachment as $attachment)
+					if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime']))
+						$message->attach(new Swift_Message_Attachment($attachment['content'], $attachment['name'], $attachment['mime']));
+			}
+			
 			/* Send mail */
 			$send = $swift->send($message, $to, new Swift_Address($from, $fromName));
 			$swift->disconnect();
