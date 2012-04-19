@@ -531,8 +531,8 @@ abstract class ObjectModelCore
 			foreach (Shop::getContextListShopID() as $id_shop)
 			{
 				$fields['id_shop'] = $id_shop;
-				$where = 'id_product = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
-				if (Db::getInstance()->getValue('SELECT id_product FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
+				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
+				if (Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
 					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
 				else
 					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
