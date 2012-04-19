@@ -531,7 +531,7 @@ class WebserviceRequestCore
 
 	protected function webserviceChecks()
 	{
-		return ($this->isActivated() && $this->authenticate() && $this->shopExists($this->params) && $this->shopHasRight($this->_key));
+		return ($this->isActivated() && $this->authenticate() && $this->groupShopExists($this->params) && $this->shopExists($this->params) && $this->shopHasRight($this->_key));
 	}
 
 	/**
@@ -759,28 +759,46 @@ class WebserviceRequestCore
 
 	protected function shopExists($params)
 	{
+		if (count(self::$shopIDs))
+			return true;
+
 		if (isset($params['id_shop']))
 		{
-			if ($params['id_shop'] != 0 && is_numeric($params['id_shop']))
+			if ($params['id_shop'] != 'all' && is_numeric($params['id_shop']))
 			{
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)$params['id_shop']);
 				self::$shopIDs[] = (int)$params['id_shop'];
 				return true;
 			}
-			else if ($params['id_shop'] == 0)
+			else if ($params['id_shop'] == 'all')
 			{
 				Shop::setContext(Shop::CONTEXT_ALL);
 				self::$shopIDs = Shop::getShops(true, null, true);
 				return true;
 			}
 		}
-		else if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop']))
+
+		$this->setError(404, 'This shop id doesn\'t exist', 129);
+		return false;
+	}
+
+	protected function groupShopExists($params)
+	{
+		if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop']))
 		{
 			Shop::setContext(Shop::CONTEXT_GROUP, (int)$params['id_group_shop']);
+			self::$shopIDs = Shop::getShops(true, (int)$params['id_group_shop'], true);
+			if (count(self::$shopIDs) == 0)
+			{
+				// @FIXME Set ErrorCode !
+				$this->setError(500, 'This group shop doesn\'t have shops', 999);
+				return false;
+			}
 			return true;
 		}
 
-		$this->setError(404, 'This shop id doesn\'t exist', 129);
+		// @FIXME Set ErrorCode !
+		$this->setError(404, 'This group shop id doesn\'t exist', 999);
 		return false;
 	}
 
