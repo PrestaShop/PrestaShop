@@ -503,8 +503,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	public function initToolbarTitle()
 	{
-		$this->initBreadcrumbs();
-
 		$bread_extended = $this->breadcrumbs;
 
 		switch ($this->display)
