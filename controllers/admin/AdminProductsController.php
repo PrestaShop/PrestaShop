@@ -2482,7 +2482,7 @@ class AdminProductsControllerCore extends AdminController
 
 						if ($existing_id <= 0)
 						{
-							$product->addSupplierReference($supplier->id_supplier, $reference, (int)$attribute['id_product_attribute'], (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
+							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
 							if ($product->id_supplier == $supplier->id_supplier)
 							{
 								if ((int)$attribute['id_product_attribute'] > 0)
