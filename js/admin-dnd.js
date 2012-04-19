@@ -50,24 +50,12 @@ function initTableDnD(table)
 				var tableDrag = table;
 				var params = '';
 
-				if (table.id == 'cms_block_0')
+				if (table.id == 'cms_block_0' || table.id == 'cms_block_1')
 					params = {
-						ajaxCMSBlockPositions: true,
-						id_cms_block: ids[1],
-						position: ids[2],
-						way: way,
-						token: token
+						updatePositions: true,
+						configure: 'blockcms'
 					};
-				if (table.id == 'cms_block_1')
-					params = {
-						ajaxCMSBlockPositions: true,
-						id_cms_block: ids[1],
-						position: ids[2],
-						way: way,
-						token: token
-					};
-
-				if (table.id == 'category')
+				else if (table.id == 'category')
 					params = {
 						action: 'updatePositions',
 						id_category_parent: ids[1],
@@ -118,8 +106,9 @@ function initTableDnD(table)
 						way: way
 					};
 				}
-
-				if (!params) {
+				// default
+				else
+				{
 					params = {
 						action : 'updatePositions',
 						id : ids[2],
