@@ -139,17 +139,12 @@
 				image_up = "{";
 				$("#imageList").find("tr").each(function(i) {
 					$("#td_" +  $(this).attr("id")).html(i + 1);
-					if ($(this).attr("id") == current)
-					{	
-						image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
-						stop = true;
-					}
 					if (!stop || (i + 1) == 2)
 						image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
 				});
 				image_up = image_up.slice(0, -1);
 				image_up += "}";
-				updateImagePositon(image_up);
+				updateImagePosition(image_up);
 				}
 			});
 			var filecheck = 1;
@@ -289,7 +284,7 @@
 			});
 			
 			//function	
-			function updateImagePositon(json)
+			function updateImagePosition(json)
 			{
 				doAdminAjax(
 				{
