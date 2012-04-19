@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Home" name="Accueil"/>
-  <tab id="tab_2" name=""/>
   <tab id="CMS_pages" name="Pages CMS"/>
   <tab id="CMS_categories" name="Cat&#xE9;gories CMS"/>
   <tab id="Combinations_generator" name="G&#xE9;n&#xE9;rateur de d&#xE9;clinaisons"/>
   <tab id="Search" name="Recherche"/>
+  <tab id="Login" name="Connexion"/>
   <tab id="Catalog" name="Catalogue"/>
   <tab id="Orders" name="Commandes"/>
   <tab id="Customers" name="Clients"/>
