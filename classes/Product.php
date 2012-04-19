@@ -2752,7 +2752,7 @@ class ProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE product_attribute_shop.`default_on` = 1
-				AND pa`id_product` = '.(int)$this->id
+				AND pa.`id_product` = '.(int)$this->id
 		);
 		if ($row)
 			return true;
