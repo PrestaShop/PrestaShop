@@ -1701,10 +1701,10 @@ class AdminProductsControllerCore extends AdminController
 						$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
 
 		// Categories
-		if (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox')))
+		if ($this->isProductFieldUpdated('id_category_default') && (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox'))))
 			$this->errors[] = $this->l('product must be in at least one Category');
 
-		if (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox')))
+		if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox'))))
 			$this->errors[] = $this->l('product must be in the default category');
 
 		// Tags
@@ -1743,7 +1743,7 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	protected function cleanMultishopFields()
 	{
-		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit')
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object)
 		{
 			$this->object = $this->loadObject();
 			foreach (Product::$definition['fields'] as $field => $data)
