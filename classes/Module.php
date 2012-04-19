@@ -1309,6 +1309,7 @@ abstract class ModuleCore
 				}
 			if (!isset($k) || !isset($res[$k]) || !isset($res[$k + 1]))
 				return false;
+
 			$from = $res[$k];
 			$to = $res[$k + 1];
 
@@ -1329,6 +1330,7 @@ abstract class ModuleCore
 			if (!Db::getInstance()->execute($sql))
 				return false;
 		}
+		return true;
 	}
 
 	/*
