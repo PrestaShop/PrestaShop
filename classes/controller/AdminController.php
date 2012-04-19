@@ -1679,7 +1679,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
-		elseif ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		elseif (Shop::getTotalShops(false) != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
 		{
 			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
 			if (count($shops))
