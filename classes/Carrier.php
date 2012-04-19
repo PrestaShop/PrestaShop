@@ -1102,7 +1102,7 @@ class CarrierCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'carrier`
 				WHERE `deleted` = 0';
 		$position = DB::getInstance()->getValue($sql);
-		return ($position !== false) ? (int)$position : -1;
+		return (is_numeric($position)) ? $position : -1;
 	}
 
 	/**
