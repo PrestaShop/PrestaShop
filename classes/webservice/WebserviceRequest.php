@@ -745,7 +745,9 @@ class WebserviceRequestCore
 				WHERE wsa.key = \''.pSQL($key).'\'';
 
 		foreach (self::$shopIDs as $id_shop)
+		{
 			$OR[] = ' wsas.id_shop = '.(int)$id_shop.' ';
+		}
 		$sql .= ' AND ('.implode('OR', $OR).') ';
 		if (!Db::getInstance()->getValue($sql))
 		{
@@ -759,13 +761,13 @@ class WebserviceRequestCore
 	{
 		if (isset($params['id_shop']))
 		{
-			if ($params['id_shop'] != 'all' && is_numeric($params['id_shop']))
+			if ($params['id_shop'] != 0 && is_numeric($params['id_shop']))
 			{
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)$params['id_shop']);
 				self::$shopIDs[] = (int)$params['id_shop'];
 				return true;
 			}
-			else if ($params['id_shop'] == 'all')
+			else if ($params['id_shop'] == 0)
 			{
 				Shop::setContext(Shop::CONTEXT_ALL);
 				self::$shopIDs = Shop::getShops(true, null, true);
@@ -1497,7 +1499,11 @@ class WebserviceRequestCore
 							// PUT nor POST is destructive, no deletion
 							$sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
 							foreach (self::$shopIDs as $id)
+							{
 								$sql .= '('.(int)$id.','.(int)$object->id.')';
+								if ($id != end(self::$shopIDs))
+									$sql .= ', ';
+							}
 							Db::getInstance()->execute($sql);
 						}
 					}
