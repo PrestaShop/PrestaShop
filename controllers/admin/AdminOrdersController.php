@@ -1846,7 +1846,6 @@ class AdminOrdersControllerCore extends AdminController
 
 	protected function doEditProductValidation(OrderDetail $order_detail, Order $order, OrderInvoice $order_invoice = null)
 	{
-		elog($order_detail->id);
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
 				'result' => false,
