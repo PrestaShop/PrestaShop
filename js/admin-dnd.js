@@ -135,16 +135,13 @@ function initTableDnD(table)
 					url: currentIndex + '&token=' + token + '&' + $.tableDnD.serialize(),
 					data: params,
 					success: function(data) {
-						if (come_from == 'AdminModulesPositions') 
+						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
+
+						if (come_from == 'AdminModulesPositions')
 						{
-								tableDrag.find('tr').removeClass('alt_row');
-								tableDrag.find('tr' + reOrder).addClass('alt_row');
-								tableDrag.find('td.positions').each(function(i) {
-									$(this).html(i+1);
-								});
-								tableDrag.find('td.dragHandle a:hidden').show();
-								tableDrag.find('td.dragHandle:first a:even').hide();
-								tableDrag.find('td.dragHandle:last a:odd').hide();
+							nodrag_lines.each(function(i) {
+								$(this).find('.positions').html(i+1);
+							});
 						}
 						else
 						{
@@ -156,31 +153,30 @@ function initTableDnD(table)
 							{
 								var reg = /_[0-9]$/g;
 							}
-							
+
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
-							$(tableDrag).children('tbody').children('tr').each(function(i) {
+							nodrag_lines.each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
 								// Update link position
 								// Up links
 								$(this).children('td.dragHandle a:odd').attr('href', $(this).children('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
-								
 								// Down links
 								$(this).children('td.dragHandle a:even').attr('href', $(this).children('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
-								
 							});
-							$(tableDrag).children('tbody').children('tr').not('.nodrag').removeClass('alt_row').removeClass('not_alt_row');
-							$(tableDrag).children('tbody').children('tr:not(".nodrag"):odd').addClass('alt_row');
-							$(tableDrag).children('tbody').children('tr:not(".nodrag"):even').addClass('not_alt_row');
-							$(tableDrag).children('tbody').children('tr').children('td.dragHandle').children('a:hidden').show();
+						}
 
-							if (alternate) {
-								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:first').children('a:odd').hide();
-								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:last').children('a:even').hide();
-							}
-							else {
-								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:first').children('a:even').hide();
-								$(tableDrag).children('tbody').children('tr').children('td.dragHandle:last').children('a:odd').hide();
-							}
+						nodrag_lines.removeClass('alt_row').removeClass('not_alt_row');
+						nodrag_lines.filter(':odd').addClass('alt_row');
+						nodrag_lines.filter(':even').addClass('not_alt_row');
+						nodrag_lines.children('td.dragHandle').children('a:hidden').show();
+
+						if (typeof alternate !== 'undefined' && alternate) {
+							nodrag_lines.children('td.dragHandle:first').children('a:odd').hide();
+							nodrag_lines.children('td.dragHandle:last').children('a:even').hide();
+						}
+						else {
+							nodrag_lines.children('td.dragHandle:first').children('a:even').hide();
+							nodrag_lines.children('td.dragHandle:last').children('a:odd').hide();
 						}
 					}
 				});
