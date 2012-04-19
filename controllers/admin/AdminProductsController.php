@@ -2704,10 +2704,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
 		$helper = new Helper();
-		if (Shop::getContext() != Shop::CONTEXT_SHOP)
-			$category_tree = $this->l('You must select a shop if you want to put your product into a particular shop.');
-		else
-			$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true);
+		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true);
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,

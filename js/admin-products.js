@@ -1500,6 +1500,10 @@ function multishopCheckProductField(checked, id, type)
 			$('#unity').attr('disabled', checked);
 			break;
 
+		case 'category_box' :
+			$('#categories-treeview input[type=checkbox]').attr('disabled', checked);
+			break;
+
 		default :
 			$('#'+id).attr('disabled', checked);
 			break;
@@ -1545,6 +1549,7 @@ function multishopCheckAllProductFieldsSeo(checked)
 function multishopCheckAllProductFieldsAssociations(checked)
 {
 	multishopCheckProductField($('input[name=\'multishop_check[id_category_default]\']').attr('checked'), 'id_category_default');
+	multishopCheckProductField($('input[name=\'multishop_check[category_box]\']').attr('checked'), 'categories-treeview', 'category_box');
 }
 
 var tabs_manager = new ProductTabsManager();
