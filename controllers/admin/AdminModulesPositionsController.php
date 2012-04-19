@@ -213,6 +213,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 			}
 		}
+		else
+			parent::postProcess();
 	}
 
 	public function initContent()
