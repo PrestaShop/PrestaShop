@@ -62,7 +62,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 
 	while (i != tabsize + 1)
 	{
-		if ($('#view'+i).attr('checked') == false || $('#edit'+i).attr('checked') == false || $('#add'+i).attr('checked') == false || $('#delete'+i).attr('checked') == false)
+		if ($('#view'+i).prop('checked') == false || $('#edit'+i).prop('checked') == false || $('#add'+i).prop('checked') == false || $('#delete'+i).prop('checked') == false)
 			$('#all'+i).attr('checked', false);
 		else
 			$('#all'+i).attr('checked', "checked");
@@ -75,7 +75,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 		i = 0;
 		while (i != tabsize)
 		{
-			if ($('#'+rights[right]+i).attr('checked') == true)
+			if ($('#'+rights[right]+i).prop('checked') == true)
 				res++;
 			i++;
 		}

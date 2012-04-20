@@ -29,8 +29,8 @@
 
 	function toggleShareOrders() {
 
-		var disabled_customer = ($('#share_customer_on').attr('checked')) ? false : true;
-		var disabled_stock = ($('#share_stock_on').attr('checked')) ? false : true;
+		var disabled_customer = ($('#share_customer_on').prop('checked')) ? false : true;
+		var disabled_stock = ($('#share_stock_on').prop('checked')) ? false : true;
 
 		if (disabled_customer || disabled_stock)
 		{
