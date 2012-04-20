@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.3';
+		$this->version = '1.8.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -258,7 +258,7 @@ class BlockLayered extends Module
 		INNER JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute) 
 		INNER JOIN '._DB_PREFIX_.'attribute_group ag ON ag.id_attribute_group = a.id_attribute_group
 		'.(is_null($id_product) ? '' : 'AND pa.id_product = '.(int)$id_product).'
-		GROUP BY a.id_attribute, pa.id_product, product_attribute_shop.`id_shop`');
+		GROUP BY a.id_attribute, pa.id_product '.(version_compare(_PS_VERSION_,'1.5','>') ? ', product_attribute_shop.`id_shop`' : ''));
 		
 		return 1;
 	}
@@ -924,32 +924,28 @@ class BlockLayered extends Module
 		if ($full)
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 				$nb_products = (int)Db::getInstance()->getValue('
-					SELECT count(*)
+					SELECT count(DISTINCT p.`id_product`)
 					FROM '._DB_PREFIX_.'product p
 					INNER JOIN `'._DB_PREFIX_.'product_shop` ps
-						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
-					GROUP BY p.`id_product`');
+						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)');
 		else
 				$nb_products = (int)Db::getInstance()->getValue('
-					SELECT count(*)
+					SELECT count(DISTINCT p.`id_product`)
 					FROM '._DB_PREFIX_.'product p
-					WHERE `active` = 1
-					GROUP BY p.`id_product`');
+					WHERE `active` = 1');
 		else
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 				$nb_products = (int)Db::getInstance()->getValue('
-					SELECT COUNT(*) FROM `'._DB_PREFIX_.'product` p
+					SELECT COUNT(DISTINCT p.`id_product`) FROM `'._DB_PREFIX_.'product` p
 					INNER JOIN `'._DB_PREFIX_.'product_shop` ps
 						ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
-			LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
-					WHERE psi.id_product IS NULL
-					GROUP BY p.`id_product`');
+					LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
+					WHERE psi.id_product IS NULL');
 			else
 				$nb_products = (int)Db::getInstance()->getValue('
-					SELECT COUNT(*) FROM `'._DB_PREFIX_.'product` p
+					SELECT COUNT(DISTINCT p.`id_product`) FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
-					WHERE `active` = 1 AND psi.id_product IS NULL
-					GROUP BY p.`id_product`');
+					WHERE `active` = 1 AND psi.id_product IS NULL');
 		
 		$max_executiontime = @ini_get('max_execution_time');
 		if ($max_executiontime > 5 || $max_executiontime <= 0)
@@ -1017,17 +1013,17 @@ class BlockLayered extends Module
 				$query = '
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
-			WHERE `active` = 1
+				WHERE `active` = 1
 				GROUP BY p.`id_product`
 				ORDER BY p.`id_product` LIMIT '.(int)$cursor.','.(int)$length;
 		else
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 			$query = '
 				SELECT p.`id_product`
-			FROM `'._DB_PREFIX_.'product` p
+				FROM `'._DB_PREFIX_.'product` p
 				INNER JOIN `'._DB_PREFIX_.'product_shop` ps
 					ON (ps.`id_product` = p.`id_product` AND ps.`active` = 1)
-			LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
+				LEFT JOIN  `'._DB_PREFIX_.'layered_price_index` psi ON (psi.id_product = p.id_product)
 				WHERE psi.id_product IS NULL
 				GROUP BY p.`id_product`
 				ORDER BY p.`id_product` LIMIT 0,'.(int)$length;
@@ -1804,17 +1800,17 @@ class BlockLayered extends Module
 			$shops = Shop::getShops(true, null, true);
 			if (count($shops) > 1)
 			{
-			$helper = new HelperForm();
-			$helper->id = null;
-			$helper->table = 'layered_filter';
-			$helper->identifier = 'id_layered_filter';
-			
-			if (Shop::isFeatureActive())
-			{
-				$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
-				$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+				$helper = new HelperForm();
+				$helper->id = null;
+				$helper->table = 'layered_filter';
+				$helper->identifier = 'id_layered_filter';
+				
+				if (Shop::isFeatureActive())
+				{
+					$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
+					$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+				}
 			}
-		}
 		}
 		
 		$html .= '
@@ -2595,7 +2591,7 @@ class BlockLayered extends Module
 						$sql_query['where'] = 'WHERE product_shop.`active` = 1 ';
 					}
 					else
-					$sql_query['where'] = 'WHERE p.`active` = 1 ';
+						$sql_query['where'] = 'WHERE p.`active` = 1 ';
 					$sql_query['group'] = ' GROUP BY p.id_product ';
 					break;
 
@@ -3427,7 +3423,7 @@ class BlockLayered extends Module
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 			$query_filters = ' AND product_shop.condition IN (';
 		else
-		$query_filters = ' AND p.condition IN (';
+			$query_filters = ' AND p.condition IN (';
 		foreach ($filter_value as $cond)
 			$query_filters .= '\''.$cond.'\',';
 		$query_filters = rtrim($query_filters, ',').') ';
@@ -3775,27 +3771,27 @@ class BlockLayered extends Module
 				$shops = Shop::getShops(true, null, true);
 				if (count($shops) > 1)
 				{
-				$helper = new HelperForm();
-				$helper->id = (int)$id_layered_filter;
-				$helper->table = 'layered_filter';
-				$helper->identifier = 'id_layered_filter';
-				$helper->base_folder = Tools::getValue('base_folder').'/themes/default/template/helpers/form/';
+					$helper = new HelperForm();
+					$helper->id = (int)$id_layered_filter;
+					$helper->table = 'layered_filter';
+					$helper->identifier = 'id_layered_filter';
+					$helper->base_folder = Tools::getValue('base_folder').'/themes/default/template/helpers/form/';
 				
-				$html .= '
-				<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
-				<script type="text/javascript">
-					$(document).ready(function() {
-						$(\'#shop_association\').html($(\'#shop_association_ajax\').html());
-						$(\'#shop_association_ajax\').remove();
-						// Initialize checkbox
-						$(\'.input_shop\').each(function(k, v) {
-								check_shop_group_status($(v).val());
-							check_all_shop();
+					$html .= '
+					<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
+					<script type="text/javascript">
+						$(document).ready(function() {
+							$(\'#shop_association\').html($(\'#shop_association_ajax\').html());
+							$(\'#shop_association_ajax\').remove();
+							// Initialize checkbox
+							$(\'.input_shop\').each(function(k, v) {
+									check_shop_group_status($(v).val());
+								check_all_shop();
+							});
 						});
-					});
-				</script>';
+					</script>';
+				}
 			}
-		}
 		}
 
 		return $html;
