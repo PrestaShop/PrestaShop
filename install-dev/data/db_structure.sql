@@ -1447,6 +1447,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `wholesale_price` decimal(20,6) NOT NULL default '0.000000',
   `price` decimal(20,6) NOT NULL default '0.000000',
   `ecotax` decimal(17,6) NOT NULL default '0.00',
+  `weight` float NOT NULL default '0',
   `unit_price_impact` decimal(17,2) NOT NULL default '0.00',
   `default_on` tinyint(1) unsigned NOT NULL default '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',

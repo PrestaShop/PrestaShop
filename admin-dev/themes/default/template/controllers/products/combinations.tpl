@@ -55,13 +55,18 @@
 	<h4>{l s='Add or modify combinations for this product'}</h4>
 	<div class="separation"></div> {l s='or go to'}
 		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
+
+	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
+		<br />
+		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}
+	{/if}
 	<div class="separation"></div>
 	
 	<div id="add_new_combination" style="display: none;">
 		<table cellpadding="5" style="width:100%">
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					{l s='Attribute:'}
+					<label>{l s='Attribute:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute_group" id="attribute_group" style="width: 200px;" onchange="populate_attrs();">
@@ -75,7 +80,7 @@
 			</tr>
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					{l s='Value:'}
+					<label>{l s='Value:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute" id="attribute" style="width: 200px;">
@@ -102,7 +107,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Reference:'}</td>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;"><label>{l s='Reference:'}</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="55" type="text" id="attribute_reference" name="attribute_reference" value="" style="width: 130px; margin-right: 44px;" />
 					{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
@@ -175,7 +180,8 @@
 		<table>
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-					{l s='Wholesale price:'}
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
+					<label>{l s='Wholesale price:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
@@ -185,7 +191,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Impact on price:'}</td>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
+					<label>{l s='Impact on price:'}</label>
+				</td>
 				<td colspan="2" style="padding-bottom:5px;">
 					<select name="attribute_price_impact" id="attribute_price_impact" style="width: 140px;" onchange="check_impact(); calcImpactPriceTI();">
 						<option value="0">{l s='None'}</option>
@@ -210,7 +219,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Impact on weight:'}</td>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
+					<label>{l s='Impact on weight:'}</label>
+				</td>
 				<td colspan="2" style="padding-bottom:5px;">
 					<select name="attribute_weight_impact" id="attribute_weight_impact" style="width: 140px;" onchange="check_weight_impact();">
 						<option value="0">{l s='None'}</option>
@@ -224,7 +236,10 @@
 				</td>
 			</tr>
 			<tr id="tr_unit_impact">
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Impact on unit price :'}</td>
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
+					<label style="width: 100px; float: right">{l s='Impact on unit price :'}</label>
+				</td>
 				<td colspan="2" style="padding-bottom:5px;">
 					<select name="attribute_unit_impact" id="attribute_unit_impact" style="width: 140px;" onchange="check_unit_impact();">
 						<option value="0">{l s='None'}</option>
@@ -240,7 +255,8 @@
 			{if $ps_use_ecotax}
 				<tr>
 					<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
-						{l s='Eco-tax:'}
+						{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
+						<label>{l s='Eco-tax:'}</label>
 					</td>
 					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
@@ -251,6 +267,7 @@
 			{/if}
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
 					<label>{l s='Minimum quantity:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
@@ -259,7 +276,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left" style="width:150px">
+				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" class="col-left">
+					{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
 					<label>{l s='Available date:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
@@ -282,7 +300,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px">{l s='Image:'}</td>
+				<td style="width:150px"><label>{l s='Image:'}</label></td>
 				<td style="padding-bottom:5px;">
 					<ul id="id_image_attr">
 						{foreach from=$images key=k item=image}
@@ -298,7 +316,10 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width:150px">{l s='Default:'}<br /><br /></td>
+				<td style="width:150px">
+					{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
+					<label>{l s='Default:'}</label><br /><br />
+				</td>
 				<td style="padding-bottom:5px;">
 					<input type="checkbox" name="attribute_default" id="attribute_default" value="1" />
 					&nbsp;{l s='Make this the default combination for this product'}<br /><br />

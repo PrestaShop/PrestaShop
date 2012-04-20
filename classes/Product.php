@@ -1231,12 +1231,25 @@ class ProductCore extends ObjectModel
 	* @return array Update result
 	*/
 	public function updateAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
+		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = null, $available_date = null, $update_all_fields = true)
 	{
+		$combination = new Combination($id_product_attribute);
+
+		if (!$update_all_fields)
+			$combination->setFieldsToUpdate(array(
+				'price' => !is_null($price),
+				'wholesale_price' => !is_null($wholesale_price),
+				'ecotax' => !is_null($ecotax),
+				'weight' => !is_null($weight),
+				'unit_price_impact' => !is_null($unit),
+				'default_on' => !is_null($ecotax),
+				'minimal_quantity' => !is_null($minimal_quantity),
+				'available_date' => !is_null($available_date),
+			));
+
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
 
-		$combination = new Combination($id_product_attribute);
 		$combination->price = (float)$price;
 		$combination->wholesale_price = (float)$wholesale_price;
 		$combination->ecotax = (float)$ecotax;
@@ -1248,7 +1261,8 @@ class ProductCore extends ObjectModel
 		$combination->upc = pSQL($upc);
 		$combination->default_on = (int)$default;
 		$combination->minimal_quantity = (int)$minimal_quantity;
-		$combination->available_date = pSQL($available_date);
+		$combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
+
 		$combination->save();
 
 		if (!empty($id_images))

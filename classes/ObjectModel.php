@@ -339,8 +339,9 @@ abstract class ObjectModelCore
 				|| ($type == self::FORMAT_COMMON && (!empty($data['shop']) || !empty($data['lang']))))
 				continue;
 
-			if (is_array($this->update_fields) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang]))))
-				continue;
+			if (is_array($this->update_fields))
+				if ((!empty($data['lang']) || !empty($data['shop'])) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang]))))
+					continue;
 
 			// Get field value, if value is multilang and field is empty, use value from default lang
 			$value = $this->$field;
@@ -433,12 +434,7 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database insertion
-		if ($null_values)
-			$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), true);
-		else
-			$result = Db::getInstance()->insert($this->def['table'], $this->getFields());
-
-		if (!$result)
+		if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values))
 			return false;
 
 		// Get object id in database
@@ -450,10 +446,7 @@ abstract class ObjectModelCore
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
 			$fields['id_shop'] = (int)$this->id_shop;
-			if ($null_values)
-				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, true);
-			else
-				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields);
+			$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
 		}
 		else if (!Shop::isFeatureActive() && Shop::isTableAssociated($this->def['table']))
 			$result &= $this->associateTo(Context::getContext()->shop->id);
@@ -515,12 +508,7 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database update
-		if ($null_values)
-			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, true);
-		else
-			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
-
-		if (!$result)
+		if (!$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
 			return false;
 
 		// Database insertion for multishop fields related to the object
@@ -528,14 +516,26 @@ abstract class ObjectModelCore
 		{
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
+			if (is_array($this->update_fields))
+			{
+				$update_fields = $this->update_fields;
+				$this->update_fields = null;
+				$all_fields = $this->getFieldsShop();
+				$all_fields[$this->def['primary']] = (int)$this->id;
+				$this->update_fields = $update_fields;
+			}
+			else
+				$all_fields = $fields;
+
 			foreach (Shop::getContextListShopID() as $id_shop)
 			{
 				$fields['id_shop'] = $id_shop;
+				$all_fields['id_shop'] = $id_shop;
 				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
 				if (Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
 					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
 				else
-					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
+					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
 			}
 		}
 
