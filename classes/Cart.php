@@ -1117,12 +1117,12 @@ class CartCore extends ObjectModel
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
 			'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
-			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute))
+			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, $id_address_delivery))
 				return false;
 
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, $id_product_attribute, null));
+			return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, $id_product_attribute, $id_address_delivery));
 		}
 
 		/* Get customization quantity */

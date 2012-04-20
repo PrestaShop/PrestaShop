@@ -295,19 +295,24 @@ function deleteProductFromSummary(id)
 				else
 				{
 					$('#product_'+ id).fadeOut('slow', function() {
-							$(this).remove();
-							cleanSelectAddressDelivery();
-						});
+						$(this).remove();
+						cleanSelectAddressDelivery();
+						if (!customizationId)
+							refreshOddRow();
+					});
 
 					var exist = false;
 					for (i=0;i<jsonData.summary.products.length;i++)
-						if (jsonData.summary.products[i].id_product == productId)
+						if (jsonData.summary.products[i].id_product == productId
+							&& jsonData.summary.products[i].id_product_attribute == productAttributeId
+							&& jsonData.summary.products[i].id_address_delivery == id_address_delivery)
 							exist = true;
 
-					// if all customization remove => delete product line
-					if (!exist)
-						$('#product_'+ productId+'_'+productAttributeId).fadeOut('slow', function() {
+					// if all customization removed => delete product line
+					if (!exist && customizationId)
+						$('#product_' + productId + '_' + productAttributeId + '_0_' + id_address_delivery).fadeOut('slow', function() {
 							$(this).remove();
+							refreshOddRow();
 						});
 				}
 				updateCartSummary(jsonData.summary);
@@ -320,6 +325,29 @@ function deleteProductFromSummary(id)
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
 	});
+}
+
+function refreshOddRow()
+{
+	var odd_class = 'odd';
+	var even_class = 'even';
+	$.each($('.cart_item'), function(i, it)
+	{
+		if (i == 0) // First item
+		{
+			if ($(this).hasClass('even'))
+			{
+				odd_class = 'even';
+				even_class = 'odd';
+			}
+			$(this).addClass('first_item');
+		}
+		if(i % 2)
+			$(this).removeClass(odd_class).addClass(even_class);
+		else
+			$(this).removeClass(even_class).addClass(odd_class);
+	});
+	$('.cart_item:last-child, .customization:last-child').addClass('last_item');
 }
 
 function upQuantity(id, qty)

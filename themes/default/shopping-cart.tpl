@@ -222,13 +222,16 @@
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
+			{assign var='odd' value=$product@iteration%2}
+			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
 			{* Display the product line *}
 			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 			{* Then the customized datas ones*}
 			{if isset($customizedDatas.$productId.$productAttributeId)}
 				{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
-					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" class="alternate_item cart_item">
-						<td colspan="4">
+					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" class="product_customization_for_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval} {if $odd}odd{else}even{/if} customization alternate_item {if $product@last && $customization@last}last_item{/if}">
+						<td></td>
+						<td colspan="3">
 							{foreach $customization.datas as $type=>$custom_data}
 
 								{if $type == $CUSTOMIZE_FILE}
