@@ -14,7 +14,7 @@ $(document).ready(function()
                 'dbPassword': $('#dbPassword').val(),
                 'dbEngine': $('#dbEngine').val(),
                 'db_prefix': $('#db_prefix').val(),
-                'clear': $('#db_clear').attr('checked') ? '1' : '0'
+                'clear': $('#db_clear').prop('checked') ? '1' : '0'
             },
 			dataType: 'json',
 			cache: false,
@@ -38,12 +38,12 @@ $(document).ready(function()
 	});
 	
 	// Check mails configuration
-	if (!$('#set_stmp').attr('checked'))
+	if (!$('#set_stmp').prop('checked'))
 		$("div#mailSMTPParam").hide();
 
 	$("#set_stmp").click(function()
 	{
-		if ($("input#set_stmp").attr('checked'))
+		if ($("input#set_stmp").prop('checked'))
 			$("div#mailSMTPParam").slideDown('slow');
 		else
 			$("div#mailSMTPParam").slideUp('slow');
@@ -64,7 +64,7 @@ $(document).ready(function()
                 'smtpPassword': $('#smtpPassword').val(),
                 'testEmail': $('#smtpSrv').val(),
                 'testEmail': $('#testEmail').val(),
-                'smtpChecked': ($('#set_stmp').attr('checked') ? 'true' : 'false')
+                'smtpChecked': ($('#set_stmp').prop('checked') ? 'true' : 'false')
             },
 			dataType: 'json',
 			cache: false,

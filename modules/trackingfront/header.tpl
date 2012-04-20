@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,8 +29,9 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>PrestaShop&trade; - {l s='Affiliation' mod='trackingfront'}</title>
-		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery-ui-1.8.10.custom.min.js"></script>
 		<link type="text/css" rel="stylesheet" href="{$smarty.const._PS_JS_DIR_}jquery/datepicker/datepicker.css" />
 	</head>
 	<body>
+

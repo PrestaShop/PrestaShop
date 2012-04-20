@@ -47,7 +47,7 @@ echo '
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
 			var roundMode = '.Configuration::get('PS_PRICE_ROUND_MODE').';
 		</script>
-		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/jquery-'._PS_JQUERY_VERSION_.'.min.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/jquery.hoverIntent.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/cluetip/jquery.cluetip.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'admin.js"></script>
@@ -95,7 +95,7 @@ echo '
 						{
 							$("#orders_notif_number_wrapper").hide();
 						}
-						
+
 						// Add customers notifications to the list
 						html = "";
 						nb_notifs = 0;
@@ -345,3 +345,4 @@ if (Shop::isFeatureActive())
 		Helper::renderShopList();
     echo '</div>';
 }
+
