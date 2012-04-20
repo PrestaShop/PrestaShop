@@ -174,7 +174,10 @@ jQuery(document).ready(Customer.init);
 	</tr>
 	{if $ps_use_ecotax}
 		<tr>
-			<td class="col-left"><label>{l s='Eco-tax (tax incl.):'}</label></td>
+			<td class="col-left">
+				{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
+				<label>{l s='Eco-tax (tax incl.):'}</label>
+			</td>
 			<td>
 				{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
 				<span style="margin-left:10px">({l s='already included in price'})</span>

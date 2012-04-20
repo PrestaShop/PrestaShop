@@ -61,13 +61,14 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `wholesale_price` decimal(20,6) NOT NULL default '0.000000',
   `price` decimal(20,6) NOT NULL default '0.000000',
   `ecotax` decimal(17,6) NOT NULL default '0.00',
+  `weight` float NOT NULL default '0',
   `unit_price_impact` decimal(17,2) NOT NULL default '0.00',
   `default_on` tinyint(1) unsigned NOT NULL default '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL,
   PRIMARY KEY  (`id_product_attribute`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_product_attribute_shop` (`id_product_attribute`, `id_shop`, `wholesale_price`, `price`, `ecotax`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date`) (SELECT `id_product_attribute`, (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_SHOP_DEFAULT'), `wholesale_price`, `price`, `ecotax`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date` FROM `PREFIX_product_attribute`);
+INSERT INTO `PREFIX_product_attribute_shop` (`id_product_attribute`, `id_shop`, `wholesale_price`, `price`, `ecotax`, `weight`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date`) (SELECT `id_product_attribute`, (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_SHOP_DEFAULT'), `wholesale_price`, `price`, `ecotax`, `weight`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date` FROM `PREFIX_product_attribute`);
 
 INSERT INTO `PREFIX_attribute_shop` (`id_attribute`, `id_shop`) (SELECT a.id_attribute, c.id_shop FROM PREFIX_attribute_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_attribute_shop` (

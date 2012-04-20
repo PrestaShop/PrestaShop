@@ -44,9 +44,9 @@
 
 					ed.onInit.add(function(ed)
 					{
-						if (typeof load_tinymce_multishop[ed.id] != 'undefined')
+						if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
 						{
-							if (typeof load_tinymce_multishop[ed.id])
+							if (typeof ProductMultishop.load_tinymce[ed.id])
 								ed.hide();
 							else
 								ed.show();
