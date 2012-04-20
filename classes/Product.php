@@ -754,12 +754,19 @@ class ProductCore extends ObjectModel
 		if (empty($categories))
 			return false;
 
+		// take the first selected category to get the category tree (nleft and nright)
+		$category = new Category($categories[0]);
 		// get max position in each categories
 		$result = Db::getInstance()->executeS('
-			SELECT `id_category`
-			FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_category` NOT IN('.implode(',', array_map('intval', $categories)).')
-				AND id_product = '.$this->id
+			SELECT c.`id_category`
+			FROM `'._DB_PREFIX_.'category_product` cp
+			LEFT JOIN `'._DB_PREFIX_.'category` c
+				ON (c.`id_category` = cp.`id_category`)
+			WHERE cp.`id_category` NOT IN('.implode(',', array_map('intval', $categories)).')
+				AND (c.`nleft` < '.(int)$category->nleft.'
+				AND c.`nright` > '.(int)$category->nright.'
+				AND c.`level_depth` = 1)
+				AND cp.id_product = '.$this->id
 		);
 		foreach ($result as $categ_to_delete)
 			$this->deleteCategory($categ_to_delete['id_category']);
