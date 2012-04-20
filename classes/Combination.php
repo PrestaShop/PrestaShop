@@ -70,7 +70,6 @@ class CombinationCore extends ObjectModel
 			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
 			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
-			'weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
 			'reference' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
 
@@ -78,6 +77,7 @@ class CombinationCore extends ObjectModel
 			'wholesale_price' =>	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
 			'price' => 				array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
 			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
+			'weight' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
 			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
 			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
 			'default_on' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isBool'),

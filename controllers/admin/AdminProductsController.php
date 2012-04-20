@@ -583,7 +583,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Validate::isLoadedObject($product = $this->object))
 		{
-			if (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null)
+			if ($this->isProductFieldUpdated('attribute_price') && (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null))
 				$this->errors[] = Tools::displayError('Attribute price required.');
 			if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list')))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
@@ -605,28 +605,29 @@ class AdminProductsControllerCore extends AdminController
 							$this->errors[] = Tools::displayError('This attribute already exists.');
 						else
 						{
-							if (Validate::isDateFormat(Tools::getValue('available_date_attribute')))
+							if ($this->isProductFieldUpdated('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))
+								$this->errors[] = Tools::displayError('Invalid date format.');
+							else
 							{
 								$product->updateAttribute((int)$id_product_attribute,
-									Tools::getValue('attribute_wholesale_price'),
-									Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
-									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
-									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
-									Tools::getValue('attribute_ecotax'),
+									$this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
+									$this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
+									$this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
+									$this->isProductFieldUpdated('attribute_unit_impact') ? Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact') : null,
+									$this->isProductFieldUpdated('attribute_ecotax') ? Tools::getValue('attribute_ecotax') : null,
 									Tools::getValue('id_image_attr'),
 									Tools::getValue('attribute_reference'),
 									Tools::getValue('attribute_ean13'),
-									Tools::getValue('attribute_default'),
+									$this->isProductFieldUpdated('attribute_default') ? Tools::getValue('attribute_default') : null,
 									Tools::getValue('attribute_location'),
 									Tools::getValue('attribute_upc'),
-									Tools::getValue('attribute_minimal_quantity'),
-									Tools::getValue('available_date_attribute'));
+									$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
+									$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+									false);
 
 								Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 								$this->updateDownloadProduct($product, 1, $id_product_attribute);
 							}
-							else
-								$this->errors[] = Tools::displayError('Invalid date format.');
 						}
 					}
 					else
@@ -1552,9 +1553,7 @@ class AdminProductsControllerCore extends AdminController
 					if ($this->isTabSubmitted('Shipping'))
 						$this->addCarriers();
 					if ($this->isTabSubmitted('Associations'))
-					{
 						$this->updateAccessories($object);
-					}
 
 					if ($this->isTabSubmitted('Accounting'))
 						$this->processAccounting();
@@ -1727,7 +1726,7 @@ class AdminProductsControllerCore extends AdminController
 		// Cache this condition to improve performances
 		static $is_activated = null;
 		if (is_null($is_activated))
-			$is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP;
+			$is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
 
 		if (!$is_activated)
 			return true;
