@@ -77,7 +77,7 @@ class BlockLayered extends Module
 			$products_count = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'product`');
 			
 			if ($products_count < 20000) // Lock template filter creation if too many products
-			$this->rebuildLayeredCache();
+				$this->rebuildLayeredCache();
 			self::installPriceIndexTable();
 			$this->installFriendlyUrlTable();
 			$this->installIndexableAttributeTable();
@@ -3951,9 +3951,9 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 		LEFT JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category)
 		WHERE c.active = 1'.
-		(count($categories_ids) ? 'AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').'
+		(count($categories_ids) ? ' AND cp.id_category IN ('.implode(',', $categories_ids).')' : '').'
 		AND '.$alias.'.active = 1'.
-		(count($products_ids) ? 'AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
+		(count($products_ids) ? ' AND p.id_product IN ('.implode(',', $products_ids).')' : ''));
 
 		$attribute_groups_by_id = array();
 		while ($row = $db->nextRow($attribute_groups))
