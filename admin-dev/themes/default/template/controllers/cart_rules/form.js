@@ -65,7 +65,7 @@ function removeProductRule(product_rule_group_id, product_rule_id)
 
 function toggleCartRuleFilter(id)
 {
-	if ($(id).attr('checked'))
+	if ($(id).prop('checked'))
 		$('#' + $(id).attr('id') + '_div').show(400);
 	else
 		$('#' + $(id).attr('id') + '_div').hide(200);
@@ -110,7 +110,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 	if (percent)
 	{
 		$('#apply_discount_percent_div').show(400);
-		if ($('#apply_discount_to_product').attr('checked'))
+		if ($('#apply_discount_to_product').prop('checked'))
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').show();
 		$('*[for=apply_discount_to_cheapest]').show();
@@ -126,7 +126,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 	if (amount)
 	{
 		$('#apply_discount_amount_div').show(400);
-		if ($('#apply_discount_to_product').attr('checked'))
+		if ($('#apply_discount_to_product').prop('checked'))
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').hide();
 		$('*[for=apply_discount_to_cheapest]').hide();
@@ -152,24 +152,24 @@ function toggleApplyDiscount(percent, amount, apply_to)
 
 function toggleApplyDiscountTo()
 {
-	if ($('#apply_discount_to_product').attr('checked'))
+	if ($('#apply_discount_to_product').prop('checked'))
 		$('#apply_discount_to_product_div').show(400);
 	else
 	{
 		$('#apply_discount_to_product_div').hide(200);
 		$('#reductionProductFilter').val('');
-		if ($('#apply_discount_to_order').attr('checked'))
+		if ($('#apply_discount_to_order').prop('checked'))
 			$('#reduction_product').val('0');
-		if ($('#apply_discount_to_cheapest').attr('checked'))
+		if ($('#apply_discount_to_cheapest').prop('checked'))
 			$('#reduction_product').val('-1');
-		if ($('#apply_discount_to_selection').attr('checked'))
+		if ($('#apply_discount_to_selection').prop('checked'))
 			$('#reduction_product').val('-2');
 	}
 }
 
 function toggleGiftProduct()
 {
-	if ($('#free_gift_on').attr('checked'))
+	if ($('#free_gift_on').prop('checked'))
 		$('#free_gift_div').show(400);
 	else
 	{
@@ -180,31 +180,31 @@ function toggleGiftProduct()
 }
 
 $('#apply_discount_percent').click(function() {toggleApplyDiscount(true, false, true);});
-if ($('#apply_discount_percent').attr('checked'))
+if ($('#apply_discount_percent').prop('checked'))
 	toggleApplyDiscount(true, false, true);
 
 $('#apply_discount_amount').click(function() {toggleApplyDiscount(false, true, true);});
-if ($('#apply_discount_amount').attr('checked'))
+if ($('#apply_discount_amount').prop('checked'))
 	toggleApplyDiscount(false, true, true);
 
 $('#apply_discount_off').click(function() {toggleApplyDiscount(false, false, false);});
-if ($('#apply_discount_off').attr('checked'))
+if ($('#apply_discount_off').prop('checked'))
 	toggleApplyDiscount(false, false, false);
 
 $('#apply_discount_to_order').click(function() {toggleApplyDiscountTo();});
-if ($('#apply_discount_to_order').attr('checked'))
+if ($('#apply_discount_to_order').prop('checked'))
 	toggleApplyDiscountTo();
 	
 $('#apply_discount_to_product').click(function() {toggleApplyDiscountTo();});
-if ($('#apply_discount_to_product').attr('checked'))
+if ($('#apply_discount_to_product').prop('checked'))
 	toggleApplyDiscountTo();
 	
 $('#apply_discount_to_cheapest').click(function() {toggleApplyDiscountTo();});
-if ($('#apply_discount_to_cheapest').attr('checked'))
+if ($('#apply_discount_to_cheapest').prop('checked'))
 	toggleApplyDiscountTo();
 	
 $('#apply_discount_to_selection').click(function() {toggleApplyDiscountTo();});
-if ($('#apply_discount_to_selection').attr('checked'))
+if ($('#apply_discount_to_selection').prop('checked'))
 	toggleApplyDiscountTo();
 	
 $('#free_gift_on').click(function() {toggleGiftProduct();});

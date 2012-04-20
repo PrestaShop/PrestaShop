@@ -131,7 +131,7 @@ function updateCarrierSelectionAndGift()
 	var delivery_option_radio = $('.delivery_option_radio');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
-		if ($(this).attr('checked'))
+		if ($(this).prop('checked'))
 			delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
 	});
 	if (delivery_option_params == '&')
@@ -674,7 +674,7 @@ function bindInputs()
 
 function multishippingMode(it)
 {
-	if ($(it).attr('checked'))
+	if ($(it).prop('checked'))
 	{
 		$('#address_delivery, .address_delivery').hide();
 		$('#address_invoice').removeClass('alternate_item').addClass('item');

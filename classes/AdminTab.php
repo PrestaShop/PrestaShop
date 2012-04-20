@@ -2333,7 +2333,7 @@ abstract class AdminTabCore
 				// Click on "all shop"
 				$('.input_all_shop').click(function()
 				{
-					var checked = $(this).attr('checked');
+					var checked = $(this).prop('checked');
 					$('.input_shop_group').attr('checked', checked);
 					$('.input_shop').attr('checked', checked);
 				});
@@ -2341,7 +2341,7 @@ abstract class AdminTabCore
 				// Click on a group shop
 				$('.input_shop_group').click(function()
 				{
-					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
+					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).prop('checked'));
 					check_all_shop();
 				});
 
@@ -2365,7 +2365,7 @@ abstract class AdminTabCore
 				var groupChecked = true;
 				$('.input_shop[value='+id_group+']').each(function(k, v)
 				{
-					if (!$(v).attr('checked'))
+					if (!$(v).prop('checked'))
 						groupChecked = false;
 				});
 				$('.input_shop_group[value='+id_group+']').attr('checked', groupChecked);
@@ -2376,7 +2376,7 @@ abstract class AdminTabCore
 				var allChecked = true;
 				$('.input_shop_group').each(function(k, v)
 				{
-					if (!$(v).attr('checked'))
+					if (!$(v).prop('checked'))
 						allChecked = false;
 				});
 				$('.input_all_shop').attr('checked', allChecked);

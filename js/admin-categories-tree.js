@@ -345,7 +345,7 @@ function openParentCategories()
 
 function checkCategory()
 {
-	if ($('li#'+category_to_check+' > input[type=checkbox]').attr('checked'))
+	if ($('li#'+category_to_check+' > input[type=checkbox]').prop('checked'))
 	{
 		clearInterval(intervalCheck);
 		intervalCheck = null;

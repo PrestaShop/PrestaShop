@@ -28,14 +28,14 @@
 $().ready(function() {
 	// Click on "all shop"
 	$('.input_all_shop').live('click', function() {
-		var checked = $(this).attr('checked');
+		var checked = $(this).prop('checked');
 		$('.input_shop_group:not(:disabled)').attr('checked', checked);
 		$('.input_shop:not(:disabled)').attr('checked', checked);
 	});
 
 	// Click on a group shop
 	$('.input_shop_group').live('click', function() {
-		$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
+		$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).prop('checked'));
 		check_all_shop();
 	});
 
@@ -57,7 +57,7 @@ function check_shop_group_status(id_group) {
 	var total = 0;
 	$('.input_shop[value='+id_group+']').each(function(k, v) {
 		total++;
-		if (!$(v).attr('checked'))
+		if (!$(v).prop('checked'))
 			groupChecked = false;
 	});
 
@@ -68,7 +68,7 @@ function check_shop_group_status(id_group) {
 function check_all_shop() {
 	var allChecked = true;
 	$('.input_shop_group:not(:disabled)').each(function(k, v) {
-		if (!$(v).attr('checked'))
+		if (!$(v).prop('checked'))
 			allChecked = false;
 		});
 	$('.input_all_shop').attr('checked', allChecked);

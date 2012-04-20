@@ -443,12 +443,12 @@ function handleSaveButtons(e)
 	// common for all products
 	// name[defaultlangid]
 	$("#disableSaveMessage").remove();
-	if ($("#name_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage.id_lang+']\']').attr('checked')))
+	if ($("#name_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage.id_lang+']\']').prop('checked')))
 	{
 		msg[i++] = empty_name_msg;
 	}
 	// check friendly_url_[defaultlangid] only if name is ok
-	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name]['+defaultLanguage.id_lang+']\']').attr('checked')))
+	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name]['+defaultLanguage.id_lang+']\']').prop('checked')))
 		msg[i++] = empty_link_rewrite_msg;
 
 	if (msg.length == 0)
@@ -766,7 +766,7 @@ product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function(){
-			if ($(this).is(':checked') || !$('input[name=\'multishop_check[show_price]\']').attr('checked'))
+			if ($(this).is(':checked') || !$('input[name=\'multishop_check[show_price]\']').prop('checked'))
 			{
 				$('#show_price').attr('checked', 'checked');
 				$('#show_price').attr('disabled', 'disabled');
@@ -936,14 +936,14 @@ product_tabs['Informations'] = new function(){
 			ProductMultishop.checkAllInformations();
 			var active_click = function()
 			{
-				if (!$('input[name=\'multishop_check[active]\']').attr('checked'))
+				if (!$('input[name=\'multishop_check[active]\']').prop('checked'))
 				{
 					$('.draft').hide();
 					showOptions(true);
 				}
 				else
 				{
-					var checked = $('#active_on').attr('checked');
+					var checked = $('#active_on').prop('checked');
 					toggleDraftWarning(checked);
 					showOptions(checked);
 				}
@@ -957,7 +957,7 @@ product_tabs['Informations'] = new function(){
 product_tabs['Pack'] = new function(){
 	var self = this;
 	this.bindPackEvents = function (){
-		if ($('#ppack').attr('checked'))
+		if ($('#ppack').prop('checked'))
 		{
 			$('#ppack').attr('disabled', 'disabled');
 			$('#ppackdiv').show();
@@ -1160,7 +1160,7 @@ product_tabs['Quantities'] = new function(){
 
 	this.refreshQtyAvailabilityForm = function()
 	{
-		if ($('#depends_on_stock_0').attr('checked'))
+		if ($('#depends_on_stock_0').prop('checked'))
 		{
 			$('.available_quantity').find('input').show();
 			$('.available_quantity').find('span').hide();
@@ -1190,7 +1190,7 @@ product_tabs['Quantities'] = new function(){
 		$('.advanced_stock_management').click(function(e)
 		{
 			var val = 0;
-			if ($(this).attr('checked'))
+			if ($(this).prop('checked'))
 				val = 1;
 
 			self.ajaxCall({actionQty: 'advanced_stock_management', value: val});
@@ -1312,7 +1312,7 @@ product_tabs['VirtualProduct'] = new function(){
 			dateFormat: 'yy-mm-dd'
 		});
 
-		if ($('#is_virtual_good').attr('checked'))
+		if ($('#is_virtual_good').prop('checked'))
 		{
 			$('#virtual_good').show();
 			$('#virtual_good_more').show();
@@ -1491,7 +1491,7 @@ var ProductMultishop = new function()
 				break;
 
 			case 'show_price' :
-				if ($('input[name=\'available_for_order\']').attr('checked'))
+				if ($('input[name=\'available_for_order\']').prop('checked'))
 					checked = true;
 				$('input[name=\''+id+'\']').attr('disabled', checked);
 				break;
@@ -1534,57 +1534,57 @@ var ProductMultishop = new function()
 
 	this.checkAllInformations = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[active]\']').attr('checked'), 'active', 'radio');
-		ProductMultishop.checkField($('input[name=\'multishop_check[visibility]\']').attr('checked'), 'visibility');
-		ProductMultishop.checkField($('input[name=\'multishop_check[available_for_order]\']').attr('checked'), 'available_for_order');
-		ProductMultishop.checkField($('input[name=\'multishop_check[show_price]\']').attr('checked'), 'show_price', 'show_price');
-		ProductMultishop.checkField($('input[name=\'multishop_check[online_only]\']').attr('checked'), 'online_only');
-		ProductMultishop.checkField($('input[name=\'multishop_check[condition]\']').attr('checked'), 'condition');
+		ProductMultishop.checkField($('input[name=\'multishop_check[active]\']').prop('checked'), 'active', 'radio');
+		ProductMultishop.checkField($('input[name=\'multishop_check[visibility]\']').prop('checked'), 'visibility');
+		ProductMultishop.checkField($('input[name=\'multishop_check[available_for_order]\']').prop('checked'), 'available_for_order');
+		ProductMultishop.checkField($('input[name=\'multishop_check[show_price]\']').prop('checked'), 'show_price', 'show_price');
+		ProductMultishop.checkField($('input[name=\'multishop_check[online_only]\']').prop('checked'), 'online_only');
+		ProductMultishop.checkField($('input[name=\'multishop_check[condition]\']').prop('checked'), 'condition');
 		$.each(languages, function(k, v)
 		{
-			ProductMultishop.checkField($('input[name=\'multishop_check[name]['+v.id_lang+']\']').attr('checked'), 'name_'+v.id_lang);
-			ProductMultishop.checkField($('input[name=\'multishop_check[description_short]['+v.id_lang+']\']').attr('checked'), 'description_short_'+v.id_lang, 'tinymce');
-			ProductMultishop.checkField($('input[name=\'multishop_check[description]['+v.id_lang+']\']').attr('checked'), 'description_'+v.id_lang, 'tinymce');
+			ProductMultishop.checkField($('input[name=\'multishop_check[name]['+v.id_lang+']\']').prop('checked'), 'name_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[description_short]['+v.id_lang+']\']').prop('checked'), 'description_short_'+v.id_lang, 'tinymce');
+			ProductMultishop.checkField($('input[name=\'multishop_check[description]['+v.id_lang+']\']').prop('checked'), 'description_'+v.id_lang, 'tinymce');
 		});
 	};
 
 	this.checkAllPrice = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[wholesale_price]\']').attr('checked'), 'wholesale_price');
-		ProductMultishop.checkField($('input[name=\'multishop_check[price]\']').attr('checked'), 'price', 'price');
-		ProductMultishop.checkField($('input[name=\'multishop_check[id_tax_rules_group]\']').attr('checked'), 'id_tax_rules_group');
-		ProductMultishop.checkField($('input[name=\'multishop_check[unit_price]\']').attr('checked'), 'unit_price', 'unit_price');
-		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').attr('checked'), 'on_sale');
-		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').attr('checked'), 'ecotax');
+		ProductMultishop.checkField($('input[name=\'multishop_check[wholesale_price]\']').prop('checked'), 'wholesale_price');
+		ProductMultishop.checkField($('input[name=\'multishop_check[price]\']').prop('checked'), 'price', 'price');
+		ProductMultishop.checkField($('input[name=\'multishop_check[id_tax_rules_group]\']').prop('checked'), 'id_tax_rules_group');
+		ProductMultishop.checkField($('input[name=\'multishop_check[unit_price]\']').prop('checked'), 'unit_price', 'unit_price');
+		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').prop('checked'), 'on_sale');
+		ProductMultishop.checkField($('input[name=\'multishop_check[on_sale]\']').prop('checked'), 'ecotax');
 	};
 
 	this.checkAllSeo = function()
 	{
 		$.each(languages, function(k, v)
 		{
-			ProductMultishop.checkField($('input[name=\'multishop_check[meta_title]['+v.id_lang+']\']').attr('checked'), 'meta_title_'+v.id_lang);
-			ProductMultishop.checkField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').attr('checked'), 'meta_description_'+v.id_lang);
-			ProductMultishop.checkField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').attr('checked'), 'meta_keywords_'+v.id_lang);
-			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').attr('checked'), 'link_rewrite_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[meta_title]['+v.id_lang+']\']').prop('checked'), 'meta_title_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').prop('checked'), 'meta_description_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').prop('checked'), 'meta_keywords_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang);
 		});
 	};
 
 	this.checkAllAssociations = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').attr('checked'), 'id_category_default');
-		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').attr('checked'), 'categories-treeview', 'category_box');
+		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'id_category_default');
+		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'categories-treeview', 'category_box');
 	};
 
 	this.checkAllCombinations = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_wholesale_price]\']').attr('checked'), 'attribute_wholesale_price');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_price_impact]\']').attr('checked'), 'attribute_price_impact', 'attribute_price_impact');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_weight_impact]\']').attr('checked'), 'attribute_weight_impact', 'attribute_weight_impact');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_unit_impact]\']').attr('checked'), 'attribute_unit_impact', 'attribute_unit_impact');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_ecotax]\']').attr('checked'), 'attribute_ecotax');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_minimal_quantity]\']').attr('checked'), 'attribute_minimal_quantity');
-		ProductMultishop.checkField($('input[name=\'multishop_check[available_date_attribute]\']').attr('checked'), 'available_date_attribute');
-		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_default]\']').attr('checked'), 'attribute_default');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_wholesale_price]\']').prop('checked'), 'attribute_wholesale_price');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_price_impact]\']').prop('checked'), 'attribute_price_impact', 'attribute_price_impact');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_weight_impact]\']').prop('checked'), 'attribute_weight_impact', 'attribute_weight_impact');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_unit_impact]\']').prop('checked'), 'attribute_unit_impact', 'attribute_unit_impact');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_ecotax]\']').prop('checked'), 'attribute_ecotax');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_minimal_quantity]\']').prop('checked'), 'attribute_minimal_quantity');
+		ProductMultishop.checkField($('input[name=\'multishop_check[available_date_attribute]\']').prop('checked'), 'available_date_attribute');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_default]\']').prop('checked'), 'attribute_default');
 	};
 };
 

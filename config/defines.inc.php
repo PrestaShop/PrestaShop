@@ -38,12 +38,12 @@ if (!defined('PHP_VERSION_ID'))
 }
 
 /* Directories */
-define('_PS_ROOT_DIR_',             realpath($currentDir.'/..'));
+define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
 define('_PS_CLASS_DIR_',            _PS_ROOT_DIR_.'/classes/');
 define('_PS_CONTROLLER_DIR_',       _PS_ROOT_DIR_.'/controllers/');
 define('_PS_FRONT_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/front/');
 define('_PS_ADMIN_CONTROLLER_DIR_', _PS_ROOT_DIR_.'/controllers/admin/');
-define('_PS_TRANSLATIONS_DIR_',     _PS_ROOT_DIR_.'/translations/');
+define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_.'/translations/');
 define('_PS_DOWNLOAD_DIR_',         _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',             _PS_ROOT_DIR_.'/mails/');
 define('_PS_PDF_DIR_', _PS_ROOT_DIR_.'/pdf/');
@@ -62,9 +62,9 @@ define('_PS_SUPP_IMG_DIR_',         _PS_IMG_DIR_.'su/');
 define('_PS_COL_IMG_DIR_',			_PS_IMG_DIR_.'co/');
 define('_PS_TMP_IMG_DIR_',          _PS_IMG_DIR_.'tmp/');
 define('_PS_UPLOAD_DIR_',			_PS_ROOT_DIR_.'/upload/');
-define('_PS_TOOL_DIR_',             _PS_ROOT_DIR_.'/tools/');
+define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');
 define('_PS_GEOIP_DIR_',            _PS_TOOL_DIR_.'geoip/');
-define('_PS_SWIFT_DIR_',            _PS_TOOL_DIR_.'swift/');
+define('_PS_SWIFT_DIR_', _PS_TOOL_DIR_.'swift/');
 define('_PS_GENDERS_DIR_',            _PS_IMG_DIR_.'genders/');
 define('_PS_FPDF_PATH_',            _PS_TOOL_DIR_.'fpdf/'); // @deprecated will be removed in 1.6
 define('_PS_TCPDF_PATH_',            _PS_TOOL_DIR_.'tcpdf/');
@@ -83,8 +83,8 @@ if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 
 define('_CAN_LOAD_FILES_', 1);
 
-/* Order states */
-// Order states has been moved in config.inc.php file for backward compatibility reasons
+/* Order states
+Order states has been moved in config.inc.php file for backward compatibility reasons */
 
 /* Tax behavior */
 define('PS_PRODUCT_TAX', 0);
@@ -146,5 +146,5 @@ define('_PS_SMARTY_CONSOLE_CLOSE_', 0);
 define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
-define('_PS_JQUERY_VERSION_', '1.4.4');
+define('_PS_JQUERY_VERSION_', '1.7.2');
 

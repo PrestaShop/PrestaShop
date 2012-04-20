@@ -488,7 +488,7 @@ function orderOverwriteMessage(sl, text)
 
 function setCancelQuantity(itself, id_order_detail, quantity)
 {
-	$('#cancelQuantity_' + id_order_detail).val($(itself).attr('checked') ? quantity : '');
+	$('#cancelQuantity_' + id_order_detail).val($(itself).prop('checked') ? quantity : '');
 }
 
 function stockManagementActivationAuthorization()
@@ -556,7 +556,7 @@ function changeCMSActivationAuthorization()
 
 function disableZipFormat()
 {
-	if ($('#need_zip_code_on').attr('checked') == false)
+	if ($('#need_zip_code_on').prop('checked') == false)
 	{
 		$('.zip_code_format').hide();
 		$('#zip_code_format').val('');
@@ -616,7 +616,7 @@ function checkAllMultishopDefaultValue(item)
 
 function checkMultishopDefaultValue(obj, key)
 {
-	if (!$(obj).attr('checked') || $('#'+key).hasClass('isInvisible'))
+	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
 		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');

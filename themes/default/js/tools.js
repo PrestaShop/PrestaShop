@@ -227,7 +227,7 @@ function resizeAddressesBox(nameBox)
 
 $(document).ready(function() {
 	$.fn.checkboxChange = function(fnChecked, fnUnchecked) {
-		if ($(this).attr('checked') && fnChecked)
+		if ($(this).prop('checked') && fnChecked)
 			fnChecked.call(this);
 		else if(fnUnchecked)
 			fnUnchecked.call(this);

@@ -683,7 +683,7 @@ function updateHookShoppingCartExtra(html)
 function refreshDeliveryOptions()
 {
 	$.each($('.delivery_option_radio'), function() {
-		if ($(this).attr('checked'))
+		if ($(this).prop('checked'))
 		{
 			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length == 0)
 				$(this).parent().find('.delivery_option_carrier').show();
@@ -713,7 +713,7 @@ $(document).ready(function() {
 			async: true,
 			cache: false,
 			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
-				+($(this).attr('checked') ? '1' : '0')
+				+($(this).prop('checked') ? '1' : '0')
 				+'&token='+static_token
 				+'&allow_refresh=1',
 			success: function(jsonData)

@@ -24,15 +24,15 @@
 
 		$('.select_box input[type=checkbox]').click(function(e)
 		{
-			select_entity($(this).attr('checked'), $(this).parent().parent());
+			select_entity($(this).prop('checked'), $(this).parent().parent());
 			e.stopImmediatePropagation();
 		});
 
 		$('.select_box').click(function()
 		{
 			var checkbox = $(this).find('input[type=checkbox]');
-			checkbox.attr('checked', !checkbox.attr('checked'));
-			select_entity(checkbox.attr('checked'), $(this).parent());
+			checkbox.attr('checked', !checkbox.prop('checked'));
+			select_entity(checkbox.prop('checked'), $(this).parent());
 		});
 	});
 
@@ -238,3 +238,4 @@
 	<?php endif; ?>
 </body>
 </html>
+
