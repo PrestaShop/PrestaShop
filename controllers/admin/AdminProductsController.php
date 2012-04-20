@@ -1455,7 +1455,7 @@ class AdminProductsControllerCore extends AdminController
 			if (empty($this->errors))
 			{
 				$languages = Language::getLanguages(false);
-				if (!$this->object->updateCategories(Tools::getValue('categoryBox')))
+				if ($this->isProductFieldUpdated('category_box') && !$this->object->updateCategories(Tools::getValue('categoryBox')))
 					$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 				elseif (!$this->updateTags($languages, $this->object))
 					$this->errors[] = Tools::displayError('An error occurred while adding tags.');
@@ -1580,7 +1580,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->updateDownloadProduct($object, 1);
 					$this->updateTags(Language::getLanguages(false), $object);
 
-					if (!$object->updateCategories(Tools::getValue('categoryBox'), true))
+					if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'), true))
 						$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 
 					if (empty($this->errors))
