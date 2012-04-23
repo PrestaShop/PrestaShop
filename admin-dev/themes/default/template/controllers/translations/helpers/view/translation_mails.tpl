@@ -27,10 +27,11 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
+
+	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
 	
 	{$tinyMCE}
-	
-	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
+
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -47,37 +48,22 @@
 		<u><b>{$limit_warning['needed_limit']}</b></u> {l s='at least.'} {l s='or edit the translation file manually.'}
 	</div>
 	{else}
-		<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br />
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
-		{$toggle_button}
-		<input type="hidden" name="lang" value="{$lang}" />
-		<input type="hidden" name="type" value="{$type}" />
-		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		{*<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />*}
-	
-		<h2>{l s='Core e-mails:'}</h2>
-		<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
-		{$mail_content}
+			{$toggle_button}
+			<input type="hidden" name="lang" value="{$lang}" />
+			<input type="hidden" name="type" value="{$type}" />
+			<input type="hidden" name="theme" value="{$theme}" />
+			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 
-		<h2>{l s='Module e-mails:'}</h2>
-		<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
-		{foreach $module_mails as $module_name => $mails}
-			{$mails['display']}
-		{/foreach}
+			<h2>{l s='Core e-mails:'}</h2>
+			<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
+			{$mail_content}
 
-		{if !empty($theme_mails)}
-			<h2>{l s='Theme e-mails:'}</h2>
-			<p class="preference_description" style="width:100%">{l s='List of emails of theme'} {$theme_name|ucfirst} {l s='which are in the folder'}" <strong>{$theme_name}/mails/{$lang|strtolower}/"</strong></p>
-			{$bool_title = false}
-			{foreach $theme_mails as $theme_or_module_name => $mails}
-				{if $theme_or_module_name != 'theme_mail' && !$bool_title}
-					{$bool_title = true}
-					<h2>{l s='E-mail modules in theme:'}</h2>
-					<p class="preference_description" style="width:100%">{l s='List of emails of theme'} {$theme_name|ucfirst} {l s='which are in the folder'}" <strong>{$theme_name}/modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
-				{/if}
+			<h2>{l s='Module e-mails:'}</h2>
+			<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
+			{foreach $module_mails as $module_name => $mails}
 				{$mails['display']}
 			{/foreach}
-		{/if}
 		</form>
 	{/if}
 
