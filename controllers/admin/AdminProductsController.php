@@ -2777,16 +2777,9 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('ps_tax', Configuration::get('PS_TAX'));
 
 		$data->assign('country_display_tax_label', $this->context->country->display_tax_label);
-		$unities = array(
-			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
-			'PS_DISTANCE_UNIT' => Configuration::get('PS_DISTANCE_UNIT'),
-			'PS_VOLUME_UNIT' => Configuration::get('PS_VOLUME_UNIT'),
-			'PS_DIMENSION_UNIT' => Configuration::get('PS_DIMENSION_UNIT')
-		);
 		$data->assign(array(
 			'currency', $this->context->currency,
 			'product' => $product,
-			'unities' => $unities,
 			'token' => $this->token
 		));
 
