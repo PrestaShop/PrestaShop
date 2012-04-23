@@ -266,8 +266,7 @@ class CustomerCore extends ObjectModel
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`
-				WHERE `active` = 1
-					AND `email` = \''.pSQL($email).'\'
+				WHERE `email` = \''.pSQL($email).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					'.(isset($passwd) ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : '').'
 					AND `deleted` = 0
