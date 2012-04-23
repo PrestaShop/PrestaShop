@@ -366,13 +366,13 @@ class HelperCore
 		$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
 		$html = '<select class="shopList chosen" onchange="location.href = \''.$url.'\'+$(this).val();">';
 
-		$html .= '<option value="" class="first">'.translate('All shops').'</option>';
+		$html .= '<option value="" class="first">'.Translate::getAdminTranslation('All shops').'</option>';
 		foreach ($tree as $gID => $group_data)
 		{
 			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP) && count($group_data['shops']) > 1)
-				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
-				$html .= '<optgroup class="group" label="'.translate('Group:').' '.htmlspecialchars($group_data['name']).'">';
+				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'">';
 
 			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP)
 				foreach ($group_data['shops'] as $sID => $shopData)
