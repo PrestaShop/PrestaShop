@@ -97,7 +97,7 @@ class EmployeeCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_lang' => array('xlink_resource' => 'languages'),
 			'last_passwd_gen' => array('setter' => null),
@@ -106,6 +106,16 @@ class EmployeeCore extends ObjectModel
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
 	);
+
+	protected $associated_shops = array();
+
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
+	{
+		parent::__construct($id, $id_lang, $id_shop);
+
+		if ($this->id)
+			$this->associated_shops = $this->getAssociatedShops();
+	}
 
 	/**
 	 * @see ObjectModel::getFields()
@@ -253,57 +263,47 @@ class EmployeeCore extends ObjectModel
 		$this->id = null;
 	}
 
-	public static function getEmployeeShopAccess($id_employee)
+	/**
+	 * Check if the employee is associated to a specific shop
+	 *
+	 * @since 1.5.0
+	 * @param int $id_shop
+	 * @return bool
+	 */
+	public function hasAuthOnShop($id_shop)
 	{
-		$context = Context::getContext();
-
-		switch (Shop::getContext())
-		{
-			case Shop::CONTEXT_SHOP:
-				if ($context->shop->checkIfShopExist(Shop::getContextShopID()))
-				{
-					if (!in_array($context->shop->id, Employee::getEmployeeShopById($id_employee)))
-						return false;
-				}
-				else
-					return false;
-			break;
-
-			case Shop::CONTEXT_GROUP:
-				if ($context->shop->checkIfShopGroupExist(Shop::getContextShopGroupID()))
-				{
-					$shops = Shop::getShops(false, Shop::getContextShopGroupID(), true);
-					foreach ($shops as $shop)
-						if (!in_array($shop, Employee::getEmployeeShopById($id_employee)))
-							return false;
-				}
-				else
-					return false;
-			break;
-
-			case Shop::CONTEXT_ALL:
-				if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
-					Shop::getTotalShops(false) == Employee::getTotalEmployeeShopById($id_employee))
-					return true;
-				else
-					return false;
-			break;
-		}
-		return true;
+		return $this->id_profile == _PS_ADMIN_PROFILE_ || in_array($id_shop, $this->associated_shops);
 	}
 
-	public static function getTotalEmployeeShopById($id)
+	/**
+	 * Check if the employee is associated to a specific shop group
+	 *
+	 * @since 1.5.0
+	 * @param int $id_shop_shop
+	 * @return bool
+	 */
+	public function hasAuthOnShopGroup($id_shop_group)
 	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = '.(int)$id);
+		if ($this->id_profile == _PS_ADMIN_PROFILE_)
+			return true;
+
+		foreach ($this->associated_shops as $id_shop)
+			if ($id_shop_group == Shop::getGroupFromShop($id_shop, true))
+				return true;
+		return false;
 	}
 
-	public static function getEmployeeShopById($id)
+	/**
+	 * Get default id_shop with auth for current employee
+	 *
+	 * @since 1.5.0
+	 * @return int
+	 */
+	public function getDefaultShopID()
 	{
-		$result = Db::getInstance()->executeS('SELECT * FROM`'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = '.(int)$id);
-		$data = array();
-		foreach ($result as $group_data)
-			$data[] = (int)$group_data['id_shop'];
-		return $data;
+		if ($this->id_profile == _PS_ADMIN_PROFILE_ || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops))
+			return Configuration::get('PS_SHOP_DEFAULT');
+		return $this->associated_shops[0];
 	}
 
 	public static function getEmployeesByProfile($id_profile, $active_only = false)

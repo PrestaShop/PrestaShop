@@ -103,30 +103,33 @@ try
 
 	$shop_id = '';
 	Shop::setContext(Shop::CONTEXT_ALL);
-	if ($context->cookie->shopContext)
+	if ($this->context->cookie->shopContext)
 	{
-		$split = explode('-', $context->cookie->shopContext);
+		$split = explode('-', $this->context->cookie->shopContext);
 		if (count($split) == 2)
 		{
 			if ($split[0] == 'g')
-				Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+			{
+				if ($this->context->employee->hasAuthOnShopGroup($split[1]))
+					Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+				else
+				{
+					$shop_id = $this->context->employee->getDefaultShopID();
+					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+				}
+			}
+			else if ($this->context->employee->hasAuthOnShop($split[1]))
+			{
+				$shop_id = $split[1];
+				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+			}
 			else
 			{
-				Shop::setContext(Shop::CONTEXT_SHOP, $split[1]);
-				$shop_id = $split[1];
+				$shop_id = $this->context->employee->getDefaultShopID();
+				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 			}
 		}
 	}
-	else if ($context->employee->id_profile == _PS_ADMIN_PROFILE_)
-		$shop_id = '';
-	else if (Shop::getTotalShops(false) != Employee::getTotalEmployeeShopById((int)$context->employee->id))
-	{
-		$shops = Employee::getEmployeeShopById((int)$context->employee->id);
-		if (count($shops))
-			$shop_id = (int)$shops[0];
-	}
-	else
-		Employee::getEmployeeShopAccess((int)$context->employee->id);
 
 	// Replace existing shop if necessary
 	if (!$shop_id)

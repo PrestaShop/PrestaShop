@@ -1658,7 +1658,7 @@ class AdminControllerCore extends Controller
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query);
 		}
 		elseif (!Shop::isFeatureActive())
-			$this->context->cookie->shopContext = 's-1';
+			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
 
 		$shop_id = '';
 		Shop::setContext(Shop::CONTEXT_ALL);
@@ -1668,24 +1668,27 @@ class AdminControllerCore extends Controller
 			if (count($split) == 2)
 			{
 				if ($split[0] == 'g')
-					Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+				{
+					if ($this->context->employee->hasAuthOnShopGroup($split[1]))
+						Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+					else
+					{
+						$shop_id = $this->context->employee->getDefaultShopID();
+						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+					}
+				}
+				else if ($this->context->employee->hasAuthOnShop($split[1]))
+				{
+					$shop_id = $split[1];
+					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+				}
 				else
 				{
-					Shop::setContext(Shop::CONTEXT_SHOP, $split[1]);
-					$shop_id = $split[1];
+					$shop_id = $this->context->employee->getDefaultShopID();
+					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 				}
 			}
 		}
-		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
-			$shop_id = '';
-		elseif (Shop::getTotalShops(false) != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
-		{
-			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
-			if (count($shops))
-				$shop_id = (int)$shops[0];
-		}
-		else
-			Employee::getEmployeeShopAccess((int)$this->context->employee->id);
 
 		// Check multishop context and set right context if need
 		if (!($this->multishop_context & Shop::getContext()))
@@ -1963,7 +1966,7 @@ class AdminControllerCore extends Controller
 		$filter_shop = '';
 		if ($this->multishop_context && Shop::isTableAssociated($this->table))
 		{
-				$idenfier_shop = Shop::getContextListShopID();
+			$idenfier_shop = Shop::getContextListShopID();
 			if (!$this->_group)
 				$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
 			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
