@@ -5,7 +5,6 @@ $_MODULE = array();
 $_MODULE['<{blocklayered}prestashop>blocklayered-no-products_5c9838becf9bbce28ba90a7426daf171'] = 'Il n\'y a pas de produit.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_84241e458cdd5162745500a59a3680f3'] = 'Bloc navigation à facettes';
 $_MODULE['<{blocklayered}prestashop>blocklayered_2d08fa8e157fe3f1875402cbd98aee1b'] = 'Affiche un bloc avec les filtres de la navigation à facettes';
-$_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Catégories';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3b3d06023f6353f8fd05f859b298573e'] = 'URL ';
 $_MODULE['<{blocklayered}prestashop>blocklayered_6252c0f2c2ed83b7b06dfca86d4650bb'] = 'Les caractères invalides :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f39f64ad2722b269d9b6cb2ec97ba4ad'] = 'Format spécifique pour la génération des URL pour la navigation à facettes';
@@ -44,6 +43,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_a2654ab6d514d63a3be2a4d6ea6b39d
 $_MODULE['<{blocklayered}prestashop>blocklayered_d4041fbb1580b68012b82fee850014a2'] = 'modèles de filtres sont configurés :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{blocklayered}prestashop>blocklayered_49ee3087348e8d44e1feda1917443987'] = 'Nom';
+$_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Catégories';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f7f19392da30e81c3abf433ce7b8ca38'] = 'Créé le';
 $_MODULE['<{blocklayered}prestashop>blocklayered_06df33001c1d7187fdd81ea1f5b277aa'] = 'Actions';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
@@ -95,6 +95,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_a19399fa42f1ab059401a14b9f13eba
 $_MODULE['<{blocklayered}prestashop>blocklayered_3e652bd299bb3ee3d458c0dcc7fd706e'] = 'Utiliser les taxes pour filtrer les prix';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cc787af9edec8ce947ada8ab5bbff6e5'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre d\'état';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ab28e5086d1dcb1474a4bd4951b148b9'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre de disponibilité';
+$_MODULE['<{blocklayered}prestashop>blocklayered_1218da2abb1e88e7fe8855995def9fef'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre fabriquant';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cf565402d32b79d33f626252949a6941'] = 'Enregistrer la configuration';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3601146c4e948c32b6424d2c0a7f0118'] = 'Prix';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8c489d0946f66d17d73f26366a4bf620'] = 'Poids';
