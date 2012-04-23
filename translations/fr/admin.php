@@ -2135,6 +2135,7 @@ $_LANGADM['AdminOrdersabbbd19bce9246d4a53a252efe4a8ef8'] = 'Facture :';
 $_LANGADM['AdminOrdersabbf10987248e3f9f4722d7354fac687'] = 'Total taxes : ';
 $_LANGADM['AdminOrdersadaaee4b22041c27198d410c68d952c9'] = 'Pourcentage';
 $_LANGADM['AdminOrdersae3ccb7e10314703d4d390c3010c71db'] = 'Message pour la commande :';
+$_LANGADM['AdminOrdersaeddc664f1e95691c69ea44a5c1c18f5'] = 'Ce produit est en rupture de stock :';
 $_LANGADM['AdminOrdersaf5730c209cb9ef0ddb9f7dc91a50e4e'] = 'Cette fonctionnalité va générer un mot de passe aléatoire et envoyer un e-mail au client';
 $_LANGADM['AdminOrdersafdbd71037839ec5a581febacab7bad7'] = 'Aucun client trouvé';
 $_LANGADM['AdminOrdersb157524c4be8c2fc80e5ef2f0b1bf1e6'] = 'Commandes validées :';

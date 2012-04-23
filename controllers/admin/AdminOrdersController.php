@@ -1205,9 +1205,20 @@ class AdminOrdersControllerCore extends AdminController
 				$payment_methods[] = $module->displayName;
 		}
 
+		// display warning if there are products out of stock
+		$display_out_of_stock_warning = false;
+		$current_order_state = $order->getCurrentOrderState();
+		if ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)
+			$display_out_of_stock_warning = true;
+
 		// products current stock (from stock_available)
 		foreach ($products as &$product)
+		{
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+			// if the current stock requires a warning
+			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
+				$this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
+		}
 
 		// Smarty assign
 		$this->tpl_view_vars = array(
