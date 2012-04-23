@@ -689,12 +689,7 @@ class ShopCore extends ObjectModel
 		if ($alias)
 			$alias .= '.';
 
-		$restriction = '';
-			if (Shop::getContext() != Shop::CONTEXT_ALL)
-				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
-			//else if ($share == Shop::SHARE_STOCK)
-			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
-
+		$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
 		return $restriction;
 	}
 
