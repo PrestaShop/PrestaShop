@@ -354,7 +354,7 @@ class BlockLayered extends Module
 							$attribute_values_by_lang[$category['id_lang']] = array();
 						if (!isset($attribute_values_by_lang[$category['id_lang']]['category']))
 							$attribute_values_by_lang[$category['id_lang']]['category'] = array();
-						$attribute_values_by_lang[$category['id_lang']]['category'][] = array('name' => $this->l('Categories'),
+						$attribute_values_by_lang[$category['id_lang']]['category'][] = array('name' => $this->translateWord('Categories', $category['id_lang']),
 						'id_name' => null, 'value' => $category['name'], 'id_value' => $category['id_category'],
 						'category_name' => $filter['link_rewrite'], 'type' => $filter['type']);
 					}
