@@ -1392,10 +1392,10 @@ class AdminTranslationsControllerCore extends AdminController
 		// Get all types of file (PHP, TPL...) and a list of files to parse by folder
 		$files_per_directory = $this->getFileToParseByTypeTranslation();
 
-		foreach ($files_per_directory['php'] as $dir)
-			foreach ($dir as $file)
+		foreach ($files_per_directory['php'] as $dir => $files)
+			foreach ($files as $file)
 				// Check if is a PHP file and if the override file exists
-				if (preg_match('/^(.*)\.php$/', $file) && Tools::file_exists_cache($file_path = _PS_ADMIN_CONTROLLER_DIR_.$file) && !in_array($file, $this->ignore_folder))
+				if (preg_match('/^(.*)\.php$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
 				{
 					$prefix_key = basename($file);
 					// -4 becomes -14 to remove the ending "Controller.php" from the filename
@@ -1436,8 +1436,8 @@ class AdminTranslationsControllerCore extends AdminController
 					}
 				}
 
-		foreach ($files_per_directory['specific'] as $dir => $array_file)
-			foreach ($array_file as $file)
+		foreach ($files_per_directory['specific'] as $dir => $files)
+			foreach ($files as $file)
 				if (Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
 				{
 					$prefix_key = 'index';
