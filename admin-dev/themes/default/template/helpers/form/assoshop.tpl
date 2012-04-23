@@ -26,7 +26,6 @@
 
 <script type="text/javascript">
 $().ready(function() {
-	// Click on "all shop"
 	$('.input_all_shop').live('click', function() {
 		var checked = $(this).prop('checked');
 		$('.input_shop_group:not(:disabled)').attr('checked', checked);
