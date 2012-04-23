@@ -475,7 +475,10 @@ var ajaxCart = {
 									$('#cart_block dl.products').append(customizationFormatedDatas);
 							}
 							else
+							{
+								$('#cart_block ul#customization_' + domIdProductAttribute).html('');
 								$('#cart_block ul#customization_' + domIdProductAttribute).append(customizationFormatedDatas);
+							}
 						}
 					}
 				}
