@@ -60,7 +60,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('displayHeader'))
+		if (parent::install() && $this->registerHook('displayHome'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
@@ -109,7 +109,7 @@ class HomeSlider extends Module
 	public function uninstall()
 	{
 		/* Deletes Module */
-		if (parent::uninstall() && $this->unregisterHook('displayHome') && $this->unregisterHook('displayHeader'))
+		if (parent::uninstall() && $this->unregisterHook('displayHome'))
 		{
 			/* Deletes tables */
 			$res = $this->deleteTables();
@@ -647,17 +647,11 @@ class HomeSlider extends Module
 	{
 		if(!$this->_prepareHook())
 			return;
-		return $this->display(__FILE__, 'homeslider.tpl');
-	}
-
-	public function hookDisplayHeader()
-	{
-		if (!$this->getSlides(true))
-			return;
 
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
+		return $this->display(__FILE__, 'homeslider.tpl');
 	}
 
 	public function hookDisplayMobileIndex()
