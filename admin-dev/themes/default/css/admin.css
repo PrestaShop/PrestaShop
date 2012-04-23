@@ -236,7 +236,6 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
 	color:#333;
 	width:180px;
-	font-weight:bold;
 	text-shadow: 0 1px 0 #fff;
 	border-color: #CCCCCC #BBBBBB #A0A0A0;
 	border-left: 1px solid #BBBBBB;
@@ -247,6 +246,8 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 	color: #000000;
 }
 #content .qq-upload-button:hover { border:1px solid #939393;}
+
+.file_upload_label {margin-top:5px;}
 
 /*leadin*/
 .leadin {}
