@@ -1077,6 +1077,24 @@ abstract class ObjectModelCore
 	}
 
 	/**
+	 * Get the list of associated id_shop
+	 *
+	 * @since 1.5.0
+	 * @return array
+	 */
+	public function getAssociatedShops()
+	{
+		if (!Shop::isTableAssociated($this->def['table']))
+			return array();
+
+		$list = array();
+		$sql = 'SELECT id_shop FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id;
+		foreach (Db::getInstance()->executeS($sql) as $row)
+			$list[] = $row['id_shop'];
+		return $list;
+	}
+
+	/**
 	 * @since 1.5.0
 	 */
 	public function duplicateShops($id)

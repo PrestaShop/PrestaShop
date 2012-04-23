@@ -757,7 +757,7 @@ class ShopCore extends ObjectModel
 		static $total = null;
 
 		if (is_null($total))
-			$total = Shop::getTotalShops(true);
+			$total = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop');
 		return ($total > 1) ? true : false;
 	}
 
