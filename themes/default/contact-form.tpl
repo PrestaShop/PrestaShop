@@ -66,7 +66,7 @@
 			<p id="desc_contact0" class="desc_contact">&nbsp;</p>
 				{foreach from=$contacts item=contact}
 					<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
-						<label>&nbsp;</label>{$contact.description|escape:'htmlall':'UTF-8'}
+						{$contact.description|escape:'htmlall':'UTF-8'}
 					</p>
 				{/foreach}
 			{/if}
