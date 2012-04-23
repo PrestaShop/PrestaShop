@@ -101,41 +101,45 @@ try
 
 	$context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-	$shop_id = '';
-	Shop::setContext(Shop::CONTEXT_ALL);
-	if ($this->context->cookie->shopContext)
+
+	if ($context->employee->isLoggedBack())
 	{
-		$split = explode('-', $this->context->cookie->shopContext);
-		if (count($split) == 2)
+		$shop_id = '';
+		Shop::setContext(Shop::CONTEXT_ALL);
+		if ($context->cookie->shopContext)
 		{
-			if ($split[0] == 'g')
+			$split = explode('-', $context->cookie->shopContext);
+			if (count($split) == 2)
 			{
-				if ($this->context->employee->hasAuthOnShopGroup($split[1]))
-					Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+				if ($split[0] == 'g')
+				{
+					if ($context->employee->hasAuthOnShopGroup($split[1]))
+						Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+					else
+					{
+						$shop_id = $context->employee->getDefaultShopID();
+						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+					}
+				}
+				else if ($context->employee->hasAuthOnShop($split[1]))
+				{
+					$shop_id = $split[1];
+					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+				}
 				else
 				{
-					$shop_id = $this->context->employee->getDefaultShopID();
+					$shop_id = $context->employee->getDefaultShopID();
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 				}
 			}
-			else if ($this->context->employee->hasAuthOnShop($split[1]))
-			{
-				$shop_id = $split[1];
-				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
-			}
-			else
-			{
-				$shop_id = $this->context->employee->getDefaultShopID();
-				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
-			}
 		}
-	}
 
-	// Replace existing shop if necessary
-	if (!$shop_id)
-		$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-	else if ($context->shop->id != $shop_id)
-		$context->shop = new Shop($shop_id);
+		// Replace existing shop if necessary
+		if (!$shop_id)
+			$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+		else if ($context->shop->id != $shop_id)
+			$context->shop = new Shop($shop_id);
+	}
 }
 catch(PrestaShopException $e)
 {
