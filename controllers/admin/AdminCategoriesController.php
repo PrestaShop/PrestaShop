@@ -234,14 +234,8 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
 				'desc' => $this->l('Edit')
 			);
-			$back = Tools::safeOutput(Tools::getValue('back', ''));
-			if (empty($back))
-				$back = self::$currentIndex.'&token='.$this->token;
-			$this->toolbar_btn['cancel'] = array(
-				'href' => $back,
-				'desc' => $this->l('Cancel')
-			);
 		}
+
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
@@ -258,6 +252,17 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token.$id_category,
 				'desc' => $this->l('Add new')
 			);
+
+			if (Tools::isSubmit('id_category'))
+			{
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+				$this->toolbar_btn['back'] = array(
+					'href' => $back,
+					'desc' => $this->l('Back to list')
+				);
+			}
 		}
 	}
 
