@@ -199,16 +199,11 @@ jQuery(document).ready(Customer.init);
 		<td>
 			{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}"
 				onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
-			{l s='/'} <!--<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/> -->
-			<select onchange="unitySecond();" name="unity" id="unity">
-				{foreach $unities as $unity}
-					<option value="{$unity}" {if $unity == $product->unity} selected="selected"{/if}>{$unity}</option>
-				{/foreach}
-			</select>
+			{l s='per'}&nbsp;<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 			{if $ps_tax && $country_display_tax_label}
 				<span style="margin-left:15px">{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-					{l s='/'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
+					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 				</span>
 			{/if}
 			<p>{l s='e.g.  per lb'}</p>
