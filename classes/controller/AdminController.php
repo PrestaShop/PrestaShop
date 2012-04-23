@@ -1647,6 +1647,9 @@ class AdminControllerCore extends Controller
 
 	public function initShopContext()
 	{
+		if (!$this->context->employee->isLoggedBack())
+			return;
+
 		// Change shop context ?
 		if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false)
 		{
