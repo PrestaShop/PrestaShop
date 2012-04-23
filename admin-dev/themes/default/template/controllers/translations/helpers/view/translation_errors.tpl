@@ -27,10 +27,12 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	
-	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Expressions to translate'} : <b>{$count}</b>.
-	<p>{l s='Total missing expresssions:'} {$count_empty} </p>
+
+	<p>
+		{l s='Expressions to translate'} : <b>{$count}</b>.<br />
+		{l s='Total missing expresssions:'} {$missing_translations}<br />
+	</p>
+
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -50,6 +52,8 @@
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 			{*{$auto_translate}$*}
 			<input type="hidden" name="lang" value="{$lang}" />
+			<input type="hidden" name="type" value="{$type}" />
+			<input type="hidden" name="theme" value="{$theme}" />
 			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 			<br /><br />
 			<table cellpadding="0" cellspacing="0" class="table">

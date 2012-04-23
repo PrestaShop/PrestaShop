@@ -28,10 +28,13 @@
 
 {block name="override_tpl"}
 
-	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Expressions to translate'} : <b>{$count}</b>.
 	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
-	<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
+
+	<p>
+		{l s='Expressions to translate'} : <b>{$count}</b>.<br />
+		{l s='Total missing expresssions:'} {$missing_translations|array_sum}.<br />
+	</p>
+
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -51,6 +54,8 @@
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
 		<input type="hidden" name="lang" value="{$lang}" />
+		<input type="hidden" name="type" value="{$type}" />
+		<input type="hidden" name="theme" value="{$theme}" />
 		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 		<br /><br />
 		{foreach $tabsArray as $k => $newLang}

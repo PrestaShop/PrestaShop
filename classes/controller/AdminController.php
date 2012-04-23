@@ -1222,7 +1222,6 @@ class AdminControllerCore extends Controller
 				$img = _PS_IMG_.'t/'.$tab['class_name'].'.png';
 			}
 
-
 			if (trim($tab['module']) != '')
 			{
 				$path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
