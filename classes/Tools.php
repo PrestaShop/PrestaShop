@@ -384,6 +384,8 @@ class ToolsCore
 			$language = new Language($id_lang);
 			if (Validate::isLoadedObject($language))
 				$context->language = $language;
+
+			Tools::redirect($_SERVER['REQUEST_URI']);
 		}
 	}
 
