@@ -33,6 +33,25 @@
 			getE('translation_lang').value = id_lang;
 			document.getElementById('typeTranslationForm').submit();
 		}
+
+		function addThemeSelect(el)
+		{
+			var list_type_for_theme = [{foreach $translations_type_for_theme as $type}'{$type}', {/foreach}];
+			var type = el.value;
+
+			$('select[name=theme]').hide();
+			for (i=0; i < list_type_for_theme.length; i++)
+				if (list_type_for_theme[i] == type)
+					$('select[name=theme]').show();
+				else
+					$('select[name=theme]').val('{$theme_default}');
+		}
+
+		$(document).ready(function(){
+			$('select[name=type]').change(function() {
+				addThemeSelect(this);
+			});
+		});
 	</script>
 	
 	<fieldset>
@@ -40,15 +59,20 @@
 		{l s='Here you can modify translations for all text input in PrestaShop.'}<br />
 		{l s='First, select a section (such as Back Office or Modules), then click the flag representing the language you want to edit.'}<br /><br />
 		<form method="get" action="index.php" id="typeTranslationForm">
-			<input type="hidden" name="tab" value="AdminTranslations" />
+			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />
 			<select name="type" style="float:left; margin-right:10px;">
-				{foreach $translations as $key => $translation}
-					<option value="{$key}">{$translation}&nbsp;</option>
+				{foreach $translations_type as $type => $array}
+					<option value="{$type}">{$array.name} &nbsp;</option>
+				{/foreach}
+			</select>
+			<select name="theme" style="float:left; margin-right:10px;">
+				{foreach $themes as $theme}
+					<option value="{$theme->directory}">{$theme->name} &nbsp;</option>
 				{/foreach}
 			</select>
 			{foreach $languages as $language}
-				<a href="javascript:chooseTypeTranslation('{$language['iso_code']}')">
+				<a href="javascript:chooseTypeTranslation('{$language['iso_code']}');">
 					<img src="{$theme_lang_dir}{$language['id_lang']}.jpg" alt="{$language['iso_code']}" title="{$language['iso_code']}" />
 				</a>
 			{/foreach}
@@ -117,7 +141,7 @@
 			&nbsp;&nbsp;&nbsp;
 			<select name="theme" style="margin-top:10px;">
 				{foreach $themes as $theme}
-					<option value="{$theme['name']}">{$theme['name']}</option>
+					<option value="{$theme->directory}">{$theme->name}</option>
 				{/foreach}
 			</select>&nbsp;&nbsp;
 			<input type="submit" class="button" name="submitExport" value="{l s='Export'}" />
@@ -141,7 +165,7 @@
 					&nbsp;&nbsp;&nbsp;
 					<select name="fromTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme['name']}">{$theme['name']}</option>
+							<option value="{$theme->directory}">{$theme->name}</option>
 						{/foreach}
 					</select> <span style="font-style: bold; color: red;">*</span>
 				</p>
@@ -155,7 +179,7 @@
 					&nbsp;&nbsp;&nbsp;
 					<select name="toTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme['name']}">{$theme['name']}</option>
+							<option value="{$theme->directory}">{$theme->name}</option>
 						{/foreach}
 					</select>
 				</p>

@@ -27,9 +27,14 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	
-	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Expressions to translate'} : <b>{$count}</b>.
+
+	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
+
+	<p>
+		{l s='Expressions to translate'} : <b>{$count}</b>.<br />
+		{l s='Total missing expresssions:'} {$missing_translations}.<br />
+	</p>
+
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -46,10 +51,11 @@
 		<u><b>{$limit_warning['needed_limit']}</b></u> {l s='at least.'} {l s='or edit the translation file manually.'}
 	</div>
 	{else}
-		<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br />
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
 		<input type="hidden" name="lang" value="{$lang}" />
+		<input type="hidden" name="type" value="{$type}" />
+		<input type="hidden" name="theme" value="{$theme}" />
 		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 		<br />
 	
@@ -70,15 +76,15 @@
 					{if !empty($newLang)}
 						{$occurrences = $newLang|array_count_values}
 						{if isset($occurrences[''])}
-							{$missing_translations = $occurrences['']}
+							{$missing_translations_module = $occurrences['']}
 						{else}
-							{$missing_translations = 0}
+							{$missing_translations_module = 0}
 						{/if}
 						<fieldset>
 							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name}').slideToggle();">{if $theme_name === 'default'}{l s='default'}{else}{$theme_name}{/if} - {$template_name}
-								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations}</font>)
+								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations_module}</font>)
 							</legend>
-							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name}" style="display:{if $missing_translations}block{else}none{/if}">
+							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name}" style="display:{if $missing_translations_module}block{else}none{/if}">
 								<table cellpadding="2">
 									{foreach $newLang as $key => $value}
 										<tr>
