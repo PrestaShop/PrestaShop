@@ -67,7 +67,7 @@ class FavoriteProduct extends ObjectModel
 				AND pl.`id_lang` = '.(int)$id_lang
 				.Shop::addSqlRestrictionOnLang('pl').'
 			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
-			'.Shop::addSqlAssociation('product_attribute', 'pa').'
+			'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 			WHERE product_shop.`active` = 1

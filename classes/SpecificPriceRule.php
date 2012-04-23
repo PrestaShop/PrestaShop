@@ -222,7 +222,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		{
 			$query->select('pa.id_product_attribute');
 			$query->leftJoin('product_attribute', 'pa', 'p.id_product = pa.id_product');
-			$query->join(Shop::addSqlAssociation('product_attribute', 'pa'));
+			$query->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
 			$query->leftJoin('product_attribute_combination', 'pac', 'pa.id_product_attribute = pac.id_product_attribute');
 			$query->groupBy('pa.id_product_attribute');
 		}
