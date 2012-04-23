@@ -674,7 +674,7 @@ class AdminOrdersControllerCore extends AdminController
 							$cartrule->date_from = date('Y-m-d H:i:s', $now);
 							$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
 							$cartrule->active = 1;
-							
+
 							// Calculate the amount of the discount
 							$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
 							// Totals are stored in the order currency (or at least should be)
@@ -690,9 +690,9 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
-							
+
 							$cartrule->reduction_amount = $total;
-							
+
 							if (!$cartrule->add())
 								$this->errors[] = Tools::displayError('Cannot generate voucher');
 							else
@@ -1204,6 +1204,10 @@ class AdminOrdersControllerCore extends AdminController
 			if (Validate::isLoadedObject($module))
 				$payment_methods[] = $module->displayName;
 		}
+
+		// products current stock (from stock_available)
+		foreach ($products as &$product)
+			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
 
 		// Smarty assign
 		$this->tpl_view_vars = array(
