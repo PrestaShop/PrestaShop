@@ -91,17 +91,20 @@ class AdminShippingControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$array_carrier = array();
 		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
+			else
+				$array_carrier[] = $carrier['id_carrier'];
 
 		$id_carrier = Tools::getValue('id_carrier');
 
 		if (count($carriers))
 		{
 			if (!$id_carrier)
-				$id_carrier = (int)$carriers[0]['id_carrier'];
+				$id_carrier = (int)$array_carrier[0];
 			$carrierSelected = new Carrier($id_carrier);
 		}
 
