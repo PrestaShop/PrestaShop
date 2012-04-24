@@ -255,12 +255,16 @@ class AttributeCore extends ObjectModel
 	 */
 	public function updatePosition($way, $position)
 	{
-		if (!$res = Db::getInstance()->executeS('
+		if (!$id_attribute_group = (int)Tools::getValue('id_attribute_group'))
+			$id_attribute_group = (int)$this->id_attribute_group;
+
+		$sql = '
 			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
 			FROM `'._DB_PREFIX_.'attribute` a
-			WHERE a.`id_attribute_group` = '.(int)Tools::getValue('id_attribute_group', 1).'
-			ORDER BY a.`position` ASC'
-		))
+			WHERE a.`id_attribute_group` = '.(int)$id_attribute_group.'
+			ORDER BY a.`position` ASC';
+
+		if (!$res = Db::getInstance()->executeS($sql))
 			return false;
 
 		foreach ($res as $attribute)
