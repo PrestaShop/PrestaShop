@@ -1151,6 +1151,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
+			$shops = array();
 			// If both failed, mysql error
 			if (!$res)
 			{
@@ -1175,8 +1176,6 @@ class AdminImportControllerCore extends AdminController
 					}
 					$product->associateTo($shops);
 				}
-				else
-					$shops = array();
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
@@ -1256,7 +1255,8 @@ class AdminImportControllerCore extends AdminController
 							$image->id_product = (int)$product->id;
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
-							if (!file_exists($url))
+							// file_exists doesn't work with HTTP protocol
+							if (@fopen($url, 'r') == false)
 								$error = true;
 							else if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
