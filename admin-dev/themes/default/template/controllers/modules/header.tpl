@@ -29,7 +29,7 @@
 	
 			<ul class="cc_button">
 				<li>
-					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="Add new">
+					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add new module'}">
 						<span class="process-icon-new-module" ></span>
 						<div>{l s='Add new module'}</div>
 					</a>
