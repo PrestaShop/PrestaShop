@@ -79,20 +79,20 @@
 		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration'}</legend>
 		<h3>{l s='Server information'}</h3>
 		<p>
-			<b>{l s='Prestashop version'}:</b> {$version.ps}
+			<b>{l s='Prestashop version'}:</b> {$version.ps|escape:'htmlall':'UTF-8'}
 		</p>
 	
 		{if count($uname)}
 		<p>
-			<b>{l s='Server information'}:</b> {$uname}
+			<b>{l s='Server information'}:</b> {$uname|escape:'htmlall':'UTF-8'}
 		</p>
 		{/if}
 	
 		<p>
-			<b>{l s='Server software version'}:</b> {$version.server}
+			<b>{l s='Server software version'}:</b> {$version.server|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='PHP version'}:</b> {$version.php}
+			<b>{l s='PHP version'}:</b> {$version.php|escape:'htmlall':'UTF-8'}
 		</p>
 		{if $apache_instaweb}
 		<p style="color:red;font-weight:700">{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
@@ -101,22 +101,22 @@
 		<hr />
 		<h3>{l s='Database information'}</h3>
 		<p>
-			<b>{l s='MySQL version'}:</b> {$database.version}
+			<b>{l s='MySQL version'}:</b> {$database.version|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='MySQL engine'}:</b> {$database.engine}
+			<b>{l s='MySQL engine'}:</b> {$database.engine|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Tables prefix'}:</b> {$database.prefix}
+			<b>{l s='Tables prefix'}:</b> {$database.prefix|escape:'htmlall':'UTF-8'}
 		</p>
 	
 		<hr />
 		<h3>{l s='Store information'}</h3>
 		<p>
-			<b>{l s='Shop URL'}:</b> {$shop.url}
+			<b>{l s='Shop URL'}:</b> {$shop.url|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Current theme in use'}:</b> {$shop.theme}
+			<b>{l s='Current theme in use'}:</b> {$shop.theme|escape:'htmlall':'UTF-8'}
 		</p>
 		<hr />
 		<h3>{l s='Mail configuration'}</h3>
@@ -128,7 +128,7 @@
 	{else}
 		{l s='You are using your own SMTP parameters.'}</p>
 		<p>
-			<b>{l s='SMTP server'}:</b> {$smtp.server}
+			<b>{l s='SMTP server'}:</b> {$smtp.server|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
 			<b>{l s='SMTP user'}:</b>
@@ -147,16 +147,16 @@
 			{/if}
 		</p>
 		<p>
-			<b>{l s='Encryption'}:</b> {$smtp.encryption}
+			<b>{l s='Encryption'}:</b> {$smtp.encryption|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
-			<b>{l s='Port'}:</b> {$smtp.port}
+			<b>{l s='Port'}:</b> {$smtp.port|escape:'htmlall':'UTF-8'}
 		</p>
 	{/if}
 		<hr />
 		<h3>{l s='Your information'}</h3>
 		<p>
-			<b>{l s='Your web browser'}:</b> {$user_agent}
+			<b>{l s='Your web browser'}:</b> {$user_agent|escape:'htmlall':'UTF-8'}
 		</p>
 	</fieldset>
 	<br />
