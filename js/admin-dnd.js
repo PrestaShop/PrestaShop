@@ -148,9 +148,9 @@ function initTableDnD(table)
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
 								// Update link position
 								// Up links
-								$(this).children('td.dragHandle a:odd').attr('href', $(this).children('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
+								$(this).find('td.dragHandle a:odd').attr('href', $(this).find('td.dragHandle a:odd').attr('href').replace(up_reg, 'position='+ (i - 1) +'&'));
 								// Down links
-								$(this).children('td.dragHandle a:even').attr('href', $(this).children('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
+								$(this).find('td.dragHandle a:even').attr('href', $(this).find('td.dragHandle a:even').attr('href').replace(up_reg, 'position='+ (i + 1) +'&'));
 							});
 						}
 
