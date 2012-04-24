@@ -2146,23 +2146,28 @@ class AdminControllerCore extends Controller
 		foreach ($rules['required'] as $field)
 			if (($value = Tools::getValue($field)) == false && (string)$value != '0')
 				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
-					$this->errors[] = $this->l('the field').
-						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
-						$this->l('is required');
+					$this->errors[] = sprintf(
+						$this->l('The field %s is required.'),
+						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+					);
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] as $field_lang)
 			if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
-				$this->errors[] = $this->l('the field').
-					' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).'</b> '.
-					$this->l('is required at least in').' '.$default_language->name;
+				$this->errors[] = sprintf(
+					$this->l('The field %s is required at least in %s.'),
+					call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+					$default_language->name
+				);
 
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] as $field => $max_length)
 			if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
-				$this->errors[] = $this->l('the field').
-					' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
-					$this->l('is too long').' ('.$max_length.' '.$this->l('chars max').')';
+				$this->errors[] = sprintf(
+					$this->l('The field %s is too long (%d chars max).'),
+					call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
+					$max_length
+				);
 
 		/* Checking for maximum multilingual fields size */
 		foreach ($rules['sizeLang'] as $field_lang => $max_length)
@@ -2170,9 +2175,12 @@ class AdminControllerCore extends Controller
 			{
 				$field_lang = Tools::getValue($field_lang.'_'.$language['id_lang']);
 				if ($field_lang !== false && Tools::strlen($field_lang) > $max_length)
-					$this->errors[] = $this->l('the field').
-						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).' ('.$language['name'].')</b> '.
-						$this->l('is too long').' ('.$max_length.' '.$this->l('chars max, html chars including').')';
+					$this->errors[] = sprintf(
+						$this->l('The field %s (%s) is too long (%d chars max, html chars including).'),
+						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+						$language['name'],
+						$max_length
+					);
 			}
 		/* Overload this method for custom checking */
 		$this->_childValidation();
@@ -2181,21 +2189,24 @@ class AdminControllerCore extends Controller
 		foreach ($rules['validate'] as $field => $function)
 			if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
 				if (!Validate::$function($value) && !empty($value))
-					$this->errors[] = $this->l('the field').
-						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
-						$this->l('is invalid');
+					$this->errors[] = sprintf(
+						$this->l('The field %s is invalid.'),
+						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+					);
 
 		/* Checking for passwd_old validity */
 		if (($value = Tools::getValue('passwd')) != false)
 		{
 			if ($class_name == 'Employee' && !Validate::isPasswdAdmin($value))
-				$this->errors[] = $this->l('the field').
-					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).'</b> '.
-					$this->l('is invalid');
+				$this->errors[] = sprintf(
+					$this->l('The field %s is invalid.'),
+					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
+				);
 			elseif ($class_name == 'Customer' && !Validate::isPasswd($value))
-				$this->errors[] = $this->l('the field').
-					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).
-					'</b> '.$this->l('is invalid');
+				$this->errors[] = sprintf(
+					$this->l('The field %s is invalid.'),
+					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
+				);
 		}
 
 		/* Checking for multilingual fields validity */
@@ -2203,9 +2214,11 @@ class AdminControllerCore extends Controller
 			foreach ($languages as $language)
 				if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
 					if (!Validate::$function($value))
-						$this->errors[] = $this->l('the field').
-							' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).' ('.$language['name'].')</b> '.
-							$this->l('is invalid');
+						$this->errors[] = sprintf(
+							$this->l('The field %s (%s) is invalid.'),
+							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+							$language['name']
+						);
 	}
 
 	/**
