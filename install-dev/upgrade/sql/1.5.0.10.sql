@@ -141,3 +141,5 @@ PRIMARY KEY (`id_supplier`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 DROP TABLE `PREFIX_supplier_group_shop`;
+
+ALTER TABLE `PREFIX_product_download` DROP COLUMN `id_product_attribute`;
