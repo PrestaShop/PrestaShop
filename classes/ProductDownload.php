@@ -30,9 +30,6 @@ class ProductDownloadCore extends ObjectModel
 	/** @var integer Product id which download belongs */
 	public $id_product;
 
-	/** @var integer Attribute Product id which download belongs */
-	public $id_product_attribute;
-
 	/** @var string DisplayFilename the name which appear */
 	public $display_filename;
 
@@ -67,7 +64,6 @@ class ProductDownloadCore extends ObjectModel
 		'primary' => 'id_product_download',
 		'fields' => array(
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'display_filename' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
 			'filename' => 				array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -193,64 +189,6 @@ class ProductDownloadCore extends ObjectModel
 	}
 
 	/**
-	 * Return the id_product_download from an id_product
-	 * @since 1.5.0.1
-	 * @param int $id_product Product the id
-	 * @return integer Product the id for this virtual product
-	 */
-	public static function getIdFromIdAttribute($id_product, $id_product_attribute)
-	{
-		if (!ProductDownload::isFeatureActive())
-			return false;
-
-		if (array_key_exists($id_product_attribute, self::$_productIds))
-			return self::$_productIds[$id_product];
-
-		self::$_productIds[$id_product_attribute] = (int)Db::getInstance()->getValue('
-			SELECT `id_product_download`
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute.'
-				AND `active` = 1'
-		);
-		return self::$_productIds[$id_product_attribute];
-	}
-
-	/**
-	 * Return the display filename from a physical filename
-	 *
-	 * @since 1.5.0.1
-	 *
-	 * @param string $filename Filename physically
-	 * @return integer Product the id for this virtual product
-	 *
-	 */
-	public static function getAttributeFromIdProduct($id_product)
-	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
-	}
-
-	/**
-	 * Return the result from an id_product_attribute
-	 *
-	 * @param int $id_product Product the id
-	 * @param int $id_product_attribute Attribute the id
-	 * @return array result for this virtual product
-	 */
-	public static function getAttributeFromIdAttribute($id_product, $id_product_attribute)
-	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.'
-		AND `id_product_attribute` = '.(int)$id_product_attribute.'
-		AND `active` = 1');
-	}
-
-	/**
 	 * Return the display filename from a physical filename
 	 *
 	 * @since 1.5.0.1
@@ -279,24 +217,6 @@ class ProductDownloadCore extends ObjectModel
 			SELECT `filename`
 			FROM `'._DB_PREFIX_.'product_download`
 			WHERE `id_product` = '.(int)$id_product.'
-				AND `active` = 1
-		');
-	}
-
-	/**
-	 * Return the filename from an id_product_attribute
-	 *
-	 * @param int $id_product Product the id
-	 * @param int $id_product_attribute Attribute the id
-	 * @return string Filename the filename for this virtual product
-	 */
-	public static function getFilenameFromIdAttribute($id_product, $id_product_attribute)
-	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `filename`
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute.'
 				AND `active` = 1
 		');
 	}

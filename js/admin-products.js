@@ -78,12 +78,7 @@ product_tabs['Combinations'] = new function(){
 					var upc = data[0]['upc'];
 					var minimal_quantity = data[0]['minimal_quantity'];
 					var available_date = data[0]['available_date'];
-					var virtual_product_name_attribute = data[0]['display_filename'];
-					var virtual_product_filename_attribute = data[0]['display_filename'];
-					var virtual_product_nb_downloable = data[0]['nb_downloadable'];
-					var virtual_product_expiration_date_attribute = data[0]['date_expiration'];
-					var virtual_product_nb_days = data[0]['nb_days_accessible'];
-					var is_shareable = data[0]['is_shareable'];
+
 					if (wholesale_price != 0 && wholesale_price > 0)
 					{
 						$("#attribute_wholesale_price_full").show();
@@ -109,13 +104,7 @@ product_tabs['Combinations'] = new function(){
 						eco_tax,
 						upc,
 						minimal_quantity,
-						available_date,
-						virtual_product_name_attribute,
-						virtual_product_filename_attribute,
-						virtual_product_nb_downloable,
-						virtual_product_expiration_date_attribute,
-						virtual_product_nb_days,
-						is_shareable
+						available_date
 					);
 					calcImpactPriceTI();
 				}
@@ -224,9 +213,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.fillCombination = function(wholesale_price, price_impact, weight_impact, unit_impact, reference,
-	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date,
-	virtual_product_name_attribute, virtual_product_filename_attribute, virtual_product_nb_downloable, virtual_product_expiration_date_attribute,
-	virtual_product_nb_days, is_shareable)
+	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date)
 	{
 		var link = '';
 		self.init_elems();
@@ -239,12 +226,6 @@ product_tabs['Combinations'] = new function(){
 		$('#attribute_minimal_quantity').val(minimal_quantity);
 
 		getE('attribute_reference').value = reference;
-
-		getE('virtual_product_name_attribute').value = virtual_product_name_attribute;
-		getE('virtual_product_nb_downloable_attribute').value = virtual_product_nb_downloable;
-		getE('virtual_product_expiration_date_attribute').value = virtual_product_nb_downloable;
-		getE('virtual_product_expiration_date_attribute').value = virtual_product_expiration_date_attribute;
-		getE('virtual_product_nb_days_attribute').value = virtual_product_nb_days;
 
 		getE('attribute_ean13').value = ean;
 		getE('attribute_upc').value = upc;
@@ -307,15 +288,6 @@ product_tabs['Combinations'] = new function(){
 			getE('attribute_unit_impact').selectedIndex = 1;
 		}
 
-		if (is_shareable > 0)
-			$("#virtual_product_is_shareable_attribute").attr("checked", "checked");
-
-		if (id_product_attribute != '' && virtual_product_filename_attribute != '')
-			$("#gethtmlink").show();
-		link = $("#make_downloadable_product_attribute").attr('href');
-		$("#make_downloadable_product_attribute").attr('href', link+"&id_product_attribute="+id_product_attribute);
-
-		$("#virtual_product_filename_attribute").val(virtual_product_filename_attribute);
 		$("#add_new_combination").show();
 
 		/* Reset all combination images */
@@ -832,7 +804,6 @@ product_tabs['Informations'] = new function(){
 			$('#is_virtual_good').removeAttr('checked');
 			$('div.is_virtual_good').hide();
 			$('#is_virtual').val(0);
-			$("#virtual_good_attributes").hide();
 
 			product_type = $(this).val();
 
@@ -867,7 +838,6 @@ product_tabs['Informations'] = new function(){
 					$('#is_virtual_good').attr('checked', true);
 					$('#virtual_good').show();
 					$('#is_virtual').val(1);
-					$("#virtual_good_attributes").show();
 				});
 
 				tabs_manager.onLoad('Quantities', function(){
@@ -894,38 +864,6 @@ product_tabs['Informations'] = new function(){
 			handleSaveButtons();
 		});
 	};
-	/*'setup_tinymce': function(){
-		// change each by click to load only on click
-		$(".autoload_rte").each(function(e){
-			tinySetup({
-				mode :"exact",
-				editor_selector :"autoload_rte",
-				elements : $(this).attr("id"),
-				theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-				theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-				theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
-				setup : function(ed) {
-					//Count the total number of the field
-					ed.onKeyUp.add(function(ed, e) {
-						tinyMCE.triggerSave();
-						textarea = $('#'+ed.id);
-						max = textarea.parent('div').find('span.counter').attr('max');
-						if (max != 'none')
-						{
-							textarea_value = textarea.val();
-							count = stripHTML(textarea_value).length;
-							rest = max - count;
-							if (rest < 0)
-								textarea.parent('div').find('span.counter').html('<span style="color:red;"> ' + mce_maximum + ' ' + max + ' ' + mce_characters + ' : ' + rest + '</span>');
-							else
-								textarea.parent('div').find('span.counter').html(' ');
-						}
-					});
-				}
-			});
-		});
-	},*/
 	this.onReady = function(){
 		self.bindAvailableForOrder();
 		self.bindTagImage();
