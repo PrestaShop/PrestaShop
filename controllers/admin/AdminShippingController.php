@@ -101,12 +101,15 @@ class AdminShippingControllerCore extends AdminController
 
 		$id_carrier = Tools::getValue('id_carrier');
 
-		if (count($carriers))
+		if (count($carriers) && isset($array_carrier[0]))
 		{
 			if (!$id_carrier)
 				$id_carrier = (int)$array_carrier[0];
-			$carrierSelected = new Carrier($id_carrier);
+
+			$carrierSelected = new Carrier((int)$id_carrier);
 		}
+		else
+			$carrierSelected = new Carrier((int)$id_carrier);
 
 		$currency = $this->context->currency;
 		$rangeObj = $carrierSelected->getRangeObject();
