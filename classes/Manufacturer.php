@@ -184,6 +184,7 @@ class ManufacturerCore extends ObjectModel
 			)
 			'.Shop::addSqlAssociation('manufacturer', 'm').
 			($active ? ' AND m.`active` = 1' : '').'
+			GROUP BY m.id_manufacturer
 			ORDER BY m.`name` ASC'.
 			($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : '');
 
@@ -337,7 +338,7 @@ class ManufacturerCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1').'
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i
@@ -359,14 +360,15 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
 				'.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					AND p.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp
-							ON (cp.`id_category` = cg.`id_category`)'.
+				AND (product_attribute_shop.default_on = 1 OR product_attribute_shop.default_on IS NULL)
+				AND p.`id_product` IN (
+					SELECT cp.`id_product`
+					FROM `'._DB_PREFIX_.'category_group` cg
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp
+						ON (cp.`id_category` = cg.`id_category`)'.
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-						WHERE cg.`id_group` '.$sql_groups.'
-					)
+					WHERE cg.`id_group` '.$sql_groups.'
+				)
 				ORDER BY '.(($order_by == 'id_product') ? 'p.' : '').pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
