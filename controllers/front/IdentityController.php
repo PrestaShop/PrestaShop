@@ -56,6 +56,9 @@ class IdentityControllerCore extends FrontController
 			{
 				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']));
 
+				if (Customer::customerExists(Tools::getValue('email'), true))
+					$this->errors[] = Tools::displayError('An account is already registered with this e-mail.');
+
 				$_POST['old_passwd'] = trim($_POST['old_passwd']);
 				if (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('Your password is incorrect.');
@@ -64,8 +67,11 @@ class IdentityControllerCore extends FrontController
 				else
 				{
 					$prev_id_default_group = $this->customer->id_default_group;
-					$this->errors = $this->customer->validateController();
+
+					// Merge all errors of this file and of the Object Model
+					$this->errors = array_merge($this->errors, $this->customer->validateController());
 				}
+
 				if (!count($this->errors))
 				{
 					$this->customer->id_default_group = (int)($prev_id_default_group);
