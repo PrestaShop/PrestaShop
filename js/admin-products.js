@@ -832,25 +832,33 @@ product_tabs['Informations'] = new function(){
 			}
 			else if (product_type == product_type_virtual)
 			{
-				$('li.tab-row a[id*="VirtualProduct"]').show().click();
+				if (has_combinations)
+				{
+					$('#simple_product').attr('checked', 'checked');
+					$('#warn_virtual_combinations').show();
+				}
+				else
+				{
+					$('li.tab-row a[id*="VirtualProduct"]').show().click();
 
-				tabs_manager.onLoad('VirtualProduct', function(){
-					$('#is_virtual_good').attr('checked', true);
-					$('#virtual_good').show();
-					$('#is_virtual').val(1);
-				});
+					tabs_manager.onLoad('VirtualProduct', function(){
+						$('#is_virtual_good').attr('checked', true);
+						$('#virtual_good').show();
+						$('#is_virtual').val(1);
+					});
 
-				tabs_manager.onLoad('Quantities', function(){
-					$('.stockForVirtualProduct').hide();
-				});
+					tabs_manager.onLoad('Quantities', function(){
+						$('.stockForVirtualProduct').hide();
+					});
 
-				$('li.tab-row a[id*="Shipping"]').hide();
+					$('li.tab-row a[id*="Shipping"]').hide();
 
-				tabs_manager.onLoad('Informations', function(){
-					$('#condition').attr('disabled', 'disabled');
-					$('#condition option[value=refurbished]').removeAttr('selected');
-					$('#condition option[value=used]').removeAttr('selected');
-				});
+					tabs_manager.onLoad('Informations', function(){
+						$('#condition').attr('disabled', 'disabled');
+						$('#condition option[value=refurbished]').removeAttr('selected');
+						$('#condition option[value=used]').removeAttr('selected');
+					});
+				}
 			}
 			else
 			{
