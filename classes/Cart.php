@@ -1159,8 +1159,13 @@ class CartCore extends ObjectModel
 		{
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			/* Update cart */
-			return $this->update(true);
+			$return = $this->update(true);
+			
+			// If there isn't any product left, remove all the cart rules associated
+			if (!$this->nbProducts())
+				$result = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id);
+				
+			return $return;
 		}
 
 		return false;
