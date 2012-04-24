@@ -108,12 +108,18 @@ class SupplierCore extends ObjectModel
 	{
 		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
-		$query = 'SELECT s.*, sl.`description`';
-		$query .= ' FROM `'._DB_PREFIX_.'supplier` as s
-		LEFT JOIN `'._DB_PREFIX_.'supplier_lang` sl ON (s.`id_supplier` = sl.`id_supplier` AND sl.`id_lang` = '.(int)$id_lang.')
-		'.Shop::addSqlAssociation('supplier', 's').'
-		'.($active ? ' WHERE s.`active` = 1 ' : '');
-		$query .= ' ORDER BY s.`name` ASC'.($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : '');
+
+		$query = new DbQuery();
+		$query->select('s.*, sl.`description`');
+		$query->from('supplier', 's');
+		$query->leftJoin('supplier_lang', 'sl', 's.`id_supplier` = sl.`id_supplier` AND sl.`id_lang` = '.(int)$id_lang);
+		$query->join(Shop::addSqlAssociation('supplier', 's'));
+		if ($active)
+			$query->where('s.`active` = 1');
+		$query->orderBy(' s.`name` ASC');
+		$query->limit($n, ($p - 1) * $n);
+		$query->groupBy('s.id_supplier');
+
 		$suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		if ($suppliers === false)
 			return false;
