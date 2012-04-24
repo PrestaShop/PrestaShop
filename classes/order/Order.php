@@ -568,10 +568,7 @@ class OrderCore extends ObjectModel
 			// Add information for virtual product
 			if ($row['download_hash'] && !empty($row['download_hash']))
 			{
-				if ($row['product_attribute_id'] && !empty($row['product_attribute_id']))
-					$row['filename'] = ProductDownload::getFilenameFromIdAttribute((int)$row['product_id'], (int)$row['product_attribute_id']);
-				else
-					$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
+				$row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}

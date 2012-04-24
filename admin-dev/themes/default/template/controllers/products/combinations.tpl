@@ -29,15 +29,9 @@
 	var msg_combination_2 = '{l s='Please choose a value'}';
 	var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
 	var msg_new_combination = '{l s='New combination'}';
-
-	$(document).ready(function(){
-		{if $product->is_virtual}
-			$('#virtual_good_attributes').show();
-		{/if}
-	});
 </script>
 
-{if isset($product->id)}
+{if isset($product->id) && !$product->is_virtual}
 	<input type="hidden" name="submitted_tabs[]" value="Combinations" />
 	<script type="text/javascript">
 		var attrs = new Array();
@@ -113,62 +107,6 @@
 					{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
 					{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
 					<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div class="separation"></div>
-				</td>
-			</tr>
-		</table>
-		<table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
-			<tr>
-				<td colspan="2">
-					<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
-					     	<h3>{l s='Virtual product'}</h3>
-						<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
-						<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">{l s='Upload a file'}</label>
-						<p><input id="virtual_product_file_attribute" name="virtual_product_file_attribute" onchange="uploadFile2();" maxlength="'.$this->maxFileSize.'" type="file"></p>
-						<div id="upload-confirmation2">
-				
-							<p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-									<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file' js=1}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
-							</p>
-						
-						</div>
-						<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' js=1}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
-						{if $up_filename}
-							<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="{$up_filename}" />
-						{/if}
-				
-						<p class="block">
-							<label for="virtual_product_name_attribute" class="t">{l s='Filename'}</label>
-							<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
-							<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g. Book.pdf)'}</span>
-						</p>
-					</div>
-					<div id="virtual_good_more_attribute" style="padding:5px;width:40%;float:left;margin-left:10px">
-						<p class="block">
-							<label for="virtual_product_nb_downloable" class="t">{l s='Number of downloads'}</label>
-							<input type="text" id="virtual_product_nb_downloable_attribute" name="virtual_product_nb_downloable_attribute" value="" class="" size="6" />
-							<span class="hint" name="help_box" style="display:none">{l s='Number of authorized downloads per customer'}</span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_expiration_date_attribute" class="t">{l s='Expiration date'}</label>
-							<input class="datepicker" type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
-							<span class="hint" name="help_box" style="display:none">{l s='Leave this blank for no expiration date'}</span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_nb_days" class="t">{l s='Number of days'}</label>
-							<input type="text" id="virtual_product_nb_days_attribute" name="virtual_product_nb_days_attribute" value="" class="" size="4" /><sup> *</sup>
-							<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='Set to zero for unlimited access'} ) </em></span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_is_shareable_attribute" class="t">{l s='is shareable'}</label>
-							<input type="checkbox" id="virtual_product_is_shareable_attribute" name="virtual_product_is_shareable" value="1" />
-							<span class="hint" name="help_box" style="display:none">{l s='Specify if the file can be shared'}</span>
-						</p>
-					</div>
 				</td>
 			</tr>
 			<tr>
