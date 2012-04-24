@@ -2184,6 +2184,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->tpl_form_vars['upload_max_filesize'] = $upload_max_filesize;
 		$this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
+		$this->tpl_form_vars['has_combinations'] = $this->object->hasAttributes();
 
 		// let's calculate this once for all
 		if (!Validate::isLoadedObject($this->object) && Tools::getValue('id_product'))
