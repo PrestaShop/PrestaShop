@@ -573,14 +573,17 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (!Combination::isFeatureActive())
 			return;
 
-		// If it's an attribute, load object Attribute()
-		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
+		if (!Tools::getValue($this->identifier) && Tools::getValue('id_attribute') && !Tools::getValue('attributeOrderby'))
 		{
 			// Override var of Controller
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
 			$this->identifier = 'id_attribute';
+		}
 
+		// If it's an attribute, load object Attribute()
+		if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
+		{
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			else if (!$object = new Attribute((int)Tools::getValue($this->identifier)))
