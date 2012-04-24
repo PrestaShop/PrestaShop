@@ -88,7 +88,7 @@
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
 	<div class="separation"></div>
-
+	<div id="warn_virtual_combinations" class="warn" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 	<div>
 		<label class="text">{$bullet_common_field} {l s='Type:'}</label>
 		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
