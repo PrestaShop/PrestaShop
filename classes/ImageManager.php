@@ -82,7 +82,7 @@ class ImageManagerCore
 				ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cache_image, $ratioX, $size, 'jpg');
 			}
 		}
-		return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+		return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
 	}
 
 	/**
