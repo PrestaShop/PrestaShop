@@ -2615,6 +2615,7 @@ class BlockLayered extends Module
 							SELECT m.name, 0 nbr, m.id_manufacturer 
 							
 							FROM `'._DB_PREFIX_.'category_product` cp
+							'.(version_compare(_PS_VERSION_,'1.5','>') ? Shop::addSqlAssociation('product', 'cp') : '').'
 							INNER JOIN  `'._DB_PREFIX_.'category` c ON (c.id_category = cp.id_category)
 							INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product)
 							INNER JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer) 
@@ -2672,6 +2673,7 @@ class BlockLayered extends Module
 							liagl.url_name name_url_name, liagl.meta_title name_meta_title, lial.url_name value_url_name, lial.meta_title value_meta_title
 							
 							FROM '._DB_PREFIX_.'layered_product_attribute lpa
+							'.(version_compare(_PS_VERSION_,'1.5','>') ? Shop::addSqlAssociation('product', 'lpa') : '').'
 							INNER JOIN '._DB_PREFIX_.'attribute a
 							ON a.id_attribute = lpa.id_attribute
 							INNER JOIN '._DB_PREFIX_.'attribute_lang al
@@ -2690,6 +2692,7 @@ class BlockLayered extends Module
 							ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.$id_lang.')
 							
 							WHERE '.$alias.'.active = 1 AND a.id_attribute_group = '.(int)$filter['id_value'].'
+							'.(version_compare(_PS_VERSION_,'1.5','>') ? 'AND lpa.`id_shop` = '.(int)Context::getContext()->shop->id : '').'
 							
 							GROUP BY lpa.id_attribute
 							ORDER BY id_attribute_group, id_attribute';
@@ -2728,6 +2731,7 @@ class BlockLayered extends Module
 							lifl.url_name name_url_name, lifl.meta_title name_meta_title, lifvl.url_name value_url_name, lifvl.meta_title value_meta_title
 					
 							FROM '._DB_PREFIX_.'feature_product fp
+							'.(version_compare(_PS_VERSION_,'1.5','>') ? Shop::addSqlAssociation('product', 'fp') : '').'
 							INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = fp.id_product)
 							LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.$id_lang.')
 							INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
