@@ -60,7 +60,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome'))
+		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('actionShopDataDuplication'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
@@ -109,7 +109,7 @@ class HomeSlider extends Module
 	public function uninstall()
 	{
 		/* Deletes Module */
-		if (parent::uninstall() && $this->unregisterHook('displayHome'))
+		if (parent::uninstall() && $this->unregisterHook('displayHome') && $this->unregisterHook('actionShopDataDuplication'))
 		{
 			/* Deletes tables */
 			$res = $this->deleteTables();
@@ -659,6 +659,16 @@ class HomeSlider extends Module
 		if(!$this->_prepareHook())
 			return;
 		return $this->display(__FILE__, 'homemobileslider.tpl');
+	}
+
+	public function hookActionShopDataDuplication($params)
+	{
+		Db::getInstance()->execute('
+			INSERT INTO '._DB_PREFIX_.'homeslider (id_homeslider_slides, id_shop)
+			SELECT id_homeslider_slides, '.(int)$params['new_id_shop'].'
+			FROM '._DB_PREFIX_.'homeslider
+			WHERE id_shop = '.(int)$params['old_id_shop'].'
+		');
 	}
 
 	public function headerHTML()

@@ -405,6 +405,12 @@ class AdminShopControllerCore extends AdminController
 			'warehouse' => $this->l('Warehouse'),
 		);
 
+		// Hook for duplication of shop data
+		$modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
+		if (is_array($modules_list) && count($modules_list) > 0)
+			foreach ($modules_list as $m)
+				$import_data['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
+
 		if (!$this->object->id)
 			$this->fields_import_form = array(
 				'radio' => array(
