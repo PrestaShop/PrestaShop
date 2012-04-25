@@ -902,6 +902,7 @@ $_LANGADM['AdminCustomerThreadsf752f758ff0b5c465d65c2d0bcc579cd'] = 'nouveau mes
 $_LANGADM['AdminCustomerThreadsf79c2e540bdb87cd7710bf1e075e49db'] = 'Les autres messages de cette catégorie ont tous été traités';
 $_LANGADM['AdminCustomerThreadsf8c8b903cb2e4f297e4b96d4b9c1e98a'] = 'Employé';
 $_LANGADM['AdminCustomerThreadsf9b68c21c5d51df2d6b54cfbfa985abe'] = 'Utilisateur IMAP';
+$_LANGADM['AdminCustomers8fb487f39e972f3d649b70f37ba97f44'] = 'Utilisé pour l\'export comptable. Si ce champs est vide, l\'export comptable utilisera le numéro prédéfini dans votre boutique %s';
 $_LANGADM['AdminCustomers00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_LANGADM['AdminCustomers00ee8a54c1a129585ad8027e6d35222d'] = 'Newsletter';
 $_LANGADM['AdminCustomers019ec3132cdf8ee0f2e2a75cf5d3e459'] = 'Sexe';
