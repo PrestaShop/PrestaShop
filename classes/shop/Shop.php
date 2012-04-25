@@ -639,6 +639,10 @@ class ShopCore extends ObjectModel
 
 	public static function setContext($type, $id = null)
 	{
+		// Always use global context for mono-shop mode
+		if (!Shop::isFeatureActive())
+			$type = self::CONTEXT_ALL;
+
 		switch ($type)
 		{
 			case self::CONTEXT_ALL :
