@@ -52,11 +52,14 @@ class BlockCurrencies extends Module
 	private function _prepareHook($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return;
+			return false;
 
 		if (!count(Currency::getCurrencies()))
-			return '';
+			return false;
+
 		$this->smarty->assign('blockcurrencies_sign', $this->context->currency->sign);
+	
+		return true;
 	}
 
 	/**
@@ -67,8 +70,8 @@ class BlockCurrencies extends Module
 	*/
 	public function hookTop($params)
 	{
-		$this->_prepareHook($params);
-		return $this->display(__FILE__, 'blockcurrencies.tpl');
+		if ($this->_prepareHook($params))
+			return $this->display(__FILE__, 'blockcurrencies.tpl');
 	}
 
 	public function hookHeader($params)
@@ -80,8 +83,8 @@ class BlockCurrencies extends Module
 
 	public function hookDisplayMobileFooterChoice($params)
 	{
-		$this->_prepareHook($params);
-		return $this->display(__FILE__, 'blockmobilecurrencies.tpl');
+		if ($this->_prepareHook($params))
+			return $this->display(__FILE__, 'blockmobilecurrencies.tpl');
 	}
 }
 
