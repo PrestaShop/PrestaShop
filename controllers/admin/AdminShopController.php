@@ -387,6 +387,7 @@ class AdminShopControllerCore extends AdminController
 			'country' => $this->l('Countries'),
 			'currency' => $this->l('Currencies'),
 			'discount' => $this->l('Discounts'),
+			'employee' => $this->l('Employees'),
 			'image' => $this->l('Images'),
 			'lang' => $this->l('Langs'),
 			'manufacturer' => $this->l('Manufacturers'),
@@ -404,6 +405,14 @@ class AdminShopControllerCore extends AdminController
 			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
 			'warehouse' => $this->l('Warehouse'),
+			'webservice_account' => $this->l('Webservice accounts'),
+			'attribute' => $this->l('Attributes'),
+			'attribute_group' => $this->l('Attribute groups'),
+			'feature' => $this->l('Features'),
+			'group' => $this->l('Customer groups'),
+			'tax_rules_group' => $this->l('Tax rules groups'),
+			'supplier' => $this->l('Suppliers'),
+			'referrer' => $this->l('Referrers'),
 		);
 
 		// Hook for duplication of shop data
