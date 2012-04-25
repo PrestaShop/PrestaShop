@@ -406,7 +406,7 @@ abstract class PaymentModuleCore extends Module
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
 						$order->total_discounts = $order->total_discounts_tax_incl = round($values['tax_incl'], 9);
-						$order->total_discounts_tax_excl = $values['tax_excl'];
+						$order->total_discounts_tax_excl = round($values['tax_excl'], 9);
 						$order->update();
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
