@@ -796,11 +796,17 @@ class ShopCore extends ObjectModel
 					Db::getInstance()->execute($sql);
 				}
 			}
-			/*else
-			{
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$table_name.'` SET  WHERE `'.$id.'`='.(int)$old_id);
-			}*/
 		}
+
+		// Hook for duplication of shop data
+		$modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
+		if (is_array($modules_list) && count($modules_list) > 0)
+			foreach ($modules_list as $m)
+				if (!$tables_import || isset($tables_import['Module'.ucfirst($m['module'])]))
+					Hook::exec('actionShopDataDuplication', array(
+						'old_id_shop' => (int)$old_id,
+						'new_id_shop' => (int)$this->id,
+					), $m['id_module']);
 	}
 
 	public function checkIfShopExist($id)
