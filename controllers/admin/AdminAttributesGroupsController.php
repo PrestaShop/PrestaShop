@@ -311,7 +311,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Color:'),
 			'name' => 'color',
 			'size' => 33,
-			'desc' => $this->l('HTML colors only (e.g.').' "lightblue", "#CC6600")'
+			'desc' => $this->l('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600")')
 		);
 
 		$this->fields_form['input'][] = array(
