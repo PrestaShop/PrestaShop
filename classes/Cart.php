@@ -314,8 +314,8 @@ class CartCore extends ObjectModel
 		// If the cart has not been saved, then there can't be any cart rule applied
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
-			
-		$cache_key = 'Cart::getCartRules'.$this->id;
+
+		$cache_key = 'Cart::getCartRules'.$this->id.'-'.$filter;
 		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
@@ -326,7 +326,10 @@ class CartCore extends ObjectModel
 					cd.`id_cart_rule` = crl.`id_cart_rule`
 					AND crl.id_lang = '.(int)$this->id_lang.'
 				)
-				WHERE `id_cart` = '.(int)$this->id
+				WHERE `id_cart` = '.(int)$this->id.'
+				'.($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '').'
+				'.($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '').'
+				'.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
 			);
 			Cache::store($cache_key, $result);
 		}
@@ -1413,8 +1416,20 @@ class CartCore extends ObjectModel
 			if ($with_shipping)
 				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
 			else
-				$cart_rules = array_merge($this->getCartRules(CartRule::FILTER_ACTION_REDUCTION), $this->getCartRules(CartRule::FILTER_ACTION_GIFT));
-				
+			{
+				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION);
+				// Cart Rules array are merged manually in order to avoid doubles
+				foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT) as $tmp_cart_rule)
+				{
+					$flag = false;
+					foreach ($cart_rules as $cart_rule)
+						if ($tmp_cart_rule['id_cart_rule'] == $cart_rule['id_cart_rule'])
+							$flag = true;
+					if (!$flag)
+						$cart_rules[] = $tmp_cart_rule;
+				}
+			}				
+	
 			foreach ($cart_rules as $cart_rule)
 				if ($with_shipping)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_ALL), 2);
