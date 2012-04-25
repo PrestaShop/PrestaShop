@@ -226,7 +226,7 @@ class AdminCustomersControllerCore extends AdminController
 		$days = Tools::dateDays();
 
 		$groups = Group::getGroups($this->default_form_language, true);
-
+		$accounting_number = Accounting::getDisplayedCustomerAccount($this->getFieldValue($obj, 'id_customer'), true);
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Customer'),
@@ -278,8 +278,8 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'account_number',
 					'size' => 33,
 					'required' => false,
-					'desc' => $this->l('Used for the accounting export. If this field is empty, the accounting export will use this number ').
-						Accounting::getDisplayedCustomerAccount($this->getFieldValue($obj, 'id_customer'), true)
+					'desc' => sprintf($this->l('Used for the accounting export. If this field is empty, the accounting export will use the predefined number from your shop %s'),
+						$accounting_number ? '('.$accounting_number.')' : '')
 				),
 				array(
 					'type' => 'birthday',
