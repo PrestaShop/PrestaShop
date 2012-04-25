@@ -371,7 +371,7 @@ abstract class PaymentModuleCore extends Module
 						if (count($order_list) == 1 && $values['tax_incl'] > $order->total_products_wt && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
 						{
 							// Create a new voucher from the original
-							$voucher = clone $cart_rule['obj'];
+							$voucher = new CartRule($cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
 							unset($voucher->id);
 
 							// Set a new voucher code
