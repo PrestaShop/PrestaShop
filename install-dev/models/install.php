@@ -30,6 +30,30 @@ class InstallModelInstall extends InstallAbstractModel
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
 	/**
+	 * @var FileLogger
+	 */
+	public $logger;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->logger = new FileLogger();
+		$this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
+	}
+
+	public function setError($errors)
+	{
+		if (!is_array($errors))
+			$errors = array($errors);
+
+		parent::setError($errors);
+
+		foreach ($errors as $error)
+			$this->logger->logError($error);
+	}
+
+	/**
 	 * Generate settings file
 	 */
 	public function generateSettingsFile($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine)

@@ -33,11 +33,6 @@ abstract class InstallAbstractModel
 	public $language;
 
 	/**
-	 * @var FileLogger
-	 */
-	public $logger;
-
-	/**
 	 * @var array List of errors
 	 */
 	protected $errors = array();
@@ -45,9 +40,6 @@ abstract class InstallAbstractModel
 	public function __construct()
 	{
 		$this->language = InstallLanguages::getInstance();
-
-		$this->logger = new FileLogger();
-		$this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
 	}
 
 	public function setError($errors)
@@ -55,11 +47,7 @@ abstract class InstallAbstractModel
 		if (!is_array($errors))
 			$errors = array($errors);
 
-		foreach ($errors as $error)
-		{
-			$this->errors[] = $error;
-			$this->logger->logError($error);
-		}
+		$this->errors[] = $errors;
 	}
 
 	public function getErrors()
