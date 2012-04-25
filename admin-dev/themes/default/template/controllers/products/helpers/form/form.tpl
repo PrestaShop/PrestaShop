@@ -95,7 +95,7 @@
 		var product_type_virtual = {Product::PTYPE_VIRTUAL};
 		var product_type_simple = {Product::PTYPE_SIMPLE};
 
-		var has_combinations = '{$has_combinations}';
+		var has_combinations = {$has_combinations};
 
 		var toload = new Array();
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save the pack.' slashes=1}';
