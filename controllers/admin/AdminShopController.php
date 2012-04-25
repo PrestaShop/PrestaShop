@@ -398,6 +398,7 @@ class AdminShopControllerCore extends AdminController
 			'module_group' => $this->l('Payment module customer group restrictions'),
 			'module_currency' => $this->l('Payment module currency restrictions'),
 			'product' => $this->l('Products'),
+			'product_attribute' => $this->l('Combinations'),
 			'product_lang' => $this->l('Products lang'),
 			'scene' => $this->l('Scenes'),
 			'stock_available' => $this->l('Available quantities for sale'),
