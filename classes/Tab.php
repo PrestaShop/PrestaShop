@@ -76,7 +76,24 @@ class TabCore extends ObjectModel
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
+		// @retrocompatibility with old menu (before 1.5.0.9)
+		$retro = array(
+			'AdminPayment' => 'AdminParentModules',
+			'AdminOrders' => 'AdminParentOrders',
+			'AdminCustomers' => 'AdminParentCustomer',
+			'AdminShipping' => 'AdminParentShipping',
+			'AdminPreferences' => 'AdminParentPreferences',
+			'AdminStats' => 'AdminParentStats',
+			'AdminEmployees' => 'AdminAdmin',
+		);
+		$class_name = Tab::getClassNameById($this->id_parent);
+		if (isset($retro[$class_name]))
+			$this->id_parent = Tab::getIdFromClassName($retro[$class_name]);
+
+		// Set good position for new tab
 		$this->position = Tab::getNewLastPosition($this->id_parent);
+
+		// Add tab
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
@@ -482,5 +499,13 @@ class TabCore extends ObjectModel
 			AND a.`add` = 1
 			ORDER BY t.`id_parent` ASC
 		');
+	}
+
+	/**
+	 * @since 1.5.0
+	 */
+	public static function getClassNameById($id_tab)
+	{
+		return Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab = '.(int)$id_tab);
 	}
 }
