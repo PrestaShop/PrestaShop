@@ -698,7 +698,7 @@ class LanguageCore extends ObjectModel
 		return copy(dirname(__FILE__).'/../img/l/none.jpg', dirname(__FILE__).'/../img/l/'.$id.'.jpg');
 	}
 
-	private static $_cache_language_installation = null;
+	protected static $_cache_language_installation = null;
 	public static function isInstalled($iso_code)
 	{
 		if (self::$_cache_language_installation === null)

@@ -36,7 +36,7 @@ class AddressFormatCore extends ObjectModel
 	/** @var string */
 	public $format;
 
-	private $_errorFormatList = array();
+	protected $_errorFormatList = array();
 
 	/**
 	 * @see ObjectModel::$definition

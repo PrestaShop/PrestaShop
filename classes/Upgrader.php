@@ -33,9 +33,9 @@ class UpgraderCore
 	/**
 	 * @var boolean contains true if last version is not installed
 	 */
-	private $need_upgrade = false;
-	private $changed_files = array();
-	private $missing_files = array();
+	protected $need_upgrade = false;
+	protected $changed_files = array();
+	protected $missing_files = array();
 
 	public $version_name;
 	public $version_num;

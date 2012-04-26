@@ -592,7 +592,7 @@ class AdminImportControllerCore extends AdminController
 		));
 	}
 
-	private static function rewindBomAware($handle)
+	protected static function rewindBomAware($handle)
 	{
 		// A rewind wrapper that skip BOM signature wrongly
 		rewind($handle);
@@ -600,19 +600,19 @@ class AdminImportControllerCore extends AdminController
 			rewind($handle);
 	}
 
-	private static function getBoolean($field)
+	protected static function getBoolean($field)
 	{
 		return (boolean)$field;
 	}
 
-	private static function getPrice($field)
+	protected static function getPrice($field)
 	{
 		$field = ((float)str_replace(',', '.', $field));
 		$field = ((float)str_replace('%', '', $field));
 		return $field;
 	}
 
-	private static function split($field)
+	protected static function split($field)
 	{
 		if (empty($field))
 			return array();
@@ -633,7 +633,7 @@ class AdminImportControllerCore extends AdminController
 
 	}
 
-	private static function createMultiLangField($field)
+	protected static function createMultiLangField($field)
 	{
 		$languages = Language::getLanguages(false);
 		$res = array();
@@ -709,14 +709,14 @@ class AdminImportControllerCore extends AdminController
 		return $res;
 	}
 
-	private static function setDefaultValues(&$info)
+	protected static function setDefaultValues(&$info)
 	{
 		foreach (self::$default_values as $k => $v)
 			if (!isset($info[$k]) || $info[$k] == '')
 				$info[$k] = $v;
 	}
 
-	private static function setEntityDefaultValues(&$entity)
+	protected static function setEntityDefaultValues(&$entity)
 	{
 		$members = get_object_vars($entity);
 		foreach (self::$default_values as $k => $v)
@@ -724,7 +724,7 @@ class AdminImportControllerCore extends AdminController
 				$entity->$k = $v;
 	}
 
-	private static function fillInfo($infos, $key, &$entity)
+	protected static function fillInfo($infos, $key, &$entity)
 	{
 		if (isset(self::$validators[$key][1]) && self::$validators[$key][1] == 'createMultiLangField' && Tools::getValue('iso_lang'))
 		{
@@ -760,7 +760,7 @@ class AdminImportControllerCore extends AdminController
 	 * @param string entity 'products' or 'categories'
 	 * @return void
 	 */
-	private static function copyImg($id_entity, $id_image = null, $url, $entity = 'products')
+	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products')
 	{
 		$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
 		$watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));
@@ -2108,7 +2108,7 @@ class AdminImportControllerCore extends AdminController
 		return count($tmp);
 	}
 
-	private static function usortFiles($a, $b)
+	protected static function usortFiles($a, $b)
 	{
 		$a = strrev(substr(strrev($a), 0, 14));
 		$b = strrev(substr(strrev($b), 0, 14));

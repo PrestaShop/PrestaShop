@@ -49,8 +49,8 @@ class CountyCore extends ObjectModel
 		),
 	);
 
-	private static $_cache_get_counties = array();
-	private static $_cache_county_zipcode = array();
+	protected static $_cache_get_counties = array();
+	protected static $_cache_county_zipcode = array();
 
 	const USE_BOTH_TAX = 0;
 	const USE_COUNTY_TAX = 1;

@@ -34,7 +34,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	/*
 	 * @var array List of warehouses
 	 */
-	private $warehouses;
+	protected $warehouses;
 
 	public function __construct()
 	{

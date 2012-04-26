@@ -27,7 +27,7 @@
 
 class AdminShippingControllerCore extends AdminController
 {
-	private $_fieldsHandling;
+	protected $_fieldsHandling;
 
 	public function __construct()
 	{

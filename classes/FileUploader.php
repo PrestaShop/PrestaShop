@@ -27,10 +27,9 @@
 
 class FileUploaderCore
 {
-
-	private $allowedExtensions = array();
-	private $file;
-	private $sizeLimit;
+	protected $allowedExtensions = array();
+	protected $file;
+	protected $sizeLimit;
 
 	public function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)
 	{
