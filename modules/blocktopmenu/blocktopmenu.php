@@ -554,19 +554,25 @@ class Blocktopmenu extends Module
 
 		$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
-		$this->_menu .= '<li '.$selected.'>';
-		$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
-
-		if (count($children))
+		$user_groups = Context::getContext()->customer->isLogged() ? Context::getContext()->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP'));
+		$is_intersected = array_intersect($category->getGroups(), $user_groups);
+		// filter the categories that the user is allowed to see and browse
+		if (!empty($is_intersected))
 		{
-			$this->_menu .= '<ul>';
+			$this->_menu .= '<li '.$selected.'>';
+			$this->_menu .= '<a href="'.$category_link.'">'.$category->name.'</a>';
 
-			foreach ($children as $child)
-				$this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+			if (count($children))
+			{
+				$this->_menu .= '<ul>';
 
-			$this->_menu .= '</ul>';
+				foreach ($children as $child)
+					$this->getCategory((int)$child['id_category'], (int)$id_lang, (int)$child['id_shop']);
+
+				$this->_menu .= '</ul>';
+			}
+			$this->_menu .= '</li>';
 		}
-		$this->_menu .= '</li>';
 	}
 
 	private function getCMSMenuItems($parent, $depth = 1, $id_lang = false)
