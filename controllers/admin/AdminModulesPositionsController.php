@@ -281,7 +281,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
 			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-			'url_live_edit' => $this->context->shop->getBaseUrl().'?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_),
+			'url_live_edit' => $this->context->shop->getBaseUrl().'index.php?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_),
 			'display_key' => $this->display_key,
 			'hooks' => $hooks,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
