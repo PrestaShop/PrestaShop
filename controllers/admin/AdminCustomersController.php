@@ -715,17 +715,16 @@ class AdminCustomersControllerCore extends AdminController
 		if (Validate::isEmail($customer_email))
 			$customer->getByEmail($customer_email);
 		if ($customer->id)
-			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
-		else
 		{
-			if ($customer = parent::processAdd())
-			{
-				$this->context->smarty->assign('new_customer', $customer);
-				return true;
-			}
-			else
-				return false;
+			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+			$this->display = 'edit';
 		}
+		elseif ($customer = parent::processAdd())
+		{
+			$this->context->smarty->assign('new_customer', $customer);
+			return true;
+		}
+		return false;
 	}
 
 	public function processUpdate()
