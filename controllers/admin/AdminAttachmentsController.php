@@ -28,7 +28,7 @@
 class AdminAttachmentsControllerCore extends AdminController
 {
 
-	private $product_attachements = array();
+	protected $product_attachements = array();
 
 	public function __construct()
 	{

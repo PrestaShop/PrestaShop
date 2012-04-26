@@ -1534,7 +1534,7 @@ class ToolsCore
 		return Media::cccJS($js_files);
 	}
 
-	private static $_cache_nb_media_servers = null;
+	protected static $_cache_nb_media_servers = null;
 
 	public static function getMediaServer($filename)
 	{

@@ -273,7 +273,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @param string $target_theme_dir relative path to target dir
 	 * @return boolean true if success
 	 */
-	private static function copyTheme($base_theme_dir, $target_theme_dir)
+	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
 		$res = true;
 		$base_theme_dir = rtrim($base_theme_dir, '/').'/';

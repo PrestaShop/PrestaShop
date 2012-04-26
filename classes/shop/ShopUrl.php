@@ -35,8 +35,8 @@ class ShopUrlCore extends ObjectModel
 	public $main;
 	public $active;
 
-	private static $main_domain = null;
-	private static $main_domain_ssl = null;
+	protected static $main_domain = null;
+	protected static $main_domain_ssl = null;
 
 	/**
 	 * @see ObjectModel::$definition

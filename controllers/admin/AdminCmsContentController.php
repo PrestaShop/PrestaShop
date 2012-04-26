@@ -28,13 +28,13 @@
 class AdminCmsContentControllerCore extends AdminController
 {
 	/** @var object adminCMSCategories() instance */
-	private $adminCMSCategories;
+	protected $adminCMSCategories;
 
 	/** @var object adminCMS() instance */
-	private $adminCMS;
+	protected $adminCMS;
 
 	/** @var object Category() instance for navigation*/
-	private static $_category = null;
+	protected static $_category = null;
 
 	public function __construct()
 	{

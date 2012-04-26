@@ -28,7 +28,7 @@
 class AdminManufacturersControllerCore extends AdminController
 {
 	/** @var array countries list */
-	private $countries_array = array();
+	protected $countries_array = array();
 
 	public function __construct()
 	{

@@ -27,7 +27,7 @@
 
 class AdminModulesPositionsControllerCore extends AdminController
 {
-	private $display_key = 0;
+	protected $display_key = 0;
 
 	public function postProcess()
 	{

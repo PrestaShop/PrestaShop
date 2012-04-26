@@ -43,7 +43,7 @@ class ProfileCore extends ObjectModel
 		),
 	);
 
-	private static $_cache_accesses = array();
+	protected static $_cache_accesses = array();
 
 	/**
 	* Get all available profiles
