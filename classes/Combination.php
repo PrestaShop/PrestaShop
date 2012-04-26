@@ -69,7 +69,7 @@ class CombinationCore extends ObjectModel
 			'location' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
 			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
+			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
 			'reference' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
 
