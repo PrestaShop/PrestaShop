@@ -212,7 +212,11 @@ class AdminShopControllerCore extends AdminController
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->errors[] = Tools::displayError('Unable to load this shop.');
 		else if (!Shop::hasDependency($object->id))
-			return Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
+		{
+			$result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
+			Tools::generateHtaccess();
+			return $result;
+		}
 		else
 			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
 
