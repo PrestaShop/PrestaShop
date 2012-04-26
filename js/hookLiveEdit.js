@@ -4,7 +4,7 @@ var hookable_list = new Array();
 var timer;
 $(document).ready(function() {
 	// do some place for submit button
-	$('body').css('margin-bottom', '45px');
+	$('body').css('margin-top', '45px');
 	// this is the result box, which will "pop up" the succeed or fail result
 	$('#fancy').fancybox({
 		autoDimensions: true,
@@ -20,18 +20,15 @@ $(document).ready(function() {
 	$('#live_edit_feedback_str').html('');
 	// add liveToken in each link to navigate into the shop and keeping the liveedit mode
 	$('a').each(function() {
-		var href = $(this).attr('href');
-		var search = $(this).attr('search');
+		var href = this.href;
+		var search = this.search;
 		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop');
-		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir) {
+		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir)
+		{
 			if (search.length == 0)
-			{
-				$(this).attr('search', hrefAdd);
-			}
+				this.search = hrefAdd;
 			else
-			{
-				$(this).attr('search', search + '&' + hrefAdd);
-			}
+				this.search += '&' + hrefAdd;
 		}
 	});
 	// populate  
