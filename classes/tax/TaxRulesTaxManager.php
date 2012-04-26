@@ -35,7 +35,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $type;
 	public $tax_calculator;
 
-	private static $cache_tax_calculator;
+	protected static $cache_tax_calculator;
 
 
 	/**

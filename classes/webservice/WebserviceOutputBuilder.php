@@ -420,7 +420,7 @@ class WebserviceOutputBuilderCore
 	 * @param $ws_params webserviceParams from the entity
 	 * @return string
 	 */
-	private function renderSchema($object, $ws_params)
+	protected function renderSchema($object, $ws_params)
 	{
 		$output = $this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 		foreach ($ws_params['fields'] as $field_name => $field)
@@ -499,7 +499,7 @@ class WebserviceOutputBuilderCore
 	 * @param int $depth
 	 * @return string
 	 */
-	private function renderField($object, $ws_params, $field_name, $field, $depth)
+	protected function renderField($object, $ws_params, $field_name, $field, $depth)
 	{
 		$output = '';
 		$show_field = true;
@@ -560,7 +560,7 @@ class WebserviceOutputBuilderCore
 	 * @param $ws_params
 	 * @return string
 	 */
-	private function renderAssociations($object, $depth, $associations, $ws_params)
+	protected function renderAssociations($object, $depth, $associations, $ws_params)
 	{
 		$output = $this->objectRender->renderAssociationWrapperHeader();
 		foreach ($associations as $assoc_name => $association)
@@ -643,7 +643,7 @@ class WebserviceOutputBuilderCore
 		return $output;
 	}
 
-	private function renderFlatAssociation($object, $depth, $assoc_name, $resource_name, $fields_assoc, $object_assoc, $parent_details)
+	protected function renderFlatAssociation($object, $depth, $assoc_name, $resource_name, $fields_assoc, $object_assoc, $parent_details)
 	{
 		$output = '';
 		$more_attr = array();
@@ -721,7 +721,7 @@ class WebserviceOutputBuilderCore
 		$this->specificFields[$field_name] = array('entity'=>$entity_name, 'object' => $object, 'method' => $method, 'type' => gettype($object));
 		return $this;
 	}
-	private function validateObjectAndMethod($object, $method)
+	protected function validateObjectAndMethod($object, $method)
 	{
 		if (is_string($object) && !class_exists($object))
 			throw new WebserviceException ('The object you want to set in '.__METHOD__.' is not allowed.', array(98, 500));
@@ -732,7 +732,7 @@ class WebserviceOutputBuilderCore
 	{
 		return $this->specificFields;
 	}
-	private function overrideSpecificField($entity_name, $field_name, $field, $entity_object, $ws_params)
+	protected function overrideSpecificField($entity_name, $field_name, $field, $entity_object, $ws_params)
 	{
 		if (array_key_exists($field_name, $this->specificFields) && $this->specificFields[$field_name]['entity'] == $entity_name)
 		{

@@ -39,7 +39,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * @var array The type of images (general, categories, manufacturers, suppliers, stores...)
 	 */
-	private $imageTypes = array(
+	protected $imageTypes = array(
 		'general' => array(
 			'header' => array(),
 			'mail' => array(),
@@ -56,12 +56,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * @var string The image type (product, category, general,...)
 	 */
-	private $imageType = NULL;
+	protected $imageType = null;
 
 	/**
 	 * @var int The maximum size supported when uploading images, in bytes
 	 */
-	private $imgMaxUploadSize = 3000000;
+	protected $imgMaxUploadSize = 3000000;
 
 	/**
 	 * @var array The list of supported mime types
@@ -71,7 +71,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * @var string The product image declination id
 	 */
-	protected $productImageDeclinationId = NULL;
+	protected $productImageDeclinationId = null;
 
 	/**
 	 * @var boolean If the current image management has to manage a "default" image (i.e. "No product available")
@@ -150,7 +150,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 *
 	 * @return boolean
 	 */
-	private function manageImages()
+	protected function manageImages()
 	{
 		/*
 		 * available cases api/... :
@@ -315,7 +315,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 *
 	 * @return boolean
 	 */
-	private function manageGeneralImages()
+	protected function manageGeneralImages()
 	{
 		$path = '';
 		$alternative_path = '';
@@ -393,7 +393,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				break;
 			case 'PUT':
 
-				if ($this->writePostedImageOnDisk($path, NULL, NULL))
+				if ($this->writePostedImageOnDisk($path, null, null))
 				{
 					if ($this->wsObject->urlSegment[2] == 'header')
 					{
@@ -410,7 +410,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		}
 	}
 
-	private function manageDefaultDeclinatedImages($directory, $normal_image_sizes)
+	protected function manageDefaultDeclinatedImages($directory, $normal_image_sizes)
 	{
 		$this->defaultImage = true;
 		// Get the language iso code list
@@ -455,7 +455,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		}
 	}
 
-	private function manageListDeclinatedImages($directory, $normal_image_sizes)
+	protected function manageListDeclinatedImages($directory, $normal_image_sizes)
 	{
 		// Check if method is allowed
 		if ($this->wsObject->method != 'GET')
@@ -502,7 +502,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		return true;
 	}
 
-	private function manageEntityDeclinatedImages($directory, $normal_image_sizes)
+	protected function manageEntityDeclinatedImages($directory, $normal_image_sizes)
 	{
 		$normal_image_size_names = array();
 		foreach ($normal_image_sizes as $normal_image_size)
@@ -634,7 +634,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $directory the file path of the root of the images folder type
 	 * @return boolean
 	 */
-	private function manageDeclinatedImages($directory)
+	protected function manageDeclinatedImages($directory)
 	{
 		// Get available image sizes for the current image type
 		$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
@@ -655,7 +655,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 	}
 
-	private function manageProductImages()
+	protected function manageProductImages()
 	{
 		$this->manageDeclinatedImages(_PS_PROD_IMG_DIR_);
 	}
@@ -669,7 +669,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $directory
 	 * @return boolean
 	 */
-	private function manageDeclinatedImagesCRUD($filename_exists, $filename, $imageSizes, $directory)
+	protected function manageDeclinatedImagesCRUD($filename_exists, $filename, $imageSizes, $directory)
 	{
 		switch ($this->wsObject->method)
 		{
@@ -684,7 +684,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// Modify the image
 			case 'PUT':
 				if ($filename_exists)
-					if ($this->writePostedImageOnDisk($filename, NULL, NULL, $imageSizes, $directory))
+					if ($this->writePostedImageOnDisk($filename, null, null, $imageSizes, $directory))
 					{
 						$this->imgToDisplay = $filename;
 						return true;
@@ -716,7 +716,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					throw new WebserviceException('This image already exists. To modify it, please use the PUT method', array(65, 400));
 				else
 				{
-					if ($this->writePostedImageOnDisk($filename, NULL, NULL, $imageSizes, $directory))
+					if ($this->writePostedImageOnDisk($filename, null, null, $imageSizes, $directory))
 						return true;
 					else
 						throw new WebserviceException('Unable to save this image', array(66, 500));
@@ -735,7 +735,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $parentPath The parent path
 	 * @return boolean
 	 */
-	private function deleteImageOnDisk($filePath, $imageTypes = NULL, $parentPath = NULL)
+	protected function deleteImageOnDisk($filePath, $imageTypes = null, $parentPath = null)
 	{
 		$this->wsObject->setOutputEnabled(false);
 		if (file_exists($filePath))
@@ -778,13 +778,13 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $parentPath
 	 * @return string
 	 */
-	private function writeImageOnDisk($basePath, $newPath, $destWidth = NULL, $destHeight = NULL, $imageTypes = NULL, $parentPath = NULL)
+	protected function writeImageOnDisk($basePath, $newPath, $destWidth = null, $destHeight = null, $imageTypes = null, $parentPath = null)
 	{
 		list($sourceWidth, $sourceHeight, $type, $attr) = getimagesize($basePath);
 		if (!$sourceWidth)
 			throw new WebserviceException('Image width was null', array(68, 400));
-		if ($destWidth == NULL) $destWidth = $sourceWidth;
-		if ($destHeight == NULL) $destHeight = $sourceHeight;
+		if ($destWidth == null) $destWidth = $sourceWidth;
+		if ($destHeight == null) $destHeight = $sourceHeight;
 		switch ($type)
 		{
 			case 1:
@@ -802,14 +802,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		$widthDiff = $destWidth / $sourceWidth;
 		$heightDiff = $destHeight / $sourceHeight;
 
-		if ($widthDiff > 1 AND $heightDiff > 1)
+		if ($widthDiff > 1 && $heightDiff > 1)
 		{
 			$nextWidth = $sourceWidth;
 			$nextHeight = $sourceHeight;
 		}
 		else
 		{
-			if ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 2 OR ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 0 AND $widthDiff > $heightDiff))
+			if ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 2 || ((int)(Configuration::get('PS_IMAGE_GENERATION_METHOD')) == 0 && $widthDiff > $heightDiff))
 			{
 				$nextHeight = $destHeight;
 				$nextWidth = (int)(($sourceWidth * $nextHeight) / $sourceHeight);
@@ -888,11 +888,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $parentPath
 	 * @return boolean
 	 */
-	private function writePostedImageOnDisk($receptionPath, $destWidth = NULL, $destHeight = NULL, $imageTypes = NULL, $parentPath = NULL)
+	protected function writePostedImageOnDisk($receptionPath, $destWidth = null, $destHeight = null, $imageTypes = null, $parentPath = null)
 	{
 		if ($this->wsObject->method == 'PUT')
 		{
-			if (isset($_FILES['image']['tmp_name']) AND $_FILES['image']['tmp_name'])
+			if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name'])
 			{
 				$file = $_FILES['image'];
 				if ($file['size'] > $this->imgMaxUploadSize)
@@ -923,7 +923,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					throw new WebserviceException('Error while uploading image. Please change your server\'s settings', array(74, 400));
 
 				// Try to copy image file to a temporary file
-				if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['image']['tmp_name'], $tmpName))
+				if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image']['tmp_name'], $tmpName))
 					throw new WebserviceException('Error while copying image to the temporary directory', array(75, 400));
 				// Try to copy image file to the image directory
 				else
@@ -938,15 +938,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		}
 		elseif ($this->wsObject->method == 'POST')
 		{
-			if (isset($_FILES['image']['tmp_name']) AND $_FILES['image']['tmp_name'])
+			if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name'])
 			{
 				$file = $_FILES['image'];
 				if ($file['size'] > $this->imgMaxUploadSize)
 					throw new WebserviceException(sprintf('The image size is too large (maximum allowed is %d KB)', ($this->imgMaxUploadSize/1000)), array(72, 400));
 				require_once(_PS_ROOT_DIR_.'/images.inc.php');
-				if (ImageManager::validateUpload($file))
+				if ($error = ImageManager::validateUpload($file))
 					throw new WebserviceException('Image upload error : '.$error, array(76, 400));
-				if (isset($file['tmp_name']) AND $file['tmp_name'] != NULL)
+				if (isset($file['tmp_name']) && $file['tmp_name'] != null)
 				{
 					if ($this->imageType == 'products')
 					{
@@ -974,7 +974,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_.$product->id.'-'.$image->id.'.jpg')))
 							$image->createImgFolder();
 
-						if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($file['tmp_name'], $tmpName))
+						if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmpName))
 							throw new WebserviceException('An error occurred during the image upload', array(76, 400));
 						elseif (!ImageManager::resize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format))
 							throw new WebserviceException('An error occurred while copying image', array(76, 400));
@@ -990,7 +990,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					}
 					elseif ($this->imageType == 'categories')
 					{
-						if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($file['tmp_name'], $tmpName))
+						if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmpName))
 							throw new WebserviceException('An error occurred during the image upload', array(76, 400));
 						elseif (!ImageManager::resize($tmpName, $receptionPath))
 							throw new WebserviceException('An error occurred while copying image', array(76, 400));

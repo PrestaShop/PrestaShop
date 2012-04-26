@@ -27,7 +27,7 @@
 
 class AdminCmsControllerCore extends AdminController
 {
-	private $_category;
+	protected $_category;
 
 	public $id_cms_category;
 

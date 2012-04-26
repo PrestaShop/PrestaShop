@@ -59,7 +59,7 @@ abstract class ObjectModelCore
 
 	protected $id_shop = null;
 
-	private $get_shop_from_context = true;
+	protected $get_shop_from_context = true;
 
 	protected static $fieldsRequiredDatabase = null;
 

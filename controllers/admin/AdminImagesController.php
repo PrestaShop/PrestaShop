@@ -27,8 +27,8 @@
 
 class AdminImagesControllerCore extends AdminController
 {
-	private $start_time = 0;
-	private $max_execution_time = 7200;
+	protected $start_time = 0;
+	protected $max_execution_time = 7200;
 
 	public function __construct()
 	{

@@ -29,8 +29,8 @@
 
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
-	private $combinations = array();
-	private $product;
+	protected $combinations = array();
+	protected $product;
 
 	public function __construct()
 	{
@@ -61,7 +61,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		return array();
 	}
 
-	private static function createCombinations($list)
+	protected static function createCombinations($list)
 	{
 		if (count($list) <= 1)
 			return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
@@ -135,7 +135,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		}
 	}
 
-	private static function displayAndReturnAttributeJs()
+	protected static function displayAndReturnAttributeJs()
 	{
 		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
 		$attribute_js = array();
@@ -158,7 +158,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		return $attribute_js;
 	}
 
-    private static function setAttributesImpacts($id_product, $tab)
+    protected static function setAttributesImpacts($id_product, $tab)
     {
         $attributes = array();
         foreach ($tab as $group)
@@ -172,7 +172,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		);
     }
 
-    private static function getAttributesImpacts($id_product)
+    protected static function getAttributesImpacts($id_product)
     {
         $tab = array();
         $result = Db::getInstance()->executeS(

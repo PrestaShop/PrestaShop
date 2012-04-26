@@ -28,13 +28,13 @@
 class AdminEmployeesControllerCore extends AdminController
 {
  	/** @var array profiles list */
-	private $profiles_array = array();
+	protected $profiles_array = array();
 
 	/** @var array themes list*/
-	private $themes = array();
+	protected $themes = array();
 
 	/** @var array tabs list*/
-	private $tabs_list = array();
+	protected $tabs_list = array();
 
 	public function __construct()
 	{

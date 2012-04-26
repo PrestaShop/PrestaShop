@@ -31,7 +31,7 @@ class AdminModulesControllerCore extends AdminController
 	/*
 	** @var array map with $_GET keywords and their callback
 	*/
-	private $map = array(
+	protected $map = array(
 		'install' => 'install',
 		'uninstall' => 'uninstall',
 		'configure' => 'getContent',
@@ -39,27 +39,27 @@ class AdminModulesControllerCore extends AdminController
 		'delete' => 'delete'
 	);
 
-	private $list_modules_categories = array();
-	private $list_partners_modules = array();
-	private $list_natives_modules = array();
+	protected $list_modules_categories = array();
+	protected $list_partners_modules = array();
+	protected $list_natives_modules = array();
 
-	private $nb_modules_total = 0;
-	private $nb_modules_installed = 0;
-	private $nb_modules_activated = 0;
+	protected $nb_modules_total = 0;
+	protected $nb_modules_installed = 0;
+	protected $nb_modules_activated = 0;
 
-	private $serial_modules = '';
-	private $modules_authors = array();
+	protected $serial_modules = '';
+	protected $modules_authors = array();
 
-	private $id_employee;
-	private $iso_default_country;
-	private $filter_configuration = array();
+	protected $id_employee;
+	protected $iso_default_country;
+	protected $filter_configuration = array();
 
- 	private $xml_modules_list = 'api.prestashop.com/xml/modules_list.xml';
-	private $addons_url = 'api.addons.prestashop.com';
-	private $logged_on_addons = false;
-	private $cache_file_modules_list = '/config/xml/modules_list.xml';
-	private $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
-	private $cache_file_customer_modules_list = '/config/xml/customer_modules_list.xml';
+ 	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list.xml';
+	protected $addons_url = 'api.addons.prestashop.com';
+	protected $logged_on_addons = false;
+	protected $cache_file_modules_list = '/config/xml/modules_list.xml';
+	protected $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
+	protected $cache_file_customer_modules_list = '/config/xml/customer_modules_list.xml';
 
 	/*
 	** Admin Modules Controller Constructor
@@ -779,7 +779,7 @@ class AdminModulesControllerCore extends AdminController
 	** Display Modules Lists
 	**
 	*/
-	private $translationsTab = array();
+	protected $translationsTab = array();
 	public function displayModuleOptions($module)
 	{	
 		if (!isset($this->translationsTab['Disable this module']))
