@@ -1164,10 +1164,17 @@ class CartCore extends ObjectModel
 			$this->_products = $this->getProducts(true);
 			$return = $this->update(true);
 			
-			// If there isn't any product left, remove all the cart rules associated
-			if (!$this->nbProducts())
-				$result = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id);
-				
+			// If there isn't any product left (which does not belong to a cart rule), remove all the cart rules associated to this cart
+			// Compare the quantity of products in the cart and the quantity of product offered (you can't simply compare the product itself, because the same product can be paid and free (2 products bought, 1 free))
+			$quantity_in_cart = 0;
+			if ($this->_products)
+				foreach ($this->_products as $product)
+					$quantity_in_cart += $product['cart_quantity'];
+			$count_free_products = Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'cart_cart_rule` ccr LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON ccr.id_cart_rule = cr.id_cart_rule WHERE `id_cart` = '.(int)$this->id.' AND gift_product != 0');
+			if ($quantity_in_cart <= $count_free_products)
+				foreach ($this->getCartRules() as $cart_rule)
+					$this->removeCartRule($cart_rule['id_cart_rule']);
+			
 			return $return;
 		}
 
