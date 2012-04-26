@@ -230,7 +230,6 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order($id_order);
 		$order_state = $order->getCurrentOrderState();
-		elog($order_state->invoice);
 		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
 			return '';
 
