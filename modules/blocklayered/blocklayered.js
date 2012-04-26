@@ -77,7 +77,7 @@ $(document).ready(function()
 		}, 500, this));
 	});
 
-	$('.radio').live('click', function() {
+	$('#layered_block_left .radio').live('click', function() {
 		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
 			if ($(item).hasClass('on') && $(item).attr('name') != name) {
@@ -88,9 +88,12 @@ $(document).ready(function()
 	});
 	
 	// Click on label
-	$('label a').live({
+	$('#layered_block_left label a').live({
 		click: function() {
-			if ($(this).parent().parent().find('input').attr('disabled') == '')
+			var disable = $(this).parent().parent().find('input').attr('disabled');
+			if (disable == ''
+			|| typeof(disable) == 'undefined'
+			|| disable == false)
 			{
 				$(this).parent().parent().find('input').click();
 				reloadContent();
