@@ -2706,12 +2706,12 @@ class ProductCore extends ObjectModel
 	 * @param array $product Array with ordered product (quantity, id_product_attribute if applicable)
 	 * @return mixed Query result
 	 */
-	public static function updateQuantity($product, $id_order = null)
+	public static function updateQuantity()
 	{
 		Tools::displayAsDeprecated();
 
 		return false;
-			}
+	}
 
 	/**
 	 * @deprecated since 1.5.0
@@ -2723,12 +2723,12 @@ class ProductCore extends ObjectModel
 	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
 	 *
 	 */
-	public static function reinjectQuantities(&$orderDetail, $quantity, Context $context = null)
+	public static function reinjectQuantities()
 	{
 		Tools::displayAsDeprecated();
 
 		return false;
-		}
+	}
 
 	public static function isAvailableWhenOutOfStock($out_of_stock)
 	{
