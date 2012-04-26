@@ -172,11 +172,19 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
 
 function smartyHook($params, &$smarty)
 {
-	if (isset($params['h']) && !empty($params['h']))
+	if (!empty($params['h']))
 	{
+		$id_module = null;
 		$hook_params = $params;
+		if (!empty($params['mod']))
+		{
+			$module = Module::getInstanceByName($params['mod']);
+			if ($module && $module->id)
+				$id_module = $module->id;
+			unset($hook_params['mod']);
+		}
 		unset($hook_params['h']);
-		return Hook::exec($params['h'], $hook_params);
+		return Hook::exec($params['h'], $hook_params, $id_module);
 	}
 }
 
