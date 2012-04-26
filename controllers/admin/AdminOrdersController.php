@@ -202,12 +202,14 @@ class AdminOrdersControllerCore extends AdminController
 				'desc' => $type,
 				'class' => 'process-icon-standardRefund'
 			);
-			$this->toolbar_btn['partial_refund'] = array(
-				'short' => 'Create',
-				'href' => '',
-				'desc' => $this->l('Partial refund'),
-				'class' => 'process-icon-partialRefund'
-			);
+			
+			if ($order->getCurrentOrderState()->paid)
+				$this->toolbar_btn['partial_refund'] = array(
+					'short' => 'Create',
+					'href' => '',
+					'desc' => $this->l('Partial refund'),
+					'class' => 'process-icon-partialRefund'
+				);
 		}
 		return parent::initToolbar();
 	}
@@ -228,6 +230,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order($id_order);
 		$order_state = $order->getCurrentOrderState();
+		elog($order_state->invoice);
 		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
 			return '';
 
