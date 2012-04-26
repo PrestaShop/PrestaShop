@@ -27,6 +27,7 @@
 
 class GuestTrackingControllerCore extends FrontController
 {
+	public $ssl = true;
 	public $php_self = 'guest-tracking';
 
 	/**
