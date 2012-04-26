@@ -406,7 +406,7 @@ class ShopCore extends ObjectModel
 	public function getUrls()
 	{
 		$sql = 'SELECT *
-				FROM '._DB_PREFIX.'shop_url
+				FROM '._DB_PREFIX_.'shop_url
 				WHERE active = 1
 					AND id_shop = '.(int)$this->id;
 		return Db::getInstance()->executeS($sql);
