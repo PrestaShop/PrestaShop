@@ -167,7 +167,7 @@ class AdminSuppliersControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Meta title:'),
-					'name' => 'smeta_title',
+					'name' => 'meta_title',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
