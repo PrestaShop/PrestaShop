@@ -510,10 +510,10 @@ class AdminShopControllerCore extends AdminController
 
 		$this->errors = array_unique($this->errors);
 		if (count($this->errors) > 0)
-        {
+		{
             $this->display = 'add';
             return;
-        }
+		}
 
 		// datas to import
 		$import_data = Tools::getValue('importData');
