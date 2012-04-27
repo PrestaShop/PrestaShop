@@ -744,164 +744,30 @@ class ToolsCore
 	}
 
 	/**
-	* Get meta tages for a given page
-	*
-	* @param integer $id_lang Language id
-	* @return array Meta tags
-	*/
+	 * @deprecated 1.5.0
+	 */
 	public static function getMetaTags($id_lang, $page_name, $title = '')
 	{
-		global $maintenance;
-
-		if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
-		{
-		 	/* Products specifics meta tags */
-			if ($id_product = Tools::getValue('id_product'))
-			{
-				$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
-						FROM `'._DB_PREFIX_.'product` p
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
-						'.Shop::addSqlAssociation('product', 'p').'
-						WHERE pl.id_lang = '.(int)$id_lang.'
-							AND pl.id_product = '.(int)$id_product.'
-							AND product_shop.active = 1';
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if ($row)
-				{
-					if (empty($row['meta_description']))
-						$row['meta_description'] = strip_tags($row['description_short']);
-					return Tools::completeMetaTags($row, $row['name']);
-				}
-			}
-
-			/* Categories specifics meta tags */
-			else if ($id_category = Tools::getValue('id_category'))
-			{
-				if (!empty($title))
-					$title = ' - '.$title;
-				$page_number = (int)Tools::getValue('p');
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
-				FROM `'._DB_PREFIX_.'category_lang` cl
-				WHERE cl.`id_lang` = '.(int)($id_lang).' AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl'));
-				if ($row)
-				{
-					if (empty($row['meta_description']))
-						$row['meta_description'] = strip_tags($row['description']);
-
-					// Paginate title
-					if (!empty($row['meta_title']))
-						$row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-					else
-						$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-
-					if (!empty($title))
-						$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-
-					return Tools::completeMetaTags($row, $row['name']);
-				}
-			}
-
-			/* Manufacturers specifics meta tags */
-			else if ($id_manufacturer = Tools::getValue('id_manufacturer'))
-			{
-				$page_number = (int)Tools::getValue('p');
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
-				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (ml.`id_manufacturer` = m.`id_manufacturer`)
-				WHERE ml.id_lang = '.(int)($id_lang).' AND ml.id_manufacturer = '.(int)($id_manufacturer));
-				if ($row)
-				{
-					if (empty($row['meta_description']))
-						$row['meta_description'] = strip_tags($row['meta_description']);
-					$row['meta_title'] .= $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '');
-					$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
-					return Tools::completeMetaTags($row, $row['meta_title']);
-				}
-			}
-
-			/* Suppliers specifics meta tags */
-			else if ($id_supplier = Tools::getValue('id_supplier'))
-			{
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'supplier_lang` sl
-				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (sl.`id_supplier` = s.`id_supplier`)
-				WHERE sl.id_lang = '.(int)($id_lang).' AND sl.id_supplier = '.(int)($id_supplier));
-
-				if ($row)
-				{
-					if (empty($row['meta_description']))
-						$row['meta_description'] = strip_tags($row['meta_description']);
-					if (!empty($row['meta_title']))
-						$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return Tools::completeMetaTags($row, $row['name']);
-				}
-			}
-
-			/* CMS specifics meta tags */
-			else if ($id_cms = Tools::getValue('id_cms'))
-			{
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'cms_lang`
-				WHERE id_lang = '.(int)($id_lang).' AND id_cms = '.(int)($id_cms));
-				if ($row)
-				{
-					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return Tools::completeMetaTags($row, $row['meta_title']);
-				}
-			}
-
-			/* CMS category specifics meta tags */
-			else if ($id_cms = Tools::getValue('id_cms_category'))
-			{
-				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'cms_category_lang`
-				WHERE id_lang = '.(int)($id_lang).' AND id_cms_category = '.(int)($id_cms));
-				if ($row)
-				{
-					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return Tools::completeMetaTags($row, $row['meta_title']);
-				}
-			}
-		}
-
-		/* Default meta tags */
-		return Tools::getHomeMetaTags($id_lang, $page_name);
+		Tools::displayAsDeprecated();
+		return Meta::getMetaTags($id_lang, $page_name, $title);
 	}
 
 	/**
-	* Get meta tags for a given page
-	*
-	* @param integer $id_lang Language id
-	* @return array Meta tags
-	*/
+	 * @deprecated 1.5.0
+	 */
 	public static function getHomeMetaTags($id_lang, $page_name)
 	{
-		/* Metas-tags */
-		$metas = Meta::getMetaByPage($page_name, $id_lang);
-		$ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'].' - '.Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
-		$ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
-		$ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] :  '';
-		return $ret;
+		Tools::displayAsDeprecated();
+		return Meta::getHomeMetas($id_lang, $page_name);
 	}
 
-
-	public static function completeMetaTags($metaTags, $defaultValue, Context $context = null)
+	/**
+	 * @deprecated 1.5.0
+	 */
+	public static function completeMetaTags($meta_tags, $default_value, Context $context = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
-		if (empty($metaTags['meta_title']))
-			$metaTags['meta_title'] = $defaultValue.' - '.Configuration::get('PS_SHOP_NAME');
-		if (empty($metaTags['meta_description']))
-			$metaTags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
-		if (empty($metaTags['meta_keywords']))
-			$metaTags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
-		return $metaTags;
+		Tools::displayAsDeprecated();
+		return Meta::completeMetaTags($meta_tags, $default_value, $context);
 	}
 
 	/**
