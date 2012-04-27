@@ -230,11 +230,13 @@
 				</form>
 				<hr />
 				{/if}
-
+				{if $order->hasBeenPaid()}
 				<p class="error" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
 					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
+					
 					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 				</p>
+				{/if}
 
 				<form id="formAddPayment" method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
