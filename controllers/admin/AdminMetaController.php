@@ -167,9 +167,25 @@ class AdminMetaControllerCore extends AdminController
 	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-		$pages = array();
-		foreach ($files as $file)
-			$pages[] = array('page' => $file);
+		$pages = array(
+			'common' => array(
+				'name' => $this->l('Default pages'),
+				'query' => array(),
+			),
+			'module' => array(
+				'name' => $this->l('Modules pages'),
+				'query' => array(),
+			),
+		);
+
+		foreach ($files as $name => $file)
+		{
+			$k = (preg_match('#^module-#', $file)) ? 'module' : 'common';
+			$pages[$k]['query'][] = array(
+				'id' => $file,
+				'page' => $name,
+			);
+		}
 
  		$this->fields_form = array(
 			'legend' => array(
@@ -185,10 +201,17 @@ class AdminMetaControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('Page:'),
 					'name' => 'page',
+
 					'options' => array(
-						'query' => $pages,
-						'id' => 'page',
-						'name' => 'page',
+						'optiongroup' => array(
+							'label' => 'name',
+							'query' => $pages,
+						),
+						'options' => array(
+							'id' => 'id',
+							'name' => 'page',
+							'query' => 'query',
+						),
 					),
 					'desc' => $this->l('Name of the related page'),
 					'required' => true,

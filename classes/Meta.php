@@ -67,7 +67,16 @@ class MetaCore extends ObjectModel
 
 		foreach ($files as $file)
 			if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
-				$selected_pages[] = strtolower(str_replace('Controller.php', '', $file));
+				$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
+
+		// Add modules controllers to list (this function is cool !)
+		foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
+		{
+			$filename = basename($file, '.php');
+			$module = basename(dirname(dirname(dirname($file))));
+			$selected_pages[$module.' - '.$filename] = 'module-'.$module.'-'.$filename;
+		}
+
 		// Exclude page already filled
 		if ($exclude_filled)
 		{
@@ -79,8 +88,11 @@ class MetaCore extends ObjectModel
 		// Add selected page
 		if ($add_page)
 		{
-			$selected_pages[] = $add_page;
-			sort($selected_pages);
+			$name = $add_page;
+			if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $add_page, $m))
+				$add_page = $m[1].' - '.$m[2];
+			$selected_pages[$add_page] = $name;
+			asort($selected_pages);
 		}
 		return $selected_pages;
 	}

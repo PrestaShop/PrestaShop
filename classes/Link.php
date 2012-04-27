@@ -306,7 +306,11 @@ class LinkCore
 		$params['module'] = $module;
 		$params['controller'] = $controller ? $controller : 'default';
 
-		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
+		// If the module has its own route ... just use it !
+		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller))
+			return $this->getPageLink('module-'.$module.'-'.$controller, $params);
+		else
+			return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
 	}
 
 	/**
