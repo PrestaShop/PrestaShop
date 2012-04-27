@@ -1179,7 +1179,6 @@ class AdminTranslationsControllerCore extends AdminController
 						if ($module_name)
 							$path = str_replace('{module}', $module_name, $path);
 						file_put_contents($path.$mail_name.'.'.$type_content, $content);
-						chmod($path.$mail_name.'.'.$type_content, 0777);
 					}
 					else
 						throw new PrestaShopException(Tools::displayError('HTML e-mail templates cannot contain JavaScript code.'));
