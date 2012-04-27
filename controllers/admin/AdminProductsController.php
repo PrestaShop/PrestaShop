@@ -3475,10 +3475,10 @@ class AdminProductsControllerCore extends AdminController
 			$shop_group = $this->context->shop->getGroup();
 
 			// if we are in all shops context, it's not possible to manage quantities at this level
-			if ($shop_context == Shop::CONTEXT_ALL)
+			if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL)
 				$show_quantities = false;
 			// if we are in group shop context
-			elseif ($shop_context == Shop::CONTEXT_GROUP)
+			elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP)
 			{
 				// if quantities are not shared between shops of the group, it's not possible to manage them at group level
 				if (!$shop_group->share_stock)
