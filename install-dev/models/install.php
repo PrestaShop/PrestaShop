@@ -426,7 +426,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$version = str_replace('.', '', _PS_VERSION_);
 		$version = substr($version, 0, 2);
 
-		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.$version.'/'.$data['shop_country'].'.xml');
+		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$data['shop_country'].'.xml');
 		if (!$localization_file_content)
 		{
 			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
