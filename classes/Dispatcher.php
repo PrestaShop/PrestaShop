@@ -445,6 +445,17 @@ class DispatcherCore
 	}
 
 	/**
+	 * Check if a route exists
+	 *
+	 * @param string $route_id
+	 * @return bool
+	 */
+	public function hasRoute($route_id)
+	{
+		return isset($this->routes[$route_id]);
+	}
+
+	/**
 	 * Check if a keyword is written in a route rule
 	 *
 	 * @param string $route_id
@@ -596,6 +607,14 @@ class DispatcherCore
 					if (!empty($route['params']))
 						foreach ($route['params'] as $k => $v)
 							$_GET[$k] = $v;
+
+					// A patch for module friendly urls
+					if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+					{
+						$_GET['module'] = $m[1];
+						$_GET['fc'] = 'module';
+						$controller = $m[2];
+					}
 
 					if (isset($_GET['fc']) && $_GET['fc'] == 'module')
 						$this->front_controller = self::FC_MODULE;
