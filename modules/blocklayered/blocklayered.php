@@ -1215,8 +1215,9 @@ class BlockLayered extends Module
 			{
 				if (!empty($val['title']))
 					$val['title'] = $val['title'].' ';
-				
-				foreach ($val['values'] as $value) {
+
+				foreach ($val['values'] as $value)
+				{
 					$title .= $category_title.' '.$val['title'].$value.' - ';
 					$description .= $category_title.' '.$val['title'].$value.', ';
 					$keywords .= $val['title'].$value.', ';
@@ -1227,8 +1228,11 @@ class BlockLayered extends Module
 		// Title attributes (ex: <attr1> <value1>/<value2>, <attr2> <value1>)
 		$description = strtolower(rtrim(substr($description, 0, -2)));
 		// kewords attributes (ex: <attr1> <value1>, <attr1> <value2>, <attr2> <value1>)
-		$category_metas = Tools::getMetaTags($id_lang, '', $title);
-		
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+			$category_metas = Meta::getMetaTags($id_lang, '', $title);
+		else
+			$category_metas = Tools::getMetaTags($id_lang, '', $title);
+
 		if (!empty($title))
 		{
 			$smarty->assign('meta_title', ucfirst(substr($category_metas['meta_title'], 3)));
@@ -1236,12 +1240,12 @@ class BlockLayered extends Module
 		}
 		else
 			$smarty->assign('meta_title', $category_metas['meta_title']);
-		
+
 		$keywords = substr(strtolower($keywords), 0, 1000);
 		if (!empty($keywords))
 			$smarty->assign('meta_keywords', rtrim($category_title.', '.$keywords.', '.$category_metas['meta_keywords'], ', '));
-		
-		if (version_compare(_PS_VERSION_,'1.5','>'))
+
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$this->context->controller->addJS(($this->_path).'blocklayered.js');
 			$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
@@ -1257,9 +1261,9 @@ class BlockLayered extends Module
 			Tools::addCSS(($this->_path).'blocklayered.css', 'all');
 			Tools::addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
 		}
-		
+
 		$filters = $this->getSelectedFilters();
-		
+
 		// Get non indexable attributes
 		$attribute_group_list = Db::getInstance()->executeS('SELECT id_attribute_group FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE indexable = 0');
 		// Get non indexable features
@@ -1267,7 +1271,7 @@ class BlockLayered extends Module
 
 		$attributes = array();
 		$features = array();
-		
+
 		$blacklist = array('weight', 'price');
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CDT'))
 			$blacklist[] = 'condition';
@@ -1275,16 +1279,17 @@ class BlockLayered extends Module
 			$blacklist[] = 'quantity';
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'))
 			$blacklist[] = 'manufacturer';
-		
+
 		foreach ($filters as $type => $val)
 		{
-			switch($type)
+			switch ($type)
 			{
 				case 'id_attribute_group':
 					foreach ($val as $attr)
 					{
 						$attr_id = preg_replace('/_\d+$/', '', $attr);
-						if (in_array($attr_id, $attributes) || in_array(array('id_attribute_group' => $attr_id), $attribute_group_list)) {
+						if (in_array($attr_id, $attributes) || in_array(array('id_attribute_group' => $attr_id), $attribute_group_list))
+						{
 							$smarty->assign('nobots', true);
 							$smarty->assign('nofollow', true);
 							return;
@@ -1296,7 +1301,8 @@ class BlockLayered extends Module
 					foreach ($val as $feat)
 					{
 						$feat_id = preg_replace('/_\d+$/', '', $feat);
-						if (in_array($feat_id, $features) || in_array(array('id_feature' => $feat_id), $feature_list)) {
+						if (in_array($feat_id, $features) || in_array(array('id_feature' => $feat_id), $feature_list))
+						{
 							$smarty->assign('nobots', true);
 							$smarty->assign('nofollow', true);
 							return;
@@ -1321,7 +1327,7 @@ class BlockLayered extends Module
 			}
 		}
 	}
-	
+
 	public function hookFooter($params)
 	{
 		if (basename($_SERVER['PHP_SELF']) == 'category.php')
@@ -1389,7 +1395,7 @@ class BlockLayered extends Module
 					Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)Tools::getValue('id_layered_filter'));
 					$this->buildLayeredCategories();
 				}
-				
+
 				if (Tools::getValue('scope') == 1)
 				{
 					Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'layered_filter');
@@ -1397,13 +1403,13 @@ class BlockLayered extends Module
 					foreach ($categories as $category)
 						$_POST['categoryBox'][] = (int)$category['id_category'];
 				}
-				
-				if (version_compare(_PS_VERSION_,'1.5','>'))
+
+				if (version_compare(_PS_VERSION_, '1.5', '>'))
 				{
 					$id_layered_filter = (int)$_POST['id_layered_filter'];
 					if (!$id_layered_filter)
 						$id_layered_filter = (int)Db::getInstance()->Insert_ID();
-					
+
 					$shop_list = array();
 					if (isset($_POST['checkBoxShopAsso_layered_filter']))
 					{
@@ -1421,19 +1427,19 @@ class BlockLayered extends Module
 				}
 				else
 					$shop_list = array(0);
-				
+
 				if (count($_POST['categoryBox']))
 				{
 					/* Clean categoryBox before use */
 					if (isset($_POST['categoryBox']) && is_array($_POST['categoryBox']))
 						foreach ($_POST['categoryBox'] as &$category_box_tmp)
 							$category_box_tmp = (int)$category_box_tmp;
-	
+
 					$filter_values = array();
 					foreach ($_POST['categoryBox'] as $idc)
 						$filter_values['categories'][] = (int)$idc;
 					$filter_values['shop_list'] = $shop_list;
-					
+
 					$values = false;
 					foreach ($_POST['categoryBox'] as $id_category_layered)
 					{
@@ -1447,16 +1453,15 @@ class BlockLayered extends Module
 									$type = Tools::getValue($key.'_filter_type');
 								if (Tools::getValue($key.'_filter_show_limit'))
 									$limit = Tools::getValue($key.'_filter_show_limit');
-								
+
 								$filter_values[$key] = array(
 									'filter_type' => (int)$type,
 									'filter_show_limit' => (int)$limit
 								);
 							}
 					}
-					
-				
-					if (version_compare(_PS_VERSION_,'1.5','>'))
+
+					if (version_compare(_PS_VERSION_, '1.5', '>'))
 					{
 						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
 						if (isset($assos))
@@ -1464,7 +1469,7 @@ class BlockLayered extends Module
 								Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter_shop (`id_layered_filter`, `id_shop`)
 									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
 					}
-					
+
 					$values_to_insert = array(
 						'name' => pSQL(Tools::getValue('layered_tpl_name')),
 						'filters' => pSQL(serialize($filter_values)),
@@ -1472,7 +1477,7 @@ class BlockLayered extends Module
 						'date_add' => date('Y-m-d H:i:s'));
 					if (isset($_POST['id_layered_filter']) && $_POST['id_layered_filter'])
 						$values_to_insert['id_layered_filter'] = (int)Tools::getValue('id_layered_filter');
-					
+
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'layered_filter', $values_to_insert, 'INSERT');
 					$this->buildLayeredCategories();
 					
@@ -1492,7 +1497,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_QTY', (int)Tools::getValue('ps_layered_filter_index_availability'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', (int)Tools::getValue('ps_layered_filter_index_condition'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
-			
+
 			$html .= '
 			<div class="conf">'.
 			(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').$this->l('Settings saved successfully').'
@@ -1509,7 +1514,7 @@ class BlockLayered extends Module
 			{
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$_GET['id_layered_filter'].' LIMIT 1');
 				$this->buildLayeredCategories();
-				
+
 				$html .= '
 				<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'
 					'.$this->l('Filter template deleted, categories updated (reverted to default Filter template).').'
@@ -1523,7 +1528,7 @@ class BlockLayered extends Module
 				</div>';
 			}
 		}
-		
+
 		$html .= '
 		<div id="ajax-message-ok" class="conf ajax-message" style="display: none">
 			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'<span class="message"></span>
@@ -1536,8 +1541,8 @@ class BlockLayered extends Module
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Indexes and caches').'</legend>
 			<span id="indexing-warning" style="display: none; color:red; font-weight: bold">'.$this->l('Indexing is in progress. Please do not leave this page').'<br/><br/></span>';
 
-		if (version_compare(_PS_VERSION_,'1.5','<') &&!Configuration::get('PS_LAYERED_INDEXED')
-			|| version_compare(_PS_VERSION_,'1.5','>') && !Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
+		if (version_compare(_PS_VERSION_, '1.5', '<') &&!Configuration::get('PS_LAYERED_INDEXED')
+			|| version_compare(_PS_VERSION_, '1.5', '>') && !Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			$html .= '
 			<script type="text/javascript">
 			$(document).ready(function() {
@@ -1550,12 +1555,12 @@ class BlockLayered extends Module
 		foreach (Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`') as $category)
 			if ($category['id_category'] != 1)
 				$category_ist[] = $category['id_category'];
-				
+
 		if (Tools::usingSecureMode())
 			$domain = Tools::getShopDomainSsl(true);
 		else
 			$domain = Tools::getShopDomain(true);
-			
+
 		$html .= '
 			<a class="bold ajaxcall-recurcive"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
@@ -1713,7 +1718,7 @@ class BlockLayered extends Module
 		<br />
 		<fieldset class="width4">
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Existing filter templates').'</legend>';
-	
+
 		$filters_templates = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
 		if (count($filters_templates))
 		{
@@ -1726,7 +1731,7 @@ class BlockLayered extends Module
 					<th>'.$this->l('Created on').'</th>
 					<th>'.$this->l('Actions').'</th>
 				</tr>';
-				
+
 			foreach ($filters_templates as $filters_template)
 			{
 				/* Clean request URI first */
@@ -1747,13 +1752,13 @@ class BlockLayered extends Module
 					</td>
 				</tr>';
 			}
-				
+
 			$html .= '
 			</table>';
 		}
 		else
 			$html .= $this->l('No filter template found.');
-			
+
 		$html .= '
 		</fieldset><br />
 		<fieldset class="width4">
