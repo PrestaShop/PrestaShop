@@ -50,10 +50,10 @@ class AdminTranslationsControllerCore extends AdminController
 	/** @var array : List of folder which must be ignored */
 	protected $ignore_folder = array('.', '..', '.svn', '.htaccess', 'index.php');
 
-	/** @var array : List of theme by translation type : FRONT, BACK, ERRRORS... */
+	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
 	protected $translations_informations = array();
 
-	/** @var array : List of theme by translation type : FRONT, BACK, ERRRORS... */
+	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
 	protected $translations_type_for_theme = array('front', 'modules', 'pdf', 'mails');
 
 	/** @var array : List of all languages */
@@ -400,7 +400,6 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!in_array($mail_to_add, $this->ignore_folder))
 				@copy(_PS_MAIL_DIR_.'en/'.$mail_to_add, _PS_MAIL_DIR_.$iso_code.'/'.$mail_to_add);
 
-
 		// 2 - Scan modules files
 		$modules = scandir(_PS_MODULE_DIR_);
 
@@ -437,13 +436,14 @@ class AdminTranslationsControllerCore extends AdminController
 			$file_iso_code = str_replace('ISO_CODE', $iso_code, $file);
 			$dir_iso_code = substr($file_iso_code, 0, -(strlen($file_iso_code) - strrpos($file_iso_code, '/') - 1));
 
-			if (!Tools::file_exists_cache($dir_iso_code))
+			if (!file_exists($dir_iso_code))
 				mkdir($dir_iso_code);
 
 			if (Tools::file_exists_cache($file_en))
 				copy($file_en, $file_iso_code);
 		}
 	}
+
 	public function submitImportLang()
 	{
 		if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name'])
@@ -1002,13 +1002,11 @@ class AdminTranslationsControllerCore extends AdminController
 		else if (Tools::isSubmit('submitTranslationsPdf'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
-		 	{
 				// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
 				if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
 					$this->writeTranslationFile();
 				else
 					$this->writeTranslationFile(true);
-			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
@@ -1341,7 +1339,6 @@ class AdminTranslationsControllerCore extends AdminController
 						{
 							// Caution ! front has underscore between prefix key and md5, back has not
 							if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)]))
-								// @todo check if stripslashes is needed, it wasn't present in 1.4
 								$new_lang[$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
 							else
 							{
@@ -1796,7 +1793,6 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-			// @todo : allow to translate when english is missing
 			$this->warnings[] = sprintf(Tools::displayError('mail directory exists for %1$s but not for english in %2$s'),
 				$this->lang_selected->iso_code, str_replace(_PS_ROOT_DIR_, '', $dir));
 		return $arr_return;
@@ -1869,8 +1865,8 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$str_return .= '
 						<div class="label-subject">
-							<b>'.sprintf($this->l('No Subject was found for %s, or subject is generated in database.'), '<em>'.$mail_name.'</em>').'</b>'
-						.'</div>';
+							<b>'.sprintf($this->l('No Subject was found for %s, or subject is generated in database.'), '<em>'.$mail_name.'</em>').'</b>
+						</div>';
 					}
 					if (key_exists('html', $mail_files))
 					{
@@ -2053,7 +2049,6 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($modules_has_mails as $module_name => $module_path)
 		{
 			$module_mails[$module_name] = $this->getMailFiles($module_path.'mails/'.$this->lang_selected->iso_code.'/', 'module_mail');
-			// @todo : all subjects (for core and modules name) are currently saved in mails/$this->lang_selected->iso_code/lang.php instead of module directory
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
 			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), sprintf($this->l('E-mails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
 		}
