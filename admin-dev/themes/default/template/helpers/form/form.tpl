@@ -69,7 +69,7 @@
 														<script type="text/javascript">
 															$().ready(function () {
 																var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
-																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
+																$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag' js='0'}{literal}'});
 																$({/literal}'#{$table}{literal}_form').submit( function() {
 																	$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 																});
