@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>homeslider</name>
-            <displayName><![CDATA[Image slider for your homepage]]></displayName>
+            <displayName><![CDATA[Carousel d&#039;image (slider) pour votre page d&#039;accueil]]></displayName>
             <version><![CDATA[1.2]]></version>
-            <description><![CDATA[Adds an image slider to your homepage.]]></description>
+            <description><![CDATA[Ajouter un carousel d&#039;images &agrave; votre page d&#039;accueil]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
