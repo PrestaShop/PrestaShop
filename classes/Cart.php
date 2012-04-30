@@ -2474,7 +2474,8 @@ class CartCore extends ObjectModel
 
 		// Additional Shipping Cost per product
 		foreach ($products as $product)
-			$shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
+			if (!$product['is_virtual'])
+				$shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
 
 		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)$this->id_currency));
 

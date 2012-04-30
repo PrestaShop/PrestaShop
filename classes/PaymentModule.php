@@ -139,90 +139,96 @@ abstract class PaymentModuleCore extends Module
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
 					foreach ($data['package_list'] as $id_package)
 					{
-						$product_list = $package_list[$id_address][$id_package]['product_list'];
-						$carrier = new Carrier($id_carrier, $cart->id_lang);
-						$order = new Order();
-						$order->id_carrier = (int)$carrier->id;
-						$order->id_customer = (int)$cart->id_customer;
-						$order->id_address_invoice = (int)$cart->id_address_invoice;
-						$order->id_address_delivery = (int)$id_address;
-						$order->id_currency = $id_currency;
-						$order->id_lang = (int)$cart->id_lang;
-						$order->id_cart = (int)$cart->id;
-						$order->reference = $reference;
-
-						$order->id_shop = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id : $cart->id_shop);
-						$order->id_shop_group = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id_shop_group : $cart->id_shop_group);
-
-						$customer = new Customer($order->id_customer);
-						$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));
-						$order->payment = $payment_method;
-						if (isset($this->name))
-							$order->module = $this->name;
-						$order->recyclable = $cart->recyclable;
-						$order->gift = (int)$cart->gift;
-						$order->gift_message = $cart->gift_message;
-						$order->conversion_rate = $currency->conversion_rate;
-						$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
-						$order->total_paid_real = 0;
-						$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
-						$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
-
-						$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
-						$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
-						$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
-
-						$order->total_shipping = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
-						$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$id_carrier, false, null, $product_list, $id_carrier);
-						$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
-
-						if (Validate::isLoadedObject($carrier))
-							$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-
-						$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
-						$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
-						$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
-
-						$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
-						$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $id_carrier), 2);
-						$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
-
-						$order->invoice_date = '0000-00-00 00:00:00';
-						$order->delivery_date = '0000-00-00 00:00:00';
-
-						// Creating order
-						$result = $order->add();
-
-						// Register Payment only if the order status validate the order
-						if ($result && $order_status->logable)
-						{
-							if (!$order->addOrderPayment($amount_paid))
-								throw new PrestaShopException('Can\'t save Order Payment');
-						}
-
-						// Amount paid by customer is not the right one -> Status = payment error
-						// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
-						// if ($order->total_paid != $order->total_paid_real)
-						// We use number_format in order to compare two string
-						if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($order->total_paid_real, 2))
-							$id_order_state = Configuration::get('PS_OS_ERROR');
-
-						$order_list[] = $order;
-
-						// Insert new Order detail list using cart for the current order
-						$order_detail = new OrderDetail(null, null, $this->context);
-						$order_detail->createList($order, $cart, $id_order_state, $product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
-						$order_detail_list[] = $order_detail;
-
-						// Adding an entry in order_carrier table
-						$order_carrier = new OrderCarrier();
-						$order_carrier->id_order = (int)$order->id;
-						$order_carrier->id_carrier = (int)$carrier->id;
-						$order_carrier->weight = (float)$order->getTotalWeight();
-						$order_carrier->shipping_cost_tax_excl = (float)$order->total_shipping_tax_excl;
-						$order_carrier->shipping_cost_tax_incl = (float)$order->total_shipping_tax_incl;
-						$order_carrier->add();
+						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
 					}
+			
+			foreach ($package_list as $id_address => $packageByAddress)
+				foreach ($packageByAddress as $id_package => $package)
+				{
+					$product_list = $package['product_list'];
+					$carrier = new Carrier($package['id_carrier'], $cart->id_lang);
+					$order = new Order();
+					$order->id_carrier = (int)$carrier->id;
+					$order->id_customer = (int)$cart->id_customer;
+					$order->id_address_invoice = (int)$cart->id_address_invoice;
+					$order->id_address_delivery = (int)$id_address;
+					$order->id_currency = $id_currency;
+					$order->id_lang = (int)$cart->id_lang;
+					$order->id_cart = (int)$cart->id;
+					$order->reference = $reference;
+
+					$order->id_shop = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id : $cart->id_shop);
+					$order->id_shop_group = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id_shop_group : $cart->id_shop_group);
+
+					$customer = new Customer($order->id_customer);
+					$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));
+					$order->payment = $payment_method;
+					if (isset($this->name))
+						$order->module = $this->name;
+					$order->recyclable = $cart->recyclable;
+					$order->gift = (int)$cart->gift;
+					$order->gift_message = $cart->gift_message;
+					$order->conversion_rate = $currency->conversion_rate;
+					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
+					$order->total_paid_real = 0;
+					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
+					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
+
+					$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
+					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
+					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
+
+					$order->total_shipping = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
+					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$id_carrier, false, null, $product_list, $id_carrier);
+					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
+
+					if (Validate::isLoadedObject($carrier))
+						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+					$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
+					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
+					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
+
+					$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $id_carrier), 2);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
+
+					$order->invoice_date = '0000-00-00 00:00:00';
+					$order->delivery_date = '0000-00-00 00:00:00';
+
+					// Creating order
+					$result = $order->add();
+
+					// Register Payment only if the order status validate the order
+					if ($result && $order_status->logable)
+					{
+						if (!$order->addOrderPayment($amount_paid))
+							throw new PrestaShopException('Can\'t save Order Payment');
+					}
+
+					// Amount paid by customer is not the right one -> Status = payment error
+					// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+					// if ($order->total_paid != $order->total_paid_real)
+					// We use number_format in order to compare two string
+					if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($order->total_paid_real, 2))
+						$id_order_state = Configuration::get('PS_OS_ERROR');
+
+					$order_list[] = $order;
+
+					// Insert new Order detail list using cart for the current order
+					$order_detail = new OrderDetail(null, null, $this->context);
+					$order_detail->createList($order, $cart, $id_order_state, $product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
+					$order_detail_list[] = $order_detail;
+
+					// Adding an entry in order_carrier table
+					$order_carrier = new OrderCarrier();
+					$order_carrier->id_order = (int)$order->id;
+					$order_carrier->id_carrier = (int)$carrier->id;
+					$order_carrier->weight = (float)$order->getTotalWeight();
+					$order_carrier->shipping_cost_tax_excl = (float)$order->total_shipping_tax_excl;
+					$order_carrier->shipping_cost_tax_incl = (float)$order->total_shipping_tax_incl;
+					$order_carrier->add();
+				}
 
 			// Next !
 			$only_one_gift = false;
