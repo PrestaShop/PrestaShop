@@ -258,9 +258,7 @@ class SupplyOrderCore extends ObjectModel
 
 		$query->select('
 			s.*,
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed,
-			p.reference as reference,
-			p.ean13 as ean13');
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed');
 
 		$query->from('supply_order_detail', 's');
 
