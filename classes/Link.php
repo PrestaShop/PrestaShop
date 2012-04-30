@@ -110,7 +110,7 @@ class LinkCore
 			$params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
 
 		if ($dispatcher->hasKeyword('product_rule', 'price'))
-			$params['supplier'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
+			$params['price'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
 
 		if ($dispatcher->hasKeyword('product_rule', 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
@@ -151,10 +151,10 @@ class LinkCore
 		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($category->meta_title);
-		
+
 		// Selected filters is used by the module blocklayered
 		$selected_filters = is_null($selected_filters) ? Tools::getValue('selected_filters') : $selected_filters;
-		
+
 		if (empty($selected_filters))
 			$rule = 'category_rule';
 		else
@@ -444,7 +444,7 @@ class LinkCore
 
 	/**
 	 * Get pagination link
-	 * 
+	 *
 	 * @param string $type Controller name
 	 * @param int $id_object
 	 * @param boolean $nb Show nb element per page attribute
@@ -505,14 +505,14 @@ class LinkCore
 				}
 			}
 		}
-		
+
 		if (!$array)
 			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars);
 		$vars['requestUrl'] = $url;
-		
+
 		if (!$this->allow == 1)
 			$vars['controller'] = Dispatcher::getInstance()->getController();
-		
+
 		if ($type && $id_object)
 			$vars['id_'.$type] = (is_object($id_object) ? (int)$id_object->id : (int)$id_object);
 		return $vars;
