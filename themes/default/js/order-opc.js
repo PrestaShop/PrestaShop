@@ -276,7 +276,6 @@ function saveAddress(type)
 				// update addresses id
 				$('input#opc_id_address_delivery').val(jsonData.id_address_delivery);
 				$('input#opc_id_address_invoice').val(jsonData.id_address_invoice);
-	
 				result = true;
 			}
 		},
@@ -470,8 +469,8 @@ $(function() {
 				var callingFile = orderOpcUrl;
 				var params = 'method=editCustomer&';
 			}
-			
-			$('#opc_account_form input:visible').each(function() {
+
+			$('#opc_account_form input:visible, #opc_account_form input[type=hidden]').each(function() {
 				if ($(this).is('input[type=checkbox]'))
 				{
 					if ($(this).is(':checked'))
