@@ -2423,7 +2423,7 @@ class ProductCore extends ObjectModel
 		}
 		$result = self::$_pricesLevel2[$cache_id_2];
 
-		if (!$specific_price)
+		if (!$specific_price || $specific_price['price'] <= 0)
 			$price = (float)$result['price'];
 		else
 			$price = (float)$specific_price['price'];
