@@ -65,8 +65,8 @@ class HomeSlider extends Module
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
 			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
-			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '1300');
-			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '7700');
+			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '500');
+			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '3000');
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', '1');
 			/* Creates tables */
 			$res &= $this->createTables();

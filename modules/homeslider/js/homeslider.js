@@ -25,15 +25,14 @@
 */
 
 $(function(){
-	
-	if (!homeslider_speed == undefined)
-		var homeslider_speed = 300;
-	if (!homeslider_pause == undefined)
-		var homeslider_pause = 6000;
-	
-	if (typeof(homeslider_loop) == 'undefined') 
+
+	if (typeof(homeslider_speed) == 'undefined')
+		homeslider_speed = 500;
+	if (typeof(homeslider_pause) == 'undefined')
+		homeslider_pause = 3000;
+	if (typeof(homeslider_loop) == 'undefined')
 		homeslider_loop = true;
-	
+
 	$('#homeslider').bxSlider({
 		infiniteLoop: homeslider_loop,
 		hideControlOnEnd: true,
