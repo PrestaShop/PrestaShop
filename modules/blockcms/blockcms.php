@@ -603,14 +603,9 @@ class BlockCms extends Module
 		else if (Tools::isSubmit('deleteBlockCMS') && Tools::getValue('id_cms_block'))
 		{
 			$id_cms_block = Tools::getvalue('id_cms_block');
-			$old_block = BlockCMSModel::getBlockCMS($id_cms_block);
 
-			if (count($old_block))
+			if ($id_cms_block)
 			{
-				$location = $old_block[1]['location'];
-				$position = $old_block[1]['position'];
-
-				BlockCMSModel::updateCMSBlockPositions($id_cms_block, $position, $position - 1, $location);
 				BlockCMSModel::deleteCMSBlock((int)$id_cms_block);
 				BlockCMSModel::deleteCMSBlockPage((int)$id_cms_block);
 
