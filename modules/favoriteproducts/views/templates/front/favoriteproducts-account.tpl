@@ -30,10 +30,10 @@ $('document').ready(function()
 	$('img[rel^=ajax_id_favoriteproduct_]').click(function()
 	{
 		var idFavoriteProduct =  $(this).attr('rel').replace('ajax_id_favoriteproduct_', '');
-		var parent = $(this).parent().parent(); 
-		
+		var parent = $(this).parent().parent();
+
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'])}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
 			type: "POST",
 			data: {
 				'id_product': idFavoriteProduct
@@ -75,7 +75,7 @@ $('document').ready(function()
 	{else}
 		<p class="warning">{l s='No favorite products yet.' mod='favoriteproducts'}</p>
 	{/if}
-	
+
 	<ul class="footer_links">
 		<li class="fleft"><a href="{$link->getPageLink('my-account.php', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account.php', true)}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
 	</ul>
