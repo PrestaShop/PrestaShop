@@ -64,8 +64,6 @@ class AddressControllerCore extends FrontController
 			else if (Tools::getValue('type') == 'invoice' && isset($this->context->cart->id_address_invoice)
 						&& $this->context->cart->id_address_invoice != $this->context->cart->id_address_delivery)
 				$id_address = (int)$this->context->cart->id_address_invoice;
-			else
-				exit;
 		}
 		else
 			$id_address = (int)Tools::getValue('id_address', 0);
@@ -189,7 +187,7 @@ class AddressControllerCore extends FrontController
 			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
 
 		// Don't continue this process if we have errors !
-		if ($this->errors && !Tools::isSubmit('ajax'))
+		if ($this->errors && !$this->ajax)
 			return;
 
 		// If we edit this address, delete old address and create a new one

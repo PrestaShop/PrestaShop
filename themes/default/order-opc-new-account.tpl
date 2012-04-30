@@ -25,7 +25,7 @@
 			</div>
 		</fieldset>
 	</form>
-	<form action="#" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
+	<form action="javascript:;" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
 		<fieldset>
 			<h3 id="new_account_title">{l s='New Customer'}</h3>
 			<div id="opc_account_choice">
