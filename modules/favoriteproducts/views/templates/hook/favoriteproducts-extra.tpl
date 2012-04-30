@@ -28,7 +28,7 @@
 $('document').ready(function(){
 	$('#favoriteproducts_block_extra_add').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'])}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], true)}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -39,14 +39,14 @@ $('document').ready(function(){
 			    	$('#favoriteproducts_block_extra_add').slideUp(function() {
 			    		$('#favoriteproducts_block_extra_added').slideDown("slow");
 			    	});
-			    	
+
 				}
 		 	}
 		});
 	});
 	$('#favoriteproducts_block_extra_remove').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'])}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -64,7 +64,7 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_added').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'])}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -82,7 +82,7 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_removed').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'])}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], true)}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
