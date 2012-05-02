@@ -67,7 +67,7 @@
 											<dd>{$module->categoryName}</dd>
 										</dl>
 									</div>
-									<p class="desc">{l s='Description'} : {$module->description}</p>
+									<p class="desc">{if isset($module->description) && $module->description ne ''}{l s='Description'} : {$module->description}{else}&nbsp;{/if}</p>
 									{if isset($module->message)}<div class="conf">{$module->message}</div>{/if}
 									<div class="row-actions-module">
 										{if !isset($module->not_on_disk)}{$module->optionsHtml}{else}&nbsp;{/if}
