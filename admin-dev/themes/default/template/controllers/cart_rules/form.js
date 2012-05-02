@@ -223,13 +223,13 @@ $('#cart_rule_form').submit(function() {
 		else
 		{
 			$('#' + restrictions[i] + '_select_2 option').each(function(i) {
-				$(this).attr('selected', 'selected');
+				$(this).attr('selected', true);
 			});
 		}
 	}
 	
 	$('.product_rule_toselect option').each(function(i) {
-		$(this).attr('selected', 'selected');
+		$(this).attr('selected', true);
 	});
 });
 	

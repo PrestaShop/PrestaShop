@@ -97,7 +97,7 @@
 		if (!val || val == {$smarty.const._PS_ADMIN_PROFILE_})
 		{
 			$('.assoShop input[type=checkbox]').attr('disabled', true);
-			$('.assoShop input[type=checkbox]').attr('checked', 'checked');
+			$('.assoShop input[type=checkbox]').attr('checked', true);
 		}
 		else
 			$('.assoShop input[type=checkbox]').attr('disabled', false);

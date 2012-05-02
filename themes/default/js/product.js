@@ -703,7 +703,7 @@ function checkUrl()
 						count++;
 						// add class 'selected' to the selected color
 						$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
-						$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
+						$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', true);
 						$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
 					}

@@ -77,7 +77,7 @@
 			else
 			{
 				$(elt).addClass('select_all').removeClass('unselect_all');
-				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').attr('checked', 'checked');
+				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').attr('checked', true);
 				$(elt).html('{l s='Unselect all'}');
 			}
 		}
