@@ -53,7 +53,7 @@ function ProductTabsManager(){
 	 */
 	this.onLoad = function (tab_name, callback)
 	{
-		container = $('#product-tab-content-' + tab_name);
+		var container = $('#product-tab-content-' + tab_name);
 		// Some containers are not loaded depending on the shop configuration
 		if (container.length === 0)
 			return;
