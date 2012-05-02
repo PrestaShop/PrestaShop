@@ -3,7 +3,7 @@
             <name>blockbestsellers</name>
             <displayName><![CDATA[Top seller block]]></displayName>
             <version><![CDATA[1.1]]></version>
-            <description><![CDATA[Add a block displaying the shop\&#039;s top sellers.]]></description>
+            <description><![CDATA[Add a block displaying the shop&#039;s top sellers.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
