@@ -791,7 +791,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			case 'front':
 					// Parsing file in Front office
-					$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?\}/U';
+					$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?\}/U';
 				break;
 
 			case 'back':
