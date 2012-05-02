@@ -70,76 +70,76 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_product_attribute_shop` (`id_product_attribute`, `id_shop`, `wholesale_price`, `price`, `ecotax`, `weight`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date`) (SELECT `id_product_attribute`, (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_SHOP_DEFAULT'), `wholesale_price`, `price`, `ecotax`, `weight`, `unit_price_impact`, `default_on`, `minimal_quantity`, `available_date` FROM `PREFIX_product_attribute`);
 
-INSERT INTO `PREFIX_attribute_shop` (`id_attribute`, `id_shop`) (SELECT a.id_attribute, c.id_shop FROM PREFIX_attribute_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_attribute_shop` (
 `id_attribute` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id_attribute`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_attribute_shop` (`id_attribute`, `id_shop`) (SELECT a.id_attribute, c.id_shop FROM PREFIX_attribute_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_attribute_group_shop`;
 
-INSERT INTO `PREFIX_feature_shop` (`id_feature`, `id_shop`) (SELECT a.id_feature, c.id_shop FROM PREFIX_feature_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_feature_shop` (
 `id_feature` INT(11) UNSIGNED NOT NULL,
 `id_shop` INT(11) UNSIGNED NOT NULL ,
 	PRIMARY KEY (`id_feature`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_feature_shop` (`id_feature`, `id_shop`) (SELECT a.id_feature, c.id_shop FROM PREFIX_feature_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_feature_group_shop`;
 
-INSERT INTO `PREFIX_group_shop` (`id_group`, `id_shop`) (SELECT a.id_group, c.id_shop FROM PREFIX_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id_group`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_group_shop` (`id_group`, `id_shop`) (SELECT a.id_group, c.id_shop FROM PREFIX_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_group_group_shop`;
 
-INSERT INTO `PREFIX_attribute_group_shop` (`id_attribute_group`, `id_shop`) (SELECT a.id_attribute_group, c.id_shop FROM PREFIX_attribute_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_attribute_group_shop` (
 `id_attribute_group` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
 	PRIMARY KEY (`id_attribute_group`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_attribute_group_shop` (`id_attribute_group`, `id_shop`) (SELECT a.id_attribute_group, c.id_shop FROM PREFIX_attribute_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_attribute_group_group_shop`;
 
-INSERT INTO `PREFIX_tax_rules_group_shop` (`id_tax_rules_group`, `id_shop`) (SELECT a.id_tax_rules_group, c.id_shop FROM PREFIX_tax_rules_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_tax_rules_group_shop` (
 	`id_tax_rules_group` INT( 11 ) UNSIGNED NOT NULL,
 	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	PRIMARY KEY (`id_tax_rules_group`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_tax_rules_group_shop` (`id_tax_rules_group`, `id_shop`) (SELECT a.id_tax_rules_group, c.id_shop FROM PREFIX_tax_rules_group_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_tax_rules_group_group_shop`;
 
-INSERT INTO `PREFIX_zone_shop` (`id_zone`, `id_shop`) (SELECT a.id_zone, c.id_shop FROM PREFIX_zone_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_zone_shop` (
 `id_zone` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
 	PRIMARY KEY (`id_zone`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_zone_shop` (`id_zone`, `id_shop`) (SELECT a.id_zone, c.id_shop FROM PREFIX_zone_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_zone_group_shop`;
 
-INSERT INTO `PREFIX_manufacturer_shop` (`id_manufacturer`, `id_shop`) (SELECT a.id_manufacturer, c.id_shop FROM PREFIX_manufacturer_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_manufacturer_shop` (
 `id_manufacturer` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
 	PRIMARY KEY (`id_manufacturer`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_manufacturer_shop` (`id_manufacturer`, `id_shop`) (SELECT a.id_manufacturer, c.id_shop FROM PREFIX_manufacturer_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_manufacturer_group_shop`;
 
-INSERT INTO `PREFIX_supplier_shop` (`id_supplier`, `id_shop`) (SELECT a.id_supplier, c.id_shop FROM PREFIX_supplier_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 CREATE TABLE `PREFIX_supplier_shop` (
 `id_supplier` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
 PRIMARY KEY (`id_supplier`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_supplier_shop` (`id_supplier`, `id_shop`) (SELECT a.id_supplier, c.id_shop FROM PREFIX_supplier_group_shop a LEFT JOIN PREFIX_shop_group b ON a.id_group_shop = b.id_shop_group INNER JOIN PREFIX_shop c ON b.id_shop_group = c.id_shop_group);
 DROP TABLE `PREFIX_supplier_group_shop`;
 
 ALTER TABLE `PREFIX_product_download` DROP COLUMN `id_product_attribute`;
