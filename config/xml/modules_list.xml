@@ -9,7 +9,10 @@
 		<module name="blockcart"/>
 		<module name="blockcategories"/>
 		<module name="blockcms"/>
+		<module name="blockcontact"/>
+		<module name="blockcontactinfos"/>
 		<module name="blockcurrencies"/>
+		<module name="blockcustomerprivacy"/>
 		<module name="blocklanguages"/>
 		<module name="blocklayered"/>
 		<module name="blocklink"/>
@@ -19,12 +22,16 @@
 		<module name="blocknewsletter"/>
 		<module name="blockpaymentlogo"/>
 		<module name="blockpermanentlinks"/>
+		<module name="blockreinsurance"/>
 		<module name="blockrss"/>
 		<module name="blocksearch"/>
+		<module name="blocksharefb"/>
+		<module name="blocksocial"/>
 		<module name="blockspecials"/>
 		<module name="blockstore"/>
 		<module name="blocksupplier"/>
 		<module name="blocktags"/>
+		<module name="blocktopmenu"/>
 		<module name="blockuserinfo"/>
 		<module name="blockviewed"/>
 		<module name="blockwishlist"/>
@@ -34,6 +41,7 @@
 		<module name="crossselling"/>
 		<module name="dateofdelivery"/>
 		<module name="editorial"/>
+		<module name="favoriteproducts"/>
 		<module name="feeder"/>
 		<module name="followup"/>
 		<module name="gadsense"/>
@@ -46,6 +54,7 @@
 		<module name="gridhtml"/>
 		<module name="gsitemap"/>
 		<module name="homefeatured"/>
+		<module name="homeslider"/>
 		<module name="importerosc"/>
 		<module name="livezilla"/>
 		<module name="loyalty"/>
