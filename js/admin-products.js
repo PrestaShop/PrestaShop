@@ -740,12 +740,12 @@ product_tabs['Informations'] = new function(){
 		$("#available_for_order").click(function(){
 			if ($(this).is(':checked') || !$('input[name=\'multishop_check[show_price]\']').prop('checked'))
 			{
-				$('#show_price').attr('checked', 'checked');
-				$('#show_price').attr('disabled', 'disabled');
+				$('#show_price').attr('checked', true);
+				$('#show_price').attr('disabled', true);
 			}
 			else
 			{
-				$('#show_price').attr('disabled', '');
+				$('#show_price').attr('disabled', false);
 			}
 		});
 	};
@@ -782,17 +782,17 @@ product_tabs['Informations'] = new function(){
 	this.switchProductType = function(){
 		if (product_type == product_type_pack)
 		{
-			$('#pack_product').attr('checked', 'checked');
+			$('#pack_product').attr('checked', true);
 		}
 		else if (product_type == product_type_virtual)
 		{
-			$('#virtual_product').attr('checked', 'checked');
-			$('#condition').attr('disabled', 'disabled');
-			$('#condition option[value=new]').attr('selected', 'selected');
+			$('#virtual_product').attr('checked', true);
+			$('#condition').attr('disabled', true);
+			$('#condition option[value=new]').attr('selected', true);
 		}
 		else
 		{
-			$('#simple_product').attr('checked', 'checked');
+			$('#simple_product').attr('checked', true);
 		}
 
 		$('input[name="type_product"]').live('click', function()
@@ -813,11 +813,11 @@ product_tabs['Informations'] = new function(){
 			{
 				//when you change the type of the product, directly go to the pack tab
 				$('li.tab-row a[id*="Pack"]').show().click();
-				$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+				$('#ppack').val(1).attr('checked', true).attr('disabled', true);
 				$('#ppackdiv').show();
 				// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
 				$("#product-tab-content-Pack").bind('loaded', function(){
-					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+					$('#ppack').val(1).attr('checked', true).attr('disabled', true);
 					$('#ppackdiv').show();
 				});
 				$("#product-tab-content-Quantities").bind('loaded', function(){
@@ -834,7 +834,7 @@ product_tabs['Informations'] = new function(){
 			{
 				if (has_combinations)
 				{
-					$('#simple_product').attr('checked', 'checked');
+					$('#simple_product').attr('checked', true);
 					$('#warn_virtual_combinations').show();
 				}
 				else
@@ -854,7 +854,7 @@ product_tabs['Informations'] = new function(){
 					$('li.tab-row a[id*="Shipping"]').hide();
 
 					tabs_manager.onLoad('Informations', function(){
-						$('#condition').attr('disabled', 'disabled');
+						$('#condition').attr('disabled', true);
 						$('#condition option[value=refurbished]').removeAttr('selected');
 						$('#condition option[value=used]').removeAttr('selected');
 					});
@@ -905,7 +905,7 @@ product_tabs['Pack'] = new function(){
 	this.bindPackEvents = function (){
 		if ($('#ppack').prop('checked'))
 		{
-			$('#ppack').attr('disabled', 'disabled');
+			$('#ppack').attr('disabled', true);
 			$('#ppackdiv').show();
 		}
 

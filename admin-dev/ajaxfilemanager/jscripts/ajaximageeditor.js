@@ -394,7 +394,7 @@
 	
 	function disableConstraint()
 	{
-		$('#constraint').attr('disabled', 'disabled');
+		$('#constraint').attr('disabled', true);
 	};
 	function ShowHandlers()
 	{
@@ -496,7 +496,7 @@
 	*/
 	function cancelChangeMode()
 	{
-		$('#formAction input[@value=' + $('#image_mode').val() + ']').attr('checked', 'checked');	
+		$('#formAction input[@value=' + $('#image_mode').val() + ']').attr('checked', true);
 	};
 	/**
 	*	get the image element which is going to be modified
@@ -669,7 +669,7 @@ function toggleDisabledButton(buttonId, forceDisable)
 		if(forceDisable && currentClass == 'button')
 		{
 			newClass = 'disabledButton';
-			$(disabledButton).attr('disabled', 'disabled');				
+			$(disabledButton).attr('disabled', true);
 		}else if(!forceDisable && currentClass == 'disabledButton')
 		{
 			newClass = 'button';
@@ -684,7 +684,7 @@ function toggleDisabledButton(buttonId, forceDisable)
 	else if(currentClass == 'button')
 	{
 		newClass = 'disabledButton';
-		$(disabledButton).attr('disabled', 'disabled');	
+		$(disabledButton).attr('disabled', true);
 	}else
 	{
 		newClass = 'button';

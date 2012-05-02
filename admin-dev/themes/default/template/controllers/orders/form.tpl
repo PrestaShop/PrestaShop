@@ -625,11 +625,11 @@
 		updateDeliveryOptionList(jsonSummary.delivery_option_list);
 
 		if (jsonSummary.cart.gift == 1)
-			$('#order_gift').attr('checked', 'checked');
+			$('#order_gift').attr('checked', true);
 		else
 			$('#carrier_gift').removeAttr('checked');
 		if (jsonSummary.cart.recyclable == 1)
-			$('#carrier_recycled_package').attr('checked', 'checked');
+			$('#carrier_recycled_package').attr('checked', true);
 		else
 			$('#carrier_recycled_package').removeAttr('checked');
 		$('#gift_message').html(jsonSummary.cart.gift_message);
@@ -645,11 +645,11 @@
 		$('#total_products').html(jsonSummary.summary.total_products);
 		id_currency = jsonSummary.cart.id_currency;
 		$('#id_currency option').removeAttr('selected');
-		$('#id_currency option[value="'+id_currency+'"]').attr('selected', 'selected');
+		$('#id_currency option[value="'+id_currency+'"]').attr('selected', true);
 		updateCurrencySign();
 		id_lang = jsonSummary.cart.id_lang;
 		$('#id_lang option').removeAttr('selected');
-		$('#id_lang option[value="'+id_lang+'"]').attr('selected', 'selected');
+		$('#id_lang option[value="'+id_lang+'"]').attr('selected', true);
 		$('#send_email_to_customer').attr('rel', jsonSummary.link_order);
 		$('#go_order_process').attr('href', jsonSummary.link_order);
 		$('#order_message').val(jsonSummary.order_message);

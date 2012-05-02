@@ -43,7 +43,7 @@
 					if (r == 'ok')
 					{
 						$('#note_feedback').html("<b style='color:green'>{l s='Your note has been saved'}</b>").fadeIn(400);
-						$('#submitCustomerNote').attr('disabled', 'disabled');
+						$('#submitCustomerNote').attr('disabled', true);
 					}
 					else if (r == 'error:validation')
 						$('#note_feedback').html("<b style='color:red'>({l s='Error: your note is not valid'}</b>").fadeIn(400);

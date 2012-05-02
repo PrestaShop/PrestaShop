@@ -184,11 +184,11 @@ var ajaxCart = {
 		//disabled the button when adding to do not double add if user double click
 		if (addedFromProductPage)
 		{
-			$('body#product p#add_to_cart input').attr('disabled', 'disabled').removeClass('exclusive').addClass('exclusive_disabled');
+			$('body#product p#add_to_cart input').attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
 			$('.filled').removeClass('filled');
 		}
 		else
-			$(callerElement).attr('disabled', 'disabled');
+			$(callerElement).attr('disabled', true);
 
 		if ($('#cart_block #cart_block_list').hasClass('collapsed'))
 			this.expand();

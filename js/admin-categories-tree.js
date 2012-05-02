@@ -203,7 +203,7 @@ function checkAllCategories()
 	else
 	{
 		$('input[name="categoryBox[]"]').not(':checked').each(function () {
-			$(this).attr('checked', 'checked');
+			$(this).attr('checked', true);
 			clickOnCategoryBox($(this));
 		});
 	}
@@ -352,7 +352,7 @@ function checkCategory()
 	}
 	else
 	{
-		$('li#'+category_to_check+' > input').attr('checked', 'checked');
+		$('li#'+category_to_check+' > input').attr('checked', true);
 		updateNbSubCategorySelected($('li#'+category_to_check+' > input[type=checkbox]'), true);
 	}
 }
