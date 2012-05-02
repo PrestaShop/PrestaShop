@@ -13,14 +13,19 @@
 }
 
 /* cart */
-#header_user #shopping_cart {
+#shopping_cart {
+	
+	
+	
+}
+#shopping_cart a{
 	padding:15px 27px 10px 43px;
+	background: url('img/icon/cart.gif') no-repeat 10px 9px #eee;
 	width: 130px;/* 200 */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	background: url('img/icon/cart.gif') no-repeat 10px 9px #eee
-}
+	border-radius: 3px;display:block}
+#shopping_cart a:hover span{text-decoration: none}
 #header_user #shopping_cart .ajax_cart_quantity { font-weight:bold; font-size:18px }
 #header_user #shopping_cart .ajax_cart_total { display:none !important; }
 
