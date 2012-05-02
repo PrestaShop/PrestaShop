@@ -121,7 +121,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = false)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -175,6 +175,14 @@ class TranslateCore
 				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 			else
 				$ret = stripslashes($string);
+
+			if ($sprintf)
+			{
+				if (!is_array($sprintf))
+					$sprintf = array($sprintf);
+
+				$ret = vsprintf($ret, $sprintf);
+			}
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}
