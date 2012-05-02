@@ -87,7 +87,7 @@
 
 <div class="adresses_bloc clearfix">
 <br />
-<ul class="address item" {if $order->isVirtual()}style="display:none;"{/if}>
+<ul class="address item {if $order->isVirtual()}full_width{/if}">
 	<li class="address_title">{l s='Invoice'}</li>
 	{foreach from=$inv_adr_fields name=inv_loop item=field_item}
 		{if $field_item eq "company" && isset($address_invoice->company)}<li class="address_company">{$address_invoice->company|escape:'htmlall':'UTF-8'}</li>
@@ -100,7 +100,7 @@
 
 	{/foreach}
 </ul>
-<ul class="address alternate_item {if $order->isVirtual()}full_width{/if}">
+<ul class="address alternate_item" {if $order->isVirtual()}style="display:none;"{/if}>
 	<li class="address_title">{l s='Delivery'}</li>
 	{foreach from=$dlv_adr_fields name=dlv_loop item=field_item}
 		{if $field_item eq "company" && isset($address_delivery->company)}<li class="address_company">{$address_delivery->company|escape:'htmlall':'UTF-8'}</li>
