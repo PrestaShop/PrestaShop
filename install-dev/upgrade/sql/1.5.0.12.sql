@@ -1,3 +1,4 @@
 SET NAMES 'utf8';
 
-/* PHP:moveTranslationsModuleFile(); */;
+/* PHP:move_translations_module_file(); */;
+
