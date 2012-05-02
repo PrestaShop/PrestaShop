@@ -3,7 +3,7 @@
             <name>statsgeolocation</name>
             <displayName><![CDATA[Geolocation]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display your customers\&#039; origin]]></description>
+            <description><![CDATA[Display your customers&#039; origin]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>1</is_configurable>
