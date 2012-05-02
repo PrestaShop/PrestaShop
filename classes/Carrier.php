@@ -1175,9 +1175,9 @@ class CarrierCore extends ObjectModel
 			{
 				$carrier = new Carrier($id_carrier);
 				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
-					|| ($carrier->max_height > 0 && $carrier->max_height > $product->height)
-					|| ($carrier->max_depth > 0 && $carrier->max_depth > $product->depth)
-					|| ($carrier->max_weight > 0 && $carrier->max_weight > $product->weight))
+					|| ($carrier->max_height > 0 && $carrier->max_height < $product->height)
+					|| ($carrier->max_depth > 0 && $carrier->max_depth < $product->depth)
+					|| ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight))
 					unset($carrier_list[$key]);
 			}
 		}
