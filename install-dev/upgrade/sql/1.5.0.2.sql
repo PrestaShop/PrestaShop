@@ -401,21 +401,21 @@ ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTE
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
 /* PHP:update_modules_multishop(); */;
 
-UPDATE `ps_tab`
+UPDATE `PREFIX_tab`
 SET `position` = (
 	SELECT `position` FROM (
 		SELECT MAX(`position`)+1 as `position`
-		FROM `ps_tab`
+		FROM `PREFIX_tab`
 		WHERE `id_parent` = 0
 	) tmp
 )
 WHERE `class_name` = 'AdminStock';
 
-UPDATE `ps_tab`
+UPDATE `PREFIX_tab`
 SET `position` = (
 	SELECT `position` FROM (
 		SELECT MAX(`position`)+1 as `position`
-		FROM `ps_tab`
+		FROM `PREFIX_tab`
 		WHERE `id_parent` = 0
 	) tmp
 )
