@@ -191,7 +191,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->identifier = 'id_product';
 		$this->_orderBy = 'id_product';
 		$this->_orderWay = 'DESC';
-		$this->_filter = 'AND active = 0';
+		$this->_filter = 'AND a.`active` = 0';
 		$this->list_no_filter = true;
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of disabled products:'));
 		$this->show_toolbar = false;
