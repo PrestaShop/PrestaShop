@@ -518,14 +518,12 @@ class CartRuleCore extends ObjectModel
 						$this->gift_product,
 						$this->minimum_amount_tax,
 						$this->gift_product_attribute,
-						null, null, null, null, null, null,
+						null, null, false, true, 1, null,
 						$context->cart->id_customer ? $context->cart->id_customer : null,
 						$context->cart->id,
 						(int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null,
-						$ref, null, null,
-						$context, null
+						$ref, true, true, $context, true
 					);
-
 					$cartTotal -= $product_price;
 				}
 			}
@@ -912,6 +910,7 @@ class CartRuleCore extends ObjectModel
 		{
 			if ($error = $cart_rule['obj']->checkValidity($context, true))
 			{
+				file_put_contents('zzzploplop.txt', $error."\n", FILE_APPEND);
 				$context->cart->removeCartRule($cart_rule['obj']->id);
 				$context->cart->update();
 				$errors[] = $error;
@@ -987,7 +986,7 @@ class CartRuleCore extends ObjectModel
 		
 		foreach ($cartRules as $cartRule)
 			if ($cartRule->checkValidity($context, true, false))
-					$context->cart->addCartRule($cartRule->id);
+				$context->cart->addCartRule($cartRule->id);
 	}
 
 	/**
