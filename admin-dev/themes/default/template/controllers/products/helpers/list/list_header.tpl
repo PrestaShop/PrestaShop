@@ -44,7 +44,7 @@
 					event.preventDefault();
 					$('#block_category_tree').toggle();
 					if ($('#block_category_tree').is(':visible'))
-						$(this).find('input').attr('checked', 'checked');
+						$(this).find('input').attr('checked', true);
 					else
 					{
 						$(this).find('input').removeAttr('checked');

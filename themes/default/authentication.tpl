@@ -50,7 +50,7 @@ countriesNeedZipCode = new Array();
 	{/foreach}
 {/if}
 $(function(){ldelim}
-	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state}{else}{if isset($address)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
+	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state}{else}{if isset($address)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', true);
 {rdelim});
 //]]>
 {if $vat_management}

@@ -412,7 +412,7 @@ function reloadContent(params_plus)
 				val = $('#pagination #nb_item').val();
 				$('#pagination #nb_item').children().each(function(it, option) {
 					if (option.value == val)
-						$(option).attr('selected', 'selected');
+						$(option).attr('selected', true);
 					else
 						$(option).removeAttr('selected');
 				});

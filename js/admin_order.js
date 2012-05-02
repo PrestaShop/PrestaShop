@@ -344,7 +344,7 @@ function init()
 		{
 			$('tr#new_product input, tr#new_product select').each(function() {
 				if ($(this).attr('id') != 'add_product_product_name')
-					$('tr#new_product input, tr#new_product select').attr('disabled', 'disabled');
+					$('tr#new_product input, tr#new_product select').attr('disabled', true);
 			});
 		}
 		else
