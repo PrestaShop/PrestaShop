@@ -2014,6 +2014,9 @@ FileETag INode MTime Size
 	 * apacheModExists return true if the apache module $name is loaded
 	 * @TODO move this method in class Information (when it will exist)
 	 *
+	 * Notes: This method requires either apache_get_modules or phpinfo()
+	 * to be available.
+	 *
 	 * @param string $name module name
 	 * @return boolean true if exists
 	 * @since 1.4.5.0
@@ -2036,17 +2039,20 @@ FileETag INode MTime Size
 		}
 		else
 		{
-			// If apache_get_modules does not exists,
-			// one solution should be parsing httpd.conf,
-			// but we could simple parse phpinfo(INFO_MODULES) return string
-			ob_start();
-			phpinfo(INFO_MODULES);
-			$phpinfo = ob_get_contents();
-			ob_end_clean();
-			if (strpos($phpinfo, $name) !== false)
-				return true;
+			if (function_exists('phpinfo'))
+			{
+				// If apache_get_modules does not exists,
+				// we parse phpinfo(INFO_MODULES) return string
+				ob_start();
+				phpinfo(INFO_MODULES);
+				$phpinfo = ob_get_contents();
+				ob_end_clean();
+				if (strpos($phpinfo, $name) !== false)
+					return true;
+			}
+			// otherwise, use the default behavior
+			// see return value at the end of the function
 		}
-
 		return false;
 	}
 
