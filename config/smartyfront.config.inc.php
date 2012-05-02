@@ -34,6 +34,7 @@ function smartyTranslate($params, &$smarty)
 	if (!isset($params['js'])) $params['js'] = 0;
 	if (!isset($params['pdf'])) $params['pdf'] = false;
 	if (!isset($params['mod'])) $params['mod'] = false;
+	if (!isset($params['sprintf'])) $params['sprintf'] = false;
 
 	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
@@ -46,7 +47,7 @@ function smartyTranslate($params, &$smarty)
 
 	$lang_array = $_LANG;
 	if ($params['mod'])
-		return Translate::getModuleTranslation($params['mod'], $params['s'], $basename);
+		return Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf']);
 	else if ($params['pdf'])
 		return Translate::getPdfTranslation($params['s']);
 
@@ -59,6 +60,14 @@ function smartyTranslate($params, &$smarty)
 
 	if ($msg != $params['s'])
 		$msg = $params['js'] ? addslashes($msg) : stripslashes($msg);
+
+	if ($params['sprintf'])
+	{
+		if (!is_array($params['sprintf']))
+			$params['sprintf'] = array($params['sprintf']);
+
+		$msg = vsprintf($msg, $params['sprintf']);
+	}
 
 	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
 }
