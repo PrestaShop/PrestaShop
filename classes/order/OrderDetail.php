@@ -238,7 +238,6 @@ class OrderDetailCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail` od
 		LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
 		WHERE od.`download_hash` = \''.pSQL(strval($hash)).'\'
-		AND od.`product_attribute_id` = pd.`id_product_attribute`
 		AND pd.`active` = 1';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
