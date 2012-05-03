@@ -69,31 +69,27 @@ class AdminLoginControllerCore extends AdminController
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install') || file_exists(_PS_ADMIN_DIR_.'/../admin')
 		|| (file_exists(_PS_ADMIN_DIR_.'/../install-dev') && (!defined('_PS_MODE_DEV_') || !_PS_MODE_DEV_)))
-			$this->context->smarty->assign(
-				array(
+			$this->context->smarty->assign(array(
 				'randomNb' => rand(100, 999),
-				'wrong_folder_name'	=> true)
-				);
+				'wrong_folder_name' => true
+			));
 
 		// Redirect to admin panel
-		if (isset($_GET['redirect']) && Validate::isControllerName($_GET['redirect']))
-			$this->context->smarty->assign(array('redirect' => Tools::getValue('redirect')));
+		if (Tools::isSubmit('redirect') && Validate::isControllerName(Tools::getValue('redirect')))
+			$this->context->smarty->assign('redirect', Tools::getValue('redirect'));
 		else
 		{
 			$tab = new Tab((int)$this->context->employee->default_tab);
-			$url = $this->context->link->getAdminLink($tab->class_name);
-			$this->context->smarty->assign(array('redirect' => $url));
+			$this->context->smarty->assign('redirect', $this->context->link->getAdminLink($tab->class_name));
 		}
 		
 		if ($nbErrors = count($this->errors))
-			$this->context->smarty->assign(
-				array(
-					'errors' => $this->errors,
-					'nbErrors' => $nbErrors,
-					'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
-					'disableDefaultErrorOutPut' => true,
-					)
-				);
+			$this->context->smarty->assign(array(
+				'errors' => $this->errors,
+				'nbErrors' => $nbErrors,
+				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
+				'disableDefaultErrorOutPut' => true,
+			));
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
@@ -132,11 +128,10 @@ class AdminLoginControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('E-mail is empty');
 		elseif (!Validate::isEmail($email))
 			$this->errors[] = Tools::displayError('Invalid e-mail address');
-		
-		
+
 		if (empty($passwd))
 			$this->errors[] = Tools::displayError('Password is blank');
-		else if (!Validate::isPasswd($passwd))
+		elseif (!Validate::isPasswd($passwd))
 			$this->errors[] = Tools::displayError('Invalid password');
 			
 		if (!count($this->errors))
@@ -191,8 +186,8 @@ class AdminLoginControllerCore extends AdminController
 			$employee = new Employee();
 			if (!$employee->getByemail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
-			else if ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
-					$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
+			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
+				$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
 		}
 		if (_PS_MODE_DEMO_)
 			$errors[] = Tools::displayError('This functionality has been disabled.');
@@ -208,16 +203,22 @@ class AdminLoginControllerCore extends AdminController
 			else
 			{
 				$params = array(
-							'{email}' => $employee->email, 
-							'{lastname}' => $employee->lastname, 
-							'{firstname}' => $employee->firstname, 
-							'{passwd}' => $pwd
-							);
+					'{email}' => $employee->email,
+					'{lastname}' => $employee->lastname,
+					'{firstname}' => $employee->firstname,
+					'{passwd}' => $pwd
+				);
 							
 				if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new admin password', (int)Configuration::get('PS_LANG_DEFAULT')), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
-					die(Tools::jsonEncode(array('hasErrors' => false, 'confirm' => $this->l('Your password has been e-mailed to you'))));
+					die(Tools::jsonEncode(array(
+						'hasErrors' => false,
+						'confirm' => $this->l('Your password has been e-mailed to you')
+					)));
 				else
-					die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => array(Tools::displayError('An error occurred during your password change.')))));
+					die(Tools::jsonEncode(array(
+						'hasErrors' => true,
+						'errors' => array(Tools::displayError('An error occurred during your password change.'))
+					)));
 			}
 		
 		}

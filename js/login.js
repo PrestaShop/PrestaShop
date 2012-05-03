@@ -1,11 +1,40 @@
 $(document).ready(function() {
-	if (document.getElementById('email')) document.getElementById('email').focus(); //$("#login").effect( "slide", { direction: "up" }, 1000 );
+	// Focus on email address field
+	$('#email').select();
+
+	// Initialize events
+	$('#login_form').submit(function(e) {
+		// Kill default behaviour
+		e.preventDefault();
+		doAjaxLogin($('#redirect').val());
+	});
+
+	$('#forgot_password_form').submit(function(e) {
+		// Kill default behaviour
+		e.preventDefault();
+		doAjaxForgot();
+	});
+
+	$('.show-forgot-password').click(function(e) {
+		// Kill default behaviour
+		e.preventDefault();
+		displayForgotPassword();
+	});
+
+	$('.show-login-form').click(function(e) {
+		// Kill default behaviour
+		e.preventDefault();
+		displayLogin();
+	});
 });
+
 
 function displayForgotPassword() {
 	$('#error').hide();
 	$('#login_form').fadeOut('fast', function () {
-		$("#forgot_password").fadeIn('fast');
+		$("#forgot_password_form").fadeIn('fast');
+		// Focus on email address forgot field
+		$('#email_forgot').select();
 	});
 
 }
@@ -13,8 +42,10 @@ function displayForgotPassword() {
 function displayLogin() {
 	$('#error').hide();
 
-	$('#forgot_password').fadeOut('fast', function () {
-		$("#login_form").fadeIn('fast');
+	$('#forgot_password_form').fadeOut('fast', function () {
+		$('#login_form').fadeIn('fast');
+		// Focus on email address field
+		$('#email').select();
 	});
 
 	return false;
@@ -27,7 +58,7 @@ function displayLogin() {
  */
 function doAjaxLogin(redirect) {
 	$('#error').hide();
-	$('#ajax-loader').fadeIn('slow', function() {
+	$('#login_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
 			url: "ajax-tab.php",
@@ -50,16 +81,15 @@ function doAjaxLogin(redirect) {
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>');
-				$('#error').fadeIn();
-				$('#ajax-loader').fadeOut('slow');
+				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
+				$('#login_form .ajax-loader').fadeOut('slow');
 			}
 		});
 	});
 }
 function doAjaxForgot() {
 	$('#error').hide();
-	$('#ajax-loader').fadeIn('slow', function() {
+	$('#forgot_password_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
 			url: "ajax-tab.php",
@@ -73,16 +103,18 @@ function doAjaxForgot() {
 				email_forgot: $('#email_forgot').val()
 			},
 			success: function(jsonData) {
-				if (jsonData.hasErrors) {
+				if (jsonData.hasErrors)
 					displayErrors(jsonData.errors);
-				} else {
+				else
+				{
 					alert(jsonData.confirm);
+					$('#forgot_password_form .ajax-loader').hide();
+					displayLogin();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>');
-				$('#error').fadeIn();
-				$('#ajax-loader').fadeOut('slow');
+				$('#error').html('<h3>TECHNICAL ERROR:</h3><p>Details: Error thrown: ' + XMLHttpRequest + '</p><p>Text status: ' + textStatus + '</p>').show();
+				$('#forgot_password_form .ajax-loader').fadeOut('slow');
 			}
 		});
 	});
@@ -91,9 +123,8 @@ function displayErrors(errors) {
 	str_errors = '<h3>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</h3><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
-	$('#ajax-loader').hide();
-	$('#error').html(str_errors + '</ol>');
-	$('#error').fadeIn();
+	$('.ajax-loader').hide();
+	$('#error').html(str_errors + '</ol>').fadeIn('slow');
 	$("#login").effect("shake", {
 		times: 4
 	}, 100);
