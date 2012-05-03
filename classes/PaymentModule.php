@@ -147,11 +147,8 @@ abstract class PaymentModuleCore extends Module
 				{
 					$product_list = $package['product_list'];
 					$order = new Order();
-					if (isset($package['id_carrier']))
-					{
-						$carrier = new Carrier($package['id_carrier'], $cart->id_lang);
-						$order->id_carrier = (int)$carrier->id;
-					}
+					$carrier = new Carrier($package['id_carrier'], $cart->id_lang);
+					$order->id_carrier = (int)$carrier->id;
 					$order->id_customer = (int)$cart->id_customer;
 					$order->id_address_invoice = (int)$cart->id_address_invoice;
 					$order->id_address_delivery = (int)$id_address;
