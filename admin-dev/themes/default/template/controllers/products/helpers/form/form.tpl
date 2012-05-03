@@ -29,47 +29,40 @@
 {block name="autoload_tinyMCE"}
 	// Execute when tab Informations has finished loading
 	tabs_manager.onLoad('Informations', function(){
-		// change each by click to load only on click
-		$(".autoload_rte").each(function(e){
-			tinySetup({
-				mode :"exact",
-				editor_selector :"autoload_rte",
-				elements : $(this).attr("id"),
-				theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-				theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-				theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
-				setup : function(ed) {
-					{* Count the total number of the field *}
-
-					ed.onInit.add(function(ed)
+		tinySetup({
+			editor_selector :"autoload_rte",
+			theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+			theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
+			theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
+			theme_advanced_buttons4 : "styleprops,|,cite,abbr,acronym,del,ins,attribs,pagebreak",
+			setup : function(ed) {
+				ed.onInit.add(function(ed)
+				{
+					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
 					{
-						if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
-						{
-							if (typeof ProductMultishop.load_tinymce[ed.id])
-								ed.hide();
-							else
-								ed.show();
-						}
-					});
+						if (typeof ProductMultishop.load_tinymce[ed.id])
+							ed.hide();
+						else
+							ed.show();
+					}
+				});
 
-					ed.onKeyUp.add(function(ed, e) {
-						tinyMCE.triggerSave();
-						textarea = $('#'+ed.id);
-						max = textarea.parent('div').find('span.counter').attr('max');
-						if (max != 'none')
-						{
-							textarea_value = textarea.val();
-							count = stripHTML(textarea_value).length;
-							rest = max - count;
-							if (rest < 0)
-								textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
-							else
-								textarea.parent('div').find('span.counter').html(' ');
-						}
-					});
-				}
-			});
+				ed.onKeyUp.add(function(ed, e) {
+					tinyMCE.triggerSave();
+					textarea = $('#'+ed.id);
+					max = textarea.parent('div').find('span.counter').attr('max');
+					if (max != 'none')
+					{
+						textarea_value = textarea.val();
+						count = stripHTML(textarea_value).length;
+						rest = max - count;
+						if (rest < 0)
+							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
+						else
+							textarea.parent('div').find('span.counter').html(' ');
+					}
+				});
+			}
 		});
 	});
 {/block}
