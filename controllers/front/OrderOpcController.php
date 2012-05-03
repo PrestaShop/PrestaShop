@@ -197,6 +197,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 									if (!count($this->errors))
 									{
+										$result = $this->_getCarrierList();
 										// Wrapping fees
 										$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
 										$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
