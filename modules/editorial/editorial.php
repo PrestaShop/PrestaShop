@@ -202,6 +202,7 @@ class Editorial extends Module
 
 	public function getContent()
 	{
+		$this->_html = '';
 		$this->postProcess();
 		
 		$helper = $this->initForm();
@@ -220,8 +221,8 @@ class Editorial extends Module
 		if ($helper->fields_value['image'])
 			$helper->fields_value['size'] = filesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') / 1000;
 		
-		
-		return $helper->generateForm($this->fields_form);
+		$this->_html .= $helper->generateForm($this->fields_form);
+		return $this->_html;
 	}
 
 	public function postProcess()
