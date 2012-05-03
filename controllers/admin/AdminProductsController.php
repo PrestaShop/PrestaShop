@@ -2807,12 +2807,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	protected function _getFinalPrice($specific_price, $productPrice, $taxRate)
+	protected function _getFinalPrice($specific_price, $product_price, $tax_rate)
 	{
-		$price = Tools::ps_round((float)($specific_price['price']) ? $specific_price['price'] : $productPrice, 2);
+		$price = Tools::ps_round((float)$specific_price['price'] ? $specific_price['price'] : $product_price, 2);
 		if (!(float)($specific_price['reduction']))
 			return (float)($specific_price['price']);
-		return ($specific_price['reduction_type'] == 'amount') ? ($price - $specific_price['reduction'] / (1 + $taxRate / 100)) : ($price - $price * $specific_price['reduction']);
+		return ($specific_price['reduction_type'] == 'amount') ? ($price - $specific_price['reduction'] / (1 + $tax_rate / 100)) : ($price - $price * $specific_price['reduction']);
 	}
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
@@ -2823,7 +2823,7 @@ class AdminProductsControllerCore extends AdminController
 		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
 		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
 
-		$taxRate = $obj->getTaxesRate(Address::initialize());
+		$tax_rate = $obj->getTaxesRate(Address::initialize());
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -2887,24 +2887,31 @@ class AdminProductsControllerCore extends AdminController
 					unset($customer);
 				}
 
-				$content .= '
-				<tr '.($i % 2 ? 'class="alt_row"' : '').'>
-					<td class="cell border">'.$rule_name.'</td>
-					<td class="cell border">'.$attributes_name.'</td>
-					'.(Shop::isFeatureActive() ? '<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>' : '').'
-					<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
-					<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
-					<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
-					<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
-					<td class="cell border">'.Tools::displayPrice((float)$specific_price['price'], $current_specific_currency).'</td>
-					<td class="cell border">'.$reduction.'</td>
-					<td class="cell border">'.$period.'</td>
-					<td class="cell border">'.$specific_price['from_quantity'].'</th>
-					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specific_price, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border">'.(!$rule->id ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
-				</tr>';
-				$i++;
-				unset($customer_full_name);
+				if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID()))
+				{
+					$content .= '
+					<tr '.($i % 2 ? 'class="alt_row"' : '').'>
+						<td class="cell border">'.$rule_name.'</td>
+						<td class="cell border">'.$attributes_name.'</td>';
+
+					if (Shop::isFeatureActive())
+						$content .= '
+						<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>';
+					$content .= '
+						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
+						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
+						<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
+						<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
+						<td class="cell border">'.Tools::displayPrice((float)$specific_price['price'], $current_specific_currency).'</td>
+						<td class="cell border">'.$reduction.'</td>
+						<td class="cell border">'.$period.'</td>
+						<td class="cell border">'.$specific_price['from_quantity'].'</th>
+						<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)$this->_getFinalPrice($specific_price, (float)$obj->price, $tax_rate)), 2, $current_specific_currency).'</b></td>
+						<td class="cell border">'.(!$rule->id ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
+					</tr>';
+					$i++;
+					unset($customer_full_name);
+				}
 			}
 		}
 		$content .= '
