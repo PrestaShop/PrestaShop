@@ -82,11 +82,11 @@ class AdminLoginControllerCore extends AdminController
 			$tab = new Tab((int)$this->context->employee->default_tab);
 			$this->context->smarty->assign('redirect', $this->context->link->getAdminLink($tab->class_name));
 		}
-		
-		if ($nbErrors = count($this->errors))
+
+		if ($nb_errors = count($this->errors))
 			$this->context->smarty->assign(array(
 				'errors' => $this->errors,
-				'nbErrors' => $nbErrors,
+				'nbErrors' => $nb_errors,
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
@@ -187,7 +187,8 @@ class AdminLoginControllerCore extends AdminController
 			if (!$employee->getByemail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
-				$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
+				$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.
+					Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
 		}
 		if (_PS_MODE_DEMO_)
 			$errors[] = Tools::displayError('This functionality has been disabled.');
