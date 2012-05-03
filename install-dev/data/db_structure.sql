@@ -1472,7 +1472,6 @@ CREATE TABLE `PREFIX_product_attribute_image` (
 CREATE TABLE `PREFIX_product_download` (
   `id_product_download` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_product` int(10) unsigned NOT NULL,
-  `id_product_attribute` int(10) unsigned NOT NULL,
   `display_filename` varchar(255) DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `date_add` datetime NOT NULL,
@@ -1482,8 +1481,7 @@ CREATE TABLE `PREFIX_product_download` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `is_shareable` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_product_download`),
-  KEY `product_active` (`id_product`,`active`),
-  KEY `id_product_attribute` (`id_product_attribute`)
+  KEY `product_active` (`id_product`,`active`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product_lang` (
