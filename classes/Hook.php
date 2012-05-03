@@ -269,8 +269,10 @@ class HookCore extends ObjectModel
 			
 			// Get all available payment module
 			$payment_modules = array();
-			foreach (Module::getPaymentModules() as $module)
-				$payment_modules[] = $module['name'];
+
+			if (isset($context->shop->id))
+				foreach (Module::getPaymentModules() as $module)
+					$payment_modules[] = $module['name'];
 			
 			if ($results)
 				foreach ($results as $row)
