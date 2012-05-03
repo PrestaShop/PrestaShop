@@ -1124,6 +1124,10 @@ class CarrierCore extends ObjectModel
 		{
 			$address = new Address($id_address);
 			$id_zone = Address::getZoneById($address->id);
+			
+			// Check the country of the address is activated
+			if (!Address::isCountryActiveById($address->id))
+				return array();
 		}
 		else
 		{

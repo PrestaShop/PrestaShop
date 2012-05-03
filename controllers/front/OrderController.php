@@ -238,9 +238,16 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->cart->setNoMultishipping();
 
 		// Add checking for all addresses
-
-		if (!Tools::isSubmit('id_address_delivery') || !Address::isCountryActiveById((int)Tools::getValue('id_address_delivery')))
-			$this->errors[] = Tools::displayError('This address is not in a valid area.');
+		$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
+		if (count($address_without_carriers))
+		{
+			if (count($address_without_carriers) > 1)
+				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.'));
+			elseif ($this->context->cart->isMultiAddressDelivery())
+				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.'));
+			else
+				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.'));
+		}
 		else
 		{
 			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');

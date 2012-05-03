@@ -201,11 +201,12 @@
 			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{if isset($HOOK_EXTRACARRIER_ADDR)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}</div>
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
-				{if $cart->isMultiAddressDelivery()}
-					{l s='There are no carriers available that deliver to some of your addresses.'}
-				{else}
-					{l s='There are no carriers available that deliver to this address.'}
-				{/if}
+				{foreach $cart->getDeliveryAddressesWithoutCarriers(true) as $address}
+					{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+					{if !$address@last}
+					<br />
+					{/if}
+				{/foreach}
 			</p>
 		{/foreach}
 	{/if}

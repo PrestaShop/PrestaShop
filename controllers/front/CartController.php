@@ -126,6 +126,12 @@ class CartControllerCore extends FrontController
 		$old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
 		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
 
+		if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery)))
+			die(Tools::jsonEncode(array(
+				'hasErrors' => true,
+				'error' => Tools::displayError('It\'s not possible to deliver this product to the selected address.', false),
+			)));
+		
 		$this->context->cart->setProductAddressDelivery(
 			$this->id_product,
 			$this->id_product_attribute,

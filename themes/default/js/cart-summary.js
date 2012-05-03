@@ -99,28 +99,37 @@ function changeAddressDelivery(obj)
 				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
-				// The product exist
-				if ($('#product_'+id_product+'_'+id_product_attribute+'_0_'+new_id_address_delivery).length)
+				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
 				{
-					updateCustomizedDatas(jsonData.customizedDatas);
-					updateCartSummary(jsonData.summary);
-					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
-					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-					if (typeof(getCarrierListAndUpdate) != 'undefined')
-						getCarrierListAndUpdate();
-
-					// @todo reverse the remove order
-					// This effect remove the current line, but it's better to remove the other one, and refresshing this one
-					$('#product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
-					
-					// @todo improve customization upgrading
-					$('.product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
+					alert(jsonData.error);
+					// Reset the old address
+					$('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery).val(old_id_address_delivery);
 				}
-				
-				if (window.ajaxCart !== undefined)
-					ajaxCart.refresh();
-				updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
-				cleanSelectAddressDelivery();
+				else
+				{
+					// The product exist
+					if ($('#product_'+id_product+'_'+id_product_attribute+'_0_'+new_id_address_delivery).length)
+					{
+						updateCustomizedDatas(jsonData.customizedDatas);
+						updateCartSummary(jsonData.summary);
+						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
+						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+						if (typeof(getCarrierListAndUpdate) != 'undefined')
+							getCarrierListAndUpdate();
+	
+						// @todo reverse the remove order
+						// This effect remove the current line, but it's better to remove the other one, and refresshing this one
+						$('#product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
+						
+						// @todo improve customization upgrading
+						$('.product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
+					}
+					
+					if (window.ajaxCart !== undefined)
+						ajaxCart.refresh();
+					updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
+					cleanSelectAddressDelivery();
+				}
 			}
 		});
 	}
@@ -192,6 +201,7 @@ function changeAddressDelivery(obj)
 			}
 		});
 	}
+	return true;
 }
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
