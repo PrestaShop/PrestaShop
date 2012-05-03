@@ -723,7 +723,6 @@
 			</div>
 			<br />
 		{/foreach}
-		<p class="info">{l s='When you read a message, please click on the green check to mark it as read.'}</p>
 		</fieldset>
 	{/if}
 	</div>
