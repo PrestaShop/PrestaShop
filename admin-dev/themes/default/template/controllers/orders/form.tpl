@@ -739,7 +739,7 @@
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "admincarts",
 				action: "updateLang",
-				id_currency: $('#id_lang option:selected').val(),
+				id_lang: $('#id_lang option:selected').val(),
 				id_customer: id_customer,
 				id_cart: id_cart
 				},
