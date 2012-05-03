@@ -1231,7 +1231,11 @@ abstract class ModuleCore
 
 		$groups = array();
 		if (isset($context->customer))
+		{
 			$groups = $context->customer->getGroups();
+			if (empty($groups))
+				$groups = array(Configuration::get('PS_UNIDENTIFIED_GROUP'));
+		}
 
 		$hookPayment = 'Payment';
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
