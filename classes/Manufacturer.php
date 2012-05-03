@@ -393,7 +393,7 @@ class ManufacturerCore extends ObjectModel
 		return Db::getInstance()->executeS('
 		SELECT p.`id_product`,  pl.`name`
 		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('procut', 'p').'
+		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').'
