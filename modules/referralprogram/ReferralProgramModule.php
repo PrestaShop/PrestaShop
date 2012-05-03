@@ -35,8 +35,8 @@ class ReferralProgramModule extends ObjectModel
 	public $lastname;
 	public $firstname;
 	public $id_customer;
-	public $id_discount;
-	public $id_discount_sponsor;
+	public $id_cart_rule;
+	public $id_cart_rule_sponsor;
 	public $date_add;
 	public $date_upd;
 
@@ -52,8 +52,8 @@ class ReferralProgramModule extends ObjectModel
 			'lastname' =>			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 128),
 			'firstname' =>			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 128),
 			'id_customer' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_discount' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_discount_sponsor' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_cart_rule' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_cart_rule_sponsor' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'date_add' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
@@ -66,14 +66,14 @@ class ReferralProgramModule extends ObjectModel
 
 	public function registerDiscountForSponsor($id_currency)
 	{
-		if ((int)$this->id_discount_sponsor > 0)
+		if ((int)$this->id_cart_rule_sponsor > 0)
 			return false;
 		return $this->registerDiscount((int)$this->id_sponsor, 'sponsor', (int)$id_currency);
 	}
 
 	public function registerDiscountForSponsored($id_currency)
 	{
-		if (!(int)$this->id_customer OR (int)$this->id_discount > 0)
+		if (!(int)$this->id_customer OR (int)$this->id_cart_rule > 0)
 			return false;
 		return $this->registerDiscount((int)$this->id_customer, 'sponsored', (int)$id_currency);
 	}

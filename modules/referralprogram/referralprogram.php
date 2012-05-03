@@ -254,7 +254,7 @@ class ReferralProgram extends Module
 
 		$this->_html .= '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-		<fieldset class="width3">
+		<fieldset>
 			<legend><img src="'._PS_ADMIN_IMG_.'prefs.gif" alt="'.$this->l('Settings').'" />'.$this->l('Settings').'</legend>
 			<p>
 				<label class="t" for="order_quantity">'.$this->l('Minimum number of orders a sponsored friend must place to get their voucher:').'</label>

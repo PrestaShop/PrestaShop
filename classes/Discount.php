@@ -126,7 +126,7 @@ class DiscountCore extends CartRule
 	{
 		Tools::displayAsDeprecated();
 		$obj = $this->parent;
-		if (in_array($method, array('add', 'update', 'getIdByName', 'getCustomerDiscounts', 'getValue', 'discountExists', 'createOrderDiscount', 'getVouchersToCartDisplay')))
+		if (in_array($method, array('add', 'update', 'getIdByName', 'getCustomerDiscounts', 'getValue', 'discountExists', 'createOrderDiscount', 'getVouchersToCartDisplay', 'display')))
 			$obj = $this;
 		return call_user_func_array(array($obj, $method), $args);
 	}
@@ -202,10 +202,7 @@ class DiscountCore extends CartRule
 	  * @deprecated 1.5.0.1
 	  */
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
-	{
-		// Todo
-		//die ('TODO');
-		
+	{		
 		$languages = Language::getLanguages($order);
 		$products = $order->getProducts(false, $productList, $qtyList);
 
@@ -251,5 +248,20 @@ class DiscountCore extends CartRule
 			return false;
 
 		return $voucher;
+	}
+
+	/**
+	  * @deprecated 1.5.0.1
+	  */
+	public static function display($value, $type, $currency = null)
+	{
+		if ((float)$value && (int)$type)
+		{
+			if ($type == 1)
+				return $value.chr(37); // ASCII #37 --> % (percent)
+			elseif ($type == 2)
+				return Tools::displayPrice($value, $currency);
+		}
+		return ''; // return a string because it's a display method
 	}
 }
