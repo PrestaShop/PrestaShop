@@ -47,7 +47,9 @@ class Blockreinsurance extends Module
 	
 	public function install()
 	{
-		return (parent::install() && $this->installDB() && Configuration::updateValue('blockreinsurance_nbblocks', 5) && $this->registerHook('footer'));
+		$return = (parent::install() && $this->installDB() && Configuration::updateValue('blockreinsurance_nbblocks', 5) && $this->registerHook('footer'));
+		$return &= $this->installFixtures();
+		return $return;
 	}
 	
 	public function installDB()
@@ -188,15 +190,34 @@ class Blockreinsurance extends Module
 	
 	public function hookFooter($params)
 	{	
-		global $smarty;		
-		
-		$infos = $this->getAllFromDB();		
-		
+		global $smarty;
+
+		$this->context->controller->addCSS($this->_path.'style.css', 'all');
+		$infos = $this->getAllFromDB();
+
 		$smarty->assign(array(
 			'nbblocks' => Configuration::get('blockreinsurance_nbblocks'),
 			'infos' => $infos
 		));
 		return $this->display(__FILE__, 'blockreinsurance.tpl');
+	}
+
+	public function installFixtures()
+	{
+		$nb_blocks = Configuration::get('blockreinsurance_nbblocks');
+		$tab_texts = array(
+			$this->l('Money back'),
+			$this->l('Exchange in-store'),
+			$this->l('Payment for shipping'),
+			$this->l('Free Shipping'),
+			$this->l('100% secured payment'),
+		);
+		$success = true;
+		for ($a = 1; $a <= $nb_blocks; $a++)
+			$success &= Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`, `text`)
+					VALUES ("reassurance'.$a.'", "'.$tab_texts[($a-1)].'")');
+		return $success;
 	}
 }
 ?>
