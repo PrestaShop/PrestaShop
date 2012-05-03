@@ -266,9 +266,18 @@ class HookCore extends ObjectModel
 			// Store results per hook name
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			$list = array();
+			
+			// Get all available payment module
+			$payment_modules = array();
+			foreach (Module::getPaymentModules() as $module)
+				$payment_modules[] = $module['name'];
+			
 			if ($results)
 				foreach ($results as $row)
 				{
+					if ($row['hook'] == 'displayPayment' && !in_array($row['module'], $payment_modules))
+						continue;
+
 					$row['hook'] = strtolower($row['hook']);
 					if (!isset($list[$row['hook']]))
 						$list[$row['hook']] = array();
@@ -324,6 +333,7 @@ class HookCore extends ObjectModel
 			throw new PrestaShopException('Invalid id_module or hook_name');
 
 		// If no modules associated to hook_name or recompatible hook name, we stop the function
+		
 		if (!$module_list = Hook::getHookModuleExecList($hook_name))
 			return '';
 
