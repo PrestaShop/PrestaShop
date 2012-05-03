@@ -69,7 +69,7 @@ class BlockViewed extends Module
 			else
 			{
 				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);
-				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 			}
 		}
 		return $output.$this->displayForm();
