@@ -1228,6 +1228,8 @@ abstract class ModuleCore
 		$context = Context::getContext();
 		if (isset($context->cart))
 			$billing = new Address((int)$context->cart->id_address_invoice);
+
+		$groups = array();
 		if (isset($context->customer))
 			$groups = $context->customer->getGroups();
 
@@ -1250,7 +1252,7 @@ abstract class ModuleCore
 					AND mg.id_shop = '.(int)$context->shop->id.'
 					AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 					AND hm.id_shop IN('.implode(', ', $list).')
-					'.(isset($groups) ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').'
+					'.(count($groups) ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').'
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
