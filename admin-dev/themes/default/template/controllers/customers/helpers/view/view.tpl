@@ -152,7 +152,12 @@
 	
 	<div class="clear">&nbsp;</div>
 	
-	<h2>{l s='Groups'} ({count($groups)})</h2>
+	<h2>
+		{l s='Groups'} ({count($groups)})
+		<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
+			<img src="../img/admin/edit.gif" />
+		</a>
+	</h2>
 	{if $groups AND count($groups)}
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 			<colgroup>
