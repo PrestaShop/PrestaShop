@@ -2039,13 +2039,14 @@ class AdminProductsControllerCore extends AdminController
 							'short' => 'Delete',
 							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
 							'desc' => $this->l('Delete this product'),
-							'confirm' => 1);
+							'confirm' => 1,
+							'js' => 'if (confirm('.$this->l('\'Delete product?\'').')){return true;}else{event.preventDefault();}'
+						);
 
 					// adding button for duplicate this product
 					if ($this->tabAccess['add'] && $this->display != 'add')
 						$this->toolbar_btn['duplicate'] = array(
 							'short' => 'Duplicate',
-							//'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;duplicateproduct',
 							'desc' => $this->l('Duplicate'),
 							'confirm' => 1,
 							'js' => 'if (confirm(\''.$this->l('Also copy images').' ?\')) document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct\'; else document.location = \''.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;duplicateproduct&amp;noimage=1\';'
