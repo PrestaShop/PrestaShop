@@ -1568,9 +1568,9 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function getListModules()
 	{
-		if (!Tools::file_exists_cache($this->translations_informations[$this->type_selected]['dir']))
-			throw new PrestaShopException(Tools::displayError('Fatal error: Module directory does not exist').'('.$this->translations_informations[$this->type_selected]['dir'].')');
-		if (!is_writable($this->translations_informations[$this->type_selected]['dir']))
+		if (!Tools::file_exists_cache($this->translations_informations['modules']['dir']))
+			throw new PrestaShopException(Tools::displayError('Fatal error: Module directory does not exist').'('.$this->translations_informations['modules']['dir'].')');
+		if (!is_writable($this->translations_informations['modules']['dir']))
 			throw new PrestaShopException(Tools::displayError('The module directory must be writable'));
 
 		$modules = array();
@@ -1583,13 +1583,13 @@ class AdminTranslationsControllerCore extends AdminController
 				$module = $module['name'];
 		}
 		else if ($this->theme_selected == self::DEFAULT_THEME_NAME)
-			if (Tools::file_exists_cache($this->translations_informations[$this->type_selected]['dir']))
-				$modules = scandir($this->translations_informations[$this->type_selected]['dir']);
+			if (Tools::file_exists_cache($this->translations_informations['modules']['dir']))
+				$modules = scandir($this->translations_informations['modules']['dir']);
 			else
 				$this->displayWarning(Tools::displayError('There are no modules in your copy of PrestaShop. Use the Modules tab to activate them or go to our Website to download additional Modules.'));
 		else
-			if (Tools::file_exists_cache($this->translations_informations[$this->type_selected]['override']['dir']))
-				$modules = scandir($this->translations_informations[$this->type_selected]['override']['dir']);
+			if (Tools::file_exists_cache($this->translations_informations['modules']['override']['dir']))
+				$modules = scandir($this->translations_informations['modules']['override']['dir']);
 			else
 				$this->displayWarning(Tools::displayError('There are no modules in your copy of PrestaShop. Use the Modules tab to activate them or go to our Website to download additional Modules.'));
 
