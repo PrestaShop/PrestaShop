@@ -360,85 +360,87 @@
 			<br />
 
 			<!-- Shipping block -->
-			<fieldset>
-				<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
+			{if !$order->isVirtual()}
+				<fieldset>
+					<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
 
-				<div class="clear" style="float: left; margin-right: 10px;">
-					<span>{l s='Recycled packaging:'}</span>
-					{if $order->recyclable}
-					<img src="../img/admin/enabled.gif" />
-					{else}
-					<img src="../img/admin/disabled.gif" />
-					{/if}
-				</div>
-				<div style="float: left;">
-					<span>{l s='Gift-wrapping:'}</span>
-					{if $order->gift}
-					<img src="../img/admin/enabled.gif" />
-					</div>
-					<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
-						{if $order->gift_message}
-						<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message:'}</b><br />{$order->gift_message|nl2br}</div>
+					<div class="clear" style="float: left; margin-right: 10px;">
+						<span>{l s='Recycled packaging:'}</span>
+						{if $order->recyclable}
+						<img src="../img/admin/enabled.gif" />
+						{else}
+						<img src="../img/admin/disabled.gif" />
 						{/if}
-					{else}
-					<img src="../img/admin/disabled.gif" />
+					</div>
+					<div style="float: left;">
+						<span>{l s='Gift-wrapping:'}</span>
+						{if $order->gift}
+						<img src="../img/admin/enabled.gif" />
+						</div>
+						<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
+							{if $order->gift_message}
+							<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message:'}</b><br />{$order->gift_message|nl2br}</div>
+							{/if}
+						{else}
+						<img src="../img/admin/disabled.gif" />
+						{/if}
+					</div>
+					<div class="clear" style="margin-bottom: 10px;"></div>
+
+					{include file='controllers/orders/_shipping.tpl'}
+
+					{if $carrierModuleCall}
+						{$carrierModuleCall}
 					{/if}
-				</div>
-				<div class="clear" style="margin-bottom: 10px;"></div>
+				</fieldset>
+				<br />
 
-				{include file='controllers/orders/_shipping.tpl'}
+				<!-- Return block -->
+				<fieldset>
+					<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
 
-				{if $carrierModuleCall}
-					{$carrierModuleCall}
-				{/if}
-			</fieldset>
-			<br />
+					{if $order->getReturn()|count > 0}
+					<table class="table" width="100%" cellspacing="0" cellpadding="0">
+						<thead>
+							<tr>
+								<th style="width:30%">Date</th>
+								<th>Type</th>
+								<th style="width:20%">Carrier</th>
+								<th style="width:30%">Tracking number</th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach from=$order->getReturn() item=line}
+							<tr>
+								<td>{$line.date_add}</td>
+								<td>{$line.type}</td>
+								<td>{$line.state_name}</td>
+								<td>
+									<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else if isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
+									{if $line.can_edit}
+									<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+										<span class="shipping_number_edit" style="display:none;">
+											<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
+											<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
+										</span>
+										<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
+										<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
+									</form>
+									{/if}
+								</td>
+							</tr>
+							{/foreach}
+						</tbody>
+					</table>
+					{else}
+					{l s='No merchandise returns yet.'}
+					{/if}
 
-			<!-- Return block -->
-			<fieldset>
-				<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
-
-				{if $order->getReturn()|count > 0}
-				<table class="table" width="100%" cellspacing="0" cellpadding="0">
-					<thead>
-						<tr>
-							<th style="width:30%">Date</th>
-							<th>Type</th>
-							<th style="width:20%">Carrier</th>
-							<th style="width:30%">Tracking number</th>
-						</tr>
-					</thead>
-					<tbody>
-						{foreach from=$order->getReturn() item=line}
-						<tr>
-							<td>{$line.date_add}</td>
-							<td>{$line.type}</td>
-							<td>{$line.state_name}</td>
-							<td>
-								<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else if isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
-								{if $line.can_edit}
-								<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
-									<span class="shipping_number_edit" style="display:none;">
-										<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
-										<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
-									</span>
-									<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
-									<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
-								</form>
-								{/if}
-							</td>
-						</tr>
-						{/foreach}
-					</tbody>
-				</table>
-				{else}
-				{l s='No merchandise returns yet.'}
-				{/if}
-
-				{if $carrierModuleCall}
-					{$carrierModuleCall}
-				{/if}
-			</fieldset>
+					{if $carrierModuleCall}
+						{$carrierModuleCall}
+					{/if}
+				</fieldset>
+			{/if}
 		</div>
 		<!-- END Right column -->
 		<div class="clear" style="margin-bottom: 10px;"></div>
@@ -446,36 +448,37 @@
 
 	<div class="container-command container-command-top-spacing">
 		<!-- Addresses -->
-		<div style="width: 49%; float:left;"></contact>
-			<!-- Shipping address -->
-			<fieldset>
-				<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
+		{if !$order->isVirtual()}
+			<div style="width: 49%; float:left;"></contact>
+				<!-- Shipping address -->
+				<fieldset>
+					<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
-				{if $can_edit}
-				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
-					<div style="margin-bottom:5px;">
-						<p>
-							<select name="id_address">
-								{foreach from=$customer_addresses item=address}
-								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-								{/foreach}
-							</select>
-							<input class="button" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
-						</p>
+					{if $can_edit}
+					<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+						<div style="margin-bottom:5px;">
+							<p>
+								<select name="id_address">
+									{foreach from=$customer_addresses item=address}
+									<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+									{/foreach}
+								</select>
+								<input class="button" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
+							</p>
+						</div>
+					</form>
+					{/if}
+
+					<div style="float: right">
+						<a href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}"><img src="../img/admin/edit.gif" /></a>
+						<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
 					</div>
-				</form>
-				{/if}
 
-				<div style="float: right">
-					<a href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}"><img src="../img/admin/edit.gif" /></a>
-					<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
-				</div>
-
-				{displayAddressDetail address=$addresses.delivery newLine='<br />'}
-				{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
-			</fieldset>
-		</div>
-
+					{displayAddressDetail address=$addresses.delivery newLine='<br />'}
+					{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
+				</fieldset>
+			</div>
+		{/if}
 		<div style="width: 49%; float:right;"></contact>
 			<!-- Invoice address -->
 			<fieldset>
