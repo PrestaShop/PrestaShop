@@ -113,13 +113,13 @@ class StateCore extends ObjectModel
 	* @param string $iso_code Iso code
 	* @return integer state id
 	*/
-	public static function getIdByIso($iso_code)
+	public static function getIdByIso($iso_code, $id_country = null)
 	{
 	  	return Db::getInstance()->getValue('
-			SELECT `id_state`
-			FROM `'._DB_PREFIX_.'state`
-			WHERE `iso_code` = \''.pSQL($iso_code).'\''
-		);
+		SELECT `id_state`
+		FROM `'._DB_PREFIX_.'state`
+		WHERE `iso_code` = \''.pSQL($iso_code).'\'
+		'.($id_country ? 'AND `id_country` = '.(int)$id_country : ''));
 	}
 
 	/**

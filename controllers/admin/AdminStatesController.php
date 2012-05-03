@@ -181,6 +181,18 @@ class AdminStatesControllerCore extends AdminController
 	{
 		if (!isset($this->table))
 			return false;
+			
+		if (!Tools::getValue('id_'.$this->table))
+		{
+			if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country')))
+				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two states with the same ISO code in the same country');
+		}
+		else if (Validate::isStateIsoCode(Tools::getValue('iso_code')))
+		{
+			$id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
+			if ($id_state && $id_state != Tools::getValue('id_'.$this->table))
+				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two states with the same ISO code in the same country');
+		}
 
 		/* Delete object */
 		if (isset($_GET['delete'.$this->table]))
