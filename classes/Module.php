@@ -1226,7 +1226,8 @@ abstract class ModuleCore
 	public static function getPaymentModules()
 	{
 		$context = Context::getContext();
-		$billing = new Address((int)$context->cart->id_address_invoice);
+		if (isset($context->cart))
+			$billing = new Address((int)$context->cart->id_address_invoice);
 		if (isset($context->customer))
 			$groups = $context->customer->getGroups();
 
@@ -1239,16 +1240,17 @@ abstract class ModuleCore
 				FROM `'._DB_PREFIX_.'module_country` mc
 				LEFT JOIN `'._DB_PREFIX_.'module` m ON m.`id_module` = mc.`id_module`
 				INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group` AND cg.`id_customer` = '.(int)$context->customer->id.')
+				INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group`
+					'.(isset($context->customer) ? 'AND cg.`id_customer` = '.(int)$context->customer->id : '').')
 				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \''.pSQL($hookPayment).'\'
-					AND mc.id_country = '.(int)$billing->id_country.'
+					'.(isset($billing) ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
 					AND mc.id_shop = '.(int)$context->shop->id.'
 					AND mg.id_shop = '.(int)$context->shop->id.'
 					AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 					AND hm.id_shop IN('.implode(', ', $list).')
-					AND (mg.`id_group` IN('.implode(', ', $groups).'))
+					'.(isset($groups) ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').'
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
