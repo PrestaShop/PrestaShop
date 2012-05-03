@@ -197,7 +197,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 									if (!count($this->errors))
 									{
-										$result = $this->_getCarrierList();
 										// Wrapping fees
 										$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
 										$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
@@ -213,7 +212,10 @@ class OrderOpcControllerCore extends ParentOrderController
 									}
 								}
 								if (count($this->errors))
-									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+									die(Tools::jsonEncode(array(
+										'hasError' => true,
+										'errors' => $this->errors
+									)));
 							}
 							die(Tools::displayError());
 							break;
@@ -504,7 +506,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (count($this->errors))
 			return array(
 				'hasError' => true,
-				'errors' => $this->errors
+				'errors' => $this->errors,
+				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl')
 			);
 	}
 
