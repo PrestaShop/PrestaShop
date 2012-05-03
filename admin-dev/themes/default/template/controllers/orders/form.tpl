@@ -856,18 +856,28 @@
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<fieldset id="customer_part"><legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
-	<p><label>{l s='Search customers:'}</label><input type="text" id="customer" value="" />
-	<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span></a></p>
+<fieldset id="customer_part">
+	<legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
+	<label>{l s='Search customers:'}</label>
+	<div class="margin-form">
+		<input type="text" id="customer" value="" />
+		<p>{l s='Search a customer by tapping the first letters of his name'}</p>
+		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
+		</a>
+	</div>
 	<div id="customers">
 	</div>
 </fieldset><br />
 <form action="{$link->getAdminLink('AdminOrders')}&submitAdd{$table}=1" method="post" autocomplete="off">
 <fieldset id="products_part" style="display:none;"><legend><img src="../img/t/AdminCatalog.gif" />{l s='Cart'}</legend>
 	<div>
-		<p><label>{l s='Search a product:'} </label>
-		<input type="hidden" value="" id="id_cart" name="id_cart" />
-		<input type="text" id="product" value="" /></p>
+		<label>{l s='Search a product:'} </label>
+		<div class="margin-form">
+			<input type="hidden" value="" id="id_cart" name="id_cart" />
+			<input type="text" id="product" value="" />
+			<p>{l s='Search a product by tapping the first letters of his name'}</p>
+		</div>
 		<div id="products_found">
 			<div id="product_list">
 			</div>
