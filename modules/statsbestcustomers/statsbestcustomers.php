@@ -45,7 +45,9 @@ class StatsBestCustomers extends ModuleGrid
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-
+		
+		parent::__construct();
+		
 		$this->_defaultSortColumn = 'totalMoneySpent';
 		$this->_defaultSortDirection = 'DESC';
 		$this->_emptyMessage = $this->l('Empty recordset returned');
@@ -83,8 +85,6 @@ class StatsBestCustomers extends ModuleGrid
 				'width' => 80,
 				'align' => 'right')
 		);
-
-		parent::__construct();
 
 		$this->displayName = $this->l('Best customers');
 		$this->description = $this->l('A list of the best customers');

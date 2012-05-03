@@ -45,7 +45,9 @@ class StatsBestCategories extends ModuleGrid
 		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-
+		
+		parent::__construct();
+		
 		$this->_defaultSortColumn = 'totalPriceSold';
 		$this->_defaultSortDirection = 'DESC';
 		$this->_emptyMessage = $this->l('Empty recordset returned');
@@ -81,8 +83,6 @@ class StatsBestCategories extends ModuleGrid
 				'align' => 'right'
 			)
 		);
-
-		parent::__construct();
 
 		$this->displayName = $this->l('Best categories');
 		$this->description = $this->l('A list of the best categories');
