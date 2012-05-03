@@ -45,7 +45,9 @@ class StatsBestManufacturers extends ModuleGrid
 		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-
+		
+		parent::__construct();
+		
 		$this->_defaultSortColumn = 'sales';
 		$this->_defaultSortDirection = 'DESC';
 		$this->_emptyMessage = $this->l('Empty recordset returned');
@@ -74,8 +76,6 @@ class StatsBestManufacturers extends ModuleGrid
 				'align' => 'right'
 			)
 		);
-
-		parent::__construct();
 
 		$this->displayName = $this->l('Best manufacturers');
 		$this->description = $this->l('A list of the best manufacturers');
