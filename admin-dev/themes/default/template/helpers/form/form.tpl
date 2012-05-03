@@ -383,6 +383,7 @@
 </form>
 {/block}
 {block name="after"}{/block}
+
 {if isset($tinymce) && $tinymce}
 	<script type="text/javascript">
 
@@ -391,21 +392,13 @@
 	var ad = '{$ad}';
 
 	$(document).ready(function(){
-
-		tinySetup();
-
 		{block name="autoload_tinyMCE"}
-			// change each by click to load only on click
-			$(".autoload_rte").each(function(e){
-				tinySetup({
-					mode :"exact",
-					editor_selector :"autoload_rte",
-					elements : $(this).attr("id"),
-					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-					theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-					theme_advanced_buttons3 : "",
-					theme_advanced_buttons4 : "",
-				});
+			tinySetup({
+				editor_selector :"autoload_rte",
+				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+				theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+				theme_advanced_buttons3 : "",
+				theme_advanced_buttons4 : ""
 			});
 		{/block}
 	});
