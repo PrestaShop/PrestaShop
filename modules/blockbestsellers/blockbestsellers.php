@@ -70,7 +70,7 @@ class BlockBestSellers extends Module
 		if (Tools::isSubmit('submitBestSellers'))
 		{
 			Configuration::updateValue('PS_BLOCK_BESTSELLERS_DISPLAY', (int)(Tools::getValue('always_display')));
-			$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+			$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
 		return $output.$this->displayForm();
 	}

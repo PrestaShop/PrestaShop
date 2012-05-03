@@ -146,7 +146,7 @@ class Watermark extends Module
 			foreach ($this->_errors as $error)
 				$this->_html .= '<div class="module_error alert error"><img src="../img/admin/warning.gif" alt="'.$this->l('ok').'" /> '.$this->l($error).'</div>';
 		else
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('ok').'" /> '.$this->l('Settings updated').'</div>';
+			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 	}
 
 	private function _displayForm()
