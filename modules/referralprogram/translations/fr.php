@@ -22,7 +22,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram-program_dcc99d8715486f570
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_f6cb78f0afcf7c3a06048a7a5855d6a1'] = 'Des e-mails ont été envoyés à vos amis !';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_79cd362fc64832faa0a2079f1142aa12'] = 'Un e-mail a été envoyé à votre amis !';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_2b90ca4a7b1c83e0a3bb65899725cd65'] = 'Des e-mails de rappel ont été envoyés à vos amis !';
-$_MODULE['<{referralprogram}prestashop>referralprogram-program_819e52b3c6ca4db131dcfea19188a0c3'] = 'Un e-mail de rappel a été envoyé à votre amis !';
+$_MODULE['<{referralprogram}prestashop>referralprogram-program_819e52b3c6ca4db131dcfea19188a0c3'] = 'Un e-mail de rappel a été envoyé à votre ami !';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_46ee2fe8845962d24bf5178a26e109f3'] = 'Parrainer mes amis';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_c56567bc42584de1a7ac430039b3a87e'] = 'Amis en attente';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_58c7f2542ab2e2c3e4e39e851ea0f225'] = 'Mes amis parrainés';
@@ -45,7 +45,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram-program_31fde7b05ac8952da
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_8e8dc296c6bf3876468aa028974bfebe'] = 'E-mail d\'invitation';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_a86073a0c3b0bebf11bd807caf8e505a'] = 'l\'e-mail par défaut';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_7532696b81dfc0b94a37e876677152c5'] = 'qui sera envoyé à vos amis.';
-$_MODULE['<{referralprogram}prestashop>referralprogram-program_ad3d06d03d94223fa652babc913de686'] = 'Validez';
+$_MODULE['<{referralprogram}prestashop>referralprogram-program_ad3d06d03d94223fa652babc913de686'] = 'Valider';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_59352cd5314a67c0fb10c964831920f3'] = 'Pour parrainer vos amis, vous devez finaliser au moins';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_ec7342814444c667ab93181b30b28e38'] = 'Ces amis parrainés n\'ont pas encore effectué d\'achat, mais vous pouvez les relancer ! Pour ce faire, vous devez cocher les cases des amis que vous voulez relancer, puis cliquer sur le bouton \"Relancer mes amis\"';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_3e717a04ff77cd5fa068d8ad9d3facc8'] = 'Dernière invitation';
