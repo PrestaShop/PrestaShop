@@ -150,11 +150,13 @@ class OrderControllerCore extends ParentOrderController
 					Tools::redirect('index.php?controller=order&step=2');
 
 				// Check the delivery option is setted
-                if (!Tools::getValue('delivery_option'))
- 	               Tools::redirect('index.php?controller=order&step=2');
-                foreach (Tools::getValue('delivery_option') as $delivery_option)
-    	            if (empty($delivery_option))
-        	            Tools::redirect('index.php?controller=order&step=2');
+				if (!Tools::getValue('delivery_option') && !$this->context->cart->isVirtualCart())
+				{
+					Tools::redirect('index.php?controller=order&step=2');
+					foreach (Tools::getValue('delivery_option') as $delivery_option)
+					if (empty($delivery_option))
+						Tools::redirect('index.php?controller=order&step=2');
+				}
 
 				$this->autoStep();
 

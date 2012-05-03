@@ -167,7 +167,7 @@
 	{include file="$tpl_dir./order-steps.tpl"}
 	{include file="$tpl_dir./errors.tpl"}
 	
-	{if !$multi_shipping && {Configuration::get('PS_ALLOW_MULTISHIPPING')}}
+	{if !$multi_shipping && {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
 		<div class="button_multishipping_mode" id="multishipping_mode_box">
 			<div class="title">{l s='Multi-shipping'}</div>
 			<div class="description">
@@ -179,7 +179,7 @@
 	{/if}
 <form action="{$link->getPageLink($back_order_page, true)}" method="post">
 {else}
-	{if {Configuration::get('PS_ALLOW_MULTISHIPPING')}}
+	{if {Configuration::get('PS_ALLOW_MULTISHIPPING')} && !$cart->isVirtualCart()}
 		<div class="address-form-multishipping">
 			<div class="button_multishipping_mode" id="multishipping_mode_box">
 				<div class="title">{l s='Multi-shipping'}</div>
@@ -207,7 +207,7 @@
 {/if}
 	<div class="addresses clearfix">
 		<p class="address_delivery select">
-			<label for="id_address_delivery">{l s='Choose a delivery address:'}</label>
+			<label for="id_address_delivery">{if $cart->isVirtualCart()}{l s='Choose a billing address:'}{else}{l s='Choose a delivery address:'}{/if}</label>
 			<select name="id_address_delivery" id="id_address_delivery" class="address_select" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
 
 			{foreach from=$addresses key=k item=address}
