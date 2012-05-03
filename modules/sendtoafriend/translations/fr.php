@@ -21,4 +21,3 @@ $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_7ae8a9a7a5d8fa40d4515fc52f16b
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_2541d938b0a58946090d7abdde0d3890'] = 'envoyer';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_68728c1897e5936032fe21ffb6b10c2e'] = 'Retour à la fiche produit';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_ajax_22c4733a9ceb239bf825a0cecd1cfaec'] = 'Un ami';
-$_MODULE['<{sendtoafriend}prestashop>sendtoafriend_ajax_ffa719e6b8863717a9e86579249c7d9b'] = 'vous à envoyé un lien vers';
