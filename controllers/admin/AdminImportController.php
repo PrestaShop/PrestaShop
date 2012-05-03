@@ -1112,6 +1112,9 @@ class AdminImportControllerCore extends AdminController
 
 			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
+			// link product to shops
+			$product->id_shop_list = explode(',', $product->shop);
+
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
 			$lang_field_error = $product->validateFieldsLang(UNFRIENDLY_ERROR, true);
@@ -1150,7 +1153,7 @@ class AdminImportControllerCore extends AdminController
 					if (isset($product->date_add) && $product->date_add != '')
 						$res = $product->add(false);
 					else
-					$res = $product->add();
+						$res = $product->add();
 				}
 			}
 
@@ -1165,21 +1168,6 @@ class AdminImportControllerCore extends AdminController
 			}
 			else
 			{
-				// Associate product to shop
-				if (Shop::isFeatureActive() && $product->shop)
-				{
-					$product->shop = explode(',', $product->shop);
-					$shops = array();
-					foreach ($product->shop as $shop)
-					{
-						$shop = trim($shop);
-						if (!is_numeric($shop))
-							$shop = Shop::getIdByName($shop);
-						$shops[] = $shop;
-					}
-					$product->associateTo($shops);
-				}
-
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
 				{
