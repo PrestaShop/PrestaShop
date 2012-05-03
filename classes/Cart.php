@@ -3307,4 +3307,31 @@ class CartCore extends ObjectModel
 			);
 		}
 	}
+	
+	/**
+	 * Get all the ids of the delivery addresses without carriers
+	 * 
+	 * @param bool $return_collection Return a collection
+	 * 
+	 * @return array Array of address id or of address object
+	 */
+	public function getDeliveryAddressesWithoutCarriers($return_collection = false)
+	{
+		$addresses_without_carriers = array();
+		foreach ($this->getProducts() as $product)
+		{
+			if (!in_array($product['id_address_delivery'], $addresses_without_carriers)
+				&& !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'])))
+				$addresses_without_carriers[] = $product['id_address_delivery'];
+		}
+		if (!$return_collection)
+			return $addresses_without_carriers;
+		else
+		{
+			$addresses_instance_without_carriers = array();
+			foreach ($addresses_without_carriers as $id_address)
+				$addresses_instance_without_carriers[] = new Address($id_address);
+			return $addresses_instance_without_carriers;
+		}
+	}
 }
