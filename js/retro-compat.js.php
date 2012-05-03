@@ -52,13 +52,13 @@ $plugins = array(
 					array('new_file' => $plugins_folder.'jquery.hoverIntent.js', 'name' => 'hoverIntent'),
 				'jquery-ui-1.8.10.custom.min.js' =>
 					array('new_file' => __DIR__.'/jquery/jquery-ui.will.be.removed.in.1.6.js', 'name' => ''),
-				'jquery.treeview-categories.async.js' =>
+				'jquery.treeview.async.js' =>
 					array('new_file' => $plugins_folder.'treeview-categories/jquery.treeview-categories.async.js', 'name' => 'treeview-categories.async'),
-				'jquery.treeview-categories.edit.js' =>
+				'jquery.treeview.edit.js' =>
 					array('new_file' => $plugins_folder.'treeview-categories/jquery.treeview-categories.edit.js', 'name' => 'treeview-categories.edit'),
-				'jquery.treeview-categories.js' =>
+				'jquery.treeview.js' =>
 					array('new_file' => $plugins_folder.'treeview-categories/jquery.treeview-categories.js', 'name' => 'treeview-categories'),
-				'jquery.treeview-categories.sortable.js' =>
+				'jquery.treeview.sortable.js' =>
 					array('new_file' => $plugins_folder.'treeview-categories/jquery.treeview-categories.sortable.js', 'name' => 'treeview-categories.sortable'),
 				'tabpane.js' => 
 					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
