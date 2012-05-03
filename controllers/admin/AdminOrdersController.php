@@ -855,10 +855,13 @@ class AdminOrdersControllerCore extends AdminController
 						SELECT `id_order_carrier`
 						FROM `'._DB_PREFIX_.'order_carrier`
 						WHERE `id_order` = '.(int)$order->id);
-					$order_carrier = new OrderCarrier($id_order_carrier);
-					$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
-					$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
-					$order_carrier->update();
+					if ($id_order_carrier)
+					{
+						$order_carrier = new OrderCarrier($id_order_carrier);
+						$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
+						$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
+						$order_carrier->update();
+					}
 
 					// Update order amount
 					$order->total_discounts = Tools::convertPriceFull($order->total_discounts, $old_currency, $currency);
