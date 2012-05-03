@@ -46,9 +46,9 @@ class OrderFollowControllerCore extends FrontController
 				Tools::redirect('index.php?controller=history');
 			if (!$order_qte_input = Tools::getValue('order_qte_input'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if ($customizationIds = Tools::getValue('customization_ids') && !$customizationQtyInput)
+			if (!$customizationQtyInput && $customizationIds = Tools::getValue('customization_ids'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if (!$ids_order_detail = Tools::getValue('ids_order_detail') && !$customizationIds)
+			if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail2');
 
 			$order = new Order((int)($id_order));
@@ -61,6 +61,7 @@ class OrderFollowControllerCore extends FrontController
 			$orderReturn->question = strval(Tools::getValue('returnText'));
 			if (empty($orderReturn->question))
 				Tools::redirect('index.php?controller=order-follow&errorMsg');
+
 			if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput))
 				Tools::redirect('index.php?controller=order-follow&errorQuantity');
 
