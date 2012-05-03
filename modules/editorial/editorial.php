@@ -34,7 +34,7 @@ class Editorial extends Module
 	{
 		$this->name = 'editorial';
 		$this->tab = 'front_office_features';
-		$this->version = '1.6';
+		$this->version = '2.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -45,7 +45,7 @@ class Editorial extends Module
 		$path = dirname(__FILE__);
 		if (strpos(__FILE__, 'Module.php') !== false)
 			$path .= '/../modules/'.$this->name;
-		include_once($path.'/EditorialClass.php');
+		include_once $path.'/EditorialClass.php';
 	}
 
 	public function install()
@@ -56,6 +56,7 @@ class Editorial extends Module
 		$res = Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial` (
 			`id_editorial` int(10) unsigned NOT NULL auto_increment,
+			`id_shop` int(10) unsigned NOT NULL ,
 			`body_home_logo_link` varchar(255) NOT NULL,
 			PRIMARY KEY (`id_editorial`))
 			ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
@@ -72,28 +73,31 @@ class Editorial extends Module
 				PRIMARY KEY (`id_editorial`, `id_lang`))
 				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-		if ($res)
-			$res &= Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'editorial`(`body_home_logo_link`)
-				VALUES("http://www.prestashop.com")');
-		if ($res)
-		{
-			$id_editorial = Db::getInstance()->Insert_ID();
-			foreach (Language::getLanguages(false) as $lang)
-				$res &= Db::getInstance()->insert('editorial_lang', array(
-					'id_editorial' =>			$id_editorial,
-					'id_lang' =>				$lang['id_lang'],
-					'body_title' =>				'Lorem ipsum dolor sit amet',
-					'body_subheading' =>		'Excepteur sint occaecat cupidatat non proident',
-					'body_paragraph' =>			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
-					'body_logo_subheading' =>	'Lorem ipsum presta shop amet',
-					));
-		}
 
-		if (!$res)
-			$res &= $this->uninstall();
-		
-		return $res;
+		if ($res)
+			foreach
+			(Shop::getShops(false) as $shop)
+				$res &= $this->createExampleEditorial($shop['id_shop']);
+
+			if (!$res)
+				$res &= $this->uninstall();
+
+			return $res;
+	}
+
+	private function createExampleEditorial($id_shop)
+	{
+		$editorial = new EditorialClass();
+		$editorial->id_shop = (int)$id_shop;
+		$editorial->body_home_logo_link = 'http://www.prestashop.com';
+		foreach (Language::getLanguages(false) as $lang)
+		{
+			$editorial->body_title[$lang['id_lang']] = 'Lorem ipsum dolor sit amet';
+			$editorial->body_subheading[$lang['id_lang']] = 'Excepteur sint occaecat cupidatat non proident';
+			$editorial->body_paragraph[$lang['id_lang']] = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>';
+			$editorial->body_logo_subheading[$lang['id_lang']] = 'Lorem ipsum presta shop amet';
+		}
+		return $editorial->add();
 	}
 
 	public function uninstall()
@@ -107,48 +111,141 @@ class Editorial extends Module
 		return true;
 	}
 
-	public function putContent($xml_data, $key, $field, $forbidden, $section)
+	private function initForm()
 	{
-		foreach ($forbidden AS $line)
-			if ($key == $line)
-				return 0;
-		if (!preg_match('/^'.$section.'_/i', $key))
-			return 0;
-		$key = preg_replace('/^'.$section.'_/i', '', $key);
-		$field = htmlspecialchars($field);
-		if (!$field)
-			return 0;
-		return ("\n".'		<'.$key.'>'.$field.'</'.$key.'>');
+		$languages = Language::getLanguages(false);
+		foreach ($languages as $k => $language)
+			$languages[$k]['is_default'] = (int)($language['id_lang'] == Configuration::get('PS_LANG_DEFAULT'));
+
+		$helper = new HelperForm();
+		$helper->module = $this;
+		$helper->name_controller = 'editorial';
+		$helper->identifier = $this->identifier;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->languages = $languages;
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		$helper->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
+		$helper->allow_employee_form_lang = true;
+		$helper->toolbar_scroll = true;
+		$helper->toolbar_btn = $this->initToolbar();
+		$helper->title = $this->displayName;
+		$helper->submit_action = 'submitUpdateEditorial';
+		
+		$this->fields_form[0]['form'] = array(
+			'tinymce' => true,
+			'legend' => array(
+				'title' => $this->displayName,
+				'image' => $this->_path.'logo.gif'
+			),
+			'submit' => array(
+				'name' => 'submitUpdateEditorial',
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Main title'),
+					'name' => 'body_title',
+					'lang' => true,
+					'size' => 64,
+					'hint' => $this->l('Appears along top of homepage'),
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Subheading'),
+					'name' => 'body_subheading',
+					'lang' => true,
+					'size' => 64,
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Introductory text'),
+					'name' => 'body_paragraph',
+					'lang' => true,
+					'autoload_rte' => true,
+					'hint' => $this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.'),
+				),
+				array(
+					'type' => 'file',
+					'label' => $this->l('Homepage logo'),
+					'name' => 'body_homepage_logo',
+					'display_image' => true
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Homepage logo link'),
+					'name' => 'body_home_logo_link',
+					'size' => 33,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Homepage logo subheading'),
+					'name' => 'body_logo_subheading',
+					'lang' => true,
+					'size' => 33,
+				),
+			)
+		);		
+		return $helper;
+	}
+
+	private function initToolbar()
+	{
+		$this->toolbar_btn['save'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save')
+		);
+		
+		return $this->toolbar_btn;
 	}
 
 	public function getContent()
 	{
+		$this->postProcess();
+		
+		$helper = $this->initForm();
+		
+		$id_shop = (int)$this->context->shop->id;
+		$editorial = EditorialClass::getByIdShop($id_shop);
 
-		/* display the module name */
-		$this->_html = '<h2>'.$this->displayName.'</h2>';
+		if (!$editorial) //if editorial ddo not exist for this shop => create a new example one
+			$this->createExampleEditorial($id_shop);
+		
+		foreach($this->fields_form[0]['form']['input'] as $input) //fill all form fields
+			if ($input['name'] != 'body_homepage_logo')
+				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
+		
+		$helper->fields_value['image'] = (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') ? '<img src="..'.$this->_path.'/homepage_logo_'.(int)$id_shop.'.jpg">' : '');
+		if ($helper->fields_value['image'])
+			$helper->fields_value['size'] = filesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') / 1000;
+		
+		
+		return $helper->generateForm($this->fields_form);
+	}
+
+	public function postProcess()
+	{
 		$errors = '';
-
+		$id_shop = (int)$this->context->shop->id;
 		// Delete logo image
 		if (Tools::isSubmit('deleteImage'))
 		{
-			if (!file_exists(dirname(__FILE__).'/homepage_logo.jpg'))
+			if (!file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 				$errors .= $this->displayError($this->l('This action cannot be taken.'));
 			else
 			{
-				unlink(dirname(__FILE__).'/homepage_logo.jpg');
+				unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
 				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id));
 			}
 			$this->_html .= $errors;
 		}
 
-		/* update the editorial xml */
-		if (Tools::isSubmit('submitUpdate'))
+		if (Tools::isSubmit('submitUpdateEditorial'))
 		{
-			// Forbidden key
-			$forbidden = array('submitUpdate');
-
-			$editorial = new EditorialClass(1);
+			$id_shop = (int)$this->context->shop->id;
+			$editorial = EditorialClass::getByIdShop($id_shop);
 			$editorial->copyFromPost();
 			$editorial->update();
 
@@ -156,159 +253,43 @@ class Editorial extends Module
 			if (isset($_FILES['body_homepage_logo']) && isset($_FILES['body_homepage_logo']['tmp_name']) && !empty($_FILES['body_homepage_logo']['tmp_name']))
 			{
 				Configuration::set('PS_IMAGE_GENERATION_METHOD', 1);
-				if(file_exists(dirname(__FILE__).'/homepage_logo.jpg'))
-					unlink(dirname(__FILE__).'/homepage_logo.jpg');
+				if (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
+					unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				if ($error = ImageManager::validateUpload($_FILES['body_homepage_logo']))
 					$errors .= $error;
 				elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
 					return false;
-				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo.jpg'))
+				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 					$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
 				if (isset($tmpName))
 					unlink($tmpName);
 			}
 			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully')) : $errors;
-			if (file_exists(dirname(__FILE__).'/homepage_logo.jpg'))
+			if (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 			{
-				list($width, $height, $type, $attr) = getimagesize(dirname(__FILE__).'/homepage_logo.jpg');
+				list($width, $height, $type, $attr) = getimagesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_WIDTH', (int)round($width));
 				Configuration::updateValue('EDITORIAL_IMAGE_HEIGHT', (int)round($height));
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 0);
 			}
 		}
-
-		/* display the editorial's form */
-		$this->_displayForm();
-
-		return $this->_html;
-	}
-
-	private function _displayForm()
-	{
-		/* Languages preliminaries */
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		$languages = Language::getLanguages(false);
-		$iso = $this->context->language->iso_code;
-		$divLangName = 'title¤subheading¤cpara¤logo_subheading';
-
-		$editorial = new EditorialClass(1);
-		// TinyMCE
-		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
-		$ad = dirname($_SERVER["PHP_SELF"]);
-		$this->_html .=  '
-			<script type="text/javascript">
-			var iso = \''.$isoTinyMCE.'\' ;
-			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
-			var ad = \''.$ad.'\' ;
-			</script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
-		$this->_html .= '
-		<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>
-		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
-			<fieldset style="width: 905px;">
-				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->displayName.'</legend>
-				<label>'.$this->l('Main title').'</label>
-				<div class="margin-form">';
-
-				foreach ($languages as $language)
-				{
-					$this->_html .= '
-					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
-						<input type="text" name="body_title_'.$language['id_lang'].'" id="body_title_'.$language['id_lang'].'" size="64" value="'.(isset($editorial->body_title[$language['id_lang']]) ? $editorial->body_title[$language['id_lang']] : '').'" />
-					</div>';
-				}
-				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'title', true);
-
-
-		$this->_html .= '
-					<p class="clear">'.$this->l('Appears along top of homepage').'</p>
-				</div>
-				<label>'.$this->l('Subheading').'</label>
-				<div class="margin-form">';
-
-				foreach ($languages as $language)
-				{
-					$this->_html .= '
-					<div id="subheading_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
-						<input type="text" name="body_subheading_'.$language['id_lang'].'" id="body_subheading_'.$language['id_lang'].'" size="64" value="'.(isset($editorial->body_subheading[$language['id_lang']]) ? $editorial->body_subheading[$language['id_lang']] : '').'" />
-					</div>';
-				 }
-				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'subheading', true);
-
-		$this->_html .= '
-					<div class="clear"></div>
-				</div>
-				<label>'.$this->l('Introductory text').'</label>
-				<div class="margin-form">';
-
-				foreach ($languages as $language)
-				{
-					$this->_html .= '
-					<div id="cpara_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
-						<textarea class="rte" cols="70" rows="30" id="body_paragraph_'.$language['id_lang'].'" name="body_paragraph_'.$language['id_lang'].'">'.(isset($editorial->body_paragraph[$language['id_lang']]) ? $editorial->body_paragraph[$language['id_lang']] : '').'</textarea>
-					</div>';
-				 }
-
-				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'cpara', true);
-
-				$this->_html .= '
-					<p class="clear">'.$this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.').'</p>
-				</div>
-				<label>'.$this->l('Homepage logo').' </label>
-				<div class="margin-form">';
-				if (file_exists(dirname(__FILE__).'/homepage_logo.jpg') && !Configuration::get('EDITORIAL_IMAGE_DISABLE'))
-						$this->_html .= '<div id="image" >
-							<img src="'.$this->_path.'homepage_logo.jpg?t='.time().'" />
-							<p align="center">'.$this->l('Filesize').' '.(filesize(dirname(__FILE__).'/homepage_logo.jpg') / 1000).'kb</p>
-							<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
-							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /> '.$this->l('Delete').'</a>
-						</div>';
-
-				$this->_html .= '<input type="file" name="body_homepage_logo" />
-					<p style="clear: both">'.$this->l('Will appear next to the Introductory Text above').'</p>
-
-				</div>
-				<label>'.$this->l('Homepage logo link').'</label>
-				<div class="margin-form">
-					<input type="text" name="body_home_logo_link" size="64" value="'.$editorial->body_home_logo_link.'" />
-					<p style="clear: both">'.$this->l('Link used on the 2nd logo').'</p>
-				</div>
-				<label>'.$this->l('Homepage logo subheading').'</label>
-				<div class="margin-form">';
-
-				foreach ($languages as $language)
-				{
-					$this->_html .= '
-					<div id="logo_subheading_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
-						<input type="text" name="body_logo_subheading_'.$language['id_lang'].'" id="logo_subheading_'.$language['id_lang'].'" size="64" value="'.(isset($editorial->body_logo_subheading[$language['id_lang']]) ? $editorial->body_logo_subheading[$language['id_lang']] : '').'" />
-					</div>';
-				 }
-
-				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'logo_subheading', true);
-
-				$this->_html .= '
-					<div class="clear"></div>
-				</div>
-				<div class="clear pspace"></div>
-				<div class="margin-form clear"><input type="submit" name="submitUpdate" value="'.$this->l('Update the editor').'" class="button" /></div>
-			</fieldset>
-		</form>';
 	}
 
 	public function hookDisplayHome($params)
 	{
+		$id_shop = (int)$this->context->shop->id;
+		$editorial = EditorialClass::getByIdShop($id_shop);
+		$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
 
-		$editorial = new EditorialClass(1, $this->context->language->id);
 		$this->smarty->assign(array(
-			'editorial' => $editorial,
-			'default_lang' => (int)$this->context->language->id,
-			'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
-			'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-			'id_lang' => $this->context->language->id,
-			'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo.jpg'),
-			'image_path' => $this->_path.'homepage_logo.jpg'
-		));
+				'editorial' => $editorial,
+				'default_lang' => (int)$this->context->language->id,
+				'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
+				'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
+				'id_lang' => $this->context->language->id,
+				'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
+				'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
+			));
 		return $this->display(__FILE__, 'editorial.tpl');
 	}
 
