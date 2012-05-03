@@ -772,6 +772,20 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
+	 * Checks if the current order state is paid and shipped
+	 *
+	 * @return bool
+	 */
+	public function isPaidAndShipped()
+	{
+		$order_state = $this->getCurrentOrderState();
+		if ($order_state && $order_state->paid && $order_state->shipped)
+			return true;
+		else
+			return false;
+	}
+
+	/**
 	 * Get customer orders
 	 *
 	 * @param integer $id_customer Customer id
@@ -1029,15 +1043,17 @@ class OrderCore extends ObjectModel
 		return false;
 	}
 
-
+	/**
+	 * Can this order be returned by the client?
+	 *
+	 * @return bool
+	 */
 	public function isReturnable()
 	{
-		$payment = $this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PAYMENT'));
-		$delivred = $this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_DELIVERED'));
-		if ($payment && $delivred && strtotime($delivred[0]['date_add']) < strtotime($payment[0]['date_add']))
-			return ((int)(Configuration::get('PS_ORDER_RETURN')) == 1 && $this->getNumberOfDays());
-		else
-			return ((int)Configuration::get('PS_ORDER_RETURN') == 1 && (int)$this->getCurrentState() == Configuration::get('PS_OS_DELIVERED') && $this->getNumberOfDays());
+		if (Configuration::get('PS_ORDER_RETURN') && $this->isPaidAndShipped())
+			return $this->getNumberOfDays();
+
+		return false;
 	}
 
     public static function getLastInvoiceNumber()
