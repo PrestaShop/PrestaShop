@@ -234,7 +234,7 @@
 				<p class="error" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
 					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
 					
-					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
+					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</span>
 				</p>
 				{/if}
 
