@@ -537,26 +537,17 @@ class ToolsCore
 			return $amount;
 
 		if ($currency_from === null)
-		{
 			$currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-			$default_currency = $currency_from;
-		}
 
 		if ($currency_to === null)
-		{
 			$currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-			$default_currency = $currency_to;
-		}
 
 		if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 			$amount *= $currency_to->conversion_rate;
 		else
 		{
-			if (!isset($default_currency))
-				$default_currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
-			// Convert amount to default currency
-			$amount = Tools::ps_round($amount / $default_currency->conversion_rate, 2);
+			// Convert amount to default currency (using the old currency rate)
+			$amount = Tools::ps_round($amount / $currency_from->conversion_rate, 2);
 			// Convert to new currency
 			$amount *= $currency_to->conversion_rate;
 		}
