@@ -216,7 +216,7 @@ class Editorial extends Module
 			if ($input['name'] != 'body_homepage_logo')
 				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
 		
-		$helper->fields_value['image'] = (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') ? '<img src="..'.$this->_path.'/homepage_logo_'.(int)$id_shop.'.jpg">' : '');
+		$helper->fields_value['image'] = (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') ? '<img src="'.$this->_path.'homepage_logo_'.(int)$id_shop.'.jpg">' : '');
 		if ($helper->fields_value['image'])
 			$helper->fields_value['size'] = filesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') / 1000;
 		
