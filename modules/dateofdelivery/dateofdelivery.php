@@ -49,10 +49,10 @@ class DateOfDelivery extends Module
 	public function install()
 	{	
 		if (!parent::install()
-            OR !$this->registerHook('beforeCarrier')
-            OR !$this->registerHook('orderDetailDisplayed')
-            OR !$this->registerHook('displayPDFInvoice'))
-			    return false;
+			|| !$this->registerHook('beforeCarrier')
+			|| !$this->registerHook('orderDetailDisplayed')
+			||!$this->registerHook('displayPDFInvoice'))
+				return false;
 		
 		if (!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'dateofdelivery_carrier_rule` (
@@ -102,21 +102,54 @@ class DateOfDelivery extends Module
 
 	public function hookBeforeCarrier($params)
 	{
-		if (!sizeof($params['carriers']))
+		if (!count($params['delivery_option_list']))
 			return false;
 		
-		$oos = false; // For out of stock management
-		foreach ($params['cart']->getProducts() as $product)
-			if ($product['stock_quantity'] <= 0 OR ($product['quantity_attribute'] <= 0 AND $product['id_product_attribute']))
-				$oos = true;
+		$package_list = $params['cart']->getPackageList();
 
 		$datesDelivery = array();
-		foreach ($params['carriers'] as $carrier)
-			$datesDelivery[(int)($carrier['id_carrier'])] = $this->_getDatesOfDelivery((int)($carrier['id_carrier']), $oos);
+		foreach ($params['delivery_option_list'] as $id_address => $by_address)
+		{
+			$datesDelivery[$id_address] = array();
+			foreach ($by_address as $key => $delivery_option)
+			{
+				$date_from = null;
+				$date_to = null;
+				$datesDelivery[$id_address][$key] = array();
+				
+				foreach ($delivery_option['carrier_list'] as $id_carrier => $carrier)
+				{
+					foreach ($carrier['package_list'] as $id_package)
+					{
+						$package = $package_list[$id_address][$id_package];
+						$oos = false; // For out of stock management
+						foreach ($package['product_list'] as $product)
+							if (StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) <= 0)
+							{
+								$oos = true;
+								break;
+							}
+						
+						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos);
+						if (is_null($date_from) || $date_from < $date_range[0])
+						{
+							$date_from = $date_range[0][1];
+							$datesDelivery[$id_address][$key][0] = $date_range[0];
+						}
+						if (is_null($date_to) || $date_to < $date_range[1])
+						{
+							$date_to = $date_range[1][1];
+							$datesDelivery[$id_address][$key][1] = $date_range[1];
+						}
+					}
+				}
+			}
+		}
 		
 		$this->smarty->assign(array(
+			'nbPackages' => $params['cart']->getNbOfPackages(),
 			'datesDelivery' => $datesDelivery,
-			'id_carrier' => ($params['cart']->id_carrier ? (int)($params['cart']->id_carrier) : (int)(Configuration::get('PS_CARRIER_DEFAULT')))
+			'delivery_option' => $params['delivery_option']
 		));
 		
 		return $this->display(__FILE__, 'beforeCarrier.tpl');
@@ -141,33 +174,33 @@ class DateOfDelivery extends Module
 		return $this->display(__FILE__, 'orderDetail.tpl');
 	}
 
-    /**
-     * Displays the delivery dates on the invoice
-     *
-     * @param $params contains an instance of OrderInvoice
-     * @return string
-     *
-     */
-    public function hookDisplayPDFInvoice($params)
-    {
-        $order_invoice = $params['object'];
-        if (!($order_invoice instanceof OrderInvoice))
-            return;
+	/**
+	 * Displays the delivery dates on the invoice
+	 *
+	 * @param $params contains an instance of OrderInvoice
+	 * @return string
+	 *
+	 */
+	public function hookDisplayPDFInvoice($params)
+	{
+		$order_invoice = $params['object'];
+		if (!($order_invoice instanceof OrderInvoice))
+			return;
 
-        $order = new Order((int)$order_invoice->id_order);
+		$order = new Order((int)$order_invoice->id_order);
 
-        $oos = false; // For out of stock management
-        foreach ($order->getProducts() as $product)
-            if ($product['product_quantity_in_stock'] < 1)
-                $oos = true;
+		$oos = false; // For out of stock management
+		foreach ($order->getProducts() as $product)
+			if ($product['product_quantity_in_stock'] < 1)
+				$oos = true;
 
-        $id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
-        $return = '';
-        if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
-            $return = $this->l('Approximate date of delivery is between').' '.$datesDelivery[0].' '.$this->l('and').' '.$datesDelivery[1];
+		$id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
+		$return = '';
+		if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
+			$return = $this->l('Approximate date of delivery is between').' '.$datesDelivery[0].' '.$this->l('and').' '.$datesDelivery[1];
 
-        return $return;
-    }
+		return $return;
+	}
 
 	private function _postProcess()
 	{
@@ -460,13 +493,13 @@ class DateOfDelivery extends Module
 		'.((int)$id_carrier_rule != 0 ? 'AND `id_carrier_rule` != '.(int)($id_carrier_rule) : ''));
 	}
 
-    /**
-     * @param $id_carrier
-     * @param bool $product_oos
-     * @param null $date
-     *
-     * @return array|bool returns the min & max delivery date
-     */
+	/**
+	 * @param $id_carrier
+	 * @param bool $product_oos
+	 * @param null $date
+	 *
+	 * @return array|bool returns the min & max delivery date
+	 */
 	private function _getDatesOfDelivery($id_carrier, $product_oos = false, $date = null)
 	{
 		if (!(int)($id_carrier))
@@ -506,6 +539,9 @@ class DateOfDelivery extends Module
 			$date_maximal_time += 24 * 3600;
 
 		/*
+		
+		// Do not remove this commentary, it's usefull to allow translations of months and days in the translator tool
+		
 		$this->l('Sunday');
 		$this->l('Monday');
 		$this->l('Tuesday');
@@ -550,8 +586,14 @@ class DateOfDelivery extends Module
 			}
 		}
 		return array(
-			$date_minimal_string,
-			$date_maximal_string
+			array(
+				$date_minimal_string,
+				$date_minimal_time
+			),
+			array(
+			$date_maximal_string,
+				$date_maximal_time
+			)
 		);
 	}
 }
