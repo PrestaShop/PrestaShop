@@ -34,21 +34,21 @@ $context = Context::getContext();
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
 	$context->customer->isLogged() === true)
-	exit(Tools::displayError('invalid token',false));
+	exit(Tools::displayError('invalid token', false));
 
 if ($context->customer->isLogged())
 {
 	$id_wishlist = (int)(Tools::getValue('id_wishlist'));
 	if (empty($id_wishlist) === true)
-		exit(Tools::displayError('Invalid wishlist',false));
+		exit(Tools::displayError('Invalid wishlist', false));
 	for ($i = 1; empty($_POST['email'.strval($i)]) === false; ++$i)
 	{
 		$to = Tools::getValue('email'.$i);
 		$wishlist = WishList::exists($id_wishlist, $context->customer->id, true);
 		if ($wishlist === false)
-			exit(Tools::displayError('Invalid wishlist',false));
+			exit(Tools::displayError('Invalid wishlist', false));
 		if (WishList::addEmail($id_wishlist, $to) === false)
-			exit(Tools::displayError('Wishlist send error',false)); 
+			exit(Tools::displayError('Wishlist send error', false));
 		$toName = strval(Configuration::get('PS_SHOP_NAME'));
 		$customer = $context->customer;
 		if (Validate::isLoadedObject($customer))
