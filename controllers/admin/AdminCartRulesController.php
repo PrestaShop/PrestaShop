@@ -53,6 +53,52 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
 		{
+			// If the reduction is associated to a specific product, then it must be part of the product restrictions
+			if ((int)Tools::getValue('reduction_product') && Tools::getValue('apply_discount_to') == 'specific' && Tools::getValue('apply_discount') != 'off')
+			{
+				$reduction_product = (int)Tools::getValue('reduction_product');
+				
+				// First, check if it is not already part of the restrictions
+				$already_restricted = false;
+				if (Tools::getValue('product_restriction') && is_array($rule_group_array = Tools::getValue('product_rule_group')) && count($rule_group_array))
+					foreach ($rule_group_array as $rule_group_id)
+						if (is_array($rule_array = Tools::getValue('product_rule_'.$rule_group_id)) && count($rule_array))
+							foreach ($rule_array as $rule_id)
+								if (Tools::getValue('product_rule_'.$rule_group_id.'_'.$rule_id.'_type') == 'products'
+									&& in_array($reduction_product, Tools::getValue('product_rule_select_'.$rule_group_id.'_'.$rule_id)))
+								{
+									$already_restricted = true;
+									break 2;
+								}
+			
+				if ($already_restricted == false)
+				{
+					// Check the product restriction
+					$_POST['product_restriction'] = 1;
+					
+					// Add a new rule group
+					$rule_group_id = 1;
+					if (is_array($rule_group_array))
+					{
+						// Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
+						for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id)
+							42;
+						$_POST['product_rule_group'][] = $rule_group_id;
+					}
+					else
+						$_POST['product_rule_group'] = array($rule_group_id);
+					
+					// Set a quantity of 1 for this new rule group
+					$_POST['product_rule_group_'.$rule_group_id.'_quantity'] = 1;
+					// Add one rule to the new rule group
+					$_POST['product_rule_'.$rule_group_id] = array(1);
+					// Set a type 'product' for this 1 rule
+					$_POST['product_rule_'.$rule_group_id.'_1_type'] = 'products';
+					// Add the product in the selected products
+					$_POST['product_rule_select_'.$rule_group_id.'_1'] = array($reduction_product);
+				}
+			}
+			
 			// These are checkboxes (which aren't sent through POST when they are not check), so they are forced to 0
 			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product', 'shop') as $type)
 				if (!Tools::getValue($type.'_restriction'))
@@ -128,18 +174,19 @@ class AdminCartRulesControllerCore extends AdminController
 				$id_product_rule_group = Db::getInstance()->Insert_ID();
 
 				if (is_array($ruleArray = Tools::getValue('product_rule_'.$ruleGroupId)) && count($ruleArray))
-				foreach ($ruleArray as $ruleId)
-				{
-					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
-					VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
-					$id_product_rule = Db::getInstance()->Insert_ID();
+					foreach ($ruleArray as $ruleId)
+					{
+						Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
+						VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
+						$id_product_rule = Db::getInstance()->Insert_ID();
 
-					$values = array();
-					foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
-						$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
-					$values = array_unique($values);
-					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
-				}
+						$values = array();
+						foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
+							$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
+						$values = array_unique($values);
+						if (count($values))
+							Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
+					}
 			}
 		}
 
@@ -266,10 +313,9 @@ class AdminCartRulesControllerCore extends AdminController
 				FROM '._DB_PREFIX_.'product p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
+					AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
 				'.Shop::addSqlAssociation('product', 'p').'
 				WHERE id_lang = '.(int)Context::getContext()->language->id.'
-				AND asso_shop_product.`id_shop` = '.(int)Context::getContext()->shop->id.'
 				ORDER BY name');
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
@@ -314,6 +360,9 @@ class AdminCartRulesControllerCore extends AdminController
 				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
+			default :
+				Context::getContext()->smarty->assign('product_rule_itemlist', array('selected' => array(), 'unselected' => array()));
+				Context::getContext()->smarty->assign('product_rule_choose_content', '');
 		}
 
 		return $this->createTemplate('controllers/cart_rules/product_rule.tpl')->fetch();
