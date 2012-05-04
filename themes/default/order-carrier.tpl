@@ -188,7 +188,14 @@
 								<td {if $option.unique_carrier}class="first_item" colspan="2"{/if}>
 									<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
 									{if isset($carrier.instance->delay[$cookie->id_lang])}
-										{$carrier.instance->delay[$cookie->id_lang]}
+										{$carrier.instance->delay[$cookie->id_lang]}<br />
+										{if count($carrier.product_list) <= 1}
+											({l s="product concerned:"}
+										{else}
+											({l s="products concerned:"}
+										{/if}
+										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
+										{foreach $carrier.product_list as $product}{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if !$product@last}, {else}){/if}{/if}{/foreach}
 									{/if}
 								</td>
 							</tr>
@@ -198,7 +205,7 @@
 				</div>
 			{/foreach}
 			</div>
-			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{if isset($HOOK_EXTRACARRIER_ADDR)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}</div>
+			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{if isset($HOOK_EXTRACARRIER_ADDR) &&  isset($HOOK_EXTRACARRIER_ADDR.$id_address)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}</div>
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
 				{foreach $cart->getDeliveryAddressesWithoutCarriers(true) as $address}

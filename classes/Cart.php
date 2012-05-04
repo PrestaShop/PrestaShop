@@ -1853,11 +1853,13 @@ class CartCore extends ObjectModel
 					$best_price_carrier[$id_carrier] = array(
 						'price_with_tax' => 0,
 						'price_without_tax' => 0,
-						'package_list' => array()
+						'package_list' => array(),
+						'product_list' => array(),
 					);
 				$best_price_carrier[$id_carrier]['price_with_tax'] += $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'];
 				$best_price_carrier[$id_carrier]['price_without_tax'] += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
 				$best_price_carrier[$id_carrier]['package_list'][] = $id_package;
+				$best_price_carrier[$id_carrier]['product_list'] = array_merge($best_price_carrier[$id_carrier]['product_list'], $packages[$id_package]['product_list']);
 				$best_price_carrier[$id_carrier]['instance'] = $carriers_instance[$id_carrier];
 			}
 
@@ -1878,11 +1880,13 @@ class CartCore extends ObjectModel
 					$best_grade_carrier[$id_carrier] = array(
 						'price_with_tax' => 0,
 						'price_without_tax' => 0,
-						'package_list' => array()
+						'package_list' => array(),
+						'product_list' => array(),
 					);
 				$best_grade_carrier[$id_carrier]['price_with_tax'] += $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'];
 				$best_grade_carrier[$id_carrier]['price_without_tax'] += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
 				$best_grade_carrier[$id_carrier]['package_list'][] = $id_package;
+				$best_grade_carrier[$id_carrier]['product_list'] = array_merge($best_grade_carrier[$id_carrier]['product_list'], $packages[$id_package]['product_list']);
 				$best_grade_carrier[$id_carrier]['instance'] = $carriers_instance[$id_carrier];
 			}
 
@@ -1900,6 +1904,7 @@ class CartCore extends ObjectModel
 				$price = 0;
 				$key = '';
 				$package_list = array();
+				$product_list = array();
 				$total_price_with_tax = 0;
 				$total_price_without_tax = 0;
 				$price_with_tax = 0;
@@ -1911,6 +1916,7 @@ class CartCore extends ObjectModel
 					$price_with_tax += $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'];
 					$price_without_tax += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
 					$package_list[] = $id_package;
+					$product_list = array_merge($product_list, $package['product_list']);
 				}
 
 				if (!isset($delivery_option_list[$id_address][$key]))
@@ -1923,7 +1929,8 @@ class CartCore extends ObjectModel
 								'price_with_tax' => $price_with_tax,
 								'price_without_tax' => $price_without_tax,
 								'instance' => $carriers_instance[$id_carrier],
-								'package_list' => $package_list
+								'package_list' => $package_list,
+								'product_list' => $product_list,
 							)
 						)
 					);
