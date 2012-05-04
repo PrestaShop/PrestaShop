@@ -75,9 +75,13 @@ function ProductTabsManager(){
 	 */
 	this.display = function (id, selected, index, stack)
 	{
-		var myurl = $('#link-'+id).attr("href")+"&ajax=1";
 		var tab_selector = $("#product-tab-content-"+id);
-		// Used to check if the tab is already in the process of being loaded
+
+		// Is the tab already being loaded?
+		if (!tab_selector.hasClass('not-loaded') || tab_selector.hasClass('loading'))
+			return;
+
+		// Mark the tab as being currently loading
 		tab_selector.addClass('loading');
 
 		if (selected)
@@ -89,7 +93,7 @@ function ProductTabsManager(){
 			data = post_data;
 
 		$.ajax({
-			url : myurl,
+			url : $('#link-'+id).attr("href")+"&ajax=1",
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 			type: 'POST',
