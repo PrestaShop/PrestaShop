@@ -806,15 +806,13 @@ class AdminTranslationsControllerCore extends AdminController
 
 			case 'errors':
 					// Parsing file for all errors syntax
-					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(, (true|false))?\)/U';
+					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(, ?(true|false))?\)/U';
 				break;
 
 			case 'modules':
 					// Parsing modules file
 					if ($type_file == 'php')
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
-					else if ($type_file == 'displayError')
-						$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(, (true|false))?\)/U';
 					else
 						$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( mod=\'.+\')?( js=1)?\}/U';
 				break;
