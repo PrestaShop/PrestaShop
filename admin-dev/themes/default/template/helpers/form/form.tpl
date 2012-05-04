@@ -218,7 +218,7 @@
 											{/foreach}
 										</div>
 									{else}
-										<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
