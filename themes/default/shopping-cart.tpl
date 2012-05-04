@@ -383,7 +383,9 @@
 					<li>
 					{foreach $addressKey as $key}
 						<span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
-							{$address.formated[$key]|escape:'htmlall':'UTF-8'}
+							{if isset($address.formated[$key])}
+								{$address.formated[$key]|escape:'htmlall':'UTF-8'}
+							{/if}
 						</span>
 					{/foreach}
 					</li>
