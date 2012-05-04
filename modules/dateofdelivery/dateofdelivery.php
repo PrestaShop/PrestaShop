@@ -102,7 +102,7 @@ class DateOfDelivery extends Module
 
 	public function hookBeforeCarrier($params)
 	{
-		if (!count($params['delivery_option_list']))
+		if (!isset($params['delivery_option_list']) || !count($params['delivery_option_list']))
 			return false;
 		
 		$package_list = $params['cart']->getPackageList();
