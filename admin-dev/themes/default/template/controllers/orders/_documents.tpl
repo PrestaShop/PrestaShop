@@ -83,7 +83,13 @@
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
 				{if $document->getRestPaid()}
-					<span style="color:red;font-weight:bold;">({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})</span>
+					<span style="color:red;font-weight:bold;">
+					{if $document->getRestPaid() >= 0}
+						({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
+					{else}
+						({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
+					{/if}
+					</span>
 				{/if}
 			{/if}
 		{/if}
