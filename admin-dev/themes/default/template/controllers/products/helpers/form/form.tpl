@@ -148,15 +148,15 @@
 					$("#product-tab-content-"+currentId).hide();
 				}
 
-				if ($("#product-tab-content-"+id).hasClass('not-loaded') && !$("#product-tab-content-"+id).hasClass('loading'))
-					tabs_manager.display(id, true, 0, null);
-				else
-				{
+				// if the tab has not already been loaded, load it now
+				tabs_manager.display(id, true, 0, null);
+
+				tabs_manager.onLoad(id, function(){
 					$("#product-tab-content-"+id).show(0, function(){
 						$(this).trigger('displayed');
 					});
 					$("#link-"+id).addClass('selected');
-				}
+				});
 
 				var languages = new Array();
 				if (btn_name == "Combinations")
