@@ -1473,7 +1473,23 @@ class CartCore extends ObjectModel
 
 		return Tools::ps_round((float)$order_total, 2);
 	}
-
+	
+	/**
+	 * Get the number of packages
+	 * 
+	 * @return int number of packages
+	 */
+	public function getNbOfPackages()
+	{
+		static $nb_packages = 0;
+		
+		if (!$nb_packages)
+			foreach ($this->getPackageList() as $by_address)
+				$nb_packages += count($by_address);
+		
+		return $nb_packages;
+	}
+	
 	/**
 	 * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
 	 *

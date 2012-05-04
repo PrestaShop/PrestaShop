@@ -119,7 +119,7 @@
 			<div class="delivery_options">
 			{foreach $option_list as $key => $option}
 				<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
-					<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" onchange="{if $opc}updateCarrierSelectionAndGift();{else}updateExtraCarrier('{$key}', {$id_address});{/if}" id="delivery_option_{$id_address}_{$option@index}" value="{$key}" {if $delivery_option[$id_address] == $key}checked="checked"{/if} />
+					<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" onchange="{if $opc}updateCarrierSelectionAndGift();{else}updateExtraCarrier('{$key}', {$id_address});{/if}" id="delivery_option_{$id_address}_{$option@index}" value="{$key}" {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}checked="checked"{/if} />
 					<label for="delivery_option_{$id_address}_{$option@index}">
 						<table class="resume">
 							<tr>
