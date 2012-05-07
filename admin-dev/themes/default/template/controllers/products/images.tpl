@@ -41,7 +41,7 @@
 				<div id="progressBarImage" class="progressBarImage"></div>
 				<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
 					<p class="preference_description" style="clear: both;">
-						{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"}{l s='kB max.'}
+						{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size|string_format:"%.2f"} {l s='kB max.'}
 					</p>
 			</td>
 		</tr>
