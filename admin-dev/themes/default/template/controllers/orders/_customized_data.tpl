@@ -73,8 +73,9 @@
 				{if ($type == Product::CUSTOMIZE_FILE)}
 					<ul style="margin: 4px 0px 4px 0px; padding: 0px; list-style-type: none;">
 					{foreach from=$datas item=data}
-						<li style="display: inline; margin: 2px;">
-							<a href="displayImage.php?img={$data['value']}&name={$order->id}-file{$data@iteration}" target="_blank"><img src="'{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" /></a>
+						<li style="margin: 2px;">
+							<span>{if $data['name']}{$data['name']}{else}{l s='Picture #'}{$data@iteration}{/if}{l s=':'}</span>&nbsp;
+								<a href="displayImage.php?img={$data['value']}&name={$order->id}-file{$data@iteration}" target="_blank"><img src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" /></a>
 						</li>
 					{/foreach}
 					</ul>
