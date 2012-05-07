@@ -2159,9 +2159,44 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'scene_products');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'accounting_product_zone_shop');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
 				Image::deleteAllImages(_PS_PROD_IMG_DIR_);
 				if (!file_exists(_PS_PROD_IMG_DIR_))
 					mkdir(_PS_PROD_IMG_DIR_);
+				break;
+			case $this->entities[$this->l('Combinations')]:
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute`');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang`');
 				break;
 			case $this->entities[$this->l('Customers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
