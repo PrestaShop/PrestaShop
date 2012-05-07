@@ -2040,7 +2040,7 @@ class AdminProductsControllerCore extends AdminController
 							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)$product->id.'&amp;deleteproduct',
 							'desc' => $this->l('Delete this product'),
 							'confirm' => 1,
-							'js' => 'if (confirm('.$this->l('\'Delete product?\'').')){return true;}else{event.preventDefault();}'
+							'js' => 'if (confirm(\''.$this->l('Delete product?').'\')){return true;}else{event.preventDefault();}'
 						);
 
 					// adding button for duplicate this product
