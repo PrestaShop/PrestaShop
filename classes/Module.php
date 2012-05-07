@@ -969,8 +969,8 @@ abstract class ModuleCore
 					$item->warning = '';
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string)$v;
-					$item->displayName = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
-					$item->description = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
+					$item->displayName = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name));
+					$item->description = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name));
 					$item->author = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
@@ -1017,7 +1017,7 @@ abstract class ModuleCore
 					$item->version = $tmp_module->version;
 					$item->tab = $tmp_module->tab;
 					$item->displayName = $tmp_module->displayName;
-					$item->description = $tmp_module->description;
+					$item->description = stripslashes($tmp_module->description);
 					$item->author = $tmp_module->author;
 					$item->limited_countries = $tmp_module->limited_countries;
 					$item->parent_class = get_parent_class($module);
@@ -1092,7 +1092,7 @@ abstract class ModuleCore
 							$item->version = strip_tags((string)$modaddons->version);
 							$item->tab = strip_tags((string)$modaddons->tab);
 							$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
-							$item->description = strip_tags((string)$modaddons->description);
+							$item->description = stripslashes(strip_tags((string)$modaddons->description));
 							$item->author = strip_tags((string)$modaddons->author);
 							$item->limited_countries = array();
 							$item->parent_class = '';
