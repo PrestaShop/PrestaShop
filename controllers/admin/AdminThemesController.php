@@ -481,27 +481,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogo()
 	{
-		$id_shop = Context::getContext()->shop->id;
-		if (isset($_FILES['PS_LOGO']['tmp_name']) && $_FILES['PS_LOGO']['tmp_name'])
-		{
-			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO'], 300000))
-				$this->errors[] = $error;
-
-			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmp_name))
-				return false;
-
-			$logo_name = 'logo-'.(int)$id_shop.'.jpg';
-			if (($id_shop == Configuration::get('PS_SHOP_DEFAULT') || $id_shop == 0))
-				$logo_name = 'logo.jpg';
-
-			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-
-			Configuration::updateValue('PS_LOGO', $logo_name);
-
-			unlink($tmp_name);
-		}
+		$this->updateLogo('PS_LOGO', 'logo');
 	}
 
 	/**
@@ -509,25 +489,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogoMail()
 	{
-		$id_shop = Context::getContext()->shop->id;
-		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) && $_FILES['PS_LOGO_MAIL']['tmp_name'])
-		{
-			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_MAIL'], 300000))
-				$this->errors[] = $error;
-			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL');
-			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmp_name))
-				return false;
-			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_mail.jpg'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			else
-				Configuration::updateValue('PS_LOGO_MAIL', 'logo_mail-'.(int)$id_shop.'.jpg');
-			
-			Configuration::updateGlobalValue('PS_LOGO_MAIL', 'logo_mail.jpg');
-			
-			unlink($tmp_name);
-		}
+		$this->updateLogo('PS_LOGO_MAIL', 'logo_mail');
 	}
 
 	/**
@@ -535,25 +497,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsLogoInvoice()
 	{
-		$id_shop = Context::getContext()->shop->id;
-		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) && $_FILES['PS_LOGO_INVOICE']['tmp_name'])
-		{
-			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_INVOICE'], 300000))
-				$this->errors[] = $error;
-			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS_INVOICE');
-			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmp_name))
-				return false;
-			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_invoice.jpg'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			else
-				Configuration::updateValue('PS_LOGO_INVOICE', 'logo_invoice-'.(int)$id_shop.'.jpg');
-			
-			Configuration::updateGlobalValue('PS_LOGO_INVOICE', 'logo_invoice.jpg');
-
-			unlink($tmp_name);
-		}
+		$this->updateLogo('PS_LOGO_INVOICE', 'logo_invoice');
 	}
 
 	/**
@@ -561,27 +505,42 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function updateOptionPsStoresIcon()
 	{
+		$this->updateLogo('PS_STORES_ICON', 'logo_stores');
+	}
+
+	/**
+	 * Generic function which allows logo upload
+	 *
+	 * @param $field_name
+	 * @param $logo_prefix
+	 * @return bool
+	 */
+	protected function updateLogo($field_name, $logo_prefix)
+	{
 		$id_shop = Context::getContext()->shop->id;
-		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) && $_FILES['PS_STORES_ICON']['tmp_name'])
+		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'])
 		{
-			if ($error = ImageManager::validateUpload($_FILES['PS_STORES_ICON'], 300000))
+			if ($error = ImageManager::validateUpload($_FILES[$field_name], 300000))
 				$this->errors[] = $error;
-			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON');
-			if (!$tmp_name || !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmp_name))
+
+			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
 				return false;
-			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores.gif'))
+
+			$logo_name = $logo_prefix.'-'.(int)$id_shop.'.jpg';
+			if (($id_shop == Configuration::get('PS_SHOP_DEFAULT') || $id_shop == 0))
+				$logo_name = $logo_prefix.'.jpg';
+
+			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
 				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores-'.(int)$id_shop.'.gif'))
-				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			else
-				Configuration::updateValue('PS_STORES_ICON', 'logo_stores-'.(int)$id_shop.'.gif');
-			
-			Configuration::updateGlobalValue('PS_STORES_ICON', 'logo_stores.gif');
-			
+
+			Configuration::updateValue($field_name, $logo_name);
+			$this->fields_options['appearance']['fields'][$field_name]['thumb'] = _PS_IMG_.$logo_name.'?date='.time();
+
 			unlink($tmp_name);
 		}
 	}
-	
+
 	/**
 	 * Update PS_FAVICON
 	 */
