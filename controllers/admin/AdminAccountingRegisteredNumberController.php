@@ -136,6 +136,8 @@ class AdminAccountingRegisteredNumberControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'toolbar_btn' => $this->toolbar_btn,
+			'show_toolbar' => true,
+			'toolbar_scroll' => true,
 			'title' => $this->l('Accounting Plan'),
 			'account_number_list' => $this->account_number_list));
 
