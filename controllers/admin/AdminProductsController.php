@@ -3264,7 +3264,7 @@ class AdminProductsControllerCore extends AdminController
 
 			$data->assign('token', $this->token);
 			$data->assign('table', $this->table);
-			$data->assign('max_image_size', $this->max_image_size / 1000);
+			$data->assign('max_image_size', $this->max_image_size / 1024);
 
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
 			$data->assign('currency', $this->context->currency);
