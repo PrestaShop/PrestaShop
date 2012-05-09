@@ -51,7 +51,7 @@ class StateCore extends ObjectModel
 		'fields' => array(
 			'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_zone' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'iso_code' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 4),
+			'iso_code' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7),
 			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
