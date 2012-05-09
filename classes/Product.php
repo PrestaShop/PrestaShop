@@ -3126,7 +3126,7 @@ class ProductCore extends ObjectModel
 			$combination = new Combination();
 			foreach ($row as $k => $v)
 				$combination->$k = $v;
-			$return &= $combination->insert();
+			$return &= $combination->add();
 
 			$id_product_attribute_new = (int)$combination->id;
 			if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old))
