@@ -83,7 +83,6 @@
 		var token = '{$token}';
 		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
 		var defaultLanguage = {$defaultLanguage};
-
 		var product_type_pack = {Product::PTYPE_PACK};
 		var product_type_virtual = {Product::PTYPE_VIRTUAL};
 		var product_type_simple = {Product::PTYPE_SIMPLE};
