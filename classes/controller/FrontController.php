@@ -175,7 +175,8 @@ class FrontControllerCore extends Controller
 			$this->context->customer->logout();
 
 			// Login information have changed, so we check if the cart rules still apply
-			CartRule::autoRemoveFromCart();
+			CartRule::autoRemoveFromCart($this->context);
+			CartRule::autoAddToCart($this->context);
 
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		}

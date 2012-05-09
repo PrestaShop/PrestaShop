@@ -323,7 +323,8 @@ class AuthControllerCore extends FrontController
 				Hook::exec('actionAuthentication');
 
 				// Login information have changed, so we check if the cart rules still apply
-				CartRule::autoRemoveFromCart();
+				CartRule::autoRemoveFromCart($this->context);
+				CartRule::autoAddToCart($this->context);
 
 				if (!$this->ajax)
 				{
