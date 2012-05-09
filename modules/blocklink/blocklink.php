@@ -113,9 +113,14 @@ class BlockLink extends Module
 	{
 		$result = array();
 		// Get id and url
-		if (!$links = Db::getInstance()->executeS('SELECT `id_blocklink`, `url`, `new_window` 
-													FROM '._DB_PREFIX_.'blocklink'.
-													((int)Configuration::get('PS_BLOCKLINK_ORDERWAY') == 1 ? ' ORDER BY `id_blocklink` DESC' : '')))
+
+		$sql = 'SELECT b.`id_blocklink`, b.`url`, b.`new_window`
+				FROM `'._DB_PREFIX_.'blocklink` b';
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
+			$sql .= ' JOIN `'._DB_PREFIX_.'blocklink_shop` bs ON b.`id_blocklink` = bs.`id_blocklink` AND bs.`id_shop` IN ('.implode(', ', Shop::getContextListShopID()).') ';
+		$sql .= (int)Configuration::get('PS_BLOCKLINK_ORDERWAY') == 1 ? ' ORDER BY `id_blocklink` DESC' : '';
+
+		if (!$links = Db::getInstance()->executeS($sql))
 			return false;
 		$i = 0;
 		foreach ($links as $link)
