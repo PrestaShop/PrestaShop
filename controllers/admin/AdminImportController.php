@@ -1528,9 +1528,9 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
-			// now adds the attributes in the attribute_combination table
 			if ($id_product_attribute)
 			{
+				// now adds the attributes in the attribute_combination table
 				if ($id_product_attribute_update)
 				{
 					Db::getInstance()->execute('
@@ -1544,6 +1544,8 @@ class AdminImportControllerCore extends AdminController
 						INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
 						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')');
 				}
+
+				StockAvailable::setQuantity($product->id, $id_product_attribute, (int)$info['quantity']);
 			}
 		}
 		$this->closeCsvFile($handle);
