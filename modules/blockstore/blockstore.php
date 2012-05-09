@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_'))
 
 class BlockStore extends Module
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'blockstore';
 		$this->tab = 'front_office_features';
@@ -44,10 +44,10 @@ class BlockStore extends Module
 		$this->description = $this->l('Displays a block with a link to the store locator.');
 	}
 
-	function install()
+	public function install()
 	{
 		Configuration::updateValue('BLOCKSTORE_IMG', 'store.jpg');
-		return (parent::install() AND $this->registerHook('rightColumn') AND $this->registerHook('header'));
+		return parent::install() && $this->registerHook('rightColumn') && $this->registerHook('header');
 	}
 
 	public function uninstall()
@@ -56,12 +56,12 @@ class BlockStore extends Module
 		return parent::uninstall();
 	}
 
-	function hookLeftColumn($params)
+	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
 
-	function hookRightColumn($params)
+	public function hookRightColumn($params)
 	{
 		$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		$sql = 'SELECT COUNT(*)
@@ -73,7 +73,7 @@ class BlockStore extends Module
 			return $this->display(__FILE__, 'blockstore.tpl');
 	}
 
-	function hookHeader($params)
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blockstore.css', 'all');
 	}
