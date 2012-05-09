@@ -258,7 +258,7 @@ jQuery(document).ready(Customer.init);
 		{else}
 			<div class="margin-form">
 				<select name="sp_id_shop">
-					<option value="0">{l s='All shops'}</option>
+					{if !$admin_one_shop}<option value="0">{l s='All shops'}</option>{/if}
 					{foreach from=$shops item=shop}
 						<option value="{$shop.id_shop}">{$shop.name|htmlentitiesUTF8}</option>
 					{/foreach}

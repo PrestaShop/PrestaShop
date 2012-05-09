@@ -2630,6 +2630,7 @@ class AdminProductsControllerCore extends AdminController
 
 			$data->assign(array(
 				'shops' => $shops,
+				'admin_one_shop' => count($this->context->employee->getAssociatedShops()) == 1,
 				'currencies' => $currencies,
 				'countries' => $countries,
 				'groups' => $groups,
@@ -2894,9 +2895,14 @@ class AdminProductsControllerCore extends AdminController
 						<td class="cell border">'.$rule_name.'</td>
 						<td class="cell border">'.$attributes_name.'</td>';
 
+					$can_delete_specific_prices = true;
 					if (Shop::isFeatureActive())
+					{
+						$id_shop_sp = $specific_price['id_shop'];
+						$can_delete_specific_prices = (count($this->context->employee->getAssociatedShops()) > 1 && !$id_shop_sp) || $id_shop_sp;
 						$content .= '
-						<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>';
+						<td class="cell border">'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
+					}
 					$content .= '
 						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
@@ -2907,7 +2913,7 @@ class AdminProductsControllerCore extends AdminController
 						<td class="cell border">'.$period.'</td>
 						<td class="cell border">'.$specific_price['from_quantity'].'</th>
 						<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)$this->_getFinalPrice($specific_price, (float)$obj->price, $tax_rate)), 2, $current_specific_currency).'</b></td>
-						<td class="cell border">'.(!$rule->id ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
+						<td class="cell border">'.((!$rule->id && $can_delete_specific_prices) ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 					</tr>';
 					$i++;
 					unset($customer_full_name);
