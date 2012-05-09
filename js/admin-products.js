@@ -415,12 +415,12 @@ function handleSaveButtons(e)
 	// common for all products
 	// name[defaultlangid]
 	$("#disableSaveMessage").remove();
-	if ($("#name_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage.id_lang+']\']').prop('checked')))
+	if ($("#name_"+defaultLanguage).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage+']\']').prop('checked')))
 	{
 		msg[i++] = empty_name_msg;
 	}
 	// check friendly_url_[defaultlangid] only if name is ok
-	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name]['+defaultLanguage.id_lang+']\']').prop('checked')))
+	else if ($("#link_rewrite_"+defaultLanguage).val() == "" && (!display_multishop_checkboxes || $('input[name=\'link_rewrite[name]['+defaultLanguage+']\']').prop('checked')))
 		msg[i++] = empty_link_rewrite_msg;
 
 	if (msg.length == 0)
@@ -1543,7 +1543,7 @@ $(document).ready(function() {
 
 	updateCurrentText();
 
-	$("#name_"+defaultLanguage.id_lang+",#link_rewrite_"+defaultLanguage.id_lang)
+	$("#name_"+defaultLanguage+",#link_rewrite_"+defaultLanguage)
 		.live("change", function(e)
 		{
 			if(typeof e == KeyboardEvent)
@@ -1552,7 +1552,7 @@ $(document).ready(function() {
 			$(this).trigger("handleSaveButtons");
 		});
 	// bind that custom event
-	$("#name_"+defaultLanguage.id_lang+",#link_rewrite_"+defaultLanguage.id_lang)
+	$("#name_"+defaultLanguage+",#link_rewrite_"+defaultLanguage)
 		.live("handleSaveButtons", function(e)
 		{
 			handleSaveButtons()

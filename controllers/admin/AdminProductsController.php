@@ -2152,7 +2152,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->getLanguages();
 
-		$this->tpl_form_vars['defaultLanguage'] = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
+		$this->tpl_form_vars['defaultLanguage'] = Configuration::get('PS_LANG_DEFAULT');
 
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
 		$this->tpl_form_vars['display_multishop_checkboxes'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit');
