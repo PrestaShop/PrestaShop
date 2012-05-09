@@ -113,8 +113,8 @@ class AdminStatesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('ISO code:'),
 					'name' => 'iso_code',
-					'size' => 5,
-					'maxlength' => 4,
+					'size' => 7,
+					'maxlength' => 7,
 					'required' => true,
 					'class' => 'uppercase',
 					'desc' => $this->l('1 to 4 letter ISO code')
