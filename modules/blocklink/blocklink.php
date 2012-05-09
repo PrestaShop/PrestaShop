@@ -183,14 +183,27 @@ class BlockLink extends Module
 						return false;
 		}
 
-		$assos_shop = Tools::getValue('checkBoxShopAsso_blocklink');
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'blocklink_shop WHERE id_blocklink='.(int)$id_link);
-		foreach ($assos_shop as $asso)
-			foreach ($asso as $id_shop => $row)
-				Db::getInstance()->insert('blocklink_shop', array(
-					'id_blocklink' =>	(int)$id_link,
-					'id_shop' => (int)$id_shop,
-				));
+
+		if (!Shop::isFeatureActive())
+		{
+			Db::getInstance()->insert('blocklink_shop', array(
+				'id_blocklink' => (int)$id_link,
+				'id_shop' => (int)Context::getContext()->shop->id,
+			));
+		}
+		else
+		{
+			$assos_shop = Tools::getValue('checkBoxShopAsso_blocklink');
+			if (empty($assos_shop))
+				return false;
+			foreach ($assos_shop as $asso)
+				foreach ($asso as $id_shop => $row)
+					Db::getInstance()->insert('blocklink_shop', array(
+						'id_blocklink' => (int)$id_link,
+						'id_shop' => (int)$id_shop,
+					));
+		}
 		return true;
 	}
 
