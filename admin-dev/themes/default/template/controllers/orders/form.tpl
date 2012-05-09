@@ -29,6 +29,7 @@
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current}&token={$token}';
+	var admin_cart_link = '{$link->getAdminLink('AdminCarts')}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
 	var id_currency = '';
@@ -36,6 +37,7 @@
 	var txt_show_carts = '{l s='Show carts and orders for this customer'}';
 	var txt_hide_carts = '{l s='Hide carts and orders for this customer'}';
 	var defaults_order_state = new Array();
+	var customization_errors = false;
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
@@ -524,33 +526,55 @@
 			{
 				var products_found = '';
 				var attributes_html = '';
+				var customization_html = '';
 				stock = {};
 				
 				if(res.found)
 				{
 					$('#products_err').hide();
 					$('#products_found').show();
-					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="displayProductAttributes();">';
+					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
 					attributes_html += '<label>{l s='Combination:'}</label>';
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
+						if (this.customizable == '1')
+						{
+							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'"';
+							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'"';
+							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields"';
+							customization_html += '<input type="hidden" name="id_customer" value="'+id_customer+'"';
+							customization_html += '<input type="hidden" name="ajax" value="1"';
+							$.each(this.customization_fields, function() {
+								customization_html += '<p><label for="customization_'+id_product+'_'+this.id_customization_field+'">';
+								if (this.required == 1)
+									customization_html += '<sup>*</sup>';
+								customization_html += this.name+'{l s=':'}</label>';
+								if (this.type == 0)
+									customization_html += '<input class="customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
+								else if (this.type == 1)
+									customization_html += '<input class="customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
+								customization_html += '</p>';
+							});
+							customization_html += '</fieldset></form>';
+						}
 						
 						$.each(this.combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 						});
 						
 						stock[this.id_product] = this.stock;
-						
+
 						attributes_html += '</select>';
 					});
-					
 					products_found += '</select>';
-					
 					$('#products_found #product_list').html(products_found);
 					$('#products_found #attributes_list').html(attributes_html);
-					displayProductAttributes();
+					$('#products_found #customization_list').contents().find('body').html(customization_html);
+					display_product_attributes();
+					display_product_customizations();
 					$('#id_product').change();
 				}
 				else
@@ -563,8 +587,21 @@
 			}
 		});
 	}
-
-	function displayProductAttributes()
+	
+	function display_product_customizations()
+	{
+		if ($('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).children().length === 0)
+			$('#customization_list').hide();
+		else
+		{
+			$('#customization_list').show();
+			$('#products_found #customization_list').contents().find('.id_customization').hide();
+			$('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).show();
+			$('#products_found #customization_list').css('height',$('#products_found #customization_list').contents().find('#customization_'+$('#id_product option:selected').val()).height()+95+'px');
+		}
+	}
+	
+	function display_product_attributes()
 	{
 		if ($('#ipa_'+$('#id_product option:selected').val()+' option').length === 0)
 			$('#attributes_list').hide();
@@ -672,7 +709,7 @@
 				id_product_attribute: id_product_attribute,
 				qty: qty,
 				id_customer: id_customer,
-				id_cart: id_cart
+				id_cart: id_cart,
 				},
 			success : function(res)
 			{
@@ -701,7 +738,14 @@
 	function addProduct()
 	{
 		var id_product = $('#id_product option:selected').val();
-		updateQty(id_product, $('#ipa_'+id_product+' option:selected').val(), $('#qty').val());
+		$('#products_found #customization_list').contents().find('#customization_'+id_product).submit();
+		if (customization_errors)
+			$('#products_err').show();
+		else
+		{
+			$('#products_err').hide();
+			updateQty(id_product, $('#ipa_'+id_product+' option:selected').val(), $('#qty').val());
+		}
 	}
 
 	function updateCurrency()
@@ -883,6 +927,19 @@
 			</div>
 			<div id="attributes_list">
 			</div>
+			<iframe id="customization_list" style="border:0px;overflow:hidden;width:100%">
+				<html>
+				<head>
+					{if isset($css_files_orders)}
+						{foreach from=$css_files_orders key=css_uri item=media}
+							<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+						{/foreach}
+					{/if}
+				</head>
+				<body>
+				</body>
+				</html>
+			</iframe>
 			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
 			<div class="margin-form">
 				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>

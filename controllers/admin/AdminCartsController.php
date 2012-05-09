@@ -239,7 +239,63 @@ class AdminCartsControllerCore extends AdminController
 				echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
 	}
-
+	
+	public function ajaxProcessUpdateCustomizationFields()
+	{
+		$errors = array();
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (!$this->context->cart->id || (!$id_product = (int)Tools::getValue('id_product')))
+				return;
+			$product = new Product((int)$id_product);
+			if (!$customization_fields = $product->getCustomizationFieldIds())
+				return;
+			foreach ($customization_fields as $customization_field)
+			{
+				$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
+				if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
+				{
+					if (!isset($_POST[$field_id]))
+					{
+						if ($customization_field['required'])
+							$errors[] = Tools::displayError('Please fill in all required fields');
+						continue;
+					}
+					if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
+						$errors[] = Tools::displayError('Invalid message');
+					$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
+				}
+				elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
+				{
+					if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name']))
+					{
+						if ($customization_field['required'])
+							$errors[] = Tools::displayError('Please fill in all required fields');
+						continue;
+					}
+					if ($error = ImageManager::validateUpload($_FILES[$field_id], (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
+						$errors[] = $error;
+					if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name))
+						$errors[] = Tools::displayError('An error occurred during the image upload.');
+					$file_name = md5(uniqid(rand(), true));
+					if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
+						continue;
+					elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')))
+						$errors[] = Tools::displayError('An error occurred during the image upload.');
+					elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
+						$errors[] = Tools::displayError('An error occurred during the image upload.');
+					else
+						$this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
+					unlink($tmp_name);
+				}
+			}
+			$this->setMedia();
+			$this->initFooter();
+			$this->context->smarty->assign('customization_errors', implode('<br />', $errors));
+			return $this->context->smarty->display('controllers/orders/form_customization_feedback.tpl');
+		}
+	}
+	
 	public function ajaxProcessUpdateQty()
 	{
 		if ($this->tabAccess['edit'] === '1')
@@ -548,7 +604,6 @@ class AdminCartsControllerCore extends AdminController
 	public function ajaxReturnVars()
 	{
 		$id_cart = (int)$this->context->cart->id;	
-
 		$message_content = '';
 		if ($message = Message::getMessageByCartId((int)$this->context->cart->id))
 			$message_content = $message['message'];
