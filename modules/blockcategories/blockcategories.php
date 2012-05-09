@@ -158,13 +158,13 @@ class BlockCategories extends Module
 	{
 		$id_current_shop = $this->context->shop->id;
 
-		$id_customer = (int)($params['cookie']->id_customer);
+		$id_customer = (int)$params['cookie']->id_customer;
 		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
 		// It is necessary to keep the group query separate from the main select query because it is used for the cache
 		$groups = $id_customer ? implode(', ', Customer::getGroupsStatic($id_customer)) : Configuration::get('PS_UNIDENTIFIED_GROUP');
-		$id_product = (int)(Tools::getValue('id_product', 0));
-		$id_category = (int)(Tools::getValue('id_category', 0));
-		$id_lang = (int)($params['cookie']->id_lang);
+		$id_product = (int)Tools::getValue('id_product', 0);
+		$id_category = (int)Tools::getValue('id_category', 0);
+		$id_lang = (int)$params['cookie']->id_lang;
 		$smartyCacheId = 'blockcategories|'.$id_current_shop.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
 
 		Tools::enableCache();
