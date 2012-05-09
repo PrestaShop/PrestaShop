@@ -184,7 +184,7 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function getIdByCode($code)
 	{
-		if (!Validate::isDiscountName($code))
+		if (!Validate::isCleanHtml($code))
 			return false;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM `'._DB_PREFIX_.'cart_rule` WHERE `code` = \''.pSQL($code).'\'');
 	}
