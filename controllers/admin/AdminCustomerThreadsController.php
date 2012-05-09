@@ -130,6 +130,24 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$this->shopLinkType = 'shop';
 
 		$this->fields_options = array(
+			'contact' => array(
+				'title' =>	$this->l('Contact options'),
+				'fields' =>	array(
+					'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
+							'title' => $this->l('Allow file upload'),
+							'desc' => $this->l('Allow customers to upload file using contact page'),
+							'type' => 'bool'
+						),
+					'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
+							'title' => $this->l('Allow file upload'),
+							'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'),
+							'type' => 'textareaLang',
+							'lang' => true,
+							'rows' => 10,
+							'cols' => 40
+						)
+					),
+			),
 			'general' => array(
 				'title' =>	$this->l('Customer service options'),
 				'fields' =>	array(
