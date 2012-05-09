@@ -68,7 +68,7 @@ class ThemeInstallator extends Module
 
 	private function getTheNativeModules()
 	{
-		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list.xml'));
+		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_15.xml'));
 		$natives = array();
 		if ($xml)
 			foreach ($xml->modules as $row)
