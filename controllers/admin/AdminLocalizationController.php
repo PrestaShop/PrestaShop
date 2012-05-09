@@ -173,6 +173,11 @@ class AdminLocalizationControllerCore extends AdminController
 		parent::postProcess();
 	}
 
+	public function sortLocalizationsPack($a, $b)
+	{
+		return $a['name'] > $b['name'];
+	}
+
 	public function renderForm()
 	{
 		$localizations_pack = false;
@@ -197,6 +202,8 @@ class AdminLocalizationControllerCore extends AdminController
 
 		if (!$localizations_pack)
 			return $this->displayWarning($this->l('Cannot connect to prestashop.com'));
+
+		usort($localizations_pack, array($this, 'sortLocalizationsPack'));
 
 		$selection_import = array(
 			array(
