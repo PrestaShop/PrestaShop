@@ -2523,45 +2523,6 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	  * @TODO delete method after AdminProducts cleanup
-	  * Display flags in forms for translations
-	  *
-	  * @param array $languages All languages available
-	  * @param integer $default_language Default language id
-	  * @param string $ids Multilingual div ids in form
-	  * @param string $id Current div id]
-	  * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
-	  *
-		* @param return define the return way : false for a display, true for a return
-		*
-		*	@return string
-	  */
-	public function getTranslationsFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
-	{
-		if (count($languages) == 1)
-			return false;
-		$output = '
-		<div class="displayed_flag">
-			<img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
-		</div>
-		<div id="languages_'.$id.'" class="language_flags">
-			'.$this->l('Choose language:').'<br /><br />';
-		foreach ($languages as $language)
-			if ($use_vars_instead_of_ids)
-				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'"
-								onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
-			else
-				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'"
-								onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
-		$output .= '</div>';
-
-		if ($return)
-			return $output;
-
-		return $output;
-	}
-
-	/**
 	 * Called before Add
 	 *
 	 * @param object $object Object
