@@ -96,7 +96,7 @@ class Cheque extends PaymentModule
 			Configuration::updateValue('CHEQUE_NAME', Tools::getValue('name'));
 			Configuration::updateValue('CHEQUE_ADDRESS', Tools::getValue('address'));
 		}
-		$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('OK').'" /> '.$this->l('Settings updated').'</div>';
+		$this->_html .= '<div class="conf confirm"> '.$this->l('Settings updated').'</div>';
 	}
 
 	private function _displayCheque()

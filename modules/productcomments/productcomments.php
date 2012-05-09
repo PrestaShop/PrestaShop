@@ -114,14 +114,14 @@ class ProductComments extends Module
 			Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', (int)Tools::getValue('moderate'));
 			Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', (int)Tools::getValue('allow_guest'));
 			Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', (int)Tools::getValue('product_comments_minimal_time'));
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
 		if ($id_criterion = (int)Tools::getValue('deleteCriterion'))
 		{
 			$productCommentCriterion = new ProductCommentCriterion((int)$id_criterion);
 			if ($productCommentCriterion->id)
 				if ($productCommentCriterion->delete())
-					$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Criterion deleted').'</div>';
+					$this->_html .= '<div class="conf confirm">'.$this->l('Criterion deleted').'</div>';
 		}
 	}
 
@@ -257,7 +257,7 @@ class ProductComments extends Module
 			$productCommentCriterion->active = (int)Tools::getValue('criterion_active');
 
 			if ($productCommentCriterion->save())
-				$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.(Tools::getValue('editCriterion') ? $this->l('Criterion updated') : $this->l('Criterion added')).'</div>';
+				$this->_html .= '<div class="conf confirm">'.(Tools::getValue('editCriterion') ? $this->l('Criterion updated') : $this->l('Criterion added')).'</div>';
 		}
 		else if (!empty($action_criterion) && empty($name))
 		{
@@ -307,7 +307,7 @@ class ProductComments extends Module
 				}
 			}
 
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
 	}
 

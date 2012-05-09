@@ -80,13 +80,13 @@ class StatsCheckUp extends Module
 			);
 			foreach ($confs as $confname)
 				Configuration::updateValue($confname, (int)Tools::getValue($confname));
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"> '.$this->l('Configuration updated').'</div>';
+			echo '<div class="conf confirm"> '.$this->l('Configuration updated').'</div>';
 		}
 
 		if (Tools::isSubmit('submitCheckupOrder'))
 		{
 			$this->context->cookie->checkup_order = (int)Tools::getValue('submitCheckupOrder');
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"> '.$this->l('Configuration updated').'</div>';
+			echo '<div class="conf confirm"> '.$this->l('Configuration updated').'</div>';
 		}
 
 		if (!isset($this->context->cookie->checkup_order))
