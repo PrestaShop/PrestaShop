@@ -2506,6 +2506,7 @@ class AdminControllerCore extends Controller
 
 	protected function processBulkAffectZone()
 	{
+		$result = false;
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			$object = new $this->className();
