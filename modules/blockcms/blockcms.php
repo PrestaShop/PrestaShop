@@ -716,13 +716,6 @@ class BlockCms extends Module
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
 
-	public function hookDisplayMobileFooterCms()
-	{
-		if (!$this->_prepareHook())
-			return ;
-		return $this->display(__FILE__, 'blockmobilecms.tpl');
-	}
-
 	protected function updatePositionsDnd()
 	{
 		if (Tools::getValue('cms_block_0'))

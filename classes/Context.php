@@ -96,58 +96,6 @@ class ContextCore
 	public $smarty;
 
 	/**
-	 * @var boolean|string mobile device of the customer
-	 */
-	protected $mobile_device;
-
-	/**
-	 * @var boolean|string touch pad device of the customer
-	 */
-	protected $touchpad_device;
-
-	public function getMobileDevice()
-	{
-		if (is_null($this->mobile_device))
-		{
-			$this->mobile_device = false;
-			if ($this->checkMobileContext())
-				if (preg_match('/(alcatel|amoi|android|avantgo|blackberry|benq|cell|cricket|docomo|elaine|htc|iemobile|iphone|ipaq|ipod|j2me|java|midp|mini|mmp|mobi\s|motorola|nec-|nokia|palm|panasonic|philips|phone|sagem|sharp|sie-|smartphone|sony|symbian|t-mobile|telus|up\.browser|up\.link|vodafone|wap|webos|wireless|xda|zte)/i', $_SERVER['HTTP_USER_AGENT'], $out))
-					$this->mobile_device = $out[0];
-		}
-
-		return $this->mobile_device;
-	}
-
-	protected function checkMobileContext()
-	{
-		return file_exists(_PS_THEME_MOBILE_DIR_)
-			&& Configuration::get('PS_ALLOW_MOBILE_DEVICE')
-			&& isset($_SERVER['HTTP_USER_AGENT']);
-	}
-
-	protected function getTouchPadDevice()
-	{
-		if (is_null($this->touchpad_device))
-		{
-			$this->touchpad_device = false;
-			if ($this->checkMobileContext())
-			{
-				if (preg_match('/(xoom|ipad)/i', $_SERVER['HTTP_USER_AGENT'], $out))
-					$this->touchpad_device = $out[0];
-				if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'android') && !strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'mobile'))
-					$this->touchpad_device = 'android';
-
-				// for Galaxy tab
-				if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'android')
-					&& (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'sch-i800')
-						|| strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'gt-p1000')))
-					$this->touchpad_device = 'android';
-			}
-		}
-		return $this->touchpad_device;
-	}
-
-	/**
 	 * Get a singleton context
 	 *
 	 * @return Context

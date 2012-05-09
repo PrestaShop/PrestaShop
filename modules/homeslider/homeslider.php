@@ -654,13 +654,6 @@ class HomeSlider extends Module
 		return $this->display(__FILE__, 'homeslider.tpl');
 	}
 
-	public function hookDisplayMobileIndex()
-	{
-		if(!$this->_prepareHook())
-			return;
-		return $this->display(__FILE__, 'homemobileslider.tpl');
-	}
-
 	public function hookActionShopDataDuplication($params)
 	{
 		Db::getInstance()->execute('
