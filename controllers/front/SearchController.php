@@ -89,6 +89,8 @@ class SearchControllerCore extends FrontController
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
+			if ($this->orderBy == 'price')
+				$this->orderBy = 'product_shop.price';
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
