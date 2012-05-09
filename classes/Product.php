@@ -3057,7 +3057,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = new DbQuery();
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management');
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, product_shop.advanced_stock_management, p.`customizable`');
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join(Shop::addSqlAssociation('product', 'p'));
@@ -3886,7 +3886,7 @@ class ProductCore extends ObjectModel
 		if (!Customization::isFeatureActive())
 			return array();
 		return Db::getInstance()->executeS('
-			SELECT `id_customization_field`, `type`
+			SELECT `id_customization_field`, `type`, `required`
 			FROM `'._DB_PREFIX_.'customization_field`
 			WHERE `id_product` = '.(int)$this->id);
 	}
