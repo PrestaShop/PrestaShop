@@ -64,7 +64,7 @@ class BlockNewProducts extends Module
 			{
 				Configuration::updateValue('PS_BLOCK_NEWPRODUCTS_DISPLAY', (int)(Tools::getValue('always_display')));
 				Configuration::updateValue('NEW_PRODUCTS_NBR', (int)($productNbr));
-				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 			}
 		}
 		return $output.$this->displayForm();

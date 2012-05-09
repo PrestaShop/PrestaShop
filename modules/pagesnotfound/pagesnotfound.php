@@ -97,14 +97,14 @@ class Pagesnotfound extends Module
 		if (Tools::isSubmit('submitTruncatePNF'))
 		{
 			Db::getInstance()->execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found has been emptied.').'</div>';
+			$this->_html .= '<div class="conf confirm"> '.$this->l('Pages not found has been emptied.').'</div>';
 		}
 		else if (Tools::isSubmit('submitDeletePNF'))
 		{
 			Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'pagenotfound`
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween());
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found have been deleted.').'</div>';
+			$this->_html .= '<div class="conf confirm"> '.$this->l('Pages not found have been deleted.').'</div>';
 		}
 
 		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
@@ -134,7 +134,7 @@ class Pagesnotfound extends Module
 			</table>';
 		}
 		else
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('No pages registered').'</div>';
+			$this->_html .= '<div class="conf confirm"> '.$this->l('No pages registered').'</div>';
 
 		$this->_html .= '</div>';
 		if (count($pages))
