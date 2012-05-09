@@ -34,8 +34,6 @@ class AdminPreferencesControllerCore extends AdminController
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
-
-
 		// Prevent classes which extend AdminPreferences to load useless data
 		if (get_class($this) == 'AdminPreferencesController')
 		{
@@ -88,6 +86,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'cast' => 'intval',
 					'type' => 'bool'
 				),
+				'PS_MULTISHOP_FEATURE_ACTIVE' => array(
+					'title' => $this->l('Enable multishop'),
+					'desc' => $this->l('Multishop feature allows you to manage several shops with one back-office. If this feature is enabled, a tab "multishop" will be available in "advanced parameters" menu.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'visibility' => Shop::CONTEXT_ALL
+				),
 			);
 
 			// No HTTPS activation if you haven't already.
@@ -109,5 +115,19 @@ class AdminPreferencesControllerCore extends AdminController
 		}
 
 		parent::__construct();
+	}
+
+	/**
+	 * Enable / disable multishop menu if multishop feature is activated
+	 *
+	 * @param string $value
+	 */
+	public function updateOptionPsMultishopFeatureActive($value)
+	{
+		Configuration::updateValue('PS_MULTISHOP_FEATURE_ACTIVE', $value);
+
+		$tab = Tab::getInstanceFromClassName('AdminShopGroup');
+		$tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+		$tab->update();
 	}
 }

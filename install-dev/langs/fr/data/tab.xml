@@ -6,6 +6,8 @@
   <tab id="Combinations_generator" name="G&#xE9;n&#xE9;rateur de d&#xE9;clinaisons"/>
   <tab id="Search" name="Recherche"/>
   <tab id="Login" name="Connexion"/>
+  <tab id="Shops" name="Boutiques"/>
+  <tab id="Shop_Urls" name="URLs de boutique"/>
   <tab id="Catalog" name="Catalogue"/>
   <tab id="Orders" name="Commandes"/>
   <tab id="Customers" name="Clients"/>
@@ -17,7 +19,6 @@
   <tab id="Advanced_parameters" name="Param&#xE8;tres avanc&#xE9;s"/>
   <tab id="Administration" name="Administration"/>
   <tab id="Stats" name="Stats"/>
-  <tab id="Shops" name="Boutiques"/>
   <tab id="Stock" name="Stock"/>
   <tab id="Products" name="Produits"/>
   <tab id="Categories" name="Cat&#xE9;gories"/>
@@ -78,6 +79,7 @@
   <tab id="Configuration_Information" name="Informations"/>
   <tab id="Performance" name="Performances"/>
   <tab id="E-mail" name="Emails"/>
+  <tab id="Multi-shop" name="Multi-boutique"/>
   <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="Sauvegarde BDD"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
@@ -95,9 +97,6 @@
   <tab id="Search_Engines" name="Moteurs de recherche"/>
   <tab id="Referrers" name="Sites affluents"/>
   <tab id="Accounting_export" name="Export comptable"/>
-  <tab id="Shops_1" name="Boutiques"/>
-  <tab id="Group_Shops" name="Groupes de boutique"/>
-  <tab id="Shop_Urls" name="URLs de boutique"/>
   <tab id="Warehouses" name="Entrep&#xF4;ts"/>
   <tab id="Stock_Management" name="Gestion du stock"/>
   <tab id="Stock_Movement" name="Mouvements de Stock"/>

@@ -108,4 +108,42 @@ class ShopGroupCore extends ObjectModel
 				WHERE name = \''.pSQL($name).'\'';
 		return (int)Db::getInstance()->getValue($sql);
 	}
+
+	/**
+	 * Detect dependency with customer or orders
+	 *
+	 * @param int $id_shop_group
+	 * @param string $check all|customer|order
+	 * @return bool
+	 */
+	public static function hasDependency($id_shop_group, $check = 'all')
+	{
+		$list_shops = Shop::getShops(false, $id_shop_group, true);
+		if (!$list_shops)
+			return false;
+
+		if ($check == 'all' || $check == 'customer')
+		{
+			$total_customer = (int)Db::getInstance()->getValue('
+				SELECT count(*)
+				FROM `'._DB_PREFIX_.'customer`
+				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
+			);
+			if ($total_customer)
+				return true;
+		}
+
+		if ($check == 'all' || $check == 'order')
+		{
+			$total_order = (int)Db::getInstance()->getValue('
+				SELECT count(*)
+				FROM `'._DB_PREFIX_.'orders`
+				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
+			);
+			if ($total_order)
+				return true;
+		}
+
+		return false;
+	}
 }
