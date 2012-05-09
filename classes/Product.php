@@ -2911,7 +2911,7 @@ class ProductCore extends ObjectModel
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0).'
-				AND `id_product_1` = '.(int)$this->id.
+				WHERE `id_product_1` = '.(int)$this->id.
 				($active ? ' AND product_shop.`active` = 1' : '');
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
