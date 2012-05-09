@@ -2,6 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{shopimporter}prestashop>ajax_10f237be40b3205ba97da9b89d290c30'] = 'Kann keine Datenbank auswählen.';
+$_MODULE['<{shopimporter}prestashop>ajax_49bd922182bd3518641589e3077eacd3'] = 'Kann keine Verbindung zur Datenbank herstellen.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_d714c742b360a8ecbb124c15e9a391a1'] = 'Shop Importeur';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8c0fe18034f47d7d3dd3e58098e3ffdb'] = 'Dieses Modul ermöglicht es Ihnen, Ihren Shop aus einem anderen System zu prestashop zu importieren ';
 $_MODULE['<{shopimporter}prestashop>shopimporter_4994a8ffeba4ac3140beb89e8d41f174'] = 'Sprache';
@@ -86,3 +88,7 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_f755e8b92cb8f02c24f6f539180d45b
 $_MODULE['<{shopimporter}prestashop>shopimporter_70f4b635847038d056e33959821a7a66'] = 'max. Warenkörbe';
 $_MODULE['<{shopimporter}prestashop>shopimporter_998b344cff693ad388a14ba89b1523c7'] = 'ist ungültig';
 $_MODULE['<{shopimporter}prestashop>shopimporter_7e47a344b06d82a8836cbee2748a79e6'] = 'ist mindestens erforderlich in';
+$_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'Das Archiv kann nicht extrahiert werden';
+$_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'Der Server verfügt nicht über die Schreibberechtigungen';
+$_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'Sprache nicht gefunden';
+$_MODULE['<{shopimporter}prestashop>shopimporter_179bdae10ca983dd1cf9cd1a4bf4f20a'] = 'Das Archiv kann nicht von Prestashop.com heruntergeladen werden';

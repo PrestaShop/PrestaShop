@@ -52,10 +52,10 @@ if ($context->customer->isLogged())
 		{
 			if (!strcmp($action, 'delete'))
 				WishList::removeProduct($id_wishlist, (int)$context->customer->id, $id_product, $id_product_attribute);
-	
+
 			$products = WishList::getProductByIdCustomer($id_wishlist, $context->customer->id, $context->language->id);
 			$bought = WishList::getBoughtProduct($id_wishlist);
-		
+
 			for ($i = 0; $i < sizeof($products); ++$i)
 			{
 				$obj = new Product((int)($products[$i]['id_product']), false, $context->language->id);
@@ -89,9 +89,9 @@ if ($context->customer->isLogged())
 						$products[$i]['bought'][$k++] = $bought[$j];
 				}
 			}
-		
+
 			$productBoughts = array();
-		
+
 			foreach ($products as $product)
 				if (sizeof($product['bought']))
 					$productBoughts[] = $product;
@@ -102,13 +102,16 @@ if ($context->customer->isLogged())
 				'refresh' => $refresh,
 				'token_wish' => $wishlist->token
 			));
-			
+
+			// Instance of module class for translations
+			$module = new BlockWishList();
+
 			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/managewishlist.tpl'))
 				$context->smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/managewishlist.tpl');
 			elseif (Tools::file_exists_cache(dirname(__FILE__).'/managewishlist.tpl'))
 				$context->smarty->display(dirname(__FILE__).'/managewishlist.tpl');
 			else
-				echo Tools::displayError('No template found');
+				echo $module->l('No template found', 'managewishlist');
 		}
 	}
 }

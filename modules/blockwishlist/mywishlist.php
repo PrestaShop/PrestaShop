@@ -37,6 +37,9 @@ $errors = array();
 
 Tools::displayFileAsDeprecated();
 
+// Instance of module class for translations
+$module = new BlockWishList();
+
 if ($context->customer->isLogged())
 {
 	$add = Tools::getIsset('add');
@@ -48,14 +51,14 @@ if ($context->customer->isLogged())
 	{
 		if (Configuration::get('PS_TOKEN_ACTIVATED') == 1 AND
 			strcmp(Tools::getToken(), Tools::getValue('token')))
-			$errors[] = Tools::displayError('Invalid token');
+			$errors[] = $module->l('Invalid token', 'mywishlist');
 		if (!sizeof($errors))
 		{
 			$name = Tools::getValue('name');
 			if (empty($name))
-				$errors[] = Tools::displayError('You must specify a name.');
+				$errors[] = $module->l('You must specify a name.', 'mywishlist');
 			if (WishList::isExistsByNameForUser($name))
-				$errors[] = Tools::displayError('This name is already used by another list.');
+				$errors[] = $module->l('This name is already used by another list.', 'mywishlist');
 			
 			if(!sizeof($errors))
 			{
@@ -82,7 +85,7 @@ if ($context->customer->isLogged())
 		if (Validate::isLoadedObject($wishlist))
 			$wishlist->delete();
 		else
-			$errors[] = Tools::displayError('Cannot delete this wishlist');
+			$errors[] = $module->l('Cannot delete this wishlist', 'mywishlist');
 	}
 	$context->smarty->assign('wishlists', WishList::getByIdCustomer($context->customer->id));
 	$context->smarty->assign('nbProducts', WishList::getInfosByIdCustomer($context->customer->id));
@@ -102,7 +105,7 @@ if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/mywishlist.tp
 elseif (Tools::file_exists_cache(dirname(__FILE__).'/views/templates/front/mywishlist.tpl'))
 	$context->smarty->display(dirname(__FILE__).'/views/templates/front/mywishlist.tpl');
 else
-	echo Tools::displayError('No template found');
+	echo $module->l('No template found', 'mywishlist');
 
 include(dirname(__FILE__).'/../../footer.php');
 

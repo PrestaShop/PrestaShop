@@ -11,6 +11,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5fd13c2b89a6eaaa4614bfe
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dea6caeb83e5c11d3678284e64ebed8'] = 'Fehler beim Herunterladen der Datei';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_c186217583219f4cd040d9ee8d388ffb'] = 'Fehler bei der Zip-Extraktion';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0210b6456cdccad569cb56026bb0f689'] = 'Schlechte Konfigurationsdatei';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0a9c7fd9de'] = 'Diese Funktion wurde entfernt.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Dokumentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Sie möchten eventuell die Dokumentation prüfen';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Rechtsklick auf den Namen  und \"Link speichern unter\" wählen';
@@ -27,10 +28,6 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de9
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'Aktuelle Konfiguration';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'Themen-Konfiguration';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_130c5b3473c57faa76e2a1c54e26f88e'] = 'Beide';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_c90ba3aaed0a2bafed18233111062cf0'] = 'Konfiguration der Themenbilder';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_2a84d9915b12fcb0c1436709a77a8dd0'] = 'Hinzufügen einer neuer Konfiguration';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_dd3acd810b479275ce68d69e78ed7a95'] = 'Fügen Sie alle hinzu (Sie verlieren eventuell Ihre aktuelle Konfig.)';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_332efbbfb2c4bd5a37fd7a55659b821a'] = 'Nichts ändern';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Weiter';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5138a89d1b730dacf446855e15c24496'] = 'Sie werden die folgenden Themen installieren';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f364da141450380ae79d7a45528f4c06'] = 'Dieses Thema ist für Prestashop';

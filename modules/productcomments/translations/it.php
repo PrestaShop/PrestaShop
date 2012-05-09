@@ -2,6 +2,9 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{productcomments}prestashop>productcommentcriterion_a09ed6c60eb3213939cecb4c580813cd'] = 'Valido per il complesso del catalogo';
+$_MODULE['<{productcomments}prestashop>productcommentcriterion_467366059d7d7c743a4d0971363a8d66'] = 'Limitato a certe categorie';
+$_MODULE['<{productcomments}prestashop>productcommentcriterion_772911becd336c843ab09a1d4b4f66c0'] = 'Limitato a certi prodotti';
 $_MODULE['<{productcomments}prestashop>productcomments_b91c4e8b229a399a3bc911d352524a9b'] = 'Commenti  prodotto';
 $_MODULE['<{productcomments}prestashop>productcomments_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Conferma';
 $_MODULE['<{productcomments}prestashop>productcomments_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
@@ -47,7 +50,6 @@ $_MODULE['<{productcomments}prestashop>productcomments_b718adec73e04ce3ec720dd11
 $_MODULE['<{productcomments}prestashop>productcomments_b9aefa40a54680bb258f9f9569290fae'] = 'Nome del prodotto';
 $_MODULE['<{productcomments}prestashop>productcomments_99121ab27aaa7472cfada9071c5ba434'] = 'Nome categoria';
 $_MODULE['<{productcomments}prestashop>productcomments_b78a3223503896721cca1303f776159b'] = 'Titolo';
-$_MODULE['<{productcomments}prestashop>productcomments_a2ed44743411cf8b80e397448fce104c'] = 'Il tuo nome:';
 $_MODULE['<{productcomments}prestashop>productcomments_94966d90747b97d1f0f206c98a8b1ac3'] = 'Invia';
 $_MODULE['<{productcomments}prestashop>productcomments_08621d00a3a801b9159a11b8bbd69f89'] = 'Non ci sono commenti dei clienti per il momento.';
 $_MODULE['<{productcomments}prestashop>products-comparison_8413c683b4b27cc3f4dbd4c90329d8ba'] = 'Commenti';
