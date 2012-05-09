@@ -497,10 +497,4 @@ class Blocknewsletter extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'blocknewsletter.css', 'all');
 	}
-
-	public function hookDisplayMobileIndex($params)
-	{
-		$this->_prepareHook($params);
-		return $this->display(__FILE__, 'blockmobilenewsletter.tpl');
-	}
 }

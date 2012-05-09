@@ -131,8 +131,7 @@ class IdentityControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		if ($this->context->getMobileDevice() == false)
-			$this->addCSS(_THEME_CSS_DIR_.'identity.css');
+		$this->addCSS(_THEME_CSS_DIR_.'identity.css');
 	}
 
 }

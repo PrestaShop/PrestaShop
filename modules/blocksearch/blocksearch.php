@@ -50,19 +50,6 @@ class BlockSearch extends Module
 			return false;
 		return true;
 	}
-
-	public function hookDisplayMobileTop($params)
-	{
-		$this->smarty->assign('hook_mobile', true);
-		return $this->hookTop($params);
-	}
-
-	public function hookDisplayMobileHeader($params)
-	{
-		if (Configuration::get('PS_SEARCH_AJAX'))
-			$this->context->controller->addJqueryPlugin('autocomplete');
-		$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
-	}
 	
 	public function hookHeader($params)
 	{

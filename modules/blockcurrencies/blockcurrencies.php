@@ -80,12 +80,6 @@ class BlockCurrencies extends Module
 			return;
 		$this->context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
-
-	public function hookDisplayMobileFooterChoice($params)
-	{
-		if ($this->_prepareHook($params))
-			return $this->display(__FILE__, 'blockmobilecurrencies.tpl');
-	}
 }
 
 
