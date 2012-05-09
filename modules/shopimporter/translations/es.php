@@ -2,6 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{shopimporter}prestashop>ajax_10f237be40b3205ba97da9b89d290c30'] = 'La selección de la base de datos no se puede realizar.';
+$_MODULE['<{shopimporter}prestashop>ajax_49bd922182bd3518641589e3077eacd3'] = 'El enlace con la base de datos no se puede establecer';
 $_MODULE['<{shopimporter}prestashop>shopimporter_d714c742b360a8ecbb124c15e9a391a1'] = 'Import de tienda';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8c0fe18034f47d7d3dd3e58098e3ffdb'] = 'Este módulo le permite importar su tienda a partir de otro sistema.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_4994a8ffeba4ac3140beb89e8d41f174'] = 'Idiomas';
@@ -85,3 +87,7 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_f755e8b92cb8f02c24f6f539180d45b
 $_MODULE['<{shopimporter}prestashop>shopimporter_70f4b635847038d056e33959821a7a66'] = 'caracteres máximos';
 $_MODULE['<{shopimporter}prestashop>shopimporter_998b344cff693ad388a14ba89b1523c7'] = 'no es válido';
 $_MODULE['<{shopimporter}prestashop>shopimporter_7e47a344b06d82a8836cbee2748a79e6'] = 'es necesario en';
+$_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'El archivo no puede extraerse';
+$_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'El servidor no dispone de permisos para la escritura';
+$_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'no se encuentra el idioma';
+$_MODULE['<{shopimporter}prestashop>shopimporter_179bdae10ca983dd1cf9cd1a4bf4f20a'] = 'El archivo no se puede descargar a partir de PrestaShop.com';

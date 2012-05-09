@@ -126,7 +126,7 @@ class Watermark extends Module
 		Configuration::updateValue('WATERMARK_Y_ALIGN', Tools::getValue('yalign'));
 		Configuration::updateValue('WATERMARK_X_ALIGN', Tools::getValue('xalign'));
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', Tools::getValue('transparency'));
-	   
+
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$str_shop = '-'.(int)$this->context->shop->id;
 		else
@@ -139,9 +139,9 @@ class Watermark extends Module
 				$this->_errors[] = $error;
 			/* Copy new watermark */
 			elseif (!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
-				$this->_errors[] = Tools::displayError('an error occurred while uploading watermark: '.$_FILES['PS_WATERMARK']['tmp_name'].' to '.$dest);
+				$this->_errors[] = sprintf($this->l('An error occurred while uploading watermark: %1$s to %2$s'), $_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif');
 		}
-		
+
 		if ($this->_errors)
 			foreach ($this->_errors as $error)
 				$this->_html .= '<div class="module_error alert error"><img src="../img/admin/warning.gif" alt="'.$this->l('ok').'" /> '.$this->l($error).'</div>';
@@ -155,7 +155,7 @@ class Watermark extends Module
 	   $str_shop = '-'.(int)$this->context->shop->id;
 		if (Shop::getContext() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 			$str_shop = '';
-			
+
 		$this->_html .=
 		'<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" />'.$this->l('Watermark details').'</legend>
@@ -229,7 +229,7 @@ class Watermark extends Module
 
 		return $this->_html;
 	}
-	
+
 	/* we assume here only jpg files */
 	public function hookwatermark($params)
 	{
@@ -255,7 +255,7 @@ class Watermark extends Module
 	}
 
 	private function watermarkByImage($imagepath, $watermarkpath, $outputpath)
-	{	
+	{
 		$Xoffset = $Yoffset = $xpos = $ypos = 0;
 		if (!$image = imagecreatefromjpeg($imagepath))
 			return false;

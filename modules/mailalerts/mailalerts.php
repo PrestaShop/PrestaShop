@@ -299,7 +299,7 @@ class MailAlerts extends Module
 							$customization_text .= $text['name'].': '.$text['value'].'<br />';
 
 					if (isset($customization['datas'][_CUSTOMIZE_FILE_]))
-						$customization_text .= count($customization['datas'][_CUSTOMIZE_FILE_]).' '.Tools::displayError('image(s)').'<br />';
+						$customization_text .= count($customization['datas'][_CUSTOMIZE_FILE_]).' '.$this->l('image(s)').'<br />';
 
 					$customization_text .= '---<br />';
 				}

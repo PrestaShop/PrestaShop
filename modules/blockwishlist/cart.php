@@ -38,10 +38,14 @@ $id_wishlist = (int)(Tools::getValue('id_wishlist'));
 $id_product = (int)(Tools::getValue('id_product'));
 $quantity = (int)(Tools::getValue('quantity'));
 $id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
+
+// Instance of module class for translations
+$module = new BlockWishList();
+
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
 	$context->customer->isLogged() === true)
-	echo Tools::displayError('Invalid token');
+	echo $module->l('Invalid token', 'cart');
 if ($context->customer->isLogged())
 {
 	if ($id_wishlist AND WishList::exists($id_wishlist, $context->customer->id) === true)
@@ -77,7 +81,7 @@ if ($context->customer->isLogged())
 	elseif (Tools::file_exists_cache(dirname(__FILE__).'/blockwishlist-ajax.tpl'))
 		$context->smarty->display(dirname(__FILE__).'/blockwishlist-ajax.tpl');
 	else
-		echo Tools::displayError('No template found');
+		echo $module->l('No template found', 'cart');
 }
 else
-	echo Tools::displayError('You must be logged in to manage your wishlist.');
+	echo $module->l('You must be logged in to manage your wishlist.', 'cart');

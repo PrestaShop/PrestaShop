@@ -214,6 +214,9 @@ class ProductCommentCriterion extends ObjectModel
 
 	public static function getTypes()
 	{
-		return array(1 => Tools::displayError('Valid for the entire catalog'), 2 => Tools::displayError('Restricted to some categories'), 3 => Tools::displayError('Restricted to some products'));
+		// Instance of module class for translations
+		$module = new MailAlerts();
+
+		return array(1 => $module->l('Valid for the entire catalog', 'ProductCommentCriterion'), 2 => $module->l('Restricted to some categories', 'ProductCommentCriterion'), 3 => $module->l('Restricted to some products', 'ProductCommentCriterion'));
 	}
 }

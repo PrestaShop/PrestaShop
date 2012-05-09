@@ -209,7 +209,7 @@ class ThemeInstallator extends Module
 			if (!(is_dir(_PS_ALL_THEMES_DIR_.$theme->directory) && file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/index.tpl')))
 			{
 				$this->page = 1;
-				$this->_errors[] = Tools::displayErrors('%s is not a valid theme to export', $theme->name);
+				$this->_errors[] = sprintf($this->l('%s is not a valid theme to export'), $theme->name);
 			}
 		}
 	}
@@ -331,7 +331,7 @@ class ThemeInstallator extends Module
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			return '<div class="error">'.Tools::displayError('This functionality has been disabled.').'</div>';
+			return '<div class="error">'.$this->l('This functionality has been disabled.').'</div>';
 
 		}
 		self::init_defines();

@@ -31,24 +31,27 @@ require_once(dirname(__FILE__).'/WishList.php');
 
 $context = Context::getContext();
 
+// Instance of module class for translations
+$module = new BlockWishList();
+
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
 	$context->customer->isLogged() === true)
-	exit(Tools::displayError('invalid token', false));
+	exit($module->l('invalid token', 'sendwishlist'));
 
 if ($context->customer->isLogged())
 {
 	$id_wishlist = (int)(Tools::getValue('id_wishlist'));
 	if (empty($id_wishlist) === true)
-		exit(Tools::displayError('Invalid wishlist', false));
+		exit($module->l('Invalid wishlist', 'sendwishlist'));
 	for ($i = 1; empty($_POST['email'.strval($i)]) === false; ++$i)
 	{
 		$to = Tools::getValue('email'.$i);
 		$wishlist = WishList::exists($id_wishlist, $context->customer->id, true);
 		if ($wishlist === false)
-			exit(Tools::displayError('Invalid wishlist', false));
+			exit($module->l('Invalid wishlist', 'sendwishlist'));
 		if (WishList::addEmail($id_wishlist, $to) === false)
-			exit(Tools::displayError('Wishlist send error', false));
+			exit($module->l('Wishlist send error', 'sendwishlist'));
 		$toName = strval(Configuration::get('PS_SHOP_NAME'));
 		$customer = $context->customer;
 		if (Validate::isLoadedObject($customer))

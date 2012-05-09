@@ -89,6 +89,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_8465d83b5c1b569299af284c1
 $_MODULE['<{referralprogram}prestashop>referralprogram_b17f3f4dcf653a5776792498a9b44d6a'] = 'Actualizar ajustes';
 $_MODULE['<{referralprogram}prestashop>referralprogram_562ad64cf21ac2da656134355115133d'] = 'Su texto está vacio.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_c5afb9c76a7880978cba32872d01f068'] = 'Actualizar el texto';
+$_MODULE['<{referralprogram}prestashop>referralprogram_94c69408d25102ba7ddcf3533b56c407'] = 'el objeto del cliente es incorrecto.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_6b31baf25848e7a6563ecc3946626c80'] = 'Programa de apadrinamiento';
 $_MODULE['<{referralprogram}prestashop>referralprogram_7790d51a3d62c85aae65464dee12ee8b'] = 'Padrino del cliente:';
 $_MODULE['<{referralprogram}prestashop>referralprogram_f964f762284ede747ed9f6428a5469b8'] = 'Nadie ha apadrinado a este cliente.';
@@ -102,6 +103,8 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_325c8bbd07033a39d25b5c445
 $_MODULE['<{referralprogram}prestashop>referralprogram_fc6e0920b914b164802d44220e6163f3'] = 'Pedidos realizados';
 $_MODULE['<{referralprogram}prestashop>referralprogram_970ad4e4787cc75cd63dbf8d5c757513'] = 'Cuenta cliente creada';
 $_MODULE['<{referralprogram}prestashop>referralprogram_5b541747d46b39c37f0e100ddfe44472'] = 'no ha apadrinado a ningún amigo todavía.';
+$_MODULE['<{referralprogram}prestashop>referralprogram_a82e0d057f443115e807bd6ca595fc8c'] = 'El objeto pedido es incorrecto';
+$_MODULE['<{referralprogram}prestashop>referralprogram_8b80d4b6307990874b832cc15a92e5a3'] = 'Algunos parámetros han desaparecido.';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_6b31baf25848e7a6563ecc3946626c80'] = 'Programa de patrocinio';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_50b12ad08d38a2b00a790304bbe851be'] = 'Usted se ha ganado un vale por un valor de';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_6c8352dbdb1fa1433bd5974c603dced4'] = 'gracias a su patrocinador';

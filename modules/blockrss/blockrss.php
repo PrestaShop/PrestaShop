@@ -149,17 +149,16 @@ class Blockrss extends Module
 
 	function hookLeftColumn($params)
 	{
-		
 		// Conf
 		$title = strval(Configuration::get('RSS_FEED_TITLE'));
 		$url = strval(Configuration::get('RSS_FEED_URL'));
 		$nb = (int)(Configuration::get('RSS_FEED_NBR'));
-		
+
 		// Getting data
 		$rss_links = array();
 		if ($url && ($contents = @file_get_contents($url)))
 			try
-			{				
+			{
 			if (@$src = new XML_Feed_Parser($contents))
 				for ($i = 0; $i < ($nb ? $nb : 5); $i++)
 					if (@$item = $src->getEntryByOffset($i))
@@ -167,9 +166,9 @@ class Blockrss extends Module
 			}
 			catch (XML_Feed_Parser_Exception $e)
 			{
-				Tools::dieOrLog(Tools::displayError('Error: invalid RSS feed in "blockrss" module').' '.$e->getMessage(), false);
+				Tools::dieOrLog(sprintf($this->l('Error: invalid RSS feed in "blockrss" module: %s'), $e->getMessage()), false);
 			}
-		
+
 		// Display smarty
 		$this->smarty->assign(array('title' => ($title ? $title : $this->l('RSS feed')), 'rss_links' => $rss_links));
 
