@@ -1805,7 +1805,7 @@ p.preference_description .light-warning {
 	margin-top: 4px;
 }
 
-.multishop_warning, .warning_mod_rewrite{
+.multishop_warning {
     background-image: url("../img/admin/warning.gif");
     background-repeat: no-repeat;
     color: #FE2744;
@@ -1813,6 +1813,16 @@ p.preference_description .light-warning {
     padding-left: 22px;
     padding-top: 1px;
 }
+
+.warning_mod_rewrite{
+	background: #FEEFB3 url(../img/admin/warning.gif) no-repeat;
+	color: #9E6014;
+    font-weight: bold;
+    padding-left: 22px;
+    padding-top: 1px;
+    height:20px;
+}
+
 
 label.conf_title{
 	width: 235px;
