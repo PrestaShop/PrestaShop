@@ -594,7 +594,6 @@ class InstallModelInstall extends InstallAbstractModel
 				continue;
 
 			$module = Module::getInstanceByName($module_name);
-			$module->uninstall();
 			if (!$module->install())
 				$errors[] = $this->language->l('Cannot install module "%s"', $module_name);
 		}
