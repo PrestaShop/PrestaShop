@@ -27,7 +27,7 @@
 
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
-	
+
 class Blockreinsurance extends Module
 {
 	public function __construct()
@@ -44,7 +44,7 @@ class Blockreinsurance extends Module
 		$this->displayName = $this->l('Bloc reinsurance');
 		$this->description = $this->l('Add a block to display more infos to reassure your customers');
 	}
-	
+
 	public function install()
 	{
 		$return = (parent::install() && $this->installDB() && Configuration::updateValue('blockreinsurance_nbblocks', 5) && $this->registerHook('footer'));
@@ -217,10 +217,11 @@ class Blockreinsurance extends Module
 		);
 		$success = true;
 		for ($a = 1; $a <= $nb_blocks; $a++)
+		{
 			$success &= Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`, `text`)
-					VALUES ("reassurance'.$a.'", "'.$tab_texts[($a-1)].'")');
+				INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`, `text`, `id_shop`)
+					VALUES ("reassurance'.$a.'", "'.$tab_texts[($a-1)].'", '.(int)$this->context->shop->id.')');
+		}
 		return $success;
 	}
 }
-?>

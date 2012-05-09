@@ -34,6 +34,7 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->id_shop = Tools::getValue('id_shop');
 
 		$this->context = Context::getContext();
 
@@ -51,20 +52,9 @@ class AdminShopUrlControllerCore extends AdminController
 				'width' => 150,
 				'filter_key' => 's!name'
 			),
-			'domain' => array(
-				'title' => $this->l('Domain'),
-				'width' => 'auto',
-				'filter_key' => 'domain'
-			),
-			'domain_ssl' => array(
-				'title' => $this->l('Domain SSL'),
-				'width' => 130,
-				'filter_key' => 'domain'
-			),
-			'uri' => array(
-				'title' => $this->l('URI'),
-				'width' => 200,
-				'filter_key' => 'uri',
+			'url' => array(
+				'title' => $this->l('URL'),
+				'filter_key' => 'url',
 				'havingFilter' => true
 			),
 			'main' => array(
@@ -86,7 +76,6 @@ class AdminShopUrlControllerCore extends AdminController
 				'width' => 50,
 			),
 		);
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -98,126 +87,143 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
+	 	$this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
+
+		if ($id_shop = (int)Tools::getValue('id_shop'))
+			$this->_where = 'AND a.id_shop = '.$id_shop;
 
 	 	return parent::renderList();
 	}
 
 	public function renderForm()
 	{
+		$this->multiple_fieldsets = true;
 		$this->fields_form = array(
-			'legend' => array(
-				'title' => $this->l('Shop URL')
+			array(
+				'form' => array(
+					'legend' => array(
+						'title' => $this->l('URL options')
+					),
+					'input' => array(
+						array(
+							'type' => 'select',
+							'label' => $this->l('Shop:'),
+							'name' => 'id_shop',
+							'onchange' => 'checkMainUrlInfo(this.value);',
+							'options' => array(
+								'optiongroup' => array (
+									'query' =>  Shop::getTree(),
+									'label' => 'name'
+								),
+								'options' => array (
+									'query' => 'shops',
+									'id' => 'id_shop',
+									'name' => 'name'
+								)
+							)
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Main URL:'),
+							'name' => 'main',
+							'class' => 't',
+							'values' => array(
+								array(
+									'id' => 'main_on',
+									'value' => 1,
+									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+								),
+								array(
+									'id' => 'main_off',
+									'value' => 0,
+									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+								)
+							),
+							'desc' => array(
+								$this->l('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).'),
+								array(
+									'text' => $this->l('Since the selected shop has no Main URL, you have to set this URL as the Main URL'),
+									'id' => 'mainUrlInfo'
+								),
+								array(
+									'text' => $this->l('The selected shop has already a Main URL, if you set this one as the Main URL, the older one will be set as the Normal URL.'),
+									'id' => 'mainUrlInfoExplain'
+								)
+							)
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Status:'),
+							'name' => 'active',
+							'required' => false,
+							'class' => 't',
+							'values' => array(
+								array(
+									'id' => 'active_on',
+									'value' => 1,
+									'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+								),
+								array(
+									'id' => 'active_off',
+									'value' => 0,
+									'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
+								)
+							),
+							'desc' => $this->l('Enabled or disabled')
+						)
+					),
+					'submit' => array(
+						'title' => $this->l('Save'),
+						'class' => 'button'
+					),
+				),
 			),
-			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Domain:'),
-					'name' => 'domain',
-					'size' => 50,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Domain SSL:'),
-					'name' => 'domain_ssl',
-					'size' => 50,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Physical URI:'),
-					'name' => 'physical_uri',
-					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you would set my-store/ in this field).'),
-					'size' => 50,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Virtual URI:'),
-					'name' => 'virtual_uri',
-					'desc' => array(
-						$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
-						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
+			array(
+				'form' => array(
+					'legend' => array(
+						'title' => $this->l('Shop URL')
 					),
-					'size' => 50,
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Your final URL will be:'),
-					'name' => 'final_url',
-					'size' => 76,
-					'readonly' => true
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Shop:'),
-					'name' => 'id_shop',
-					'onchange' => 'checkMainUrlInfo(this.value);',
-					'options' => array(
-						'optiongroup' => array (
-							'query' =>  Shop::getTree(),
-							'label' => 'name'
-						),
-						'options' => array (
-							'query' => 'shops',
-							'id' => 'id_shop',
-							'name' => 'name'
-						)
-					)
-				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Main URL:'),
-					'name' => 'main',
-					'class' => 't',
-					'values' => array(
+					'input' => array(
 						array(
-							'id' => 'main_on',
-							'value' => 1,
-							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
+							'type' => 'text',
+							'label' => $this->l('Domain:'),
+							'name' => 'domain',
+							'size' => 50,
 						),
 						array(
-							'id' => 'main_off',
-							'value' => 0,
-							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
-						)
+							'type' => 'text',
+							'label' => $this->l('Domain SSL:'),
+							'name' => 'domain_ssl',
+							'size' => 50,
+						),
+						array(
+							'type' => 'text',
+							'label' => $this->l('Physical URI:'),
+							'name' => 'physical_uri',
+							'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you would set my-store/ in this field).'),
+							'size' => 50,
+						),
+						array(
+							'type' => 'text',
+							'label' => $this->l('Virtual URI:'),
+							'name' => 'virtual_uri',
+							'desc' => array(
+								$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
+								'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
+							),
+							'size' => 50,
+						),
+						array(
+							'type' => 'text',
+							'label' => $this->l('Your final URL will be:'),
+							'name' => 'final_url',
+							'size' => 76,
+							'readonly' => true
+						),
 					),
-					'desc' => array(
-						$this->l('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).'),
-						array(
-							'text' => $this->l('Since the selected shop has no Main URL, you have to set this URL as the Main URL'),
-							'id' => 'mainUrlInfo'
-						),
-						array(
-							'text' => $this->l('The selected shop has already a Main URL, if you set this one as the Main URL, the older one will be set as the Normal URL.'),
-							'id' => 'mainUrlInfoExplain'
-						)
-					)
 				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Status:'),
-					'name' => 'active',
-					'required' => false,
-					'class' => 't',
-					'values' => array(
-						array(
-							'id' => 'active_on',
-							'value' => 1,
-							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" />'
-						),
-						array(
-							'id' => 'active_off',
-							'value' => 0,
-							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
-						)
-					),
-					'desc' => $this->l('Enabled or disabled')
-				)
 			),
-			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'button'
-			)
 		);
 
 		if (!($obj = $this->loadObject(true)))
@@ -242,10 +248,61 @@ class AdminShopUrlControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initToolbar()
+	{
+		if ($this->id_object)
+			$this->loadObject();
+
+		if (!$this->id_shop && $this->object && $this->object->id_shop)
+			$this->id_shop = $this->object->id_shop;
+
+		if (!$this->display && $this->id_shop)
+			$this->toolbar_btn['edit'] = array(
+				'desc' => $this->l('Edit this shop'),
+				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;updateshop&amp;id_shop='.$this->id_shop,
+			);
+
+		parent::initToolbar();
+
+		$this->show_toolbar = false;
+		if (isset($this->toolbar_btn['new']))
+			$this->toolbar_btn['new'] = array(
+				'desc' => $this->l('Add new url'),
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='.$this->id_shop,
+			);
+
+		if (isset($this->toolbar_btn['back']))
+			$this->toolbar_btn['back']['href'] .= '&amp;id_shop='.$this->id_shop;
+	}
+
+	public function initContent()
+	{
+		$this->list_simple_header = true;
+		parent::initContent();
+
+		$this->addJqueryPlugin('cookie');
+		$this->addJqueryPlugin('jstree');
+		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
+
+		if (!$this->display && $this->id_shop)
+		{
+			$shop = new Shop($this->id_shop);
+			$this->toolbar_title[] = $shop->name;
+		}
+
+		$this->context->smarty->assign(array(
+			'toolbar_scroll' => 1,
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->toolbar_title,
+			'selected_tree_id' => ($this->display == 'edit' ? 'tree-url-'.$this->id_object : (Tools::getValue('id_shop') ? 'tree-shop-'.Tools::getValue('id_shop') : '')),
+		));
+	}
+
 	public function postProcess()
 	{
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
+		$result = true;
 		if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -265,15 +322,13 @@ class AdminShopUrlControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		else if (Tools::isSubmit('submitAdd'.$this->table) && $this->tabAccess['add'] === '1')
-		{
-			if (ShopUrl::urlExists(Tools::getValue('domain'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'), Tools::getValue('id_shop')))
-				$this->errors[] = Tools::displayError('Virtual URI already used.');
-			else
-				return parent::postProcess();
-		}
 		else
-			return parent::postProcess();
+			$result = parent::postProcess();
+
+		if ($this->redirect_after)
+			$this->redirect_after .= '&id_shop='.$this->id_shop;
+
+		return $result;
 	}
 
 	public function processSave()

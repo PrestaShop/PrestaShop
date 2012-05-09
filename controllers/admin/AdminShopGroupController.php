@@ -36,9 +36,7 @@ class AdminShopGroupControllerCore extends AdminController
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->addRowAction('edit');
-
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 		$this->context = Context::getContext();
 
@@ -67,7 +65,53 @@ class AdminShopGroupControllerCore extends AdminController
 			),
 		);
 
+		$this->fields_options = array(
+			'general' => array(
+				'title' =>	$this->l('Multishop options'),
+				'fields' =>	array(
+					'PS_SHOP_DEFAULT' => array(
+						'title' => $this->l('Default shop:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_shop',
+						'list' => Shop::getShops(),
+						'visibility' => Shop::CONTEXT_ALL
+					)
+				),
+				'submit' => array()
+			)
+		);
+
 		parent::__construct();
+	}
+
+	public function initToolbar()
+	{
+		parent::initToolbar();
+
+		$this->show_toolbar = false;
+		if (isset($this->toolbar_btn['new']))
+			$this->toolbar_btn['new']['desc'] = $this->l('Add new shop group');
+	}
+
+	public function initContent()
+	{
+		$this->list_simple_header = true;
+		parent::initContent();
+
+		$this->addJqueryPlugin('cookie');
+		$this->addJqueryPlugin('jstree');
+		$this->addCSS(_PS_JS_DIR_.'jquery/plugins/jstree/themes/classic/style.css');
+
+		if ($this->display == 'edit')
+			$this->toolbar_title[] = $this->object->name;
+
+		$this->context->smarty->assign(array(
+			'toolbar_scroll' => 1,
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->toolbar_title,
+			'selected_tree_id' => ($this->display == 'edit') ? 'tree-group-'.$this->id_object : 'tree-root',
+		));
 	}
 
 	public function renderForm()
@@ -76,6 +120,7 @@ class AdminShopGroupControllerCore extends AdminController
 			'legend' => array(
 				'title' => $this->l('ShopGroup')
 			),
+			'description' => $this->l('Warning: it is not recommended to enable the "share customers" and "share orders" options, because once they are activated and customers or orders are created, you won\'t be able to disable these options anymore. If you need these options, try to first consider using several categories instead on several shops.'),
 			'input' => array(
 				array(
 					'type' => 'text',
@@ -90,6 +135,7 @@ class AdminShopGroupControllerCore extends AdminController
 					'required' => true,
 					'class' => 't',
 					'is_bool' => true,
+					'disabled' => ($this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'customer')) ? true : false,
 					'values' => array(
 						array(
 							'id' => 'share_customer_on',
@@ -102,7 +148,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share customers between shops of this group')
+					'desc' => $this->l('Once the option is enabled, the shops in this group will share their customers: if a customer registers on one of this group\'s shops, the account will automatically be available on the others shops of this goup. Warning: you won\'t be able to disable this option once you have customers registered on at least one shop of this group.'),
 				),
 				array(
 					'type' => 'radio',
@@ -132,6 +178,7 @@ class AdminShopGroupControllerCore extends AdminController
 					'required' => true,
 					'class' => 't',
 					'is_bool' => true,
+					'disabled' => ($this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'order')) ? true : false,
 					'values' => array(
 						array(
 							'id' => 'share_order_on',
@@ -144,8 +191,7 @@ class AdminShopGroupControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' =>
-					$this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and available quantities)')
+					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared among all the shops in this group. This way, any purchase started on one of the shops in this group will be able to be finished in another shop from the same shop group. Warning: you won\'t be able to disable this option once you have orders on at least one shop of this group.')
 				),
 				array(
 					'type' => 'radio',
@@ -187,18 +233,6 @@ class AdminShopGroupControllerCore extends AdminController
 			);
 		else
 			$disabled = false;
-
-		$import_data = array(
-			'attribute_group' => $this->l('Attribute groups'),
-			'attribute' => $this->l('Attributes'),
-			//'customer_group' => $this->l('Customer groups'),
-			'feature' => $this->l('Features'),
-			'group' => $this->l('Groups'),
-			'manufacturer' => $this->l('Manufacturers'),
-			'supplier' => $this->l('Suppliers'),
-			'tax_rules_group' => $this->l('Tax rule groups'),
-			'zone' => $this->l('Zones'),
-		);
 
 		$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$this->tpl_form_vars = array(

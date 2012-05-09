@@ -30,6 +30,29 @@
 		fillShopUrl();
 		checkMainUrlInfo();
 		$('#domain, #physical_uri, #virtual_uri').keyup(fillShopUrl);
+
+		var change_domain_value = false;
+		$('#domain').keydown(function()
+		{
+			if (!$('#domain_ssl').val() || $('#domain_ssl').val() == $('#domain').val())
+			{
+				change_domain_value = true;
+			}
+		});
+
+		$('#domain_ssl').keydown(function()
+		{
+			change_domain_value = false;
+		});
+
+		$('#domain').keyup(function()
+		{
+			if (change_domain_value)
+			{
+				change_domain_value = false;
+				$('#domain_ssl').val($('#domain').val());
+			}
+		});
 	});
 
 	var shopUrl = {$js_shop_url};

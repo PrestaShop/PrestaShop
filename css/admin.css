@@ -1757,7 +1757,7 @@ a.action_module_delete {
 	border: 1px dotted #000000;
 }
 
-fieldset .optionsDescription{
+fieldset .optionsDescription, fieldset p.description, .info{
     background: url("../img/admin/icon-info.png") no-repeat scroll 6px 6px #BDE5F8;
     border: 1px solid #00529B;
     color: #00529B;
@@ -2291,3 +2291,54 @@ margin-bottom:7px;
 #block_partner_tips {float:right; width:48.1%}
 .row-news { width:100%;float:left;}
 #table_info_news { border:1px solid #ccc;}
+
+#multishop-tree{
+
+}
+
+.multishop-left{
+	float: left;
+	width: 250px;
+	border: 1px solid #CCCED7;
+	background-color: #F9F9F9;
+	overflow: auto;
+	padding: 3px;
+	max-height: 400px;
+	min-height: 200px;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+}
+
+	.multishop-left .multishop-title{
+		border-bottom: 1px solid #CCCED7;
+		color: #333333;
+		background-color: #F0F0F0;
+		font-size: 14px;
+		font-weight: bold;
+		text-align: left;
+		padding: 2px;
+		width: 247px;
+	}
+
+.multishop-right{
+	margin-left: 270px;
+}
+
+#container-multishop {
+	background-color:#EBEDF4;
+	border:1px solid #CCCED7;
+	color: #585A69;
+	padding:10px;
+}
+
+#multishop-tree{
+	font-size: 13px;
+	margin-top: 3px;
+}
+
+	#multishop-tree a.selected{
+		background-color: #49B2FF;
+		padding: 3px;
+		color: #FFFFFF;
+	}

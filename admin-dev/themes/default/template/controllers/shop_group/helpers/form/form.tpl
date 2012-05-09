@@ -47,31 +47,22 @@
 	}
 
 	$(document).ready(function() {
-		toggleShareOrders();
-		$('input[name=share_customer]').click(function()
+		if (!$("input[name=share_order]").prop('disabled'))
 		{
 			toggleShareOrders();
-		});
-		$('input[name=share_stock]').click(function()
-		{
-			toggleShareOrders();
-		});
+			$('input[name=share_customer]').click(function()
+			{
+				toggleShareOrders();
+			});
+			$('input[name=share_stock]').click(function()
+			{
+				toggleShareOrders();
+			});
+		}
 
 		$('#useImportData').click(function() {
 			$('#importList').slideToggle('slow');
 		});
 	});
-
-{/block}
-
-{block name="label"}
-
-	{if $input.type == 'text' && $input.name == 'name'}
-		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t edit the shop group when you have more than one shop'}</div><br />
-	{/if}
-
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
 
 {/block}

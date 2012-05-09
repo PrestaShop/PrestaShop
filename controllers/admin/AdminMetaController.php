@@ -112,6 +112,46 @@ class AdminMetaControllerCore extends AdminController
 		if (isset($robots_submit))
 			$robots_options['submit'] = $robots_submit;
 
+		// Options for shop URL if multishop is disabled
+		$shop_url_options = array(
+			'title' => $this->l('Set shop URL'),
+			'fields' => array(),
+		);
+
+		if (!Shop::isFeatureActive())
+		{
+			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
+			if ($this->url)
+			{
+				$shop_url_options['description'] = $this->l('You can set here the URL for your shop. If you migrate your shop to a new URL, remember to change the values bellow.');
+				$shop_url_options['fields'] = array(
+					'domain' => array(
+						'title' =>	$this->l('Shop domain'),
+						'validation' => 'isString',
+						'type' => 'text',
+						'size' => 70,
+						'defaultValue' => $this->url->domain,
+					),
+					'domain_ssl' => array(
+						'title' =>	$this->l('SSL domain'),
+						'validation' => 'isString',
+						'type' => 'text',
+						'size' => 70,
+						'defaultValue' => $this->url->domain_ssl,
+					),
+					'uri' => array(
+						'title' =>	$this->l('Base URI'),
+						'validation' => 'isString',
+						'type' => 'text',
+						'size' => 70,
+						'defaultValue' => $this->url->physical_uri,
+					),
+				);
+			}
+		}
+		else
+			$shop_url_options['description'] = $this->l('Multishop option is enabled, if you want to change the url of your shop you have to go in "Advanced parameters" -> "multishop" tab.');
+
 		// List of options
 		$this->fields_options = array(
 			'general' => array(
@@ -120,12 +160,13 @@ class AdminMetaControllerCore extends AdminController
 				'fields' =>	$general_fields,
 				'submit' => array()
 			),
-			'robots' => $robots_options,
+			'shop_url' => $shop_url_options,
 			'routes' => array(
 				'title' =>	$this->l('Schema of URLs'),
 				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
 				'fields' => array(),
 			),
+			'robots' => $robots_options,
 		);
 
 		// Add display route options to options form
@@ -147,20 +188,20 @@ class AdminMetaControllerCore extends AdminController
 		$this->addJqueryUi('ui.widget');
 		$this->addJqueryPlugin('tagify');
 	}
-	
-	public function addFieldRoute($routeID, $title)
+
+	public function addFieldRoute($route_id, $title)
 	{
 		$keywords = array();
-		foreach (Dispatcher::getInstance()->default_routes[$routeID]['keywords'] as $keyword => $data)
+		foreach (Dispatcher::getInstance()->default_routes[$route_id]['keywords'] as $keyword => $data)
 			$keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
 
-		$this->fields_options['routes']['fields']['PS_ROUTE_'.$routeID] = array(
+		$this->fields_options['routes']['fields']['PS_ROUTE_'.$route_id] = array(
 			'title' =>	$title,
 			'desc' => sprintf($this->l('Keywords: %s'), implode(', ', $keywords)),
 			'validation' => 'isString',
 			'type' => 'text',
 			'size' => 70,
-			'defaultValue' => Dispatcher::getInstance()->default_routes[$routeID]['rule'],
+			'defaultValue' => Dispatcher::getInstance()->default_routes[$route_id]['rule'],
 		);
 	}
 
@@ -363,29 +404,29 @@ class AdminMetaControllerCore extends AdminController
 	/**
 	 * Validate route syntax and save it in configuration
 	 *
-	 * @param string $routeID
+	 * @param string $route_id
 	 */
-	public function checkAndUpdateRoute($routeID)
+	public function checkAndUpdateRoute($route_id)
 	{
 		$default_routes = Dispatcher::getInstance()->default_routes;
-		if (!isset($default_routes[$routeID]))
+		if (!isset($default_routes[$route_id]))
 			return;
 
-		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
-		if (!$rule || $rule == $default_routes[$routeID]['rule'])
+		$rule = Tools::getValue('PS_ROUTE_'.$route_id);
+		if (!$rule || $rule == $default_routes[$route_id]['rule'])
 		{
-			Configuration::updateValue('PS_ROUTE_'.$routeID, '');
+			Configuration::updateValue('PS_ROUTE_'.$route_id, '');
 			return;
 		}
 
 		$errors = array();
-		if (!Dispatcher::getInstance()->validateRoute($routeID, $rule, $errors))
+		if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
 		{
 			foreach ($errors as $error)
-				$this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
+				$this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $route_id, htmlspecialchars($rule));
 		}
 		else
-			Configuration::updateValue('PS_ROUTE_'.$routeID, $rule);
+			Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
 	}
 
 	/**
@@ -430,6 +471,42 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRouteCmsCategoryRule()
 	{
 		$this->checkAndUpdateRoute('cms_category_rule');
+	}
+
+	/**
+	 * Update shop domain (for mono shop)
+	 */
+	public function updateOptionDomain($value)
+	{
+		if (!Shop::isFeatureActive() && $this->url && $this->url->domain != $value)
+		{
+			$this->url->domain = $value;
+			$this->url->update();
+		}
+	}
+
+	/**
+	 * Update shop SSL domain (for mono shop)
+	 */
+	public function updateOptionDomainSsl($value)
+	{
+		if (!Shop::isFeatureActive() && $this->url && $this->url->domain_ssl != $value)
+		{
+			$this->url->domain_ssl = $value;
+			$this->url->update();
+		}
+	}
+
+	/**
+	 * Update shop physical uri for mono shop)
+	 */
+	public function updateOptionUri($value)
+	{
+		if (!Shop::isFeatureActive() && $this->url && $this->url->physical_uri != $value)
+		{
+			$this->url->physical_uri = $value;
+			$this->url->update();
+		}
 	}
 
 	/**

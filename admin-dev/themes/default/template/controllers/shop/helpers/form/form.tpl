@@ -25,13 +25,6 @@
 *}
 {extends file="helpers/form/form.tpl"}
 
-{block name="label"}
-	{if $input.type == 'text' && $input.name == 'name'}
-		<div class="hint" name="help_box" style="display:block;">{l s='You can\'t change the shop group when you have more than one Shop'}</div><br />
-	{/if}
-	{$smarty.block.parent}
-{/block}
-
 {block name="input"}
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
@@ -43,7 +36,7 @@
 		{/foreach}
 		<div class="clear">&nbsp;</div>
 	{elseif $input.type == 'textShopGroup'}
-		{$input.value}
+		<p style="color: #000000; padding: 0px; font-size: 12px; margin-top: 4px;">{$input.value}</p>
 	{else}
 		{if $input.type == 'select' && $input.name == 'id_category'}
 			<script type="text/javascript">

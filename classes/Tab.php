@@ -89,6 +89,7 @@ class TabCore extends ObjectModel
 		$class_name = Tab::getClassNameById($this->id_parent);
 		if (isset($retro[$class_name]))
 			$this->id_parent = Tab::getIdFromClassName($retro[$class_name]);
+		self::$_cache_tabs = array();
 
 		// Set good position for new tab
 		$this->position = Tab::getNewLastPosition($this->id_parent);
@@ -220,7 +221,7 @@ class TabCore extends ObjectModel
 	 *
 	 * @return array tabs
 	 */
-	static $_cache_tabs = array();
+	protected static $_cache_tabs = array();
 	public static function getTabs($id_lang, $id_parent = null)
 	{
 		if (!isset(self::$_cache_tabs[$id_lang]))
@@ -479,6 +480,7 @@ class TabCore extends ObjectModel
 		if ($current_tab->id_parent != $this->id_parent)
 			$this->position = Tab::getNewLastPosition($this->id_parent);
 
+		self::$_cache_tabs = array();
 		return parent::update($null_values);
 	}
 

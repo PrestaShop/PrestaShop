@@ -866,7 +866,7 @@ class AdminControllerCore extends Controller
 					continue;
 
 				// Check if field is required
-				if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
+				if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
@@ -897,10 +897,10 @@ class AdminControllerCore extends Controller
 			{
 				foreach ($fields as $key => $options)
 				{
-					if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Shop::getContext()))
+					if (Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 						continue;
 
-					if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
+					if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($_POST['multishopOverrideOption'][$key]))
 					{
 						Configuration::deleteFromContext($key);
 						continue;
@@ -941,10 +941,10 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
+
 		if (empty($this->errors))
 			$this->confirmations[] = $this->_conf[6];
 	}
-
 
 	/**
 	 * assign default action in toolbar_btn smarty var, if they are not set.
