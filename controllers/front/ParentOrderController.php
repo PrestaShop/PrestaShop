@@ -242,7 +242,8 @@ class ParentOrderControllerCore extends FrontController
 			return false;
 
 		// Carrier has changed, so we check if the cart rules still apply
-		CartRule::autoRemoveFromCart();
+		CartRule::autoRemoveFromCart($this->context);
+		CartRule::autoAddToCart($this->context);
 		
 		return true;
 	}
@@ -373,7 +374,8 @@ class ParentOrderControllerCore extends FrontController
 				$this->context->cart->update();
 				
 				// Address has changed, so we check if the cart rules still apply
-				CartRule::autoRemoveFromCart();
+				CartRule::autoRemoveFromCart($this->context);
+				CartRule::autoAddToCart($this->context);
 			}
 
 			/* If delivery address is valid in cart, assign it to Smarty */
