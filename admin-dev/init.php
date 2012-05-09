@@ -96,7 +96,7 @@ try
 		$query = (isset($url['query'])) ? $url['query'] : '';
 		parse_str($query, $parseQuery);
 		unset($parseQuery['setShopContext']);
-		Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery));
+		Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
 	}
 
 	$context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));

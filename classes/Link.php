@@ -496,7 +496,7 @@ class LinkCore
 						$vars[urlencode($k)] = $value;
 					else
 					{
-						foreach (explode('&', http_build_query(array($k => $value))) as $key => $val)
+						foreach (explode('&', http_build_query(array($k => $value)), '', '&') as $key => $val)
 						{
 							$data = explode('=', $val);
 							$vars[urldecode($data[0])] = $data[1];
@@ -507,7 +507,7 @@ class LinkCore
 		}
 
 		if (!$array)
-			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars);
+			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
 		$vars['requestUrl'] = $url;
 
 		if (!$this->allow == 1)
