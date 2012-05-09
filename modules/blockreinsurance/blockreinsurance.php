@@ -57,6 +57,7 @@ class Blockreinsurance extends Module
 		return Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance` (
 			`id_contactinfos` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+			`id_shop` int(10) unsigned NOT NULL ,
 			`filename` VARCHAR(100) NOT NULL,
 			`text` VARCHAR(300) NOT NULL,
 			PRIMARY KEY (`id_contactinfos`)
@@ -123,13 +124,14 @@ class Blockreinsurance extends Module
 	public function getContent()
 	{
 		// If we try to update the settings
+		$output = '';
 		if (isset($_POST['submitModule']))
 		{				
 			Configuration::updateValue('blockreinsurance_nbblocks', ((isset($_POST['nbblocks']) && $_POST['nbblocks'] != '') ? (int)$_POST['nbblocks'] : ''));
 			if ($this->removeFromDB() && $this->addToDB())
-				echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').'</div>';
+				$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 			else
-				echo '<div class="conf error"><img src="../img/admin/disabled.gif"/>'.$this->l('An error occurred during the save').'</div>';
+				$output = '<div class="conf error"><img src="../img/admin/disabled.gif"/>'.$this->l('An error occurred during the save').'</div>';
 		}
 		
 		$nb_blocks = Configuration::get('blockreinsurance_nbblocks');
@@ -161,6 +163,7 @@ class Blockreinsurance extends Module
 			});	
 		</script>
 		<h2>'.$this->displayName.'</h2>
+		'.$output.'
 		<form method="post" action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 			<fieldset class="width2">
 				<select name="nbblocks">';	

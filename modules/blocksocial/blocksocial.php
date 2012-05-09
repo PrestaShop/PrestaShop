@@ -56,16 +56,18 @@ class blocksocial extends Module
 	public function getContent()
 	{
 		// If we try to update the settings
+		$output = '';
 		if (isset($_POST['submitModule']))
 		{	
 			Configuration::updateValue('blocksocial_facebook', (($_POST['facebook_url'] != '') ? $_POST['facebook_url']: ''));
 			Configuration::updateValue('blocksocial_twitter', (($_POST['twitter_url'] != '') ? $_POST['twitter_url']: ''));		
 			Configuration::updateValue('blocksocial_rss', (($_POST['rss_url'] != '') ? $_POST['rss_url']: ''));				
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').'</div>';
+			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 		
 		return '
 		<h2>'.$this->displayName.'</h2>
+		'.$output.'
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset class="width2">				
 				<label for="facebook_url">'.$this->l('Facebook URL : ').'</label>

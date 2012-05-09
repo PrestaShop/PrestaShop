@@ -102,7 +102,7 @@ class BankWire extends PaymentModule
 			Configuration::updateValue('BANK_WIRE_OWNER', Tools::getValue('owner'));
 			Configuration::updateValue('BANK_WIRE_ADDRESS', Tools::getValue('address'));
 		}
-		$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('ok').'" /> '.$this->l('Settings updated').'</div>';
+		$this->_html .= '<div class="conf confirm"> '.$this->l('Settings updated').'</div>';
 	}
 
 	private function _displayBankWire()

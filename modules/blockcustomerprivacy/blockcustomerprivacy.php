@@ -58,6 +58,7 @@ class Blockcustomerprivacy extends Module
 		$languages = Language::getLanguages(false);
 		$iso = $this->context->language->iso_code;
 
+		$output = '';
 		if (Tools::isSubmit('submitCustPrivMess'))
 		{
 			$message_trads = array();
@@ -68,7 +69,7 @@ class Blockcustomerprivacy extends Module
 					$message_trads[(int)$id_lang[1]] = $value;
 				}
 			Configuration::updateValue('CUSTPRIV_MESSAGE', $message_trads, true);
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').'</div>';			
+			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 		
 		$content = '';
@@ -118,6 +119,7 @@ class Blockcustomerprivacy extends Module
 		}
 		
 		$values = Configuration::getInt('CUSTPRIV_MESSAGE');
+		$content .= $output;
 		$content .= '
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">				

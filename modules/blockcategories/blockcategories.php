@@ -89,7 +89,7 @@ class BlockCategories extends Module
 				Configuration::updateValue('BLOCK_CATEG_SORT', Tools::getValue('BLOCK_CATEG_SORT'));
 
 				$this->_clearBlockcategoriesCache();
-				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+				$output .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 			}
 		}
 		return $output.$this->displayForm();

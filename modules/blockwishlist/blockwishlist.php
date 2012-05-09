@@ -95,7 +95,7 @@ class BlockWishList extends Module
 			$activated = Tools::getValue('activated');
 			if ($activated != 0 AND $activated != 1)
 				$this->_html .= '<div class="alert error">'.$this->l('Activate module : Invalid choice.').'</div>';
-			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
+			$this->_html .= '<div class="conf confirm">'.$this->l('Settings updated').'</div>';
 		}
 		$this->_displayForm();
 		return ($this->_html);
