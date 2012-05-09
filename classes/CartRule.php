@@ -910,7 +910,6 @@ class CartRuleCore extends ObjectModel
 		{
 			if ($error = $cart_rule['obj']->checkValidity($context, true))
 			{
-				file_put_contents('zzzploplop.txt', $error."\n", FILE_APPEND);
 				$context->cart->removeCartRule($cart_rule['obj']->id);
 				$context->cart->update();
 				$errors[] = $error;
