@@ -107,13 +107,6 @@ class BlockLanguages extends Module
 	{
 		$this->context->controller->addCSS($this->_path.'blocklanguages.css', 'all');
 	}
-
-	public function hookDisplayMobileFooterChoice($params)
-	{
-		if (!$this->_prepareHook($params))
-			return;
-		return $this->display(__FILE__, 'blockmobilelanguages.tpl');
-	}
 }
 
 

@@ -24,9 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="favoriteproducts">
-	<a href="{$link->getModuleLink('favoriteproducts', 'account')}" title="{l s='My favorite products' mod='favoriteproducts'}">
-		<img {if isset($mobile_hook)}src="{$module_template_dir}img/favorites.png" class="ui-li-icon ui-li-thumb"{else}src="{$module_template_dir}img/favorites.png" class="icon"{/if} alt="{l s='My favorite products' mod='favoriteproducts'}"/>
-		{l s='My favorite products' mod='favoriteproducts'}
+<li class="favorite products">
+	<a href="{$link->getModuleLink('favorite products', 'account')}" title="{l s='My favorite products' mod='favorite products'}">
+		<img src="{$module_template_dir}img/favorites.png" class="icon" />
+		{l s='My favorite products' mod='favorite products'}
 	</a>
 </li>

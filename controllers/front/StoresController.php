@@ -175,17 +175,6 @@ class StoresControllerCore extends FrontController
 	 */
 	protected function displayAjax()
 	{
-		if ($this->context->getMobileDevice() == true)
-		{
-			$stores = $this->getStores();
-			foreach ($stores as &$store)
-			{
-				if (file_exists(_PS_STORE_IMG_DIR_.(int)$store['id_store'].'.jpg'))
-					$store['picture'] = (int)$store['id_store'].'.jpg';
-			}
-			die(Tools::jsonEncode($stores));
-		}
-
 		$stores = $this->getStores();
 		$dom = new DOMDocument('1.0');
 		$node = $dom->createElement('markers');
@@ -269,17 +258,9 @@ class StoresControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-
+		$this->addCSS(_THEME_CSS_DIR_.'stores.css');
+		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
+			$this->addJS(_THEME_JS_DIR_.'stores.js');
 		$this->addJS('http://maps.google.com/maps/api/js?sensor=true');
-		if ($this->context->getMobileDevice() == false)
-		{
-			$this->addCSS(_THEME_CSS_DIR_.'stores.css');
-			if (!Configuration::get('PS_STORES_SIMPLIFIED'))
-				$this->addJS(_THEME_JS_DIR_.'stores.js');
-		}
-		else // mobile device
-			$this->addJS(array(
-				_THEME_MOBILE_JS_DIR_.'stores.js'
-			));
 	}
 }
