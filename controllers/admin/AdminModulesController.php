@@ -54,7 +54,7 @@ class AdminModulesControllerCore extends AdminController
 	protected $iso_default_country;
 	protected $filter_configuration = array();
 
- 	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list.xml';
+ 	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list_15.xml';
 	protected $addons_url = 'api.addons.prestashop.com';
 	protected $logged_on_addons = false;
 	protected $cache_file_modules_list = '/config/xml/modules_list.xml';
