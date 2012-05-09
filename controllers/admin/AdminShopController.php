@@ -305,7 +305,7 @@ class AdminShopControllerCore extends AdminController
 				$display_group_list = false;
 		}
 
-		if (!$display_group_list)
+		if ($display_group_list)
 		{
 			$options = array();
 			foreach (ShopGroup::getShopGroups() as $group)
@@ -609,7 +609,7 @@ class AdminShopControllerCore extends AdminController
 				FROM '._DB_PREFIX_.'shop_group g
 				LEFT JOIN  '._DB_PREFIX_.'shop s ON g.id_shop_group = s.id_shop_group
 				LEFT JOIN  '._DB_PREFIX_.'shop_url u ON u.id_shop = s.id_shop
-				ORDER BY g.name, s.name, u.main, u.domain';
+				ORDER BY g.name, s.name, u.domain';
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($results as $row)
 		{
