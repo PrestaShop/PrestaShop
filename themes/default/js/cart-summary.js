@@ -578,6 +578,9 @@ function updateCartSummary(json)
 	}
 	else
 	{
+		if ($('.cart_discount').length == 0)
+			location.reload();
+
 		if (priceDisplayMethod != 0)
 			$('#total_discount').html(formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
 		else
