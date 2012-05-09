@@ -54,7 +54,7 @@ class StatsCatalog extends Module
 
 	public function getQuery1()
 	{
-		$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS total, SUM(product_shop.`price`) / COUNT(`product_shop.price`) AS average_price, COUNT(DISTINCT i.`id_image`) AS images
+		$sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS total, SUM(product_shop.`price`) / COUNT(product_shop.`price`) AS average_price, COUNT(DISTINCT i.`id_image`) AS images
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON i.`id_product` = p.`id_product`
@@ -149,7 +149,6 @@ class StatsCatalog extends Module
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)';
 			$this->_where = ' AND cp.`id_category` = '.$id_category;
 		}
-		$this->_join .= Shop::addSqlAssociation('product', 'p');
 
 		$result1 = $this->getQuery1(true);
 		$total = $result1['total'];
