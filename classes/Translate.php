@@ -155,6 +155,20 @@ class TranslateCore
 			$translations_merged[md5($file)] = true;
 		}
 
+		// Check if translations exists in a current theme
+		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php'))
+			$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php';
+		else if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php'))
+			$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php';
+		else
+			$file_theme = false;
+
+		if ($file_theme && !isset($translations_merged[md5($file_theme)]) && Tools::file_exists_cache($file_theme) && include_once($file_theme))
+		{
+			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+			$translations_merged[md5($file_theme)] = true;
+		}
+
 		$key = md5(str_replace('\'', '\\\'', $string));
 
 		$cache_key = $name.'|'.$string.'|'.$source;
