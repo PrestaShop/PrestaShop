@@ -309,7 +309,7 @@ class AdminCartRulesControllerCore extends AdminController
 			case 'products':
 				$products = array('selected' => array(), 'unselected' => array());
 				$results = Db::getInstance()->executeS('
-				SELECT name, p.id_product as id
+				SELECT DISTINCT name, p.id_product as id
 				FROM '._DB_PREFIX_.'product p
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product`
@@ -350,8 +350,12 @@ class AdminCartRulesControllerCore extends AdminController
 			case 'categories':
 				$categories = array('selected' => array(), 'unselected' => array());
 				$results = Db::getInstance()->executeS('
-				SELECT name, id_category as id
-				FROM '._DB_PREFIX_.'category_lang pl
+				SELECT DISTINCT name, c.id_category as id
+				FROM '._DB_PREFIX_.'category c
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+					ON (c.`id_category` = cl.`id_category`
+					AND cl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('cl').')
+				'.Shop::addSqlAssociation('category', 'c').'
 				WHERE id_lang = '.(int)Context::getContext()->language->id.'
 				ORDER BY name');
 				foreach ($results as $row)
