@@ -66,13 +66,16 @@ class MetaCore extends ObjectModel
 		);
 
 		foreach ($files as $file)
-			if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
+			if ($file != 'index.php' && preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
 				$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
 
 		// Add modules controllers to list (this function is cool !)
 		foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
 		{
 			$filename = basename($file, '.php');
+			if ($filename == 'index')
+				continue;
+
 			$module = basename(dirname(dirname(dirname($file))));
 			$selected_pages[$module.' - '.$filename] = 'module-'.$module.'-'.$filename;
 		}
@@ -180,6 +183,7 @@ class MetaCore extends ObjectModel
 	{
 		global $maintenance;
 
+		$page_name = str_replace('-', '', strtolower($page_name));
 		if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
 		{
 			if ($id_product = Tools::getValue('id_product'))
