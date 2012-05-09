@@ -198,6 +198,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * Detect dependency with customer or orders
 	 *
+	 * @param int $id_shop
 	 * @return bool
 	 */
 	public static function hasDependency($id_shop)
@@ -222,17 +223,6 @@ class ShopCore extends ObjectModel
 		}
 
 		return $has_dependency;
-	}
-
-	/**
-	 * Get a new instance of a shop
-	 *
-	 * @param int $id shop ID
-	 * @return Shop
-	 */
-	public static function getInstance($id)
-	{
-		return new Shop($id);
 	}
 
 	/**
@@ -534,6 +524,25 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
+	 * Get a collection of shops
+	 *
+	 * @param bool $active
+	 * @param int $id_shop_group
+	 * @return Collection
+	 */
+	public static function getShopsCollection($active = true, $id_shop_group = null)
+	{
+		$shops = new Collection('Shop');
+		if ($active)
+			$shops->where('active', '=', 1);
+
+		if ($id_shop_group)
+			$shops->where('id_shop_group', '=', $id_shop_group);
+
+		return $shops;
+	}
+
+	/**
 	 * Return some informations cached for one shop
 	 *
 	 * @param int $shop_id
@@ -749,15 +758,11 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @return bool Return true if there is more than one shop
+	 * @return bool Return true if multishop feature is activated
 	 */
 	public static function isFeatureActive()
 	{
-		static $total = null;
-
-		if (is_null($total))
-			$total = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop');
-		return ($total > 1) ? true : false;
+		return Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 	}
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
@@ -811,16 +816,6 @@ class ShopCore extends ObjectModel
 						'old_id_shop' => (int)$old_id,
 						'new_id_shop' => (int)$this->id,
 					), $m['id_module']);
-	}
-
-	public function checkIfShopExist($id)
-	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop` WHERE `id_shop` = '.(int)$id);
-	}
-
-	public function checkIfShopGroupExist($id)
-	{
-		return (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM`'._DB_PREFIX_.'shop_group` WHERE `id_shop_group` = '.(int)$id);
 	}
 
 	/**

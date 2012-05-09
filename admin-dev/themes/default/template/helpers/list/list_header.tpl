@@ -133,7 +133,7 @@
 						<col width="52px" />
 					{/if}
 					<thead>
-						<tr class="nodrag nodrop">
+						<tr class="nodrag nodrop" style="height: 40px">
 							<th class="center">
 								{if $has_bulk_actions}
 									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
@@ -149,7 +149,7 @@
 										<br />
 										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}"><img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
 										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}"><img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
-									{else}
+									{elseif !$simple_header}
 										<br />&nbsp;
 									{/if}
 								</th>
@@ -165,7 +165,7 @@
 								</th>
 							{/if}
 							{if $has_actions}
-								<th class="center">{l s='Actions'}<br />&nbsp;</th>
+								<th class="center">{l s='Actions'}{if !$simple_header}<br />&nbsp;{/if}</th>
 							{/if}
 						</tr>
  						{if !$simple_header}

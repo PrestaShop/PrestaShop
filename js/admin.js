@@ -606,11 +606,11 @@ function submitAddcmsAndPreview()
 
 function checkAllMultishopDefaultValue(item)
 {
-	$(item).parent().find('input[name^=\'configUseDefault\']').each(function(k, v)
+	$(item).parent().find('input[name^=\'multishopOverrideOption\']').each(function(k, v)
 	{
 		$(v).attr('checked', item.checked);
 		var name = $(v).attr('name');
-		checkMultishopDefaultValue(v, name.substr(17, name.length - 18));
+		checkMultishopDefaultValue(v, name.substr(24, name.length - 25));
 	})
 }
 
@@ -692,7 +692,7 @@ $(document).ready(function()
 	{
 		var key = $(v).attr('name');
 		var len = key.length;
-		checkMultishopDefaultValue(v, key.substr(17, len - 18));
+		checkMultishopDefaultValue(v, key.substr(24, len - 25));
 	});
 
 	$(".copy2friendlyUrl").live('keyup change',function(e){

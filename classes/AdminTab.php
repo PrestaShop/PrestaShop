@@ -957,7 +957,7 @@ abstract class AdminTabCore
 
 				/* Check required fields */
 				foreach ($fields as $field => $values)
-					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
+					if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
 						if (isset($values['type']) && $values['type'] == 'textLang')
 						{
 							foreach ($languages as $language)
@@ -985,14 +985,14 @@ abstract class AdminTabCore
 					if (!Tools::getValue($field) && isset($values['default']))
 						$_POST[$field] = $values['default'];
 
-				if (1||!count($this->_errors))
+				if (!count($this->_errors))
 				{
 					foreach ($fields as $key => $options)
 					{
 						if (isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 							continue;
 
-						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
+						if (Shop::isFeatureActive() && empty($_POST['multishopOverrideOption'][$key]))
 						{
 							Configuration::deleteFromContext($key);
 							continue;
@@ -1891,7 +1891,7 @@ abstract class AdminTabCore
 				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible)
 					echo '<div class="preference_default_multishop">
 							<label>
-								<input type="checkbox" name="configUseDefault['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
+								<input type="checkbox" name="multishopOverrideOption['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
 							</label>
 						</div>';
 

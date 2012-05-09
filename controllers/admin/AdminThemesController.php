@@ -551,7 +551,7 @@ class AdminThemesControllerCore extends AdminController
 			$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
 		if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico'))
 			Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
-		
+
 		Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
 	}
 

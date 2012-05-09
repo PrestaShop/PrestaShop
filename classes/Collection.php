@@ -347,6 +347,19 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	}
 
 	/**
+	 * Retrieve the first result
+	 *
+	 * @return ObjectModel
+	 */
+	public function getFirst()
+	{
+		$this->getAll();
+		if (!count($this))
+			return false;
+		return $this[0];
+	}
+
+	/**
 	 * Get results array
 	 *
 	 * @return array

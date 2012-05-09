@@ -70,7 +70,7 @@
 					<div style="clear: both; padding-top:15px;" id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
 					{if ($field['multishop_default'])}
 						<div class="preference_default_multishop">
-							<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} {/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+							<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 						</div>
 					{/if}
 					{block name="label"}

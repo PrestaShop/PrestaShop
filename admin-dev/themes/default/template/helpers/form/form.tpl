@@ -43,7 +43,7 @@
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}}" />{/if}
 						{$field.title}
 					</legend>
-				{elseif $key == 'description'}
+				{elseif $key == 'description' && $field}
 					<p class="description">{$field}</p>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
@@ -378,7 +378,7 @@
 			{/if}
 		</fieldset>
 		{block name="other_fieldsets"}{/block}
-		{if isset($fields[$f+1])}<br class="clear" />{/if}
+		{if isset($fields[$f+1])}<br />{/if}
 	{/foreach}
 </form>
 {/block}
