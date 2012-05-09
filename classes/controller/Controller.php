@@ -240,13 +240,13 @@ abstract class ControllerCore
 				if (is_string($css_file) && strlen($css_file) > 1)
 				{
 					$css_path = Media::getCSSPath($css_file, $media);
-					if ($css_path)
+					if ($css_path && !in_array($css_path, $this->css_files))
 						$this->css_files = array_merge($this->css_files, $css_path);
 				}
 				else
 				{
 					$css_path = Media::getCSSPath($media, $css_media_type);
-					if ($css_path)
+					if ($css_path && !in_array($css_path, $this->css_files))
 						$this->css_files = array_merge($this->css_files, $css_path);
 				}
 			}
@@ -270,14 +270,14 @@ abstract class ControllerCore
 			foreach ($js_uri as $js_file)
 			{
 				$js_path = Media::getJSPath($js_file);
-				if ($js_path)
+				if ($js_path && !in_array($js_path, $this->js_files))
 					$this->js_files[] = $js_path;
 			}
 		else
 		{
 			$js_path = Media::getJSPath($js_uri);
-				if ($js_path)
-					$this->js_files[] = $js_path;
+			if ($js_path)
+				$this->js_files[] = $js_path;
 		}
 	}
 
