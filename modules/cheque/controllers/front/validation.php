@@ -47,7 +47,7 @@ class ChequeValidationModuleFrontController extends ModuleFrontController
 			}
 
 		if (!$authorized)
-			die(Tools::displayError('This payment method is not available.'));
+			die($this->module->l('This payment method is not available.', 'validation'));
 
 		$customer = new Customer($cart->id_customer);
 

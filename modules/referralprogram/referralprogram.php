@@ -507,7 +507,7 @@ class ReferralProgram extends Module
 
 		$customer = new Customer((int)$params['id_customer']);
 		if (!Validate::isLoadedObject($customer))
-			die (Tools::displayError('Incorrect Customer object.'));
+			die ($this->l('Incorrect Customer object.'));
 
 		$friends = ReferralProgramModule::getSponsorFriend((int)$customer->id);
 		if ($id_referralprogram = ReferralProgramModule::isSponsorised((int)$customer->id, true))
@@ -564,7 +564,7 @@ class ReferralProgram extends Module
 	public function hookOrderConfirmation($params)
 	{
 		if ($params['objOrder'] AND !Validate::isLoadedObject($params['objOrder']))
-			return die(Tools::displayError('Incorrect Order object.'));
+			return die($this->l('Incorrect Order object.'));
 
 		include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 
@@ -593,11 +593,11 @@ class ReferralProgram extends Module
 	public function hookUpdateOrderStatus($params)
 	{
 		if (!Validate::isLoadedObject($params['newOrderStatus']))
-			die (Tools::displayError('Missing parameters'));
+			die ($this->l('Missing parameters'));
 		$orderState = $params['newOrderStatus'];
 		$order = new Order((int)($params['id_order']));
 		if ($order AND !Validate::isLoadedObject($order))
-			die(Tools::displayError('Incorrect Order object.'));
+			die($this->l('Incorrect Order object.'));
 
 		include_once(dirname(__FILE__).'/ReferralProgramModule.php');
 

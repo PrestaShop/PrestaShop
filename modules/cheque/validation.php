@@ -51,7 +51,7 @@ foreach (Module::getPaymentModules() as $module)
 		break;
 	}
 if (!$authorized)
-	die(Tools::displayError('This payment method is not available.'));
+	die($cheque->l('This payment method is not available.', 'validation'));
 
 $customer = new Customer($cart->id_customer);
 

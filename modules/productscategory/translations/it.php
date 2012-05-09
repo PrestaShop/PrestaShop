@@ -13,5 +13,4 @@ $_MODULE['<{productscategory}prestashop>productscategory_70f9a895dc3273d34a7f6d1
 $_MODULE['<{productscategory}prestashop>productscategory_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{productscategory}prestashop>productscategory_4aae87211f77aada2c87907121576cfe'] = 'altri prodotti della stessa categoria:';
 $_MODULE['<{productscategory}prestashop>productscategory_dd1f775e443ff3b9a89270713580a51b'] = 'Precedente';
-$_MODULE['<{productscategory}prestashop>productscategory_4351cfebe4b61d8aa5efa1d020710005'] = 'Visualizza';
 $_MODULE['<{productscategory}prestashop>productscategory_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Successivo';

@@ -47,17 +47,17 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->assign();
 	}
-	
+
 	/**
 	 * Assign wishlist template
 	 */
 	public function assign()
 	{
 		$errors = array();
-		
+
 		if ($this->context->customer->isLogged())
 		{
 			$add = Tools::getIsset('add');
@@ -69,15 +69,15 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 			{
 				if (Configuration::get('PS_TOKEN_ACTIVATED') == 1 AND
 					strcmp(Tools::getToken(), Tools::getValue('token')))
-					$errors[] = Tools::displayError('Invalid token');
+					$errors[] = $this->module->l('Invalid token', 'mywishlist');
 				if (!sizeof($errors))
 				{
 					$name = Tools::getValue('name');
 					if (empty($name))
-						$errors[] = Tools::displayError('You must specify a name.');
+						$errors[] = $this->module->l('You must specify a name.', 'mywishlist');
 					if (WishList::isExistsByNameForUser($name))
-						$errors[] = Tools::displayError('This name is already used by another list.');
-					
+						$errors[] = $this->module->l('This name is already used by another list.', 'mywishlist');
+
 					if(!sizeof($errors))
 					{
 						$wishlist = new WishList();
@@ -115,20 +115,20 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 				if (Validate::isLoadedObject($wishlist))
 					$wishlist->delete();
 				else
-					$errors[] = Tools::displayError('Cannot delete this wishlist');
+					$errors[] = $this->module->l('Cannot delete this wishlist', 'mywishlist');
 			}
 			$this->context->smarty->assign('wishlists', WishList::getByIdCustomer($this->context->customer->id));
 			$this->context->smarty->assign('nbProducts', WishList::getInfosByIdCustomer($this->context->customer->id));
 		}
 		else
 			Tools::redirect('index.php?controller=authentication&back='.urlencode($this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
-		
+
 		$this->context->smarty->assign(array(
 			'id_customer' => (int)$this->context->customer->id,
 			'errors' => $errors,
 			'form_link' => $errors,
 		));
-		
+
 		$this->setTemplate('mywishlist.tpl');
 	}
 }

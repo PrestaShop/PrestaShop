@@ -90,6 +90,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_b17f3f4dcf653a5776792498a
 $_MODULE['<{referralprogram}prestashop>referralprogram_562ad64cf21ac2da656134355115133d'] = 'Il testo è vuoto.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_6b719c160f9b08dad4760bcc4b52ed48'] = 'Condizioni del programma di riferimento';
 $_MODULE['<{referralprogram}prestashop>referralprogram_c5afb9c76a7880978cba32872d01f068'] = 'Aggiorna il testo';
+$_MODULE['<{referralprogram}prestashop>referralprogram_94c69408d25102ba7ddcf3533b56c407'] = 'Oggetto cliente errato';
 $_MODULE['<{referralprogram}prestashop>referralprogram_6b31baf25848e7a6563ecc3946626c80'] = 'Programma di segnalazione';
 $_MODULE['<{referralprogram}prestashop>referralprogram_7790d51a3d62c85aae65464dee12ee8b'] = 'Sponsor del cliente.';
 $_MODULE['<{referralprogram}prestashop>referralprogram_f964f762284ede747ed9f6428a5469b8'] = 'Nessuno ha segnalato questo cliente.';
@@ -103,6 +104,8 @@ $_MODULE['<{referralprogram}prestashop>referralprogram_325c8bbd07033a39d25b5c445
 $_MODULE['<{referralprogram}prestashop>referralprogram_fc6e0920b914b164802d44220e6163f3'] = 'Ordini effettuati';
 $_MODULE['<{referralprogram}prestashop>referralprogram_970ad4e4787cc75cd63dbf8d5c757513'] = 'Account cliente creato';
 $_MODULE['<{referralprogram}prestashop>referralprogram_5b541747d46b39c37f0e100ddfe44472'] = 'non ha ancora segnalato alcun amico.';
+$_MODULE['<{referralprogram}prestashop>referralprogram_a82e0d057f443115e807bd6ca595fc8c'] = 'Oggetto ordine errato';
+$_MODULE['<{referralprogram}prestashop>referralprogram_8b80d4b6307990874b832cc15a92e5a3'] = 'Parametri mancanti';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_6b31baf25848e7a6563ecc3946626c80'] = 'Programma di segnalazione';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_50b12ad08d38a2b00a790304bbe851be'] = 'Hai guadagnato un buono del valore';
 $_MODULE['<{referralprogram}prestashop>shopping-cart_6c8352dbdb1fa1433bd5974c603dced4'] = 'grazie al tuo  sponsor!';

@@ -32,6 +32,9 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 include_once(dirname(__FILE__).'/mailalerts.php');
 
+// Instance of module class for translations
+$module = new MailAlerts();
+
 $errors = array();
 
 if ($cookie->isLogged())
@@ -40,7 +43,7 @@ if ($cookie->isLogged())
 	{
 		$id_customer = (int)($cookie->id_customer);
 		if (!$id_product = (int)(Tools::getValue('id_product')))
-			$errors[] = Tools::displayError('You must have a product to delete an alert.'); 
+			$errors[] = $module->l('You must have a product to delete an alert.', 'mailalerts-account');
 		$id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 		$customer = new Customer((int)($id_customer));
 		MailAlerts::deleteAlert((int)($id_customer), strval($customer->email), (int)($id_product), (int)($id_product_attribute));
@@ -48,7 +51,7 @@ if ($cookie->isLogged())
 	$this->context->smarty->assign('mailAlerts', MailAlert::getProductsAlerts((int)($cookie->id_customer), (int)($cookie->id_lang)));
 }
 else
-	$errors[] = Tools::displayError('You must be logged in to manage your alerts.'); 
+	$errors[] = $module->l('You must be logged in to manage your alerts.', 'mailalerts-account');
 
 $this->context->smarty->assign(array(
 	'id_customer' => (int)($cookie->id_customer),
@@ -60,6 +63,6 @@ if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/mailalerts/myalerts.tpl'))
 elseif (Tools::file_exists_cache(dirname(__FILE__).'/myalerts.tpl'))
 	$smarty->display(dirname(__FILE__).'/myalerts.tpl');
 else
-	echo Tools::displayError('No template found');
+	echo $module->l('No template found', 'mailalerts-account');
 
 include(dirname(__FILE__).'/../../footer.php');

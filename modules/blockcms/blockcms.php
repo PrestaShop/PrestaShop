@@ -468,24 +468,24 @@ class BlockCms extends Module
 			$cmsBoxes = Tools::getValue('cmsBox');
 
 			if (!Validate::isInt(Tools::getValue('display_stores')) || (Tools::getValue('display_stores') != 0 && Tools::getValue('display_stores') != 1))
-				$this->_errors[] = Tools::displayError('Invalid store display value');
+				$this->_errors[] = $this->l('Invalid store display value');
 			if (!Validate::isInt(Tools::getValue('block_location')) || (Tools::getValue('block_location') != BlockCMSModel::LEFT_COLUMN && Tools::getValue('block_location') != BlockCMSModel::RIGHT_COLUMN))
-				$this->_errors[] = Tools::displayError('Invalid block location');
+				$this->_errors[] = $this->l('Invalid block location');
 			if (!is_array($cmsBoxes))
-				$this->_errors[] = Tools::displayError('You must choose at least one page or subcategory to create a CMS block.');
+				$this->_errors[] = $this->l('You must choose at least one page or subcategory to create a CMS block.');
 			else
 			{
 				foreach ($cmsBoxes as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->_errors[] = Tools::displayError('Invalid CMS page or category');
+						$this->_errors[] = $this->l('Invalid CMS page or category');
 				foreach ($this->context->controller->_languages as $language)
 					if (strlen(Tools::getValue('block_name_'.$language['id_lang'])) > 40)
-						$this->_errors[] = Tools::displayError('Block name is too long');
+						$this->_errors[] = $this->l('Block name is too long');
 			}
 		}
 		else if (Tools::isSubmit('deleteBlockCMS') && !Validate::isInt(Tools::getValue('id_cms_block')))
 		{
-			$this->_errors[] = Tools::displayError('Invalid id_cms_block');
+			$this->_errors[] = $this->l('Invalid id_cms_block');
 		}
 		else if (Tools::isSubmit('submitFooterCMS'))
 		{
@@ -493,7 +493,7 @@ class BlockCms extends Module
 			{
 				foreach (Tools::getValue('footerBox') as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->_errors[] = Tools::displayError('Invalid CMS page or category');
+						$this->_errors[] = $this->l('Invalid CMS page or category');
 			}
 
 			$empty_footer_text = true;
@@ -516,7 +516,7 @@ class BlockCms extends Module
 			}
 
 			if (!$empty_footer_text && empty($footer_text[(int)Configuration::get('PS_LANG_DEFAULT')]))
-				$this->_errors[] = Tools::displayError('Please provide footer text for the default language');
+				$this->_errors[] = $this->l('Please provide footer text for the default language');
 			else
 			{
 				foreach ($this->context->controller->_languages as $language)
@@ -524,7 +524,7 @@ class BlockCms extends Module
 			}
 
 			if ((Tools::getValue('cms_footer_on') != 0) && (Tools::getValue('cms_footer_on') != 1))
-				$this->_errors[] = Tools::displayError('Invalid activation footer');
+				$this->_errors[] = $this->l('Invalid activation footer');
 		}
 		if (count($this->_errors))
 		{

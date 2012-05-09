@@ -1187,7 +1187,7 @@ class shopimporter extends ImportModule
 									if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 									{
 										if (!Language::checkAndAddLanguage($iso))
-											$errors[] = Tools::displayError('Archive cannot be extracted.');
+											$errors[] = $this->l('Archive cannot be extracted.');
 										else
 										{
 											$newId = Language::getIdByIso($iso);
@@ -1196,19 +1196,19 @@ class shopimporter extends ImportModule
 																		WHERE  `id_lang` = '.(int)$newId);
 										}
 									}
-									$errors[] = Tools::displayError('Archive cannot be extracted.');
+									$errors[] = $this->l('Archive cannot be extracted.');
 								}
 								else
-									$errors[] = Tools::displayError('Server does not have permissions for writing.');
+									$errors[] = $this->l('Server does not have permissions for writing.');
 							}
 							else
-								$errors[] = Tools::displayError('Language not found');
+								$errors[] = $this->l('Language not found');
 						}
 						else
-							$errors[] = Tools::displayError('archive cannot be downloaded from prestashop.com.');
+							$errors[] = $this->l('archive cannot be downloaded from prestashop.com.');
 					}
 					else
-						$errors[] = Tools::displayError('archive cannot be downloaded from prestashop.com.');
+						$errors[] = $this->l('archive cannot be downloaded from prestashop.com.');
 				}
 			}
 			else

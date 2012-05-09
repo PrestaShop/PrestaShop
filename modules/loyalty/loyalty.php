@@ -533,7 +533,7 @@ class Loyalty extends Module
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 		
 		if (!Validate::isLoadedObject($params['customer']) OR !Validate::isLoadedObject($params['order']))
-			die(Tools::displayError('Missing parameters'));
+			die($this->l('Missing parameters'));
 		$loyalty = new LoyaltyModule();
 		$loyalty->id_customer = (int)$params['customer']->id;
 		$loyalty->id_order = (int)$params['order']->id;
@@ -552,11 +552,11 @@ class Loyalty extends Module
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 		
 		if (!Validate::isLoadedObject($params['newOrderStatus']))
-			die(Tools::displayError('Missing parameters'));
+			die($this->l('Missing parameters'));
 		$newOrder = $params['newOrderStatus'];
 		$order = new Order((int)($params['id_order']));
 		if ($order AND !Validate::isLoadedObject($order))
-			die(Tools::displayError('Incorrect Order object.'));
+			die($this->l('Incorrect Order object.'));
 		$this->instanceDefaultStates();
 
 		if ($newOrder->id == $this->loyaltyStateValidation->id_order_state OR $newOrder->id == $this->loyaltyStateCancel->id_order_state)
@@ -590,7 +590,7 @@ class Loyalty extends Module
 		
 		$customer = new Customer((int)$params['id_customer']);
 		if ($customer AND !Validate::isLoadedObject($customer))
-			die(Tools::displayError('Incorrect Customer object.'));
+			die($this->l('Incorrect Customer object.'));
 
 		$details = LoyaltyModule::getAllByIdCustomer((int)$params['id_customer'], (int)$params['cookie']->id_lang);
 		$points = (int)LoyaltyModule::getPointsByCustomer((int)$params['id_customer']);

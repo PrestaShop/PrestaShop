@@ -11,6 +11,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5fd13c2b89a6eaaa4614bfe
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dea6caeb83e5c11d3678284e64ebed8'] = 'Errore durante il download di file';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_c186217583219f4cd040d9ee8d388ffb'] = 'Errore durante l\'estrazione zip';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0210b6456cdccad569cb56026bb0f689'] = 'Cattivo file di configurazione ';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0a9c7fd9de'] = 'Questa funzionalità è stata disabilitata';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentazione';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Si consiglia di consultare la documentazione';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Fai clic destro sul nome e scegli \"Salva collegamento come\"';
@@ -27,10 +28,6 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de9
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'configurazione attuale';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'configurazione del tema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_130c5b3473c57faa76e2a1c54e26f88e'] = 'Entrambi';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_c90ba3aaed0a2bafed18233111062cf0'] = 'configurazione immagini tema';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_2a84d9915b12fcb0c1436709a77a8dd0'] = 'Aggiungi nuova configurazione';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_dd3acd810b479275ce68d69e78ed7a95'] = 'Aggiungi tutti (rischi di perdere la tua attuale configurazione)';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_332efbbfb2c4bd5a37fd7a55659b821a'] = 'Non cambiare nulla';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Successivo';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5138a89d1b730dacf446855e15c24496'] = 'Stai per installare il seguente tema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f364da141450380ae79d7a45528f4c06'] = 'Questo tema è per Prestashop';

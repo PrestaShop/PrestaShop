@@ -34,11 +34,15 @@ require_once(dirname(__FILE__).'/WishList.php');
 
 $context = Context::getContext();
 $token = Tools::getValue('token');
+
+// Instance of module class for translations
+$module = new BlockWishList();
+
 if (empty($token) === false)
 {
 	$wishlist = WishList::getByToken($token);
 	if (empty($result) === true || $result === false)
-		$errors[] = Tools::displayError('Invalid wishlist token');
+		$errors[] = $module->l('Invalid wishlist token', 'view');
 	WishList::refreshWishList($wishlist['id_wishlist']);
 	$products = WishList::getProductByIdCustomer((int)($wishlist['id_wishlist']), (int)($wishlist['id_customer']), $context->language->id, null, true);
 	for ($i = 0; $i < sizeof($products); ++$i)
@@ -84,6 +88,6 @@ if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/view.tpl'))
 elseif (Tools::file_exists_cache(dirname(__FILE__).'/view.tpl'))
 	$context->smarty->display(dirname(__FILE__).'/view.tpl');
 else
-	echo Tools::displayError('No template found');
+	echo $module->l('No template found', 'view');
 
 require(dirname(__FILE__).'/../../footer.php');

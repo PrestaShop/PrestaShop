@@ -29,8 +29,8 @@ $apikey = Tools::getValue('apikey');
 if (Tools::isSubmit('checkAndSaveConfig'))
 {
 	//cleans the database if an import has already been done
-	$shopImporter = new shopImporter();
-	foreach($shopImporter->supportedImports as $key => $import)
+	$shop_importer = new shopImporter();
+	foreach($shop_importer->supportedImports as $key => $import)
 		if (array_key_exists('alterTable', $import))
 			$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.bqSQL($import['table']).'`');
 			foreach ($columns as $column)
@@ -39,7 +39,7 @@ if (Tools::isSubmit('checkAndSaveConfig'))
 	if ($link = @mysql_connect(Tools::getValue('server'), Tools::getValue('user'), Tools::getValue('password')))
 	{
 		if (!@mysql_select_db(Tools::getValue('database'), $link))
-			die('{"hasError" : true, "error" : ["'.Tools::displayError('The database selection cannot be made.').'"]}');
+			die('{"hasError" : true, "error" : ["'.$shop_importer->l('The database selection cannot be made.', 'ajax').'"]}');
 		else
 		{
 			@mysql_close($link);
@@ -47,7 +47,7 @@ if (Tools::isSubmit('checkAndSaveConfig'))
 		}
 	}
 	else
-		die('{"hasError" : true, "error" : ["'.Tools::displayError('Link to database cannot be established.').'"]}');
+		die('{"hasError" : true, "error" : ["'.$shop_importer->l('Link to database cannot be established.', 'ajax').'"]}');
 	
 }
 
@@ -70,8 +70,8 @@ if (Tools::isSubmit('getData') || Tools::isSubmit('syncLang') || Tools::isSubmit
 		else
 		{
 			$return = call_user_func_array(array($importModule, $getMethod), array($limit, $nbr_import));
-			$shopImporter = new shopImporter();
-			$shopImporter->genericImport($className, $return, (bool)$save);
+			$shop_importer = new shopImporter();
+			$shop_importer->genericImport($className, $return, (bool)$save);
 		}
 	}
 }
@@ -94,8 +94,8 @@ if (Tools::isSubmit('getDataWS') || Tools::isSubmit('syncLangWS') || Tools::isSu
 			else
 			{
 				$return = call_user_func_array(array($importModule, $getMethod), array($limit, $nbr_import));
-				$shopImporter = new shopImporter();
-				$shopImporter->genericImport($className, $return, (bool)$save);
+				$shop_importer = new shopImporter();
+				$shop_importer->genericImport($className, $return, (bool)$save);
 			}
 			die('{"hasError" : false, "error" : []}');
 		} catch (Exception $e)
@@ -107,8 +107,8 @@ if (Tools::isSubmit('getDataWS') || Tools::isSubmit('syncLangWS') || Tools::isSu
 
 if (Tools::isSubmit('truncatTable'))
 {	
-	$shopImporter = new shopImporter();
-	if ($shopImporter->truncateTable($className))
+	$shop_importer = new shopImporter();
+	if ($shop_importer->truncateTable($className))
 		die('{"hasError" : false, "error" : []}');
 	else
 		die('{"hasError" : true, "error" : ["'.$className.'"]}');
@@ -116,9 +116,9 @@ if (Tools::isSubmit('truncatTable'))
 }
 
 if (Tools::isSubmit('alterTable'))
-{	
-	$shopImporter = new shopImporter();
-	if ($shopImporter->alterTable($className))
+{
+	$shop_importer = new shopImporter();
+	if ($shop_importer->alterTable($className))
 		die('{"hasError" : false, "error" : []}');
 	else
 		die('{"hasError" : true, "error" : ["'.$className.'"]}');
@@ -126,9 +126,10 @@ if (Tools::isSubmit('alterTable'))
 }
 
 if (Tools::isSubmit('displaySpecificOptions'))
-{	
+{
 	if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
 	{
+		$shop_importer = new shopImporter();
 		require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
 		$importModule = new $moduleName();
 		$importModule->server = $server;
@@ -139,14 +140,14 @@ if (Tools::isSubmit('displaySpecificOptions'))
 		if ($link = @mysql_connect(Tools::getValue('server'), Tools::getValue('user'), Tools::getValue('password')))
 		{
 			if(!@mysql_select_db(Tools::getValue('database'), $link))
-				die(Tools::displayError('The database selection cannot be made.'));
+				die($shop_importer->l('The database selection cannot be made.', 'ajax'));
 			elseif (method_exists($importModule, 'displaySpecificOptions'))
 				die($importModule->displaySpecificOptions());
 			else
 				die('not_exist');
 		}
 		else
-			die(Tools::displayError('Link to database cannot be established.'));
+			die($shop_importer->l('Link to database cannot be established.', 'ajax'));
 	}
 }
 elseif (Tools::isSubmit('displaySpecificOptionsWsdl'))
