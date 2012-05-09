@@ -629,7 +629,7 @@ class FrontControllerCore extends Controller
 
 			$strParams = '';
 			if ($params)
-				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').http_build_query($params);
+				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').http_build_query($params, '', '&');
 
 			header('HTTP/1.0 301 Moved');
 			header('Cache-Control: no-cache');

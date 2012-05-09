@@ -502,7 +502,7 @@ class DispatcherCore
 	{
 		if (!isset($this->routes[$route_id]))
 		{
-			$query = http_build_query($params);
+			$query = http_build_query($params, '', '&');
 			return ($route_id == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$route_id];
@@ -542,7 +542,7 @@ class DispatcherCore
 			}
 			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
 			if (count($add_param))
-				$url .= '?'.http_build_query($add_param);
+				$url .= '?'.http_build_query($add_param, '', '&');
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
@@ -554,7 +554,7 @@ class DispatcherCore
 
 			if (!empty($route['controller']))
 				$query_params['controller'] = $route['controller'];
-			$url = 'index.php?'.http_build_query(array_merge($add_params, $query_params));
+			$url = 'index.php?'.http_build_query(array_merge($add_params, $query_params), '', '&');
 		}
 
 		return $url.$anchor;
