@@ -125,7 +125,7 @@ INSERT INTO `PREFIX_currency_shop` (id_shop, id_currency) (SELECT 1, id_currency
 
 ALTER TABLE `PREFIX_cart` ADD `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_cart` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_shop_group`, ADD INDEX `id_shop_group` (`id_shop_group`), ADD INDEX `id_shop` (`id_shop`);
 
-ALTER TABLE `PREFIX_customer` ADD `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_shop_group`, ADD INDEX `id_shop_group` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
+ALTER TABLE `PREFIX_customer` ADD `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_shop_group`, ADD INDEX `id_shop_group` (`id_shop_group`), ADD INDEX `id_shop` (`id_shop`);
 
 ALTER TABLE `PREFIX_orders` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_order` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
 
