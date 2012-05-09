@@ -94,7 +94,7 @@ class ParentOrderControllerCore extends FrontController
 				{
 					if (!($code = trim(Tools::getValue('discount_name'))))
 						$this->errors[] = Tools::displayError('You must enter a voucher code');
-					elseif (!Validate::isDiscountName($code))
+					elseif (!Validate::isCleanHtml($code))
 						$this->errors[] = Tools::displayError('Voucher code invalid');
 					else
 					{
