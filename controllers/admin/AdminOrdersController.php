@@ -1340,7 +1340,14 @@ class AdminOrdersControllerCore extends AdminController
 				foreach ($combinations as &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
 				$product['combinations'] = $combinations;
+				
+				if ($product['customizable'])
+				{
+					$product_instance = new Product((int)$product['id_product']);
+					$product['customization_fields'] = $product_instance->getCustomizationFields($this->context->language->id);
+				}
 			}
+
 			$to_return = array(
 				'products' => $products,
 				'found' => true
