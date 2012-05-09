@@ -39,7 +39,8 @@ class InstallModelInstall extends InstallAbstractModel
 		parent::__construct();
 
 		$this->logger = new FileLogger();
-		$this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
+		if (is_writable(_PS_ROOT_DIR_.'/log/'))
+			$this->logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_installation.log');
 	}
 
 	public function setError($errors)
