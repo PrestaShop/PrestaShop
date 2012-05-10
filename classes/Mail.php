@@ -133,6 +133,8 @@ class MailCore
 					if ($toName && is_array($toName) && Validate::isGenericName($toName[$key]))
 						$to_name = $toName[$key];
 				}
+				if ($to_name == null)
+					$to_name = $addr;
 				/* Encode accentuated chars */
 				$to_list->addTo($addr, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 			}
@@ -141,6 +143,8 @@ class MailCore
 		} else {
 			/* Simple recipient, one address */
 			$to_plugin = $to;
+			if ($toName == null)
+				$toName = $to;
 			$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($toName).'?=');
 		}
 		try {
@@ -230,7 +234,6 @@ class MailCore
 					if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime']))
 						$message->attach(new Swift_Message_Attachment($attachment['content'], $attachment['name'], $attachment['mime']));
 			}
-			
 			/* Send mail */
 			$send = $swift->send($message, $to, new Swift_Address($from, $fromName));
 			$swift->disconnect();
