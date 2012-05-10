@@ -79,7 +79,7 @@ class AdminShopControllerCore extends AdminController
 	public function initToolbar()
 	{
 		if (!$this->id_shop_group && $this->object && $this->object->id_shop_group)
-			$this->id_shop_group = $this->object->id_shop_url;
+			$this->id_shop_group = $this->object->id_shop_group;
 
 		if (!$this->display && $this->id_shop_group)
 			$this->toolbar_btn['edit'] = array(
