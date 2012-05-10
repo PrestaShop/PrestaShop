@@ -91,11 +91,11 @@ $(document).ready(function() {
 					cancelMove = old_target;
 					if (new_target_id == '')
 						new_target_id = old_target;
-        ids = $(ui.item[0]).attr('id').split('_');
-				newHookId = $("input[value="+new_target_id+"]").attr('name').substr(10);
-				newHookId = newHookId.substr(0, newHookId.length -1);
-				new_id = ids[0] + "_" + newHookId + "_" + ids[2] + "_" + ids[3];
-				$(ui.item[0]).attr('id', new_id);
+	        		ids = $(ui.item[0]).attr('id').split('_');
+					newHookId = $("input[value="+new_target_id+"]").attr('name').substr(10);
+					newHookId = newHookId.substr(0, newHookId.length -1);
+					new_id = ids[0] + "_" + newHookId + "_" + ids[2] + "_" + ids[3] + "_" + ids[4] + "_" + ids[5] ;
+					$(ui.item[0]).attr('id', new_id);
 				}
 			},
 			change: function(evartent, ui) {
@@ -120,7 +120,6 @@ $(document).ready(function() {
 				}
 			}
 		});
-		// WTF
 		$('#' + id_hook + '').disableSelection();
 	});
 });
@@ -129,7 +128,6 @@ function getHookableList() {
 	hooks_list = new Array();
 	$("input[name^=hook_list]}").each(function(e){
 		hooks_list.push($(this).val());
-		// +$(this).val();
 	}); 
 
     $.ajax({
