@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 14978 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="favorite products">
-	<a href="{$link->getModuleLink('favoriteproducts', 'account')}" title="{l s='My favorite products' mod='favorite products'}">
-		<img src="{$module_template_dir}img/favorites.png" class="icon" />
-		{l s='My favorite products' mod='favorite products'}
-	</a>
-</li>
+<script type="text/javascript">
+	var favorite_products_url_add = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], true)}';
+	var favorite_products_url_remove = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}';
+	var favorite_products_id_product = '{$smarty.get.id_product}';
+</script>
