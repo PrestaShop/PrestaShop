@@ -52,7 +52,7 @@ class BlockCategories extends Module
 			!$this->registerHook('categoryAddition') ||
 			!$this->registerHook('categoryUpdate') ||
 			!$this->registerHook('categoryDeletion') ||
-			!$this->registerHook('afterSaveAdminMeta') ||
+			!$this->registerHook('actionAdminMetaControllerUpdate_optionsAfter') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
@@ -340,7 +340,7 @@ class BlockCategories extends Module
 		$this->_clearBlockcategoriesCache();
 	}
 
-	public function hookAfterSaveAdminMeta($params)
+	public function hookActionAdminMetaControllerUpdate_optionsAfter($params)
 	{
 		$this->_clearBlockcategoriesCache();
 	}
