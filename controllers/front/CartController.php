@@ -62,11 +62,8 @@ class CartControllerCore extends FrontController
 
 	public function postProcess()
 	{
-		if ($this->context->customer->isLogged() && !$this->isTokenValid())
-			$this->errors[] = Tools::displayError('Invalid token');
-
 		// Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
-		if ($this->context->cookie->exists() && !$this->errors)
+		if ($this->context->cookie->exists() && !$this->errors && !($this->context->customer->isLogged() && !$this->isTokenValid()))
 		{
 			if (Tools::getIsset('add') || Tools::getIsset('update'))
 				$this->processChangeProductInCart();
