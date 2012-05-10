@@ -554,7 +554,7 @@ product_tabs['Prices'] = new function(){
 		self.bindDelete();
 
 		if (display_multishop_checkboxes)
-			ProductMultishop.checkAllPrice();
+			ProductMultishop.checkAllPrices();
 	};
 }
 
@@ -1494,7 +1494,7 @@ var ProductMultishop = new function()
 		});
 	};
 
-	this.checkAllPrice = function()
+	this.checkAllPrices = function()
 	{
 		ProductMultishop.checkField($('input[name=\'multishop_check[wholesale_price]\']').prop('checked'), 'wholesale_price');
 		ProductMultishop.checkField($('input[name=\'multishop_check[price]\']').prop('checked'), 'price', 'price');
