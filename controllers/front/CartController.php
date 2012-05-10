@@ -226,7 +226,7 @@ class CartControllerCore extends FrontController
 			if (!$this->errors)
 			{
 				$cart_rules = $this->context->cart->getCartRules();
-				$updateQuantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery, Tools::getValue('op', 'up'));
+				$updateQuantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery);
 				if ($updateQuantity < 0)
 				{
 					// If product has attribute, minimal quantity is set with minimal quantity of attribute

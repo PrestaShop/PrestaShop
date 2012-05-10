@@ -759,7 +759,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
 	
 		if ((int)$cartRule->gift_product)
-			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 0, 'up', null, false);
+			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 'up', 0, null, false);
 
 		return true;
 	}
@@ -796,7 +796,7 @@ class CartCore extends ObjectModel
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
 	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
-		$id_address_delivery = 0, $operator = 'up', Shop $shop = null, $auto_add_cart_rule = true)
+		$operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -833,7 +833,7 @@ class CartCore extends ObjectModel
 
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-		else if (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
+		elseif (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
 			return false;
 		else
 		{
@@ -1088,7 +1088,7 @@ class CartCore extends ObjectModel
 		
 		$cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
 		if ((int)$cart_rule->gift_product)
-			$this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, null, 'down', null, false);
+			$this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false);
 		
 		return $result;
 	}
@@ -2853,8 +2853,8 @@ class CartCore extends ObjectModel
 				(int)$product['id_product'],
 				(int)$product['id_product_attribute'],
 				null,
-				(int)$product['id_address_delivery'],
 				'up',
+				(int)$product['id_address_delivery'],
 				new Shop($cart->id_shop)
 			);
 
