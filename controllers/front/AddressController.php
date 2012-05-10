@@ -149,23 +149,19 @@ class AddressControllerCore extends FrontController
 		{
 			if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
 			{
-				$zip_regexp = '/^'.$zip_code_format.'$/ui';
-				$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-				$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-				$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
-				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '
-											.Tools::displayError('is invalid.').'<br />'.Tools::displayError('Must be typed as follows:')
-											.' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
+				if (!$country->checkZipCode($postcode))
+					$this->errors[] = sprintf(
+						Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+						str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+					);
 			}
 			else if ($zip_code_format)
-				$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is required.');
+				$this->errors[] = Tools::displayError('Zip / Postal code is required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is invalid.')
-										.'<br />'.Tools::displayError('Must be typed as follows:').' '
-										.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
+				$this->errors[] = sprintf(
+					Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+					str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+				);
 		}
 
 		// Check country DNI
