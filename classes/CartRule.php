@@ -572,7 +572,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
+							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 						case 'products':
 							$cartProducts = Db::getInstance()->executeS('
@@ -590,7 +590,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
+							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 						case 'categories':
 							$cartCategories = Db::getInstance()->executeS('
@@ -609,7 +609,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
+							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 						case 'manufacturers':
 							$cartManufacturers = Db::getInstance()->executeS('
@@ -628,7 +628,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
+							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 						case 'suppliers':
 							$cartSuppliers = Db::getInstance()->executeS('
@@ -647,7 +647,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-							$eligibleProductsList = array_uintersect($eligibleProductsList, $matchingProductsList, 'cartrule_products_intersect');
+							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 					}
 
@@ -660,7 +660,33 @@ class CartRuleCore extends ObjectModel
 
 		if ($return_products)
 			return $selectedProducts;
-		return ($display_error) ? true : false;
+		return (!$display_error) ? true : false;
+	}
+	
+	protected static function array_uintersect($array1, $array2)
+	{
+		$intersection = array();
+		foreach ($array1 as $value1)
+			foreach ($array2 as $value2)
+				if (CartRule::array_uintersect_compare($value1, $value2) == 0)
+				{
+					$intersection[] = $value1;
+					break 1;
+				}
+		return $intersection;
+	}
+	
+	protected static function array_uintersect_compare($a, $b)
+	{
+		if ($a == $b)
+			return 0;
+
+		$asplit = explode('-', $a);
+		$bsplit = explode('-', $b);
+		if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1]))
+			return 0;
+
+		return 1;
 	}
 
 	/**
@@ -1012,17 +1038,4 @@ class CartRuleCore extends ObjectModel
 			WHERE code LIKE \'%'.pSQL($name).'%\'
 		');
 	}
-}
-
-function cartrule_products_intersect($a, $b)
-{
-	if ($a == $b)
-		return 0;
-
-	$asplit = explode('-', $a);
-	$bsplit = explode('-', $b);
-	if ($asplit[0] == $bsplit[0] && (!(int)$asplit[1] || !(int)$bsplit[1]))
-		return 0;
-
-	return 1;
 }
