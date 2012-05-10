@@ -106,12 +106,12 @@ class AuthControllerCore extends FrontController
 					$countries = Country::getCountries($this->context->language->id, true);
 
 				$this->context->smarty->assign(array(
-					'inOrderProcess' => true,
-					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
-					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
-					'countries' => $countries
-				));
+						'inOrderProcess' => true,
+						'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
+						'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+						'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
+						'countries' => $countries
+					));
 			}
 		}
 
@@ -127,17 +127,17 @@ class AuthControllerCore extends FrontController
 
 		// Call a hook to display more information on form
 		$this->context->smarty->assign(array(
-			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
-			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
-		));
+				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
+				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
+			));
 		
 		if ($this->ajax)
 		{
 			// Call a hook to display more information on form
 			$this->context->smarty->assign(array(
-				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-				'genders' => Gender::getGenders()
-			));
+					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+					'genders' => Gender::getGenders()
+				));
 
 			$return = array(
 				'hasError' => !empty($this->errors),
@@ -168,13 +168,13 @@ class AuthControllerCore extends FrontController
 		$days = Tools::dateDays();
 
 		$this->context->smarty->assign(array(
-			'years' => $years,
-			'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
-			'months' => $months,
-			'sl_month' => (isset($selectedMonths) ? $selectedMonths : 0),
-			'days' => $days,
-			'sl_day' => (isset($selectedDays) ? $selectedDays : 0)
-		));
+				'years' => $years,
+				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
+				'months' => $months,
+				'sl_month' => (isset($selectedMonths) ? $selectedMonths : 0),
+				'days' => $days,
+				'sl_day' => (isset($selectedDays) ? $selectedDays : 0)
+			));
 	}
 
 	/**
@@ -192,16 +192,16 @@ class AuthControllerCore extends FrontController
 			 * But for now it's a bug !
 			 * @see : bug #6968
 			 * @link:http://www.prestashop.com/bug_tracker/view/6968/
-			elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-			{
-				$array = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-				if (Validate::isLanguageIsoCode($array[0]))
-				{
-					$selectedCountry = Country::getByIso($array[0]);
-					if (!$selectedCountry)
-						$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-				}
-			}*/
+			 elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+			 {
+			 $array = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			 if (Validate::isLanguageIsoCode($array[0]))
+			 {
+			 $selectedCountry = Country::getByIso($array[0]);
+			 if (!$selectedCountry)
+			 $selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
+			 }
+			 }*/
 			if (!isset($selectedCountry))
 				$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
 
@@ -210,11 +210,11 @@ class AuthControllerCore extends FrontController
 			else
 				$countries = Country::getCountries($this->context->language->id, true);
 			$this->context->smarty->assign(array(
-				'countries' => $countries,
-				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-				'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
-				'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
-			));
+					'countries' => $countries,
+					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+					'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
+					'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
+				));
 		}
 	}
 
@@ -229,7 +229,7 @@ class AuthControllerCore extends FrontController
 
 		foreach ($addressFormat as $addressline)
 			foreach (explode(' ', $addressline) as $addressItem)
-				$addressItems[] = trim($addressItem);
+			$addressItems[] = trim($addressItem);
 
 		// Add missing require fields for a new user susbscription form
 		foreach ($requireFormFieldsList as $fieldName)
@@ -348,6 +348,26 @@ class AuthControllerCore extends FrontController
 	}
 
 	/**
+	 * Process the newsletter settings and set the customer infos.
+	 *
+	 * @param Customer $customer Reference on the customer Object.
+	 *
+	 * @note At this point, the email has been validated.
+	 */
+	protected function processCustomerNewsletter(&$customer)
+	{
+		if (Tools::getValue('newsletter'))
+		{
+			$customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
+			$customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
+
+			if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
+				if ($module_newsletter->active)
+					$module_newsletter->confirmSubscription(Tools::getValue('email'));
+		}
+	}
+
+	/**
 	 * Process submit on an account
 	 */
 	protected function processSubmitAccount()
@@ -379,10 +399,7 @@ class AuthControllerCore extends FrontController
 			if (!count($this->errors))
 			{
 				if (Tools::isSubmit('newsletter'))
-				{
-					$customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
-					$customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-				}
+					$this->processCustomerNewsletter($customer);
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 				$customer->active = 1;
 				// New Guest customer
@@ -414,9 +431,9 @@ class AuthControllerCore extends FrontController
 
 						$this->context->cart->update();
 						Hook::exec('actionCustomerAccountAdd', array(
-							'_POST' => $_POST,
-							'newCustomer' => $customer
-						));
+								'_POST' => $_POST,
+								'newCustomer' => $customer
+							));
 						if ($this->ajax)
 						{
 							$return = array(
@@ -494,10 +511,7 @@ class AuthControllerCore extends FrontController
 			if (Customer::customerExists(Tools::getValue('email')))
 				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please enter your password or request a new one.', false);
 			if (Tools::isSubmit('newsletter'))
-			{
-				$customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
-				$customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-			}
+				$this->processCustomerNewsletter($customer);
 
 			$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 			if (!count($this->errors))
@@ -549,9 +563,9 @@ class AuthControllerCore extends FrontController
 							// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
 							$this->context->cart->update();
 							Hook::exec('actionCustomerAccountAdd', array(
-								'_POST' => $_POST,
-								'newCustomer' => $customer
-							));
+									'_POST' => $_POST,
+									'newCustomer' => $customer
+								));
 							if ($this->ajax)
 							{
 								$return = array(
