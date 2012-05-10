@@ -1474,8 +1474,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		// Add product to cart
-		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 'up', new Shop($cart->id_shop));
-
+		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 0, 'up', new Shop($cart->id_shop));
 		// If order is valid, we can create a new invoice or edit an existing invoice
 		if ($order->hasInvoice())
 		{
@@ -1587,6 +1586,7 @@ class AdminOrdersControllerCore extends AdminController
 			$specific_price->delete();
 
 		$products = $this->getProducts($order);
+
 		// Get the last product
 		$product = $products[max(array_keys($products))];
 
