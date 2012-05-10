@@ -28,25 +28,25 @@
 class AdminCmsContentControllerCore extends AdminController
 {
 	/** @var object adminCMSCategories() instance */
-	protected $adminCMSCategories;
+	protected $admin_cms_categories;
 
 	/** @var object adminCMS() instance */
-	protected $adminCMS;
+	protected $admin_cms;
 
 	/** @var object Category() instance for navigation*/
-	protected static $_category = null;
+	protected static $category = null;
 
 	public function __construct()
 	{
 		/* Get current category */
-		$id_cms_category = (int)(Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1)));
-		self::$_category = new CMSCategory($id_cms_category);
-		if (!Validate::isLoadedObject(self::$_category))
+		$id_cms_category = (int)Tools::getValue('id_cms_category', Tools::getValue('id_cms_category_parent', 1));
+		self::$category = new CMSCategory($id_cms_category);
+		if (!Validate::isLoadedObject(self::$category))
 			die('Category cannot be loaded');
 
 		$this->table = array('cms_category', 'cms');
-		$this->adminCMSCategories = new AdminCmsCategoriesController();
-		$this->adminCMS = new AdminCmsController();
+		$this->admin_cms_categories = new AdminCmsCategoriesController();
+		$this->admin_cms = new AdminCmsController();
 
 		parent::__construct();
 	}
@@ -58,47 +58,47 @@ class AdminCmsContentControllerCore extends AdminController
 	 */
 	public static function getCurrentCMSCategory()
 	{
-		return self::$_category;
+		return self::$category;
 	}
 
 	public function viewAccess($disable = false)
 	{
 		$result = parent::viewAccess($disable);
-		$this->adminCMSCategories->tabAccess = $this->tabAccess;
-		$this->adminCMS->tabAccess = $this->tabAccess;
+		$this->admin_cms_categories->tabAccess = $this->tabAccess;
+		$this->admin_cms->tabAccess = $this->tabAccess;
 		return $result;
 	}
 
 	public function initContent()
 	{
-		$this->adminCMSCategories->token = $this->token;
-		$this->adminCMS->token = $this->token;
+		$this->admin_cms_categories->token = $this->token;
+		$this->admin_cms->token = $this->token;
 
 		if ($this->display == 'edit_category')
-			$this->content .= $this->adminCMSCategories->renderForm();
+			$this->content .= $this->admin_cms_categories->renderForm();
 		else if ($this->display == 'edit_page')
-			$this->content .= $this->adminCMS->renderForm();
+			$this->content .= $this->admin_cms->renderForm();
 		else if ($this->display == 'view_page')
 			$fixme = 'fixme';// @FIXME
 		else
 		{
-			$id_cms_category = (int)(Tools::getValue('id_cms_category'));
+			$id_cms_category = (int)Tools::getValue('id_cms_category');
 			if (!$id_cms_category)
 				$id_cms_category = 1;
 
 			// CMS categories breadcrumb
 			$cms_tabs = array('cms_category', 'cms');
 			// Cleaning links
-			$catBarIndex = self::$currentIndex;
+			$cat_bar_index = self::$currentIndex;
 			foreach ($cms_tabs as $tab)
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway'))
-					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
+					$cat_bar_index = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 
-			$this->content .= $this->adminCMSCategories->renderList();
-			$this->adminCMS->id_cms_category = $id_cms_category;
-			$this->content .= $this->adminCMS->renderList();
+			$this->content .= $this->admin_cms_categories->renderList();
+			$this->admin_cms->id_cms_category = $id_cms_category;
+			$this->content .= $this->admin_cms->renderList();
 			$this->context->smarty->assign(array(
-				'cms_breadcrumb' => getPath($catBarIndex, $id_cms_category, '', '', 'cms'),
+				'cms_breadcrumb' => getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
 			));
 		}
 
@@ -109,11 +109,27 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->adminCMSCategories->errors))
+		if (Tools::isSubmit('submitDelcms')
+			|| Tools::isSubmit('previewSubmitAddcmsAndPreview')
+			|| Tools::isSubmit('submitAddcms')
+			|| isset($_GET['deletecms'])
+			|| Tools::isSubmit('viewcms')
+			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
+			|| (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position')))
+			$this->admin_cms->postProcess();
+		else if (Tools::isSubmit('submitDelcms_category')
+			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
+			|| Tools::isSubmit('submitAddcms_category')
+			|| isset($_GET['deletecms_category'])
+			|| (Tools::isSubmit('statuscms_category') && Tools::isSubmit('id_cms_category'))
+			|| (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move')))
+			$this->admin_cms_categories->postProcess();
+
+		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
 			|| isset($_GET['updatecms_category'])
 			|| isset($_GET['addcms_category']))
 			$this->display = 'edit_category';
-		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
+		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
 			|| isset($_GET['updatecms'])
 			|| isset($_GET['addcms']))
 			$this->display = 'edit_page';
@@ -123,25 +139,15 @@ class AdminCmsContentControllerCore extends AdminController
 			$this->id_cms_category = (int)Tools::getValue('id_cms_category');
 		}
 
-		if (Tools::isSubmit('submitDelcms')
-			|| Tools::isSubmit('previewSubmitAddcmsAndPreview')
-			|| Tools::isSubmit('submitAddcms')
-			|| isset($_GET['deletecms'])
-			|| Tools::isSubmit('viewcms')
-			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
- 	 	 	|| (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position')))
-			$this->adminCMS->postProcess();
-		else if (Tools::isSubmit('submitDelcms_category')
-			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
-			|| Tools::isSubmit('submitAddcms_category')
-			|| isset($_GET['deletecms_category'])
-			|| (Tools::isSubmit('statuscms_category') && Tools::isSubmit('id_cms_category'))
-			|| (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move')))
-			$this->adminCMSCategories->postProcess();
+		if (isset($this->admin_cms->errors))
+			$this->errors = array_merge($this->errors, $this->admin_cms->errors);
+
+		if (isset($this->admin_cms_categories->errors))
+			$this->errors = array_merge($this->errors, $this->admin_cms_categories->errors);
 
 		parent::postProcess();
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -151,9 +157,9 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCmsPositions()
 	{
-		$id_cms = (int)(Tools::getValue('id_cms'));
-		$id_category = (int)(Tools::getValue('id_cms_category'));
-		$way = (int)(Tools::getValue('way'));
+		$id_cms = (int)Tools::getValue('id_cms');
+		$id_category = (int)Tools::getValue('id_cms_category');
+		$way = (int)Tools::getValue('way');
 		$positions = Tools::getValue('cms');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
@@ -179,9 +185,9 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCmsCategoriesPositions()
 	{
-		$id_cms_category_to_move = (int)(Tools::getValue('id_cms_category_to_move'));
-		$id_cms_category_parent = (int)(Tools::getValue('id_cms_category_parent'));
-		$way = (int)(Tools::getValue('way'));
+		$id_cms_category_to_move = (int)Tools::getValue('id_cms_category_to_move');
+		$id_cms_category_parent = (int)Tools::getValue('id_cms_category_parent');
+		$way = (int)Tools::getValue('way');
 		$positions = Tools::getValue('cms_category');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
