@@ -107,7 +107,7 @@ jQuery(document).ready(Customer.init);
 	{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 </div>
 
-{include file="controllers/products/multishop/check_fields.tpl" product_tab="Price"}
+{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
 
 <div class="separation"></div>
 <table>
