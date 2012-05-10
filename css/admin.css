@@ -821,6 +821,7 @@ tr.deleted td {
 	background: #BDE5F8 url(../img/admin/icon-info.png) no-repeat 6px 5px;
 	border-radius:3px;
 	min-height:15px;
+	z-index:10;
 }
 .hint p {
 	color: #00529B;
