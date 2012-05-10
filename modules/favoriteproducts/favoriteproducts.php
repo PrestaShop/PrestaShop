@@ -107,6 +107,8 @@ class FavoriteProducts extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'favoriteproducts.css', 'all');
+		$this->context->controller->addJS($this->_path.'favoriteproducts.js');
+		return $this->display(__FILE__, 'favoriteproducts-header.tpl');
 	}
 
 }
