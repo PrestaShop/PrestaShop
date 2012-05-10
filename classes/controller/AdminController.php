@@ -1182,7 +1182,15 @@ class AdminControllerCore extends Controller
 		foreach ($quick_access as $index => $quick)
 		{
 			if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP)
-				$quick_access[$index]['link'] = $this->context->shop->getBaseURL();
+			{
+				$url = $this->context->shop->getBaseURL();
+				if (!$url)
+				{
+					unset($quick_access[$index]);
+					continue;
+				}
+				$quick_access[$index]['link'] = $url;
+			}
 			else
 			{
 				preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
