@@ -391,12 +391,16 @@ function reloadContent(params_plus)
 			if ($(result.pagination).find('ul.pagination').length)
 			{
 				$('div#pagination').show();
-				$('ul.pagination').replaceWith($(result.pagination).find('ul.pagination'));
+				$('ul.pagination').each(function () {
+					$(this).replaceWith($(result.pagination).find('ul.pagination'));
+				});
 			}
 			else if (!$('ul.pagination').length)
 			{
 				$('div#pagination').show();
-				$('div#pagination').html($(result.pagination));
+				$('div#pagination').each(function () {
+					$(this).html($(result.pagination));
+				});
 			}
 			else
 			{
