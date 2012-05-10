@@ -348,7 +348,7 @@ class HelperCore
 
 	public static function renderShopList()
 	{
-		if (!Shop::isFeatureActive() || count(Shop::getShops(false, null, true)) < 2)
+		if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2)
 			return null;
 
 		$tree = Shop::getTree();

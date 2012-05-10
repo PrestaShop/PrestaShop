@@ -505,6 +505,7 @@ class ShopCore extends ObjectModel
 	 * @param bool $active
 	 * @param int $id_shop_group
 	 * @param bool $get_as_list_id
+	 * @return array
 	 */
 	public static function getShops($active = true, $id_shop_group = null, $get_as_list_id = false)
 	{
@@ -574,11 +575,13 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
+	 * @param bool $active
+	 * @param int $id_shop_group
 	 * @return int Total of shops
 	 */
-	public static function getTotalShops($active = true)
+	public static function getTotalShops($active = true, $id_shop_group = null)
 	{
-		return count(Shop::getShops($active));
+		return count(Shop::getShops($active, $id_shop_group));
 	}
 
 	/**
