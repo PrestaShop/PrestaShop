@@ -456,6 +456,7 @@ class HelperListCore extends Helper
 			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
 
 		$data = array(
+			$this->identifier => $id,
 			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token)),
 			'action' => self::$cache_lang['Delete'],
 		);

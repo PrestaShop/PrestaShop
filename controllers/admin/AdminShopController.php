@@ -275,7 +275,7 @@ class AdminShopControllerCore extends AdminController
 			if (Shop::hasDependency($shop['id_shop']))
 				$shop_delete_list[] = $shop['id_shop'];
 		}
-		$this->addRowActionSkipList('delete', $shop_delete_list);
+		$this->context->smarty->assign('shops_having_dependencies', $shop_delete_list);
 	}
 
 	public function renderForm()
