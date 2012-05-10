@@ -637,7 +637,7 @@ class FrontControllerCore extends Controller
 						}
 						else
 						{
-							$hasBeenSet = !isset($this->context->cookie->iso_code_country);
+							$has_been_set = !isset($this->context->cookie->iso_code_country);
 							$this->context->cookie->iso_code_country = strtoupper($record->country_code);
 						}
 					}
@@ -648,7 +648,7 @@ class FrontControllerCore extends Controller
 					/* Update defaultCountry */
 					if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country)
 						$defaultCountry = new Country($id_country);
-					if (isset($hasBeenSet) && $hasBeenSet)
+					if (isset($has_been_set) && $has_been_set)
 						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $defaultCountry;
 				}
