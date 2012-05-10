@@ -44,6 +44,11 @@ class LinkCore
 		$this->url = $_SERVER['SCRIPT_NAME'];
 		$this->protocol_link = $protocol_link;
 		$this->protocol_content = $protocol_content;
+
+		if (!defined('_PS_BASE_URL_'))
+			define('_PS_BASE_URL_', Tools::getShopDomain(true));
+		if (!defined('_PS_BASE_URL_SSL_'))
+			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 	}
 
 	/**
@@ -204,7 +209,7 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
-		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
+		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
