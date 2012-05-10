@@ -349,7 +349,7 @@ class OrderCore extends ObjectModel
 		$productPrice = number_format($quantity * $price, 2, '.', '');
 		/* Update cart */
 		$cart = new Cart($this->id_cart);
-		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 0, 'down'); // customization are deleted in deleteCustomization
+		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
 		$cart->update();
 
 		/* Update order */
