@@ -582,7 +582,7 @@ class AdminShopControllerCore extends AdminController
 			$id_root = Configuration::get('PS_ROOT_CATEGORY');
 		$id_shop = (int)Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);
-		$selected_cat = Shop::getCategories();
+		$selected_cat = Shop::getCategories($id_shop);
 		if (empty($selected_cat))
 		{
 			// get first category root and preselect all these children
