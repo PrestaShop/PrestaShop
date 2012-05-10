@@ -2488,6 +2488,7 @@ $_LANGADM['AdminProducts4faaa9989034c771a314b2f2c0c9ede6'] = 'Maximum 32 caract�
 $_LANGADM['AdminProducts522794e2dc4cecbae08ad633f40d4b9b'] = 'Définissez les libellés des champs fichiers :';
 $_LANGADM['AdminProducts52eb5928a34db3e3da7ba52b0644273b'] = 'EAN-13';
 $_LANGADM['AdminProducts52f5e0bc3859bc5f5e25130b6c7e8881'] = 'Position';
+$_LANGADM['AdminProducts5328b77fdd34ba6aea22aff14de2e7f5'] = 'Tout cocher / décocher (vous éditez cette page pour plusieurs boutiques, plusieurs champs comme le nom ou le prix sont désactivés, vous devez cocher les boites devant ces champs afin de les éditer pour l\'ensemble des boutiques en cours)';
 $_LANGADM['AdminProducts535fb9c585d10cb369e97f1ae2d5e11f'] = 'Déjà incluse dans le prix';
 $_LANGADM['AdminProducts544baae42433c186ff222736db985d7d'] = 'Ajouter une valeur prédéfinie dans un premier temps';
 $_LANGADM['AdminProducts545f6c2f382c04810103b3e5e6f7d841'] = 'Illimité';
