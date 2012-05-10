@@ -248,7 +248,7 @@ class AdminCmsControllerCore extends AdminController
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-				if (isset($_POST[$this->table.'Box']))
+				if (Tools::isSubmit($this->table.'Box'))
 				{
 					$cms = new CMS();
 					$result = true;
