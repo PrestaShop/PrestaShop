@@ -503,17 +503,20 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$phpDotNetSupportedLangs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
-		$phpLang = in_array($this->context->language->iso_code, $phpDotNetSupportedLangs) ? $this->context->language->iso_code : 'en';
+		$php_dot_net_supported_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
+		$php_lang = in_array($this->context->language->iso_code, $php_dot_net_supported_langs) ? 
+			$this->context->language->iso_code : 'en';
 		
 		if (!extension_loaded('memcache'))
 			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').'
-				<a href="http://www.php.net/manual/'.substr($phpLang, 0, 2).'/memcache.installation.php" target="_blank">http://www.php.net/manual/'.substr($phpLang, 0, 2).'/memcache.installation.php</a>';
+				<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">
+					http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php
+				</a>';
 		if (!extension_loaded('apc'))
 		{
 			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').'
-				<a href="http://php.net/manual/'.substr($phpLang, 0, 2).'/apc.installation.php" target="_blank">
-					http://php.net/manual/'.substr($phpLang, 0, 2).'/apc.installation.php
+				<a href="http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php" target="_blank">
+					http://php.net/manual/'.substr($php_lang, 0, 2).'/apc.installation.php
 				</a>';
 		}
 		if (!extension_loaded('xcache'))
