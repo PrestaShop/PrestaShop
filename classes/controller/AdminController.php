@@ -1692,6 +1692,11 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
+		else if (Shop::getTotalShops(false, null) < 2)
+		{
+			$shop_id = $this->context->employee->getDefaultShopID();
+			Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+		}
 
 		// Check multishop context and set right context if need
 		if (!($this->multishop_context & Shop::getContext()))
