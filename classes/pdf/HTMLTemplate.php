@@ -47,13 +47,18 @@ abstract class HTMLTemplateCore
 		if (Validate::isLoadedObject($this->shop))
 			$shop_name = $this->shop->name;
 
+		$path_logo = $this->getLogo();
+		list($width, $height) = getimagesize(_PS_BASE_URL_.$path_logo);
+
 		$this->smarty->assign(array(
-			'logo_path' => $this->getLogo(),
+			'logo_path' => $path_logo,
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'title' => $this->title,
 			'date' => $this->date,
-			'shop_name' => $shop_name
+			'shop_name' => $shop_name,
+			'width_logo' => $width,
+			'height_logo' => $height
 		));
 
 		return $this->smarty->fetch($this->getTemplate('header'));
