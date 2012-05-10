@@ -10,3 +10,5 @@ ALTER TABLE `PREFIX_customer` DROP `account_number`;
 
 /* PHP:move_translations_module_file(); */;
 
+ALTER TABLE `PREFIX_tax_rule` CHANGE `zipcode_from` `zipcode_from` VARCHAR(12) NOT NULL, CHANGE `zipcode_to` `zipcode_to` VARCHAR(12) NOT NULL;
+

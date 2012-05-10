@@ -30,13 +30,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	public $tax_rule;
 	public $selected_countries = array();
 	public $selected_states = array();
-	public $_errors_tax_rule;
+	public $errors_tax_rule;
 
 	public function __construct()
 	{
-	 	$this->table = 'tax_rules_group';
+		$this->table = 'tax_rules_group';
 		$this->className = 'TaxRulesGroup';
-	 	$this->lang = false;
+		$this->lang = false;
 
 		$this->context = Context::getContext();
 
@@ -59,7 +59,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -74,10 +74,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 	public function initRulesList($id_group)
 	{
-	 	$this->table = 'tax_rule';
-	 	$this->identifier = 'id_tax_rule';
-        $this->className = 'TaxRule';
-	 	$this->lang = false;
+		$this->table = 'tax_rule';
+		$this->identifier = 'id_tax_rule';
+		$this->className = 'TaxRule';
+		$this->lang = false;
 		$this->list_simple_header = false;
 		$this->toolbar_btn = null;
 		$this->list_no_link = true;
@@ -346,38 +346,42 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	}
 
 
-    public function initProcess()
-    {
-        if (Tools::isSubmit('deletetax_rule'))
-        {
-            if ($this->tabAccess['delete'] === '1')
-                $this->action = 'delete_tax_rule';
-            else
-                $this->errors[] = Tools::displayError('You do not have permission to delete here.');
-        }
-        else if (Tools::isSubmit('submitBulkdeletetax_rule'))
-        {
-            if ($this->tabAccess['delete'] === '1')
-                $this->action = 'bulk_delete_tax_rules';
-            else
-                $this->errors[] = Tools::displayError('You do not have permission to delete here.');
-        }
-        else if (Tools::getValue('action') == 'create_rule')
-        {
-            if ($this->tabAccess['add'] === '1')
-                $this->action = 'create_rule';
-            else
-                $this->errors[] = Tools::displayError('You do not have permission to add here.');
-        }
-        else
-            parent::initProcess();
+	public function initProcess()
+	{
+		if (Tools::isSubmit('deletetax_rule'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'delete_tax_rule';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'bulk_delete_tax_rules';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		else if (Tools::getValue('action') == 'create_rule')
+		{
+			if ($this->tabAccess['add'] === '1')
+				$this->action = 'create_rule';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		else
+			parent::initProcess();
 
-    }
+	}
 
 	protected function processCreateRule()
 	{
-		$zipcode = Tools::getValue('zipcode');
+		$zip_code = Tools::getValue('zipcode');
 		$id_rule = (int)Tools::getValue('id_tax_rule');
+		$id_tax = (int)Tools::getValue('id_tax');
+		$id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
+		$behavior = (int)Tools::getValue('behavior');
+		$description = pSQL(Tools::getValue('description'));
 
 		$this->selected_countries = Tools::getValue('country');
 		$this->selected_states = Tools::getValue('states');
@@ -395,54 +399,83 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				if (isset($id_rule))
 					$tr->id = $id_rule;
 
-				$tr->id_tax = (int)Tools::getValue('id_tax');
-				$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
+				$tr->id_tax = $id_tax;
+				$tr->id_tax_rules_group = (int)$id_tax_rules_group;
 				$tr->id_country = (int)$id_country;
 				$tr->id_state = (int)$id_state;
-				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
-				$tr->behavior = (int)Tools::getValue('behavior');
-				$tr->description = Tools::getValue('description');
+				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
+
+				// Construct Object Country
+				$country = new Country((int)$id_country);
+
+				if ($zip_code && $country->need_zip_code)
+				{
+					if ($country->zip_code_format)
+					{
+						foreach (array($tr->zipcode_from, $tr->zipcode_to) as $zip_code)
+							if ($zip_code)
+								if (!$country->checkZipCode($zip_code))
+								{
+									$this->errors[] = sprintf(
+										Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+									);
+								}
+					}
+				}
+
+				$tr->behavior = (int)$behavior;
+				$tr->description = $description;
 				$this->tax_rule = $tr;
 				$_POST['id_state'] = $tr->id_state;
-                $this->errors = $this->validateTaxRule($tr);
+
+				$this->errors = array_merge($this->errors, $this->validateTaxRule($tr));
 
 				if (count($this->errors) == 0)
+				{
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
-				else
-					Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+					else
+						Tools::redirectAdmin(
+							self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+						);
+				}
 			}
 		}
 
 		if (count($this->errors) == 0)
-			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-        else
-            $this->display = 'edit';
+			Tools::redirectAdmin(
+				self::$currentIndex.'&'.$this->identifier.'='.(int)$id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+			);
+		else
+			$this->display = 'edit';
 	}
 
-    protected function processBulkDeleteTaxRules()
-    {
-        $this->deleteTaxRule(Tools::getValue('tax_ruleBox'));
-    }
+	protected function processBulkDeleteTaxRules()
+	{
+		$this->deleteTaxRule(Tools::getValue('tax_ruleBox'));
+	}
 
-    protected function processDeleteTaxRule()
-    {
-        $this->deleteTaxRule(array(Tools::getValue('id_tax_rule')));
-    }
+	protected function processDeleteTaxRule()
+	{
+		$this->deleteTaxRule(array(Tools::getValue('id_tax_rule')));
+	}
 
-    protected function deleteTaxRule(array $id_tax_rule_list)
-    {
-        $result = true;
+	protected function deleteTaxRule(array $id_tax_rule_list)
+	{
+		$result = true;
 
-        foreach ($id_tax_rule_list as $id_tax_rule)
-        {
-            $tax_rule = new TaxRule((int)$id_tax_rule);
-            if (Validate::isLoadedObject($tax_rule))
-                $result &= $tax_rule->delete();
-        }
+		foreach ($id_tax_rule_list as $id_tax_rule)
+		{
+			$tax_rule = new TaxRule((int)$id_tax_rule);
+			if (Validate::isLoadedObject($tax_rule))
+				$result &= $tax_rule->delete();
+		}
 
-        Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-    }
+		Tools::redirectAdmin(
+			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+		);
+	}
 
 
 	/**
