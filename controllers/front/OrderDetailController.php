@@ -169,7 +169,7 @@ class OrderDetailControllerCore extends FrontController
 					'currency' => new Currency($order->id_currency),
 					'order_state' => (int)($id_order_state),
 					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-					'invoice' => (OrderState::invoiceAvailable($id_order_state) && $order->invoice_number),
+					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
 					'discounts' => $order->getCartRules(),
