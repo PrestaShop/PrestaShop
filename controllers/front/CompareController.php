@@ -86,7 +86,7 @@ class CompareControllerCore extends FrontController
 
 		if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
 			$ids = array_unique(explode('|', $postProducts));
-		else if (isset(self::$cookie->id_compare))
+		else if (isset($this->context->cookie->id_compare))
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 		else
 			$ids = null;
