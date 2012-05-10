@@ -226,7 +226,6 @@ class AdminCustomersControllerCore extends AdminController
 		$days = Tools::dateDays();
 
 		$groups = Group::getGroups($this->default_form_language, true);
-		$accounting_number = Accounting::getDisplayedCustomerAccount($this->getFieldValue($obj, 'id_customer'), true);
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Customer'),
