@@ -82,7 +82,6 @@ class MailAlerts extends Module
 			!$this->registerHook('actionProductDelete') ||
 			!$this->registerHook('actionProductAttributeDelete') ||
 			!$this->registerHook('actionProductAttributeUpdate') ||
-			!$this->registerHook('actionProductUpdate') ||
 			!$this->registerHook('actionProductCoverage') ||
 			!$this->registerHook('displayHeader'))
 			return false;
@@ -472,12 +471,6 @@ class MailAlerts extends Module
 
 		if ($this->_customer_qty && $result['quantity'] > 0)
 			MailAlert::sendCustomerAlert((int)$result['id_product'], (int)$params['id_product_attribute']);
-	}
-
-	public function hookActionProductUpdate($params)
-	{
-		// @deprecated 1.5.x
-		Tools::displayAsDeprecated();
 	}
 
 	public function hookDisplayCustomerAccount($params)
