@@ -325,10 +325,11 @@ abstract class PaymentModuleCore extends Module
 
 					$cart_rules_list = '';
 					$cart_rules = $cart->getCartRules();
-					$values = array('tax_incl' => 0, 'tax_excl' => 0);
-
+					$total_cart_rules = array('tax_incl' => 0, 'tax_excl' => 0);
 					foreach ($cart_rules as $cart_rule)
 					{
+						$values = array('tax_incl' => 0, 'tax_excl' => 0);
+
 						// If the cart is split in multiple orders, the cart rule must be split too
 						if (count($order_list) > 1)
 						{
@@ -367,13 +368,19 @@ abstract class PaymentModuleCore extends Module
 						}
 						else
 						{
-							$values['tax_incl'] += $cart_rule['obj']->getContextualValue(true);
-							$values['tax_excl'] += $cart_rule['obj']->getContextualValue(false);
+							$values = array(
+								'tax_incl' => $cart_rule['obj']->getContextualValue(true),
+								'tax_excl' => $cart_rule['obj']->getContextualValue(false)
+							);
 						}
 
 						// If the reduction is not applicable to this order (in a multi-shipping case), then try the next
 						if (!$values['tax_excl'])
 							continue;
+
+						$total_cart_rules['tax_incl'] += $values['tax_incl'];
+						$total_cart_rules['tax_excl'] += $values['tax_excl'];
+
 
 						/* IF
 						** - This is not multi-shipping
@@ -420,8 +427,8 @@ abstract class PaymentModuleCore extends Module
 
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
-						$order->total_discounts = $order->total_discounts_tax_incl = round($values['tax_incl'], 9);
-						$order->total_discounts_tax_excl = round($values['tax_excl'], 9);
+						$order->total_discounts = $order->total_discounts_tax_incl = round($total_cart_rules['tax_incl'], 9);
+						$order->total_discounts_tax_excl = round($total_cart_rules['tax_excl'], 9);
 						$order->update();
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
