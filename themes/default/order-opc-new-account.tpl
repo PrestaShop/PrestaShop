@@ -263,7 +263,7 @@
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>
 				</p>
 				<p class="required text">
-					<label for="phone">{l s='Home phone'} <sup>*</sup></label>
+					<label for="phone">{l s='Home phone'}</label>
 					<input type="text" class="text" name="phone" id="phone" value="{if isset($guestInformations) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
 				</p>
 				<p class="text is_customer_param">
@@ -362,7 +362,7 @@
 						<textarea name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>
 					</p>
 					<p class="required text">
-						<label for="phone_invoice">{l s='Home phone'} <sup>*</sup></label>
+						<label for="phone_invoice">{l s='Home phone'}</label>
 						<input type="text" class="text" name="phone_invoice" id="phone_invoice" value="" />
 					</p>
 					<p class="text is_customer_param">
