@@ -325,10 +325,10 @@ abstract class PaymentModuleCore extends Module
 
 					$cart_rules_list = '';
 					$cart_rules = $cart->getCartRules();
+					$values = array('tax_incl' => 0, 'tax_excl' => 0);
+
 					foreach ($cart_rules as $cart_rule)
 					{
-						$values = array('tax_incl' => 0, 'tax_excl' => 0);
-
 						// If the cart is split in multiple orders, the cart rule must be split too
 						if (count($order_list) > 1)
 						{
@@ -367,10 +367,8 @@ abstract class PaymentModuleCore extends Module
 						}
 						else
 						{
-							$values = array(
-								'tax_incl' => $cart_rule['obj']->getContextualValue(true),
-								'tax_excl' => $cart_rule['obj']->getContextualValue(false)
-							);
+							$values['tax_incl'] += $cart_rule['obj']->getContextualValue(true);
+							$values['tax_excl'] += $cart_rule['obj']->getContextualValue(false);
 						}
 
 						// If the reduction is not applicable to this order (in a multi-shipping case), then try the next
