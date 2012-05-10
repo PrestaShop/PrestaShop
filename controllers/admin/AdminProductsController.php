@@ -61,7 +61,6 @@ class AdminProductsControllerCore extends AdminController
 		'Quantities' => 6,
 		'Suppliers' => 13,
 		'Warehouses' => 14,
-		'Accounting' => 15,
 	);
 
 	protected $default_tab = 'Informations';
@@ -173,7 +172,6 @@ class AdminProductsControllerCore extends AdminController
 			'Quantities' => $this->l('Quantities'),
 			'Suppliers' => $this->l('Suppliers'),
 			'Warehouses' => $this->l('Warehouses'),
-			'Accounting' => $this->l('Accounting')
 		);
 
 
