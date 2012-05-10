@@ -59,8 +59,10 @@ try
 	$protocol_content = (isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 	$link = new Link($protocol_link, $protocol_content);
 	$context->link = $link;
-	define('_PS_BASE_URL_', Tools::getShopDomain(true));
-	define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+	if (!defined('_PS_BASE_URL_'))
+		define('_PS_BASE_URL_', Tools::getShopDomain(true));
+	if (!defined('_PS_BASE_URL_SSL_'))
+		define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 	$path = dirname(__FILE__).'/themes/';
 	// if the current employee theme is not valid (check layout.tpl presence), 
