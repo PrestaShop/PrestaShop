@@ -133,8 +133,6 @@ class CustomerCore extends ObjectModel
 
 	public $groupBox;
 
-	public $account_number = '';
-
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_default_group' => array('xlink_resource' => 'groups'),
@@ -171,7 +169,6 @@ class CustomerCore extends ObjectModel
 			'optin' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'website' =>					array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
 			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-			'account_number' => 						array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000, 'copy_from_front' => false),
 			'siret' =>						array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
 			'ape' =>						array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
 			'outstanding_allow_amount' =>	array('type' => self::TYPE_INT, 'validate' => 'isFloat', 'copy_post' => false),
