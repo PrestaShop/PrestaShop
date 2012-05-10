@@ -41,9 +41,8 @@
 			populateStates($(this).val(), '');
 		});
 
-		{if !isset($smarty.get.create_rule)}
-			$('#tax_rule_form').hide();
-		{/if}
+		$('#tax_rule_form').hide();
+
 		$('#desc-tax_rules_group-new').click(function() {
 			initForm();
 			$('#tax_rule_form').slideToggle();
