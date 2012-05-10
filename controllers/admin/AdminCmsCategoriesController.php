@@ -28,7 +28,7 @@
 class AdminCmsCategoriesControllerCore extends AdminController
 {
 	/** @var object CMSCategory() instance for navigation*/
-	protected $_CMSCategory;
+	protected $cms_category;
 
 	protected $position_identifier = 'id_cms_category_to_move';
 
@@ -47,10 +47,13 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'callback' => 'hideCMSCategoryPosition', 'callback_object' => 'CMSCategory'),
 		'description' => array('title' => $this->l('Description'), 'width' => 500, 'maxlength' => 90, 'orderby' => false),
 		'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
-		'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'active' => 'status', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
+		'active' => array(
+			'title' => $this->l('Displayed'), 'width' => 25, 'active' => 'status',
+			'align' => 'center','type' => 'bool', 'orderby' => false
+		));
 
-		$this->_CMSCategory = AdminCmsContentController::getCurrentCMSCategory();
-		$this->_filter = 'AND `id_parent` = '.(int)($this->_CMSCategory->id);
+		$this->cms_category = AdminCmsContentController::getCurrentCMSCategory();
+		$this->_filter = 'AND `id_parent` = '.(int)$this->cms_category->id;
 		$this->_select = 'position ';
 
 		parent::__construct();
@@ -81,9 +84,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			$this->action = 'save';
-			if ($id_cms_category = (int)(Tools::getValue('id_cms_category')))
+			if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 			{
-				if (!CMSCategory::checkBeforeMove($id_cms_category, (int)(Tools::getValue('id_parent'))))
+				if (!CMSCategory::checkBeforeMove($id_cms_category, (int)Tools::getValue('id_parent')))
 				{
 					$this->errors[] = Tools::displayError('CMS Category cannot be moved here');
 					return false;
@@ -91,25 +94,29 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			}
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (isset($_GET['statuscms_category']) && Tools::getValue($this->identifier))
+		elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->toggleStatus())
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((int)$object->id_parent ? '&id_cms_category='.(int)$object->id_parent : '').'&token='.Tools::getValue('token'));
+					{
+						$identifier = ((int)$object->id_parent ? '&id_cms_category='.(int)$object->id_parent : '');
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$identifier.'&token='.Tools::getValue('token'));
+					}
 					else
 						$this->errors[] = Tools::displayError('An error occurred while updating status.');
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		/* Delete object */
-		elseif (isset($_GET['delete'.$this->table]))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
@@ -117,7 +124,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				{
 					// check if request at least one object with noZeroObject
 					if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+						$this->errors[] = Tools::displayError('You need at least one object.')
+							.' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{
 						if ($this->deleted)
@@ -132,36 +140,49 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->errors[] = Tools::displayError('An error occurred while deleting object.')
+						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		elseif (isset($_GET['position']))
+		elseif (Tools::isSubmit('position'))
 		{
+			$object = new CMSCategory((int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1)));
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-			elseif (!Validate::isLoadedObject($object = new CMSCategory((int)(Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1))))))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
+			elseif (!Validate::isLoadedObject($object))
+				$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+					.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+			elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_cms_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+			{
+				$identifier = '';
+				if ($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_parent', 1)))
+					$identifier = '&'.$this->identifier.'='.$id_category;
+				$token = Tools::getAdminTokenLite('AdminCmsContent');
+
+				Tools::redirectAdmin(
+					self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$identifier.'&token='.$token
+				);
+			}
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-				if (isset($_POST[$this->table.'Box']))
+				if (Tools::isSubmit($this->table.'Box'))
 				{
 					$cms_category = new CMSCategory();
 					$result = true;
 					$result = $cms_category->deleteSelection(Tools::getValue($this->table.'Box'));
 					if ($result)
 					{
-						$cms_category->cleanPositions((int)(Tools::getValue('id_cms_category')));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_category='.(int)(Tools::getValue('id_cms_category')));
+						$cms_category->cleanPositions((int)Tools::getValue('id_cms_category'));
+						$token = Tools::getAdminTokenLite('AdminCmsContent');
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_category='.(int)Tools::getValue('id_cms_category'));
 					}
 					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 
