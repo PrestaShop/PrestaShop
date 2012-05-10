@@ -100,7 +100,7 @@ class ParentOrderControllerCore extends FrontController
 					{
 						if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
 						{
-							if ($error = $cartRule->checkValidity($this->context))
+							if ($error = $cartRule->checkValidity($this->context, false, true))
 								$this->errors[] = $error;
 							else
 							{
