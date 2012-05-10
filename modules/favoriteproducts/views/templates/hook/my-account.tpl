@@ -25,7 +25,7 @@
 *}
 
 <li class="favorite products">
-	<a href="{$link->getModuleLink('favoriteproducts', 'account')}" title="{l s='My favorite products' mod='favorite products'}">
+	<a href="{$link->getModuleLink('favoriteproducts', 'account')|escape:'htmlall':'UTF-8'}" title="{l s='My favorite products' mod='favorite products'}">
 		<img src="{$module_template_dir}img/favorites.png" class="icon" />
 		{l s='My favorite products' mod='favorite products'}
 	</a>
