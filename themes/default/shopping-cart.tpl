@@ -223,7 +223,7 @@
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
 			{assign var='odd' value=$product@iteration%2}
-			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
+			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId) || count($gift_products)}
 			{* Display the product line *}
 			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 			{* Then the customized datas ones*}
@@ -293,6 +293,17 @@
 				{if $product.quantity-$quantityDisplayed > 0}{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}{/if}
 			{/if}
 		{/foreach}
+		{assign var='last_was_odd' value=$product@iteration%2}
+		{foreach $gift_products as $product}
+			{assign var='productId' value=$product.id_product}
+			{assign var='productAttributeId' value=$product.id_product_attribute}
+			{assign var='quantityDisplayed' value=0}
+			{assign var='odd' value=($product@iteration+$last_was_odd)%2}
+			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
+			{assign var='cannotModify' value=1}
+			{* Display the gift product line *}
+			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
+		{/foreach}
 		</tbody>
 	{if sizeof($discounts)}
 		<tbody>
@@ -307,7 +318,7 @@
 					<span class="price-discount price">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
 				</td>
 				<td class="price_discount_del">
-					<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}">{l s='Delete'}</a>
+					{if strlen($discount.code)}<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}">{l s='Delete'}</a>{/if}
 				</td>
 			</tr>
 		{/foreach}
