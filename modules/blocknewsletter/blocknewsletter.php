@@ -423,6 +423,26 @@ class Blocknewsletter extends Module
 	}
 
 	/**
+	 * Send the confirmation mails to the given $email address if needed.
+	 *
+	 * @param string $email Email where to send the confirmation
+	 *
+	 * @note the email has been verified and might not yet been registered. Called by AuthController::processCustomerNewsletter
+	 *
+	 */
+	public function confirmSubscription($email)
+	{
+		if ($email)
+		{
+			if ($discount = Configuration::get('NW_VOUCHER_CODE'))
+				$this->sendVoucher($email, $discount);
+
+			if (Configuration::get('NW_CONFIRMATION_EMAIL'))
+				$this->sendConfirmationEmail($email);
+		}
+	}
+
+	/**
 	 * Send an email containing a voucher code
 	 * @param string $email
 	 * @param string $discount
