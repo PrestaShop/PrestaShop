@@ -542,7 +542,6 @@ CREATE TABLE `PREFIX_customer` (
   `passwd` varchar(32) NOT NULL,
   `last_passwd_gen` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `birthday` date default NULL,
-  `account_number` varchar(128) NULL,
   `newsletter` tinyint(1) unsigned NOT NULL default '0',
   `ip_registration_newsletter` varchar(15) default NULL,
   `newsletter_date_add` datetime default NULL,
@@ -1748,8 +1747,7 @@ CREATE TABLE `PREFIX_tax` (
   `id_tax` int(10) unsigned NOT NULL auto_increment,
   `rate` DECIMAL(10, 3) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '1',
-  `deleted` tinyint(1) unsigned NOT NULL default '0',
-  `account_number` varchar(64) NOT NULL,
+  `deleted` tinyint(1) unsigned NOT NULL default '0',s
   PRIMARY KEY  (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -2327,35 +2325,6 @@ CREATE TABLE `PREFIX_product_supplier` (
   PRIMARY KEY (`id_product_supplier`),
   UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_accounting_export` (
-  `id_accounting_export` int(11) NOT NULL AUTO_INCREMENT,
-  `begin_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `end_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `type` int(11) NOT NULL,
-  `file` varchar(256) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_accounting_export`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_accounting_zone_shop` (
-  `id_accounting_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zone` int(11) NOT NULL,
-  `id_shop` int(11) NOT NULL,
-  `account_number` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_accounting_zone_shop`),
-  UNIQUE KEY `id_zone` (`id_zone`,`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_accounting_product_zone_shop` (
-  `id_accounting_product_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
-  `id_product` int(11) NOT NULL,
-  `id_shop` int(11) NOT NULL,
-  `id_zone` int(11) NOT NULL,
-  `account_number` varchar(64) NOT NULL,
-  PRIMARY KEY (`id_accounting_product_zone_shop`),
-  UNIQUE KEY `id_product` (`id_product`,`id_shop`,`id_zone`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_carrier` (
   `id_order_carrier` int(11) NOT NULL AUTO_INCREMENT,

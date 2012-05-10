@@ -255,12 +255,6 @@
     <tab id="SQL_Manager" id_parent="Advanced_parameters" active="1">
       <class_name>AdminRequestSql</class_name>
     </tab>
-    <tab id="Accounting" id_parent="Advanced_parameters" active="1">
-      <class_name>AdminAccountingConfiguration</class_name>
-    </tab>
-    <tab id="Accounting_plan" id_parent="Advanced_parameters" active="1">
-      <class_name>AdminAccountingRegisteredNumber</class_name>
-    </tab>
     <tab id="Logs" id_parent="Advanced_parameters" active="1">
       <class_name>AdminLogs</class_name>
     </tab>
@@ -293,9 +287,6 @@
     </tab>
     <tab id="Referrers" id_parent="Stats" active="1">
       <class_name>AdminReferrers</class_name>
-    </tab>
-    <tab id="Accounting_export" id_parent="Stats" active="1">
-      <class_name>AdminAccountingExport</class_name>
     </tab>
     <tab id="Warehouses" id_parent="Stock" active="1">
       <class_name>AdminWarehouses</class_name>
