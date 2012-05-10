@@ -1,6 +1,7 @@
 <?php
 function set_stock_available()
 {
+	$res = true;
 	//Get all products with positive quantity
 	$resource = Db::getInstance()->query('
 		SELECT quantity, id_product, out_of_stock
@@ -26,12 +27,14 @@ function set_stock_available()
 			$quantity += $attribute['quantity'];
 
 			//add stock available for attributes
-			Db::getInstance()->execute('
+			$res &= Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'stock_available`
-				(`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`)
+				(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
 				VALUES
 				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", "1", "0", "'.(int)$attribute['quantity'].'", "0", "'.(int)$row['out_of_stock'].'")
 			');
+			if (!$res)
+				return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(attributes)'.Db::getInstance()->getMsgError());
 		}
 
 		if (count($attributes) == 0)
@@ -41,11 +44,14 @@ function set_stock_available()
 			continue;
 
 		//Add stock available for product
-		Db::getInstance()->execute('
+		$res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'stock_available`
-			(`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`, `quantity`, `depends_on_stock`, `out_of_stock`)
+			(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
 			VALUES
 			("'.(int)$row['id_product'].'", "0", "1", "0", "'.(int)$quantity.'", "0", "'.(int)$row['out_of_stock'].'")
 		');
+			if (!$res)
+				return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
 	}
+	return $res;
 }
