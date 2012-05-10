@@ -33,7 +33,7 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|escape:'htmlall':'UTF-8'}",
 			type: "POST",
 			data: {
 				'id_product': idFavoriteProduct
@@ -53,7 +53,11 @@ $('document').ready(function()
 });
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account.php', true)}">{l s='My account' mod='favoriteproducts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}{/capture}
+{capture name=path}
+	<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}">
+		{l s='My account' mod='favoriteproducts'}</a>
+		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}
+{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="favoriteproducts_block_account">
@@ -62,9 +66,10 @@ $('document').ready(function()
 		<div>
 			{foreach from=$favoriteProducts item=favoriteProduct}
 			<div class="favoriteproduct clearfix">
-				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}" class="product_img_link"><img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')}" alt=""/></a>
-				<h3><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)}">{$favoriteProduct.name}</a></h3>
-				<div class="product_desc">{$favoriteProduct.description_short}</div>
+				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}" class="product_img_link">
+					<img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')|escape:'htmlall':'UTF-8'}" alt=""/></a>
+				<h3><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}">{$favoriteProduct.name|escape:'htmlall':'UTF-8'}</a></h3>
+				<div class="product_desc">{$favoriteProduct.description_short|escape:'htmlall':'UTF-8'}</div>
 
 				<div class="remove">
 					<img rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}" src="{$img_dir}icon/delete.gif" alt="" class="icon" />
@@ -77,6 +82,8 @@ $('document').ready(function()
 	{/if}
 
 	<ul class="footer_links">
-		<li class="fleft"><a href="{$link->getPageLink('my-account.php', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account.php', true)}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
+		<li class="fleft">
+			<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a>
+			<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
 	</ul>
 </div>
