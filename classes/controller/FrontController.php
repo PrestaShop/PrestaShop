@@ -637,8 +637,8 @@ class FrontControllerCore extends Controller
 						}
 						else
 						{
+							$hasBeenSet = !isset($this->context->cookie->iso_code_country);
 							$this->context->cookie->iso_code_country = strtoupper($record->country_code);
-							$hasBeenSet = true;
 						}
 					}
 				}
