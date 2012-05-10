@@ -2491,51 +2491,6 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	/**
-	* Init data for accounting
-	*/
-	public function initFormAccounting($obj)
-	{
-		$data = $this->createTemplate($this->tpl_form);
-
-		if ($obj->id)
-		{
-			$error = '';
-			$detail = array();
-
-			if (count(Shop::getContextListShopID()) > 1)
-				$error = $this->l('Please select the shop you want to configure');
-			else
-			{
-				$zones = Zone::getZones();
-				$id_shop = $this->context->shop->id;
-
-				// Set default zone value to the shop	and sort it
-				foreach ($zones as $zone)
-				{
-					$detail['zones'][$zone['id_zone']]['name'] = $zone['name'];
-					$detail['zones'][$zone['id_zone']]['account_number'] = '';
-				}
-				$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($obj->id, $id_shop);
-
-				// Set Account number to the id_zone for an id_shop if exist
-				foreach ($zoneAccountNumberList as $zone)
-					$detail['zones'][$zone['id_zone']]['account_number'] = $zone['account_number'];
-			}
-
-			$data->assign(array(
-				'productAccountNumberList' => $detail,
-				'shopName' => $this->context->shop->name,
-				'error' => $error,
-				'product' => $obj
-			));
-		}
-		else
-			$this->displayWarning($this->l('You must save this product before managing accounting.'));
-
-		$this->tpl_form_vars['custom_form'] = $data->fetch();
-	}
-
 	public function initFormAssociations($obj)
 	{
 		$product = $obj;
