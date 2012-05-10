@@ -1026,7 +1026,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!$this->action)
 			parent::initProcess();
 
-		if ($this->action == 'save' || $this->action == 'new' && isset($this->available_tabs[Tools::getValue('key_tab')]))
+		if (isset($this->available_tabs[Tools::getValue('key_tab')]))
 			$this->tab_display = Tools::getValue('key_tab');
 
 		// Set tab to display if not decided already
@@ -1452,7 +1452,7 @@ class AdminProductsControllerCore extends AdminController
 				if ($this->display == 'edit')
 					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
 						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-						.'&addproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
+						.'&updateproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
 				else
 					// Default behavior (save and back)
 					$this->redirect_after = self::$currentIndex
