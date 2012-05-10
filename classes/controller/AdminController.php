@@ -2338,7 +2338,7 @@ class AdminControllerCore extends Controller
 			return;
 
 		$shops = Shop::getShops(true, null, true);
-		if (count($shops) == 1)
+		if (count($shops) == 1 && isset($shops[0]))
 			return array($shops[0], 'shop');
 
 		$assos = array();

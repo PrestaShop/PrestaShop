@@ -427,6 +427,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Caching'),
 				'image' => '../img/admin/computer_key.png'
 			),
+			'desc' => $this->l('Caching systems are used to speed up your store by caching data into the server\'s memory, avoiding the exhausting task of querying the database.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -502,15 +503,22 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$phpDotNetSupportedLangs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
+		$phpLang = in_array($this->context->language->iso_code, $phpDotNetSupportedLangs) ? $this->context->language->iso_code : 'en';
+		
 		if (!extension_loaded('memcache'))
 			$this->warnings[] = $this->l('To use Memcached, you must install the Memcache PECL extension on your server.').'
-				<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
+				<a href="http://www.php.net/manual/'.substr($phpLang, 0, 2).'/memcache.installation.php" target="_blank">http://www.php.net/manual/'.substr($phpLang, 0, 2).'/memcache.installation.php</a>';
 		if (!extension_loaded('apc'))
+		{
 			$this->warnings[] = $this->l('To use APC, you must install the APC PECL extension on your server.').'
-				<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
+				<a href="http://php.net/manual/'.substr($phpLang, 0, 2).'/apc.installation.php" target="_blank">
+					http://php.net/manual/'.substr($phpLang, 0, 2).'/apc.installation.php
+				</a>';
+		}
 		if (!extension_loaded('xcache'))
 			$this->warnings[] = $this->l('To use Xcache, you must install the Xcache extension on your server.').'
-				<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
+				<a href="http://xcache.lighttpd.net" target="_blank">http://xcache.lighttpd.net</a>';
 
 		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
 			$this->warnings[] = $this->l('To use the CacheFS directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
