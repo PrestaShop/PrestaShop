@@ -1100,9 +1100,13 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$order_invoice->id_order.'
 				AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
-			$order_carrier = new OrderCarrier($id_order_carrier);
-			$order_carrier->id_order_invoice = (int)$order_invoice->id;
-			$order_carrier->update();
+			
+			if ($id_order_carrier)
+			{
+				$order_carrier = new OrderCarrier($id_order_carrier);
+				$order_carrier->id_order_invoice = (int)$order_invoice->id;
+				$order_carrier->update();
+			}
 
 			// Update order detail
 			Db::getInstance()->execute('
