@@ -77,6 +77,12 @@ class CompareProductCore extends ObjectModel
 	 */
 	public static function addCompareProduct($id_compare, $id_product)
 	{
+		// Check if compare row exists
+		$id_compare = Db::getInstance()->getValue('
+			SELECT `id_compare`
+			FROM `'._DB_PREFIX_.'compare`
+			WHERE `id_compare` = '.(int)$id_compare);
+
 		if (!$id_compare)
 		{
 			$id_customer = false;
