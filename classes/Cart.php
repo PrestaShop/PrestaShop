@@ -2619,6 +2619,39 @@ class CartCore extends ObjectModel
 
 		if ($total_tax < 0)
 			$total_tax = 0;
+		
+		$currency = new Currency($this->id_currency);
+		
+		$products = $this->getProducts(false);
+		$gift_products = array();
+		$cart_rules = $this->getCartRules();
+		foreach ($cart_rules as &$cart_rule)
+		{
+			if ($cart_rule['gift_product'])
+			{
+				foreach ($products as $key => &$product)
+					if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
+					{
+						// Update product quantity and price
+						$product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$product['total'] = Tools::ps_round($product['total'] - $product['price'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$product['cart_quantity']--;
+						
+						if (!$product['cart_quantity'])
+							unset($products[$key]);
+						
+						// Add a new product line
+						$free_product = $product;
+						$free_product['cart_quantity'] = 1;
+						$free_product['price'] = $product['price'];
+						$free_product['price_wt'] = $product['price_wt'];
+						$free_product['total_wt'] = $product['price_wt'];
+						$free_product['total'] = $product['price'];
+						$free_product['gift'] = true;
+						$gift_products[] = $free_product;
+					}
+			}
+		}
 
 		return array(
 			'delivery' => $delivery,
@@ -2626,8 +2659,9 @@ class CartCore extends ObjectModel
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
 			'formattedAddresses' => $formatted_addresses,
-			'products' => $this->getProducts(false),
-			'discounts' => $this->getCartRules(),
+			'products' => array_values($products),
+			'gift_products' => $gift_products,
+			'discounts' => $cart_rules,
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
 			'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),

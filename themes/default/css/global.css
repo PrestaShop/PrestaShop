@@ -842,6 +842,14 @@ table#cart_summary .cart_total_price .total_price_container {
 	text-align: center;
 }
 
+table#cart_summary .gift-icon {
+	color: white;
+	background: #0088CC;
+	line-height: 20px;
+	padding: 2px 5px;
+	border-radius: 5px;
+}
+
 /* step 2 - authentification ******************************************************************* */
 #create-account_form, #authentication #login_form {
 	clear: none;
