@@ -46,7 +46,7 @@
 
 	function activeClueTip()
 	{
-		$('.info').cluetip({
+		$('.info_import').cluetip({
 			splitTitle: '|',
 		    showTitle: false
 	 	});

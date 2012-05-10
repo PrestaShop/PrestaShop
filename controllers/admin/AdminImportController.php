@@ -671,16 +671,18 @@ class AdminImportControllerCore extends AdminController
 	{
 		$i = 0;
 		$fields = array();
+		$keys = array_keys($this->available_fields);
+		array_shift($keys);
 		foreach ($this->available_fields as $k => $field)
 		{
 			if ($k === 'no')
 				continue;
 			if ($k === 'price_tin')
-				$fields[$i - 1]['label'] = $fields[$i - 1]['label'].' '.$this->l('or').' '.$field['label'];
+				$fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].' '.$this->l('or').' '.$field['label'].'<span style="margin-left:16px"></span></div>';
 			else
 			{
 				if (isset($field['help']))
-					$html = '&nbsp;<a href="#" class="info" title="'.$this->l('Info').'|'.$field['help'].'"><img src="'._PS_ADMIN_IMG_.'information.png"></a>';
+					$html = '&nbsp;<a href="#" class="info_import" title="'.$this->l('Info').'|'.$field['help'].'"><img src="'._PS_ADMIN_IMG_.'information.png"></a>';
 				else
 					$html = '<span style="margin-left:16px"></span>';
 				$fields[] = '<div>'.$field['label'].$html.'</div>';
