@@ -499,7 +499,3 @@ ul.listForm li {padding-bottom:3px;}
 .selected-line {background:#fff1b5;}
 
 #changedFiles ul{list-style-type: square; padding-left: 40px;}
-
-#account_list { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
-#account_list  h2 { font-weight:normal; margin:0; font-size: 1.4em; padding-bottom:10px;}
-#account_list table td, #accounting_list table th {width:100px;}

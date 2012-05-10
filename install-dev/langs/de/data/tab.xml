@@ -83,8 +83,6 @@
   <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="DB-Backup"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
-  <tab id="Accounting" name="Accounting"/>
-  <tab id="Accounting_plan" name="Accounting plan"/>
   <tab id="Logs" name="Log"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Preferences_1" name="Voreinstellungen"/>
@@ -96,7 +94,6 @@
   <tab id="Stats_1" name="Statistik"/>
   <tab id="Search_Engines" name="Suchmaschinen"/>
   <tab id="Referrers" name="Referrer"/>
-  <tab id="Accounting_export" name="Accounting export"/>
   <tab id="Warehouses" name="Warehouses"/>
   <tab id="Stock_Management" name="Stock Management"/>
   <tab id="Stock_Movement" name="Lagerbewegungen"/>
