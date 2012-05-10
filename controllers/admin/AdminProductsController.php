@@ -1512,8 +1512,6 @@ class AdminProductsControllerCore extends AdminController
 					if ($this->isTabSubmitted('Associations'))
 						$this->updateAccessories($object);
 
-					if ($this->isTabSubmitted('Accounting'))
-						$this->processAccounting();
 					if ($this->isTabSubmitted('Suppliers'))
 						$this->processSuppliers();
 					if ($this->isTabSubmitted('Warehouses'))
@@ -2228,35 +2226,6 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 		return $preview_url;
-	}
-
-	/**
-	* Post treatment for accounting
-	*/
-	public function processAccounting()
-	{
-		if (Validate::isLoadedObject(($product = new Product((int)Tools::getValue('id_product')))))
-		{
-			$id_shop = $this->context->shop->id;
-
-			// If zone still exist, then update the database with the new value
-			if (count($zones = Zone::getZones()))
-			{
-				// Build tab with associated data
-				$tab = array();
-				foreach ($zones as $zone)
-					if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== null)
-						$tab[] = array(
-							'id_zone' => $zone['id_zone'],
-							'id_product' => $product->id,
-							'id_shop' => (int)$id_shop,
-							'num' => $num);
-
-				// Save to the database the account
-				if (empty($tab) || !Accounting::saveProductAccountingInformations($tab))
-					$this->errors[] = $this->l('Account Numbers could not be updated or added in the database');
-			}
-		}
 	}
 
 	/**

@@ -1980,10 +1980,6 @@ ul.connectedSortable li.module_list {
 	outline:none;
 }
 
-/* Accounting css */
-.formAccountingExport {
-	display:none;
-}
 .input-error
 {
 	color:#D8000C;
