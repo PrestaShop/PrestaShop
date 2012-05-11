@@ -1212,18 +1212,18 @@ product_tabs['Suppliers'] = new function(){
 	};
 
 	this.onReady = function(){
-		$('.supplierCheckBox').click(function() {
+		$('.supplierCheckBox').live('click', function() {
 			var check = $(this);
 			var checkbox = $('#default_supplier_'+check.val());
 			if (this.checked)
 			{
-				//enable default radio button associated
-				checkbox.attr("disabled","");
+				// enable default radio button associated
+				checkbox.removeAttr('disabled');
 			}
 			else
 			{
-				//enable default radio button associated
-				checkbox.attr("disabled","disabled");
+				// disable default radio button associated
+				checkbox.attr('disabled', true);
 			}
 			//manage default supplier check
 			self.manageDefaultSupplier();
