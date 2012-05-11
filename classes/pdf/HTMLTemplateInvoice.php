@@ -70,6 +70,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->smarty->assign(array(
 			'order' => $this->order,
 			'order_details' => $this->order_invoice->getProducts(),
+			'cart_rules' => $this->order->getCartRules($this->order_invoice->id),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),

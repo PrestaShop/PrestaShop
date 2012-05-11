@@ -590,7 +590,10 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
+					//		p($matchingProductsList);
+				//			p($eligibleProductsList);
 							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
+//							d($eligibleProductsList);
 							break;
 						case 'categories':
 							$cartCategories = Db::getInstance()->executeS('
@@ -662,7 +665,7 @@ class CartRuleCore extends ObjectModel
 			return $selectedProducts;
 		return (!$display_error) ? true : false;
 	}
-	
+
 	protected static function array_uintersect($array1, $array2)
 	{
 		$intersection = array();
@@ -675,7 +678,7 @@ class CartRuleCore extends ObjectModel
 				}
 		return $intersection;
 	}
-	
+
 	protected static function array_uintersect_compare($a, $b)
 	{
 		if ($a == $b)
@@ -1008,7 +1011,7 @@ class CartRuleCore extends ObjectModel
 					WHERE id_cart = '.(int)$context->cart->id.'
 					AND id_cart_rule = '.(int)$cartRule->id))
 				$context->cart->removeCartRule($cartRule->id);
-		
+
 		foreach ($cartRules as $cartRule)
 			if ($cartRule->checkValidity($context, true, false))
 				$context->cart->addCartRule($cartRule->id);
@@ -1039,3 +1042,4 @@ class CartRuleCore extends ObjectModel
 		');
 	}
 }
+
