@@ -299,7 +299,7 @@ product_tabs['Combinations'] = new function(){
 		/* Check combination images */
 		if (typeof(combination_images[id_product_attribute]) != 'undefined')
 			for (i = 0; i < combination_images[id_product_attribute].length; i++)
-				$('#id_image_attr_' + combination_images[id_product_attribute][i]).attr('checked', 'checked');
+				$('#id_image_attr_' + combination_images[id_product_attribute][i]).attr('checked', true);
 		check_impact();
 		check_weight_impact();
 		check_unit_impact();
@@ -1185,7 +1185,7 @@ product_tabs['Suppliers'] = new function(){
 			{
 				if (item.is(':checked'))
 				{
-					item.attr("checked", "");
+					item.removeAttr("checked");
 					default_is_ok = false;
 				}
 			}
@@ -1203,7 +1203,7 @@ product_tabs['Suppliers'] = new function(){
 
 				if (item.is(':disabled') == false)
 				{
-					item.attr("checked", "checked");
+					item.attr("checked", true);
 					default_is_ok = true;
 				}
 				break;
@@ -1328,11 +1328,11 @@ product_tabs['Warehouses'] = new function(){
 
 				if (item.is(':checked'))
 				{
-					item.attr("checked", "");
+					item.removeAttr("checked");
 				}
 				else
 				{
-					item.attr("checked", "checked");
+					item.attr("checked", true);
 				}
 			}
 		});
