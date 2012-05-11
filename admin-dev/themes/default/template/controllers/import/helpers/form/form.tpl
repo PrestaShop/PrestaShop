@@ -40,7 +40,17 @@
 		$("a#upload_file_import_link").fancybox({
 				'titleShow' : false,
 				'transitionIn' : 'elastic',
-				'transitionOut' : 'elastic',
+				'transitionOut' : 'elastic'
+		});
+
+		$('#preview_import').submit(function(e) {
+			if ($('#truncate').get(0).checked)
+			{
+				if (!confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+				{
+					e.preventDefault();
+				}
+			}
 		});
 	});
 
@@ -50,20 +60,6 @@
 			splitTitle: '|',
 		    showTitle: false
 	 	});
-
-		$('#preview_import').submit(function() {
-			if ($('#truncate').get(0).checked)
-			{
-				if (confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		});
 	};
 </script>
 
