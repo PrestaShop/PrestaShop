@@ -36,7 +36,7 @@ var id_category_root = 0;
 function buildTreeView()
 {
 	use_shop_context = 0;
-	if (buildTreeView.arguments[0])
+	if (buildTreeView.arguments[0] && buildTreeView.arguments[0] == 1)
 		use_shop_context = 1;
 	$("#categories-treeview").treeview({
 		url : 'ajax.php',
