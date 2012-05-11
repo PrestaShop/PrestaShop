@@ -176,10 +176,12 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
             $_cacheDirs = new RecursiveDirectoryIterator($_dir);
             $_cache = new RecursiveIteratorIterator($_cacheDirs, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($_cache as $_file) {
-					/* PrestaShop 
-                if (substr($_file->getBasename(),0,1) == '.' || strpos($_file, '.svn') !== false) continue;*/
-                if (substr($_file->getFilename(),0,1) == '.' || strpos($_file, '.svn') !== false) continue;
-                /* END */
+
+					/* PrestaShop - Do not delete index.php and .svn files */
+					if (preg_match('/^(\.|\.\.|\.svn|index\.php)$/', $_file->getFilename()))
+						continue;
+					/* End */
+					
                 // directory ?
                 if ($_file->isDir()) {
                     if (!$_cache->isDot()) {
