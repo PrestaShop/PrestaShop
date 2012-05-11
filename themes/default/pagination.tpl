@@ -58,6 +58,13 @@
 		{else}
 			<li id="pagination_previous" class="disabled"><span>&laquo;&nbsp;{l s='Previous'}</span></li>
 		{/if}
+		{if $start==3}
+			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}">1</a></li>
+			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 2)}">2</a></li>
+		{/if}
+		{if $start==2}
+			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}">1</a></li>
+		{/if}
 		{if $start>3}
 			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}">1</a></li>
 			<li class="truncate">...</li>
@@ -71,6 +78,13 @@
 		{/section}
 		{if $pages_nb>$stop+2}
 			<li class="truncate">...</li>
+			<li><a href="{$link->goPage($requestPage, $pages_nb)}">{$pages_nb|intval}</a></li>
+		{/if}
+		{if $pages_nb==$stop+1}
+			<li><a href="{$link->goPage($requestPage, $pages_nb)}">{$pages_nb|intval}</a></li>
+		{/if}
+		{if $pages_nb==$stop+2}
+			<li><a href="{$link->goPage($requestPage, $pages_nb-1)}">{$pages_nb-1|intval}</a></li>
 			<li><a href="{$link->goPage($requestPage, $pages_nb)}">{$pages_nb|intval}</a></li>
 		{/if}
 		{if $pages_nb > 1 AND $p != $pages_nb}
