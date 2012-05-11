@@ -213,22 +213,9 @@ class AdminPPreferencesControllerCore extends AdminController
 						'required' => false,
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
-						'js' => array(
-							'on' => 'onchange="advStockManagementActivationAuthorization()"',
-							'off' => 'onchange="advStockManagementActivationAuthorization()"'
-						)
-					),
-					'UPDATE_ASM_PRODUCTS' => array(
-						'title' => $this->l('Update products:'),
-						'desc' => $this->l('Massively activate(yes) or desactivate(no) advanced stock management for all products.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'required' => false,
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization(); advStockManagementActivationAuthorization();</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
 				'submit' => array()
 			),
 		);
@@ -255,52 +242,4 @@ class AdminPPreferencesControllerCore extends AdminController
 		}
 	}
 
-	public function postProcess()
-	{
-		// if advanced stock management is activated, and mass update of products is required
-		if (((int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 1 || Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) &&
-			Tools::isSubmit('UPDATE_ASM_PRODUCTS'))
-		{
-			// gets the value to set
-			$advanced_stock_management = (int)Tools::getValue('UPDATE_ASM_PRODUCTS');
-
-			// updates product table
-			ObjectModel::updateMultishopTable(
-				'Product',
-				array(
-					'advanced_stock_management' => $advanced_stock_management
-				),
-				'product_shop.`advanced_stock_management` = '.($advanced_stock_management == 1 ? 0 : 1).'
-				 AND `cache_is_pack` = 0
-				 AND `is_virtual` = 0'
-			);
-
-			// updates stock available table
-			Db::getInstance()->execute(
-				'UPDATE `'._DB_PREFIX_.'stock_available` s
-				 LEFT JOIN
-				 	`'._DB_PREFIX_.'product` p
-				 ON
-				 (
-				 	p.`id_product` = s.`id_product`
-				 )
-				 LEFT JOIN
-				 	`'._DB_PREFIX_.'product_shop` product_shop
-				 ON
-				 (
-				 	p.`cache_is_pack` = 0
-				 	AND p.`is_virtual` = 0
-				 	AND product_shop.`advanced_stock_management` = '.$advanced_stock_management.'
-				 )
-				 SET s.`depends_on_stock` = '.$advanced_stock_management.',
-				 	 s.`quantity` = 0
-				 WHERE s.`depends_on_stock` = '.($advanced_stock_management == 1 ? 0 : 1));
-		}
-
-		// deletes from post since it's not a configuration variable..
-		if (Tools::isSubmit('UPDATE_ASM_PRODUCTS'))
-			unset($_POST['UPDATE_ASM_PRODUCTS']);
-
-		return parent::postProcess();
-	}
 }
