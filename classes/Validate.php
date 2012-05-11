@@ -407,7 +407,7 @@ class ValidateCore
 	 */
 	public static function isPasswd($passwd, $size = 5)
 	{
-		return (Tools::strlen($passwd) > $size && Tools::strlen($passwd) < 255);
+		return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
 	}
 
 	public static function isPasswdAdmin($passwd)
