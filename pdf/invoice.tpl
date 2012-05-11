@@ -50,6 +50,7 @@
 			{else}
 				<table style="width: 100%">
 					<tr>
+
 						<td style="width: 50%">
 							<span style="font-weight: bold; font-size: 10pt; color: #9E9F9E">{l s='Billing & Delivery Address.' pdf='true'}</span><br />
 							 {$invoice_address}
@@ -107,6 +108,7 @@
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">{l s='Total' pdf='true'}</td>
 				</tr>
+				<!-- PRODUCTS -->
 				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
@@ -165,6 +167,23 @@
 						{/foreach}
 					{/foreach}
 				{/foreach}
+				<!-- END PRODUCTS -->
+
+				<!-- CART RULES -->
+				{foreach $cart_rules as $cart_rule}
+				{cycle values='#FFF,#DDD' assign=bgcolor}
+					<tr style="line-height:6px;background-color:{$bgcolor};" text-align="left">
+						<td colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
+						<td>
+							{if $tax_excluded_display}
+								- {$cart_rule.value_tax_excl}
+							{else}
+								- {$cart_rule.value}
+							{/if}
+						</td>
+					</tr>
+				{/foreach}
+				<!-- END CART RULES -->
 			</table>
 
 			<table style="width: 100%">
@@ -209,11 +228,11 @@
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Shipping Cost' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">
-					{if $tax_excluded_display}
-						{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}
-					{else}
-						{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_incl}
-					{/if}
+						{if $tax_excluded_display}
+							{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}
+							{else}
+							{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_incl}
+						{/if}
 					</td>
 				</tr>
 				{/if}
