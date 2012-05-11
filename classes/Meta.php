@@ -307,7 +307,7 @@ class MetaCore extends ObjectModel
 		{
 			if (empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
-			$row['meta_title'] .= $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '');
+			$row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
 			$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
 			return Meta::completeMetaTags($row, $row['meta_title']);
 		}
