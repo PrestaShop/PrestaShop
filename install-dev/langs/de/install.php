@@ -1,7 +1,5 @@
 <?php return array (
-  'informations' => 
-  array (
-  ),
+  'informations' => array ('phone' => '+33 (0)1.40.18.30.04'),
   'translations' => 
   array (
     'menu_welcome' => 'Willkommen!',
@@ -123,7 +121,7 @@
     'Official forum' => 'Offizielles Forum',
     'Support' => 'Support',
     'Documentation' => 'Tutotrials',
-    'Contact us!' => 'Kontaktieren Sie uns! Persönlicher Support ist derzeit nur in den Sprachen Englisch und Französisch möglich. ',
+    'Contact us!' => 'Kontaktieren Sie uns! Persönlicher Support',
     'Forum' => 'Forum',
     'Blog' => 'Blog',
     'Done!' => 'Erfolgreich abgeschlossen',
