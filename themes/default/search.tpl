@@ -44,7 +44,7 @@
 		{/if}
 	</p>
 {else}
-	<h3 class="nbresult"><span class="big">{$nbProducts|intval}</span>&nbsp;{if $nbProducts == 1}{l s='result has been found.'}{else}{l s='results have been found.'}{/if}</h3>
+	<h3 class="nbresult"><span class="big">{if $nbProducts == 1}{l s='%d result has been found.' sprintf=$nbProducts|intval}{else}{l s='%d results have been found.' sprintf=$nbProducts|intva}{/if}</span></h3>
 	
 	{if !isset($instantSearch) || (isset($instantSearch) && !$instantSearch)}
 	<div class="sortPagiBar clearfix">

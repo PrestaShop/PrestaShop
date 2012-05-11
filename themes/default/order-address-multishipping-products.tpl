@@ -62,7 +62,7 @@
 									</div>
 								{elseif $type == $CUSTOMIZE_TEXTFIELD}
 									<ul class="typedText">
-										{foreach from=$datas item='textField' name='typedText'}<li>{if $textField.name}{$textField.name}{else}{l s='Text #'}{$smarty.foreach.typedText.index+1}{/if}{l s=':'} {$textField.value}</li>{/foreach}
+										{foreach from=$datas item='textField' name='typedText'}<li>{if $textField.name}{$textField.name}{l s=':'}{else}{l s='Text #%s:' sprintf=$smarty.foreach.typedText.index+1}{/if} {$textField.value}</li>{/foreach}
 									</ul>
 								{/if}
 							{/foreach}

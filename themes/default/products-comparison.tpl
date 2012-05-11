@@ -62,7 +62,7 @@
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
+							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %d' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
 						{else}
 						&nbsp;
 						{/if}
