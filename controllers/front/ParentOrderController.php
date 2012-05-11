@@ -109,7 +109,7 @@ class ParentOrderControllerCore extends FrontController
 							}
 						}
 						else
-							$this->errors[] = Tools::displayError('Voucher name invalid.');
+							$this->errors[] = Tools::displayError('This voucher does not exists');
 					}
 					$this->context->smarty->assign(array(
 						'errors' => $this->errors,
