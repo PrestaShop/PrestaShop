@@ -1,7 +1,5 @@
 <?php return array (
-  'informations' => 
-  array (
-  ),
+  'informations' => array ('phone' => '+33 (0)1.40.18.30.04'),
   'translations' => 
   array (
     'menu_welcome' => 'Benvenuto!',
