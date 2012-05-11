@@ -383,10 +383,9 @@ class AuthControllerCore extends FrontController
 		if (isset($_POST['guest_email']) && $_POST['guest_email'])
 			$_POST['email'] = $_POST['guest_email'];
 		// Checked the user address in case he changed his email address
-		if (!Validate::isEmail($email = Tools::getValue('email')) || empty($email))
-			$this->errors[] = Tools::displayError('Invalid e-mail address');
-		elseif (Customer::customerExists($email))
-			$this->errors[] = Tools::displayError('An account is already registered with this e-mail.', false);
+		if (Validate::isEmail($email = Tools::getValue('email')) && !empty($email))
+			if (Customer::customerExists($email))
+				$this->errors[] = Tools::displayError('An account is already registered with this e-mail.', false);
 		// Preparing customer
 		$customer = new Customer();
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
@@ -477,29 +476,26 @@ class AuthControllerCore extends FrontController
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
 
-			$zip_code_format = Country::getZipCodeFormat((int)(Tools::getValue('id_country')));
-			if (Country::getNeedZipCode((int)(Tools::getValue('id_country'))))
+			$country = new Country((int)Tools::getValue('id_country'));
+			if ($country->need_zip_code)
 			{
-				if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
+				if (($postcode = Tools::getValue('postcode')) && $country->zip_code_format)
 				{
-					$zip_regexp = '/^'.$zip_code_format.'$/ui';
-					$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-					$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-					$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-					$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-					$zip_regexp = str_replace('C', Country::getIsoById((int)(Tools::getValue('id_country'))), $zip_regexp);
-					if (!preg_match($zip_regexp, $postcode))
-						$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is invalid.').'<br />'.Tools::displayError('Must be typed as follows:').' '.str_replace('C', Country::getIsoById((int)(Tools::getValue('id_country'))), str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
+					if (!$country->checkZipCode($postcode))
+						$this->errors[] = sprintf(
+							Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+							str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+						);
 				}
-				elseif ($zip_code_format)
-					$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is required.');
+				elseif ($country->zip_code_format)
+					$this->errors[] = Tools::displayError('Zip / Postal code is required.');
 				elseif ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = '<strong>'.Tools::displayError('Zip / Postal code').'</strong> '.Tools::displayError('is invalid.');
+					$this->errors[] = Tools::displayError('Zip / Postal code is invalid.');
 			}
 
-			if (Country::isNeedDniByCountryId($address->id_country) && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
+			if ($country->need_identification_number && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 				$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
-			elseif (!Country::isNeedDniByCountryId($address->id_country))
+			elseif (!$country->need_identification_number)
 				$address->dni = null;
 		}
 
@@ -520,7 +516,7 @@ class AuthControllerCore extends FrontController
 				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE'))
 					if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
 						die(Tools::displayError());
-				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_state: 0;
+				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
 				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && $contains_state && !$id_state)
 					$this->errors[] = Tools::displayError('This country requires a state selection.');
