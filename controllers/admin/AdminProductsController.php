@@ -613,8 +613,6 @@ class AdminProductsControllerCore extends AdminController
 									$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
 									$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
 									false);
-
-								Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 							}
 						}
 					}

@@ -1278,9 +1278,9 @@ class ProductCore extends ObjectModel
 		if (!empty($id_images))
 			$combination->setImages($id_images);
 
-		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
-
 		Product::updateDefaultAttribute($this->id);
+
+		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
 
 		return true;
 	}
