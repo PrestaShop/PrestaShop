@@ -110,7 +110,7 @@ class CartControllerCore extends FrontController
 				$this->context->cart->update();
 			}
 		}
-		$removed = CartRule::autoRemoveFromCart();
+		$removed = CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
