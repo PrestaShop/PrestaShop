@@ -37,9 +37,11 @@
 		<span class="bold">
 			{if $nbSuppliers == 0}{l s='There are no suppliers.'}
 			{else}
-				{if $nbSuppliers == 1}{l s='There is'}{else}{l s='There are'}{/if}&#160;
-				{$nbSuppliers}&#160;
-				{if $nbSuppliers == 1}{l s='supplier.'}{else}{l s='suppliers.'}{/if}
+				{if $nbSuppliers == 1}
+					{l s='There is %d supplier.' sprintf=$nbSuppliers}
+				{else}
+					{l s='There are %d suppliers.' sprintf=$nbSuppliers}
+				{/if}
 			{/if}
 		</span>{/strip}
 	</p>
@@ -81,7 +83,7 @@
 				{if $supplier.nb_products > 0}
 					<a href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">
 				{/if}
-					<span>{$supplier.nb_products|intval} {if $supplier.nb_products == 1}{l s='product'}{else}{l s='products'}{/if}</span>
+					<span>{if $supplier.nb_products == 1}{l s='%d product' sprintf=$supplier.nb_products|intval}{else}{l s='%d products' sprintf=$supplier.nb_products|intval}{/if}</span>
 				{if $supplier.nb_products > 0}
 					</a>
 				{/if}

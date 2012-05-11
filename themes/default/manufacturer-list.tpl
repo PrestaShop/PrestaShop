@@ -36,9 +36,11 @@
 		<span class="bold">
 			{if $nbManufacturers == 0}{l s='There are no manufacturers.'}
 			{else}
-				{if $nbManufacturers == 1}{l s='There is'}{else}{l s='There are'}{/if}&#160;
-				{$nbManufacturers}&#160;
-				{if $nbManufacturers == 1}{l s='manufacturer.'}{else}{l s='manufacturers.'}{/if}
+				{if $nbManufacturers == 1}
+					{l s='There is %d manufacturer.' sprintf=$nbManufacturers}
+				{else}
+					{l s='There are %d manufacturers.' sprintf=$nbManufacturers}
+				{/if}
 			{/if}
 		</span>{/strip}
 	</p>
@@ -66,7 +68,7 @@
 					{if $manufacturer.nb_products > 0}</a>{/if}
 					<br />
 					{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
-						<span>{$manufacturer.nb_products|intval} {if $manufacturer.nb_products == 1}{l s='product'}{else}{l s='products'}{/if}</span>
+						<span>{if $manufacturer.nb_products == 1}{l s='%d product' sprintf=$manufacturer.nb_products|intval}{else}{l s='%d products' sprintf=$manufacturer.nb_products|intval}{/if}</span>
 					{if $manufacturer.nb_products > 0}</a>{/if}
 					</p>
 				</div>

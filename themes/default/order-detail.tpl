@@ -35,7 +35,7 @@
 		<input type="hidden" value="{$order->id}" name="id_order"/>
 		<h4>
 			<input type="submit" value="{l s='Reorder'}" name="submitReorder" class="button exclusive" />
-			{l s='Order'} <span class="color-myaccount">{l s='#'}{$order->id|string_format:"%06d"}</span> - {l s='placed on'} {dateFormat date=$order->date_add full=0}
+			{l s='Order #%s - placed on' sprintf=$order->id|string_format:"%06d"}{dateFormat date=$order->date_add full=0}
 		</h4>
 	</div>
 </form>
@@ -383,7 +383,7 @@
 	{/if}
 	{if isset($errors) && $errors}
 		<div class="error">
-			<p>{if $errors|@count > 1}{l s='There are'}{else}{l s='There is'}{/if} {$errors|@count} {if $errors|@count > 1}{l s='errors'}{else}{l s='error'}{/if} :</p>
+			<p>{if $errors|@count > 1}{l s='There are %d errors' sprintf=$errors|@count}{else}{l s='There is %d error' sprintf=$errors|@count}{/if}</p>
 			<ol>
 			{foreach from=$errors key=k item=error}
 				<li>{$error}</li>
