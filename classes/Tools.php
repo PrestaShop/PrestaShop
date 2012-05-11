@@ -2056,9 +2056,10 @@ FileETag INode MTime Size
 	 * @return array List of file found
 	 * @since 1.5.0
 	 */
-	public static function scandir($path, $ext = 'php', $dir = '')
+	public static function scandir($path, $ext = 'php', $dir = '', $recursive = false)
 	{
-		$real_path = $path.$dir;
+		$path = rtrim(rtrim($path, '\\'), '/').'/';
+		$real_path = rtrim(rtrim($path.$dir, '\\'), '/').'/';
 		$files = scandir($real_path);
 		if (!$files)
 			return array();
@@ -2068,12 +2069,18 @@ FileETag INode MTime Size
 		$real_ext = '';
 		if (!empty($ext))
 			$real_ext = '.'.$ext;
-
 		$real_ext_length = strlen($real_ext);
 
+		$subdir = ($dir) ? $dir.'/' : '';
 		foreach ($files as $file)
+		{
 			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
-				$filtered_files[] = $dir.DIRECTORY_SEPARATOR.$file;
+				$filtered_files[] = $subdir.$file;
+
+			if ($recursive && $file[0] != '.' && is_dir($real_path.$file))
+				foreach (Tools::scandir($path, $ext, $subdir.$file, $recursive) as $subfile)
+					$filtered_files[] = $subfile;
+		}
 		return $filtered_files;
 	}
 

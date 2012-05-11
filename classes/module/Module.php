@@ -206,6 +206,10 @@ abstract class ModuleCore
 			return false;
 		}
 
+		// Install overrides
+		if (!$this->installOverrides())
+			return false;
+
 		// Install module and retrieve the installation id
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
@@ -467,6 +471,10 @@ abstract class ModuleCore
 			$this->_errors[] = $this->l('The module is not installed.');
 			return false;
 		}
+
+		// Uninstall overrides
+		if (!$this->uninstallOverrides())
+			return false;
 
 		// Retrieve hooks used by the module
 		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
@@ -1697,13 +1705,13 @@ abstract class ModuleCore
 		$result = Db::getInstance()->getRow('
 			SELECT `position`
 			FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_hook` = '.(int)($id_hook).'
-			AND `id_module` = '.(int)($this->id).'
+			WHERE `id_hook` = '.(int)$id_hook.'
+			AND `id_module` = '.(int)$this->id.'
 			AND `id_shop` = '.(int)Context::getContext()->shop->id);
-		
+
 		return $result['position'];
 	}
-	
+
 	/**
 	 * add a warning message to display at the top of the admin page
 	 *
@@ -1726,6 +1734,135 @@ abstract class ModuleCore
 		if (!($this->context->controller instanceof AdminController))
 			return false;
 		$this->context->controller->informations[] = $msg;
+	}
+
+	/**
+	 * Install overrides files for the module
+	 *
+	 * @return bool
+	 */
+	public function installOverrides()
+	{
+		if (!is_dir($this->getLocalPath().'override'))
+			return true;
+
+		$result = true;
+		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
+		{
+			$class = basename($file, '.php');
+			if (Autoload::getInstance()->getClassPath($class.'Core'))
+				$result &= $this->addOverride($class);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Uninstall overrides files for the module
+	 *
+	 * @return bool
+	 */
+	public function uninstallOverrides()
+	{
+		if (!is_dir($this->getLocalPath().'override'))
+			return true;
+
+		$result = true;
+		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
+		{
+			$class = basename($file, '.php');
+			if (Autoload::getInstance()->getClassPath($class.'Core'))
+				$result &= $this->removeOverride($class);
+		}
+		return $result;
+	}
+
+	/**
+	 * Add all methods in a module override to the override class
+	 *
+	 * @param string $classname
+	 * @return bool
+	 */
+	public function addOverride($classname)
+	{
+		$path = Autoload::getInstance()->getClassPath($classname.'Core');
+
+		// Check if override file is writable
+		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+		if (!is_writable($override_path))
+			return false;
+
+		// Make a reflection of the override class and the module override class
+		$override_file = file($override_path);
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'), implode('', $override_file)));
+		$override_class = new ReflectionClass($classname.'OverrideOriginal');
+
+		$module_file = file($this->getLocalPath().'override/'.$path);
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'), implode('', $module_file)));
+		$module_class = new ReflectionClass($classname.'Override');
+
+		// Check if none of the methods already exists in the override class
+		foreach ($module_class->getMethods() as $method)
+			if ($override_class->hasMethod($method->name))
+				return false;
+
+		// Insert the methods from module override in override
+		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
+		array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
+		$code = implode('', $override_file);
+		file_put_contents($override_path, $code);
+
+		return true;
+	}
+
+	/**
+	 * Remove all methods in a module override from the override class
+	 *
+	 * @param string $classname
+	 * @return bool
+	 */
+	public function removeOverride($classname)
+	{
+		$path = Autoload::getInstance()->getClassPath($classname.'Core');
+
+		// Check if override file is writable
+		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
+		if (!is_writable($override_path))
+			return false;
+
+		// Make a reflection of the override class and the module override class
+		$override_file = file($override_path);
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal_remove'), implode('', $override_file)));
+		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove');
+
+		$module_file = file($this->getLocalPath().'override/'.$path);
+		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override_remove'), implode('', $module_file)));
+		$module_class = new ReflectionClass($classname.'Override_remove');
+
+		// Remove methods from override file
+		$override_file = file($override_path);
+		foreach ($module_class->getMethods() as $method)
+		{
+			if (!$override_class->hasMethod($method->name))
+				continue;
+
+			$method = $override_class->getMethod($method->name);
+			$length = $method->getEndLine() - $method->getStartLine() + 1;
+			array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'));
+		}
+
+		// Rewrite nice code
+		$code = '';
+		foreach ($override_file as $line)
+		{
+			if ($line == '#--remove--#')
+				continue;
+
+			$code .= $line;
+		}
+		file_put_contents($override_path, $code);
+
+		return true;
 	}
 }
 
