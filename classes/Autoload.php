@@ -196,5 +196,10 @@ class Autoload
 
 		return $classes;
 	}
+
+	public function getClassPath($classname)
+	{
+		return isset($this->index[$classname]) ? $this->index[$classname] : null;
+	}
 }
 
