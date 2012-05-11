@@ -261,6 +261,7 @@ class StoresControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'stores.css');
 		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
 			$this->addJS(_THEME_JS_DIR_.'stores.js');
-		$this->addJS('http://maps.google.com/maps/api/js?sensor=true');
+        $default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$this->addJS('http://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
 	}
 }
