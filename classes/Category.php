@@ -233,8 +233,8 @@ class CategoryCore extends ObjectModel
 	 * Recursive scan of subcategories
 	 *
 	 * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
- 	 * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
- 	 * @param integer $id_lang Specify the id of the language used
+	 * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
+	 * @param integer $id_lang Specify the id of the language used
 	 * @param array $excluded_ids_array specify a list of ids to exclude of results
 	 *
 	 * @return array Subcategories lite tree
@@ -524,10 +524,10 @@ class CategoryCore extends ObjectModel
 		ORDER BY c.`position`');
 	}
 
-    public function getShopID()
-    {
-        return $this->id_shop;
-    }
+	public function getShopID()
+	{
+		return $this->id_shop;
+	}
 
 	/**
 	  * Return current category childs
@@ -585,7 +585,7 @@ class CategoryCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (!$check_access || !$this->checkAccess($context->customer->id))
+		if ($check_access && !$this->checkAccess($context->customer->id))
 			return false;
 		
 		$front = true;
@@ -682,7 +682,7 @@ class CategoryCore extends ObjectModel
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
-		$sql .= 'GROUP BY p.`id_product`';
+		$sql .= ' GROUP BY p.`id_product`';
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
