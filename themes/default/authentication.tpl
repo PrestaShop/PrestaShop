@@ -99,7 +99,13 @@ $(function(){ldelim}
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=authentication&SubmitCreate=1&ajax=true&email_create='+$('#email_create').val()+'&token='+token,
+			data: {
+				controller: 'authentication',
+				SubmitCreate: 1,
+				ajax: true,
+				email_create: $('#email_create').val(),
+				token: token
+			},
 			success: function(jsonData)
 			{
 				if (jsonData.hasError)
