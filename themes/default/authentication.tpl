@@ -141,7 +141,7 @@ $(function(){ldelim}
 		{if {$authentification_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
 			{else}
-			<p>{l s='There are'}{$account_error|@count} {l s='errors'} :</p>
+			<p>{l s='There are %s errors' sprintf=[$account_error|@count]} :</p>
 		{/if}
 		<ol>
 			{foreach from=$authentification_error item=v}
@@ -354,7 +354,7 @@ $(function(){ldelim}
 		{if {$account_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
 			{else}
-			<p>{l s='There are'}{$account_error|@count} {l s='errors'} :</p>
+			<p>{l s='There are %s errors' sprintf=[$account_error|@count]} :</p>
 		{/if}
 		<ol>
 			{foreach from=$account_error item=v}
