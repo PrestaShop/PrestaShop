@@ -279,6 +279,9 @@ class SearchCore
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
+		$alias = '';
+		if ($order_by == 'price')
+			$alias = 'product_shop.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 				tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.',
@@ -304,7 +307,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				'.Product::sqlStock('p', 0).'
 				WHERE p.`id_product` '.$product_pool.'
-				'.($order_by ? 'ORDER BY  '.$order_by : '').($order_way ? ' '.$order_way : '').'
+				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
 		$result = $db->executeS($sql);
 
