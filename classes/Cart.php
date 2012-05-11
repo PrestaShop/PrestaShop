@@ -2641,14 +2641,14 @@ class CartCore extends ObjectModel
 							unset($products[$key]);
 						
 						// Add a new product line
-						$free_product = $product;
-						$free_product['cart_quantity'] = 1;
-						$free_product['price'] = $product['price'];
-						$free_product['price_wt'] = $product['price_wt'];
-						$free_product['total_wt'] = $product['price_wt'];
-						$free_product['total'] = $product['price'];
-						$free_product['gift'] = true;
-						$gift_products[] = $free_product;
+						$gift_product = $product;
+						$gift_product['cart_quantity'] = 1;
+						$gift_product['price'] = $product['price'];
+						$gift_product['price_wt'] = $product['price_wt'];
+						$gift_product['total_wt'] = $product['price_wt'];
+						$gift_product['total'] = $product['price'];
+						$gift_product['gift'] = true;
+						$gift_products[] = $gift_product;
 					}
 			}
 		}
