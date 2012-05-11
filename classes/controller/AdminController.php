@@ -1670,6 +1670,8 @@ class AdminControllerCore extends Controller
 		}
 		elseif (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
+		else if (Shop::getTotalShops(false, null) < 2)
+			$this->context->cookie->shopContext = 's-'.$this->context->employee->getDefaultShopID();
 
 		$shop_id = '';
 		Shop::setContext(Shop::CONTEXT_ALL);
@@ -1699,11 +1701,6 @@ class AdminControllerCore extends Controller
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 				}
 			}
-		}
-		else if (Shop::getTotalShops(false, null) < 2)
-		{
-			$shop_id = $this->context->employee->getDefaultShopID();
-			Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 		}
 
 		// Check multishop context and set right context if need
