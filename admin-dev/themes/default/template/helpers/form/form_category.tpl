@@ -31,8 +31,9 @@
 		var selectedLabel = '{$categories.trads.selected}';
 		var home = '{$categories.trads.Root.name}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
+		var use_context = {if isset($categories.use_context)}1{else}0{/if};
 		$(document).ready(function(){
-			buildTreeView();
+			buildTreeView(use_context);
 		});
 	</script>
 

@@ -359,6 +359,7 @@ class AdminCategoriesControllerCore extends AdminController
 						'use_search' => false,
 						'disabled_categories' => array(4),
 						'top_category' => Category::getTopCategory(),
+						'use_context' => true,
 					)
 				),
 				array(
