@@ -103,7 +103,7 @@ class AdminCategoriesControllerCore extends AdminController
 				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
 
 		// if we are not in a shop context, we remove the position column
-		if (Shop::getContext() != Shop::CONTEXT_SHOP)
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
 		// shop restriction : if category is not available for current shop, we redirect to the list from default category
 		if (!Shop::isCategoryAvailable($this->_category->id))

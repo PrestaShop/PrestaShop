@@ -547,6 +547,7 @@ class CategoryCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
 			FROM `'._DB_PREFIX_.'category` c
+			'.Shop::addSqlAssociation('category', 'c').'
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
 				AND `id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
@@ -556,7 +557,7 @@ class CategoryCore extends ObjectModel
 				'.($active ? 'AND `active` = 1' : '').'
 				AND cg.`id_group` '.$sql_groups.'
 			GROUP BY c.`id_category`
-			ORDER BY `level_depth` ASC, c.`position` ASC
+			ORDER BY `level_depth` ASC, category_shop.`position` ASC
 		');
 
 		foreach ($result as &$row)
