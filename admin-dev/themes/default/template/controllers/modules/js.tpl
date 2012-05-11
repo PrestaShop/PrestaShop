@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 <link href="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">{$autocompleteList}</script>
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/autocomplete/jquery.autocomplete.js"></script>
@@ -39,9 +38,6 @@
 	var errorLogin = '{l s='PrestaShop was unable to login to Addons, please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
-
-
-
 
 	{literal}
 
@@ -67,16 +63,10 @@
 		document.location.href=currentIndex+'&token='+token+'&'+action+'='+module_list.substring(1, module_list.length);
 	}
 
-
 	$('document').ready( function() {
-
-
-
 		// ScrollTo
 		if (anchor != '')
 			$.scrollTo('#'+anchor, 1200, {offset: -100});
-
-
 
 		// AutoComplete Search
 		$('input[name="filtername"]').autocomplete(moduleList, {
@@ -98,27 +88,22 @@
 			 $('#filternameForm').submit();
 		});
 
-
-
 		// Method to check / uncheck all modules checkbox
 		$('#checkme').click(function()
 		{
 			if ($(this).attr("rel") == 'false')
 			{
-				$(this).attr("checked", "checked");
+				$(this).attr("checked", true);
 				$(this).attr("rel", "true");
-				$("input[name=modules]").attr("checked", "checked");
+				$("input[name=modules]").attr("checked", true);
 			}
 			else
 			{
-				$(this).attr("checked", "");
+				$(this).removeAttr("checked");
 				$(this).attr("rel", "false");
-				$("input[name=modules]").attr("checked", "");
+				$("input[name=modules]").removeAttr("checked");
 			}
 		});		
-
-
-
 
 		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
@@ -156,8 +141,6 @@
 			return false;
 		});
 
-
-
 		// Method to get modules_list.xml from prestashop.com and default_country_modules_list.xml from addons.prestashop.com
 		try
 		{
@@ -185,8 +168,6 @@
 			});
 		}
 		catch(e) { }
-
-
 
 		// Method to log on PrestaShop Addons WebServices
 		$('#addons_login_button').click(function()
@@ -233,7 +214,6 @@
 			return false;
 		});
 
-
 		// Method to log out PrestaShop Addons WebServices
 		$('#addons_logout_button').click(function()
 		{
@@ -274,7 +254,6 @@
 			catch(e){}
 			return false;
 		});
-
 
 		// Method to set filter on modules
 		function setFilter()
@@ -320,9 +299,6 @@
 		$('#module_status_filter').change(function() { setFilter(); });
 		$('#country_module_value_filter').change(function() { setFilter(); });
 
-
-
-
 		// Method to save favorites preferences
 		$('.moduleFavorite').change(function()
 		{
@@ -360,10 +336,6 @@
 			catch(e){}
 			return false;
 		});
-
-
-
-
 	});
 	{/literal}
 </script>
