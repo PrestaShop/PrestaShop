@@ -417,7 +417,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
+					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
 				),
 				array(
 					'type' => 'text',

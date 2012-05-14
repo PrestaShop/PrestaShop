@@ -115,7 +115,8 @@ class AdminCmsControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'size' => 70
+					'size' => 70,
+					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
 				),
 				array(
 					'type' => 'text',
