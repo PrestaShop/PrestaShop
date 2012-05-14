@@ -389,18 +389,7 @@ class HookCore extends ObjectModel
 				if ($array['live_edit'] && ((Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))))
 				{
 					$live_edit = true;
-					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
-								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'"
-								class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-								<span style="font-family: Georgia;
-font-size:13px;
-font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleInstance->name.'/logo.gif">'
-							 	.$moduleInstance->displayName.'<span style="float:right">
-							 	<a href="#" id="'.$array['id_hook'].'_'.$moduleInstance->id.'" class="moveModule">
-							 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-							 	<a href="#" id="'.$array['id_hook'].'_'.$moduleInstance->id.'" class="unregisterHook">
-							 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></span></a>
-							 	</span>'.$display.'</div>';
+					$output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
 				}
 				else
 					$output .= $display;
@@ -408,10 +397,24 @@ font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleI
 		}
 
 		// Return html string
-		return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script><!--<div id="add_'.$hook_name.'" class="add_module_live_edit">
-			<a class="exclusive" href="#">Add a module</a></div>--><div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
+		return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script>
+				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
 	}
 
+	public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
+	{
+		return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
+				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
+				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
+				<span style="font-family: Georgia;font-size:13px;font-style:italic;">
+				<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
+			 	.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
+			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
+			 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
+			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
+			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></span></a>
+			 	</span>'.$display.'</div>';
+	}
 
 
 	/**
