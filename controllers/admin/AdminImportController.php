@@ -134,6 +134,10 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
+					'shop' => array(
+						'label' => $this->l('ID / Name of shop'),
+						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+					),
 				);
 
 				self::$default_values = array(
@@ -146,7 +150,8 @@ class AdminImportControllerCore extends AdminController
 					'ecotax' => 0,
 					'quantity' => 0,
 					'weight' => 0,
-					'default_on' => 0
+					'default_on' => 0,
+					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
 				);
 			break;
 
@@ -1499,6 +1504,14 @@ class AdminImportControllerCore extends AdminController
 							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 					}
 
+					$info['shop'] = explode(',', $info['shop']);
+					$id_shop_list = array();
+					foreach ($info['shop'] as $shop)
+						if (!is_numeric($shop))
+							$id_shop_list[] = Shop::getIdByName($shop);
+						else
+							$id_shop_list[] = $shop;
+
 					// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
 					if (isset($info['reference']) && !empty($info['reference']))
 					{
@@ -1527,7 +1540,9 @@ class AdminImportControllerCore extends AdminController
 										0,
 										strval($info['upc']),
 										(int)$info['quantity'],
-										0
+										0,
+										null,
+										$id_shop_list
 									);
 
 									$id_product_attribute_update = true;
@@ -1550,7 +1565,8 @@ class AdminImportControllerCore extends AdminController
 								(int)$info['default_on'],
 								0,
 								strval($info['upc']),
-								(int)$info['quantity']
+								(int)$info['quantity'],
+								$id_shop_list
 							);
 					}
 
@@ -2406,3 +2422,4 @@ class AdminImportControllerCore extends AdminController
 		$this->warnings[] = $product_name.(isset($product_id) ? ' (ID '.$product_id.')' : '').' '.Tools::displayError($message);
 	}
 }
+

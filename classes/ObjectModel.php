@@ -59,6 +59,8 @@ abstract class ObjectModelCore
 
 	protected $id_shop = null;
 
+	public $id_shop_list = null;
+
 	protected $get_shop_from_context = true;
 
 	protected static $fieldsRequiredDatabase = null;
@@ -445,8 +447,17 @@ abstract class ObjectModelCore
 		{
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
-			$fields['id_shop'] = (int)$this->id_shop;
-			$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
+
+			$id_shop_list = Shop::getContextListShopID();
+			if (count($this->id_shop_list) > 0)
+				$id_shop_list = $this->id_shop_list;
+
+			$id_shop_list = $this->id_shop_list;
+			foreach ($id_shop_list as $id_shop)
+			{
+				$fields['id_shop'] = (int)$id_shop;
+				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
+			}
 		}
 		else if (!Shop::isFeatureActive() && Shop::isTableAssociated($this->def['table']))
 			$result &= $this->associateTo(Context::getContext()->shop->id);
@@ -527,10 +538,15 @@ abstract class ObjectModelCore
 			else
 				$all_fields = $fields;
 
-			foreach (Shop::getContextListShopID() as $id_shop)
+			$id_shop_list = Shop::getContextListShopID();
+			if (count($this->id_shop_list) > 0)
+				$id_shop_list = $this->id_shop_list;
+			$id_shop_list = $this->id_shop_list;
+
+			foreach ($id_shop_list as $id_shop)
 			{
-				$fields['id_shop'] = $id_shop;
-				$all_fields['id_shop'] = $id_shop;
+				$fields['id_shop'] = (int)$id_shop;
+				$all_fields['id_shop'] = (int)$id_shop;
 				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
 				if (Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
 					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
@@ -554,10 +570,13 @@ abstract class ObjectModelCore
 					// If this table is linked to multishop system, update / insert for all shops from context
 					if ($this->isLangMultishop())
 					{
-						$list_shops = ($this->id_shop && !$this->get_shop_from_context) ? array($this->id_shop) : Shop::getContextListShopID();
-						foreach ($list_shops as $shop)
+						$id_shop_list = Shop::getContextListShopID();
+						if (count($this->id_shop_list) > 0)
+							$id_shop_list = $this->id_shop_list;
+
+						foreach ($id_shop_list as $id_shop)
 						{
-							$field['id_shop'] = $shop;
+							$field['id_shop'] = (int)$id_shop;
 							$where = pSQL($this->def['primary']).' = '.(int)$this->id
 										.' AND id_lang = '.(int)$field['id_lang']
 										.' AND id_shop = '.$field['id_shop'];
@@ -605,7 +624,13 @@ abstract class ObjectModelCore
 
 		// Remove association to multishop table
 		if (!empty($this->def['multishop']))
-			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', Shop::getContextListShopID()).')');
+		{
+			$id_shop_list = Shop::getContextListShopID();
+			if (count($this->id_shop_list))
+				$id_shop_list = $this->id_shop_list;
+
+			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
+		}
 		else if (Shop::isTableAssociated($this->def['table']))
 			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
