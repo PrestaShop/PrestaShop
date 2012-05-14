@@ -655,16 +655,12 @@ abstract class ObjectModelCore
 	 	// Object must have a variable called 'active'
 	 	if (!array_key_exists('active', $this))
 			throw new PrestaShopException('property "active is missing in object '.get_class($this));
-
+		
 	 	// Update active status on object
 	 	$this->active = !(int)$this->active;
 
 		// Change status to active/inactive
-		return Db::getInstance()->execute('
-			UPDATE `'.pSQL(_DB_PREFIX_.$this->def['table']).'`
-			SET `active` = !`active`
-			WHERE `'.pSQL($this->def['primary']).'` = '.(int)$this->id
-		);
+		return $this->update();
 	}
 
 	/**
