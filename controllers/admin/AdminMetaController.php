@@ -1,4 +1,4 @@
-<?php
+d<?php
 /*
 * 2007-2012 PrestaShop
 *
@@ -282,7 +282,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('List of keywords for search engines'),
+					'desc' => $this->l('List of keywords for search engines').' '.$this->l('To add "tags" click in the field, write something, then press "Enter"'), 
 					'size' => 50
 				),
 				array(

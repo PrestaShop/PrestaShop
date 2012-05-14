@@ -468,6 +468,7 @@ $_LANGADM['AdminCms00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_LANGADM['AdminCms084af17ae8dce6465e3acd94a3d995c1'] = 'Votre page de CMS sera enregistrée comme brouillon';
 $_LANGADM['AdminCms1dec4f55522b828fe5dacf8478021a9e'] = 'URL simplifiée :';
 $_LANGADM['AdminCms2ef9671539ece086eb5c74c851a08565'] = 'Seuls les caractères alphabétique et le caractère moins (-) sont autorisés';
+$_LANGADM['AdminCms33fe26e0d07af85617f326ca09fb5085'] = 'Pour ajouter des \"tags\" cliquer dans le champ, ecrivez quelque chose, puis appuyez sur \"Entrer\"';
 $_LANGADM['AdminCms38fb7d24e0d60a048f540ecb18e13376'] = 'Enregistrer';
 $_LANGADM['AdminCms3f64b2beede1082fd32ddb0bf11a641f'] = 'Méta description :';
 $_LANGADM['AdminCms45b1bce0ceb1e155fc99d59a21761b9e'] = 'Contenu de la page';
