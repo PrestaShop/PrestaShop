@@ -228,7 +228,7 @@ class CartControllerCore extends FrontController
 				{
 					// If product has attribute, minimal quantity is set with minimal quantity of attribute
 					$minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-					$this->errors[] = Tools::displayError('You must add', false).' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity', false);
+					$this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity);
 				}
 				elseif (!$updateQuantity)
 					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', false);

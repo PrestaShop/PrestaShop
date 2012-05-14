@@ -1037,7 +1037,10 @@ class shopimporter extends ImportModule
 					$fields[$field] = $this->generateData($size, $rules['validate'][$field]);
 				}
 				else
-					$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
+					$returnErrors[] = sprintf(
+						$this->l('The field %s is required.'),
+						call_user_func(array($className, 'displayFieldName'), $field, $className)
+					);
 
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] AS $field => $maxLength)
@@ -1046,7 +1049,11 @@ class shopimporter extends ImportModule
 					if ($hasErrors == 2)
 						$fields[$field] = substr($fields[$field], 0, $maxLength);
 					else
-						$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b>'.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+						$returnErrors[] = sprintf(
+							$this->l('The field %1$s is too long (%2$d chars max).'),
+							call_user_func(array($className, 'displayFieldName'), $field, $className),
+							$maxLength
+						);
 
 		/* Checking for fields validity */
 		foreach ($rules['validate'] AS $field => $function)
@@ -1062,7 +1069,10 @@ class shopimporter extends ImportModule
 							$fields[$field] = $this->generateData($size, $rules['validate'][$field]);
 						}
 						else
-							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
+							$returnErrors[] = sprintf(
+								$this->l('The field %s is invalid.'),
+								call_user_func(array($className, 'displayFieldName'), $field, $className)
+							);
 
 		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang'])))
 		{
@@ -1080,7 +1090,11 @@ class shopimporter extends ImportModule
 					$fields[$fieldLang][$matchIdLang[$defaultLanguage->id]] = $this->generateData($size, $rules['validateLang'][$fieldLang]);
 				}
 				else
-					$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$defaultLanguage->name;
+					$returnErrors[] = sprintf(
+						$this->l('This field %1$s is required at least in %2$s'),
+						call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+						$defaultLanguage->name
+					);
 		}
 		/* Checking for maximum multilingual fields size */
 		foreach ($rules['sizeLang'] AS $fieldLang => $maxLength)
@@ -1089,8 +1103,12 @@ class shopimporter extends ImportModule
 					if ($hasErrors == 2)
 						$fields[$fieldLang] = substr($fields[$fieldLang], 0, $maxLength);
 					else
-						$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
-		/* Checking for multilingual fields validity */
+						$returnErrors[] = sprintf(
+							$this->l('This field %1$s (%2$s) is too long: %3$d chars max.'),
+							call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+							$language['name'],
+							$maxLength
+						);
 		foreach ($rules['validateLang'] AS $fieldLang => $function)
 			{
 			foreach ($languages AS $language)
@@ -1107,7 +1125,11 @@ class shopimporter extends ImportModule
 							$fields[$fieldLang][$language['id_lang']] = $this->generateData($size, $rules['validateLang'][$fieldLang]);
 						}
 						else
-							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
+							$returnErrors[] = sprintf(
+								$this->l('The field %1$s (%2$s) is invalid.'),
+								call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+								$language['name']
+							);
 				}
 			}
 		}
@@ -1131,7 +1153,10 @@ class shopimporter extends ImportModule
 					$fields[$field] = $this->generateData($size, $rules['validate'][$field]);
 				}
 				else
-					$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
+					$returnErrors[] = sprintf(
+						$this->l('The field %s is required.'),
+						call_user_func(array($className, 'displayFieldName'), $field, $className)
+					);
 
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] AS $field => $maxLength)
@@ -1140,7 +1165,11 @@ class shopimporter extends ImportModule
 					if ($hasErrors == 2)
 						$fields[$field] = substr($fields[$field], 0, $maxLength);
 					else
-						$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b>'.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+						$returnErrors[] = sprintf(
+							$this->l('The field %1$s is too long (%2$d chars max).'),
+							call_user_func(array($className, 'displayFieldName'), $field, $className),
+							$maxLength
+						);
 
 		/* Checking for fields validity */
 		foreach ($rules['validate'] AS $field => $function)
@@ -1156,8 +1185,10 @@ class shopimporter extends ImportModule
 							$fields[$field] = $this->generateData($size, $rules['validate'][$field]);
 						}
 						else
-							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
-
+							$returnErrors[] = sprintf(
+								$this->l('The field %s is invalid.'),
+								call_user_func(array($className, 'displayFieldName'), $field, $className)
+							);
 
 		return $returnErrors;
 	}

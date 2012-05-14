@@ -469,12 +469,13 @@ abstract class AdminTabCore
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] as $field => $maxLength)
 			if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $maxLength)
-				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+				$this->_errors[] = sprintf(Tools::displayError('field %1$s is too long. (%2$d chars max)'), call_user_func(array($className, 'displayFieldName'), $field, $className), $maxLength);
 
 		/* Checking for maximum multilingual fields size */
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
 				if (Tools::getValue($fieldLang.'_'.$language['id_lang']) !== false && Tools::strlen(Tools::getValue($fieldLang.'_'.$language['id_lang'])) > $maxLength)
+					$this->_errors[] = sprintf(Tools::displayError('field %1$s is too long. (%2$d chars max, html chars including)'), call_user_func(array($className, 'displayFieldName'), $fieldLang, $className), $maxLength);
 					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max, html chars including').')';
 
 		/* Overload this method for custom checking */
@@ -962,10 +963,10 @@ abstract class AdminTabCore
 						{
 							foreach ($languages as $language)
 								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+									$this->_errors[] = sprintf(Tools::displayError('field %s is required.'), $values['title']);
 						}
 						elseif (($value = Tools::getValue($field)) == false && (string)$value != '0')
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+							$this->_errors[] = sprintf(Tools::displayError('field %s is required.'), $values['title']);
 
 				/* Check fields validity */
 				foreach ($fields as $field => $values)
@@ -974,11 +975,11 @@ abstract class AdminTabCore
 						foreach ($languages as $language)
 							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
 								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+									$this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
 					}
 					elseif (Tools::getValue($field) && isset($values['validation']))
 						if (!Validate::$values['validation'](Tools::getValue($field)))
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+							$this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
 
 				/* Default value if null */
 				foreach ($fields as $field => $values)

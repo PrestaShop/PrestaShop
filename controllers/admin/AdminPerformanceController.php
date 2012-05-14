@@ -735,8 +735,10 @@ class AdminPerformanceControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').'
 						<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 				else if ($cache_active && $caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
-					$this->errors[] = Tools::displayError('To use CacheFS the directory').' '.
-						realpath(_PS_CACHEFS_DIRECTORY_).' '.Tools::displayError('must be writable');
+					$this->errors[] = sprintf(
+						Tools::displayError('To use CacheFS the directory %s must be writable.'),
+						realpath(_PS_CACHEFS_DIRECTORY_)
+					);
 
 				if ($caching_system == 'CacheFs' && $cache_active)
 				{

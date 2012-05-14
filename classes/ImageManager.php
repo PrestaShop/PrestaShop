@@ -216,11 +216,15 @@ class ImageManagerCore
 	public static function validateUpload($file, $max_file_size = 0)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
-			return Tools::displayError('Image is too large').' ('.($file['size'] / 1000).Tools::displayError('kB').'). '.Tools::displayError('Maximum allowed:').' '.($max_file_size / 1000).Tools::displayError('kB');
+			return sprintf(
+				Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
+				$file['size'] / 1000,
+				$max_file_size / 1000
+			);
 		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
-			return Tools::displayError('Error while uploading image; please change your server\'s settings.').'('.Tools::displayError('Error code:').$file['error'].')';
+			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
 		return false;
 	}
 
@@ -234,7 +238,11 @@ class ImageManagerCore
 	public static function validateIconUpload($file, $max_file_size = 0)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > $max_file_size)
-			return Tools::displayError('Image is too large').' ('.($file['size'] / 1000).'ko). '.Tools::displayError('Maximum allowed:').' '.($max_file_size / 1000).'ko';
+			return sprintf(
+				Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
+				$file['size'] / 1000,
+				$max_file_size / 1000
+			);
 		if (substr($file['name'], -4) != '.ico')
 			return Tools::displayError('Image format not recognized, allowed formats are: .ico');
 		if ($file['error'])
