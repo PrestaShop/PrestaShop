@@ -1048,56 +1048,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Add a product attribute
-	* @since 1.5.0.1
-	*
-	* @param float $price Additional price
-	* @param float $weight Additional weight
-	* @param float $ecotax Additional ecotax
-	* @param integer $id_images Image ids
-	* @param string $reference Reference
-	* @param string $location Location
-	* @param string $ean13 Ean-13 barcode
-	* @param boolean $default Is default attribute for product
-	* @param integer $minimal_quantity Minimal quantity to add to cart
-	* @return mixed $id_product_attribute or false
-	*/
-	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-		$default, $location = null, $upc = null, $minimal_quantity = 1)
-	{
-		if (!$this->id)
-			return;
-
-		$price = str_replace(',', '.', $price);
-		$weight = str_replace(',', '.', $weight);
-
-		$combination = new Combination();
-		$combination->id_product = (int)$this->id;
-		$combination->price = (float)$price;
-		$combination->ecotax = (float)$ecotax;
-		$combination->quantity = 0;
-		$combination->weight = (float)$weight;
-		$combination->unit_price_impact = (float)$unit_impact;
-		$combination->reference = pSQL($reference);
-		$combination->location = pSQL($location);
-		$combination->ean13 = pSQL($ean13);
-		$combination->upc = pSQL($upc);
-		$combination->default_on = (int)$default;
-		$combination->minimal_quantity = (int)$minimal_quantity;
-		$combination->add();
-
-		if (!$combination->id)
-			return false;
-
-		Product::updateDefaultAttribute($this->id);
-
-		if (!empty($id_images))
-			$combination->setImages($id_images);
-
-		return (int)$combination->id;
-	}
-
-	/**
 	* @param integer $quantity DEPRECATED
 	* @param string $supplier_reference DEPRECATED
 	*/
@@ -1241,7 +1191,7 @@ class ProductCore extends ObjectModel
 	* @return array Update result
 	*/
 	public function updateAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = null, $available_date = null, $update_all_fields = true)
+		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = null, $available_date = null, $update_all_fields = true, array $id_shop_list = array())
 	{
 		$combination = new Combination($id_product_attribute);
 
@@ -1273,6 +1223,9 @@ class ProductCore extends ObjectModel
 		$combination->minimal_quantity = (int)$minimal_quantity;
 		$combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
 
+		if (count($id_shop_list))
+			$combination->id_shop_list = $id_shop_list;
+
 		$combination->save();
 
 		if (!empty($id_images))
@@ -1284,6 +1237,61 @@ class ProductCore extends ObjectModel
 
 		return true;
 	}
+
+	/**
+	 * Add a product attribute
+	 * @since 1.5.0.1
+	 *
+	 * @param float $price Additional price
+	 * @param float $weight Additional weight
+	 * @param float $ecotax Additional ecotax
+	 * @param integer $id_images Image ids
+	 * @param string $reference Reference
+	 * @param string $location Location
+	 * @param string $ean13 Ean-13 barcode
+	 * @param boolean $default Is default attribute for product
+	 * @param integer $minimal_quantity Minimal quantity to add to cart
+	 * @return mixed $id_product_attribute or false
+	 */
+	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
+								 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array())
+	{
+		if (!$this->id)
+			return;
+
+		$price = str_replace(',', '.', $price);
+		$weight = str_replace(',', '.', $weight);
+
+		$combination = new Combination();
+		$combination->id_product = (int)$this->id;
+		$combination->price = (float)$price;
+		$combination->ecotax = (float)$ecotax;
+		$combination->quantity = 0;
+		$combination->weight = (float)$weight;
+		$combination->unit_price_impact = (float)$unit_impact;
+		$combination->reference = pSQL($reference);
+		$combination->location = pSQL($location);
+		$combination->ean13 = pSQL($ean13);
+		$combination->upc = pSQL($upc);
+		$combination->default_on = (int)$default;
+		$combination->minimal_quantity = (int)$minimal_quantity;
+
+		if (count($id_shop_list))
+			$combination->id_shop_list = $id_shop_list;
+
+		$combination->add();
+
+		if (!$combination->id)
+			return false;
+
+		Product::updateDefaultAttribute($this->id);
+
+		if (!empty($id_images))
+			$combination->setImages($id_images);
+
+		return (int)$combination->id;
+	}
+
 
 	/**
 	 * @deprecated since 1.5.0
@@ -4862,3 +4870,4 @@ class ProductCore extends ObjectModel
 		return Product::PTYPE_SIMPLE;
 	}
 }
+
