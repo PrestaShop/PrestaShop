@@ -914,8 +914,9 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
-					Db::getInstance()->getMsgError();
+				$error_tmp = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
+				if ($error_tmp != '')
+					$this->errors[] = $error_tmp;
 			}
 			else
 			{
