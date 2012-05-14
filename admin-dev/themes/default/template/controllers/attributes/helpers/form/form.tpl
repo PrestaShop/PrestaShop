@@ -71,7 +71,7 @@
 		var id_attribute_group = $('#id_attribute_group').val();
 		$('.input_shop').each(function(k, item)
 		{
-			var id_shop = $(item).val();
+			var id_shop = $(item).attr('shop_id');
 			if (typeof shop_associations[id_attribute_group] != 'undefined' && $.inArray(id_shop, shop_associations[id_attribute_group]) > -1)
 				$(item).attr('disabled', false);
 			else
