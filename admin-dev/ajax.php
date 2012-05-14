@@ -298,7 +298,7 @@ if (Tools::isSubmit('getHookableList'))
 			if (!array_key_exists($hook_name, $hookableList))
 				$hookableList[$hook_name] = array();
 			if ($moduleInstance->isHookableOn($hook_name))
-				array_push($hookableList[$hook_name], $module);
+				array_push($hookableList[$hook_name], str_replace('_', '-', $module));
 		}
 
 	}
