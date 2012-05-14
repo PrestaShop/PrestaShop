@@ -31,6 +31,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	protected $_defaultOrderBy = 'date_add';
 	protected $_defaultOrderWay = 'DESC';
+	protected $can_add_customer = true;
 
 	public function __construct()
 	{
@@ -139,6 +140,18 @@ class AdminCustomersControllerCore extends AdminController
 		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
 
 		parent::__construct();
+
+		// Check if we can add a customer
+		if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP))
+			$this->can_add_customer = false;
+	}
+
+	public function postProcess()
+	{
+		if (!$this->can_add_customer && $this->display)
+			$this->redirect_after = $this->context->link->getAdminLink('AdminCustomers');
+
+		parent::postProcess();
 	}
 
 	public function initContent()
@@ -150,7 +163,17 @@ class AdminCustomersControllerCore extends AdminController
 				'boxes' => $this->boxes,
 			));
 
+		if (!$this->can_add_customer && !$this->display)
+			$this->informations[] = $this->l('You have to select a shop if you want to create a customer');
+
 		parent::initContent();
+	}
+
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		if (!$this->can_add_customer)
+			unset($this->toolbar_btn['new']);
 	}
 
 	public function initProcess()
