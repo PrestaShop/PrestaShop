@@ -4,7 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{blocklayered}prestashop>blocklayered_84241e458cdd5162745500a59a3680f3'] = 'Bloque navegación por facetas';
 $_MODULE['<{blocklayered}prestashop>blocklayered_2d08fa8e157fe3f1875402cbd98aee1b'] = 'Muestra un bloque con los filtros de la navegación por facetas';
-$_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Categorías';
 $_MODULE['<{blocklayered}prestashop>blocklayered_817c37b9c1f5cd4a450dad384e63e6c7'] = 'Su filtro';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3185cefd67b575e582063148e4f15860'] = 'se ha actualizado correctamente.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7ccab4d8de5d6b9bb61e99c7bba343ab'] = 'se ha añadido correctamente.';
@@ -14,6 +13,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_491f46aa6101560e9f1e0d55a063231
 $_MODULE['<{blocklayered}prestashop>blocklayered_09da2b6f1217055bb22caa6ea08d9b80'] = 'Capas de navegación';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a2654ab6d514d63a3be2a4d6ea6b39df'] = 'Plantillas de los filtros existentes';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d4041fbb1580b68012b82fee850014a2'] = 'las plantillas de filtros están configuradas:';
+$_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Categorías';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7dce122004969d56ae2e0245cb754d35'] = 'Editar';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d180b4e0681bba834c76b479590e1c1e'] = 'Eliminar plantilla de filtro #';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d1457b72c3fb323a2671125aef3eab5d'] = '?';

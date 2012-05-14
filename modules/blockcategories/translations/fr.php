@@ -6,7 +6,6 @@ $_MODULE['<{blockcategories}prestashop>blockcategories_8f0ed7c57fca428f7e3f8e64d
 $_MODULE['<{blockcategories}prestashop>blockcategories_15a6f5841d9e4d7e62bec3319b4b7036'] = 'Ajoute un bloc proposant une navigation au sein de vos catégories de produits';
 $_MODULE['<{blockcategories}prestashop>blockcategories_23e0d4ecc25de9b2777fdaca3e2f3193'] = 'Profondeur maximum : nombre invalide';
 $_MODULE['<{blockcategories}prestashop>blockcategories_0cf328636f0d607ac24a5c435866b94b'] = 'Dynamic HTML : choix invalide';
-$_MODULE['<{blockcategories}prestashop>blockcategories_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';
 $_MODULE['<{blockcategories}prestashop>blockcategories_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
 $_MODULE['<{blockcategories}prestashop>blockcategories_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
 $_MODULE['<{blockcategories}prestashop>blockcategories_19561e33450d1d3dfe6af08df5710dd0'] = 'Profondeur maximum';

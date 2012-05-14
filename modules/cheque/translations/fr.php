@@ -9,7 +9,6 @@ $_MODULE['<{cheque}prestashop>cheque_1fddeba3cee2a70b37a20889e124948a'] = 'L\'or
 $_MODULE['<{cheque}prestashop>cheque_4402acab1c8f90dcf4a31dc96833bd86'] = 'Aucune devise disponible pour ce module';
 $_MODULE['<{cheque}prestashop>cheque_a0048063a9be52816b7fa7f17aa3a2b7'] = 'L\'ordre du chèque est requis.';
 $_MODULE['<{cheque}prestashop>cheque_4b5e20a521d31cc44b9690bd35eaacfc'] = 'L\'adresse est requise.';
-$_MODULE['<{cheque}prestashop>cheque_e0aa021e21dddbd6d8cecec71e9cf564'] = 'OK';
 $_MODULE['<{cheque}prestashop>cheque_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
 $_MODULE['<{cheque}prestashop>cheque_14e41f4cfd99b10766cc15676d8cda66'] = 'Ce module vous permet d\'accepter des paiements par chèque.';
 $_MODULE['<{cheque}prestashop>cheque_3b39b241f115e5823eeca07df2949a35'] = 'Si le client choisit ce mode de paiement, la commande passera à l\'état \"Paiement en attente\".';

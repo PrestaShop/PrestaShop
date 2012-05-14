@@ -6,7 +6,6 @@ $_MODULE['<{blockcategories}prestashop>blockcategories_8f0ed7c57fca428f7e3f8e64d
 $_MODULE['<{blockcategories}prestashop>blockcategories_15a6f5841d9e4d7e62bec3319b4b7036'] = 'Añdir un bloque que ofrezca categorías de productos';
 $_MODULE['<{blockcategories}prestashop>blockcategories_23e0d4ecc25de9b2777fdaca3e2f3193'] = 'Nivel máximo: Número incorrecto';
 $_MODULE['<{blockcategories}prestashop>blockcategories_0cf328636f0d607ac24a5c435866b94b'] = 'HTML dinámico: opción no válida';
-$_MODULE['<{blockcategories}prestashop>blockcategories_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmación';
 $_MODULE['<{blockcategories}prestashop>blockcategories_c888438d14855d7d96a2724ee9c306bd'] = 'Configuración actualizada';
 $_MODULE['<{blockcategories}prestashop>blockcategories_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuración';
 $_MODULE['<{blockcategories}prestashop>blockcategories_19561e33450d1d3dfe6af08df5710dd0'] = 'Nivel máximo';

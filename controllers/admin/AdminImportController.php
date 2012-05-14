@@ -1244,7 +1244,7 @@ class AdminImportControllerCore extends AdminController
 							$is_tag_added = $tag->addTags($key, $product->id, $tags);
 							if (!$is_tag_added)
 							{
-								$this->addProductWarning($info['name'], $product->id, $this->l('Tags list').' '.$this->l('is invalid'));
+								$this->addProductWarning($info['name'], $product->id, $this->l('Tags list is invalid'));
 								break;
 							}
 						}

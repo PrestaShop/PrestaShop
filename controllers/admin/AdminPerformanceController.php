@@ -524,7 +524,7 @@ class AdminPerformanceControllerCore extends AdminController
 				<a href="http://xcache.lighttpd.net" target="_blank">http://xcache.lighttpd.net</a>';
 
 		if (!is_writable(_PS_CACHEFS_DIRECTORY_))
-			$this->warnings[] = $this->l('To use the CacheFS directory').' '.realpath(_PS_CACHEFS_DIRECTORY_).' '.$this->l('must be writable');
+			$this->warnings[] = sprintf($this->l('To use the CacheFS directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
 
 		$this->initToolbar();
 		$this->display = '';

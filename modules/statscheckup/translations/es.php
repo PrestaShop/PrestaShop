@@ -14,7 +14,6 @@ $_MODULE['<{statscheckup}prestashop>statscheckup_fff0d600f8a0b5e19e88bfb821dd115
 $_MODULE['<{statscheckup}prestashop>statscheckup_59b514174bffe4ae402b3d63aad79fe0'] = 'imágenes';
 $_MODULE['<{statscheckup}prestashop>statscheckup_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'Ventas';
 $_MODULE['<{statscheckup}prestashop>statscheckup_c3917e1f7138a24c6dc954fe81b86679'] = 'pedidos / mes';
-$_MODULE['<{statscheckup}prestashop>statscheckup_27ce7f8b5623b2e2df568d64cf051607'] = 'Stock';
 $_MODULE['<{statscheckup}prestashop>statscheckup_691d502cfd0e0626cd3b058e5682ad1c'] = 'artículos';
 $_MODULE['<{statscheckup}prestashop>statscheckup_dc270bcf468689b19074a5eef7581b52'] = 'Insuficiente';
 $_MODULE['<{statscheckup}prestashop>statscheckup_f4abc77d498c89880f67331609406774'] = 'Perfecto';

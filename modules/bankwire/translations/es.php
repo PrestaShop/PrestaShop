@@ -9,7 +9,6 @@ $_MODULE['<{bankwire}prestashop>bankwire_f05d09f37c9a02f0737c1e71142028a9'] = 'E
 $_MODULE['<{bankwire}prestashop>bankwire_4402acab1c8f90dcf4a31dc96833bd86'] = 'No hay moneda asignada a este módulo';
 $_MODULE['<{bankwire}prestashop>bankwire_bfa43217dfe8261ee7cb040339085677'] = 'se necesitan los detalles de la cuenta.';
 $_MODULE['<{bankwire}prestashop>bankwire_ccab155f173ac76f79eb192703f86b18'] = 'Se necesita el propietario de la cuenta.';
-$_MODULE['<{bankwire}prestashop>bankwire_444bcb3a3fcf8389296c49467f27e1d6'] = 'ok';
 $_MODULE['<{bankwire}prestashop>bankwire_c888438d14855d7d96a2724ee9c306bd'] = 'configuración actualizada';
 $_MODULE['<{bankwire}prestashop>bankwire_fcec4d73cccd149a2d18695fd8785f88'] = 'Este módulo permite aceptar pagos por trasferencia bancaria.';
 $_MODULE['<{bankwire}prestashop>bankwire_b6af2d31afe71aedcceca73cc27fec29'] = 'si el cliente elije este modo de pago, el pedido cambiará su estado a \"pendiente de pago\".';

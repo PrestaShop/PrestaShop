@@ -74,7 +74,7 @@
 					{$document->getInvoiceNumberFormatted($current_id_lang)}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
-				{l s='#'}{'%06d'|sprintf:$document->id}
+				{l s='#%d' sprintf=$document->id}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}

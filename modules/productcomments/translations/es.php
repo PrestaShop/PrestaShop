@@ -6,7 +6,6 @@ $_MODULE['<{productcomments}prestashop>productcommentcriterion_a09ed6c60eb321393
 $_MODULE['<{productcomments}prestashop>productcommentcriterion_467366059d7d7c743a4d0971363a8d66'] = 'Limitado a ciertas catagorías';
 $_MODULE['<{productcomments}prestashop>productcommentcriterion_772911becd336c843ab09a1d4b4f66c0'] = 'Limitado a ciertos productos';
 $_MODULE['<{productcomments}prestashop>productcomments_b91c4e8b229a399a3bc911d352524a9b'] = 'Comentario sobre el producto';
-$_MODULE['<{productcomments}prestashop>productcomments_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmación';
 $_MODULE['<{productcomments}prestashop>productcomments_c888438d14855d7d96a2724ee9c306bd'] = 'Ajustes actualizados';
 $_MODULE['<{productcomments}prestashop>productcomments_1bb54e382f7dbdb260f0aa6b42bb624b'] = 'Criterio suprimido';
 $_MODULE['<{productcomments}prestashop>productcomments_e6ea19ae2eb9447f98c7ed74227bb4a3'] = 'El campo Nombre es requerido por lo menos en';

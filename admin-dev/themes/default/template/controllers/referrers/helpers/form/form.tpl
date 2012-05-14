@@ -45,7 +45,8 @@
 					<li>
 						{l s='The field `request_uri` is the URL from which the customers come to your website.'}<br />
 						{l s='For example, if the visitor accesses a product page, the URL will be'} "{$uri}music-ipods/1-ipod-nano.html".<br />
-						{l s='This is interesting because you can add some tags or tokens in the links pointing to your website. For example, you can post a link'} "{$uri}index.php?prestashop" {l s='in the forum and get statistics by entering "%prestashop" in the field `request_uri`. You will get all the visitors coming from the forum.'}
+						{l s='This is interesting because you can add some tags or tokens in the links pointing to your website.'}
+						{l s='For example, you can post a link "%dindex.php?prestashop" in the forum and get statistics by entering "%prestashop" in the field `request_uri`. You will get all the visitors coming from the forum.'}
 						{l s='This method is more reliable than the `http_referer` one, but there is a danger: if a search engine read a page with your link, then it will be displayed in its results and you will have not only the forum visitors, but also the ones from the search engine.'}
 					</li>
 					<br />

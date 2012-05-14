@@ -5,7 +5,6 @@ $_MODULE = array();
 $_MODULE['<{blockcart}prestashop>blockcart_c2e1362a9710a3dd86f937c2ea1f336d'] = 'Carrito';
 $_MODULE['<{blockcart}prestashop>blockcart_e03093a5753b436ee1de63b6e3e1bd02'] = 'Añadir un bloque que contenga el carrito de compra del cliente';
 $_MODULE['<{blockcart}prestashop>blockcart_eb4ae207521bbe6403f7fe9564d38cda'] = 'Ajax: opción incorrecta.';
-$_MODULE['<{blockcart}prestashop>blockcart_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmación';
 $_MODULE['<{blockcart}prestashop>blockcart_c888438d14855d7d96a2724ee9c306bd'] = 'Configuración actualizada';
 $_MODULE['<{blockcart}prestashop>blockcart_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuración';
 $_MODULE['<{blockcart}prestashop>blockcart_614a8820aa4ac08ce2ee398a41b10778'] = 'Carrito Ajax';

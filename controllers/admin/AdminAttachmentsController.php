@@ -146,9 +146,11 @@ class AdminAttachmentsControllerCore extends AdminController
 				if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name']))
 				{
 					if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-						$this->errors[] = $this->l('File too large, maximum size allowed:').' '.
-							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.
-							$this->l('File size you\'re trying to upload is:').number_format(($_FILES['file']['size'] / 1024), 2, '.', '').$this->l('kb');
+						$this->errors[] = sprintf(
+							$this->l('File too large, maximum size allowed: %1$d kB. File size you\'re trying to upload is:  %2$d kB.'),
+							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+							number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
+						);
 					else
 					{
 						do $uniqid = sha1(microtime());
@@ -166,8 +168,11 @@ class AdminAttachmentsControllerCore extends AdminController
 					$max_upload = (int)ini_get('upload_max_filesize');
 					$max_post = (int)ini_get('post_max_size');
 					$upload_mb = min($max_upload, $max_post);
-					$this->errors[] = $this->l('the File').' <b>'.$_FILES['file']['name'].'</b> '.
-						$this->l('exceeds the size allowed by the server. The limit is set to').' <b>'.$upload_mb.$this->l('MB').'</b>';
+					$this->errors[] = sprintf(
+						$this->l('The File %1$s exceeds the size allowed by the server. The limit is set to %1$d MB.'),
+						'<b>'.$_FILES['file']['name'].'</b> ',
+						'<b>'.$upload_mb.'</b>'
+					);
 				}
 				else if (!empty($_FILES['file']['tmp_name']))
 					$this->errors[] = $this->l('No file or your file is not uploadable, please check your server configuration for the maximum upload size.');
