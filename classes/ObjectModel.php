@@ -540,7 +540,6 @@ abstract class ObjectModelCore
 			$id_shop_list = Shop::getContextListShopID();
 			if (count($this->id_shop_list) > 0)
 				$id_shop_list = $this->id_shop_list;
-			$id_shop_list = $this->id_shop_list;
 
 			foreach ($id_shop_list as $id_shop)
 			{
