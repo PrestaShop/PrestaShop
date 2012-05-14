@@ -1806,7 +1806,7 @@ FileETag INode MTime Size
 			$zip = new PclZip($fromFile);
 			$list = $zip->extract(PCLZIP_OPT_PATH, $toDir);
 			foreach ($list as $extractedFile)
-				if ($extractedFile['status'] != 'ok')
+				if ($extractedFile['status'] != 'ok' && $extractedFile['status'] != 'already_a_directory')
 					return false;
 			return true;
 		}
