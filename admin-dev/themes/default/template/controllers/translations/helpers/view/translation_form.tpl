@@ -48,7 +48,7 @@
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the this limit to'}
 		{/if}
-		<u><b>{$limit_warning['needed_limit']}</b></u> {l s='at least.'} {l s='or edit the translation file manually.'}
+		{l s='%s at least or edit the translation file manually.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">

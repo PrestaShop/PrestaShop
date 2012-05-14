@@ -9,7 +9,6 @@ $_MODULE['<{blockbestsellers}prestashop>blockbestsellers-home_eae99cd6a931f35531
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers-home_f7be84d6809317a6eb0ff3823a936800'] = 'Pas encore de meilleure vente';
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers_6232eaff79c9ccb6c1a66e5a75a212d5'] = 'Bloc meilleures ventes';
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers_95d17a0a1b5ea2de13a3565ed400ebbb'] = 'Ajoute un bloc qui affiche les meilleures ventes de la boutique';
-$_MODULE['<{blockbestsellers}prestashop>blockbestsellers_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
 $_MODULE['<{blockbestsellers}prestashop>blockbestsellers_530c88f8210e022b39128e3f0409bbcf'] = 'Toujours afficher ce bloc';

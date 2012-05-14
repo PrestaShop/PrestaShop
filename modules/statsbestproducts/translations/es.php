@@ -12,7 +12,6 @@ $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_6771f2d557a34bd89ea7a
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'ventas';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_213c80e9307852da96029181967ff545'] = 'Cant./día';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_57f32d7d0e6672cc2b60bc7a49f91453'] = 'Páginas vistas';
-$_MODULE['<{statsbestproducts}prestashop>statsbestproducts_27ce7f8b5623b2e2df568d64cf051607'] = 'Stock';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_71a5c322b7f69a8a4e40b3eb20da5559'] = 'Mejores productos';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_1784296dda47f4d571a179aad8106018'] = 'Lista de los mejores productos';
 $_MODULE['<{statsbestproducts}prestashop>statsbestproducts_998e4c5c80f27dec552e99dfed34889a'] = 'CSV Export';

@@ -33,7 +33,7 @@
 <div id="container">	
 	<div id="error" {if !isset($errors)}class="hide"{/if}>
 		{if isset($errors)}
-			<h3>{if $nbErrors > 1}{l s='There are'}{else}{l s='There is'}{/if} {$nbErrors}{if $nbErrors > 1} {l s='errors'}{else} {l s='error'}{/if}</h3>
+			<h3>{if $nbErrors > 1}{l s='There are %d errors.' sprintf=$nbErrors}{else}{l s='There is %d error.' sprintf=$nbErrors}{/if}</h3>
 			<ol style="margin: 0 0 0 20px;">
 			{foreach from=$errors item="error"}
 				<li>{$error}</li>

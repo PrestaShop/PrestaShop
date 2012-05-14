@@ -26,7 +26,6 @@ $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b2485e09e6a72c45d35286d3f
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ed3cd7b3cc134222fa70602921ec27e1'] = 'Votre inscription a bien été prise en compte';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_9e1f0c4c3f90d775eafbb0854ec63808'] = 'E-mail déjà enregistré ou non valable';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_4e1c51e233f1ed368c58db9ef09010ba'] = 'Merci de vous être inscrit à notre newsletter.';
-$_MODULE['<{blocknewsletter}prestashop>blockmobilenewsletter_416f61a2ce16586f8289d41117a2554e'] = 'votre e-mail';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ffb7e666a70151215b4c55c6268d7d72'] = 'Newsletter';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_416f61a2ce16586f8289d41117a2554e'] = 'votre e-mail';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b26917587d98330d93f87808fc9d7267'] = 'Inscription';

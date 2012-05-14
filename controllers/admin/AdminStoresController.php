@@ -160,7 +160,7 @@ class AdminStoresControllerCore extends AdminController
 					'name' => 'name',
 					'size' => 33,
 					'required' => false,
-					'hint' => $this->l('Allowed characters: letters, spaces and').' (-)',
+					'hint' => sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
 					'desc' => $this->l('Store name (e.g. Citycentre Mall Store)')
 				),
 				array(

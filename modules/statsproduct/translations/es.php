@@ -28,7 +28,6 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_3303da9d5241177588a06ad60d7edab
 $_MODULE['<{statsproduct}prestashop>statsproduct_6ccf03bc05e4b749b74b5d577c7e7d3a'] = 'Disponibilidad de los productos';
 $_MODULE['<{statsproduct}prestashop>statsproduct_12d3c7a4296542c62474856ec452c045'] = 'Ref.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_49ee3087348e8d44e1feda1917443987'] = 'Nombre';
-$_MODULE['<{statsproduct}prestashop>statsproduct_27ce7f8b5623b2e2df568d64cf051607'] = 'Stock';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guía';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6c1a8292e4da90e1ef19ae9444226d8f'] = 'Número de compras en relación con el número de visitas';
 $_MODULE['<{statsproduct}prestashop>statsproduct_1d0ba341c7847cbff109276485417a1c'] = 'Tras elegir una categoría y seleccionar un producto disponible de la categoría, aparecen algunos gráficos. Entonces, usted puede analizarlos.';
@@ -36,3 +35,4 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_6559cc601f073740b825a4fc9b76149
 $_MODULE['<{statsproduct}prestashop>statsproduct_e22269bb51f9f2394e148716babbafbb'] = 'Popularidad';
 $_MODULE['<{statsproduct}prestashop>statsproduct_5e9613e58f3bdbc89b1fef07274c0877'] = 'Visitas (x100)';
 $_MODULE['<{statsproduct}prestashop>statsproduct_287234a1ff35a314b5b6bc4e5828e745'] = 'Atributos';
+$_MODULE['<{statsproduct}prestashop>statsproduct_27ce7f8b5623b2e2df568d64cf051607'] = 'Stock';

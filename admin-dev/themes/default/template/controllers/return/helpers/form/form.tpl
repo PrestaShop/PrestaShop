@@ -75,7 +75,7 @@
 								{elseif $type == 'type_textfield'}
 									<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
 										{foreach $datas as $data name='loop'}
-											<li>{if $data['name']}$data['name']{else}{l s='Text #'}loop.iteration{/if}{l s=':'} {$data['value']}</li>
+											<li>{if $data['name']}$data['name']{else}{l s='Text #%d' sprintf=$loop.iteration}{/if}{l s=':'} {$data['value']}</li>
 										{/foreach}
 									</ul>
 								{/if}

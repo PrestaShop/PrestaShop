@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<h1>{l s='The controller'} {$controller} {l s='is missing or invalid.'}</h1>
+<h1>{l s='The controller %s is missing or invalid.' sprintf=$controller}</h1>
 <ul>
 <li><a href="index.php">{l s='Go to Dashboard'}</a></li>
 <li><a href="#" onclick="window.history.back();">{l s='Back to previous page'}</a></li>

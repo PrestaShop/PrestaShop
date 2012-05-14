@@ -82,12 +82,6 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_807079d19357b6d44089c220f74cc2d
 $_MODULE['<{shopimporter}prestashop>shopimporter_29361e9c6917fb14b43d3e78e2811e56'] = 'La devise par défaut ne correspond pas à :';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6117c4d73fcf0c20fe3946f1d00dde85'] = 'Veuillez changer la devise par défaut dans votre configuration ';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8136c99d09cb6e9f0f998dd231fff6ed'] = 'Une erreur s\'est produite lors de l\'ajout de l\'objet ';
-$_MODULE['<{shopimporter}prestashop>shopimporter_01f8544c8fd4628bc686502e8b727d95'] = 'le champ';
-$_MODULE['<{shopimporter}prestashop>shopimporter_0a5fa53f3f20f67f98bd6c3b16df059d'] = 'est nécessaire ';
-$_MODULE['<{shopimporter}prestashop>shopimporter_f755e8b92cb8f02c24f6f539180d45b1'] = 'est trop long';
-$_MODULE['<{shopimporter}prestashop>shopimporter_70f4b635847038d056e33959821a7a66'] = 'caractères max.';
-$_MODULE['<{shopimporter}prestashop>shopimporter_998b344cff693ad388a14ba89b1523c7'] = 'n\'est pas valable';
-$_MODULE['<{shopimporter}prestashop>shopimporter_7e47a344b06d82a8836cbee2748a79e6'] = 'est nécessaire au moins dans ';
 $_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'L\'archive ne peut être extraite.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'Le serveur ne dispose pas des permissions pour l\'écriture.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'Langue introuvable';

@@ -153,7 +153,7 @@
 				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
 				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
 				{if ($customer->isGuest())}
-					{l s='This order has been placed by a'} <b>{l s='guest'}</b>
+					{l s='This order has been placed by a guest.'}
 					{if (!Customer::customerExists($customer->email))}
 					<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />

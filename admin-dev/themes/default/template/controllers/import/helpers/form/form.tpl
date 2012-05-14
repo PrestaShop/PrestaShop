@@ -120,7 +120,7 @@
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
 
-			<label class="clear">{l s='Your CSV file'} ({count($files_to_import)} {if count($files_to_import) > 1} {l s='files'}{else}{l s='file'}{/if}{l s='):'}</label>
+			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=files_to_import}{else}{l s='Your CSV file (%d file):' sprintf=files_to_import}{/if}</label>
 			<div class="margin-form">
 				{if count($files_to_import)}
 					<select name="csv">

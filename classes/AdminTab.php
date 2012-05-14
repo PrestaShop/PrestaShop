@@ -1174,7 +1174,7 @@ abstract class AdminTabCore
 				echo $this->_errors[0];
 			else
 			{
-				echo $nbErrors.' '.$this->l('errors').'<br /><ol>';
+				echo sprintf($this->l('%d errors'), $nbErrors).'<br /><ol>';
 				foreach ($this->_errors as $error)
 					echo '<li>'.$error.'</li>';
 				echo '</ol>';

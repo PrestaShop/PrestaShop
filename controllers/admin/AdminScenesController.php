@@ -198,9 +198,9 @@ class AdminScenesControllerCore extends AdminController
 		$image_to_map_desc = '';
 		$image_to_map_desc .= $this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
 				.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
-				.$this->l('If larger than the image size setting, the image will be reduced to ')
-				.' '.$large_scene_image_type['width'].'x'.$large_scene_image_type['height'].'px '
-				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
+				.sprintf($this->l('If larger than the image size setting, the image will be reduced to %1$d x %2$dpx (width x height).'),
+				$large_scene_image_type['width'], $large_scene_image_type['height'])
+				.$this->l('If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
 		{
@@ -228,8 +228,8 @@ class AdminScenesControllerCore extends AdminController
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
 				.'<br />'.$this->l('Format:').' JPG, GIF, PNG. '
 				.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
-				.$this->l('Automatically resized to')
-				.' '.$thumb_scene_image_type['width'].'x'.$thumb_scene_image_type['height'].'px '.$this->l('(width x height)').'.<br />'
+				.sprintf($this->l('Automatically resized to %1$d x %2$dpx (width x height).'),
+				$thumb_scene_image_type['width'], $thumb_scene_image_type['height']).'.<br />'
 				.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 
 			$input_img_alt = array(

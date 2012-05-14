@@ -1180,7 +1180,7 @@ class AdminOrdersControllerCore extends AdminController
 				$deliveryState = new State((int)($addressDelivery->id_state));
 		}
 
-		$this->toolbar_title = $this->l('Order #').sprintf('%06d', $order->id).' ('.$order->reference.') - '.$customer->firstname.' '.$customer->lastname;
+		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, $order->reference, $customer->firstname, $customer->lastname);
 
 		// gets warehouses to ship products, if and only if advanced stock management is activated
 		$warehouse_list = null;

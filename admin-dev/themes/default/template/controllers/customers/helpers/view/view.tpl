@@ -144,7 +144,7 @@
 		</table>
 		<div class="clear">&nbsp;</div>
 	{else}
-		{$customer->firstname} {$customer->lastname} {l s='has never contacted you'}
+		{l s='%1$s %2$s has never contacted you' sprintf=[$customer->firstname, $customer->lastname]}
 	{/if}
 	
 	{* display hook specified to this page : AdminCustomers *}
@@ -262,7 +262,7 @@
 			<div class="clear">&nbsp;</div>
 		{/if}
 	{else}
-		{$customer->firstname} {$customer->lastname} {l s='has not placed any orders yet'}
+		{l s='%1$s %2$s has not placed any orders yet' sprintf=[$customer->firstname, $customer->lastname]}
 	{/if}
 	
 	{if $products AND count($products)}
@@ -334,7 +334,7 @@
 			{/foreach}
 		</table>
 	{else}
-		{$customer->firstname} {$customer->lastname} {l s='has not registered any addresses yet'}
+		{l s='%1$s %2$s has not registered any addresses yet' sprintf=[$customer->firstname, $customer->lastname]}
 	{/if}
 	
 	<div class="clear">&nbsp;</div>
@@ -362,7 +362,7 @@
 		{/foreach}
 		</table>
 	{else}
-		{$customer->firstname} {$customer->lastname} {l s='has no discount vouchers'}.
+		{l s='%1$s %2$s has no discount vouchers' sprintf=[$customer->firstname, $customer->lastname]}.
 	{/if}
 	<div class="clear">&nbsp;</div>
 	
