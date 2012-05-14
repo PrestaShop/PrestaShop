@@ -138,6 +138,13 @@ elseif ($versionCompare === false)
 	$fail_result .= '<action result="fail" error="29" />'."\n";
 }
 
+if((defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_ ))
+{
+	$logger->logError('The cache is activated. Please deactivate it first before lauching this script.');
+	$fail_result .= '<action result="fail" error="35" />'."\n";
+}
+
+
 //check DB access
 // include_once(_PS_INSTALL_PATH_.'/classes/ToolsInstall.php');
 // $resultDB = ToolsInstall::checkDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
@@ -374,7 +381,7 @@ foreach ($arrayToClean as $dir)
 
 // delete cache filesystem if activated
 $depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
-if($depth)
+if((defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_ ) && $depth)
 {
 	CacheFs::deleteCacheDirectory();
 	CacheFs::createCacheDirectories((int)$depth);
