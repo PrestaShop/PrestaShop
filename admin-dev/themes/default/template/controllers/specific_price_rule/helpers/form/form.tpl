@@ -156,7 +156,7 @@ function new_condition_group()
 {
 	last_condition_group++;
 	var html = '<div class="condition_group" id="condition_group_'+last_condition_group+'"><h3>{l s='Condition group'} '+last_condition_group+'</h3>';
-		html += '<table cellspacing="0" cellpadding="0" class="table width2"><thead><tr><th height="39">{l s='Type'}</th><th>{l s='Value'}</th></tr></thead><tbody></tbody></table>';
+		html += '<table cellspacing="0" cellpadding="0" class="table width3"><thead><tr><th width="196px" height="39">{l s='Type'}</th><th width="300px">{l s='Value'}</th></tr></thead><tbody></tbody></table>';
 		html += '</div><div class="condition_separator">{l s='OR'}</div><div class="separation"></div>';
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
