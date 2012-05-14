@@ -114,7 +114,7 @@ function check_all_shop() {
 							<label class="child">
 								<input class="input_shop"
 									type="checkbox"
-									value="{$groupID}"
+									value="{$shopID}"
 									name="checkBoxShopAsso_{$table}[{$form_id}][{$shopID}]"
 									id="checkedBox_{$shopID}"
 									{if $checked} checked="checked"{/if} />

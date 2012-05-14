@@ -293,7 +293,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$sql = 'SELECT id_attribute_group, id_shop FROM '._DB_PREFIX_.'attribute_group_shop';
 			$associations = array();
 			foreach (Db::getInstance()->executeS($sql) as $row)
-				$associations[$row['id_attribute_group']][] = $row['id_shop_group'];
+				$associations[$row['id_attribute_group']][] = $row['id_shop'];
 
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
@@ -306,6 +306,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$associations = array();
 
 		$this->fields_form['shop_associations'] = Tools::jsonEncode($associations);
+
 		$this->fields_form['input'][] = array(
 			'type' => 'color',
 			'label' => $this->l('Color:'),
