@@ -366,80 +366,101 @@ class AdminRequestSqlControllerCore extends AdminController
 			{
 				case 'checkedFrom':
 					if (isset($e[$key]['table']))
-						$this->errors[] = Tools::DisplayError($this->l('The Table').' "'.$e[$key]['table'].'" '.$this->l('doesn\'t exist.'));
+						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedSelect':
 					if (isset($e[$key]['table']))
-						$this->errors[] = Tools::DisplayError($this->l('The Table').' "'.$e[$key]['table'].'" '.$this->l('doesn\'t exist.'));
+						$this->errors[] = sprintf(Tools::displayError('The Table "%s" doesn\'t exist.'), $e[$key]['table']);
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else if (isset($e[$key]['*']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator "*" can be used in a nested query.'));
+						$this->errors[] = Tools::displayError('The operator "*" can be used in a nested query.');
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedWhere':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator').' "'.$e[$key]['operator'].'" '.$this->l('used is incorrect.'));
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedHaving':
 					if (isset($e[$key]['operator']))
-						$this->errors[] = Tools::DisplayError($this->l('The operator').' "'.$e[$key]['operator'].'" '.$this->l('used is incorrect.'));
+						$this->errors[] = sprintf(Tools::displayError('The operator "%s" used is incorrect.'), $e[$key]['operator']);
 					else if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedOrder':
 					if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedGroupBy':
 					if (isset($e[$key]['attribut']))
-						$this->errors[] = Tools::DisplayError($this->l('The attribute').' "'.
-						$e[$key]['attribut'][0].'" '.$this->l('does not exist in the table:').$e[$key]['attribut'][1].'.');
+						$this->errors[] = sprintf(
+							Tools::displayError('The attribute "%1$s" does not exist in the table: %2$s.'),
+							$e[$key]['attribut'][0],
+							$e[$key]['attribut'][1]
+						);
 					else
-						$this->errors[] = Tools::DisplayError($this->l('Error'));
+						$this->errors[] = Tools::displayError('Error');
 				break;
 
 				case 'checkedLimit':
-						$this->errors[] = Tools::DisplayError($this->l('The LIMIT clause must contain numeric arguments.'));
+						$this->errors[] = Tools::displayError('The LIMIT clause must contain numeric arguments.');
 				break;
 
 				case 'returnNameTable':
 						if (isset($e[$key]['reference']))
-							$this->errors[] = Tools::DisplayError($this->l('The reference').'"'.
-							$e[$key]['reference'][0].'"'.$this->l('doesn\'t exist in:').$e[$key]['reference'][1]);
+							$this->errors[] = sprintf(
+								Tools::displayError('The reference "%1$s" does not exist in the table: %2$s.'),
+								$e[$key]['reference'][0],
+								$e[$key]['attribut'][1]
+							);
 						else
-							$this->errors[] = Tools::DisplayError($this->l('When multiple tables are used, each attribute must be referenced to a table.'));
+							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must be referenced to a table.');
 				break;
 
 				case 'testedRequired':
-						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l('doesn\'t exist.'));
+						$this->errors[] = sprintf(Tools::displayError('%s doesn\'t exist.'), $e[$key]);
 					break;
 
 				case 'testedUnauthorized':
-						$this->errors[] = Tools::DisplayError($e[$key].' '.$this->l('is a unauthorized keyword.'));
+						$this->errors[] = sprintf(Tools::displayError('is a unauthorized keyword.'), $e[$key]);
 				break;
 			}
 		}

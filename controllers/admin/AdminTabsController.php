@@ -131,7 +131,7 @@ class AdminTabsControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Icon:'),
 					'name' => 'icon',
-					'desc' => $this->l('Upload logo from your computer').' (.gif, .jpg, .jpeg '.$this->l('or').' .png)'
+					'desc' => $this->l('Upload logo from your computer (.gif, .jpg, .jpeg or .png).')
 				),
 				array(
 					'type' => 'radio',

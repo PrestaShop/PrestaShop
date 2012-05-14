@@ -93,7 +93,7 @@ class AdminAccessControllerCore extends AdminController
 				if ($m)
 					$module['name'] = $m->displayName;
 				else
-					$this->warnings[] = '<b>'.$module['name'].'</b>'.$this->l(': module is installed in database, but its files are missing or incompatible.');
+					$this->warnings[] = sprintf($this->l('%s: module is installed in database, but its files are missing or incompatible.'), '<b>'.$module['name'].'</b>');
 			}
 		}
 

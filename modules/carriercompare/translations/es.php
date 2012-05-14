@@ -7,7 +7,6 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_68e114c207a6820a8f14d0eceac
 $_MODULE['<{carriercompare}prestashop>carriercompare_ed70a57a190d596171cf324c16a2277d'] = 'El identificante State no es válido';
 $_MODULE['<{carriercompare}prestashop>carriercompare_b72dd62d03697b37417288c63e78c8c6'] = 'Por favor, utilice un código postal válido en función del país elegido';
 $_MODULE['<{carriercompare}prestashop>carriercompare_efaf5c3827ef576b05de32ad458f196c'] = 'Este identificante de transportista no se encuentra disponible para esta selección';
-$_MODULE['<{carriercompare}prestashop>carriercompare_edc5cf1b3bab64b1d45ef51c63b53887'] = 'Imposible actualizar el carrito';
 $_MODULE['<{carriercompare}prestashop>carriercompare_e7a6ca4e744870d455a57b644f696457'] = '¡Gratis!';
 $_MODULE['<{carriercompare}prestashop>carriercompare_fbc1bef527a3a092053a244fd8d87abf'] = 'Haga una estimación de sus gastos de envío e impuestos';
 $_MODULE['<{carriercompare}prestashop>carriercompare_59716c97497eb9694541f7c3d37b1a4d'] = 'País';

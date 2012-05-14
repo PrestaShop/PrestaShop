@@ -65,7 +65,7 @@
 
 {if $generate}
 	<div class="module_confirmation conf confirm">
-		{$combinations_size} {l s='product(s) successfully created.'}
+		{l s='%d product(s) successfully created.' sprintf=$combinations_size}
 	</div>
 {/if}
 <script type="text/javascript" src="../js/attributesBack.js"></script>

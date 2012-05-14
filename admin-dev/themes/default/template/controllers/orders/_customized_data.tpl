@@ -82,7 +82,7 @@
 				{elseif ($type == Product::CUSTOMIZE_TEXTFIELD)}
 					<ul style="margin: 0px 0px 4px 0px; padding: 0px 0px 0px 6px; list-style-type: none;">
 					{foreach from=$datas item=data}
-						<li>{if $data['name']}{$data['name']}{else}{l s='Text #'}{$data@iteration}{/if}{l s=':'} {$data['value']}</li>
+						<li>{if $data['name']}{l s='%s:' sprintf=$data['name']}{else}{l s='Text #%s:' sprintf=$data@iteration}{/if} {$data['value']}</li>
 					{/foreach}
 					</ul>
 				{/if}

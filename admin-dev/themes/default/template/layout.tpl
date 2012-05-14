@@ -38,7 +38,7 @@
 		{if count($errors) == 1}
 			{$errors[0]}
 		{else}
-			{$errors|count} {l s='errors'}
+			{l s='%d errors' sprintf=$errors|count}
 			<br/>
 			<ol>
 				{foreach $errors as $error}
@@ -71,7 +71,7 @@
 			<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
 		</span>
 		{if count($warnings) > 1}
-			{l s='There are'} {count($warnings)} {l s='warnings'}
+			{l s='There are %d warnings.' sprintf=count($warnings)}
 			<span style="margin-left:20px;" id="labelSeeMore">
 				<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
 				<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>

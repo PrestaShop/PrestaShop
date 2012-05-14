@@ -9,7 +9,6 @@ $_MODULE['<{bankwire}prestashop>bankwire_f05d09f37c9a02f0737c1e71142028a9'] = 'L
 $_MODULE['<{bankwire}prestashop>bankwire_4402acab1c8f90dcf4a31dc96833bd86'] = 'Aucune devise disponible pour ce module';
 $_MODULE['<{bankwire}prestashop>bankwire_bfa43217dfe8261ee7cb040339085677'] = 'Les détails du compte sont requis.';
 $_MODULE['<{bankwire}prestashop>bankwire_ccab155f173ac76f79eb192703f86b18'] = 'Le titulaire du compte est requis.';
-$_MODULE['<{bankwire}prestashop>bankwire_444bcb3a3fcf8389296c49467f27e1d6'] = 'ok';
 $_MODULE['<{bankwire}prestashop>bankwire_c888438d14855d7d96a2724ee9c306bd'] = 'Mise à jour réussie';
 $_MODULE['<{bankwire}prestashop>bankwire_fcec4d73cccd149a2d18695fd8785f88'] = 'Ce module vous permet d\'accepter les paiements par virement bancaire.';
 $_MODULE['<{bankwire}prestashop>bankwire_b6af2d31afe71aedcceca73cc27fec29'] = 'Si le client choisit ce mode de paiement, la commande passera à l\'état \"Paiement en attente\".';

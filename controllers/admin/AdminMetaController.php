@@ -90,8 +90,7 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		// Options to generate robot.txt
-		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else.');
-		$robots_description .= '<br />'.$this->l('e.g. http://www.yoursite.com/robots.txt');
+		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
 			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase your old robots.txt file):');

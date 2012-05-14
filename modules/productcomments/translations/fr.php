@@ -22,7 +22,6 @@ $_MODULE['<{productcomments}prestashop>productcomments-extra_94966d90747b97d1f0f
 $_MODULE['<{productcomments}prestashop>productcomments-extra_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{productcomments}prestashop>productcomments_b91c4e8b229a399a3bc911d352524a9b'] = 'Commentaires produits';
 $_MODULE['<{productcomments}prestashop>productcomments_9918811c511f3481c085e46c07ab5da8'] = 'Permet aux client de commenter les produits.';
-$_MODULE['<{productcomments}prestashop>productcomments_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';
 $_MODULE['<{productcomments}prestashop>productcomments_c888438d14855d7d96a2724ee9c306bd'] = 'Configuration mise à jour';
 $_MODULE['<{productcomments}prestashop>productcomments_1bb54e382f7dbdb260f0aa6b42bb624b'] = 'Critère supprimé';
 $_MODULE['<{productcomments}prestashop>productcomments_e6ea19ae2eb9447f98c7ed74227bb4a3'] = 'Le champ Nom est requis au moins une fois en';

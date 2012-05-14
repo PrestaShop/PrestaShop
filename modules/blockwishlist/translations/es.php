@@ -12,7 +12,6 @@ $_MODULE['<{blockwishlist}prestashop>blockwishlist_2715a65604e1af3d6933b61704865
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_7244141a5de030c4c882556f4fd70a8b'] = 'Añadir un bloque que contenga la wishlist de los clientes';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_9ae79c1fccd231ac7fbbf3235dbf6326'] = 'Mi wishlist';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_5ef2d617096ae7b47a83f3d4de9c84bd'] = 'Módulo activado: opción no válida';
-$_MODULE['<{blockwishlist}prestashop>blockwishlist_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmación';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_c888438d14855d7d96a2724ee9c306bd'] = 'Configuración actualizada';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_56ee3495a32081ccb6d2376eab391bfa'] = 'Listado';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_e6d0e1c8fc6a4fcf47869df87e04cd88'] = 'Clientes';
