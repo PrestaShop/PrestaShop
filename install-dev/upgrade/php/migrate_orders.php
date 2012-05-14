@@ -27,6 +27,7 @@
 
 function migrate_orders()
 {
+	$array_errors = array();
 	$res = true;
 	if (!defined('PS_TAX_EXC'))
 		 define('PS_TAX_EXC', 1);
@@ -38,7 +39,8 @@ function migrate_orders()
 	$values_order_detail = array();
 	$col_order_detail = Db::getInstance()->query('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
 	if (!$col_order_detail)
-		return array('error' => true, 'msg' => 'unable to get fields list from order_detail table');
+		$array_errors[] = 'unable to get fields list from order_detail table';
+
 	$col_order_detail = $col_order_detail->fetchAll(PDO::FETCH_COLUMN);
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
@@ -46,14 +48,14 @@ function migrate_orders()
 	$values_order = array();
 	$col_orders = Db::getInstance()->query('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 	if (!$col_orders)
-		return array('error' => true, 'msg' => 'unable to get fields list from orders table');
+		$array_errors[] = 'unable to get fields list from orders table';
 	$col_orders = $col_orders->fetchAll(PDO::FETCH_COLUMN);
 	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
 
 	// create temporary tables
 	$res = mo_duplicateTables();
 	if (!$res)
-		return array('error' => true, 'msg' => 'unable to duplicate tables orders and order_detail');
+		$array_errors[] = 'unable to duplicate tables orders and order_detail';
 
 	$order_res = Db::getInstance()->query(
 			'SELECT *
@@ -120,6 +122,11 @@ function migrate_orders()
 		$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
 		$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
 		$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
+		// protect text and varchar fields 
+		$order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
+		$order['payment'] = Db::getInstance()->escape($order['payment']);
+		$order['module'] = Db::getInstance()->escape($order['module']);
+
 		$values_order[] = '(\''.implode('\', \'', $order).'\')';
 
 		unset($order);
@@ -130,10 +137,10 @@ function migrate_orders()
 			$cpt = 0;
 			$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
 			if (!$res)
-				return array('error' => true, 'msg' => Db::getInstance()->getMsgError());
+				$array_errors[] = '[insert order detail] - '.Db::getInstance()->getMsgError();
 			$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
 			if (!$res)
-				return array('error' => true, 'msg' => Db::getInstance()->getMsgError());
+				$array_errors[] = '[insert order] - '.Db::getInstance()->getMsgError();
 			$values_order = array();
 			$values_order_detail = array();
 		}
@@ -144,16 +151,24 @@ function migrate_orders()
 
 		$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
 		if (!$res)
-			return array('error' => true, 'msg' => Db::getInstance()->getMsgError());
+		{
+			info($values_order_detail, "order detail error");
+			$array_errors[] = Db::getInstance()->getMsgError();
+		}
 		$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
 		if (!$res)
-			return array('error' => true, 'msg' => Db::getInstance()->getMsgError());
+		{
+			info($values_order_detail, "orders error");
+			$array_errors[] = Db::getInstance()->getMsgError();
+		}
 	}
 
 	$res &= mo_renameTables();
 	if (!$res)
-		return array('error' => true, 'msg' => 'unable to rename tables orders_2 and order_detail_2 to orders_2 and order_detail');
-
+		$array_errors[] = 'unable to rename tables orders_2 and order_detail_2 to orders and order_detail';
+	
+	if (!$res)
+		return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
 }
 
 
