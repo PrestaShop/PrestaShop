@@ -182,8 +182,11 @@ class ManufacturerCore extends ObjectModel
 				m.`id_manufacturer` = ml.`id_manufacturer`
 				AND ml.`id_lang` = '.(int)$id_lang.'
 			)
-			'.Shop::addSqlAssociation('manufacturer', 'm').
-			($active ? ' AND m.`active` = 1' : '').'
+			'.Shop::addSqlAssociation('manufacturer', 'm');
+			if ($active)
+				$sql .= '
+			WHERE m.`active` = 1';
+			$sql .= '
 			GROUP BY m.id_manufacturer
 			ORDER BY m.`name` ASC'.
 			($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : '');
