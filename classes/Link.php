@@ -385,7 +385,7 @@ class LinkCore
 	 */
 	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false)
 	{
-		$controller = str_replace(array('-', '.php'), '', $controller);
+		$controller = str_replace('.php', '', $controller);
 
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
@@ -400,7 +400,7 @@ class LinkCore
 		}
 		unset($request['controller']);
 
-		$uri_path = Dispatcher::getInstance()->createUrl($controller.'_'.$id_lang, $request, true, '', $id_lang);
+		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
 		$url = ($ssl && Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
 
