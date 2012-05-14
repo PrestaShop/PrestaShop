@@ -179,8 +179,6 @@ class DispatcherCore
 	 */
 	protected $front_controller = self::FC_FRONT;
 
-	protected $loaded_languages = array();
-
 	/**
 	 * Get current instance of dispatcher (singleton)
 	 *
@@ -352,6 +350,7 @@ class DispatcherCore
 	 */
 	protected function loadRoutes()
 	{
+		$context = Context::getContext();
 		foreach ($this->default_routes as $id => $route)
 			$this->addRoute(
 				$id,
@@ -364,7 +363,23 @@ class DispatcherCore
 		if ($this->use_routes)
 		{
 			// Load routes from meta table
-			$this->loadLangRoutes(Context::getContext()->language->id);
+			$sql = 'SELECT m.page, ml.url_rewrite
+					FROM `'._DB_PREFIX_.'meta` m
+					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml').')
+					WHERE id_lang = '.(int)$context->language->id.'
+					ORDER BY LENGTH(ml.url_rewrite) DESC';
+			if ($results = Db::getInstance()->executeS($sql))
+				foreach ($results as $row)
+				{
+					if ($row['url_rewrite'])
+						$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
+					else
+						$this->empty_route = array(
+							'routeID' =>	$row['page'],
+							'rule' =>		$row['url_rewrite'],
+							'controller' =>	$row['page'],
+						);
+				}
 
 			// Load custom routes
 			foreach ($this->default_routes as $route_id => $route_data)
@@ -377,30 +392,6 @@ class DispatcherCore
 						isset($route_data['params']) ? $route_data['params'] : array()
 					);
 		}
-	}
-
-	public function loadLangRoutes($id_lang)
-	{
-		if (in_array($id_lang, $this->loaded_languages))
-			$this->loaded_languages[] = $id_lang;
-
-		$sql = 'SELECT m.page, ml.url_rewrite
-					FROM `'._DB_PREFIX_.'meta` m
-					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml').')
-					WHERE id_lang = '.(int)$id_lang.'
-					ORDER BY LENGTH(ml.url_rewrite) DESC';
-		if ($results = Db::getInstance()->executeS($sql))
-			foreach ($results as $row)
-			{
-				if ($row['url_rewrite'])
-					$this->addRoute(str_replace('-', '', $row['page']).'_'.$id_lang, $row['url_rewrite'], $row['page']);
-				else
-					$this->empty_route = array(
-						'routeID' =>	$row['page'].'_'.$id_lang,
-						'rule' =>		$row['url_rewrite'],
-						'controller' =>	$row['page'],
-					);
-			}
 	}
 
 	/**
@@ -507,12 +498,8 @@ class DispatcherCore
 	 * @param bool $use_routes If false, don't use to create this url
 	 * @param string $anchor Optional anchor to add at the end of this url
 	 */
-	public function createUrl($route_id, array $params = array(), $use_routes = true, $anchor = '', $id_lang = null)
+	public function createUrl($route_id, array $params = array(), $use_routes = true, $anchor = '')
 	{
-		if (!$id_lang)
-			$id_lang = Context::getContext()->language->id;
-		$this->loadLangRoutes($id_lang);
-
 		if (!isset($this->routes[$route_id]))
 		{
 			$query = http_build_query($params, '', '&');
