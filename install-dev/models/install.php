@@ -367,7 +367,10 @@ class InstallModelInstall extends InstallAbstractModel
 	{
 		// Clear smarty cache
 		$this->clearSmartyCache();
-
+		
+		//clear image cache in tmp folder
+		Tools::deleteDirectory(_PS_TMP_IMG_DIR_, false);
+		
 		$default_data = array(
 			'shop_name' =>		'My Shop',
 			'shop_activity' =>	'',
