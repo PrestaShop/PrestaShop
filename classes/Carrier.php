@@ -783,9 +783,10 @@ class CarrierCore extends ObjectModel
 			copy($old_logo, _PS_SHIP_IMG_DIR_.'/'.(int)$this->id.'.jpg');
 
 		$old_tmp_logo = _PS_TMP_IMG_DIR_.'/carrier_mini_'.(int)$old_id.'.jpg';
-		if (file_exists($old_tmp_logo))
+		if (file_exists($old_tmp_logo) && !isset($_FILES['logo']))
 			copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$this->id.'.jpg');
-
+		unlink($old_tmp_logo);
+		
 		// Copy existing ranges price
 		foreach (array('range_price', 'range_weight') as $range)
 		{
