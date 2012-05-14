@@ -419,7 +419,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getAssoTables()
 	{
-		return self::$asso_tables;
+		return Shop::$asso_tables;
 	}
 
 	/**
@@ -430,7 +430,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function isTableAssociated($table)
 	{
-		return isset(self::$asso_tables[$table]) && self::$asso_tables[$table]['type'] == 'shop';
+		return isset(Shop::$asso_tables[$table]) && Shop::$asso_tables[$table]['type'] == 'shop';
 	}
 
 	/**
