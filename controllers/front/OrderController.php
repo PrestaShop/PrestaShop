@@ -58,8 +58,10 @@ class OrderControllerCore extends ParentOrderController
 		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step != -1)
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('A minimum purchase total of').' '.Tools::displayPrice($minimal_purchase, $currency).
-			' '.Tools::displayError('is required in order to validate your order.');
+			$this->errors[] = sprintf(
+				Tools::displayError('A minimum purchase total of %d is required in order to validate your order.'),
+				Tools::displayPrice($minimal_purchase, $currency)
+			);
 		}
 
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))

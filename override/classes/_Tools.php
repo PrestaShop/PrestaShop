@@ -179,7 +179,11 @@ class Tools extends ToolsCore
 			else
 				trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
 
-			$message = Tools::displayError('The function').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
+			$message = sprintf(
+				Tools::displayError('The function %1$s (Line %2$s) is deprecated and will be removed in the next major version.'),
+				$callee['function'],
+				$callee['line']
+			);
 			Logger::addLog($message, 3, $callee['class']);
 		}
 	}
@@ -199,8 +203,12 @@ class Tools extends ToolsCore
 			if(PS_USE_FIREPHP)
 				FB::trace('Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />', 'deprecated parameter');
 			else
-				$message = Tools::displayError('The parameter').' '.$parameter.' '.Tools::displayError(' in function ').' '.$callee['function'].' ('.Tools::displayError('Line').' '.$callee['Line'].') '.Tools::displayError('is deprecated and will be removed in the next major version.');
-
+				$message = sprintf(
+					Tools::displayError('The parameter %1$s in function %2$s (Line %3$s) is deprecated and will be removed in the next major version.'),
+					$parameter,
+					$callee['function'],
+					$callee['Line']
+				);
 			Logger::addLog($message, 3, $callee['class']);
 		}
 	}

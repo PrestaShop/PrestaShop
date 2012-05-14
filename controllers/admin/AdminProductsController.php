@@ -328,7 +328,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
 				$this->errors[] = Tools::displayError('Invalid Name');
 			elseif (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
-				$this->errors[] = Tools::displayError('Name is too long.').' '.'(32 '.Tools::displayError('chars max').')';
+				$this->errors[] = sprintf(Tools::displayError('Name is too long (%d chars max).'), 32);
 			if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
 				$this->errors[] = Tools::displayError('Invalid description');
 		}
@@ -1306,9 +1306,17 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$current_language = new Language($language['id_lang']);
 				if (Tools::strlen($val) > $rules['sizeLang']['value'])
-					$this->errors[] = Tools::displayError('name for feature').' <b>'.$feature['name'].'</b> '.Tools::displayError('is too long in').' '.$current_language->name;
+					$this->errors[] = sprintf(
+						Tools::displayError('The name for feature %1$s is too long in %2$s.'),
+						' <b>'.$feature['name'].'</b>',
+						$current_language->name
+					);
 				elseif (!call_user_func(array('Validate', $rules['validateLang']['value']), $val))
-					$this->errors[] = Tools::displayError('Valid name required for feature.').' <b>'.$feature['name'].'</b> '.Tools::displayError('in').' '.$current_language->name;
+					$this->errors[] = sprintf(
+						Tools::displayError('Valid name required for feature. %1$s in %2$s.'),
+						' <b>'.$feature['name'].'</b>',
+						$current_language->name
+					);
 				if (count($this->errors))
 					return 0;
 				// Getting default language
@@ -1603,19 +1611,30 @@ class AdminProductsControllerCore extends AdminController
 			{
 				if (Tools::getValue('id_'.$this->table) && $field == 'passwd')
 					continue;
-				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
+				$this->errors[] = sprintf(
+					Tools::displayError('The field %s is required.'),
+					call_user_func(array($className, 'displayFieldName'), $field, $className)
+				);
 			}
 		}
 
 		// Check multilingual required fields
 		foreach ($rules['requiredLang'] as $fieldLang)
 			if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang.'_'.$default_language->id))
-				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$default_language->name;
+				$this->errors[] = sprintf(
+					Tools::displayError('This field %1$s is required at least in %2$s'),
+					call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+					$default_language->name
+				);
 
 		// Check fields sizes
 		foreach ($rules['size'] as $field => $maxLength)
 			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)) && Tools::strlen($value) > $maxLength)
-				$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+				$this->errors[] = sprintf(
+					Tools::displayError('The field %1$s is too long (%2$d chars max).'),
+					call_user_func(array($className, 'displayFieldName'), $field, $className),
+					$maxLength
+				);
 
 		if (Tools::getIsset('description_short') && $this->isProductFieldUpdated('description_short'))
 		{
@@ -1629,13 +1648,24 @@ class AdminProductsControllerCore extends AdminController
 		foreach ($languages as $language)
 			if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_'.$language['id_lang'])))
 				if (Tools::strlen(strip_tags($value)) > $limit)
-					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'description_short').' ('.$language['name'].')</b> '.$this->l('is too long').' : '.$limit.' '.$this->l('chars max').' ('.$this->l('count now').' '.Tools::strlen(strip_tags($value)).')';
+					$this->errors[] = sprintf(
+						Tools::displayError('This field %1$s (%2$s) is too long: %3$d chars max (count now %4$d).'),
+						call_user_func(array($className, 'displayFieldName'), 'description_short'),
+						$language['name'],
+						$limit,
+						Tools::strlen(strip_tags($value))
+					);
 
 		// Check multilingual fields sizes
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
 				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']) && Tools::strlen($value) > $maxLength)
-					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
+					$this->errors[] = sprintf(
+						Tools::displayError('The field %1$s is too long (%2$d chars max).'),
+						call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+						$maxLength
+					);
+
 		if ($this->isProductFieldUpdated('description_short') && isset($_POST['description_short']))
 			$_POST['description_short'] = $saveShort;
 
@@ -1643,14 +1673,21 @@ class AdminProductsControllerCore extends AdminController
 		foreach ($rules['validate'] as $field => $function)
 			if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)))
 				if (!Validate::$function($value))
-					$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
+					$this->errors[] = sprintf(
+						Tools::displayError('The field %s is invalid.'),
+						call_user_func(array($className, 'displayFieldName'), $field, $className)
+					);
 
 		// Check multilingual fields validity
 		foreach ($rules['validateLang'] as $fieldLang => $function)
 			foreach ($languages as $language)
 				if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])))
 					if (!Validate::$function($value))
-						$this->errors[] = $this->l('this field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
+						$this->errors[] = sprintf(
+							Tools::displayError('The field %1$s (%2$s) is invalid.'),
+							call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+							$language['name']
+						);
 
 		// Categories
 		if ($this->isProductFieldUpdated('id_category_default') && (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox'))))
@@ -1663,7 +1700,10 @@ class AdminProductsControllerCore extends AdminController
 		foreach ($languages as $language)
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
 				if (!Validate::isTagsList($value))
-					$this->errors[] = $this->l('Tags list').' ('.$language['name'].') '.$this->l('is invalid');
+					$this->errors[] = sprintf(
+						Tools::displayError('Tags list (%s) is invalid'),
+						$language['name']
+					);
 	}
 
 	/**

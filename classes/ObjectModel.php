@@ -867,8 +867,11 @@ abstract class ObjectModelCore
 
 			// Checking for maximum fields sizes
 			if (isset($data['size']) && ($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $data['size'])
-				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is too long.')
-								.' ('.Tools::displayError('Maximum length:').' '.$data['size'].')';
+				$errors[] = sprintf(
+					Tools::displayError('%1$s is too long. Maximum length: %2$d'),
+					self::displayFieldName($field, get_class($this), $htmlentities),
+					$data['size']
+				);
 
 			// Checking for fields validity
 			// Hack for postcode required for country which does not have postcodes
