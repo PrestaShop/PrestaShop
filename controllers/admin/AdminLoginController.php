@@ -187,8 +187,10 @@ class AdminLoginControllerCore extends AdminController
 			if (!$employee->getByemail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
-				$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.
-					Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
+				$this->errors[] = sprintf(
+					Tools::displayError('You can regenerate your password only every %d minute(s)'),
+					Configuration::get('PS_PASSWD_TIME_BACK')
+				);
 		}
 		if (_PS_MODE_DEMO_)
 			$errors[] = Tools::displayError('This functionality has been disabled.');

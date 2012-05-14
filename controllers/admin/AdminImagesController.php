@@ -581,7 +581,7 @@ class AdminImagesControllerCore extends AdminController
 			if ($deleteOldImages)
 				$this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
 			if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true)
-				$this->errors[] = Tools::displayError('Cannot write').$proc['type'].Tools::displayError('images. Please check the folder\'s writing permissions.');
+				$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions.'), $proc['type']);
 			elseif ($return == 'timeout')
 				$this->errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
 			else
@@ -591,7 +591,10 @@ class AdminImagesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('Server timed out, the watermark may not have been applied to all images.');
 				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
-						$this->errors[] = Tools::displayError('Cannot write "No picture" image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
+						$this->errors[] = sprintf(
+							Tools::displayError('Cannot write "No picture" image to (%s) images folder. Please check the folder\'s writing permissions.'),
+							$proc['type']
+						);
 			}
 		}
 		return (count($this->errors) > 0 ? false : true);

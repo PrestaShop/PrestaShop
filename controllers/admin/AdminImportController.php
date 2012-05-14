@@ -849,8 +849,11 @@ class AdminImportControllerCore extends AdminController
 						$category->id_parent = $category_to_create->id;
 					else
 					{
-						$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
-							' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(
+							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+							$category_to_create->name[$default_language_id],
+							(isset($category_to_create->id) ? $category_to_create->id : 'null')
+						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
@@ -868,14 +871,18 @@ class AdminImportControllerCore extends AdminController
 				if ($category->link_rewrite == '')
 				{
 					$category->link_rewrite = 'friendly-url-autogeneration-failed';
-					$this->warnings[] = Tools::displayError('URL rewriting failed to auto-generate a friendly URL for: ').$category->name[$default_language_id];
+					$this->warnings[] = sprintf(Tools::displayError('URL rewriting failed to auto-generate a friendly URL for: %s'), $category->name[$default_language_id]);
 				}
 				$category->link_rewrite = AdminImportController::createMultiLangField($category->link_rewrite);
 			}
 
 			if (!$valid_link)
-				$this->warnings[] = Tools::displayError('Rewrite link for').' '.$bak.(isset($info['id']) ? ' (ID '.$info['id'].') ' : '').
-					' '.Tools::displayError('was re-written as').' '.$category->link_rewrite[$default_language_id];
+				$this->warnings[] = sprintf(
+					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
+					$bak,
+					(isset($info['id']) ? $info['id'] : 'null'),
+					$category->link_rewrite[$default_language_id]
+				);
 			$res = false;
 			if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
@@ -913,7 +920,11 @@ class AdminImportControllerCore extends AdminController
 			// If both failed, mysql error
 			if (!$res)
 			{
-				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = sprintf(
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+					$info['name'],
+					(isset($info['id']) ? $info['id'] : 'null')
+				);
 				$error_tmp = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 				if ($error_tmp != '')
 					$this->errors[] = $error_tmp;
@@ -996,7 +1007,11 @@ class AdminImportControllerCore extends AdminController
 						$product->id_manufacturer = (int)$manufacturer->id;
 					else
 					{
-						$this->errors[] = $manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(
+							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+							$manufacturer->name,
+							(isset($manufacturer->id) ? $manufacturer->id : 'null')
+						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
@@ -1018,7 +1033,11 @@ class AdminImportControllerCore extends AdminController
 						$product->id_supplier = (int)$supplier->id;
 					else
 					{
-						$this->errors[] = $supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(
+							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+							$supplier->name,
+							(isset($supplier->id) ? $supplier->id : 'null')
+						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
@@ -1061,8 +1080,11 @@ class AdminImportControllerCore extends AdminController
 								$product->id_category[] = (int)$category_to_create->id;
 							else
 							{
-								$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
-									' '.Tools::displayError('Cannot be saved');
+								$this->errors[] = sprintf(
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+									$category_to_create->name[$default_language_id],
+									(isset($category_to_create->id) ? $category_to_create->id : 'null')
+								);
 								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
@@ -1086,8 +1108,11 @@ class AdminImportControllerCore extends AdminController
 								$product->id_category[] = (int)$category_to_create->id;
 							else
 							{
-								$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
-									' '.Tools::displayError('Cannot be saved');
+								$this->errors[] = sprintf(
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+									$category_to_create->name[$default_language_id],
+									(isset($category_to_create->id) ? $category_to_create->id : 'null')
+								);
 								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
@@ -1110,8 +1135,12 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			if (!$valid_link)
-				$this->warnings[] = Tools::displayError('Rewrite link for').' '.$link_rewrite.(isset($info['id']) ? ' (ID '.$info['id'].') ' : '').
-					' '.Tools::displayError('was re-written as').' '.$link_rewrite;
+				$this->warnings[] = sprintf(
+					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
+					$link_rewrite,
+					(isset($info['id']) ? $info['id'] : 'null'),
+					$link_rewrite
+				);
 
 			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
@@ -1164,7 +1193,11 @@ class AdminImportControllerCore extends AdminController
 			// If both failed, mysql error
 			if (!$res)
 			{
-				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = sprintf(
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+					$info['name'],
+					(isset($info['id']) ? $info['id'] : 'null')
+				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 
@@ -1357,7 +1390,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').' '.Tools::displayError('Cannot be saved');
+					$this->warnings[] = sprintf(Tools::displayError('%s cannot be saved'), (isset($image->id_product) ? ' ('.$image->id_product.')' : ''));
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
@@ -1597,7 +1630,11 @@ class AdminImportControllerCore extends AdminController
 			}
 			if (!$res)
 			{
-				$this->errors[] = $info['email'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = sprintf(
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+					$info['email'],
+					(isset($info['id']) ? $info['id'] : 'null')
+				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
@@ -1644,7 +1681,7 @@ class AdminImportControllerCore extends AdminController
 						$address->id_country = (int)$country->id;
 					else
 					{
-						$this->errors[] = $country->name[$default_language_id].' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
@@ -1674,7 +1711,7 @@ class AdminImportControllerCore extends AdminController
 						$address->id_state = (int)$state->id;
 					else
 					{
-						$this->errors[] = $state->name.' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
@@ -1689,11 +1726,15 @@ class AdminImportControllerCore extends AdminController
 					if ($customer)
 						$address->id_customer = (int)$customer;
 					else
-						$this->errors[] = Db::getInstance()->getMsgError().' '.$address->customer_email.' '.Tools::displayError('does not exist in database').' '.
-							(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = sprintf(
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Db::getInstance()->getMsgError(),
+							$address->customer_email,
+							(isset($info['id']) ? $info['id'] : 'null')
+						);
 				}
 				else
-					$this->errors[] = '"'.$address->customer_email.'" :'.Tools::displayError('Is not a valid e-mail address');
+					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid e-mail address'), $address->customer_email);
 			}
 
 			if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer))
@@ -1707,8 +1748,11 @@ class AdminImportControllerCore extends AdminController
 					$address->id_manufacturer = (int)$manufacturer->id;
 				else
 				{
-					$this->errors[] = Db::getInstance()->getMsgError().' '.$manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').
-						' '.Tools::displayError('Cannot be saved');
+					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+						$manufacturer->name,
+						(isset($manufacturer->id) ? $manufacturer->id : 'null')
+					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
@@ -1725,8 +1769,11 @@ class AdminImportControllerCore extends AdminController
 					$address->id_supplier = (int)$supplier->id;
 				else
 				{
-					$this->errors[] = Db::getInstance()->getMsgError().' '.$supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').
-						' '.Tools::displayError('Cannot be saved');
+					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+						$supplier->name,
+						(isset($supplier->id) ? $supplier->id : 'null')
+					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
@@ -1743,7 +1790,11 @@ class AdminImportControllerCore extends AdminController
 			}
 			if (!$res)
 			{
-				$this->errors[] = $info['alias'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = sprintf(
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+					$info['alias'],
+					(isset($info['id']) ? $info['id'] : 'null')
+				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
@@ -1800,8 +1851,11 @@ class AdminImportControllerCore extends AdminController
 
 			if (!$res)
 			{
-				$this->errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
-					' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+					$info['name'],
+					(isset($info['id']) ? $info['id'] : 'null')
+				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
@@ -1838,8 +1892,11 @@ class AdminImportControllerCore extends AdminController
 					$res = $supplier->add();
 
 				if (!$res)
-					$this->errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
-						' '.Tools::displayError('Cannot be saved');
+					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+						$info['name'],
+						(isset($info['id']) ? $info['id'] : 'null')
+					);
 				else
 				{
 					// Associate supplier to group shop

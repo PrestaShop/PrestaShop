@@ -48,7 +48,10 @@ class PasswordControllerCore extends FrontController
 				else
 				{
 					if ((strtotime($customer->last_passwd_gen.'+'.(int)($min_time = Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0)
-						$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.(int)($min_time).' '.Tools::displayError('minute(s)');
+						$this->errors[] = sprintf(
+							Tools::displayError('You can regenerate your password only every %d minute(s)'),
+							(int)$min_time
+						);
 					else
 					{
 						if (Mail::Send($this->context->language->id, 'password_query', Mail::l('Password query confirmation'),
