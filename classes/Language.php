@@ -324,7 +324,9 @@ class LanguageCore extends ObjectModel
 				{
 					$modDir = _PS_MODULE_DIR_.$mod;
 					// Lang file
-					if (file_exists($modDir.'/'.(string)$iso_from.'.php'))
+					if (file_exists($modDir.'/translations/'.(string)$iso_from.'.php'))
+						$files_modules[$modDir.'/translations/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/translations/'.(string)$iso_to.'.php' : ++$number);
+					else if (file_exists($modDir.'/'.(string)$iso_from.'.php'))
 						$files_modules[$modDir.'/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/'.(string)$iso_to.'.php' : ++$number);
 					// Mails files
 					$modMailDirFrom = $modDir.'/mails/'.(string)$iso_from;
