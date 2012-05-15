@@ -85,7 +85,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'title' =>	$this->l('Employee options'),
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array(
-						'title' => $this->l('Password regeneration:'),
+						'title' => $this->l('Password regeneration'),
 						'desc' => $this->l('Security: minimum time to wait between two password changes'),
 						'cast' => 'intval',
 						'size' => 5,
@@ -94,7 +94,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-						'title' => $this->l('Memorize language used in Admin panel forms:'),
+						'title' => $this->l('Memorize language used in Admin panel forms'),
 						'desc' => $this->l('Allow employees to select a specific language for Admin panel forms'),
 						'cast' => 'intval',
 						'type' => 'select',

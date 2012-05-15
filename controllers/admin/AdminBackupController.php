@@ -51,8 +51,8 @@ class AdminBackupControllerCore extends AdminController
 				'title' =>	$this->l('Backup options'),
 				'fields' =>	array(
 					'PS_BACKUP_ALL' => array(
-						'title' => $this->l('Ignore statistics tables:'),
-						'desc' => $this->l('If enabled, the following tables will NOT be backed up:').'
+						'title' => $this->l('Ignore statistics tables'),
+						'desc' => $this->l('Drop existing tables during import').'
 							<br />'._DB_PREFIX_.'connections, '._DB_PREFIX_.'connections_page, '._DB_PREFIX_.'connections_source, '.
 							_DB_PREFIX_.'guest, '._DB_PREFIX_.'statssearch',
 						'cast' => 'intval',

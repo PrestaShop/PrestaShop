@@ -52,7 +52,7 @@ class AdminLogsControllerCore extends AdminController
 				'title' =>	$this->l('Logs by e-mail'),
 				'fields' =>	array(
 					'PS_LOGS_BY_EMAIL' => array(
-						'title' => $this->l('Minimum severity level:'),
+						'title' => $this->l('Minimum severity level'),
 						'desc' => $this->l('Enter "5" if you do not want to receive any e-mails.').'<br />'.$this->l('E-mails will be sent to the shop owner.'),
 						'cast' => 'intval',
 						'type' => 'text',

@@ -88,7 +88,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'desc' => $this->l('Enable ajax search for your visitors.').'<br />'.
 							$this->l('With ajax search, the first 10 products matching the user query will appear in real time below the input field.')),
 					'PS_INSTANT_SEARCH' => array(
-						'title' => $this->l('Instant search:'),
+						'title' => $this->l('Instant search'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
