@@ -1795,9 +1795,19 @@ class BlockLayered extends Module
 				<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Use this template for:').'</span>
 				<input type="radio" id="scope_1" name="scope" value="1" style="margin-left: 15px;" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
 				<label for="scope_1" style="float: none;">'.$this->l('All categories').'</label>
-				<input type="radio" id="scope_2" name="scope" value="2" style="margin-left: 15px;" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
-				<label for="scope_2" style="float: none;"><a id="inline" href="#layered-categories-selection" style="text-decoration: underline;">'.$this->l('Specific').'</a>
-				'.$this->l('categories').' (<span id="layered-cat-counter"></span> '.$this->l('selected').')</label>
+				<input type="radio" id="scope_2" name="scope" value="2" style="margin-left: 15px;" class="layered-category-selection" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
+				<style>
+					.link {
+						color: black;
+						cursor: pointer;
+						text-decoration: underline;
+					}
+					.link:hover {
+						color: gray;
+					}
+				</style>
+				<label for="scope_2" style="float: none;"><a id="inline" href="#layered-categories-selection" style="text-decoration: underline;"></a>'.preg_replace('/\*([^*]+)\*/Usi', '<span class="link">$1</span>', $this->l('*Specific* categories')).'
+				(<span id="layered-cat-counter"></span> '.$this->l('selected').')</label>
 			</p>';
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
