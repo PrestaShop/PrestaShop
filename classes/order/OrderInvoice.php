@@ -250,7 +250,7 @@ class OrderInvoiceCore extends ObjectModel
 		if ($this->useOneAfterAnotherTaxComputationMethod())
 		{
 			// sum by taxes
-			$taxes_by_tax = Db::getInstance()->executeS('
+			$taxes_infos = Db::getInstance()->executeS('
 			SELECT odt.`id_order_detail`, t.`name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
 			FROM `'._DB_PREFIX_.'order_detail_tax` odt
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
@@ -292,11 +292,16 @@ class OrderInvoiceCore extends ObjectModel
 						'total_price_tax_excl' => 0
 					);
 
+				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
+				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'];
+				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += ($tax_infos['total_price_tax_excl'] - $order_reduction_amount);
 			}
 		}
+
+
 
 		return $tmp_tax_infos;
 	}
