@@ -55,8 +55,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_c25a08cd48b8fd27ff49f435f05640c
 $_MODULE['<{blocklayered}prestashop>blocklayered_0ce4150f57948567deeaa58d0c367412'] = 'Étape 1/3 - Choisissez vos catégories';
 $_MODULE['<{blocklayered}prestashop>blocklayered_99cdd6365310333a594b16e5658eee5c'] = 'Utiliser ce modèle pour :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_62f5d708d6ad1fa1ddd9429a65cccbea'] = 'Toutes les catégories';
-$_MODULE['<{blocklayered}prestashop>blocklayered_fe0619d5f4999e09c622e32da7e7566a'] = 'Spécifiques';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b0b5ccb4a195a07fd3eed14affb8695f'] = 'catégories';
+$_MODULE['<{blocklayered}prestashop>blocklayered_4071a0db922638ac9648539ea2ddaa8b'] = 'Catégories *spécifiques*';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef7de3f485174ff47f061ad27d83d0ee'] = 'sélectionnée(s)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c2d0bf5ad42279c519cdcb4a94eb46b6'] = 'Choisissez une association de boutiques :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f72c75bdf80dc88b2529162f4947edc8'] = 'Veuillez sélectionnez au moins une catégorie spécifique ou choisissez \"Toutes les catégories\".';
