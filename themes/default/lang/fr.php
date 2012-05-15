@@ -329,6 +329,7 @@ $_LANG['order-carrier_0fce1189b263c211a8239fb0e9df004d'] = 'J\'accepte de recevo
 $_LANG['order-carrier_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Suivant';
 $_LANG['order-carrier_1f87346a16cf80c372065de3c54c86d9'] = 'TTC';
 $_LANG['order-carrier_21034ae6d01a83e702839a72ba8a77b0'] = 'HT';
+$_LANG['order-carrier_2d51d96d770cc2244be31a85e608de19'] = 'Aucun transporteur disponible.';
 $_LANG['order-carrier_5508a53851720a210e50f7b8a6f66f46'] = 'Vous devez accepter les conditions générales de vente pour passer à l\'étape suivante.';
 $_LANG['order-carrier_5c2dfd55fea1f5c6adef500fcb6403b4'] = 'Coût suppl. de';
 $_LANG['order-carrier_617096c86d35478132502be00e12e016'] = 'Si vous souhaitez ajouter un commentaire sur votre commande, veuillez l\'écrire ci-dessous.';
