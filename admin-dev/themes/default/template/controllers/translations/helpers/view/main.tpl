@@ -120,9 +120,20 @@
 				<img src="../img/admin/import.gif" />{l s='Import a language pack manually'}
 			</legend>
 			<div id="submitImportContent">
-				{l s='If the name format is: isocode.gzip (e.g. us.gzip) and the language corresponding to this package does not exist, it will automatically be created.'}
-				{l s='Be careful, as this will replace all existing data for the destination language!'}<br /><br />
-				{l s='Language pack to import:'} <input type="file" name="file" /> &nbsp;<input type="submit" value="{l s='Import'}" name="submitImport" class="button" /></p>
+				<p>
+					{l s='If the name format is: isocode.gzip (e.g. us.gzip) and the language corresponding to this package does not exist, it will automatically be created.'}
+					{l s='Be careful, as this will replace all existing data for the destination language!'}
+				</p>
+				<p><label for="importLanguage">{l s='Language pack to import:'}</label><input type="file" name="file" id="importLanguage"/>&nbsp;</p>
+				<p>
+					<label for="selectThemeForImport">{l s='Select yours themes:'}</label>
+					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
+						{foreach $themes as $theme}
+							<option value="{$theme->directory}" selected="selected">{$theme->name} &nbsp;</option>
+						{/foreach}
+					</select>
+				</p>
+				<p class="margin-form"><input type="submit" value="{l s='Import'}" name="submitImport" class="button" /></p>
 			</div>
 		</fieldset>
 	</form>

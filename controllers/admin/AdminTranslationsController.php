@@ -444,6 +444,43 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * Move theme translations in selected themes
+	 *
+	 * @param array $files
+	 * @param array $themes_selected
+	 */
+	public function checkAndAddThemesFiles($files, $themes_selected)
+	{
+		foreach ($files as $file)
+		{
+			// Check if file is a file theme
+			if (preg_match('#^themes\/([a-z0-9]+)\/lang\/#Ui', $file['filename'], $matches))
+			{
+				$slash_pos = strrpos($file['filename'], '/');
+				$name_file = substr($file['filename'], -(strlen($file['filename']) - $slash_pos - 1));
+				$name_default_theme = $matches[1];
+				$deleted_old_theme = false;
+
+				// Get the old file theme
+				if (file_exists(_PS_THEME_DIR_.'lang/'.$name_file))
+					$theme_file_old = _PS_THEME_DIR_.'lang/'.$name_file;
+				else
+				{
+					$deleted_old_theme = true;
+					$theme_file_old = str_replace(self::DEFAULT_THEME_NAME, $name_default_theme, _PS_THEME_DIR_.'lang/'.$name_file);
+				}
+
+				// Move the old file theme in the new folder
+				foreach ($themes_selected as $theme_name)
+					copy($theme_file_old, str_replace($name_default_theme, $theme_name, $theme_file_old));
+
+				if ($deleted_old_theme)
+					@unlink($theme_file_old);
+			}
+		}
+	}
+
 	public function submitImportLang()
 	{
 		if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name'])
@@ -452,10 +489,12 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			$gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
 			$iso_code = str_replace('.gzip', '', $_FILES['file']['name']);
+			$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
 			$files_list = $gz->listContent();
 			if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 			{
 				$this->checkAndAddMailsFiles($iso_code, $files_list);
+				$this->checkAndAddThemesFiles($files_list, $themes_selected);
 				if (Validate::isLanguageFileName($_FILES['file']['name']))
 				{
 					if (!Language::checkAndAddLanguage($iso_code))
@@ -919,7 +958,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->themes = Theme::getThemes();
 
 		// Get folder name of theme
-		if ($theme = Tools::getValue('theme'))
+		if (($theme = Tools::getValue('theme')) && !is_array($theme))
 			$this->theme_selected = Tools::safeOutput($theme);
 		else
 			$this->theme_selected = self::DEFAULT_THEME_NAME;
@@ -928,7 +967,7 @@ class AdminTranslationsControllerCore extends AdminController
 		define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_.'/themes/'.$this->theme_selected.'/');
 
 		// Get type of translation
-		if ($type = Tools::getValue('type'))
+		if (($type = Tools::getValue('type')) && !is_array($type))
 			$this->type_selected = strtolower(Tools::safeOutput($type));
 
 		// Get selected language
