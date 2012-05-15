@@ -30,7 +30,7 @@
 
 	<p>
 		{l s='Expressions to translate'} : <b>{$count}</b>.<br />
-		{l s='Total missing expresssions:'} {$missing_translations}<br />
+		{l s='Total missing expresssions:'} {$missing_translations|array_sum}<br />
 	</p>
 
 	{if $post_limit_exceeded}
