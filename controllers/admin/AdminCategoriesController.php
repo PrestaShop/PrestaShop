@@ -154,10 +154,8 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-		$this->_select = 'cs.`position` ';
-		$id = $this->context->shop->id;
-		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (a.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
+		$this->_select = 'category_shop.`position` ';
+		$this->_join = Shop::addSqlAssociation('category', 'a');
 		// we add restriction for shop
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
 			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->id;
@@ -188,7 +186,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, 'cs.position', $order_way, $start, $limit, Context::getContext()->shop->id);
+		parent::getList($id_lang, 'category_shop.position', $order_way, $start, $limit, Context::getContext()->shop->id);
 		// Check each row to see if there are combinations and get the correct action in consequence
 
 		$nb_items = count($this->_list);
@@ -650,8 +648,9 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 		$delete = substr($delete, 0, strlen($delete) - 1);
 		$insert = substr($insert, 0, strlen($insert) - 1);
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
-			($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
+		if (!empty($delete))
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
+				($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
 
 		if (!empty($insert))
 			Db::getInstance()->execute('

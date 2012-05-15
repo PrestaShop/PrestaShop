@@ -196,11 +196,11 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->_category = new Category();
 
-		$this->_join = Shop::addSqlAssociation('product', 'a').'
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
+		$this->_join =
+			'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (sa.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
@@ -210,7 +210,7 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 
-		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity';
+		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, sa.`price`, (sa.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity';
 
 	}
 	protected function _cleanMetaKeywords($keywords)
