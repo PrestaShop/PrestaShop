@@ -1986,7 +1986,7 @@ class AdminControllerCore extends Controller
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
-			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $test_join)
+			if (Shop::isFeatureActive() && $test_join)
 			{
 				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_shop` sa ';
 				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $idenfier_shop).'))';

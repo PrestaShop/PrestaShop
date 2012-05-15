@@ -271,8 +271,7 @@ class AdminProductsControllerCore extends AdminController
 			$orderWay = 'ASC';
 		}
 
-		$alias = (Shop::getContext() != Shop::CONTEXT_SHOP) ? 'product_shop': 'sa';
-		$this->_select .= ', '.$alias.'.`active`';
+		$this->_select .= ', sa.`active`';
 		if (!Tools::isSubmit('productFilter_active'))
 			$this->_filter = '';
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
