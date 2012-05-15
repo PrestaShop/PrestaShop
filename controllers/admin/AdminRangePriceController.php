@@ -119,17 +119,21 @@ class AdminRangePriceControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		$id = (int)Tools::getValue('id_'.$this->table);		
-		
-		if (Tools::getValue('submitAdd'.$this->table) && Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
-			$this->errors[] = Tools::displayError('Invalid range');
-		else if (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
-			$this->errors[] = Tools::displayError('Range already exists');
-		else if (!$id && RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
-			$this->errors[] = Tools::displayError('Ranges are overlapping');
+		$id = (int)Tools::getValue('id_'.$this->table);	
+		if (Tools::getValue('submitAdd'.$this->table))
+		{
+			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
+				$this->errors[] = Tools::displayError('Invalid range');
+			else if (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
+				$this->errors[] = Tools::displayError('Range already exists');
+			else if (RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
+				$this->errors[] = Tools::displayError('Ranges are overlapping');
+			else if (!count($this->errors))
+				parent::postProcess();
+		}
 		else
 			parent::postProcess();
-	}
+ 	}
 }
 
 
