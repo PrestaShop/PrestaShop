@@ -1537,7 +1537,7 @@ tabs_manager.setTabs(product_tabs);
 
 $(document).ready(function() {
 	// The manager schedules the onReady() methods of each tab to be called when the tab is loaded
-	tabs_manager.onReady();
+	tabs_manager.init();
 
 	updateCurrentText();
 
