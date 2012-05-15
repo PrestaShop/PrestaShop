@@ -113,8 +113,7 @@ class Newsletter extends Module
 					$this->_my_fputcsv($fd, $tab);
 				fclose($fd);
 				$this->_html .= $this->displayConfirmation(
-				$this->l('The .CSV file has been successfully exported.').
-				' ('.$nb.' '.$this->l('customers found').')<br />
+				sprintf($this->l('The .CSV file has been successfully exported. (%d customers found)'), $nb).'<br />
 				<a href="../modules/newsletter/'.Tools::safeOutput(strval($_POST['action'])).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
 				<br />
 				<ol style="margin-top: 10px;">

@@ -596,7 +596,7 @@ class Loyalty extends Module
 		$points = (int)LoyaltyModule::getPointsByCustomer((int)$params['id_customer']);
 
 		$html = '
-		<br /><h2>'.$this->l('Loyalty points').' ('.(int)$points.' '.$this->l('points').')</h2>';
+		<br /><h2>'.sprintf($this->l('Loyalty points (%d points)'), $points).'</h2>';
 		
 		if (!$points)
 			return $html.' '.$this->l('This customer has no points');
@@ -614,7 +614,7 @@ class Loyalty extends Module
 		{
 			$html.= '
 			<tr style="background-color: '.($key % 2 != 0 ? '#FFF6CF' : '#FFFFFF').';">
-				<td>'.((int)$loyalty['id'] > 0 ? '<a style="color: #268CCD; font-weight: bold; text-decoration: underline;" href="index.php?tab=AdminOrders&id_order='.$loyalty['id'].'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($params['cookie']->id_employee)).'">'.$this->l('#').sprintf('%06d', $loyalty['id']).'</a>' : '--').'</td>
+				<td>'.((int)$loyalty['id'] > 0 ? '<a style="color: #268CCD; font-weight: bold; text-decoration: underline;" href="index.php?tab=AdminOrders&id_order='.$loyalty['id'].'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)($params['cookie']->id_employee)).'">'.sprintf($this->l('#%d'), $loyalty['id']).'</a>' : '--').'</td>
 				<td>'.Tools::displayDate($loyalty['date'], (int)($params['cookie']->id_lang)).'</td>
 				<td>'.((int)$loyalty['id'] > 0 ? $loyalty['total_without_shipping'] : '--').'</td>
 				<td>'.(int)$loyalty['points'].'</td>

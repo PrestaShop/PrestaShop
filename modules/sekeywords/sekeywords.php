@@ -106,8 +106,8 @@ class SEKeywords extends ModuleGraph
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
 		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-		<p>
-		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'</p>';
+		<p>'.
+		($total == 1 ? sprintf($this->l('%d keyword matches your query.'), $total) : sprintf($this->l('%d keywords match your query.'), $total)).'</p>';
 		if ($result && $total)
 		{
 			$table = '
@@ -140,13 +140,15 @@ class SEKeywords extends ModuleGraph
 		$this->html .= '</div><br/>
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Identify external search engines\' keywords').'</h2>
-			<p>'.$this->l('One of the most common ways of finding a website through a search engine.
-				Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'
+			<p>'.$this->l('One of the most common ways of finding a website through a search engine.').
+			$this->l('Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'
 			</p><br />
 			<h3>'.$this->l('How does it work?').'</h2>
-			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it. 
-				Currently, it manages the following search engines:').'<b> Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b> '.$this->l('and').' <b>Altavista</b>. '.
-				$this->l('Soon it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
+			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it.').
+			sprintf($this->l('Currently, it manages the following search engines: %1$s and %2$s.'),
+				'<b>Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b>',
+				'<b>Altavista</b>'
+			).$this->l('Soon it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
 		</div>';
 		return $this->html;
 	}

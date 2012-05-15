@@ -9,8 +9,7 @@ $_MODULE['<{dateofdelivery}prestashop>beforecarrier_c9ed8c0b07828727ca6653924b04
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b0f76e26cffaf27784d901a64f39593e'] = 'Date de livraison';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_98110868b266d63c3bacdac4430169cf'] = 'Afficher une date approximative de livraison';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_a39df5444246aeb081729db7e17f51bc'] = 'Configuration : date de livraison';
-$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_8e8fe67c419e34287373a91cc6cab1de'] = 'La date approximative de livraison est entre le :';
-$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_be5d5d37542d75f93a87094459f76678'] = 'et le ';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_32dfb655a7b12a2c5662516e82f5d79b'] = 'Date approximative de livraison est entre le %1$s et le %2$s';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_0ea55758c7a68c0309b915e4b718d6b8'] = 'Le format de la date n\'est pas valable';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7ccf58c950043c9fbfed668df13ce608'] = 'Paramètres mis à jour';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_ecfe3ba0ff66a97029088e8e90a3f051'] = 'Délai minimum incorrect';
@@ -30,8 +29,7 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_1b9f5204ddf0881dc9f3a7bf65d
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_52f253c711cff509bd5e4df2b18b697a'] = 'livraison le samedi';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_fcddbca356dee064438a399fc0c4c84e'] = 'livraison le dimanche';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_06df33001c1d7187fdd81ea1f5b277aa'] = 'Actions';
-$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7b367091d009d1a4be71a6a72494894f'] = 'jour(s) et';
-$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_225e75c29d32392d311f5dc94c792384'] = 'jour(s)';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b5813d499e8a122485995dd7851c1fb2'] = '%1$d jour(s) et %2$d jour(s)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
@@ -39,6 +37,7 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_f2a6c498fb90ee345d997f888fc
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_58f748703db13e81b6ca6c366d1ab50c'] = 'Aucune règle de transporteur';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_4dab36ac83853282fc0d7bae20c19e90'] = 'Plus d\'options';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_0008e84621e5c9f21f8a55387a28692f'] = 'Temps supplémentaire lorsqu\'un produit est hors stock';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_225e75c29d32392d311f5dc94c792384'] = 'jour(s)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_521d02cf307201053a46e0b9c5b5170c'] = 'Temps supplémentaire pour la préparation des commandes';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_cec31ec82e3bdee482baaa9f5b11eeed'] = 'Option pour la préparation';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_15b4020fafe2bcadf41fbdb2e7fa137a'] = 'préparation le samedi';
@@ -50,6 +49,7 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_168ee9f4820976c4f4055cd8179
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_8c5961161cc9ce6db81bf3be77091136'] = 'Modification d\'une règle de transporteur';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_f8617a92ba0a0a4eabee724eab7c9f48'] = 'Transporteur :';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_961f2247a2070bedff9f9cd8d64e2650'] = 'Choisissez';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7b367091d009d1a4be71a6a72494894f'] = 'jour(s) et';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_d3e0fc43c22a6bb8e2d271a29b2f06fd'] = 'Option de livraison :';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_9d1a0949c39e66a0cd65240bc0ac9177'] = 'Dimanche';
@@ -71,6 +71,5 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_cc5d90569e1c8313c2b1c2aab14
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_eca60ae8611369fe28a02e2ab8c5d12e'] = 'Octobre';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7e823b37564da492ca1629b4732289a8'] = 'Novembre';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_82331503174acbae012b2004f6431fa5'] = 'Décembre';
-$_MODULE['<{dateofdelivery}prestashop>orderdetail_8e8fe67c419e34287373a91cc6cab1de'] = 'Date approximative de livraison est entre le';
-$_MODULE['<{dateofdelivery}prestashop>orderdetail_be5d5d37542d75f93a87094459f76678'] = 'et le';
+$_MODULE['<{dateofdelivery}prestashop>orderdetail_32dfb655a7b12a2c5662516e82f5d79b'] = 'Date approximative de livraison est entre le %1$s et le %2$s';
 $_MODULE['<{dateofdelivery}prestashop>orderdetail_c9ed8c0b07828727ca6653924b0498d3'] = 'avec un moyen de paiement direct (ex. : carte bancaire)';

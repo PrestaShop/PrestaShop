@@ -197,7 +197,7 @@ class DateOfDelivery extends Module
 		$id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
 		$return = '';
 		if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
-			$return = $this->l('Approximate date of delivery is between').' '.$datesDelivery[0].' '.$this->l('and').' '.$datesDelivery[1];
+			$return = sprintf($this->l('Approximate date of delivery is between %1$s and %2$s'), $datesDelivery[0], $datesDelivery[1]);
 
 		return $return;
 	}
@@ -307,7 +307,7 @@ class DateOfDelivery extends Module
 				$this->_html .= '
 				<tr>
 					<td width="30%">'.(!preg_match('/^0$/Ui', $rule['name']) ? htmlentities($rule['name'], ENT_QUOTES, 'UTF-8') : Configuration::get('PS_SHOP_NAME')).'</td>
-					<td width="40%" class="center"><b>'.(int)($rule['minimal_time']).'</b> '.$this->l('day(s) and').' <b>'.(int)($rule['maximal_time']).'</b> '.$this->l('day(s)').'</td>
+					<td width="40%" class="center"><b>'.'</b> '.sprintf($this->l('%1$d day(s) and %2$d day(s)'), $rule['minimal_time'], $rule['maximal_time']).'</td>
 					<td width="10%" class="center">';
 					
 				if ($rule['delivery_saturday'])
