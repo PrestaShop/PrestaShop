@@ -1444,15 +1444,32 @@ class CategoryCore extends ObjectModel
 
 	public function addPosition($position, $id_shop = null)
 	{
+		$return = true;
 		if (is_null($id_shop))
 		{
-			$id = Context::getContext()->shop->id;
-			$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
+			if (Shop::getContext() != Shop::CONTEXT_SHOP)
+				foreach (Shop::getContextListShopID() as $id_shop)
+					$return &= Db::getInstance()->execute('
+						INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`, `position`) VALUES
+						('.(int)$this->id.', '.(int)$id_shop.', '.(int)$position.')
+						ON DUPLICATE KEY UPDATE `position` = '.(int)$position);
+			else
+			{
+				$id = Context::getContext()->shop->id;
+				$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
+				$return &= Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`, `position`) VALUES
+					('.(int)$this->id.', '.(int)$id_shop.', '.(int)$position.')
+					ON DUPLICATE KEY UPDATE `position` = '.(int)$position);
+			}
 		}
-		return Db::getInstance()->execute('
+		else
+			$return &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`, `position`) VALUES
 			('.(int)$this->id.', '.(int)$id_shop.', '.(int)$position.')
 			ON DUPLICATE KEY UPDATE `position` = '.(int)$position);
+
+		return $return;
 	}
 
 	public static function getShopsByCategory($id_category)
