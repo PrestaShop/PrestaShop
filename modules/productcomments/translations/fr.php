@@ -7,8 +7,7 @@ $_MODULE['<{productcomments}prestashop>productcomments-ajax_f88dc17737f7fdd4464b
 $_MODULE['<{productcomments}prestashop>productcomments-ajax_7fa4a3510dafd0eac6435c19861b2bb7'] = 'Commentaire publié.';
 $_MODULE['<{productcomments}prestashop>productcomments-ajax_f8694a9aae2eb045920f613cfa7f1235'] = 'En attente de la validation de la modération.';
 $_MODULE['<{productcomments}prestashop>productcomments-ajax_6bf852d9850445291f5e9d4740ac7b50'] = 'Un texte de commentaire est nécessaire.';
-$_MODULE['<{productcomments}prestashop>productcomments-ajax_6d28f2900adb9e500868166f6d04da92'] = 'Vous devriez attendre';
-$_MODULE['<{productcomments}prestashop>productcomments-ajax_ba8d7ae5dcadfba739f28a777378f208'] = 'secondes avant de publier un nouveau commentaire.';
+$_MODULE['<{productcomments}prestashop>productcomments-ajax_8aafe254c3e8dceb6425591b322044f2'] = 'Vous devriez attendre %d secondes avant de publier un nouveau commentaire.';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_3f3c57ad486f74745aef0a3bb5f3ad6c'] = 'Votre commentaire ne peut pas être publié. Veuillez remplir tous les champs requis.';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_7c3b0e9898b88deee7ea75aafd2e37e2'] = 'Note moyenne';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_a71a0229e164fecdcde3c4e0f40473fa'] = 'Lire les avis utilisateurs';
@@ -71,8 +70,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_729a51874fe901b092899e9e8
 $_MODULE['<{productcomments}prestashop>productcomments_687e376375b560c9261aba93ea5186de'] = 'Aucun commentaire à gérer en ce moment.';
 $_MODULE['<{productcomments}prestashop>productcomments_4494d00c901c9e22ff3b953177205cea'] = 'Êtes-vous sur de vouloir signaler ce commentaire ?';
 $_MODULE['<{productcomments}prestashop>productcomments_4b3b9db8c9784468094acde0f8bf7071'] = 'Note';
-$_MODULE['<{productcomments}prestashop>productcomments_663fc7093256cda156e571631ddb295e'] = 'personne(s) sur';
-$_MODULE['<{productcomments}prestashop>productcomments_e759c67f646fedbee26e1e6732588a98'] = 'ont trouvé ce commentaire utile';
+$_MODULE['<{productcomments}prestashop>productcomments_b5c82723bd85856358f9a376bc613998'] = '%1$d personne(s) sur %2$d ont trouvé ce commentaire utile.';
 $_MODULE['<{productcomments}prestashop>productcomments_39630ad6ee79b8653ea89194cdb45bec'] = 'Ce commentaire vous a-t-il été utile ?';
 $_MODULE['<{productcomments}prestashop>productcomments_a6105c0a611b41b08f1209506350279e'] = 'oui';
 $_MODULE['<{productcomments}prestashop>productcomments_7fa3b767c460b54a2be4d49030b349c7'] = 'non';

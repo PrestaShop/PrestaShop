@@ -3,8 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_4f29d8c727dcf2022ac241cb96c31083'] = 'Aucun résultat';
-$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_eab2b4237a7cd89c309119e35f62d168'] = 'Affichage de';
-$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_8bf8854bebe108183caeb845c7676ae4'] = 'sur';
+$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_f5c493141bb4b2508c5938fd9353291a'] = 'Affichage de %1$s de %2$s';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_eebfd2d9a7ea25b9e61e8260bcd4849c'] = 'Quantité totale vendue';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_411919c5d99ff5d0f9770e96ffe22a01'] = 'Prix total vendu';

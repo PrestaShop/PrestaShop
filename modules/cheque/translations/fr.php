@@ -36,14 +36,13 @@ $_MODULE['<{cheque}prestashop>payment_execution_46b9e3665f187c739c55983f757ccda0
 $_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Autres moyens de paiement';
 $_MODULE['<{cheque}prestashop>payment_a5967aadef7d23b5027d46e107faf6d0'] = 'Payer par chèque';
 $_MODULE['<{cheque}prestashop>payment_30bee0e9549e97b2f65f8fd8fc5948be'] = 'Payer par chèque (traitement plus long)';
-$_MODULE['<{cheque}prestashop>payment_return_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Votre commande sur';
-$_MODULE['<{cheque}prestashop>payment_return_75fbf512d744977d62599cc3f0ae2bb4'] = 'est bien enregistrée.';
+$_MODULE['<{cheque}prestashop>payment_return_88526efe38fd18179a127024aba8c1d7'] = 'Votre commande sur %s a bien été enregistrée.';
 $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] = 'Veuillez nous envoyer un chèque avec :';
 $_MODULE['<{cheque}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'] = 'un montant de';
 $_MODULE['<{cheque}prestashop>payment_return_84cca8efe379645790938f55b701a1a4'] = 'payable à l\'ordre de';
 $_MODULE['<{cheque}prestashop>payment_return_c5a6826dd3b059e32a3fa1ae029179de'] = 'à envoyer à';
-$_MODULE['<{cheque}prestashop>payment_return_dd765b42bd8a2631e8e7b9a9af1c590f'] = 'N\'oubliez pas d\'indiquer votre numéro de commande';
-$_MODULE['<{cheque}prestashop>payment_return_08b63acd68117efc30b7072cbeedfb81'] = 'N\'oubliez pas d\'indiquer votre référence de commande';
+$_MODULE['<{cheque}prestashop>payment_return_e1c54fdba2544646684f41ace03b5fda'] = 'N\'oubliez pas d\'indiquer votre numéro de commande n°%d.';
+$_MODULE['<{cheque}prestashop>payment_return_4761b03b53bc2b3bd948bb7443a26f31'] = 'N\'oubliez pas d\'indiquer votre référence de commande %s.';
 $_MODULE['<{cheque}prestashop>payment_return_13f4ac6dc75b5829499cb9cf8b733071'] = 'Un e-mail contenant ces informations vous a été envoyé.';
 $_MODULE['<{cheque}prestashop>payment_return_ffd2478830ca2f519f7fe7ee259d4b96'] = 'Votre commande vous sera envoyée dès réception du paiement.';
 $_MODULE['<{cheque}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Pour toute question ou information complémentaire, veuillez contacter notre';

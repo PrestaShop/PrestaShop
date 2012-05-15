@@ -84,13 +84,17 @@
 
 	<div id="idTab1">
 		<p class="bold">
-			<strong>{l s='Get a discount of' mod='referralprogram'} {$discount} {l s='for you and your friends by recommending this Website.' mod='referralprogram'}</strong>
+			<strong>{l s='Get a discount of %d for you and your friends by recommending this Website.' sprintf=$discount mod='referralprogram'}</strong>
 		</p>
 		{if $canSendInvitations}
 			<p>
 				{l s='It\'s quick and it\'s easy. Just fill in the first name, last name, and e-mail address(es) of your friend(s) in the fields below.' mod='referralprogram'}
-				{l s='When one of them makes at least' mod='referralprogram'} {$orderQuantity} {if $orderQuantity > 1}{l s='orders' mod='referralprogram'}{else}{l s='order' mod='referralprogram'}{/if},
-				{l s='he or she will receive a' mod='referralprogram'} {$discount} {l s='voucher and you will receive your own voucher worth' mod='referralprogram'} {$discount}.
+				{if $orderQuantity > 1}
+					{l s='When one of them makes at least %d orders' sprintf=$orderQuantity mod='referralprogram'}
+				{else}
+					{l s='When one of them makes at least %d order' sprintf=$orderQuantity mod='referralprogram'}
+				{/if},
+				{l s='he or she will receive a %1$d voucher and you will receive your own voucher worth %2$d.' sprintf=[$discount,$discount] mod='referralprogram'}
 			</p>
 			<form method="post" action="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" class="std">
 				<table class="std">

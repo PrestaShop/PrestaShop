@@ -28,8 +28,8 @@
 <p id="loyalty">
 	<img src="{$module_template_dir}images/loyalty.gif" alt="{l s='loyalty' mod='loyalty'}" class="icon" />
 	{if $points > 0}
-		{l s='By checking out of this shopping cart you can collect up to' mod='loyalty'} <b>{$points} 
-		{if $points > 1}{l s='loyalty points' mod='loyalty'}{else}{l s='loyalty point' mod='loyalty'}{/if}</b> 
+		{l s='By checking out of this shopping cart you can collect up to' mod='loyalty'} <b>
+		{if $points > 1}{l s='%d loyalty points' sprintf=$points mod='loyalty'}{else}{l s='%d loyalty point' sprintf=$points mod='loyalty'}{/if}</b>
 		{l s='that can be converted into a voucher of' mod='loyalty'} {convertPrice price=$voucher}{if isset($guest_checkout) && $guest_checkout}<sup>*</sup>{/if}.<br />
 		{if isset($guest_checkout) && $guest_checkout}<sup>*</sup> {l s='Not available for Instant checkout order' mod='loyalty'}{/if}
 	{else}

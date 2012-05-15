@@ -36,13 +36,12 @@ $_MODULE['<{cheque}prestashop>payment_execution_46b9e3665f187c739c55983f757ccda0
 $_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Otros modos de pago';
 $_MODULE['<{cheque}prestashop>payment_a5967aadef7d23b5027d46e107faf6d0'] = 'Pagar por cheque ';
 $_MODULE['<{cheque}prestashop>payment_30bee0e9549e97b2f65f8fd8fc5948be'] = 'Pagar por cheque (proceso más largo)';
-$_MODULE['<{cheque}prestashop>payment_return_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Su pedido de';
-$_MODULE['<{cheque}prestashop>payment_return_75fbf512d744977d62599cc3f0ae2bb4'] = 'se ha completado.';
+$_MODULE['<{cheque}prestashop>payment_return_88526efe38fd18179a127024aba8c1d7'] = 'Su pedido %s está completo.';
 $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] = 'Por favor, envíenos un cheque :';
 $_MODULE['<{cheque}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'] = 'por un valor de';
 $_MODULE['<{cheque}prestashop>payment_return_84cca8efe379645790938f55b701a1a4'] = 'a la orden de';
 $_MODULE['<{cheque}prestashop>payment_return_c5a6826dd3b059e32a3fa1ae029179de'] = 'enviar a';
-$_MODULE['<{cheque}prestashop>payment_return_dd765b42bd8a2631e8e7b9a9af1c590f'] = 'No se olvide añadir su pedido #';
+$_MODULE['<{cheque}prestashop>payment_return_e1c54fdba2544646684f41ace03b5fda'] = 'No se olvide añadir su pedido #%d.';
 $_MODULE['<{cheque}prestashop>payment_return_13f4ac6dc75b5829499cb9cf8b733071'] = 'Le hemos enviado un email con los datos anteriores.';
 $_MODULE['<{cheque}prestashop>payment_return_ffd2478830ca2f519f7fe7ee259d4b96'] = 'Le enviaremos su pedido en cuanto recibamos el pago';
 $_MODULE['<{cheque}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Para cualquier duda o para más información, póngase en contacto con nuestro servicio ';

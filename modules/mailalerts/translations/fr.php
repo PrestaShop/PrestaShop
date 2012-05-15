@@ -24,8 +24,7 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_929396618e54384e9a22493055028533'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_cadcfa2749b0cfb51d88837d4a934ad1'] = 'Couverture :';
 $_MODULE['<{mailalerts}prestashop>mailalerts_dccbd7d58f294df927f4d0baafb6c375'] = 'Couverture de stock, en jours. Cette valeur est également utilisée pour calculer la couverture actuelle d\'un produit.';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7bcb7394f6b2ff226c423fea1a153754'] = 'Adresses e-mail';
-$_MODULE['<{mailalerts}prestashop>mailalerts_8c5b6fe38a32f46c355f025a820c804c'] = 'Une adresse e-mail par ligne';
-$_MODULE['<{mailalerts}prestashop>mailalerts_f77ed609e48d550f0166dfbafc102710'] = 'ex :';
+$_MODULE['<{mailalerts}prestashop>mailalerts_4395d1c88a7f0796edc652d2b57bc664'] = 'Une adresse e-mail par ligne (ex : bob@example.com)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'Aucun message';
 $_MODULE['<{mailalerts}prestashop>mailalerts_1d744a9ad1dac20645cfc4a36b77323b'] = 'image(s)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9137796c15dd92e5553c3f29574d0968'] = 'Code de réduction :';

@@ -16,8 +16,7 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_86e8d61297942b00e9937299735df971'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_38fb7d24e0d60a048f540ecb18e13376'] = 'Guardar';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9204d21640382a89a95ec42f44f9051c'] = 'Nuevo pedido:';
 $_MODULE['<{mailalerts}prestashop>mailalerts_ebc3ccf8441dba3c1615afa6acb3282a'] = 'Fuera de stock';
-$_MODULE['<{mailalerts}prestashop>mailalerts_8c5b6fe38a32f46c355f025a820c804c'] = 'Una dirección email por línea';
-$_MODULE['<{mailalerts}prestashop>mailalerts_f77ed609e48d550f0166dfbafc102710'] = 'ej:';
+$_MODULE['<{mailalerts}prestashop>mailalerts_4395d1c88a7f0796edc652d2b57bc664'] = 'Una dirección email por línea (ej: bob@example.com)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'No hay mensaje';
 $_MODULE['<{mailalerts}prestashop>mailalerts_1d744a9ad1dac20645cfc4a36b77323b'] = 'imagen(es)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9137796c15dd92e5553c3f29574d0968'] = 'Código del vale:';

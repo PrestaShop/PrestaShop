@@ -27,8 +27,8 @@
 <!-- MODULE ReferralProgram -->
 <p id="referralprogram">
 	<img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" />
-	{l s='You have earned a voucher worth' mod='referralprogram'} <strong>{$discount_display}</strong> {l s='thanks to your sponsor!' mod='referralprogram'}
-	{l s='Enter voucher name' mod='referralprogram'}&nbsp;<strong>{$discount->name}</strong> {l s='to receive the reduction on this order.' mod='referralprogram'}
+	{l s='You have earned a voucher worth %s thanks to your sponsor!' sprintf=$discount_display mod='referralprogram'}
+	{l s='Enter voucher name %s to receive the reduction on this order.' sprintf=$discount->name mod='referralprogram'}
 	<a href="{$module_template_dir}referralprogram-program.php" title="{l s='Referral program' mod='referralprogram'}">{l s='View your referral program.' mod='referralprogram'}</a>
 </p>
 <br />

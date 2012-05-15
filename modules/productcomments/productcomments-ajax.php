@@ -130,7 +130,7 @@ else if (Tools::getValue('action') && Tools::getValue('secure_key') == $productC
 					$errors[] = $productCom->l('Comment text is required.');
 			}
 			else
-				$errors[] = $productCom->l('You should wait').' '.Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME').' '.$productCom->l('seconds before posting a new comment');
+				$errors[] = sprintf($productCom->l('You should wait %d seconds before posting a new comment.'), Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME'));
 		}
 }
 
