@@ -171,7 +171,7 @@
 				{foreach $input['values'] key=key item=category }
 					<tr class="alt_row" id="{$category.id_category}">
 						<td>{$category.path}</td>
-						<td>{l s='Discount: %d%' sprintf=$category.reduction}</td>
+						<td>{l s='Discount: %d%%' sprintf=$category.reduction}</td>
 						<td>
 							<a href="#" onclick="deleteCategoryReduction({$category.id_category});"><img src="../img/admin/delete.gif"></a>
 							<input type="hidden" class="category_reduction" name="category_reduction[{$category.id_category}]" value="{$category.reduction}">
