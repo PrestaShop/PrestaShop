@@ -271,6 +271,10 @@ class AdminProductsControllerCore extends AdminController
 			$orderWay = 'ASC';
 		}
 
+		$alias = (Shop::getContext() != Shop::CONTEXT_SHOP) ? 'product_shop': 'sa';
+		$this->_select .= ', '.$alias.'.`active`';
+		if (!Tools::isSubmit('productFilter_active'))
+			$this->_filter = '';
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
 
 		/* update product quantity with attributes ...*/
@@ -2550,7 +2554,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
 		$helper = new Helper();
-		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true);
+		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true, array(), false, true);
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
