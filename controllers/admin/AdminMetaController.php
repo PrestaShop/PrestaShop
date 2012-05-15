@@ -1,4 +1,4 @@
-d<?php
+<?php
 /*
 * 2007-2012 PrestaShop
 *
