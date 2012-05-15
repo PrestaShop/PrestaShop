@@ -20,6 +20,7 @@ $_MODULE['<{bankwire}prestashop>bankwire_3ec365dd533ddb7ef3d1c111186ce872'] = 'D
 $_MODULE['<{bankwire}prestashop>bankwire_6b154cafbab54ba3a1e76a78c290c02a'] = 'Comme le code banque, l\'IBAN ou encore le BIC';
 $_MODULE['<{bankwire}prestashop>bankwire_f9a1a1bb716cbae0503d351ea2af4b34'] = 'Adresse de la banque';
 $_MODULE['<{bankwire}prestashop>bankwire_b17f3f4dcf653a5776792498a9b44d6a'] = 'Mettre à jour';
+$_MODULE['<{bankwire}prestashop>validation_e2b7dec8fa4b498156dfee6e4c84b156'] = 'Cette méthode de paiement n\'est pas disponible.';
 $_MODULE['<{bankwire}prestashop>payment_execution_c5e8668ba5e211603955f0b5e913d83d'] = 'Paiement par virement bancaire';
 $_MODULE['<{bankwire}prestashop>payment_execution_f1d3b424cd68795ecaa552883759aceb'] = 'Récapitulatif de commande';
 $_MODULE['<{bankwire}prestashop>payment_execution_879f6b8877752685a966564d072f498f'] = 'Votre panier est vide.';
