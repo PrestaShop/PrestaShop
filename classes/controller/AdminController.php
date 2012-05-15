@@ -2000,7 +2000,10 @@ class AdminControllerCore extends Controller
 			$lang_join = 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'`';
 			$lang_join .= ' AND b.`id_lang` = '.(int)$id_lang;
 			if ($id_lang_shop)
-			 	 $lang_join .= ' AND b.`id_shop`='.(int)$id_lang_shop;
+				if (Shop::getContext() == Shop::CONTEXT_SHOP)
+					$lang_join .= ' AND b.`id_shop`='.(int)$id_lang_shop;
+				else
+					$lang_join .= ' AND b.`id_shop` IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')';
 			$lang_join .= ')';
 		}
 
