@@ -1643,7 +1643,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$name_var = $this->translations_informations[$this->type_selected]['var'];
 		$GLOBALS[$name_var] = $this->fileExists();
-		$count_empty = 0;
+		$count_empty = array();
 
 		/* List files to parse */
 		$string_to_translate = array();
@@ -1674,12 +1674,13 @@ class AdminTranslationsControllerCore extends AdminController
 						if (array_key_exists(md5($key), $GLOBALS[$name_var]))
 							$string_to_translate[$key] = html_entity_decode($GLOBALS[$name_var][md5($key)], ENT_COMPAT, 'UTF-8');
 						else
+						{
 							$string_to_translate[$key] = '';
+							if (!isset($count_empty[$key]))
+								$count_empty[$key] = 1;
+						}
 
 						$this->total_expression++;
-
-						if (empty($string_to_translate[$key]))
-							$count_empty++;
 					}
 				}
 
