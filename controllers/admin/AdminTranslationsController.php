@@ -1453,10 +1453,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						// Caution ! front has underscore between prefix key and md5, back has not
 						if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-						{
 							$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
-							$count++;
-						}
 						else
 						{
 							if (!isset($tabs_array[$prefix_key][$key]))
@@ -1466,9 +1463,9 @@ class AdminTranslationsControllerCore extends AdminController
 									$missing_translations_back[$prefix_key] = 1;
 								else
 									$missing_translations_back[$prefix_key]++;
-								$count++;
 							}
 						}
+						$count++;
 					}
 				}
 
@@ -1488,10 +1485,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						// Caution ! front has underscore between prefix key and md5, back has not
 						if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-						{
 							$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
-							$count++;
-						}
 						else
 						{
 							if (!isset($tabs_array[$prefix_key][$key]))
@@ -1501,9 +1495,9 @@ class AdminTranslationsControllerCore extends AdminController
 									$missing_translations_back[$prefix_key] = 1;
 								else
 									$missing_translations_back[$prefix_key]++;
-								$count++;
 							}
 						}
+						$count++;
 					}
 				}
 
@@ -1559,10 +1553,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$trans_key = $prefix_key.md5($english_string);
 
 							if (isset($GLOBALS[$name_var][$trans_key]))
-							{
 								$new_lang[$english_string] = html_entity_decode($GLOBALS[$name_var][$trans_key], ENT_COMPAT, 'UTF-8');
-								$count++;
-							}
 							else
 							{
 								if (!isset($new_lang[$english_string]))
@@ -1572,9 +1563,9 @@ class AdminTranslationsControllerCore extends AdminController
 										$missing_translations_back[$prefix_key] = 1;
 									else
 										$missing_translations_back[$prefix_key]++;
-									$count++;
 								}
 							}
+							$count++;
 						}
 					}
 					if (isset($tabs_array[$prefix_key]))
@@ -2310,7 +2301,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @return array containing all datas needed for building the translation form
 	 * @since 1.4.5.0
 	 */
-	protected function parsePdfClass($file_path, $file_type, $lang_array, $tab, $tabs_array, &$count, &$count_missing)
+	protected function parsePdfClass($file_path, $file_type, $lang_array, $tab, $tabs_array, &$count_missing)
 	{
 		// Get content for this file
 		$content = file_get_contents($file_path);
@@ -2320,10 +2311,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($matches as $key)
 			if (stripslashes(array_key_exists($tab.md5(addslashes($key)), $lang_array)))
-			{
 				$tabs_array[$tab][$key] = html_entity_decode($lang_array[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
-				$count++;
-			}
 			else
 			{
 				$tabs_array[$tab][$key] = '';
@@ -2331,7 +2319,6 @@ class AdminTranslationsControllerCore extends AdminController
 					$count_missing[$tab] = 1;
 				else
 					$count_missing[$tab]++;
-				$count++;
 			}
 
 		return $tabs_array;
@@ -2370,7 +2357,6 @@ class AdminTranslationsControllerCore extends AdminController
 		if (!isset($GLOBALS[$name_var]) || count($GLOBALS[$name_var]) == 0)
 			@include($default_i18n_file);
 
-		$count = 0;
 		$prefix_key = 'PDF';
 		$tabs_array = array($prefix_key => array());
 
@@ -2392,12 +2378,8 @@ class AdminTranslationsControllerCore extends AdminController
 								$matches = $this->userParseFile($content, $this->type_selected, 'tpl');
 
 								foreach ($matches as $key)
-								{
 									if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-									{
 										$tabs_array[$prefix_key][$key] = (html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
-										$count++;
-									}
 									else
 									{
 										if (!isset($tabs_array[$prefix_key][$key]))
@@ -2407,19 +2389,17 @@ class AdminTranslationsControllerCore extends AdminController
 												$missing_translations_pdf[$prefix_key] = 1;
 											else
 												$missing_translations_pdf[$prefix_key]++;
-											$count++;
 										}
 									}
-								}
 							}
 						}
 						else
 							if (Tools::file_exists_cache($file_path))
-								$tabs_array = $this->parsePdfClass($file_path, 'php', $GLOBALS[$name_var], $prefix_key, $tabs_array, $count, $missing_translations_pdf);
+								$tabs_array = $this->parsePdfClass($file_path, 'php', $GLOBALS[$name_var], $prefix_key, $tabs_array, $missing_translations_pdf);
 					}
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
-			'count' => $count,
+			'count' => count($tabs_array['PDF']),
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations_pdf
