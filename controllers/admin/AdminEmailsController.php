@@ -43,7 +43,7 @@ class AdminEmailsControllerCore extends AdminController
 				'icon' => 'email',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
-						'title' => $this->l('Send e-mail to:'), 
+						'title' => $this->l('Send e-mail to'), 
 						'desc' => $this->l('Where customers send messages from order page'), 
 						'validation' => 'isUnsignedId', 
 						'type' => 'select', 

@@ -41,7 +41,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Templates cache:'),
+					'label' => $this->l('Templates cache'),
 					'name' => 'smarty_force_compile',
 					'class' => 't',
 					'br' => true,
@@ -68,7 +68,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Cache:'),
+					'label' => $this->l('Cache'),
 					'name' => 'smarty_cache',
 					'class' => 't',
 					'is_bool' => true,
@@ -88,7 +88,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Debug console:'),
+					'label' => $this->l('Debug console'),
 					'name' => 'smarty_console',
 					'class' => 't',
 					'br' => true,
@@ -135,7 +135,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Combinations:'),
+					'label' => $this->l('Combinations'),
 					'name' => 'combination',
 					'class' => 't',
 					'is_bool' => true,
@@ -152,11 +152,11 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features will be disabled:')
+					'desc' => $this->l('These features will be disabled')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Features:'),
+					'label' => $this->l('Features'),
 					'name' => 'feature',
 					'class' => 't',
 					'is_bool' => true,
@@ -172,7 +172,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'desc' => $this->l('These features will be disabled:')
+					'desc' => $this->l('These features will be disabled')
 				)
 			)
 		);
@@ -196,7 +196,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Smart cache for CSS:'),
+					'label' => $this->l('Smart cache for CSS'),
 					'name' => 'PS_CSS_THEME_CACHE',
 					'class' => 't',
 					'br' => true,
@@ -336,21 +336,21 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Media server #1:'),
+					'label' => $this->l('Media server #1'),
 					'name' => '_MEDIA_SERVER_1_',
 					'size' => 30,
 					'desc' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Media server #2:'),
+					'label' => $this->l('Media server #2'),
 					'name' => '_MEDIA_SERVER_2_',
 					'size' => 30,
 					'desc' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Media server #3:'),
+					'label' => $this->l('Media server #3'),
 					'name' => '_MEDIA_SERVER_3_',
 					'size' => 30,
 					'desc' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank')
@@ -378,7 +378,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Algorithm:'),
+					'label' => $this->l('Algorithm'),
 					'name' => 'PS_CIPHER_ALGORITHM',
 					'class' => 't',
 					'br' => true,
@@ -435,7 +435,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Use cache:'),
+					'label' => $this->l('Use cache'),
 					'name' => 'active',
 					'class' => 't',
 					'is_bool' => true,
@@ -455,7 +455,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Caching system:'),
+					'label' => $this->l('Caching system'),
 					'name' => 'caching_system',
 					'options' => array(
 						'query' => $caching_system,
@@ -465,7 +465,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Directory depth:'),
+					'label' => $this->l('Directory depth'),
 					'name' => 'ps_cache_fs_directory_depth',
 					'size' => 30
 				),

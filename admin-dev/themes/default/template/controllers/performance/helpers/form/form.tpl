@@ -75,15 +75,15 @@
 			</div>
 			<div id="formMemcachedServer" style="margin-top: 10px; display:none;">
 				<form action="{$current}&token={$token}" method="post">
-					<label>{l s='IP Address:'} </label>
+					<label>{l s='IP Address'} </label>
 					<div class="margin-form">
 						<input type="text" name="memcachedIp" />
 					</div>
-					<label>{l s='Port:'} </label>
+					<label>{l s='Port'} </label>
 					<div class="margin-form">
 						<input type="text" name="memcachedPort" value="11211" />
 					</div>
-					<label>{l s='Weight:'} </label>
+					<label>{l s='Weight'} </label>
 					<div class="margin-form">
 						<input type="text" name="memcachedWeight" value="1" />
 					</div>

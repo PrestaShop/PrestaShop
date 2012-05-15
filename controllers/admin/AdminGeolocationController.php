@@ -33,11 +33,11 @@ class AdminGeolocationControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'geolocationConfiguration' => array(
-				'title' =>	$this->l('Geolocation by IP address:'),
+				'title' =>	$this->l('Geolocation by IP address'),
 				'icon' =>	'world',
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_ENABLED' => array(
-		 				'title' => $this->l('Geolocation by IP address:'),
+		 				'title' => $this->l('Geolocation by IP address'),
 		 				'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for certain countries. See below.'),
 		 				'validation' => 'isUnsignedId',
 		 				'cast' => 'intval',
@@ -51,14 +51,14 @@ class AdminGeolocationControllerCore extends AdminController
 				'description' => $this->l('The following features are only available if you enable the Geolocation by IP address feature.'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_BEHAVIOR' => array(
-						'title' => $this->l('Geolocation behavior for restricted countries:'),
+						'title' => $this->l('Geolocation behavior for restricted countries'),
 						'type' => 'select',
 						'identifier' => 'key',
 						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
 										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order'))),
 					),
 		 			'PS_GEOLOCATION_NA_BEHAVIOR' => array(
-						'title' => $this->l('Geolocation behavior for other countries:'),
+						'title' => $this->l('Geolocation behavior for other countries'),
 						'type' => 'select',
 						'identifier' => 'key',
 						'list' => array(array('key' => '-1', 'name' => $this->l('All features are available')),
@@ -72,7 +72,7 @@ class AdminGeolocationControllerCore extends AdminController
 				'icon' =>	'world',
 				'description' => $this->l('You can add  IP addresses that will always be allowed to access your shop (e.g. Google bots\' IP).'),
 				'fields' =>	array(
-		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses:'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
+		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Whitelisted IP addresses'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
 				),
 				'submit' => array(),
 			),

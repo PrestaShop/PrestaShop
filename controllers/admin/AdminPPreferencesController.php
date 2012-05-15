@@ -39,7 +39,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Products (general)'),
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array(
-						'title' => $this->l('Catalog mode:'),
+						'title' => $this->l('Catalog mode'),
 						'desc' => $this->l('When active, all shopping features will be disabled'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -47,7 +47,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_COMPARATOR_MAX_ITEM' => array(
-						'title' => $this->l('Set the maximum number of products that can be selected for comparison:'),
+						'title' => $this->l('Set the maximum number of products that can be selected for comparison'),
 						'desc' => $this->l('Set the threshold at which a message will announce the product is close to being out of stock.').' '.$this->l('Set to 0 to disable this feature'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
@@ -55,13 +55,13 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_NB_DAYS_NEW_PRODUCT' => array(
-						'title' => $this->l('Number of days for which the product is considered \'new\':'),
+						'title' => $this->l('Number of days for which the product is considered \'new\''),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'type' => 'text'
 					),
 					'PS_CART_REDIRECT' => array(
-						'title' => $this->l('Redirection after adding product to cart:'),
+						'title' => $this->l('Redirection after adding product to cart'),
 						'desc' => $this->l('Only for non-AJAX version of the cart'),
 						'cast' => 'intval',
 						'show' => true,
@@ -82,7 +82,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'suffix' => $this->l('characters'),
 					),
 					'PS_QTY_DISCOUNT_ON_COMBINATION' => array(
-						'title' => $this->l('Quantity discounts based on:'),
+						'title' => $this->l('Quantity discounts based on'),
 						'desc' => $this->l('How to calculate quantity discounts'),
 						'cast' => 'intval',
 						'show' => true,
@@ -100,14 +100,14 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Pagination'),
 				'fields' =>	array(
 					'PS_PRODUCTS_PER_PAGE' => array(
-						'title' => $this->l('Products per page:'),
+						'title' => $this->l('Products per page'),
 						'desc' => $this->l('Number of products displayed per page. Default is 10.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'type' => 'text'
 					),
 					'PS_PRODUCTS_ORDER_BY' => array(
-						'title' => $this->l('Default order by:'),
+						'title' => $this->l('Default order by'),
 						'desc' => $this->l('The order in which products are displayed in the product list'),
 						'type' => 'select',
 						'list' => array(
@@ -121,7 +121,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'identifier' => 'id'
 					),
 					'PS_PRODUCTS_ORDER_WAY' => array(
-						'title' => $this->l('Default order method:'),
+						'title' => $this->l('Default order method'),
 						'desc' => $this->l('Default order method for product list'),
 						'type' => 'select',
 						'list' => array(
@@ -142,7 +142,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Product page'),
 				'fields' =>	array(
 					'PS_DISPLAY_QTIES' => array(
-						'title' => $this->l('Display available quantities on product page:'),
+						'title' => $this->l('Display available quantities on product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -150,7 +150,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_LAST_QTIES' => array(
-						'title' => $this->l('Display remaining quantities when qty is lower than:'),
+						'title' => $this->l('Display remaining quantities when qty is lower than'),
 						'desc' => $this->l('Set to 0 to disable this feature'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
@@ -158,7 +158,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on product page:'),
+						'title' => $this->l('Enable JqZoom instead of Thickbox on product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -166,7 +166,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_DISP_UNAVAILABLE_ATTR' => array(
-						'title' => $this->l('Display unavailable product attributes on product page:'),
+						'title' => $this->l('Display unavailable product attributes on product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -174,7 +174,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
-						'title' => $this->l('Display "add to cart" button when product has attributes:'),
+						'title' => $this->l('Display "add to cart" button when product has attributes'),
 						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes to force customers to see the product detail'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -186,7 +186,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Products stock'),
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
-		 				'title' => $this->l('Allow ordering of out-of-stock products:'),
+		 				'title' => $this->l('Allow ordering of out-of-stock products'),
 		 				'desc' => $this->l('Add to cart button is hidden when product is unavailable'),
 		 				'validation' => 'isBool',
 		 				'cast' => 'intval',
@@ -194,7 +194,7 @@ class AdminPPreferencesControllerCore extends AdminController
 		 				'type' => 'bool'
 					),
 					'PS_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable stock management:'),
+						'title' => $this->l('Enable stock management'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -206,7 +206,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced stock management:'),
+						'title' => $this->l('Enable advanced stock management'),
 						'desc' => $this->l('Allows you to manage physical stock, warehouses and supply orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
