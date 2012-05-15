@@ -148,7 +148,7 @@
 				}
 
 				// if the tab has not already been loaded, load it now
-				tabs_manager.display(id, true, 0, null);
+				tabs_manager.display(id, true);
 
 				tabs_manager.onLoad(id, function(){
 					$("#product-tab-content-"+id).show(0, function(){
@@ -208,8 +208,7 @@
 			{/foreach}
 
 			// Recursively load tabs starting with the first element of stack
-			tabs_manager.display(tabs_to_preload[0], false, 0, tabs_to_preload);
-
+			tabs_manager.displayBulk(tabs_to_preload);
 			$('.productTabs').show();
 			$('#product_form').show();
 			$('#product-tab-content-wait').hide();

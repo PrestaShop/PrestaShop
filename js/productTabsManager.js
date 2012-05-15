@@ -27,22 +27,30 @@
  * Handles loading of product tabs
  */
 function ProductTabsManager(){
-	this.product_tabs = [];
 	var self = this;
+	this.product_tabs = [];
+	this.current_request;
 
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
 	}
 
 	/**
-	 * Schedule execution of onReady() function for each tab
+	 * Schedule execution of onReady() function for each tab and bind events
 	 */
-	this.onReady = function(){
+	this.init = function(){
 		for (var tab_name in this.product_tabs)
 		{
 			if (this.product_tabs[tab_name].onReady !== undefined)
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
+
+		$(document).bind('change', function(){
+			if (self.current_request)
+			{
+				self.current_request.abort();
+			}
+		});
 	}
 
 	/**
@@ -68,14 +76,12 @@ function ProductTabsManager(){
 	/**
 	 * Get a single tab or recursively get tabs in stack then display them
 	 *
-	 * @param int id position of the tab in the product page
+	 * @param string tab_name name of the tab
 	 * @param boolean selected is the tab selected
-	 * @param int index current index in the stack (or 0)
-	 * @param array stack list of tab ids to load (or null)
 	 */
-	this.display = function (id, selected, index, stack)
+	this.display = function (tab_name, selected)
 	{
-		var tab_selector = $("#product-tab-content-"+id);
+		var tab_selector = $("#product-tab-content-"+tab_name);
 
 		// Is the tab already being loaded?
 		if (!tab_selector.hasClass('not-loaded') || tab_selector.hasClass('loading'))
@@ -92,8 +98,8 @@ function ProductTabsManager(){
 		if (save_error)
 			data = post_data;
 
-		$.ajax({
-			url : $('#link-'+id).attr("href")+"&ajax=1",
+		return $.ajax({
+			url : $('#link-'+tab_name).attr("href")+"&ajax=1",
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 			type: 'POST',
@@ -105,22 +111,19 @@ function ProductTabsManager(){
 
 				if (selected)
 				{
-					$("#link-"+id).addClass('selected');
+					$("#link-"+tab_name).addClass('selected');
 					tab_selector.show();
 				}
 			},
 			complete : function(data)
 			{
-				$("#product-tab-content-"+id).removeClass('loading');
+				tab_selector.removeClass('loading');
 				if (selected)
 				{
 					$('#product-tab-content-wait').hide();
 					tab_selector.trigger('displayed');
 				}
 				tab_selector.trigger('loaded');
-
-				if (stack && stack[index + 1])
-					self.display(stack[index + 1], selected, index + 1, stack);
 			},
 			beforeSend : function(data)
 			{
@@ -129,5 +132,25 @@ function ProductTabsManager(){
 					clearTimeout(ajax_running_timeout);
 			}
 		});
+	}
+
+	/**
+	 * Send an ajax call for each tab in the stack, binding each call to the "complete" event of the previous call
+	 *
+	 * @param array stack contains tab names as strings
+	 */
+	this.displayBulk = function(stack){
+		this.current_request = this.display(stack[0], false);
+
+		if (this.current_request !== undefined)
+		{
+			this.current_request.complete(function(request, status){
+				stack.shift();
+				if (stack.length !== 0 && status !== 'abort')
+				{
+					self.displayBulk(stack);
+				}
+			});
+		}
 	}
 }
