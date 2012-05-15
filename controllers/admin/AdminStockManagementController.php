@@ -289,8 +289,8 @@ class AdminStockManagementControllerCore extends AdminController
 							'required' => true,
 							'options' => array(
 								'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
-																					    array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
-																					    1),
+																						array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
+																						1),
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
@@ -398,8 +398,8 @@ class AdminStockManagementControllerCore extends AdminController
 							'required' => true,
 							'options' => array(
 								'query' => StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
-																					    array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')),
-																					    -1),
+																						array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')),
+																						-1),
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
