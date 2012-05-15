@@ -209,7 +209,11 @@
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
 				{foreach $cart->getDeliveryAddressesWithoutCarriers(true) as $address}
-					{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+					{if empty($address->alias)}
+						{l s='No carriers available.'}
+					{else}
+						{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+					{/if}
 					{if !$address@last}
 					<br />
 					{/if}
