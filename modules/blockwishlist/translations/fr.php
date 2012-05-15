@@ -31,7 +31,11 @@ $_MODULE['<{blockwishlist}prestashop>blockwishlist_4b7d496eedb665d0b5f589f2f874e
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_09dc02ecbb078868a3a86dded030076d'] = 'Aucun produit';
 $_MODULE['<{blockwishlist}prestashop>blockwishlist_7ec9cceb94985909c6994e95c31c1aa8'] = 'Mes listes';
 $_MODULE['<{blockwishlist}prestashop>buywishlistproduct_607e1d854783c8229998ac2b5b6923d3'] = 'Jeton non valable';
+$_MODULE['<{blockwishlist}prestashop>buywishlistproduct_b0ffc4925401f6f4edb038f5ca954937'] = 'Vous devez vous connecter';
 $_MODULE['<{blockwishlist}prestashop>cart_607e1d854783c8229998ac2b5b6923d3'] = 'Jeton non valable';
+$_MODULE['<{blockwishlist}prestashop>cart_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
+$_MODULE['<{blockwishlist}prestashop>cart_16a23698e7cf5188ce1c07df74298076'] = 'Vous devez être connecté pour gérer votre liste de cadeaux';
+$_MODULE['<{blockwishlist}prestashop>managewishlist_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
 $_MODULE['<{blockwishlist}prestashop>managewishlist_65a26fd603de62416ed333c7a8928713'] = 'Fermer';
 $_MODULE['<{blockwishlist}prestashop>managewishlist_0ac1aeb2429db494dd42ad2dc219ca7e'] = 'Cacher les produits';
 $_MODULE['<{blockwishlist}prestashop>managewishlist_0de9d09a36e820f9da7e87ab3678dd12'] = 'Afficher les produits';
@@ -56,6 +60,14 @@ $_MODULE['<{blockwishlist}prestashop>managewishlist_09dc02ecbb078868a3a86dded030
 $_MODULE['<{blockwishlist}prestashop>my-account_7ec9cceb94985909c6994e95c31c1aa8'] = 'Mes listes de cadeaux';
 $_MODULE['<{blockwishlist}prestashop>my-account_723edf7c24638ed18d2fa831e647a5cc'] = 'liste cadeaux';
 $_MODULE['<{blockwishlist}prestashop>mywishlist_607e1d854783c8229998ac2b5b6923d3'] = 'Jeton non valable';
+$_MODULE['<{blockwishlist}prestashop>mywishlist_b30545c7b2d429352b9afdd85be810c7'] = 'Vous devez spécifier un nom.';
+$_MODULE['<{blockwishlist}prestashop>mywishlist_b74c118d823d908d653cfbf1c877ae55'] = 'Ce nom est déjà utilisé pour une autre liste.';
+$_MODULE['<{blockwishlist}prestashop>mywishlist_7098d49878bbd102b13038a748125e27'] = 'Impossible de supprimer cette liste de cadeaux.';
+$_MODULE['<{blockwishlist}prestashop>mywishlist_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_8f4be21ec3cfbba15a349e9c5e888579'] = 'Jeton non valable';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_90d8a44a1fba13198035d86caeeb2d4d'] = 'Liste de cadeaux invalide';
+$_MODULE['<{blockwishlist}prestashop>view_7cff73659ca47fea5d29644da84f35e2'] = 'Jeton non valable';
+$_MODULE['<{blockwishlist}prestashop>view_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
 $_MODULE['<{blockwishlist}prestashop>view_641254d77e7a473aa5910574f3f9453c'] = 'Liste de cadeaux';
 $_MODULE['<{blockwishlist}prestashop>view_9862d189193590487b2686b1c9043714'] = 'Autres listes de';
 $_MODULE['<{blockwishlist}prestashop>view_3d01e7d8174b6a9b088b44870714cf07'] = 'Bienvenue sur la liste de ';

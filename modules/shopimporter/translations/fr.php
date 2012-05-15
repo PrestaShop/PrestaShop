@@ -82,6 +82,13 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_807079d19357b6d44089c220f74cc2d
 $_MODULE['<{shopimporter}prestashop>shopimporter_29361e9c6917fb14b43d3e78e2811e56'] = 'La devise par défaut ne correspond pas à :';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6117c4d73fcf0c20fe3946f1d00dde85'] = 'Veuillez changer la devise par défaut dans votre configuration ';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8136c99d09cb6e9f0f998dd231fff6ed'] = 'Une erreur s\'est produite lors de l\'ajout de l\'objet ';
+$_MODULE['<{shopimporter}prestashop>shopimporter_2deae2efe4b65df80c188a31fed3cc17'] = 'Le champ %s est requis';
+$_MODULE['<{shopimporter}prestashop>shopimporter_1086ee44ab3d66a33d23308e942067e0'] = 'Le champ %1$s est trop grand (%2$d caratères maximum).';
+$_MODULE['<{shopimporter}prestashop>shopimporter_3d2496e596f4cbc8045e689d94f77cbd'] = 'Le champ %s est invalide.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_c662307430c97af94e120201c8d56c66'] = 'Le champ %1$s est requis au moins en %2$s';
+$_MODULE['<{shopimporter}prestashop>shopimporter_25d42a115ce1c8390ba062cbc958deb3'] = 'Le champ %1$s (%2$s) est trop long : %3$d  caratères maximum.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_35f428e10ac312a2d9a32325c8294df9'] = 'Le champ %1$s (%2$s) est invalide.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'L\'archive ne peut être extraite.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'Le serveur ne dispose pas des permissions pour l\'écriture.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'Langue introuvable';
+$_MODULE['<{shopimporter}prestashop>shopimporter_179bdae10ca983dd1cf9cd1a4bf4f20a'] = 'l\'archive ne peut être téléchargée depuis prestashop.com';

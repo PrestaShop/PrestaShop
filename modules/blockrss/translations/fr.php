@@ -20,4 +20,5 @@ $_MODULE['<{blockrss}prestashop>blockrss_695d0986205c1ce17d03b026feb78c97'] = 'A
 $_MODULE['<{blockrss}prestashop>blockrss_ff9aa540e20285875ac8b190a3cb7ccf'] = 'Nombre de messages affichés';
 $_MODULE['<{blockrss}prestashop>blockrss_f33725e23a017705ad35897e849a4db4'] = 'Nombre de messages affichés par le bloc (par défaut : 5)';
 $_MODULE['<{blockrss}prestashop>blockrss_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
+$_MODULE['<{blockrss}prestashop>blockrss_0a1c629f0e86804a9e165f4b1ee399b7'] = 'Erreur: Flux RSS invalide dans le module \"blockrss\" : %s';
 $_MODULE['<{blockrss}prestashop>blockrss_10fd25dcd3353c0ba3731d4a23657f2e'] = 'Aucun flux RSS ajouté';
