@@ -292,7 +292,7 @@ class OrderDetailCore extends ObjectModel
 	 * @since 1.5.0.1
 	 * @return boolean
 	 */
-	public function saveTaxCalculator()
+	public function saveTaxCalculator(Order $order)
 	{
 		// Nothing to save
 		if ($this->tax_calculator == null)
@@ -304,8 +304,12 @@ class OrderDetailCore extends ObjectModel
 		if (count($this->tax_calculator->taxes) == 0)
 			return true;
 
+		$ratio = $this->unit_price_tax_excl / $order->total_products;
+		$order_reduction_amount = $order->total_discounts_tax_excl * $ratio;
+		$discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
+
 		$values = '';
-		foreach ($this->tax_calculator->getTaxesAmount($this->unit_price_tax_excl) as $id_tax => $amount)
+		foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount)
 		{
 			$unit_amount = (float)Tools::ps_round($amount, 2);
 			$total_amount = $unit_amount * $this->product_quantity;
@@ -531,7 +535,7 @@ class OrderDetailCore extends ObjectModel
 		$this->save();
 
 		if ($use_taxes)
-			$this->saveTaxCalculator();
+			$this->saveTaxCalculator($order);
 		unset($this->tax_calculator);
 	}
 
