@@ -47,8 +47,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a
 $_MODULE['<{blocklayered}prestashop>blocklayered_f7f19392da30e81c3abf433ce7b8ca38'] = 'Créé le';
 $_MODULE['<{blocklayered}prestashop>blocklayered_06df33001c1d7187fdd81ea1f5b277aa'] = 'Actions';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d180b4e0681bba834c76b479590e1c1e'] = 'Supprimer le modèle de filtre n°';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d1457b72c3fb323a2671125aef3eab5d'] = ' ?';
+$_MODULE['<{blocklayered}prestashop>blocklayered_ee7d4220e8cade335dde5e0f414b5969'] = 'Supprimer le modèle de filtre n°%d ?';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_MODULE['<{blocklayered}prestashop>blocklayered_058eeeba77f547f8a9a295a0efd4f6cd'] = 'Aucun modèle de filtre n\'a été trouvé.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c25a08cd48b8fd27ff49f435f05640c3'] = 'Construisez vos propres modèles de filtre';
@@ -78,7 +77,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_597c70730ebddba7d845e686665f9f2
 $_MODULE['<{blocklayered}prestashop>blocklayered_c48c42c966b3a35ad3b893e798bdec7c'] = 'Erreurs :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_74a6a547d86659933a210680efb6e6d1'] = 'Étape 3/3 - Nommez votre modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f8263d99054a4cdb3428196f078fa212'] = 'Nom du modèle :';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b96ce93c61b856a0163c116820646b19'] = 'Mon modèle';
+$_MODULE['<{blocklayered}prestashop>blocklayered_32d2e6cd4bb1719c572ef470a3a525b6'] = 'Mon modèle %s';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5f514b580ea1b6bdb681916bc1deb207'] = 'uniquement pour le retrouver facilement';
 $_MODULE['<{blocklayered}prestashop>blocklayered_188185ae335eb523e53d6d31ede21f1c'] = 'Aucun filtre sélectionné, la navigation à facette sera désactivée pour les catégories sélectionnées.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef1094d9826e98f5417e0a37f1742133'] = 'Sauvegarder ce modèle de filtres';
@@ -120,13 +119,11 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_2d9b9a764fb0be4be10e1b2fce63f56
 $_MODULE['<{blocklayered}prestashop>blocklayered_7e650380ef2b9cec2f2a96e6266ca93d'] = 'Zone de saisie';
 $_MODULE['<{blocklayered}prestashop>blocklayered_010359888c6e811caee8e540221f0a21'] = 'Liste de valeurs';
 $_MODULE['<{blocklayered}prestashop>blocklayered_0649bb392812f99ff6b0e2ba160675fa'] = 'Filtre prix du produit (cuseur)';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d73c57be7aad115d20508215e8ea9951'] = 'Groupe d\'attributs :';
-$_MODULE['<{blocklayered}prestashop>blocklayered_736b91750e516139acc13c5eb6564f92'] = 'attributs';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d2eb444e35c0a71f0a85df8194acb5b6'] = 'attribut';
+$_MODULE['<{blocklayered}prestashop>blocklayered_88abab51d4f2e6732b518911bfca58a4'] = 'Groupe d\'attributs : %1$s (%2$d attributs)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_e38ebd31243143bf3f3bd3810b5fc156'] = 'Groupe d\'attributs : %1$s (%2$d attribut)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ee59f74265cd7f85d0ad30206a1a89b0'] = 'Ce groupe permet aux clients de choisir une couleur';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b07e7131a6007b2a1a765bdd0e1e4894'] = 'Caractéristique :';
-$_MODULE['<{blocklayered}prestashop>blocklayered_f09cc7ee3a9a93273f4b80601cafb00c'] = 'valeurs';
-$_MODULE['<{blocklayered}prestashop>blocklayered_2063c1608d6e0baf80249c42e2be5804'] = 'valeur';
+$_MODULE['<{blocklayered}prestashop>blocklayered_7d06fc6f3166570e5d8995088066c0a2'] = 'Caractéristique : %1$s (%2$d valeurs)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_57d6fd5e5b9c215d6edac66b67e65773'] = 'Caractéristique : %1$s (%2$d valeur)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c32516babc5b6c47eb8ce1bfc223253c'] = 'Catalogue';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1262d1b9fbffb3a8e85ac9e4b449e989'] = 'Filtres actifs :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';

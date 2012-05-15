@@ -92,7 +92,7 @@ var img_dir = '{$img_dir}';
 							<span class="quantity-formated"><span class="quantity">{$customization.quantity}</span>x</span>{if isset($customization.datas.$CUSTOMIZE_TEXTFIELD.0)}
 							{$customization.datas.$CUSTOMIZE_TEXTFIELD.0.value|escape:html:'UTF-8'|replace:"<br />":" "|truncate:28}
 							{else}
-							{l s='Customization #' mod='blockcart'}{$id_customization|intval}{l s=':' mod='blockcart'}
+							{l s='Customization #%d:' sprintf=$id_customization|intval mod='blockcart'}
 							{/if}
 						</li>
 					{/foreach}

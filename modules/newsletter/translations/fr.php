@@ -15,8 +15,7 @@ $_MODULE['<{newsletter}prestashop>newsletter_011d8c5d94f729f013963d856cd78745'] 
 $_MODULE['<{newsletter}prestashop>newsletter_793ee192a9124cd6f529460eef17d3e5'] = 'Inscrits pub';
 $_MODULE['<{newsletter}prestashop>newsletter_7b15c043d66fecc45c8752592aa38e38'] = 'Mettre un filtre sur les inscrits aux messages publicitaires.';
 $_MODULE['<{newsletter}prestashop>newsletter_82e5e0bc0f9c776c98253d569c111c0f'] = 'Aucun client trouvé avec ces paramètres !';
-$_MODULE['<{newsletter}prestashop>newsletter_d526d090aa22242fa5f6acfccc6bd007'] = 'Le fichier .CSV a bien été exporté';
-$_MODULE['<{newsletter}prestashop>newsletter_55caa4828d4e935c2ba9f1558f1c4edd'] = 'clients trouvés';
+$_MODULE['<{newsletter}prestashop>newsletter_04e7c39a16e4d89fe9c3861af82ececa'] = 'Le fichier .CSV a bien été exporté. (%d clients trouvés)';
 $_MODULE['<{newsletter}prestashop>newsletter_48e3d5f66961b621c78f709afcd7d437'] = 'Télécharger le fichier';
 $_MODULE['<{newsletter}prestashop>newsletter_faa1115fbab933e7178ee43ce1590977'] = 'ATTENTION : si vous tentez d\'ouvrir le fichier .csv avec Excel, n\'oubliez pas de sélectionner l\'encodage UTF-8, sinon vous aurez des caractères incorrects';
 $_MODULE['<{newsletter}prestashop>newsletter_81573e0ea79138f02fd2cee94786d7e9'] = 'Erreur : impossible d\'écrire';

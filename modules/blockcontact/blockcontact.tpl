@@ -27,8 +27,8 @@
 <div id="contact_block" class="block">
 	<h4>{l s='Contact us' mod='blockcontact'}</h4>
 	<div class="block_content clearfix">
-			<p>{l s='Our hotline' mod='blockcontact'}<br />{l s='is available 24/7' mod='blockcontact'}</p>
+			<p>{l s='Our hotline is available 24/7' mod='blockcontact'}</p>
 			{if $telnumber != ''}<p class="tel">{l s='Phone:' mod='blockcontact'}{$telnumber}</p>{/if}
-			{if $email != ''}<a href="mailto:{$email}">{l s='Contact' mod='blockcontact'}<br/> {l s='our hotline' mod='blockcontact'}</a>{/if}
+			{if $email != ''}<a href="mailto:{$email}">{l s='Contact our hotline' mod='blockcontact'}</a>{/if}
 	</div>
 </div>

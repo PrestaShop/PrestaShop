@@ -144,7 +144,7 @@
 					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}
-							<li>{$comment.total_useful} {l s='out of' mod='productcomments'} {$comment.total_advice} {l s='people found this review useful' mod='productcomments'}</li>
+							<li>{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}</li>
 						{/if}
 						{if $logged == 1}
 							{if !$comment.customer_advice}

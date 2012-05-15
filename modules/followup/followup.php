@@ -123,7 +123,7 @@ class Followup extends Module
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_1" value="'.$conf['PS_FOLLOW_UP_AMOUNT_1'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
 				<label>'.$this->l('Discount validity').'</label>
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_1" value="'.$conf['PS_FOLLOW_UP_DAYS_1'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.$this->l('Next process will send:').' <b>'.(int)($n1).' '.($n1 > 1 ? $this->l('e-mails') : $this->l('e-mail')).'</b></p>
+				<p>'.($n1 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n1) : sprintf($this->l('Next process will send: %d e-mail'), $n1)).'</b></p>
 				<hr size="1" />
 				<p><b>2. '.$this->l('Re-order').'</b><br /><br />'.$this->l('For each validated order, generate a discount and send it to the customer.').'</p>
 				<label>'.$this->l('Enable').'</label>
@@ -132,7 +132,7 @@ class Followup extends Module
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_AMOUNT_2" value="'.$conf['PS_FOLLOW_UP_AMOUNT_2'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> %</div>
 				<label>'.$this->l('Discount validity').'</label>
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_2" value="'.$conf['PS_FOLLOW_UP_DAYS_2'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.$this->l('Next process will send:').' <b>'.(int)($n2).' '.($n2 > 1 ? $this->l('e-mails') : $this->l('e-mail')).'</b></p>
+				<p>'.($n2 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n2) : sprintf($this->l('Next process will send: %d e-mail'), $n2)).'</b></p>
 				<hr size="1" />
 				<p><b>3. '.$this->l('Best customers').'</b><br /><br />'.$this->l('For each customer raising a threshold, generate a discount and send it to the customer.').'</p>
 				<label>'.$this->l('Enable').'</label>
@@ -143,7 +143,7 @@ class Followup extends Module
 				<div class="margin-form">'.($currency->format == 1 ? ' '.$currency->sign.' ' : '').'<input type="text" name="PS_FOLLOW_UP_THRESHOLD_3" value="'.$conf['PS_FOLLOW_UP_THRESHOLD_3'].'" size="6" onKeyUp="javascript:this.value = this.value.replace(/,/g, \'.\');" /> '.($currency->format == 2 ? ' '.$currency->sign : '').'</div>
 				<label>'.$this->l('Discount validity').'</label>
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_3" value="'.$conf['PS_FOLLOW_UP_DAYS_3'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.$this->l('Next process will send:').' <b>'.(int)($n3).' '.($n3 > 1 ? $this->l('e-mails') : $this->l('e-mail')).'</b></p>
+				<p>'.($n3 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n3) : sprintf($this->l('Next process will send: %d e-mail'), $n3)).'</b></p>
 				<hr size="1" />
 				<p><b>4. '.$this->l('Bad customers').'</b><br /><br />'.$this->l('For each customer who has already passed at least one order and with no orders since a given duration, generate a discount and send it to the customer.').'</p>
 				<label>'.$this->l('Enable').'</label>
@@ -154,7 +154,7 @@ class Followup extends Module
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_THRESHOLD_4" value="'.$conf['PS_FOLLOW_UP_DAYS_THRESHOLD_4'].'" size="6" /> '.$this->l('day(s)').'</div>
 				<label>'.$this->l('Discount validity').'</label>
 				<div class="margin-form"><input type="text" name="PS_FOLLOW_UP_DAYS_4" value="'.$conf['PS_FOLLOW_UP_DAYS_4'].'" size="6" /> '.$this->l('day(s)').'</div>
-				<p>'.$this->l('Next process will send:').' <b>'.(int)($n4).' '.($n4 > 1 ? $this->l('e-mails') : $this->l('e-mail')).'</b></p>
+				<p>'.($n4 > 1 ? sprintf($this->l('Next process will send: %d e-mails'), $n4) : sprintf($this->l('Next process will send: %d e-mail'), $n4)).'</b></p>
 				<hr size="1" />
 				<input type="checkbox" style="vertical-align: middle;" name="PS_FOLLOW_UP_CLEAN_DB" value="1" '.($conf['PS_FOLLOW_UP_CLEAN_DB'] == 1 ? 'checked="checked"' : '').' /> '.$this->l('Delete outdated discounts during each launch to clean database.').'
 				<hr size="1" />

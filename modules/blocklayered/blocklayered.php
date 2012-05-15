@@ -1747,7 +1747,7 @@ class BlockLayered extends Module
 						<a href="#" onclick="return updElements('.($filters_template['n_categories'] ? 0 : 1).', '.(int)$filters_template['id_layered_filter'].');">
 						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
 						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filters_template['id_layered_filter'].'"
-						onclick="return confirm(\''.addslashes($this->l('Delete filter template #')).(int)$filters_template['id_layered_filter'].$this->l('?').'\');">
+						onclick="return confirm(\''.addslashes(sprintf($this->l('Delete filter template #%d?'), (int)$filters_template['id_layered_filter'])).'\');">
 						<img src="../img/admin/delete.gif" alt="" title="'.$this->l('Delete').'" /></a>
 					</td>
 				</tr>';
@@ -2099,7 +2099,7 @@ class BlockLayered extends Module
 				</div>
 				<h2>'.$this->l('Step 3/3 - Name your template').'</h2>
 				<p>'.$this->l('Template name:').' <input type="text" id="layered_tpl_name" onkeyup="if ($(this).val() != \'\')
-				{ $(\'#error-filter-name\').hide(); } else { $(\'#error-filter-name\').show(); }" name="layered_tpl_name" maxlength="64" value="'.$this->l('My template').' '.date('Y-m-d').'"
+				{ $(\'#error-filter-name\').hide(); } else { $(\'#error-filter-name\').show(); }" name="layered_tpl_name" maxlength="64" value="'.sprintf($this->l('My template %s'), date('Y-m-d')).'"
 				style="width: 200px; font-size: 11px;" /> <span style="font-size: 10px; font-style: italic;">('.$this->l('only as a reminder').')</span></p>
 				<hr size="1" noshade />
 				<p class="alert">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</p>
@@ -3633,7 +3633,7 @@ class BlockLayered extends Module
 						<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 						<input type="checkbox" id="layered_selection_ag_'.(int)$attribute_group['id_attribute_group'].'" name="layered_selection_ag_'.(int)$attribute_group['id_attribute_group'].'" />
 						<span class="position"></span>
-						'.$this->l('Attribute group:').' '.$attribute_group['name'].' ('.(int)$attribute_group['n'].' '.($attribute_group['n'] > 1 ? $this->l('attributes') : $this->l('attribute')).')'.
+						'.($attribute_group['n'] > 1 ? sprintf($this->l('Attribute group: %1$s (%2$d attributes)'), $attribute_group['name'], $attribute_group['n']) : sprintf($this->l('Attribute group: %1$s (%2$d attribute)'), $attribute_group['name'], $attribute_group['n'])).')'.
 						($attribute_group['is_color_group'] ? ' <img src="../img/admin/color_swatch.png" alt="" title="'.$this->l('This group will allow user to select a color').'" />' : '').'
 					
 						<select class="filter_show_limit" name="layered_selection_ag_'.(int)$attribute_group['id_attribute_group'].'_filter_show_limit">
@@ -3661,7 +3661,7 @@ class BlockLayered extends Module
 						<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 						<input type="checkbox" id="layered_selection_feat_'.(int)$feature['id_feature'].'" name="layered_selection_feat_'.(int)$feature['id_feature'].'" />
 						<span class="position"></span>
-						'.$this->l('Feature:').' '.$feature['name'].' ('.(int)$feature['n'].' '.($feature['n'] > 1 ? $this->l('values') : $this->l('value')).')
+						'.($feature['n'] > 1 ? sprintf($this->l('Feature: %1$s (%2$d values)'), $feature['name'], $feature['n']) : sprintf($this->l('Feature: %1$s (%2$d value)'), $feature['name'], $feature['n'])).')
 					
 						<select class="filter_show_limit" name="layered_selection_feat_'.(int)$feature['id_feature'].'_filter_show_limit">
 							<option value="0">'.$this->l('No limit').'</option>
@@ -4092,7 +4092,7 @@ class BlockLayered extends Module
 		if ($to_insert)
 		{
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter(name, filters, n_categories, date_add)
-				VALUES (\''.$this->l('My template').' '.date('Y-m-d').'\', \''.pSQL(serialize($filter_data)).'\', '.count($filter_data['categories']).', NOW())');
+				VALUES (\''.sprintf($this->l('My template %s'), date('Y-m-d')).'\', \''.pSQL(serialize($filter_data)).'\', '.count($filter_data['categories']).', NOW())');
 			
 			if (version_compare(_PS_VERSION_,'1.5','>'))
 			{

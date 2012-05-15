@@ -60,7 +60,7 @@ class Gsitemap extends Module
 	{
 		file_put_contents(GSITEMAP_FILE, '');
 		if (!($fp = fopen(GSITEMAP_FILE, 'w')))
-			$this->_postErrors[] = $this->l('Cannot create').' '.realpath(dirname(__FILE__.'/../..')).'/'.$this->l('sitemap.xml file.');
+			$this->_postErrors[] = sprintf($this->l('Cannot create %ssitemap.xml file.'), realpath(dirname(__FILE__.'/../..')).'/');
 		else
 			fclose($fp);
 	}

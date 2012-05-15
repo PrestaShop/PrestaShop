@@ -51,7 +51,7 @@ class StatsBestSuppliers extends ModuleGrid
 		$this->_defaultSortColumn = 'sales';
 		$this->_defaultSortDirection = 'DESC';
 		$this->_emptyMessage = $this->l('Empty recordset returned');
-		$this->_pagingMessage = $this->l('Displaying').' {0} - {1} '.$this->l('of').' {2}';
+		$this->_pagingMessage = sprintf($this->l('Displaying %1$s of %2$s'), '{0} - {1}', '{2}');
 
 		$this->_columns = array(
 			array(

@@ -15,8 +15,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_a2654ab6d514d63a3be2a4d6ea6b39d
 $_MODULE['<{blocklayered}prestashop>blocklayered_d4041fbb1580b68012b82fee850014a2'] = 'las plantillas de filtros están configuradas:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a0'] = 'Categorías';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7dce122004969d56ae2e0245cb754d35'] = 'Editar';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d180b4e0681bba834c76b479590e1c1e'] = 'Eliminar plantilla de filtro #';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d1457b72c3fb323a2671125aef3eab5d'] = '?';
+$_MODULE['<{blocklayered}prestashop>blocklayered_ee7d4220e8cade335dde5e0f414b5969'] = 'Eliminar plantilla de filtro #%d?';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f2a6c498fb90ee345d997f888fce3b18'] = 'Borrar';
 $_MODULE['<{blocklayered}prestashop>blocklayered_058eeeba77f547f8a9a295a0efd4f6cd'] = 'No se encontró plantilla de filtro.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c25a08cd48b8fd27ff49f435f05640c3'] = 'Construya su propia plantilla de filtros';
@@ -38,7 +37,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_8524de963f07201e5c086830d370797
 $_MODULE['<{blocklayered}prestashop>blocklayered_597c70730ebddba7d845e686665f9f28'] = 'Ha seleccionado-Todas las categorías, todas las plantillas de filtro existentes se eliminarán, ¿está de acuerdo?';
 $_MODULE['<{blocklayered}prestashop>blocklayered_74a6a547d86659933a210680efb6e6d1'] = 'Paso 3 / 3 - de un nombre a la plantilla';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f8263d99054a4cdb3428196f078fa212'] = 'Nombre de la plantilla:';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b96ce93c61b856a0163c116820646b19'] = 'Mi plantilla';
+$_MODULE['<{blocklayered}prestashop>blocklayered_32d2e6cd4bb1719c572ef470a3a525b6'] = 'Mi plantilla %s';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5f514b580ea1b6bdb681916bc1deb207'] = 'sólo como un recordatorio';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef1094d9826e98f5417e0a37f1742133'] = 'Guardar esta plantilla de filtro';
 $_MODULE['<{blocklayered}prestashop>blocklayered_254f642527b45bc260048e30704edb39'] = 'Configuración';
@@ -64,13 +63,11 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_cd50ff1c5332f9920acf8173c4aab42
 $_MODULE['<{blocklayered}prestashop>blocklayered_048c1728a0a6cf36f56c9dcdd23d8a14'] = 'Filtro estado del producto';
 $_MODULE['<{blocklayered}prestashop>blocklayered_02ecc2cbb645a2b859deba6907334cc8'] = 'Filtro fabricante del producto';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cc72ed9534a489b5d2e5882735bf1364'] = 'Filtro peso del producto';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d73c57be7aad115d20508215e8ea9951'] = 'Grupo de atributos';
-$_MODULE['<{blocklayered}prestashop>blocklayered_736b91750e516139acc13c5eb6564f92'] = 'atributos';
-$_MODULE['<{blocklayered}prestashop>blocklayered_d2eb444e35c0a71f0a85df8194acb5b6'] = 'atributo';
+$_MODULE['<{blocklayered}prestashop>blocklayered_88abab51d4f2e6732b518911bfca58a4'] = 'Grupo de atributos: %1$s (%2$d atributos)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_e38ebd31243143bf3f3bd3810b5fc156'] = 'Grupo de atributos: %1$s (%2$d atributo)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ee59f74265cd7f85d0ad30206a1a89b0'] = 'Este grupo permitirá al usuario seleccionar un color';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b07e7131a6007b2a1a765bdd0e1e4894'] = 'Característica:';
-$_MODULE['<{blocklayered}prestashop>blocklayered_f09cc7ee3a9a93273f4b80601cafb00c'] = 'valores';
-$_MODULE['<{blocklayered}prestashop>blocklayered_2063c1608d6e0baf80249c42e2be5804'] = 'valor';
+$_MODULE['<{blocklayered}prestashop>blocklayered_7d06fc6f3166570e5d8995088066c0a2'] = 'Característica: %1$s (%2$d valores)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_57d6fd5e5b9c215d6edac66b67e65773'] = 'Característica: %1$s (%2$d valor)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c32516babc5b6c47eb8ce1bfc223253c'] = 'Catálogo';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1262d1b9fbffb3a8e85ac9e4b449e989'] = 'filtros habilitados:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ea4788705e6873b424c65e91c2846b19'] = 'Cancelar';

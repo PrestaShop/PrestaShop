@@ -167,7 +167,7 @@ class StatsCatalog extends Module
 		$averageViewed = $total ? ($totalPageViewed / $total) : 0;		
 		$conversion = number_format((float)($totalPageViewed ? ($totalBought / $totalPageViewed) : 0), 2, '.', '');
 		if ($conversionReverse = number_format((float)($totalBought ? ($totalPageViewed / $totalBought) : 0), 2, '.', ''))
-			$conversion .= ' (1 '.$this->l('purchase').' / '.$conversionReverse.' '.$this->l('visits').')';
+			$conversion .= sprintf($this->l('(1 purchase / %d visits)'), $conversionReverse);
 
 		$totalNV = $total - $this->getTotalProductViewed();
 

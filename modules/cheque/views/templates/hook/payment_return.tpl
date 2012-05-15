@@ -25,16 +25,16 @@
 *}
 
 {if $status == 'ok'}
-	<p>{l s='Your order on' mod='cheque'} <strong>{$shop_name}</span> {l s='is complete.' mod='cheque'}
+	<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='cheque'}
 		<br /><br />
 		{l s='Please send us a cheque with:' mod='cheque'}
 		<br /><br />- {l s='an amount of' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
 		<br /><br />- {l s='payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
 		<br /><br />- {l s='mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
 		{if !isset($reference)}
-			<br /><br />- {l s='Do not forget to insert your order number #' mod='cheque'} <strong>{$id_order}</strong>
+			<br /><br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order mod='cheque'}
 		{else}
-			<br /><br />- {l s='Do not forget to insert your order reference' mod='cheque'} <strong>{$reference}</strong>
+			<br /><br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference mod='cheque'}
 		{/if}
 		<br /><br />{l s='An e-mail has been sent to you with this information.' mod='cheque'}
 		<br /><br /><strong>{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</strong>
