@@ -65,15 +65,16 @@ class RangeCore extends ObjectModel
 			AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2`='.(float)$delimiter2);
 	}
 	
-	public static function isOverlapping($id_carrier, $delimiter1, $delimiter2)
+	public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT count(*)
 			FROM `'._DB_PREFIX_.static::$range_table.'`
 			WHERE `id_carrier` = '.(int)$id_carrier.'
-			AND ((`delimiter1` > '.(float)$delimiter1.' AND `delimiter1` <= '.(float)$delimiter2.')
-			    OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` <= '.(float)$delimiter2.')
+			AND ((`delimiter1` >= '.(float)$delimiter1.' AND `delimiter1` < '.(float)$delimiter2.')
+			    OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` < '.(float)$delimiter2.')
 			    OR ('.(float)$delimiter1.' > `delimiter1` AND '.(float)$delimiter1.' < `delimiter2`)
 			    OR ('.(float)$delimiter2.' < `delimiter1` AND '.(float)$delimiter2.' > `delimiter2`)
-			    )');
+			    )
+			'.(!is_null($id_rang) ? ' AND `'.pSQL(static::$range_identifier).'` != '.(int)$id_rang : ''));
 	}
 }
