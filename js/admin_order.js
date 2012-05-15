@@ -870,4 +870,13 @@ $(document).ready(function() {
 	});
 });
 
-
+function checkPartialRefundProductQuantity(it)
+{
+	if (parseInt($(it).val()) > parseInt($(it).parent().parent().find('.partialRefundProductQuantity').val()))
+		$(it).val($(it).parent().parent().find('.partialRefundProductQuantity').val());
+}
+function checkPartialRefundProductAmount(it)
+{
+	if (parseInt($(it).val()) > parseInt($(it).parent().parent().find('.partialRefundProductAmount').val()))
+		$(it).val($(it).parent().parent().find('.partialRefundProductAmount').val());
+}

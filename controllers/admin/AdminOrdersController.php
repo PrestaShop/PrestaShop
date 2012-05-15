@@ -454,16 +454,22 @@ class AdminOrdersControllerCore extends AdminController
 					$amount = 0;
 					$order_detail_list = array();
 					foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
-						if (isset($amount_detail) && !empty($amount_detail))
+					{
+						$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
+						
+						if (empty($amount_detail))
 						{
-							$amount += $amount_detail;
-							$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
-							$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
+							$orderDetail = new OrderDetail($id_order_detail);
+							$order_detail_list[$id_order_detail]['amount'] = $orderDetail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
+						else
+							$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
+						$amount += $order_detail_list[$id_order_detail]['amount'];
+					}
 					$shipping_cost_amount = (float)Tools::getValue('partialRefundShippingCost');
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
-
+					
 					if ($amount > 0)
 					{
 						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
@@ -1221,6 +1227,12 @@ class AdminOrdersControllerCore extends AdminController
 		foreach ($products as &$product)
 		{
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+			
+			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
+			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
+			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+			
 			// if the current stock requires a warning
 			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
 				$this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);

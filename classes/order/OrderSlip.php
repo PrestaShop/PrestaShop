@@ -141,6 +141,14 @@ class OrderSlipCore extends ObjectModel
 			}
 		return $order->getProducts($resTab);
 	}
+	
+	public static function getProductSlipResume($id_order_detail)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT SUM(product_quantity) product_quantity, SUM(amount_tax_excl) amount_tax_excl, SUM(amount_tax_incl) amount_tax_incl
+			FROM `'._DB_PREFIX_.'order_slip_detail`
+			WHERE `id_order_detail` = '.(int)$id_order_detail);
+	}
 
 	public function getProducts()
 	{
@@ -212,6 +220,18 @@ class OrderSlipCore extends ObjectModel
 	{
 		foreach ($order_detail_list as $id_order_detail => $tab)
 		{
+			$order_detail = new OrderDetail($id_order_detail);
+			$order_slip_resume = self::getProductSlipResume($id_order_detail);
+			
+			if ($tab['amount'] + $order_slip_resume['amount_tax_incl'] > $order_detail->total_price_tax_incl)
+				$tab['amount'] = $order_detail->total_price_tax_incl - $order_slip_resume['amount_tax_incl'];
+			
+			if ($tab['amount'] == 0)
+				continue;
+			
+			if ($tab['quantity'] + $order_slip_resume['product_quantity'] > $order_detail->product_quantity)
+				$tab['quantity'] = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
+			
 			$tab['amount_tax_excl'] = $tab['amount_tax_incl'] = $tab['amount'];
 			$id_tax = (int)Db::getInstance()->getValue('SELECT `id_tax` FROM `'._DB_PREFIX_.'order_detail_tax` WHERE `id_order_detail` = '.(int)$id_order_detail);
 			if ($id_tax > 0)
@@ -224,6 +244,12 @@ class OrderSlipCore extends ObjectModel
 				}
 			}
 			
+			if ($tab['quantity'] > 0 && $tab['quantity'] > $order_detail->product_quantity_refunded)
+			{
+				$order_detail->product_quantity_refunded = $tab['quantity'];
+				$order_detail->save();
+			}
+			
 			$insertOrderSlip = array(
 				'id_order_slip' => (int)($this->id),
 				'id_order_detail' => (int)($id_order_detail),
@@ -231,6 +257,7 @@ class OrderSlipCore extends ObjectModel
 				'amount_tax_excl' => (float)($tab['amount_tax_excl']),
 				'amount_tax_incl' => (float)($tab['amount_tax_incl']),
 			);
+			
 			Db::getInstance()->insert('order_slip_detail', $insertOrderSlip);
 		}
 	}
