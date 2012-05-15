@@ -81,7 +81,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_PURCHASE_MINIMUM' => array(
-						'title' => $this->l('Minimum purchase total required in order to validate order:'),
+						'title' => $this->l('Minimum purchase total required in order to validate order'),
 						'desc' => $this->l('Set to 0 to disable this feature'),
 						'validation' => 'isFloat',
 						'cast' => 'floatval',

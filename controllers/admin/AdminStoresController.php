@@ -65,32 +65,32 @@ class AdminStoresControllerCore extends AdminController
 				'title' =>	$this->l('Parameters'),
 				'fields' =>	array(
 					'PS_STORES_DISPLAY_FOOTER' => array(
-						'title' => $this->l('Display in the footer:'),
+						'title' => $this->l('Display in the footer'),
 						'desc' => $this->l('Display a link to the store locator in the footer'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_STORES_DISPLAY_SITEMAP' => array(
-						'title' => $this->l('Display in the sitemap page:'),
+						'title' => $this->l('Display in the sitemap page'),
 						'desc' => $this->l('Display a link to the store locator in the sitemap page'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_STORES_SIMPLIFIED' => array(
-						'title' => $this->l('Show a simplified store locator:'),
+						'title' => $this->l('Show a simplified store locator'),
 						'desc' => $this->l('No map, no search, only a store directory'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_STORES_CENTER_LAT' => array(
-						'title' => $this->l('Latitude by default:'),
+						'title' => $this->l('Latitude by default'),
 						'desc' => $this->l('Used for the position by default of the map'),
 						'cast' => 'floatval',
 						'type' => 'text',
 						'size' => '10'
 					),
 					'PS_STORES_CENTER_LONG' => array(
-						'title' => $this->l('Longitude by default:'),
+						'title' => $this->l('Longitude by default'),
 						'desc' => $this->l('Used for the position by default of the map'),
 						'cast' => 'floatval',
 						'type' => 'text',
@@ -156,7 +156,7 @@ class AdminStoresControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 33,
 					'required' => false,
@@ -165,27 +165,27 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Address'),
 					'name' => 'address1',
 					'size' => 33,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address (2):'),
+					'label' => $this->l('Address (2)'),
 					'name' => 'address2',
 					'size' => 33
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode / Zip Code:'),
+					'label' => $this->l('Postcode / Zip Code'),
 					'name' => 'postcode',
 					'size' => 6,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('City:'),
+					'label' => $this->l('City'),
 					'name' => 'city',
 					'size' => 33,
 					'class' => 'uppercase',
@@ -193,7 +193,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'default_value' => (int)$this->context->country->id,
@@ -205,7 +205,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('State:'),
+					'label' => $this->l('State'),
 					'name' => 'id_state',
 					'required' => true,
 					'options' => array(
@@ -216,7 +216,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'latitude',
-					'label' => $this->l('Latitude / Longitude:'),
+					'label' => $this->l('Latitude / Longitude'),
 					'name' => 'latitude',
 					'required' => true,
 					'size' => 11,
@@ -225,32 +225,32 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Phone:'),
+					'label' => $this->l('Phone'),
 					'name' => 'phone',
 					'size' => 33
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Fax:'),
+					'label' => $this->l('Fax'),
 					'name' => 'fax',
 					'size' => 33
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address:'),
+					'label' => $this->l('E-mail address'),
 					'name' => 'email',
 					'size' => 33
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Note:'),
+					'label' => $this->l('Note'),
 					'name' => 'note',
 					'cols' => 42,
 					'rows' => 4
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -273,7 +273,7 @@ class AdminStoresControllerCore extends AdminController
 			'rightCols' => array (
 				'input' => array(
 					'type' => 'file',
-					'label' => $this->l('Picture:'),
+					'label' => $this->l('Picture'),
 					'name' => 'image',
 					'desc' => $this->l('Storefront picture')
 				)
@@ -419,14 +419,14 @@ class AdminStoresControllerCore extends AdminController
 
 		$formFields = array(
 			'PS_SHOP_NAME' => array(
-				'title' => $this->l('Shop name:'),
+				'title' => $this->l('Shop name'),
 				'desc' => $this->l('Displayed in e-mails and page titles'),
 				'validation' => 'isGenericName',
 				'required' => true,
 				'size' => 30,
 				'type' => 'text'
 			),
-			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop e-mail:'),
+			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop e-mail'),
 				'desc' => $this->l('Displayed in e-mails sent to customers'),
 				'validation' => 'isEmail',
 				'required' => true,
@@ -434,7 +434,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_DETAILS' => array(
-				'title' => $this->l('Registration:'),
+				'title' => $this->l('Registration'),
 				'desc' => $this->l('Shop registration information (e.g. SIRET or RCS)'),
 				'validation' => 'isGenericName',
 				'size' => 30,
@@ -443,7 +443,7 @@ class AdminStoresControllerCore extends AdminController
 				'rows' => 5
 			),
 			'PS_SHOP_ADDR1' => array(
-				'title' => $this->l('Shop address line 1:'),
+				'title' => $this->l('Shop address line 1'),
 				'validation' => 'isAddress',
 				'size' => 30,
 				'type' => 'text'
@@ -455,19 +455,19 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_CODE' => array(
-				'title' => $this->l('Postcode / Zip code:'),
+				'title' => $this->l('Postcode / Zip code'),
 				'validation' => 'isGenericName',
 				'size' => 6,
 				'type' => 'text'
 			),
 			'PS_SHOP_CITY' => array(
-				'title' => $this->l('City:'),
+				'title' => $this->l('City'),
 				'validation' => 'isGenericName',
 				'size' => 30,
 				'type' => 'text'
 			),
 			'PS_SHOP_COUNTRY_ID' => array(
-				'title' => $this->l('Country:'),
+				'title' => $this->l('Country'),
 				'validation' => 'isInt',
 				'type' => 'select',
 				'list' => $countryList,
@@ -476,7 +476,7 @@ class AdminStoresControllerCore extends AdminController
 				'defaultValue' => (int)$this->context->country->id
 			),
 			'PS_SHOP_STATE_ID' => array(
-				'title' => $this->l('State:'),
+				'title' => $this->l('State'),
 				'validation' => 'isInt',
 				'type' => 'select',
 				'list' => $stateList,
@@ -484,13 +484,13 @@ class AdminStoresControllerCore extends AdminController
 				'cast' => 'intval'
 			),
 			'PS_SHOP_PHONE' => array(
-				'title' => $this->l('Phone:'),
+				'title' => $this->l('Phone'),
 				'validation' => 'isGenericName',
 				'size' => 30,
 				'type' => 'text'
 			),
 			'PS_SHOP_FAX' => array(
-				'title' => $this->l('Fax:'),
+				'title' => $this->l('Fax'),
 				'validation' => 'isGenericName',
 				'size' => 30,
 				'type' => 'text'

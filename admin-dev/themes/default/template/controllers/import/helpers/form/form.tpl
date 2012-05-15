@@ -70,7 +70,7 @@
 	<div id="upload_file_import" style="padding-left: 10px; background-color: #EBEDF4; border: 1px solid #CCCED7">
 		<div class="clear">&nbsp;</div>
 		<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">	
-			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file:'} </label>	
+			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file'} </label>	
 			<div class="margin-form" style="padding-left:190px;">
 				<input name="file" type="file" />
 				<p class="preference_description">
@@ -133,7 +133,7 @@
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
 
-			<label class="clear">{l s='What kind of Entity would you like to import ?'} </label>
+			<label class="clear">{l s='What kind of Entity would you like to import?'} </label>
 			<div class="margin-form">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
@@ -144,7 +144,7 @@
 				</select>
 			</div>
 				
-			<label class="clear">{l s='Language of the file:'}</label>
+			<label class="clear">{l s='Language of the file'}</label>
 			<div class="margin-form">
 				<select name="iso_lang">
 					{foreach $languages AS $lang}
@@ -157,12 +157,12 @@
 			<div class="margin-form">
 				<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>
 			</div>
-			<label class="clear">{l s='Field separator:'} </label>
+			<label class="clear">{l s='Field separator'} </label>
 			<div class="margin-form">
 				<input type="text" size="2" value=";" name="separator"/>
 				{l s='e.g. '}"1<span class="bold" style="color: red">;</span>Ipod<span class="bold" style="color: red">;</span>129.90<span class="bold" style="color: red">;</span>5"
 			</div>
-			<label class="clear">{l s='Multiple value separator:'} </label>
+			<label class="clear">{l s='Multiple value separator'} </label>
 			<div class="margin-form">
 				<input type="text" size="2" value="," name="multiple_value_separator"/>
 				{l s='e.g. '}"Ipod;red.jpg<span class="bold" style="color: red">,</span>blue.jpg<span class="bold" style="color: red">,</span>green.jpg;129.90"

@@ -66,7 +66,7 @@ class AdminWebserviceControllerCore extends AdminController
 				'general' => array(
 					'title' =>	$this->l('Configuration'),
 					'fields' =>	array(
-						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice:'),
+						'PS_WEBSERVICE' => array('title' => $this->l('Enable PrestaShop Webservice'),
 							'desc' => $this->l('Before activating the webservice, you must be sure to: ').
 												'<ol>
 													<li>'.$this->l('be certain that URL rewriting is available on this server').'</li>
@@ -75,7 +75,7 @@ class AdminWebserviceControllerCore extends AdminController
 							'cast' => 'intval',
 							'type' => 'bool'),
 						'PS_WEBSERVICE_CGI_HOST' => array(
-							'title' => $this->l('Active mode CGI for PHP:'),
+							'title' => $this->l('Active mode CGI for PHP'),
 							'desc' => $this->l('Be sure PHP is not configured as an Apache module on your server'),
 							'cast' => 'intval',
 							'type' => 'bool'

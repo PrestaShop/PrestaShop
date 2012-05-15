@@ -56,7 +56,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				'title' =>	$this->l('Settings'),
 				'fields' =>	array(
 					'PS_ENCODING_FILE_MANAGER_SQL' => array(
-						'title' => $this->l('Select your encoding file by default:'),
+						'title' => $this->l('Select your encoding file by default'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
