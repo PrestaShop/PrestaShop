@@ -1921,9 +1921,10 @@ class ProductCore extends ObjectModel
 							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 							WHERE cg.`id_group` '.$sql_groups.'
 						)
-						AND pa.`default_on` = 1
+						AND ((pa.`default_on` = 1 AND pa.`id_product_attribute` != 0) OR (pa.`id_product_attribute` IS NULL))
 					GROUP BY p.id_product
 					ORDER BY RAND()';
+
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
 			if (!$id_product = $result['id_product'])
