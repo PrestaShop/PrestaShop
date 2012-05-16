@@ -108,14 +108,31 @@ class AdminPaymentControllerCore extends AdminController
 
 	protected function saveRestrictions($type)
 	{
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'` WHERE id_shop = '.Context::getContext()->shop->id);
+		// Delete type restrictions for active module.
+		$modules = array();
+		foreach ($this->payment_modules as $module)
+			if ($module->active)
+				$modules[] = (int)$module->id;
+
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'`
+			WHERE id_shop = '.Context::getContext()->shop->id.'
+			AND `id_module` IN ('.implode(', ', $modules).')'
+		);
+
+		// Fill the new restriction selection for active module.
+		$values = array();
 		foreach ($this->payment_modules as $module)
 			if ($module->active && isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
-					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->id.', '.(int)$selected.')';
+					$values[] = '('.(int)$module->id.', '.(int)Context::getContext()->shop->id.', '.(int)$selected.')';
 
 		if (count($values))
-			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
+			Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL($type).'`
+				(`id_module`, `id_shop`, `id_'.bqSQL($type).'`)
+				VALUES '.implode(',', $values));
+
 		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
 	}
 
