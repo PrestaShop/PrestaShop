@@ -170,12 +170,13 @@ function hideFilterValueAction(it)
 	}
 }
 
-function addSlider(type, data, unit)
+function addSlider(type, data, unit, format)
 {
 	sliderList.push({
 		type: type,
 		data: data,
-		unit: unit
+		unit: unit,
+		format: format
 	});
 }
 
@@ -183,8 +184,25 @@ function initSliders()
 {
 	$(sliderList).each(function(i, slider){
 		$('#layered_'+slider['type']+'_slider').slider(slider['data']);
-		$('#layered_'+slider['type']+'_range').html($('#layered_'+slider['type']+'_slider').slider('values', 0)+slider['unit']+
-			' - ' + $('#layered_'+slider['type']+'_slider').slider('values', 1 )+slider['unit']);
+		
+		var from = '';
+		var to = '';
+		console.log(slider);
+		switch (slider['format'])
+		{
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				from = formatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 0), slider['format'], slider['unit']);
+				to = formatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 1), slider['format'], slider['unit']);
+				break;
+			case 5:
+				from =  $('#layered_'+slider['type']+'_slider').slider('values', 0)+slider['unit']
+				to = $('#layered_'+slider['type']+'_slider').slider('values', 1)+slider['unit'];
+				break;
+		}
+		$('#layered_'+slider['type']+'_range').html(from+' - '+to);
 	});
 }
 
