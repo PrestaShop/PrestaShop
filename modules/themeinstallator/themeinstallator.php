@@ -663,7 +663,30 @@ class ThemeInstallator extends Module
 			<input type="submit" class="button" name="prevThemes" value="'.$this->l('Previous').'" />
 			<input type="submit" class="button" name="submitModules" value="'.$this->l('Next').'" />
 		</fieldset>
-		</form>';
+		</form>
+		<script type="text/javascript">
+			$(document).ready(function() {
+					$.ajax({
+						type : "POST",
+						url : "'. str_replace('index', 'ajax-tab', AdminController::$currentIndex) .'",
+						data :	{
+							"theme_list" : '.Tools::jsonEncode(array((string)$this->xml->theme_key)).',
+							"controller" : "AdminModules",
+							"action" : "wsThemeCall",
+							"token" : "'. Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id) .'"
+						},
+						dataType: "json",
+						success: function(json)
+						{
+							//console.log(json);
+						},
+						error: function(xhr, ajaxOptions, thrownError)
+						{
+							//jAlert("TECHNICAL ERROR"+res);
+						}
+					});
+				});
+		</script>';
 	}
 
 	private function _displayForm2()
