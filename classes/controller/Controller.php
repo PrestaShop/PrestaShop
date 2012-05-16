@@ -150,9 +150,6 @@ abstract class ControllerCore
 		$this->init();
 		if ($this->checkAccess())
 		{
-			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
-				$this->setMedia();
-
 			// postProcess handles ajaxProcess
 			$this->postProcess();
 
@@ -160,7 +157,10 @@ abstract class ControllerCore
 				$this->redirect();
 
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+			{
+				$this->setMedia();
 				$this->initHeader();
+			}
 
 			if ($this->viewAccess())
 				$this->initContent();
