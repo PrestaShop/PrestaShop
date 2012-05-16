@@ -212,6 +212,19 @@ class CurrencyCore extends ObjectModel
 		return $tab;
 	}
 
+	public static function getCurrenciesByIdShop($id_shop = 0)
+	{
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'currency` c
+				LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
+				'.($id_shop != 0 ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
+				GROUP BY c.id_currency
+				ORDER BY `name` ASC';
+
+		return Db::getInstance()->executeS($sql);
+	}
+
+
 	public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
 	{
 		if (is_null($id_shop))
