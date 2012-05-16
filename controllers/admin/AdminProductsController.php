@@ -1413,7 +1413,10 @@ class AdminProductsControllerCore extends AdminController
 		$this->checkProduct();
 
 		if (!empty($this->errors))
+		{
+			$this->display = 'add';
 			return false;
+		}
 
 		$this->object = new $this->className();
 		$this->_removeTaxFromEcotax();
@@ -1503,7 +1506,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!empty($this->errors))
 		{
-			//$this->display = 'edit';
+			$this->display = 'edit';
 			return false;
 		}
 
@@ -3942,7 +3945,6 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.css',
 				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
 			));
-
 		}
 	}
 
