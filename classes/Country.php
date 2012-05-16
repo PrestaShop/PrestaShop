@@ -71,6 +71,7 @@ class CountryCore extends ObjectModel
 		'table' => 'country',
 		'primary' => 'id_country',
 		'multilang' => true,
+		'multishop' => true,
 		'fields' => array(
 			'id_zone' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_currency' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
