@@ -1,5 +1,9 @@
 <?php $this->displayTemplate('header') ?>
 
+<?php if (true): ?>
+	<div class="warnBlock"><?php echo $this->l('PrestaShop requires at least 16M of memory to run, please check the memory_limit directive in php.ini or contact your host provider'); ?></div>
+<?php endif; ?>
+
 <h2><?php echo $this->l('Welcome to the PrestaShop %s Installer.', _PS_INSTALL_VERSION_) ?></h2>
 <p><?php echo $this->l('The installation process should take only few minutes!') ?></p>
 <p><?php echo $this->l('If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s', $this->getDocumentationLink(), $this->getPhone()) ?></p>
