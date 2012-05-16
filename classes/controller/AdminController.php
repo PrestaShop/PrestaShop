@@ -2353,6 +2353,8 @@ class AdminControllerCore extends Controller
 					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
 			}
 		}
+		else // if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
+			$assos[] = array('id_object' => (int)$id_object, 'id_'.$type => (int)Shop::getContextShopID());
 		return array($assos, $type);
 	}
 
@@ -2368,7 +2370,7 @@ class AdminControllerCore extends Controller
 			return;
 
 		$def = ObjectModel::getDefinition($this->className);
-		if (!empty($def['multishop']))
+		if (empty($def['multishop']))
 			return;
 
 		$assos_data = $this->getAssoShop($this->table, $id_object);
