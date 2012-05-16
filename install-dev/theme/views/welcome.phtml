@@ -1,6 +1,6 @@
 <?php $this->displayTemplate('header') ?>
 
-<?php if (true): ?>
+<?php if (Tools::getMemoryLimit() < Tools::getOctets('16M')): ?>
 	<div class="warnBlock"><?php echo $this->l('PrestaShop requires at least 16M of memory to run, please check the memory_limit directive in php.ini or contact your host provider'); ?></div>
 <?php endif; ?>
 
