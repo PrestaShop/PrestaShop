@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class RangeWeight extends ObjectModel
+class RangeWeightCore extends ObjectModel
 {
 	public $id_carrier;
 	public $delimiter1;
