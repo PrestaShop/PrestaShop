@@ -2842,6 +2842,7 @@ class BlockLayered extends Module
 						'min' => null,
 						'values' => array ('1' => 0),
 						'unit' => $currency->sign,
+						'format' => $currency->format,
 						'filter_show_limit' => $filter['filter_show_limit'],
 						'filter_type' => $filter['filter_type']
 					);
@@ -2903,6 +2904,7 @@ class BlockLayered extends Module
 						'min' => null,
 						'values' => array ('1' => 0),
 						'unit' => Configuration::get('PS_WEIGHT_UNIT'),
+						'format' => 5, // Ex: xxxxx kg
 						'filter_show_limit' => $filter['filter_show_limit'],
 						'filter_type' => $filter['filter_type']
 					);
