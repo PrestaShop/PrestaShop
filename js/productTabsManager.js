@@ -96,7 +96,11 @@ function ProductTabsManager(){
 		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
 		var data;
 		if (save_error)
+		{
 			data = post_data;
+			// set key_tab so that the ajax call returns the display for the current tab
+			data.key_tab = tab_name;
+		}
 
 		return $.ajax({
 			url : $('#link-'+tab_name).attr("href")+"&ajax=1",
