@@ -71,12 +71,18 @@ class GroupCore extends ObjectModel
 
 	protected $webserviceParameters = array();
 
-	public static function getGroups($id_lang)
+	public static function getGroups($id_lang, $id_shop = false)
 	{
+		$shop_criteria = '';
+		if ($id_shop)
+			$shop_criteria = 'LEFT JOIN `'._DB_PREFIX_.'group_shop` gs ON (gs.`id_group` = g.`id_group`)
+			 			      WHERE `id_shop` = '.(int)$id_shop;
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
 		FROM `'._DB_PREFIX_.'group` g
 		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)$id_lang.')
+		'.$shop_criteria.'
 		ORDER BY g.`id_group` ASC');
 	}
 

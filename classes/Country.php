@@ -147,6 +147,17 @@ class CountryCore extends ObjectModel
 		return $countries;
 	}
 
+	public static function getCountriesByIdShop($id_shop, $id_lang)
+	{
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'country` c
+				LEFT JOIN `'._DB_PREFIX_.'country_shop` cs ON (cs.`id_country`= c.`id_country`)
+				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+				WHERE `id_shop` = '.(int)$id_shop;
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+	}
+
 	/**
 	  * Get a country ID with its iso code
 	  *

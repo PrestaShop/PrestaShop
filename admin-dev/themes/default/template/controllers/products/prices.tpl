@@ -25,6 +25,9 @@
 *}
 
 <script type="text/javascript">
+
+var product_url = '{$link->getAdminLink('AdminProducts', true)}';
+
 var Customer = {
 	"hiddenField": jQuery('#id_customer'),
 	"field": jQuery('#customer'),
@@ -257,7 +260,7 @@ jQuery(document).ready(Customer.init);
 				<input type="hidden" name="sp_id_shop" value="0" />
 		{else}
 			<div class="margin-form">
-				<select name="sp_id_shop">
+				<select name="sp_id_shop" id="sp_id_shop">
 					{if !$admin_one_shop}<option value="0">{l s='All shops'}</option>{/if}
 					{foreach from=$shops item=shop}
 						<option value="{$shop.id_shop}">{$shop.name|htmlentitiesUTF8}</option>
@@ -272,14 +275,14 @@ jQuery(document).ready(Customer.init);
 				{/foreach}
 			</select>
 						&gt;
-			<select name="sp_id_country">
+			<select name="sp_id_country" id="sp_id_country">
 				<option value="0">{l s='All countries'}</option>
 				{foreach from=$countries item=country}
 					<option value="{$country.id_country}">{$country.name|htmlentitiesUTF8}</option>
 				{/foreach}
 			</select>
 						&gt;
-			<select name="sp_id_group">
+			<select name="sp_id_group" id="sp_id_group">
 				<option value="0">{l s='All groups'}</option>
 				{foreach from=$groups item=group}
 					<option value="{$group.id_group}">{$group.name}</option>

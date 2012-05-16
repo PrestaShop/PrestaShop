@@ -377,7 +377,7 @@ product_tabs['Combinations'] = new function(){
 
 /**
  * hide save and save-and-stay buttons
- * 
+ *
  * @access public
  * @return void
  */
@@ -410,7 +410,7 @@ function handleSaveButtons(e)
 		msg[i++] = handleSaveButtonsForVirtual();
 	else
 		msg[i++] = handleSaveButtonsForSimple();
-	
+
 	// common for all products
 	$("#disableSaveMessage").remove();
 	if ($("#name_"+defaultLanguage).val() == "" && (!display_multishop_checkboxes || $('input[name=\'multishop_check[name]['+defaultLanguage+']\']').prop('checked')))
@@ -546,11 +546,28 @@ product_tabs['Prices'] = new function(){
 		})
 	};
 
+	this.loadInformations = function(select_id, action)
+	{
+		id_shop = $('#sp_id_shop').val();
+		$.ajax({
+			url: product_url + '&action='+action+'&ajax=true&id_shop='+id_shop,
+			success: function(data) {
+				$(select_id + ' option').not(':first').remove();
+				$(select_id).append(data);
+			}
+		});
+	}
+
 	this.onReady = function(){
 		self.toggleSpecificPrice();
 		self.deleteSpecificPrice();
 		self.bindDelete();
 
+		$('#sp_id_shop').change(function() {
+			self.loadInformations('#sp_id_group','getGroupsOptions');
+			self.loadInformations('#spm_currency_0', 'getCurrenciesOptions');
+			self.loadInformations('#sp_id_country', 'getCountriesOptions');
+		});
 		if (display_multishop_checkboxes)
 			ProductMultishop.checkAllPrices();
 	};
@@ -1564,3 +1581,4 @@ $(document).ready(function() {
 		return (code == 13) ? false : true;
 	});
 });
+
