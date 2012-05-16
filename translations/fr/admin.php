@@ -2519,6 +2519,7 @@ $_LANGADM['AdminProducts6f39383b81d4999830ab6febe6279777'] = 'Ajouter ou modifie
 $_LANGADM['AdminProducts70ec3125ad8169fc81d61d3586bfa4df'] = 'Annuler le nouveau prix spécifique';
 $_LANGADM['AdminProducts70f394c7aa6039a151b545cc56b797b8'] = 'Si aucun des transporteurs n\'est sélectionné, tous les transporteurs pourront être utilisés pour expédier ce produit.';
 $_LANGADM['AdminProducts7164d9223003cb3505836cf3afebcb67'] = 'Référence(s) produit(s)';
+$_LANGADM['AdminProducts71c5b4a2630ecbc10433debd7b672f54'] = 'Association de boutique';
 $_LANGADM['AdminProducts729a51874fe901b092899e9e8b31c97a'] = 'Êtes-vous sûr ?';
 $_LANGADM['AdminProducts74645ed4e5e25461a664d5f68ff19098'] = 'Cocher dans quelle(s) catégorie(s) le produit doit apparaître';
 $_LANGADM['AdminProducts7475ec0d41372a307c497acb7eeea8c4'] = 'Aucune taxe';
