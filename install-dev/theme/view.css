@@ -260,6 +260,17 @@ div.field {
 	border:1px solid #ccc;
 }
 
+.warnBlock {
+	padding:14px 25px 14px 35px;
+	margin-bottom: 10px;
+	font-weight:normal;
+	font-size:13px;
+	line-height:18px;
+	background:#FEEFB3;
+	border:1px solid #9E6014;
+	color:#9E6014
+}
+
 .okBlock h1,
 .okBlock h2,
 .okBlock h3,
