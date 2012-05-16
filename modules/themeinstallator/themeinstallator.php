@@ -81,7 +81,7 @@ class ThemeInstallator extends Module
 		$natives = array(
 			'autoupgrade', 'bankwire', 'birthdaypresent', 'blockadvertising', 'blockbestsellers', 'blockcart',
 			'blockcategories', 'blockcms', 'blockcontact', 'blockcontactinfos', 'blockcurrencies', 'blockcustomerprivacy',
-			'blocklanguages', 'blocklayered', 'blocklink', 'blockmanufacturer', 'blockmyaccount', 'blocknewproducts',
+			'blocklanguages', 'blocklayered', 'blocklink', 'blockmanufacturer', 'blockmyaccount', 'blockmyaccountfooter', 'blocknewproducts',
 			'blocknewsletter', 'blockpaymentlogo', 'blockpermanentlinks', 'blockreinsurance', 'blockrss', 'blocksearch',
 			'blocksharefb', 'blocksocial', 'blockspecials', 'blockstore', 'blocksupplier', 'blocktags', 'blocktopmenu',
 			'blockuserinfo', 'blockviewed', 'blockwishlist', 'cashondelivery', 'carriercompare', 'cheque', 'crossselling',
