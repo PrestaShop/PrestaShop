@@ -71,6 +71,3 @@ if (!@ini_get('date.timezone'))
 // Try to improve memory limit if it's under 32M
 if (Tools::getMemoryLimit() < Tools::getOctets('32M'))
 	ini_set('memory_limit', '32M');
-
-if (Tools::getMemoryLimit() < Tools::getOctets('16M'))
-	die('PrestaShop requires at least 16M of memory to run, please check the memory_limit directive in php.ini or contact your host provider');
