@@ -2242,6 +2242,10 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->_displayDraftWarning($this->object->active);
 
+			// if there was an error while saving, we don't want to lose posted data
+			if (!empty($this->errors))
+				$this->copyFromPost($this->object, $this->table);
+
 			$this->initPack($this->object);
 			$this->{'initForm'.$this->tab_display}($this->object);
 			$this->tpl_form_vars['product'] = $this->object;
