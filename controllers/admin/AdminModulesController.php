@@ -341,6 +341,45 @@ class AdminModulesControllerCore extends AdminController
 	}
 
 
+	/**
+	 * Ajax call for statistic
+	 *
+	 * @result : die the request
+	 */
+	public function ajaxProcessWsModuleCall()
+	{
+		if (($list = Tools::getValue('modules_list')) && is_array($list))
+		{
+			foreach ($list as $id)
+				if ($obj = Module::getInstanceById($id))
+				{
+					if (isset($obj->module_key) && isset($obj->version))
+					{
+						$post_data = http_build_query(array(
+							'key' => urlencode($obj->module_key),
+							'url' => urlencode(Tools::getShopDomain()),
+							'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL')),
+							'version' => urlencode(_PS_VERSION_),
+							'method' => 'product_key'
+						));
+
+						$opts = array(
+							'http' => array(
+								'method' => 'POST',
+								'header'  => 'Content-type: application/x-www-form-urlencoded',
+								'content' => $post_data
+							)
+						);
+
+						$context = stream_context_create($opts);
+						file_get_contents('http://api.addons.prestashop.com/', false, $context);
+					}
+				}
+		}
+		die();
+	}
+
+
 
 	/*
 	** Get current URL
@@ -569,6 +608,8 @@ class AdminModulesControllerCore extends AdminController
 	public function postProcessCallback()
 	{
 	 	$return = false;
+		$installed_modules = array();
+
 		foreach ($this->map as $key => $method)
 		{
 			$modules = Tools::getValue($key);
@@ -695,7 +736,14 @@ class AdminModulesControllerCore extends AdminController
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
 						elseif ($echo === true)
-							$return = ($method == 'install' ? 12 : 13);
+						{
+							$return = 13;
+							if ($method == 'install')
+							{
+								$return = 12;
+								$installed_modules[] = $module->id;
+							}
+						}
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
 						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
@@ -716,10 +764,12 @@ class AdminModulesControllerCore extends AdminController
 		}
 		if ($return)
 		{
+			$params = (count($installed_modules)) ? '&installed_modules='.implode('|', $installed_modules) : '';
+
 			// If redirect parameter is present and module installed with success, we redirect on configuration module page
 			if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && Module::isInstalled(pSQL(Tools::getValue('module_name'))))
-				Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name'));
-			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : ''));
+				Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('module_name').'&token='.Tools::getValue('token').'&module_name='.Tools::getValue('module_name').$params);
+			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
 		}
 	}
 	
@@ -727,6 +777,11 @@ class AdminModulesControllerCore extends AdminController
 	{
 		// Parent Post Process
 		parent::postProcess();
+
+
+		// Get the list of installed module ans prepare it for ajax call.
+		if (($list = Tools::getValue('installed_modules')))
+			Context::getContext()->smarty->assign('installed_modules', Tools::jsonEncode(explode('|', $list)));
 
 		// If redirect parameter is present and module already installed, we redirect on configuration module page
 		if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && Module::isInstalled(pSQL(Tools::getValue('module_name'))))
@@ -843,7 +898,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function isModuleFiltered($module)
 	{
-		// Beware $module could be an instance of Module or stdClass, that explain the static call
+		// Beware $module could be an instance of Module or stdClass, that expflain the static call
 		if ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
 			return true;
 
