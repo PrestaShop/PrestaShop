@@ -167,8 +167,8 @@ param_product_url = '';
 											{/literal}
 											{if $filter.format < 5}
 											{literal}
-												from = formatCurrency(ui.values[0], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
-												to = formatCurrency(ui.values[1], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
+												from = blocklayeredFormatCurrency(ui.values[0], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
+												to = blocklayeredFormatCurrency(ui.values[1], {/literal}{$filter.format}{literal}, '{/literal}{$filter.unit}{literal}');
 											{/literal}
 											{else}
 											{literal}
