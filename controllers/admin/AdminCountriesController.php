@@ -384,9 +384,6 @@ class AdminCountriesControllerCore extends AdminController
 				$tmp_addr_format->id_country = $id_country;
 			}
 
-			$object = new $this->className();
-			$this->updateAssoShop($object->id);
-
 			$tmp_addr_format->format = Tools::getValue('address_layout');
 
 			if (strlen($tmp_addr_format->format) > 0)
