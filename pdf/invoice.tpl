@@ -88,7 +88,7 @@
 				</tr>
 			{foreachelse}
 				<tr>
-					<td>{l s='No payment'}</td>
+					<td>{l s='No payment' pdf='true'}</td>
 				</tr>
 			{/foreach}
 			</table>
@@ -103,10 +103,24 @@
 					{if !$tax_excluded_display}
 						<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'} <br />{l s='(Tax Excl.)' pdf='true'}</td>
 					{/if}
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Unit Price' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">
+						{l s='Unit Price' pdf='true'}
+						{if $tax_excluded_display}
+							 {l s='(Tax Excl.)' pdf='true'}
+						{else}
+							 {l s='(Tax Incl.)' pdf='true'}
+						{/if}
+					</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Discount' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">{l s='Total' pdf='true'}</td>
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">
+						{l s='Total' pdf='true'}
+						{if $tax_excluded_display}
+							{l s='(Tax Excl.)' pdf='true'}
+						{else}
+							{l s='(Tax Incl.)' pdf='true'}
+						{/if}
+					</td>
 				</tr>
 				<!-- PRODUCTS -->
 				{foreach $order_details as $order_detail}
