@@ -34,6 +34,7 @@
 	var currentIndexWithToken = '{$currentIndex}&token={$token}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
+	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
 	var by = '{l s='by'}';
 	var errorLogin = '{l s='PrestaShop was unable to login to Addons, please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
@@ -67,6 +68,10 @@
 		// ScrollTo
 		if (anchor != '')
 			$.scrollTo('#'+anchor, 1200, {offset: -100});
+
+		// If a list of modules is set, install request has been called
+		if (installed_modules !== false)
+			wsModuleCall(installed_modules);
 
 		// AutoComplete Search
 		$('input[name="filtername"]').autocomplete(moduleList, {
@@ -337,5 +342,29 @@
 			return false;
 		});
 	});
+
+	function wsModuleCall(modules_list)
+	{
+		$.ajax({
+			type : 'POST',
+			url : ajaxCurrentIndex,
+			data :	{
+				'modules_list' : modules_list,
+				'controller' : 'AdminModules',
+				'action' : 'wsModuleCall',
+				'token' : token
+			},
+			dataType: 'json',
+			success: function(json)
+			{
+				//console.log(json);
+ 			},
+			error: function(xhr, ajaxOptions, thrownError)
+			{
+				//jAlert("TECHNICAL ERROR"+res);
+			}
+		});
+	}
+
 	{/literal}
 </script>
