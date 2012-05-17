@@ -683,6 +683,9 @@ class FrontControllerCore extends Controller
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
+
+		// Execute Hook FrontController SetMedia
+		Hook::exec('actionFrontControllerSetMedia', array());
 	}
 
 	public function initHeader()
