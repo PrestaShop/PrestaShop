@@ -1578,6 +1578,9 @@ class AdminControllerCore extends Controller
 			if (Configuration::get('PS_HELPBOX'))
 				$this->addJS(_PS_JS_DIR_.'helpAccess.js');
 		}
+
+		// Execute Hook AdminController SetMedia
+		Hook::exec('actionAdminControllerSetMedia', array());
 	}
 
 	/**
