@@ -771,6 +771,7 @@ class AdminModulesControllerCore extends AdminController
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
 				$this->errors[] = sprintf(Tools::displayError('The following module(s) were not installed properly: %s'), $html_error);
+				$this->context->smarty->assign('error_module', 'true');
 			}
 		}
 		if ($return)
