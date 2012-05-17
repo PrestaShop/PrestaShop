@@ -234,6 +234,7 @@ class DispatcherCore
 	 */
 	public function dispatch()
 	{
+		$controller_class = '';
 		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
 
 		// If there are several languages, get language from uri
@@ -267,7 +268,7 @@ class DispatcherCore
 				if (!isset($controllers[$this->controller]))
 					$this->controller = $this->controller_not_found;
 				$controller_class = $controllers[$this->controller];
-				$paramsHookActionDispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 0);
+				$params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 0);
 			break;
 
 			// Dispatch module controller for front office
@@ -284,7 +285,7 @@ class DispatcherCore
 						$controller_class = $module_name.$this->controller.'ModuleFrontController';
 					}
 				}
-				$paramsHookActionDispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
+				$params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
 			break;
 
 			// Dispatch back office controller + module back office controller
@@ -310,7 +311,7 @@ class DispatcherCore
 							$controller_class = $controllers[$this->controller].(strpos($controllers[$this->controller], 'Controller') ? '' : 'Controller');
 						}
 					}
-					$paramsHookActionDispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 1);
+					$params_hook_action_dispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 1);
 				}
 				else
 				{
@@ -318,7 +319,7 @@ class DispatcherCore
 					if (!isset($controllers[$this->controller]))
 						$this->controller = $this->controller_not_found;
 					$controller_class = $controllers[$this->controller];
-					$paramsHookActionDispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 0);
+					$params_hook_action_dispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 0);
 
 					if (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php'))
 						$retrocompatibility_admin_tab = _PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php';
@@ -345,8 +346,8 @@ class DispatcherCore
 			$controller = Controller::getController($controller_class);
 
 			// Execute hook dispatcher
-			if (isset($paramsHookActionDispatcher))
-				Hook::exec('actionDispatcher', $paramsHookActionDispatcher);
+			if (isset($params_hook_action_dispatcher))
+				Hook::exec('actionDispatcher', $params_hook_action_dispatcher);
 
 			// Running controller
 			$controller->run();
