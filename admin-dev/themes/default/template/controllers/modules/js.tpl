@@ -38,7 +38,7 @@
 	var by = '{l s='by'}';
 	var errorLogin = '{l s='PrestaShop was unable to login to Addons, please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
-	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
+	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
 	{literal}
 
