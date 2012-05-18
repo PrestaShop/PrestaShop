@@ -31,6 +31,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a20ddccbb6f808ec42cd663
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_33167fe8de7517798cf2e95c7680d6a4'] = 'Les thèmes suivants ont correctement été importés';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f4ef3a40f287dd9849004a7f5af73f00'] = 'Attention : un module avec le même nom existe déjà';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_df8703a4066393da85e8188261660717'] = 'Sélectionnez les modules du thème que vous souhaitez installer';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_7b8e139260e50dd81e70b6ef6910e6f6'] = 'Sélectionnez les modules qui doivent être désactivé pour ce thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de988ce574b0'] = 'Configuration des modules natifs';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'Configuration actuelle';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'Configuration du thème';
