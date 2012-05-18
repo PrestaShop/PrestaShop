@@ -271,9 +271,6 @@ class AdminProductsControllerCore extends AdminController
 			$orderBy = 'id_'.$this->table;
 			$orderWay = 'ASC';
 		}
-
-		if (!Tools::isSubmit('productFilter_active'))
-			$this->_filter = '';
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
 
 		/* update product quantity with attributes ...*/
