@@ -2335,10 +2335,9 @@ class AdminControllerCore extends Controller
 	 * Returns an array with selected shops and type (group or boutique shop)
 	 *
 	 * @param string $table
-	 * @param int $id_object
 	 * @return array
 	 */
-	protected function getSelectedAssoShop($table, $id_object = false)
+	protected function getSelectedAssoShop($table)
 	{
 		if (!Shop::isFeatureActive() || !Shop::isTableAssociated($table))
 			return array();
@@ -2362,9 +2361,8 @@ class AdminControllerCore extends Controller
 	 * Update the associations of shops
 	 *
 	 * @param int $id_object
-	 * @param int $new_id_object
 	 */
-	protected function updateAssoShop($id_object, $new_id_object = false)
+	protected function updateAssoShop($id_object)
 	{
 		if (!Shop::isFeatureActive())
 			return;
@@ -2388,7 +2386,7 @@ class AdminControllerCore extends Controller
 		$insert = array();
 		foreach ($assos_data as $id_shop)
 			$insert[] = array(
-				$this->identifier => $new_id_object ? $new_id_object : $id_object,
+				$this->identifier => $id_object,
 				'id_shop' => (int)$id_shop,
 			);
 		Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
