@@ -215,7 +215,6 @@ class ThemeInstallator extends Module
 		define('MAX_WEBSITE_LENGTH', 128);
 		define('MAX_DESCRIPTION_LENGTH', 64);
 		define('MAX_T_VER_LENGTH', 3);
-		define('MAX_COMPATIBILITY_VER', 7);
 		define('ARCHIVE_NAME', _IMPORT_FOLDER_.'uploaded.zip');
 		define('XMLFILENAME', 'Config.xml');
 
@@ -1406,13 +1405,13 @@ class ThemeInstallator extends Module
 			<div style="float: left;">
 				<label>'.$this->l('Compatible From').'</label>
 				<div class="margin-form">
-					<input type="text" value="'.$val.'" name="compa_from" maxlength="'.MAX_COMPATIBILITY_VER.'" />
+					<input type="text" value="'.$val.'" name="compa_from"/>
 				</div>
 			</div>
 			<div style="margin-left: 30px; float: left;">
 				<label>'.$this->l('To').'</label>
 				<div class="margin-form">
-					<input type="text" value="'.$val2.'" name="compa_to" maxlength="'.MAX_COMPATIBILITY_VER.'"/>
+					<input type="text" value="'.$val2.'" name="compa_to">
 				</div>
 			</div>
 			<p class="clear">&nbsp;</p>';
@@ -1449,7 +1448,6 @@ class ThemeInstallator extends Module
 				var compato = "'.$this->l('To').'";
 				var name_length = "'.MAX_NAME_LENGTH.'";
 				var doc_default_val = "'.$this->l('Documentation').'";
-				var compatibility_length = "'.MAX_COMPATIBILITY_VER.'";
 				var compatibility_from = "'.DEFAULT_COMPATIBILITY_FROM.'";
 				var compatibility_to = "'.DEFAULT_COMPATIBILITY_TO.'";
 				var select_default = "'.$this->l('Choose a theme').'";
