@@ -106,7 +106,7 @@ class ThemeInstallator extends Module
 			{
 				if (is_dir($dirname.'/'.$file))
 					self::deleteDirectory($dirname.'/'.$file);
-				else if (file_exists($dirname.'/'.$file))
+				elseif (file_exists($dirname.'/'.$file))
 					unlink($dirname.'/'.$file);
 				}
 		rmdir($dirname);
@@ -123,7 +123,7 @@ class ThemeInstallator extends Module
 			{
 				if (is_dir($src.'/'.$file))
 					self::recurseCopy($src.'/'.$file, $dst.'/'.$file);
-				else if (is_readable($src.'/'.$file) && $file != 'Thumbs.db' && $file != '.DS_Store' && substr($file, -1) != '~')
+				elseif (is_readable($src.'/'.$file) && $file != 'Thumbs.db' && $file != '.DS_Store' && substr($file, -1) != '~')
 					copy($src.'/'.$file, $dst.'/'.$file);
 			}
 		closedir($dir);
@@ -220,43 +220,43 @@ class ThemeInstallator extends Module
 		{
 			if ($_FILES['themearchive']['error'] || !file_exists($_FILES['themearchive']['tmp_name']))
 				$this->errors[] = parent::displayError($this->l('An error has occurred during the file upload.'));
-			else if (substr($_FILES['themearchive']['name'], -4) != '.zip')
+			elseif (substr($_FILES['themearchive']['name'], -4) != '.zip')
 				$this->errors[] = parent::displayError($this->l('Only zip files are allowed'));
-			else if (!rename($_FILES['themearchive']['tmp_name'], ARCHIVE_NAME))
+			elseif (!rename($_FILES['themearchive']['tmp_name'], ARCHIVE_NAME))
 				$this->errors[] = parent::displayError($this->l('An error has occurred during the file copy.'));
-			else if (Tools::ZipTest(ARCHIVE_NAME))
+			elseif (Tools::ZipTest(ARCHIVE_NAME))
 				$this->page = 2;
 			else
 				$this->errors[] = parent::displayError($this->l('Zip file seems to be broken'));
 		}
-		else if (Tools::isSubmit('submitImport2'))
+		elseif (Tools::isSubmit('submitImport2'))
 		{
 			if (!Validate::isModuleUrl($url = Tools::getValue('linkurl'), $tmp)) // $tmp is not used, because we don't care about the error output of isModuleUrl
 				$this->errors[] = parent::displayError($this->l('Only zip files are allowed'));
-			else if (!copy($url, ARCHIVE_NAME))
+			elseif (!copy($url, ARCHIVE_NAME))
 				$this->errors[] = parent::displayError($this->l('Error during the file download'));
-			else if (Tools::ZipTest(ARCHIVE_NAME))
+			elseif (Tools::ZipTest(ARCHIVE_NAME))
 				$this->errors[] = parent::displayError($this->l('Zip file seems to be broken'));
 			else
 				$this->page = 2;
 		}
-		else if (Tools::isSubmit('submitImport3'))
+		elseif (Tools::isSubmit('submitImport3'))
 		{
 			$filename = _IMPORT_FOLDER_.Tools::getValue('ArchiveName');
 			if (substr($filename, -4) != '.zip')
 				$this->errors[] = parent::displayError($this->l('Only zip files are allowed'));
-			else if (!copy($filename, ARCHIVE_NAME))
+			elseif (!copy($filename, ARCHIVE_NAME))
 				$this->errors[] = parent::displayError($this->l('An error has occurred during the file copy.'));
-			else if (Tools::ZipTest(ARCHIVE_NAME))
+			elseif (Tools::ZipTest(ARCHIVE_NAME))
 				$this->page = 2;
 			else
 				$this->errors[] = parent::displayError($this->l('Zip file seems to be broken'));
 		}
-		else if (Tools::isSubmit('prevThemes'))
+		elseif (Tools::isSubmit('prevThemes'))
 			$this->page = 2;
-		else if (Tools::isSubmit('submitThemes'))
+		elseif (Tools::isSubmit('submitThemes'))
 			$this->page = 3;
-		else if (Tools::isSubmit('submitModules'))
+		elseif (Tools::isSubmit('submitModules'))
 			$this->page = 4;
 		if ($this->page == 2 && file_exists(ARCHIVE_NAME))
 		{
@@ -309,11 +309,18 @@ class ThemeInstallator extends Module
 		if (Tools::isSubmit('submitExport') && $this->error === false && $this->checkPostedDatas() == true)
 		{
 			self::getThemeVariations();
-			self::getDocumentation();
-			self::getHookState();
-			self::getImageState();
-			self::generateXML();
-			self::generateArchive();
+			
+			// Check variations exists
+			if (empty($this->variations))
+				$this->_html .= parent::displayError($this->l('You must select at least one theme'));
+			else
+			{
+				self::getDocumentation();
+				self::getHookState();
+				self::getImageState();
+				self::generateXML();
+				self::generateArchive();
+			}
 		}
 		self::AuthorInformationForm();
 		self::ModulesInformationForm();
@@ -353,7 +360,7 @@ class ThemeInstallator extends Module
 				self::_displayForm4();
 				break;
 		}
-		return join($this->errors, '').$this->_msg.$this->_html;
+		return implode($this->errors, '').$this->_msg.$this->_html;
 	}
 
 	/*
@@ -394,9 +401,9 @@ class ThemeInstallator extends Module
 		{
 			if (strval($row['action']) == 'install' && !in_array(strval($row['name']), $this->native_modules))
 				$this->to_install[] = strval($row['name']);
-			else if (strval($row['action']) == 'enable')
+			elseif (strval($row['action']) == 'enable')
 				$this->to_enable[] = strval($row['name']);
-			else if (strval($row['action']) == 'disable')
+			elseif (strval($row['action']) == 'disable')
 				$this->to_disable[] = strval($row['name']);
 		}
 	}
@@ -478,7 +485,7 @@ class ThemeInstallator extends Module
 						UPDATE `'._DB_PREFIX_.'module`
 						SET `active`= 1
 						WHERE `name` = \''.pSQL($row).'\'');
-				else if (!$obj || !$obj->install())
+				elseif (!$obj || !$obj->install())
 					continue;
 				Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 				$msg .= '<i>- '.pSQL($row).'</i><br />';
@@ -530,7 +537,7 @@ class ThemeInstallator extends Module
 							WHERE `name` = \''.pSQL($row).'\'');
 						Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$obj->id.', '.$shopID.')');
 					}
-					else if (!is_object($obj) || !$obj->install())
+					elseif (!is_object($obj) || !$obj->install())
 						continue ;
 					if ($flag++ == 0)
 						$msg .= '<b>'.$this->l('The following modules have been enabled').' :</b><br />';
@@ -865,7 +872,7 @@ class ThemeInstallator extends Module
 				if ($row != '.' && $row != '..')
 					$this->archiveThisFile($obj, $row, $serverPath.$file.'/', $archivePath.$file.'/');
 		}
-		else if (!$obj->addFile($serverPath.$file, $archivePath.$file))
+		elseif (!$obj->addFile($serverPath.$file, $archivePath.$file))
 			$this->error = true;
 	}
 
@@ -1045,7 +1052,7 @@ class ThemeInstallator extends Module
 				else
 					$this->to_disable[] = $array['name'];
 			}
-			else if ($array['active'] == 1)
+			elseif ($array['active'] == 1)
 				$this->to_install[] = $array['name'];
 		}
 		foreach ($this->native_modules as $str)
@@ -1134,9 +1141,9 @@ class ThemeInstallator extends Module
 
 		if ($mail && !preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail))
 			$this->_html .= parent::displayError($this->l('There is an error in your e-mail syntax!'));
-		else if ($website && (!Validate::isURL($website) || !Validate::isAbsoluteUrl($website)))
+		elseif ($website && (!Validate::isURL($website) || !Validate::isAbsoluteUrl($website)))
 			$this->_html .= parent::displayError($this->l('There is an error in your URL syntax!'));
-		else if (!$this->checkVersionsAndCompatibility() || !$this->checkNames() || !$this->checkDocumentation())
+		elseif (!$this->checkVersionsAndCompatibility() || !$this->checkNames() || !$this->checkDocumentation())
 			return false;
 		else
 			return true;
@@ -1159,9 +1166,9 @@ class ThemeInstallator extends Module
 
 			if (!in_array($extension, $extensions))
 				$this->_html .= parent::displayError($this->l('File extension must be .txt or .pdf'));
-			else if ($_FILES['mydoc_'.$count]['error'] > 0 || $_FILES['mydoc_'.$count]['size'] > 1048576)
+			elseif ($_FILES['mydoc_'.$count]['error'] > 0 || $_FILES['mydoc_'.$count]['size'] > 1048576)
 				$this->_html .= parent::displayError($this->l('An error occurred during documentation upload'));
-			else if (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
+			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
 				$this->_html .= parent::displayError($this->l('Please enter a valid documentation name'));
 		}
 		if ($this->error == true)
@@ -1180,7 +1187,7 @@ class ThemeInstallator extends Module
 
 		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
 			$this->_html .= parent::displayError($this->l('Please enter a valid author name'));
-		else if (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
+		elseif (!$name || !Validate::isGenericName($name) || strlen($name) > MAX_NAME_LENGTH)
 			$this->_html .= parent::displayError($this->l('Please enter a valid theme name'));
 		while ($this->error === false && Tools::isSubmit('myvar_'.++$count))
 		{
