@@ -1425,7 +1425,6 @@ class AdminProductsControllerCore extends AdminController
 			$this->updateAccessories($this->object);
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
-			$this->updateAssoShop($this->object->id);
 
 			if (empty($this->errors))
 			{
@@ -1527,6 +1526,8 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if ($this->isTabSubmitted('Shipping'))
 						$this->addCarriers();
+					if ($this->isTabSubmitted('Associations'))
+						$this->updateAccessories($object);
 					if ($this->isTabSubmitted('Suppliers'))
 						$this->processSuppliers();
 					if ($this->isTabSubmitted('Warehouses'))
@@ -1545,11 +1546,6 @@ class AdminProductsControllerCore extends AdminController
 						$this->processCustomizationConfiguration();
 					if ($this->isTabSubmitted('Attachments'))
 						$this->processAttachments();
-					if ($this->isTabSubmitted('Associations'))
-					{
-						$this->updateAccessories($object);
-						$this->updateAssoShop($object->id);
-					}
 
 					$this->updatePackItems($object);
 					$this->updateDownloadProduct($object, 1);
