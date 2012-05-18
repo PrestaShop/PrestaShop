@@ -66,6 +66,7 @@ class SupplierCore extends ObjectModel
 		'table' => 'supplier',
 		'primary' => 'id_supplier',
 		'multilang' => true,
+		'multishop' => true,
 		'fields' => array(
 			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
 			'active' => 			array('type' => self::TYPE_BOOL),
