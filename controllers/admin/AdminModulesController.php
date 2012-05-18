@@ -730,7 +730,7 @@ class AdminModulesControllerCore extends AdminController
 									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
 								elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 								{
-									$shop_group = new ShopGroup((int)Shop::getContextShopGroupID())
+									$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 									$toolbar .= 'all shops of group shop <b>'.$shop_group->name.'</b>';
 								}
 								else
