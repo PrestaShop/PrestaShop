@@ -71,16 +71,6 @@
 				<div class="hint" style="display:block;">{l s='The default category is the category which is displayed by default.'}</div>
 			</td>
 		</tr>
-		{if $is_multishop && !$is_shop_context}
-		<tr>
-			<td class="col-left">
-				<label>{l s='Associated shops:'}</label>
-			</td>
-			<td class="col-right">
-				{$asso_shop}
-			</td>
-		</tr>
-		{/if}
 	</table>
 <div class="separation"></div>
 	<table>

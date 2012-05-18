@@ -2556,10 +2556,6 @@ class AdminProductsControllerCore extends AdminController
 
 		$tab_root = array('id_category' => $root->id, 'name' => $root->name);
 		$helper = new Helper();
-		$helper_form = new HelperForm();
-		$helper_form->table = 'product';
-		$helper_form->identifier = 'id_product';
-		$helper_form->id = $product->id;
 		$category_tree = $helper->renderCategoryTree($tab_root, $selected_cat, 'categoryBox', false, true, array(), false, true);
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
@@ -2568,8 +2564,6 @@ class AdminProductsControllerCore extends AdminController
 					'category_tree' => $category_tree,
 					'product' => $product,
 					'link' => $this->context->link,
-					'asso_shop' => $helper_form->renderAssoShop(),
-					'is_multishop' => Shop::isFeatureActive(),
 					'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
 		));
 
