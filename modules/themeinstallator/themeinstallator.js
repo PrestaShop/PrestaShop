@@ -44,9 +44,9 @@ function addVariation(id_variation)
 	}
 	newRow += '</select></td>';
 	newRow += '<td style="font-weight: bold;">'+compafrom+'</td>';
-	newRow += '<td><input type="text" value="'+compatibility_from+'" name="compafrom_'+idRow+'" maxlength="'+compatibility_length+'" /></td>';
+	newRow += '<td><input type="text" value="'+compatibility_from+'" name="compafrom_'+idRow+'"/></td>';
 	newRow += '<td style="font-weight: bold;">'+compato+'</td>';
-	newRow += '<td><input type="text" value="'+compatibility_to+'" name="compato_'+idRow+'" maxlength="'+compatibility_length+'" /></td>';
+	newRow += '<td><input type="text" value="'+compatibility_to+'" name="compato_'+idRow+'"/></td>';
 	
 	if ($('#variation_table tr').length > 0)
 		$('#variation_table tr:last').after(newRow);
