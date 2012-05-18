@@ -761,11 +761,18 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @return bool Return true if multishop feature is activated
+	 * @return bool Return true if multishop feature is active and at last 2 shops have been created
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+		if (!Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+			return false;
+
+		static $total = null;
+
+		if (is_null($total))
+			$total = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop');
+		return ($total > 1) ? true : false;
 	}
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
