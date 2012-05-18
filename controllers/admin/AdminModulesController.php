@@ -1055,7 +1055,10 @@ class AdminModulesControllerCore extends AdminController
 			// Upgrade Module process, init check if a module could be upgraded
 			if (Module::initUpgradeModule($module->name, $module->version))
 			{
-				if ($object = new $module->name())
+				// When the XML cache file is up-to-date, the module may not be loaded yet
+				if (!class_exists($module->name))
+					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
+				if ($object = new $module->name)
 				{
 					$object->runUpgradeModule();
 					if ((count($errors_module_list = $object->getErrors())))
@@ -1069,6 +1072,9 @@ class AdminModulesControllerCore extends AdminController
 			// User has to be prevented
 			else if (Module::getUpgradeStatus($module->name))
 			{
+				// When the XML cache file is up-to-date, the module may not be loaded yet
+				if (!class_exists($module->name))
+					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
 				$object = new $module->name();
 				$module_success[] = array('name' => $module->name, 'message' => array(
 					0 => $this->l('Current version:').$object->version,
