@@ -165,7 +165,7 @@ class ManufacturerCore extends ObjectModel
 	  * @return array Manufacturers
 	  */
 	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false,
-		$n = false, $all_group = false, $id_shop_group = false)
+		$n = false, $all_group = false)
 	{
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
