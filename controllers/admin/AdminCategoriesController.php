@@ -621,43 +621,6 @@ class AdminCategoriesControllerCore extends AdminController
 		return strip_tags(stripslashes($description));
 	}
 
-	protected function updateAssoShop($id_object = false, $new_id_object = false)
-	{
-		if (!Shop::isFeatureActive())
-			return;
-
-		$assos_data = $this->getAssoShop($this->table, $id_object);
-		$assos = $assos_data[0];
-		$type = $assos_data[1];
-
-		$categories_shop = Category::getShopsByCategory($id_object);
-
-		if (!$type)
-			return;
-
-		$delete = $insert = '';
-		foreach ($assos as $asso)
-		{
-			$passed = false;
-			$delete .= (int)$asso['id_'.$type].',';
-			foreach ($categories_shop as $cat)
-				if ($cat['id_shop'] == $asso['id_'.$type])
-					$passed = true;
-			if (!$passed)
-				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].'),';
-		}
-		$delete = substr($delete, 0, strlen($delete) - 1);
-		$insert = substr($insert, 0, strlen($insert) - 1);
-		if (!empty($delete))
-			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
-				($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
-
-		if (!empty($insert))
-			Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
-				VALUES '.pSQL($insert));
-	}
-
 	public function ajaxProcessUpdatePositions()
 	{
 		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
