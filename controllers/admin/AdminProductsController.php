@@ -1069,6 +1069,47 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!$this->redirect_after)
 			parent::postProcess();
+		
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			$this->addjQueryPlugin(array(
+				'autocomplete',
+				'tablednd',
+				'thickbox',
+				'ajaxfileupload',
+				'date'
+			));
+
+			$this->addJqueryUI(array(
+				'ui.core',
+				'ui.widget',
+				'ui.accordion',
+				'ui.slider',
+				'ui.datepicker'
+			));
+
+			$this->addJS(array(
+				_PS_JS_DIR_.'productTabsManager.js',
+				_PS_JS_DIR_.'admin-products.js',
+				_PS_JS_DIR_.'attributesBack.js',
+				_PS_JS_DIR_.'price.js',
+				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
+				_PS_JS_DIR_.'tinymce.inc.js',
+				_PS_JS_DIR_.'fileuploader.js',
+				_PS_JS_DIR_.'admin-dnd.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
+				_PS_JS_DIR_.'admin-categories-tree.js',
+				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
+				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
+			));
+
+			$this->addCSS(array(
+				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.css',
+				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
+			));
+		}
 	}
 
 	/* @todo rename to processaddproductimage */
@@ -3888,51 +3929,6 @@ class AdminProductsControllerCore extends AdminController
 			'Mark all checkbox(es) of categories in which product is to appear' => $this->l('Mark all checkbox(es) of categories in which product is to appear')
 		);
 		return $trad[$key];
-	}
-
-	public function setMedia()
-	{
-		parent::setMedia();
-		if ($this->display == 'edit' || $this->display == 'add')
-		{
-			$this->addjQueryPlugin(array(
-				'autocomplete',
-				'tablednd',
-				'thickbox',
-				'ajaxfileupload',
-				'date'
-			));
-
-			$this->addJqueryUI(array(
-				'ui.core',
-				'ui.widget',
-				'ui.accordion',
-				'ui.slider',
-				'ui.datepicker'
-			));
-
-			$this->addJS(array(
-				_PS_JS_DIR_.'productTabsManager.js',
-				_PS_JS_DIR_.'admin-products.js',
-				_PS_JS_DIR_.'attributesBack.js',
-				_PS_JS_DIR_.'price.js',
-				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
-				_PS_JS_DIR_.'tinymce.inc.js',
-				_PS_JS_DIR_.'fileuploader.js',
-				_PS_JS_DIR_.'admin-dnd.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.async.js',
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.edit.js',
-				_PS_JS_DIR_.'admin-categories-tree.js',
-				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
-			));
-
-			$this->addCSS(array(
-				_PS_JS_DIR_.'jquery/plugins/treeview-categories/jquery.treeview-categories.css',
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
-			));
-		}
 	}
 
 	protected function _displayUnavailableProductWarning()

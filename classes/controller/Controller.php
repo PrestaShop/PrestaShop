@@ -150,6 +150,10 @@ abstract class ControllerCore
 		$this->init();
 		if ($this->checkAccess())
 		{
+			// setMedia MUST be called before postProcess
+			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+				$this->setMedia();
+
 			// postProcess handles ajaxProcess
 			$this->postProcess();
 
@@ -157,10 +161,7 @@ abstract class ControllerCore
 				$this->redirect();
 
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
-			{
-				$this->setMedia();
 				$this->initHeader();
-			}
 
 			if ($this->viewAccess())
 				$this->initContent();
@@ -266,6 +267,7 @@ abstract class ControllerCore
 	 */
 	public function addJS($js_uri)
 	{
+//elog($js_uri);
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
