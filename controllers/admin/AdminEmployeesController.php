@@ -405,9 +405,8 @@ class AdminEmployeesControllerCore extends AdminController
 					return false;
 			}
 
-			$assos = $this->getAssoShop($this->table);
-
-			if (count($assos[0]) == 0 && $this->table = 'employee')
+			$assos = $this->getSelectedAssoShop($this->table);
+			if (!$assos && $this->table = 'employee')
 				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
 					$this->errors[] = Tools::displayError('The employee must be associated with at least one shop');
 		}
