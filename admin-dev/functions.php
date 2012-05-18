@@ -466,7 +466,10 @@ function runAdminTab($tab, $ajaxMode = false)
 			{
 				echo '<div class="multishop_info">';
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
-					printf(translate('You are configuring your store for group shop %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
+				{
+					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+					printf(translate('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
+				}
 				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					printf(translate('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo '</div>';
