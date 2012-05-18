@@ -49,7 +49,6 @@ class SceneCore extends ObjectModel
 		'table' => 'scene',
 		'primary' => 'id_scene',
 		'multilang' => true,
-		'multishop' => true,
 		'fields' => array(
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
