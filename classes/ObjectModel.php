@@ -135,6 +135,8 @@ abstract class ObjectModelCore
 	 */
 	protected $update_fields = null;
 
+	public $insert_missing_shop = true;
+
 	/**
 	 * Returns object validation rules (fields validity)
 	 *
@@ -546,7 +548,11 @@ abstract class ObjectModelCore
 				$fields['id_shop'] = (int)$id_shop;
 				$all_fields['id_shop'] = (int)$id_shop;
 				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
-				if (Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where))
+				$shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
+				if (!$this->insert_missing_shop && !$shop_exists)
+					continue;
+
+				if ($shop_exists)
 					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
 				else
 					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
@@ -678,12 +684,13 @@ abstract class ObjectModelCore
 	 	// Object must have a variable called 'active'
 	 	if (!array_key_exists('active', $this))
 			throw new PrestaShopException('property "active is missing in object '.get_class($this));
-		
+
 	 	// Update active status on object
 	 	$this->active = !(int)$this->active;
 
 		// Change status to active/inactive
-		return $this->update();
+		$this->insert_missing_shop = false;
+		return $this->update(false);
 	}
 
 	/**

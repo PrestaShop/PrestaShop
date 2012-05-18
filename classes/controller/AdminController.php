@@ -1982,17 +1982,21 @@ class AdminControllerCore extends Controller
 		$filter_shop = '';
 		if ($this->multishop_context && Shop::isTableAssociated($this->table))
 		{
-			$idenfier_shop = Shop::getContextListShopID();
-			if (!$this->_group)
-				$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
-			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
-				$this->_group .= ', a.'.pSQL($this->identifier);
-
-			$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
-			if (Shop::isFeatureActive() && $test_join)
+			$def = ObjectModel::getDefinition($this->className);
+			if (Shop::getContext() != Shop::CONTEXT_ALL || !empty($def['multishop']))
 			{
-				$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_shop` sa ';
-				$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $idenfier_shop).'))';
+				$idenfier_shop = Shop::getContextListShopID();
+				if (!$this->_group)
+					$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
+				elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+					$this->_group .= ', a.'.pSQL($this->identifier);
+
+				$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
+				if (Shop::isFeatureActive() && $test_join)
+				{
+					$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_shop` sa ';
+					$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $idenfier_shop).'))';
+				}
 			}
 		}
 
@@ -2332,33 +2336,26 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param string $table
 	 * @param int $id_object
+	 * @return array
 	 */
-	protected function getAssoShop($table, $id_object = false)
+	protected function getSelectedAssoShop($table, $id_object = false)
 	{
-		if (Shop::isTableAssociated($table))
-			$type = 'shop';
-		else
-			return;
+		if (!Shop::isFeatureActive() || !Shop::isTableAssociated($table))
+			return array();
 
 		$shops = Shop::getShops(true, null, true);
 		if (count($shops) == 1 && isset($shops[0]))
 			return array($shops[0], 'shop');
 
 		$assos = array();
-		if (Tools::isSubmit('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table))
+		if (Tools::isSubmit('checkBoxShopAsso_'.$table))
 		{
-			$check_box = Tools::getValue('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table);
-			foreach ($check_box as $id_asso_object => $row)
-			{
-				if ($id_object)
-					$id_asso_object = $id_object;
-				foreach ($row as $id_shop => $value)
-					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
-			}
+			foreach (Tools::getValue('checkBoxShopAsso_'.$table) as $id_shop => $value)
+				$assos[] = (int)$id_shop;
 		}
-		else // if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
-			$assos[] = array('id_object' => (int)$id_object, 'id_'.$type => (int)Shop::getContextShopID());
-		return array($assos, $type);
+		else if (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
+			$assos[] = (int)Shop::getContextShopID();
+		return $assos;
 	}
 
 	/**
@@ -2367,30 +2364,34 @@ class AdminControllerCore extends Controller
 	 * @param int $id_object
 	 * @param int $new_id_object
 	 */
-	protected function updateAssoShop($id_object = false, $new_id_object = false)
+	protected function updateAssoShop($id_object, $new_id_object = false)
 	{
 		if (!Shop::isFeatureActive())
 			return;
 
 		$def = ObjectModel::getDefinition($this->className);
-		if (empty($def['multishop']))
+		if (!empty($def['multishop']))
 			return;
 
-		$assos_data = $this->getAssoShop($this->table, $id_object);
-		$assos = $assos_data[0];
-		$type = $assos_data[1];
-
-		if (!$type)
+		if (!Shop::isTableAssociated($this->table))
 			return;
 
-		Db::getInstance()->execute('
-			DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? '
-			WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		$assos_data = $this->getSelectedAssoShop($this->table, $id_object);
 
-		foreach ($assos as $asso)
-			Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
-				VALUES('.($new_id_object ? $new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].')');
+		// Get list of shop id we want to exclude from asso deletion
+		$exclude_ids = $assos_data;
+		foreach (Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop') as $row)
+			if (!$this->context->employee->hasAuthOnShop($row['id_shop']))
+				$exclude_ids[] = $row['id_shop'];
+		Db::getInstance()->delete($this->table.'_shop', '`'.$this->identifier.'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', $exclude_ids).')' : ''));
+
+		$insert = array();
+		foreach ($assos_data as $id_shop)
+			$insert[] = array(
+				$this->identifier => $new_id_object ? $new_id_object : $id_object,
+				'id_shop' => (int)$id_shop,
+			);
+		Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
 	}
 
 	protected function validateField($value, $field)
