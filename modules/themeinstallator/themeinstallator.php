@@ -205,9 +205,8 @@ class ThemeInstallator extends Module
 		{
 			// Get all selected shops (Key and values are inversed)
 			$shops = Tools::getValue('checkBoxShopAsso_', array($this->context->shop->id => 1));
-			foreach ($shops as $shop)
-				foreach ($shop as $id_shop => $row)
-					$this->selected_shops[] = (int)$id_shop;
+			foreach ($shops as $key => $shop)
+				$this->selected_shops[] = (int)$key;
 		}
 		else
 			$this->selected_shops = array($this->context->shop->id);
@@ -555,7 +554,8 @@ class ThemeInstallator extends Module
 
 							// Delete all native module which are in the front office feature category and in selected shops
 							$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
-							if (Db::getInstance()->execute($sql))
+							$sql1 = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
+							if (Db::getInstance()->execute($sql) && Db::getInstance()->execute($sql1))
 								$msg .= '<i>- '.pSQL($row).'</i><br />';
 						}
 					}
