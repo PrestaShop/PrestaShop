@@ -860,7 +860,7 @@ class ThemeInstallator extends Module
 			$this->_html .= '<div class="margin-form">
 						<select style="width:350px" name="id_theme">'.$installed_themes.'</select>
 					</div>
-					<input type="submit" class="button" name="exportTheme" value="'.$this->l('Export this theme').'" />';
+					<input type="submit" class="button" name="exportTheme" value="'.$this->l('Export this theme').'" onclick="if (!$(\'select[name=\\\'id_theme\\\']\').val().length) { alert(\''.$this->l('Please select a theme').'\'); return false; } "/>';
 			$this->_html .= '</form>';
 			$this->_html .= '</fieldset>
 				<div class="clear">&nbsp;</div>';
@@ -1469,7 +1469,7 @@ class ThemeInstallator extends Module
 				var select_default = "'.$this->l('Choose a theme').'";
 				var themes = Array();
 				var themes_id = Array();
-				var theme_selected = '.Tools::getValue('id_theme').';
+				var theme_selected = '.(Tools::getValue('id_theme')-1).';
 		';
 		$id = 0;
 		foreach ($this->theme_list as $row)
