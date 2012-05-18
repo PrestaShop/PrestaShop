@@ -15,9 +15,9 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Dokumentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Sie möchten eventuell die Dokumentation prüfen';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Rechtsklick auf den Namen  und \"Link speichern unter\" wählen';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_b857ef1f431c5f3290dc5b5e644826a6'] = 'Folgende Module wurden installiert';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_22c765d777eb4ca6b4292bcbb596872e'] = 'Folgende Module wurden deaktiviert';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_e501dc865768ac08d49c129a23c3ae09'] = 'Folgende Module wurden aktiviert';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Folgende Module wurden installiert:';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Folgende Module wurden deaktiviert:';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Folgende Module wurden aktiviert:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Bilder wurden korrekt in der Datenbank aktualisiert';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_dd1f775e443ff3b9a89270713580a51b'] = 'Zurück';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a20ddccbb6f808ec42cd66323e6c6061'] = 'Fertig';
