@@ -41,7 +41,6 @@ class ProductComment extends ObjectModel
 	/** @var integer Guest's id */
 	public $id_guest;
 
-
 	/** @var integer Customer name */
 	public $customer_name;
 
@@ -118,22 +117,19 @@ class ProductComment extends ObjectModel
 	 *
 	 * @return arrayComments
 	 */
-	public static function getByCustomer($id_product, $id_customer, $last = false, $id_guest = false)
+	public static function getByCustomer($id_product, $id_customer, $get_last = false, $id_guest = false)
 	{
 		$results = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'product_comment` pc
-		WHERE pc.`id_product` = '.(int)$id_product.'
-		AND '.(!$id_guest ? 'pc.`id_customer` = '.(int)$id_customer : 'pc.`id_guest` = '.(int)$id_guest).'
-		ORDER BY pc.`date_add` DESC '
-		.($last ? 'LIMIT 1' : '')
+			SELECT *
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			WHERE pc.`id_product` = '.(int)$id_product.'
+			AND '.(!$id_guest ? 'pc.`id_customer` = '.(int)$id_customer : 'pc.`id_guest` = '.(int)$id_guest).'
+			ORDER BY pc.`date_add` DESC '
+			.($get_last ? 'LIMIT 1' : '')
 		);
 
-		if (!$results)
-			return false;
-		elseif ($last)
-			return array_shift($results);
-		else
+		if ($get_last)
+			$results = array_shift($results);
 		return $results;
 	}
 
