@@ -43,9 +43,11 @@ class ThemeInstallator extends Module
 	private $selected_disable_modules = array();
 	private $native_modules = array();
 	private $module_list = array();
-	private $hook_list= array();
+	private $hook_list = array();
 
-	public $action_form;
+	private $default_theme = 'default';
+
+	private $action_form;
 
 	/*
 	** index
@@ -549,7 +551,7 @@ class ThemeInstallator extends Module
 						if (Validate::isLoadedObject($obj))
 						{
 							if ($flag++ == 0)
-								$msg .= '<b>'.$this->l('The following modules have been unhook:').' :</b><br />';
+								$msg .= '<b>'.$this->l('The following modules have been unhook:').'</b><br />';
 
 							// Delete all native module which are in the front office feature category and in selected shops
 							$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
@@ -654,7 +656,7 @@ class ThemeInstallator extends Module
 			$ok = array();
 			foreach ($this->selected_variations as $variation)
 			{
-				if ($variation == 'prestashop')
+				if ($variation == $this->default_theme)
 					continue;
 
 				if ($variation != $theme_directory)
@@ -1498,7 +1500,7 @@ class ThemeInstallator extends Module
 		$id = 0;
 		foreach ($this->theme_list as $row)
 		{
-			if (!is_dir(_PS_ALL_THEMES_DIR_.$row) || !file_exists(_PS_ALL_THEMES_DIR_.$row.'/index.tpl') || $row == 'prestashop' || $row == Tools::getValue('mainTheme'))
+			if (!is_dir(_PS_ALL_THEMES_DIR_.$row) || !file_exists(_PS_ALL_THEMES_DIR_.$row.'/index.tpl') || $row == $this->default_theme || $row == Tools::getValue('mainTheme'))
 				continue;
 
 			$this->_html .= 'themes['.$id.'] = "'.$row.'";';
