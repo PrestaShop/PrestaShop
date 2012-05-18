@@ -102,14 +102,14 @@ class ThemeInstallator extends Module
 	{
 		$files = scandir($dirname);
 		foreach ($files as $file)
-            if ($file != '.' && $file != '..')
+			if ($file != '.' && $file != '..')
 			{
 				if (is_dir($dirname.'/'.$file))
 					self::deleteDirectory($dirname.'/'.$file);
 				else if (file_exists($dirname.'/'.$file))
 					unlink($dirname.'/'.$file);
 				}
-        rmdir($dirname);
+		rmdir($dirname);
 	}
 
 	private function recurseCopy($src, $dst)
@@ -600,8 +600,8 @@ class ThemeInstallator extends Module
 				if ($variation != $theme_directory)
 					$theme_directory .= $variation;
 
-                if (empty($theme_directory))
-                    $theme_directory = str_replace(' ', '', (string)$this->xml['name']);
+				if (empty($theme_directory))
+					$theme_directory = str_replace(' ', '', (string)$this->xml['name']);
 
 				$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
 
@@ -920,8 +920,8 @@ class ThemeInstallator extends Module
 	{
 		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright Prestashop --><theme></theme>');
 		$theme->addAttribute('version', Tools::getValue('version'));
-        $theme->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
-        $theme->addAttribute('directory', Tools::htmlentitiesUTF8(Tools::getValue('theme_directory')));
+		$theme->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
+		$theme->addAttribute('directory', Tools::htmlentitiesUTF8(Tools::getValue('theme_directory')));
 		$author = $theme->addChild('author');
 		$author->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('author_name')));
 		$author->addAttribute('email', Tools::htmlentitiesUTF8(Tools::getValue('email')));
@@ -1069,14 +1069,16 @@ class ThemeInstallator extends Module
 	*/
 	private function getHookState()
 	{
-		foreach ($this->to_install as $string)
-			foreach ($this->hook_list as $tmp)
-				if ($tmp['name_module'] == $string)
-					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
-		foreach ($this->to_enable as $string)
-			foreach ($this->hook_list as $tmp)
-				if ($tmp['name_module'] == $string)
-					$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
+		if ($this->to_install !== false)
+			foreach ($this->to_install as $string)
+				foreach ($this->hook_list as $tmp)
+					if ($tmp['name_module'] == $string)
+						$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
+		if ($this->to_enable !== false)
+			foreach ($this->to_enable as $string)
+				foreach ($this->hook_list as $tmp)
+					if ($tmp['name_module'] == $string)
+						$this->to_hook[] = $string.';'.$tmp['name_hook'].';'.$tmp['position'].';'.$tmp['exceptions'];
 	}
 
 	/*
@@ -1100,9 +1102,6 @@ class ThemeInstallator extends Module
 	private function getThemeVariations()
 	{
 		// @todo check theme variation pertinence
-		$from = Tools::getValue('compa_from');
-		$to = Tools::getValue('compa_to');
-		$this->variations[] = Tools::getValue('theme_name').'¤'.Tools::getValue('mainTheme').'¤'.$from.'¤'.$to;
 		$count = 0;
 		while (Tools::isSubmit('myvar_'.++$count))
 		{
@@ -1176,7 +1175,7 @@ class ThemeInstallator extends Module
 	private function checkNames()
 	{
 		$author = Tools::getValue('author_name');
-        $name = Tools::getValue('theme_name');
+		$name = Tools::getValue('theme_name');
 		$count = 0;
 
 		if (!$author || !Validate::isGenericName($author) || strlen($author) > MAX_NAME_LENGTH)
@@ -1271,7 +1270,7 @@ class ThemeInstallator extends Module
 		$theme = new Theme($id_theme);
 
 		$theme_name = Tools::getValue('theme_name') ? Tools::getValue('theme_name') : $theme->name;
-        $theme_directory = Tools::getValue('theme_directory') ? Tools::getValue('theme_directory') : $theme->directory;
+		$theme_directory = Tools::getValue('theme_directory') ? Tools::getValue('theme_directory') : $theme->directory;
 
 		$this->_html .=	'
 		<fieldset>
@@ -1362,12 +1361,14 @@ class ThemeInstallator extends Module
 				var select_default = "'.$this->l('Choose a theme').'";
 				var themes = Array();
 				var themes_id = Array();
+				var theme_selected = '.Tools::getValue('id_theme').';
 		';
 		$id = 0;
 		foreach ($this->theme_list as $row)
 		{
 			if (!is_dir(_PS_ALL_THEMES_DIR_.$row) || !file_exists(_PS_ALL_THEMES_DIR_.$row.'/index.tpl') || $row == 'prestashop' || $row == Tools::getValue('mainTheme'))
 				continue ;
+			
 			$this->_html .= 'themes['.$id.'] = "'.$row.'";';
 			$this->_html .= 'themes_id['.$id.'] = '.$id.';';
 			$id++;
