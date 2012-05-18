@@ -139,7 +139,7 @@ class HelperFormCore extends Helper
 						case 'shop' :
 							$params['html'] = $this->renderAssoShop($params['type']);
 							$shops = Shop::getShops(true, null, true);
-							if (count($shops) == 1)
+							if (Shop::getTotalShops(false) == 1)
 								unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 						break;
 					}

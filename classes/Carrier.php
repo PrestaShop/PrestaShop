@@ -115,7 +115,6 @@ class CarrierCore extends ObjectModel
 		'primary' => 'id_carrier',
 		'multilang' => true,
 		'multilang_shop' => true,
-		'multishop' => true,
 		'fields' => array(
 			/* Classic fields */
 			'id_reference' => 			array('type' => self::TYPE_INT),

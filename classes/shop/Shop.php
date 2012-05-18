@@ -445,7 +445,6 @@ class ShopCore extends ObjectModel
 
 		self::$shops = array();
 
-		$select = '';
 		$from = '';
 		$where = '';
 
@@ -454,12 +453,11 @@ class ShopCore extends ObjectModel
 		// If the profile isn't a superAdmin
 		if (Validate::isLoadedObject($employee) && $employee->id_profile != _PS_ADMIN_PROFILE_)
 		{
-			$select .= ', es.id_employee';
 			$from .= 'LEFT JOIN '._DB_PREFIX_.'employee_shop es ON es.id_shop = s.id_shop';
 			$where .= 'AND es.id_employee = '.(int)$employee->id;
 		}
 
-		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri'.$select.'
+		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri
 				FROM '._DB_PREFIX_.'shop_group gs
 				LEFT JOIN '._DB_PREFIX_.'shop s
 					ON s.id_shop_group = gs.id_shop_group
