@@ -177,7 +177,7 @@ class AdminCarriersControllerCore extends AdminController
 			</ul>'
 		);
 		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').'
 							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier`
 								AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
@@ -476,7 +476,7 @@ class AdminCarriersControllerCore extends AdminController
 						$new_carrier->position = $current_carrier->position;
 						if ($new_carrier->add())
 						{
-							$this->updateAssoShop($current_carrier->id, $new_carrier->id);
+							$this->updateAssoShop($new_carrier->id);
 							$new_carrier->copyCarrierData((int)$current_carrier->id);
 							$this->changeGroups($new_carrier->id);
 							// Call of hooks
