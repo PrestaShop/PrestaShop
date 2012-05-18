@@ -65,6 +65,7 @@ class WarehouseCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'warehouse',
 		'primary' => 'id_warehouse',
+		'multishop' => true,
 		'fields' => array(
 			'id_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'reference' => 			array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
