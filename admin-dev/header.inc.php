@@ -151,8 +151,11 @@ echo '
 			{
 				if (Shop::getContext() == Shop::CONTEXT_ALL)
 					$youEditFieldFor = translate('A modification of this field will be applied for all shops');
-				else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for all shops of group %s'), '<b>'.Context::getContext()->shop->getGroup()->name.'</b>');
+				elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
+				{
+					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for all shops of group %s'), '<b>'.$shop_group->name.'</b>');
+				}
 				else
 					$youEditFieldFor = sprintf(translate('A modification of this field will be applied for the shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
 				echo 'hints.html(hints.html()+\'<br /><span class="red">'.addslashes($youEditFieldFor).'</span>\');';

@@ -1292,7 +1292,7 @@ class AdminControllerCore extends Controller
 			'multi_shop' => Shop::isFeatureActive(),
 			'shop_list' => Helper::renderShopList(),
 			'shop' => $this->context->shop,
-			'shop_group' => $this->context->shop->getGroup(),
+			'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
 			'tab' => $tab,
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
