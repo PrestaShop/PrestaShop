@@ -618,7 +618,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessCallback()
 	{
-	 	$return = false;
+		$return = false;
 		$installed_modules = array();
 
 		foreach ($this->map as $key => $method)
