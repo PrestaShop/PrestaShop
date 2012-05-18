@@ -16,9 +16,9 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Vous devriez consulter la documentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Faites un clic droit sur le nom et choisissez \"Enregistrer le lien sous\"';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_b857ef1f431c5f3290dc5b5e644826a6'] = 'Les modules suivants ont été installés';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_22c765d777eb4ca6b4292bcbb596872e'] = 'Les modules suivants ont été désactivés';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_e501dc865768ac08d49c129a23c3ae09'] = 'Les modules suivants ont été activés';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Les modules suivants ont été installés :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Les modules suivants ont été désactivés :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Les modules suivants ont été activés :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Les images ont bien été mises à jour dans la base de données';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Attention : copier/coller vos erreurs si vous souhaitez définir manuellement ces types d\'images (dans l\'onglet Préférences > Images) :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Certains types d\'image n’ont pu être ajoutés, car ils existent déjà. Voici la liste :';
@@ -34,6 +34,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de9
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'Configuration actuelle';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'Configuration du thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_130c5b3473c57faa76e2a1c54e26f88e'] = 'Les deux';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_20be6bcfa3d8c557253841bf7b22235a'] = 'Sélectionnez votre boutique qui utilisera ce thème:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Suivant';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5138a89d1b730dacf446855e15c24496'] = 'Vous êtes sur le point d\'installer le thème suivant';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f364da141450380ae79d7a45528f4c06'] = 'Ce thème est pour PrestaShop';
