@@ -40,6 +40,7 @@ class ThemeInstallator extends Module
 
 	private $selected_shops = array();
 	private $selected_variations = array();
+	private $selected_disable_modules = array();
 	private $native_modules = array();
 	private $module_list = array();
 	private $hook_list= array();
@@ -209,6 +210,9 @@ class ThemeInstallator extends Module
 		else
 			$this->selected_shops = array($this->context->shop->id);
 
+		if (Tools::isSubmit('submitModules'))
+			$this->selected_disable_modules = Tools::getValue('modulesToDisable', array());
+
 		$_POST = @array_map('trim', $_POST);
 		define('DEFAULT_COMPATIBILITY_FROM', _PS_VERSION_);
 		define('DEFAULT_COMPATIBILITY_TO', _PS_VERSION_);
@@ -362,8 +366,8 @@ class ThemeInstallator extends Module
 		if (_PS_MODE_DEMO_)
 		{
 			return '<div class="error">'.$this->l('This functionality has been disabled.').'</div>';
-
 		}
+
 		self::initDefines();
 		if (!Tools::isSubmit('cancelExport') && $this->page == 'exportPage')
 			return self::getContentExport();
@@ -539,7 +543,7 @@ class ThemeInstallator extends Module
 				$flag = 0;
 				// Disable native modules
 				if ($val == 2 && $this->to_disable && count($this->to_disable))
-					foreach ($this->to_disable as $row)
+					foreach (array_merge($this->to_disable, $this->selected_disable_modules) as $row)
 					{
 						$obj = Module::getInstanceByName($row);
 						if (Validate::isLoadedObject($obj))
@@ -713,6 +717,26 @@ class ThemeInstallator extends Module
 					</fieldset>
 					<p>&nbsp;</p>';
 		}
+
+		$var = '';
+		foreach (array_diff($this->native_modules, $this->to_disable) as $row)
+		{
+			$obj = Module::getInstanceByName($row);
+			if (Validate::isLoadedObject($obj))
+				if (!file_exists(_IMPORT_FOLDER_.'modules/'.$row) && $obj->tab == 'front_office_features')
+				{
+					$var .= '<input type="checkbox" name="modulesToDisable[]" id="'.$row.'" value="'.$row.'" />
+						<label style="display:bock;float:none" for="'.$row.'">'.$row.'</label><br />';
+				}
+		}
+
+		$this->_html .= '
+			<fieldset>
+				<legend>'.$this->l('Select modules which must be disabled for this theme').'</legend>
+				<p class="margin-form">'.$var.'</p>
+			</fieldset>
+			<p>&nbsp;</p>';
+
 		$this->_html .= '
 			<fieldset>
 				<legend>'.$this->l('Native modules configuration').'</legend>
