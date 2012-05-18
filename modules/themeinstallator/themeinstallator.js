@@ -99,7 +99,6 @@ $('document').ready(function()
 	if (themes.length > 0)
 	{
 		var count = 0;
-		while (themes_id[count] != null && count < 10)
-			addVariation(themes_id[count++]);
+		addVariation(themes_id[theme_selected]);
 	}
 });
