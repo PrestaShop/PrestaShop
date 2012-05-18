@@ -114,7 +114,8 @@ p {padding-bottom:20px}
 /* link **************************************************************************************** */
 a, a:active, a:visited {
 	color:#333;
-	text-decoration:none
+	text-decoration:none;
+	outline: medium none
 }
 	a:hover {text-decoration:underline}
 
