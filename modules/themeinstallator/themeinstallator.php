@@ -40,6 +40,9 @@ class ThemeInstallator extends Module
 
 	private $selected_shops = array();
 	private $selected_variations = array();
+	private $native_modules = array();
+	private $module_list = array();
+	private $hook_list= array();
 
 	public $action_form;
 
@@ -329,7 +332,7 @@ class ThemeInstallator extends Module
 		if (Tools::isSubmit('submitExport') && $this->error === false && $this->checkPostedDatas() == true)
 		{
 			self::getThemeVariations();
-			
+
 			// Check variations exists
 			if (empty($this->variations))
 				$this->_html .= parent::displayError($this->l('You must select at least one theme'));
@@ -836,8 +839,7 @@ class ThemeInstallator extends Module
 			$this->_html .= '
 				<input type="hidden" name="variation[]" value="'.$xml->variations->variation[0]['directory'].'" />
 				<input type="submit" class="button" name="cancel" value="'.$this->l('Previous').'" />
-				<input type="submit" class="button" name="submitThemes" value="'.$this->l('Next').'" />
-';
+				<input type="submit" class="button" name="submitThemes" value="'.$this->l('Next').'" />';
 		$this->_html .= '</form>';
 	}
 
@@ -1102,18 +1104,32 @@ class ThemeInstallator extends Module
 	private function initList()
 	{
 		$this->native_modules = self::getTheNativeModules();
-		$this->module_list = Db::getInstance()->executeS('SELECT id_module, name, active FROM `'._DB_PREFIX_.'module`');
+
+		// Get id shop for this seleted theme
+		$id_shop = Db::getInstance()->getValue('SELECT `id_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_theme` = '.(int)Tools::getValue('id_theme'));
+
+		// Select the list of module for this shop
+		$this->module_list = Db::getInstance()->executeS('
+			SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
+			FROM `'._DB_PREFIX_.'module` m
+			LEFT JOIN `'._DB_PREFIX_.'module_shop` ms On (m.`id_module` = ms.`id_module`)
+			WHERE ms.`id_shop` = '.(int)$id_shop.'
+		');
+
+		// Select the list of hook for this shop
 		$this->hook_list = Db::getInstance()->executeS('
-			SELECT a.id_hook, a.name as name_hook, c.position, c.id_module, d.name as name_module, GROUP_CONCAT(hme.file_name, ",") as exceptions
-			FROM `'._DB_PREFIX_.'hook` a
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` c ON c.id_hook = a.id_hook
-			LEFT JOIN `'._DB_PREFIX_.'module` d ON c.id_module = d.id_module
-			LEFT OUTER JOIN `'._DB_PREFIX_.'hook_module_exceptions` hme ON (hme.id_module = c.id_module AND hme.id_hook = a.id_hook)
-			GROUP BY id_module, id_hook
-			ORDER BY name_module');
+			SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
+			FROM `'._DB_PREFIX_.'hook` h
+			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_hook` = h.`id_hook`
+			LEFT JOIN `'._DB_PREFIX_.'module` m ON hm.`id_module` = m.`id_module`
+			LEFT OUTER JOIN `'._DB_PREFIX_.'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
+			WHERE hm.`id_shop` = '.(int)$id_shop.'
+			GROUP BY `id_module`, `id_hook`
+			ORDER BY `name_module`
+		');
+
 		foreach ($this->hook_list as &$row)
 			$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
-
 	}
 
 	/*
