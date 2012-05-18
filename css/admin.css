@@ -2334,8 +2334,13 @@ margin-bottom:7px;
 	margin-top: 3px;
 }
 
-	#multishop-tree a.selected{
-		background-color: #49B2FF;
-		padding: 3px;
-		color: #FFFFFF;
-	}
+#multishop-tree a.selected{
+	background-color: #49B2FF;
+	padding: 3px;
+	color: #FFFFFF;
+}
+
+.datepicker{
+	position: relative;
+	z-index:20;
+}
