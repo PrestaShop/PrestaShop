@@ -954,9 +954,8 @@ class ThemeInstallator extends Module
 				if ($row != '.' && $row != '..')
 					$this->archiveThisFile($obj, $row, $server_path.$file.'/', $archive_path.$file.'/');
 		}
-<<<<<<< .mine		else if (!$obj->addFile($server_path.$file, $archive_path.$file))
-=======		elseif (!$obj->addFile($serverPath.$file, $archivePath.$file))
->>>>>>> .theirs			$this->error = true;
+		elseif (!$obj->addFile($server_path.$file, $archive_path.$file))
+			$this->error = true;
 	}
 
 	/*
