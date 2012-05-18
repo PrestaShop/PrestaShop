@@ -56,6 +56,7 @@ class LanguageCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'lang',
 		'primary' => 'id_lang',
+		'multishop' => true,
 		'fields' => array(
 			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'iso_code' => 			array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
@@ -384,29 +385,48 @@ class LanguageCore extends ObjectModel
 				if ($t != _DB_PREFIX_.'configuration_lang')
 				$langTables[] = $t;
 
-		Db::getInstance()->execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
 		$return = true;
-		foreach ($langTables as $name)
-		{
-			$fields = '';
-			$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
-			foreach ($columns as $column)
-				$fields .= $column['Field'].', ';
-			$fields = rtrim($fields, ', ');
-			preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
-			$identifier = 'id_'.$m[1];
 
-			$sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
-			foreach ($columns as $column)
+		$shops = Shop::getShopsCollection(false);
+		foreach ($shops as $shop)
+		{
+			$id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+
+			foreach ($langTables as $name)
 			{
-				if ($identifier != $column['Field'] && $column['Field'] != 'id_lang')
-					$sql .= '(SELECT `'.$column['Field'].'` FROM `'.$name.'` tl WHERE tl.`id_lang` = @id_lang_default AND tl.`'.$identifier.'` = `'.str_replace('_lang', '', $name).'`.`'.$identifier.'`), ';
-				else
-					$sql .= '`'.$column['Field'].'`, ';
+				$fields = '';
+				// We will check if the table contains a column "id_shop"
+				// If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
+				$shop_field_exists = false;
+				$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
+				foreach ($columns as $column)
+				{
+					$fields .= $column['Field'].', ';
+					if ($column['Field'] == 'id_shop')
+						$shop_field_exists = true;
+				}
+				$fields = rtrim($fields, ', ');
+				preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
+				$identifier = 'id_'.$m[1];
+
+				$sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
+
+				// For each column, copy data from default language
+				foreach ($columns as $column)
+				{
+					if ($identifier != $column['Field'] && $column['Field'] != 'id_lang')
+					{
+						$sql .= '(SELECT `'.$column['Field'].'`	FROM `'.$name.'` tl	WHERE tl.`id_lang` = '.(int)$id_lang_default
+									.($shop_field_exists ? ' AND tl.`id_shop` = '.(int)$shop->id : '')
+									.' AND tl.`'.$identifier.'` = `'.str_replace('_lang', '', $name).'`.`'.$identifier.'`), ';
+					}
+					else
+						$sql .= '`'.$column['Field'].'`, ';
+				}
+				$sql = rtrim($sql, ', ');
+				$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
+				$return &= Db::getInstance()->execute(pSQL($sql));
 			}
-			$sql = rtrim($sql, ', ');
-			$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
-			$return &= Db::getInstance()->execute(pSQL($sql));
 		}
 		return $return;
 	}
