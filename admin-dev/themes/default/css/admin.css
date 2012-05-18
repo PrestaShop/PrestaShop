@@ -227,7 +227,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-help{ background-image: url('../img/process-icon-help.png');}
 .toolbarBox .process-icon-help-new{ background-image: url('../img/process-icon-help-new.png');}
 
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;}
 
 /*button upload files*/
 #content .qq-upload-button {
