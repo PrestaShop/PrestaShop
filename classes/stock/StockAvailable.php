@@ -418,7 +418,7 @@ class StockAvailableCore extends ObjectModel
 				// if we are in shop_group context
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				{
-					$shop_group = $context->shop->getGroup();
+					$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 
 					// if quantities are shared between shops of the group
 					if ($shop_group->share_stock)
@@ -562,7 +562,7 @@ class StockAvailableCore extends ObjectModel
 			$id_shop = $context->shop->id;
 
 		// if we are in $shop_group context
-		$shop_group = $context->shop->getGroup();
+		$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 
 		// if quantities are shared between shops of the group
 		if ($shop_group->share_stock)
@@ -614,7 +614,7 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = $context->shop->id;
 
-		$shop_group = $context->shop->getGroup();
+		$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 
 		// if quantities are shared between shops of the group
 		if ($shop_group->share_stock)
