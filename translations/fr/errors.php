@@ -237,6 +237,7 @@ $_ERRORS['592a291120e1c687a70e6d1a53259a28'] = 'La base de données de géolocal
 $_ERRORS['59382adebc7f0d65c42fe773d443e4c7'] = 'Ce code ISO est déjà lié à une autre langue.';
 $_ERRORS['5a6448a8d8e77fa43df91db2eea79fb1'] = 'Ce bon de réduction est désactivé';
 $_ERRORS['5a69d1cb0ef4096b272b3b441555d737'] = 'Vous n\'avez pas la permission de configurer ce module.';
+$_ERRORS['5abbf1d644e48c9d704c1f57dc38f757'] = 'Vous ne pouvez pas placer cet onglet dans lui-même';
 $_ERRORS['5aee207224baebde35a0b0009b8e74a9'] = 'Un élément de votre panier n\'est plus disponible pour cette quantité, vous ne pouvez pas continuer votre commande.';
 $_ERRORS['5af5f631f774a71445e3028253874394'] = 'Ce magasin n\'a pas accepté votre nouvelle commande.';
 $_ERRORS['5b19b5178c34a3c0af13b0edc231efb8'] = 'L\'identifiant de transaction n\'est pas valable';
