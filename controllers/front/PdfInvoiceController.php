@@ -37,16 +37,15 @@ class PdfInvoiceControllerCore extends FrontController
 
 	public function postProcess()
 	{
-		$id_order = (int)Tools::getValue('id_order');
-
 		if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key'))
 			Tools::redirect('index.php?controller=authentication&back=pdf-invoice');
 
 		if (!(int)Configuration::get('PS_INVOICE'))
 			die(Tools::displayError('Invoices are disabled in this shop.'));
 
-		if (isset($id_order) && Validate::isUnsignedId($id_order))
-			$order = new Order($id_order);
+		$id_order = (int)Tools::getValue('id_order');
+		if (Validate::isUnsignedId($id_order))
+			$order = new Order((int)$id_order);
 
 		if (!isset($order) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invoice not found'));
@@ -85,4 +84,3 @@ class PdfInvoiceControllerCore extends FrontController
 		return $template;
 	}
 }
-
