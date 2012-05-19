@@ -58,7 +58,7 @@
 		<td>
 			<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 			{if $line.can_edit}
-				<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+				<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id|escape:'htmlall':'UTF-8'}">
 					<span class="shipping_number_edit" style="display:none;">
 						<input type="text" name="id_order_carrier" value="{$line.id_order_carrier|htmlentities}" />
 						<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
