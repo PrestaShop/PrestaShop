@@ -78,19 +78,14 @@ class FavoriteProducts extends Module
 
 	public function hookDisplayCustomerAccount($params)
 	{
-		include_once(dirname(__FILE__).'/FavoriteProduct.php');
-
-		$products = FavoriteProduct::getFavoriteProducts($this->context->customer->id, $this->context->language->id);
-		$this->smarty->assign(array(
-			'favorite_products' => $products,
-		));
-
+		$this->smarty->assign('in_footer', false);
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
 	public function hookDisplayMyAccountBlock($params)
 	{
-		return $this->hookDisplayCustomerAccount($params);
+		$this->smarty->assign('in_footer', true);
+		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
 	public function hookDisplayLeftColumnProduct($params)
