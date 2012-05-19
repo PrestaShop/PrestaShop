@@ -218,7 +218,7 @@ class MailCore
 			$templateVars['{shop_logo}'] = (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))) : 
 					((file_exists(_PS_IMG_DIR_.'logo.jpg')) ? $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))) : '');
 			$templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
-			$templateVars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__;
+			$templateVars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
 			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $templateVars)), 'decorator');
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
 				$message->attach(new Swift_Message_Part($templateTxt, 'text/plain', '8bit', 'utf-8'));
