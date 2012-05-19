@@ -161,12 +161,11 @@ class FrontControllerCore extends Controller
 		if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
-		/* Theme is missing or maintenance */
+		/* Theme is missing */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\'))));
-		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE')))
-			$this->maintenance = true;
-		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
+		
+		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
 
@@ -375,8 +374,7 @@ class FrontControllerCore extends Controller
 		self::$link = $link;
 		$defaultCountry = $this->context->country;
 
-		if ($this->maintenance)
-			$this->displayMaintenancePage();
+		$this->displayMaintenancePage();
 		if ($this->restrictedCountry)
 			$this->displayRestrictedCountryPage();
 
@@ -563,12 +561,16 @@ class FrontControllerCore extends Controller
 	/* Display a maintenance page if shop is closed */
 	protected function displayMaintenancePage()
 	{
-		if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
+		if ($this->maintenance == true || (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE'))))
 		{
-			header('HTTP/1.1 503 temporarily overloaded');
-			$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
-			$this->context->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
-			exit;
+			$this->maintenance = true;
+			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
+			{
+				header('HTTP/1.1 503 temporarily overloaded');
+				$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
+				$this->context->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
+				exit;
+			}
 		}
 	}
 
