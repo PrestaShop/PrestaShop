@@ -2905,7 +2905,7 @@ class AdminProductsControllerCore extends AdminController
 						<td class="cell border">'.$reduction.'</td>
 						<td class="cell border">'.$period.'</td>
 						<td class="cell border">'.$specific_price['from_quantity'].'</th>
-						<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)$this->_getFinalPrice($specific_price, (float)$obj->price, $tax_rate)), 2, $current_specific_currency).'</b></td>
+						<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)$this->_getFinalPrice($specific_price, (float)$obj->price, $tax_rate)), $current_specific_currency).'</b></td>
 						<td class="cell border">'.((!$rule->id && $can_delete_specific_prices) ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 					</tr>';
 					$i++;
