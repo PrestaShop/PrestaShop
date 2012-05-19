@@ -7,6 +7,5 @@
     <gender id="Mr" type="0"/>
     <gender id="Ms" type="1"/>
     <gender id="Miss" type="1"/>
-    <gender id="Unknown" type="2"/>
   </entities>
 </entity_gender>
