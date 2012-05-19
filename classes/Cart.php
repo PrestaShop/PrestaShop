@@ -2605,8 +2605,9 @@ class CartCore extends ObjectModel
 	*/
 	public function getSummaryDetails($id_lang = null)
 	{
+		$context = Context::getContext();
 		if (!$id_lang)
-			$id_lang = Context::getContext()->language->id;
+			$id_lang = $context->language->id;
 
 		$delivery = new Address((int)$this->id_address_delivery);
 		$invoice = new Address((int)$this->id_address_invoice);
@@ -2625,14 +2626,41 @@ class CartCore extends ObjectModel
 		$products = $this->getProducts(false);
 		$gift_products = array();
 		$cart_rules = $this->getCartRules();
+		$total_shipping = $this->getTotalShippingCost();
+		$total_shipping_tax_exc = $this->getTotalShippingCost(null, false);
+		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+		$total_discounts = $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+		$total_discounts_tax_exc = $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
+		
+		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
+			if ($cart_rule['free_shipping'])
+			{
+				$cart_rule['value_real'] -= $total_shipping;
+				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
+				$total_shipping = 0;
+				$total_shipping_tax_exc = 0;
+			}
 			if ($cart_rule['gift_product'])
 			{
 				foreach ($products as $key => &$product)
 					if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
 					{
-						// Update product quantity and price
+						// Update total products
+						$total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$total_products = Tools::ps_round($total_products - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						
+						// Update total discounts
+						$total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+					
+						// Update cart rule value
+						$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						
+						// Update product quantity
 						$product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
 						$product['total'] = Tools::ps_round($product['total'] - $product['price'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
 						$product['cart_quantity']--;
@@ -2643,15 +2671,19 @@ class CartCore extends ObjectModel
 						// Add a new product line
 						$gift_product = $product;
 						$gift_product['cart_quantity'] = 1;
-						$gift_product['price'] = $product['price'];
-						$gift_product['price_wt'] = $product['price_wt'];
-						$gift_product['total_wt'] = $product['price_wt'];
-						$gift_product['total'] = $product['price'];
+						$gift_product['price'] = 0;
+						$gift_product['price_wt'] = 0;
+						$gift_product['total_wt'] = 0;
+						$gift_product['total'] = 0;
 						$gift_product['gift'] = true;
 						$gift_products[] = $gift_product;
 					}
 			}
 		}
+
+		foreach ($cart_rules as $key => &$cart_rule)
+			if ($cart_rule['value_real'] == 0)
+				unset($cart_rules[$key]);
 
 		return array(
 			'delivery' => $delivery,
@@ -2663,19 +2695,19 @@ class CartCore extends ObjectModel
 			'gift_products' => $gift_products,
 			'discounts' => $cart_rules,
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
-			'total_discounts' => $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
-			'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
+			'total_discounts' => $total_discounts,
+			'total_discounts_tax_exc' => $total_discounts_tax_exc,
 			'total_wrapping' => $this->getOrderTotal(true, Cart::ONLY_WRAPPING),
 			'total_wrapping_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_WRAPPING),
-			'total_shipping' => $this->getTotalShippingCost(),
-			'total_shipping_tax_exc' => $this->getTotalShippingCost(null, false),
-			'total_products_wt' => $this->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-			'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
+			'total_shipping' => $total_shipping,
+			'total_shipping_tax_exc' => $total_shipping_tax_exc,
+			'total_products_wt' => $total_products_wt,
+			'total_products' => $total_products,
 			'total_price' => $this->getOrderTotal(),
 			'total_tax' => $total_tax,
 			'total_price_without_tax' => $this->getOrderTotal(false),
 			'is_multi_address_delivery' => $this->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1),
-			'free_ship' => 0,
+			'free_ship' => $total_shipping ? 0 : 1,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
 		);
 	}
