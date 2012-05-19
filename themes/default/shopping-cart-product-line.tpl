@@ -31,20 +31,21 @@
 	<td class="cart_description">
 		<h5><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, null, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$product.name|escape:'htmlall':'UTF-8'}</a></h5>
 		{if isset($product.attributes) && $product.attributes}<a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, null, $product.id_product_attribute)|escape:'htmlall':'UTF-8'}">{$product.attributes|escape:'htmlall':'UTF-8'}</a>{/if}
-		{if !empty($product.gift)}
-			<br /><span class="gift-icon">{l s='Gift!'}</span>
-		{/if}
 	</td>
 	<td class="cart_ref">{if $product.reference}{$product.reference|escape:'htmlall':'UTF-8'}{else}--{/if}</td>
 	<td class="cart_unit">
 		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
-			{if isset($product.is_discounted) && $product.is_discounted}
-				<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
-			{/if}
-			{if !$priceDisplay}
-				{convertPrice price=$product.price_wt}
+			{if !empty($product.gift)}
+				<span class="gift-icon">{l s='Gift!'}</span>
 			{else}
-				{convertPrice price=$product.price}
+				{if isset($product.is_discounted) && $product.is_discounted}
+					<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
+				{/if}
+				{if !$priceDisplay}
+					{convertPrice price=$product.price_wt}
+				{else}
+					{convertPrice price=$product.price}
+				{/if}
 			{/if}
 		</span>
 	</td>
@@ -81,10 +82,14 @@
 	</td>
 	<td class="cart_total">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
-			{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}
-				{if !$priceDisplay}{displayPrice price=$product.total_customization_wt}{else}{displayPrice price=$product.total_customization}{/if}
+			{if !empty($product.gift)}
+				<span class="gift-icon">{l s='Gift!'}</span>
 			{else}
-				{if !$priceDisplay}{displayPrice price=$product.total_wt}{else}{displayPrice price=$product.total}{/if}
+				{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}
+					{if !$priceDisplay}{displayPrice price=$product.total_customization_wt}{else}{displayPrice price=$product.total_customization}{/if}
+				{else}
+					{if !$priceDisplay}{displayPrice price=$product.total_wt}{else}{displayPrice price=$product.total}{/if}
+				{/if}
 			{/if}
 		</span>
 	</td>
