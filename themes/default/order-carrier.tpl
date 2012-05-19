@@ -111,7 +111,7 @@
 		{foreach $delivery_option_list as $id_address => $option_list}
 			<h3>
 				{if isset($address_collection[$id_address])}
-					{l s='Choose a shipping option for the address:'}{$address_collection[$id_address]->alias}
+					{l s='Choose a shipping option for the address:'} {$address_collection[$id_address]->alias}
 				{else}
 					{l s='Choose a shipping option'}
 				{/if}
