@@ -156,13 +156,10 @@ class CategoryCore extends ObjectModel
 			$this->level_depth = $this->calcLevelDepth();
 		$ret = parent::add($autodate, $null_values);
 		if (Tools::isSubmit('checkBoxShopAsso_category'))
-			foreach (Tools::getValue('checkBoxShopAsso_category') as $row)
+			foreach (Tools::getValue('checkBoxShopAsso_category') as $id_shop => $value)
 			{
-				foreach ($row as $id_shop => $value)
-				{
-					$position = Category::getLastPosition((int)$this->id_parent, $id_shop);
-					$this->addPosition($position, $id_shop);
-				}
+				$position = Category::getLastPosition((int)$this->id_parent, $id_shop);
+				$this->addPosition($position, $id_shop);
 			}
 		else
 			foreach (Shop::getShops(true) as $shop)
