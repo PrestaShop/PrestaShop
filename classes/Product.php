@@ -1055,7 +1055,7 @@ class ProductCore extends ObjectModel
 		$id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
 		$id_product_attribute = $this->addAttribute(
-			$price, $weight, $unit_impact, $ecotax, 0, $id_images,
+			$price, $weight, $unit_impact, $ecotax, $id_images,
 			$reference, $ean13, $default, $location, $upc, $minimal_quantity);
 
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
