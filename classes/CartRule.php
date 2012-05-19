@@ -733,7 +733,14 @@ class CartRuleCore extends ObjectModel
 		{
 			// Discount (%) on the whole order
 			if ($this->reduction_percent && $this->reduction_product == 0)
-				$reduction_value += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
+			{
+				// Do not give a reduction on free products!
+				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS);
+				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT), 2);
+
+				$reduction_value += $order_total * $this->reduction_percent / 100;
+			}
 
 			// Discount (%) on a specific product
 			if ($this->reduction_percent && $this->reduction_product > 0)
@@ -822,6 +829,7 @@ class CartRuleCore extends ObjectModel
 					{
 						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
 						$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
 
 						if ($cart_vat_amount == 0 || $cart_amount_te == 0)

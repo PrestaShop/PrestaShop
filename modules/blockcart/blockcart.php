@@ -80,6 +80,8 @@ class BlockCart extends Module
 			$totalToPayWithoutTaxes = $params['cart']->getOrderTotal(false);
 			$this->smarty->assign('tax_cost', Tools::displayPrice($totalToPay - $totalToPayWithoutTaxes, $currency));
 		}
+		
+		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
 			if ($cart_rule['free_shipping'])
