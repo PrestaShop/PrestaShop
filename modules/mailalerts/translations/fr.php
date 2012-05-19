@@ -2,6 +2,9 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_ae0e822b6fad0de61c231ef188997e92'] = 'Vous devez avoir un produit pour effacer une alerte.';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_0d15d3afa8c174934ff0e43ce3b99bd3'] = 'Vous devez être identifié pour gérer vos alertes.';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
 $_MODULE['<{mailalerts}prestashop>mailalerts_fd30254803e8db32521d3390131a44da'] = 'Alertes e-mail';
 $_MODULE['<{mailalerts}prestashop>mailalerts_2d51f4a7ab8a12c4f35b507019523b8c'] = 'Envoie des notifications par e-mail aux clients et aux marchands.';
 $_MODULE['<{mailalerts}prestashop>mailalerts_8fd3b84964bd6dfec8095f658d200b29'] = 'Êtes-vous sûr de vouloir supprimer toutes les notifications clients ?';
