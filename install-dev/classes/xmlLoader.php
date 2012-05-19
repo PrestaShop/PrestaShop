@@ -368,7 +368,8 @@ class InstallXmlLoader
 			if (!file_exists($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
 
-			if (!$this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'InstallSimplexmlElement'))
+			$this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'InstallSimplexmlElement');
+			if (!$this->cache_xml_entity[$this->path_type][$entity][$iso])
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml invalid');
 		}
 
@@ -473,6 +474,35 @@ class InstallXmlLoader
 						'id_shop' => 1,
 						'id_'.$entity => $entity_id,
 					);
+			}
+		}
+
+		$this->storeId($entity, $identifier, $entity_id);
+	}
+
+	public function createEntityConfiguration($identifier, array $data, array $data_lang)
+	{
+		if (Db::getInstance()->getValue('SELECT id_configuration FROM '._DB_PREFIX_.'configuration WHERE name = \''.pSQL($data['name']).'\''))
+			return;
+
+		$entity = 'configuration';
+		$entity_id = $this->generatePrimary($entity, 'id_configuration');
+		$data['id_configuration'] = $entity_id;
+
+		// Store INSERT queries in order to optimize install with grouped inserts
+		$this->delayed_inserts[$entity][] = array_map('pSQL', $data);
+		if ($data_lang)
+		{
+			$real_data_lang = array();
+			foreach ($data_lang as $field => $list)
+				foreach ($list as $id_lang => $value)
+					$real_data_lang[$id_lang][$field] = $value;
+
+			foreach ($real_data_lang as $id_lang => $insert_data_lang)
+			{
+				$insert_data_lang['id_'.$entity] = $entity_id;
+				$insert_data_lang['id_lang'] = $id_lang;
+				$this->delayed_inserts[$entity.'_lang'][] = array_map('pSQL', $insert_data_lang);
 			}
 		}
 
