@@ -1031,6 +1031,8 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!$this->action)
 			parent::initProcess();
+		else
+			$this->id_object = (int)Tools::getValue($this->identifier);
 
 		if (isset($this->available_tabs[Tools::getValue('key_tab')]))
 			$this->tab_display = Tools::getValue('key_tab');
