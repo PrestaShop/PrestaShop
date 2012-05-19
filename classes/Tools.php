@@ -635,7 +635,7 @@ class ToolsCore
 		$dirname = rtrim($dirname, '/').'/';
 		$files = scandir($dirname);
 		foreach ($files as $file)
-			if ($file != '.' && $file != '..')
+			if ($file != '.' && $file != '..' && $file != '.svn')
 			{
 				if (is_dir($dirname.$file))
 					Tools::deleteDirectory($dirname.$file, true);
