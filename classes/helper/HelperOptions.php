@@ -63,8 +63,12 @@ class HelperOptionsCore extends Helper
 			if (!isset($category_data['fields']))
 				$category_data['fields'] = array();
 
+			$category_data['hide_multishop_checkbox'] = true;
 			foreach ($category_data['fields'] as $key => $field)
 			{
+				if (empty($field['no_multishop_checkbox']))
+					$category_data['hide_multishop_checkbox'] = false;
+
 				// Set field value unless explicitly denied
 				if (!isset($field['auto_value']) || $field['auto_value'])
 					$field['value'] = $this->getOptionValue($key, $field);
