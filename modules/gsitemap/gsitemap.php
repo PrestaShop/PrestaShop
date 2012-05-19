@@ -37,7 +37,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '1.8';
+		$this->version = '1.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -123,7 +123,9 @@ XML;
 
 			$last = $this->generateSitemap($row['id_shop'], $info['dirname'].'/'.$filename, $replaceUrl);
 			if ($last)
+			{
 				$this->_addSitemapIndexNode($xml, 'http://'.$row['domain'].(($row['uri']) ? $row['uri'] : '/').$filename, date('Y-m-d'));
+			}
 			$res &= $last;
 		}
 
@@ -159,7 +161,9 @@ XML;
 
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count($langs) > 1)
 			foreach($langs as $lang)
+			{
 				$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__.$lang['iso_code'].'/', '1.00', 'daily', date('Y-m-d'));
+			}
 		else
 			$this->_addSitemapNode($xml, Tools::getShopDomain(true, true).__PS_BASE_URI__, '1.00', 'daily', date('Y-m-d'));
 
@@ -245,7 +249,6 @@ XML;
 			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ?
 				$this->context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang'])
 				: $this->context->link->getCategoryLink((int)$category['id_category']);
-
 			$this->_addSitemapNode($xml, htmlspecialchars($tmpLink), $priority, 'weekly', substr($category['date_upd'], 0, 10));
 		}
 
@@ -306,7 +309,7 @@ XML;
 
 		// Replace URL in XML strings by real shops URL
 		if ($replace_url)
-			$xml_string = str_replace(array(Tools::getShopDomain(true).'/', Tools::getShopDomainSsl(true).'/'), $replace_url, $xml_string);
+			$xml_string = str_replace(array(Tools::getShopDomain(true).__PS_BASE_URI__, Tools::getShopDomainSsl(true).__PS_BASE_URI__), $replace_url, $xml_string);
 
 		$fp = fopen($filename, 'w');
 		fwrite($fp, $xml_string);
