@@ -47,8 +47,9 @@
 	{/foreach}
 	</script>
 	<h4>{l s='Add or modify combinations for this product'}</h4>
-	<div class="separation"></div> {l s='or go to'}
-		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
+	<div class="separation"></div> {l s='or use the'}
+		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
+		{l s='in order to create automatically a set of combinations'}
 
 	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 		<br />

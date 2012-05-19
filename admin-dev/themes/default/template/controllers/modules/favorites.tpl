@@ -23,13 +23,13 @@
 				</colgroup>
 				<thead>
 					<tr class="nodrag nodrop">
-						<th class="center">Logo</th>
-						<th>Nom du module</th>
-						<th>Description</th>
-						<th>Etat</th>
-						<th>Catégories</th>
-						<th>Intérêt</th>
-						<th>Favori</th>
+						<th class="center">{l s='Logo'}</th>
+						<th>{l s='Module Name'}</th>
+						<th>{l s='Description'}</th>
+						<th>{l s='Status'}</th>
+						<th>{l s='Categories'}</th>
+						<th>{l s='Interest'}</th>
+						<th>{l s='Favorite'}</th>
 						<th>&nbsp;</th>
 					</tr>
 				</thead>
