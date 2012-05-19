@@ -1783,26 +1783,6 @@ class AdminProductsControllerCore extends AdminController
 			return !empty($_POST['multishop_check'][$field][$id_lang]);
 	}
 
-	/**
-	 * If multishop is activated and context is all / group, set to empty all fields values not checked
-	 */
-	protected function cleanMultishopFields()
-	{
-		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object)
-		{
-			$this->object = $this->loadObject();
-			foreach (Product::$definition['fields'] as $field => $data)
-				if (!empty($data['shop']) || !empty($data['lang']))
-				{
-					if (is_array($this->object->$field))
-						foreach ($this->object->$field as $k => $v)
-							$this->object->{$field}[$k] = '';
-					else
-						$this->object->$field = '';
-				}
-		}
-	}
-
 	protected function _removeTaxFromEcotax()
 	{
 		$ecotaxTaxRate = Tax::getProductEcotaxRate();
@@ -2206,7 +2186,6 @@ class AdminProductsControllerCore extends AdminController
 		// This nice code (irony) is here to store the product name, because the row after will erase product name in multishop context
 		$this->product_name = $this->object->name[$this->context->language->id];
 
-		$this->cleanMultishopFields();
 		if (!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
