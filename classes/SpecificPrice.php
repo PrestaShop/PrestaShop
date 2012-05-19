@@ -61,7 +61,7 @@ class SpecificPriceCore extends ObjectModel
 			'id_country' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'from_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'reduction_type' => 		array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
@@ -230,7 +230,7 @@ class SpecificPriceCore extends ObjectModel
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
 				AND id_cart IN (0, '.(int)$id_cart.')
-				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC');
+				ORDER BY `id_specific_price_rule` ASC, `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];
 	}
@@ -398,8 +398,9 @@ class SpecificPriceCore extends ObjectModel
 		return Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
 	}
 	
-	public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to)
+	public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
 	{
+		$rule = ' AND `id_specific_price_rule`'.(!$rule ? '=0' : '!=0');
 		return (int)Db::getInstance()->getValue('SELECT `id_specific_price`
 																FROM '._DB_PREFIX_.'specific_price
 																WHERE `id_product`='.(int)$id_product.' AND
@@ -411,7 +412,7 @@ class SpecificPriceCore extends ObjectModel
 																	`id_customer`='.(int)$id_customer.' AND
 																	`from_quantity`='.(int)$from_quantity.' AND
 																	`from` >= \''.pSQL($from).'\' AND
-																	 `to` <= \''.pSQL($to).'\'');
+																	 `to` <= \''.pSQL($to).'\''.$rule);
 	}
 }
 
