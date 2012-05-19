@@ -342,6 +342,10 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function processSave()
 	{
+		$object = $this->loadObject(true);
+		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
+
 		$return = parent::processSave();
 		if (!$this->errors)
 			Tools::generateHtaccess();
@@ -360,9 +364,6 @@ class AdminShopUrlControllerCore extends AdminController
 
 		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
 			$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
-
-		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
 
 		parent::processAdd();
 	}
