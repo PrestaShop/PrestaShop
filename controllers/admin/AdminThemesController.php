@@ -109,6 +109,7 @@ class AdminThemesControllerCore extends AdminController
 						'themes' => Theme::getThemes(),
 						'id_theme' => $this->context->shop->id_theme,
 						'can_display_themes' => $this->can_display_themes,
+						'no_multishop_checkbox' => true,
 					),
 				),
 			),

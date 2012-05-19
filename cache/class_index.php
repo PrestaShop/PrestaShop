@@ -510,7 +510,6 @@
   'ProfileCore' => 'classes/Profile.php',
   'QuickAccess' => 'override/classes/QuickAccess.php',
   'QuickAccessCore' => 'classes/QuickAccess.php',
-  'Range' => 'override/classes/range/Range.php',
   'RangePrice' => 'override/classes/range/RangePrice.php',
   'RangePriceCore' => 'classes/range/RangePrice.php',
   'RangeWeight' => 'override/classes/range/RangeWeight.php',
