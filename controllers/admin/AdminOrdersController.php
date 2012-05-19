@@ -1718,7 +1718,6 @@ class AdminOrdersControllerCore extends AdminController
 				$old_order_invoice->total_paid_tax_incl -= $order_detail->total_price_tax_incl;
 
 				$res &= $old_order_invoice->update();
-				// TODO remove invoice if no item ?
 
 				$order_invoice->total_products += $order_detail->total_price_tax_excl;
 				$order_invoice->total_products_wt += $order_detail->total_price_tax_incl;
@@ -1769,6 +1768,10 @@ class AdminOrdersControllerCore extends AdminController
 		$products = $this->getProducts($order);
 		// Get the last product
 		$product = $products[$order_detail->id];
+		$resume = OrderSlip::getProductSlipResume($order_detail->id);
+		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
+		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
