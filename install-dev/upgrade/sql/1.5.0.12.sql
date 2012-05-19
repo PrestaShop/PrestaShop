@@ -30,3 +30,4 @@ ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop_group` INT(10) AFTER `id_pagenotf
 ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop` INT(10) AFTER `id_pagenotfound`;
 
 /* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
+/* PHP:editorial_update_multishop(); */;
