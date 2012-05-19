@@ -99,6 +99,15 @@ class AdminShopUrlControllerCore extends AdminController
 	public function renderForm()
 	{
 		$this->multiple_fieldsets = true;
+		if (!Configuration::get('PS_REWRITING_SETTINGS'))
+			$desc_virtual_uri = array(
+				$this->l('You need to activate the URL Rewriting if you want to add a virtual URI.')
+			);
+		else
+			$desc_virtual_uri = array(
+				$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
+				'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
+			);
 		$this->fields_form = array(
 			array(
 				'form' => array(
@@ -208,10 +217,8 @@ class AdminShopUrlControllerCore extends AdminController
 							'type' => 'text',
 							'label' => $this->l('Virtual URI:'),
 							'name' => 'virtual_uri',
-							'desc' => array(
-								$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
-								'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
-							),
+							'disabled' => !Configuration::get('PS_REWRITING_SETTINGS'),
+							'desc' => $desc_virtual_uri,
 							'size' => 50,
 						),
 						array(
