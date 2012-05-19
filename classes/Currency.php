@@ -388,10 +388,10 @@ class CurrencyCore extends ObjectModel
 		if (!$default_currency = Currency::getDefaultCurrency())
 			return Tools::displayError('No default currency');
 
-		$currencies = Currency::getCurrencies(true);
+		$currencies = Currency::getCurrencies(true, false);
 		foreach ($currencies as $currency)
-			$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
-
+			if ($currency->id != $default_currency->id)
+				$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
 	}
 
 	/**
