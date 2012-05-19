@@ -30,7 +30,7 @@ class RangeWeightCore extends ObjectModel
 	public $id_carrier;
 	public $delimiter1;
 	public $delimiter2;
-	
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -43,7 +43,7 @@ class RangeWeightCore extends ObjectModel
 			'delimiter2' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true),
 		),
 	);
-	
+
 	protected $webserviceParameters = array(
 			'objectNodeName' => 'weight_range',
 			'objectsNodeName' => 'weight_ranges',
@@ -51,7 +51,7 @@ class RangeWeightCore extends ObjectModel
 			'id_carrier' => array('xlink_resource' => 'carriers'),
 		)
 	);
-	
+
 	/**
 	 * Override add to create delivery value for all zones
 	 * @see classes/ObjectModelCore::add()
@@ -79,7 +79,7 @@ class RangeWeightCore extends ObjectModel
 
 		return true;
 	}
-	
+
 	/**
 	* Get all available price ranges
 	*
@@ -93,7 +93,7 @@ class RangeWeightCore extends ObjectModel
 			WHERE `id_carrier` = '.(int)$id_carrier.'
 			ORDER BY `delimiter1` ASC');
 	}
-	
+
 	public static function rangeExist($id_carrier, $delimiter1, $delimiter2)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -102,7 +102,7 @@ class RangeWeightCore extends ObjectModel
 			WHERE `id_carrier` = '.(int)$id_carrier.'
 			AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2`='.(float)$delimiter2);
 	}
-	
+
 	public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
