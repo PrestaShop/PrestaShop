@@ -71,9 +71,10 @@
 	<div>
 		<div class="productTabs" style="display:none;">
 			<ul class="tab">
+			{*todo href when nojs*}
 			{foreach $product_tabs key=numStep item=tab}
 				<li class="tab-row">
-					<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>{*todo href when nojs*}
+					<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name|escape:'htmlall':'UTF-8'}</a>
 				</li>
 			{/foreach}
 			</ul>

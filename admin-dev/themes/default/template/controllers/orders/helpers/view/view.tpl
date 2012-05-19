@@ -583,8 +583,7 @@
 						<br /><br />{l s='Merchandise returns are disabled'}
 					{/if}
 				</div>
-
-				<div style="float:right;">
+				<div style="float:right; margin-top: 20px;">
 					<table class="table" width="450px;" style="border-radius:0px;"cellspacing="0" cellpadding="0">
 						<tr id="total_products">
 							<td width="150px;"><b>{l s='Products'}</b></td>
