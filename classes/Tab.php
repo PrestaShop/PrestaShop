@@ -499,6 +499,7 @@ class TabCore extends ObjectModel
 			AND a.`edit` = 1
 			AND a.`delete` = 1
 			AND a.`add` = 1
+			AND t.`id_parent` != 0 AND t.`id_parent` != -1
 			ORDER BY t.`id_parent` ASC
 		');
 	}
