@@ -54,6 +54,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_dc87369c7dd7d760c8076a4
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_d1baba351b02042982a133c4df5d4924'] = 'Exporter un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5092965125a28a17f49ee460fbc1f62c'] = 'Sélectionner un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0557cae4cf5b379e665910d701210f69'] = 'Exporter ce thème';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_73b423af0106343c060aefb660e79ff2'] = 'S\'il vous plaît, sélectionnez un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7961c4434751797a383d52d647e044d6'] = 'Importer depuis l\'ordinateur';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_bc52857ec49d8de10e55171f5bbc7f2a'] = 'Fichier de l\'archive';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_24ad8bfdfce09842a83f10d59a8ef01f'] = 'Où se trouve votre fichier .zip ?';

@@ -126,7 +126,7 @@
 				</p>
 				<p><label for="importLanguage">{l s='Language pack to import:'}</label><input type="file" name="file" id="importLanguage"/>&nbsp;</p>
 				<p>
-					<label for="selectThemeForImport">{l s='Select yours themes:'}</label>
+					<label for="selectThemeForImport">{l s='Select your theme:'}</label>
 					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
 						{foreach $themes as $theme}
 							<option value="{$theme->directory}" selected="selected">{$theme->name} &nbsp;</option>
