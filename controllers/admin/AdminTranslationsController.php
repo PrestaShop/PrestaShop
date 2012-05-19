@@ -709,6 +709,9 @@ class AdminTranslationsControllerCore extends AdminController
 					if (!in_array($module_key, $array_check_duplicate))
 					{
 						$array_check_duplicate[] = $module_key;
+						if (!isset($this->modules_translations[$theme_name][$module_name][$template_name][$key]))
+							$this->total_expression++;
+
 						if (array_key_exists($module_key, $GLOBALS[$name_var]))
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key] = html_entity_decode($GLOBALS[$name_var][$module_key], ENT_COMPAT, 'UTF-8');
 						else
@@ -716,7 +719,6 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->modules_translations[$theme_name][$module_name][$template_name][$key] = '';
 							$this->missing_translations++;
 						}
-						$this->total_expression++;
 					}
 				}
 			}
@@ -1421,8 +1423,6 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$name_var = $this->translations_informations[$this->type_selected]['var'];
 		$GLOBALS[$name_var] = $this->fileExists();
-		// count will contain the number of expressions of the page
-		$count = 0;
 		$missing_translations_back = array();
 
 		// Get all types of file (PHP, TPL...) and a list of files to parse by folder
@@ -1465,7 +1465,6 @@ class AdminTranslationsControllerCore extends AdminController
 									$missing_translations_back[$prefix_key]++;
 							}
 						}
-						$count++;
 					}
 				}
 
@@ -1497,7 +1496,6 @@ class AdminTranslationsControllerCore extends AdminController
 									$missing_translations_back[$prefix_key]++;
 							}
 						}
-						$count++;
 					}
 				}
 
@@ -1520,7 +1518,7 @@ class AdminTranslationsControllerCore extends AdminController
 						$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
 
 					// Adding list, form, option in Helper Translations
-					$list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminOptions', 'AdminForm', 'AdminHelpAccess');
+					$list_prefix_key = array('AdminHelpers', 'AdminList', 'AdminView', 'AdminOptions', 'AdminForm', 'AdminHelpAccess');
 					if (in_array($prefix_key, $list_prefix_key))
 						$prefix_key = 'Helper';
 
@@ -1565,7 +1563,6 @@ class AdminTranslationsControllerCore extends AdminController
 										$missing_translations_back[$prefix_key]++;
 								}
 							}
-							$count++;
 						}
 					}
 					if (isset($tabs_array[$prefix_key]))
@@ -1574,8 +1571,11 @@ class AdminTranslationsControllerCore extends AdminController
 						$tabs_array[$prefix_key] = $new_lang;
 				}
 
-		// with php then tpl files, order can be a mess
-		asort($tabs_array);
+
+		// count will contain the number of expressions of the page
+		$count = 0;
+		foreach ($tabs_array as $array)
+			$count += count($array);
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => $count,
@@ -1670,14 +1670,12 @@ class AdminTranslationsControllerCore extends AdminController
 							if (!isset($count_empty[$key]))
 								$count_empty[$key] = 1;
 						}
-
-						$this->total_expression++;
 					}
 				}
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
-			'count' => $this->total_expression,
-			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+			'count' => count($string_to_translate),
+			'limit_warning' => $this->displayLimitPostWarning(count($string_to_translate)),
 			'errorsArray' => $string_to_translate,
 			'missing_translations' => $count_empty
 		));
@@ -2400,7 +2398,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'count' => count($tabs_array['PDF']),
-			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+			'limit_warning' => $this->displayLimitPostWarning(count($tabs_array['PDF'])),
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations_pdf
 		));
