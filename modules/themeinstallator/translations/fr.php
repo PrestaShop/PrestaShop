@@ -77,6 +77,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_9891d2e13ad8b753833055c
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_dd88d85745bba1abfa65cef79472da6a'] = 'Erreur de syntaxe dans le champ \"version\". Seuls les nombres et les points sont autorisés, et la compatibilité doit être croissante ou égale.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_bf17ac149e2e7a530c677e9bd51d3fd2'] = 'Modules';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_714af595b1403ed23ff51f27e863c9a2'] = 'Sélectionnez les modules que vous souhaitez exporter';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_fa20578667f2e569f2ed1da415126040'] = 'C\'est une liste des modules installés et qui sont natifs.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a517747c3d12f99244ae598910d979c5'] = 'Auteur';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ce8ae9da5b7cd6c3df2929543a9af92d'] = 'Email';
