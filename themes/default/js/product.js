@@ -375,9 +375,7 @@ function updateDisplay()
 				reduction = ps_round(reduction / tax, 6);
 		}
 
-		if (!display_specific_price)
-			productPriceWithoutReduction = productPrice * group_reduction;
-
+		productPriceWithoutReduction = productPrice * group_reduction;
 
 		productPrice -= reduction;
 		var tmp = productPrice * group_reduction;
