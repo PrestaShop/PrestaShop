@@ -255,7 +255,8 @@ class AdminShopControllerCore extends AdminController
 
 	protected function afterUpdate($new_shop)
 	{
-		Category::updateFromShop(Tools::getValue('categoryBox'), $new_shop->id);
+		if (!Category::updateFromShop(Tools::getValue('categoryBox'), $new_shop->id))
+			$this->errors[] = $this->l('You need to select at least the root category.');
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 		return parent::afterUpdate($new_shop);
