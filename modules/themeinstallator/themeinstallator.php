@@ -1366,6 +1366,7 @@ class ThemeInstallator extends Module
 					<legend>'.$this->l('Modules').'</legend>
 					<label>'.$this->l('Select the modules that you wish to export').'</label>
 					<div class="margin-form">'.$tmp.'</div>
+						<div class="info">'.$this->l('It\'s a list of installed modules which are not native.').'</div>
 				</fieldset>
 				<p class="clear">&nbsp;</p>';
 		}
