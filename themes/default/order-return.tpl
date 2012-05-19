@@ -30,7 +30,7 @@
 		<p class="bold">{l s='We have logged your return request.'}</p>
 		<p>{l s='Your package must be returned to us within'} {$nbdaysreturn} {l s='days of receiving your order.'}</p>
 		<p>{l s='Current status of your merchandise return:'} <span class="bold">{$state_name|escape:'htmlall':'UTF-8'}</span></p>
-		<p>{l s='List of items marked as returned:'}</p>
+		<p>{l s='List of items to be returned:'}</p>
 	</div>
 	<div id="order-detail-content" class="table_block">
 		<table class="std">
