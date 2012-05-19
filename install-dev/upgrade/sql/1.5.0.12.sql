@@ -12,3 +12,16 @@ ALTER TABLE `PREFIX_customer` DROP `account_number`;
 
 ALTER TABLE `PREFIX_tax_rule` CHANGE `zipcode_from` `zipcode_from` VARCHAR(12) NOT NULL, CHANGE `zipcode_to` `zipcode_to` VARCHAR(12) NOT NULL;
 
+UPDATE PREFIX_order_detail_tax odt
+LEFT JOIN PREFIX_tax t ON (t.id_tax = odt.id_tax)
+SET unit_amount = ROUND((t.rate / 100) * (
+		SELECT od.unit_price_tax_excl - ( o.total_discounts_tax_excl * ( od.unit_price_tax_excl / o.total_products ))
+		FROM PREFIX_order_detail od
+		LEFT JOIN PREFIX_orders o ON ( o.id_order = od.id_order)
+		WHERE odt.id_order_detail = od.id_order_detail
+), 2);
+
+
+UPDATE PREFIX_order_detail_tax odt
+LEFT JOIN PREFIX_order_detail od ON (od.id_order_detail = odt.id_order_detail)
+SET total_amount = odt.unit_amount * od.product_quantity;
