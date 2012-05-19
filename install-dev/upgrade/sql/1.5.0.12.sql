@@ -25,3 +25,6 @@ SET unit_amount = ROUND((t.rate / 100) * (
 UPDATE PREFIX_order_detail_tax odt
 LEFT JOIN PREFIX_order_detail od ON (od.id_order_detail = odt.id_order_detail)
 SET total_amount = odt.unit_amount * od.product_quantity;
+
+ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`;
+ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop` INT(10) AFTER `id_pagenotfound`;
