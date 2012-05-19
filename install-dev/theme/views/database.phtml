@@ -74,7 +74,7 @@
 			<p>
 				<label for="smtpEnc"><?php echo $this->l('Encryption:') ?></label>
 				<select id="smtpEnc" name="smtpEnc">
-					<option value="off" <?php if ($this->smtp_encryption == 'off'): ?>selected="selected"<?php endif; ?>><?php $this->l('None') ?></option>
+					<option value="off" <?php if ($this->smtp_encryption == 'off'): ?>selected="selected"<?php endif; ?>><?php echo $this->l('None') ?></option>
 					<option value="tls" <?php if ($this->smtp_encryption == 'tls'): ?>selected="selected"<?php endif; ?>>TLS</option>
 					<option value="ssl" <?php if ($this->smtp_encryption == 'ssl'): ?>selected="selected"<?php endif; ?>>SSL</option>
 				</select>

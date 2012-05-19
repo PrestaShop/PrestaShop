@@ -5,7 +5,7 @@
  	<div class="productTabs">
 		<ul class="tab">
 			<li class="tab-row">
-				<a class="tab-page" id="cart_rule_link_informations" href="javascript:displayCartRuleTab('informations');">{l s='Informations'}</a>
+				<a class="tab-page" id="cart_rule_link_informations" href="javascript:displayCartRuleTab('informations');">{l s='Information'}</a>
 			</li>
 			<li class="tab-row">
 				<a class="tab-page" id="cart_rule_link_conditions" href="javascript:displayCartRuleTab('conditions');">{l s='Conditions'}</a>

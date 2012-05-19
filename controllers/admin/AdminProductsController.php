@@ -157,7 +157,7 @@ class AdminProductsControllerCore extends AdminController
 
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array (
-			'Informations' => $this->l('Informations'),
+			'Informations' => $this->l('Information'),
 			'Pack' => $this->l('Pack'),
 			'VirtualProduct' => $this->l('Virtual Product'),
 			'Prices' => $this->l('Prices'),
