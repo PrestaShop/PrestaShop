@@ -30,6 +30,7 @@ ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop_group` INT(10) AFTER `id_pagenotf
 
 /* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
 /* PHP:editorial_update_multishop(); */;
+/* PHP:update_module_product_comments(); */;
 
 ALTER TABLE `PREFIX_customer`
 	ADD `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
