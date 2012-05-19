@@ -28,3 +28,5 @@ SET total_amount = odt.unit_amount * od.product_quantity;
 
 ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`;
 ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop` INT(10) AFTER `id_pagenotfound`;
+
+/* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
