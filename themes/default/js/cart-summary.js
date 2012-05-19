@@ -333,7 +333,10 @@ function deleteProductFromSummary(id)
 					getCarrierListAndUpdate();
 			}
 		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			if (textStatus != 'abort')
+				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		}
 	});
 }
 
@@ -418,7 +421,10 @@ function upQuantity(id, qty)
 					getCarrierListAndUpdate();
 			}
 		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			if (textStatus != 'abort')
+				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		}
 	});
 }
 
@@ -490,7 +496,10 @@ function downQuantity(id, qty)
 						getCarrierListAndUpdate();
 				}
 			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				if (textStatus != 'abort')
+					alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			}
 		});
 
 	}
