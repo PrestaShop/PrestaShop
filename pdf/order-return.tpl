@@ -97,7 +97,7 @@
 		<td style="width: 80%; text-align: right">
 			<table style="width: 100%">
 				<tr style="line-height:6px;">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 60%">{l s='ITEMS MARKED AS RETURNED' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 60%">{l s='ITEMS TO BE RETURNED' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 20%">{l s='REFERENCE' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='QTY' pdf='true'}</td>
 				</tr>
