@@ -1602,6 +1602,10 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Get the last product
 		$product = $products[max(array_keys($products))];
+		$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
+		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
+		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
