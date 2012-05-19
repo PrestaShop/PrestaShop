@@ -3,5 +3,4 @@
   <gender id="Mr" name="Sig."/>
   <gender id="Ms" name="Sig.ra"/>
   <gender id="Miss" name="Miss"/>
-  <gender id="Unknown" name="Sconosciuto"/>
 </entity_gender>
