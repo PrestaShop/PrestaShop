@@ -1000,20 +1000,12 @@ class CartRuleCore extends ObjectModel
 				WHERE id_cart = '.(int)$context->cart->id.'
 			)
 		)
+		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule	FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority');
 
 		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
-
-		// Todo: consider optimization (we can avoid many queries in checkValidity)
 		foreach ($cartRules as $cartRule)
-			if (Db::getInstance()->getValue('SELECT count(*)
-					FROM '._DB_PREFIX_.'cart_cart_rule
-					WHERE id_cart = '.(int)$context->cart->id.'
-					AND id_cart_rule = '.(int)$cartRule->id))
-				$context->cart->removeCartRule($cartRule->id);
-
-		foreach ($cartRules as $cartRule)
-			if ($cartRule->checkValidity($context, true, false))
+			if ($cartRule->checkValidity($context, false, false))
 				$context->cart->addCartRule($cartRule->id);
 	}
 
