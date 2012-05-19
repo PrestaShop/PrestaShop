@@ -1,12 +1,14 @@
 <?php 
 
-		/**
+	/**
 	 * the php script used to get the list of file or folders under a specific folder
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
 	 * @link www.phpletter.com
 	 * @since 22/May/2007
 	 *
 	 */
+	if (!defined('_PS_ADMIN_DIR_'))
+		define('_PS_ADMIN_DIR_', getcwd());
 	require_once('../../config/config.inc.php');
 	require_once('../init.php');
 
