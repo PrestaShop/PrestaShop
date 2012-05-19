@@ -389,10 +389,18 @@ class DispatcherCore
 					else
 						$this->empty_route = array(
 							'routeID' =>	$row['page'],
-							'rule' =>		$row['url_rewrite'],
+							'rule' =>		'',
 							'controller' =>	$row['page'],
 						);
 				}
+
+			// Set default empty route if no empty route (that's weird I know)
+			if (!$this->empty_route)
+				$this->empty_route = array(
+					'routeID' =>	'index',
+					'rule' =>		'',
+					'controller' =>	'index',
+				);
 
 			// Load custom routes
 			foreach ($this->default_routes as $route_id => $route_data)
