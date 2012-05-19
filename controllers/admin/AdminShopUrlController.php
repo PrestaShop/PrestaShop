@@ -98,8 +98,10 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		$update_htaccess = Tools::modRewriteActive() && ((file_exists('.htaccess') && is_writable('.htaccess')) || is_writable(dirname('.htaccess')));
+
 		$this->multiple_fieldsets = true;
-		if (!Configuration::get('PS_REWRITING_SETTINGS'))
+		if (!$update_htaccess)
 			$desc_virtual_uri = array(
 				$this->l('You need to activate the URL Rewriting if you want to add a virtual URI.')
 			);
@@ -217,7 +219,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'type' => 'text',
 							'label' => $this->l('Virtual URI:'),
 							'name' => 'virtual_uri',
-							'disabled' => !Configuration::get('PS_REWRITING_SETTINGS'),
+							'disabled' => !$update_htaccess,
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
 						),
