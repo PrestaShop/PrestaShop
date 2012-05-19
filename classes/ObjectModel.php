@@ -548,14 +548,7 @@ abstract class ObjectModelCore
 				$fields['id_shop'] = (int)$id_shop;
 				$all_fields['id_shop'] = (int)$id_shop;
 				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
-				$shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
-				if (!$this->insert_missing_shop && !$shop_exists)
-					continue;
-
-				if ($shop_exists)
-					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
-				else
-					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
+				$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
 			}
 		}
 
@@ -585,10 +578,7 @@ abstract class ObjectModelCore
 										.' AND id_lang = '.(int)$field['id_lang']
 										.' AND id_shop = '.$field['id_shop'];
 
-							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
-								$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
-							else
-								$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
+							$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
 						}
 					}
 					// If this table is not linked to multishop system ...
