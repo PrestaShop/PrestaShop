@@ -127,6 +127,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (!$this->object->id)
+			$this->object->price = -1;
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Specific price rules'),
@@ -195,9 +198,26 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'label' => $this->l('Price (tax excl.):'),
 					'name' => 'price',
 					'size' => 6,
+					'disabled' => ($this->object->price == -1 ? 1 : 0),
 					'maxlength' => 10,
 					'suffix' => $this->context->currency->getSign('right'),
-					'desc' => $this->l('Put 0 to not change the price')
+
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'leave_bprice',
+					'values' => array(
+						'query' => array(
+							array(
+								'id' => 'on',
+								'name' => $this->l('Leave base price'),
+								'val' => '1',
+								'checked' => '1'
+							),
+						),
+						'id' => 'id',
+						'name' => 'name'
+					)
 				),
 				array(
 					'type' => 'date',
@@ -233,11 +253,17 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'class' => 'button'
 			),
 		);
+		if ($value = $this->getFieldValue($this->object, 'price') != -1)	
+			$price = number_format($value, 2);
+		else
+			$price = '';
 		$this->fields_value = array(
-										'price' => number_format((($value = $this->getFieldValue($this->object, 'price')) ? $value : 0), 2),
+										'price' => $price,
 										'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
 										'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 2),
+										'leave_bprice_on' => ($value = $this->getFieldValue($this->object, 'price')) ? $value : 1
 									);
+
 		$attribute_groups = array();
 		$attributes = Attribute::getAttributes((int)$this->context->language->id);
 		foreach ($attributes as $attribute)
@@ -270,6 +296,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 	public function processSave()
 	{
+		$_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
 		if (Validate::isLoadedObject(($object = parent::processSave())))
 		{
 			$object->deleteConditions();
