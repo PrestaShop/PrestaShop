@@ -1693,7 +1693,7 @@ class AdminControllerCore extends Controller
 						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 					}
 				}
-				else if ($this->context->employee->hasAuthOnShop($split[1]))
+				else if (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
 				{
 					$shop_id = $split[1];
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
