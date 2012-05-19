@@ -2432,10 +2432,11 @@ class ProductCore extends ObjectModel
 		}
 		$result = self::$_pricesLevel2[$cache_id_2];
 
-		if (!$specific_price || $specific_price['price'] <= 0)
+		if (!$specific_price || $specific_price['price'] < 0)
 			$price = (float)$result['price'];
 		else
 			$price = (float)$specific_price['price'];
+
 		// convert only if the specific price is in the default currency (id_currency = 0)
 		if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency']))
 			$price = Tools::convertPrice($price, $id_currency);

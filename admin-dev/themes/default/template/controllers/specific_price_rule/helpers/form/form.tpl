@@ -162,6 +162,12 @@ function new_condition_group()
 	toggle_condition_group(last_condition_group);
 }
 $(document).ready(function() {
+	$('#leave_bprice_on').click(function() {
+		if (this.checked)
+			$('#price').attr('disabled', 'disabled');
+		else
+			$('#price').removeAttr('disabled');
+	});
 	$('#specific_price_rule_form').live('submit', function(e) {
 		var html = '';
 		$.each(conditions, function() {

@@ -324,6 +324,12 @@ jQuery(document).ready(Customer.init);
 				$('#id_product_attribute').change(function() {
 					$('#sp_current_ht_price').html(product_prices[$('#id_product_attribute option:selected').val()]);
 				});
+				$('#leave_bprice').click(function() {
+					if (this.checked)
+						$('#sp_price').attr('disabled', 'disabled');
+					else
+						$('#sp_price').removeAttr('disabled');
+				});
 
 				$('.datepicker').datetimepicker({
 					prevText: '',
@@ -355,12 +361,17 @@ jQuery(document).ready(Customer.init);
 			<span id="spm_currency_sign_pre_0" style="font-weight:bold; color:#000000; font-size:12px">
 				{$currency->prefix}
 			</span>
-			<input type="text" name="sp_price" value="{$product->price|string_format:'%.2f'}" size="11" />
+			<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:'%.2f'}" size="11" />
 			<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">
 				{$currency->suffix}
 			</span>
 		</div>
-
+		<label>
+			{l s='Leave base price:'}
+		</label>
+		<div class="margin-form">
+			<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
+		</div>
 		<label>{l s='Apply a discount of:'}</label>
 		<div class="margin-form">
 			<input type="text" name="sp_reduction" value="0.00" size="11" />

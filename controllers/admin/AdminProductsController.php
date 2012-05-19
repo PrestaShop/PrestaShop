@@ -766,7 +766,7 @@ class AdminProductsControllerCore extends AdminController
 		$id_country = Tools::getValue('sp_id_country');
 		$id_group = Tools::getValue('sp_id_group');
 		$id_customer = Tools::getValue('sp_id_customer');
-		$price = Tools::getValue('sp_price');
+		$price = Tools::getValue('leave_bprice') ? '-1' : Tools::getValue('sp_price');
 		$from_quantity = Tools::getValue('sp_from_quantity');
 		$reduction = (float)(Tools::getValue('sp_reduction'));
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
@@ -776,7 +776,6 @@ class AdminProductsControllerCore extends AdminController
 		$to = Tools::getValue('sp_to');
 		if (!$to)
 			$to = '0000-00-00 00:00:00';
-
 		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{
 			$specificPrice = new SpecificPrice();
@@ -1331,7 +1330,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
 			$this->errors[] = Tools::displayError('Wrong IDs');
-		elseif ((empty($price) && empty($reduction)) || (!empty($price) && !Validate::isPrice($price)) || (!empty($reduction) && !Validate::isPrice($reduction)))
+		elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction)))
 			$this->errors[] = Tools::displayError('Invalid price/discount amount');
 		elseif (!Validate::isUnsignedInt($from_quantity))
 			$this->errors[] = Tools::displayError('Invalid quantity');
@@ -1339,7 +1338,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Please select a discount type (amount or percentage)');
 		elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to)))
 			$this->errors[] = Tools::displayError('Wrong from/to date');
-		elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to))
+		elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false))
 			$this->errors[] = Tools::displayError('A specific price already exists for these parameters');
 		else
 			return true;
@@ -2806,10 +2805,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _getFinalPrice($specific_price, $product_price, $tax_rate)
 	{
-		$price = Tools::ps_round((float)$specific_price['price'] ? $specific_price['price'] : $product_price, 2);
-		if (!(float)($specific_price['reduction']))
-			return (float)($specific_price['price']);
-		return ($specific_price['reduction_type'] == 'amount') ? ($price - $specific_price['reduction'] / (1 + $tax_rate / 100)) : ($price - $price * $specific_price['reduction']);
+		return $this->object->getPrice(false, $specific_price['id_product_attribute'], 2);
 	}
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
@@ -2899,12 +2895,13 @@ class AdminProductsControllerCore extends AdminController
 						$content .= '
 						<td class="cell border">'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
 					}
+					$new_price = $specific_price['price'] == -1 ? $obj->price : $specific_price['price'];
 					$content .= '
 						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
 						<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
 						<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
-						<td class="cell border">'.Tools::displayPrice((float)$specific_price['price'], $current_specific_currency).'</td>
+						<td class="cell border">'.Tools::displayPrice((float)$new_price, $current_specific_currency).'</td>
 						<td class="cell border">'.$reduction.'</td>
 						<td class="cell border">'.$period.'</td>
 						<td class="cell border">'.$specific_price['from_quantity'].'</th>
