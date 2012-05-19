@@ -599,7 +599,7 @@ class CategoryCore extends ObjectModel
 
 		if (empty($order_way))
 			$order_way = 'ASC';
-		if ($order_by == 'id_product' ||	$order_by == 'date_add')
+		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
