@@ -54,17 +54,17 @@ function create_multistore()
 																			VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1)');
 
 	// Stock conversion
-	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_shop_group`, `id_shop`, `quantity`)
+	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
 	VALUES (SELECT `p.id_product`, 0, 1, 1, `p.quantity` FROM `'._DB_PREFIX_.'.product` p);';
 	$res &= Db::getInstance()->execute($sql);
 
-	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_shop_group`, `id_shop`, `quantity`)
+	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
 	VALUES (SELECT `id_product`, `id_product_attribute`, 1, 1, `quantity` FROM `'._DB_PREFIX_.'product_attribute` p);';
 	$res &= Db::getInstance()->execute($sql);
 
 	// Add admin tabs
 	$shopTabId = add_new_tab('AdminShop', 'it:Shops|es:Shops|fr:Boutiques|de:Shops|en:Shops',  0, true);
-	add_new_tab('AdminShopGroup', 'it:Group Shops|es:Group Shops|fr:Groupes de boutique|de:Group Shops|en:Group Shops', $shopTabId);
+	add_new_tab('AdminGroupShop', 'it:Group Shops|es:Group Shops|fr:Groupes de boutique|de:Group Shops|en:Group Shops', $shopTabId);
 	add_new_tab('AdminShopUrl', 'it:Shop Urls|es:Shop Urls|fr:URLs de boutique|de:Shop Urls|en:Shop Urls', $shopTabId);
 
 	return $res;

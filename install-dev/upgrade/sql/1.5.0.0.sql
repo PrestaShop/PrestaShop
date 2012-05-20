@@ -1,38 +1,38 @@
 SET NAMES 'utf8';
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
-  `id_shop_group` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `share_customer` TINYINT(1) NOT NULL,
   `share_order` TINYINT(1) NOT NULL,
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_shop_group`)
+  PRIMARY KEY (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_group_shop` (`id_shop_group`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
+INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `id_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop_group` int(11) unsigned NOT NULL,
+  `id_group_shop` int(11) unsigned NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_theme` INT(1) UNSIGNED NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_shop`),
-  KEY `id_shop_group` (`id_shop_group`),
+  KEY `id_group_shop` (`id_group_shop`),
   KEY `id_category` (`id_category`),
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_shop` 
-	(`id_shop`, `id_shop_group`, `name`, `id_category`, `id_theme`, `active`, `deleted`)
+	(`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) 
 	VALUES 
 	(1, 1, (SELECT value FROM `PREFIX_configuration` WHERE name = 'PS_SHOP_NAME'), 1, 1, 1, 0);
 
-ALTER TABLE `PREFIX_configuration` ADD `id_shop_group` INT(11) UNSIGNED  DEFAULT  NULL AFTER `id_configuration` , ADD `id_shop` INT(11) UNSIGNED DEFAULT NULL AFTER `id_shop_group`;
+ALTER TABLE `PREFIX_configuration` ADD `id_group_shop` INT(11) UNSIGNED  DEFAULT  NULL AFTER `id_configuration` , ADD `id_shop` INT(11) UNSIGNED DEFAULT NULL AFTER `id_group_shop`;
 ALTER TABLE `PREFIX_configuration` DROP INDEX `name` , ADD INDEX `name` ( `name` ) ;
-ALTER TABLE `PREFIX_configuration` ADD INDEX (`id_shop_group`);
+ALTER TABLE `PREFIX_configuration` ADD INDEX (`id_group_shop`);
 ALTER TABLE `PREFIX_configuration` ADD INDEX (`id_shop`);
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, 'PS_SHOP_DEFAULT', '1', NOW(), NOW());
 
@@ -123,9 +123,9 @@ CREATE TABLE `PREFIX_currency_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_currency_shop` (id_shop, id_currency) (SELECT 1, id_currency FROM PREFIX_currency);
 
-ALTER TABLE `PREFIX_cart` ADD `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_cart` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_shop_group`, ADD INDEX `id_shop_group` (`id_shop_group`), ADD INDEX `id_shop` (`id_shop`);
+ALTER TABLE `PREFIX_cart` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_cart` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
 
-ALTER TABLE `PREFIX_customer` ADD `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_shop_group`, ADD INDEX `id_shop_group` (`id_shop_group`), ADD INDEX `id_shop` (`id_shop`);
+ALTER TABLE `PREFIX_customer` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
 
 ALTER TABLE `PREFIX_orders` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_order` , ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`, ADD INDEX `id_group_shop` (`id_group_shop`), ADD INDEX `id_shop` (`id_shop`);
 

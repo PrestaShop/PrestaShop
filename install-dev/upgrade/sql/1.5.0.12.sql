@@ -26,21 +26,13 @@ UPDATE PREFIX_order_detail_tax odt
 LEFT JOIN PREFIX_order_detail od ON (od.id_order_detail = odt.id_order_detail)
 SET total_amount = odt.unit_amount * od.product_quantity;
 
-ALTER TABLE `PREFIX_pagenotfound` ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`, ADD `id_shop` INT(10) AFTER `id_pagenotfound`;
+/* PHP:add_missing_shop_column_pagenotfound(); */;
 
 /* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
 /* PHP:editorial_update_multishop(); */;
 /* PHP:update_module_product_comments(); */;
 
-ALTER TABLE `PREFIX_customer`
-	ADD `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
-	ADD `company` varchar(64),
-	ADD `siret` varchar(14),
-	ADD `ape` varchar(5),
-	ADD `website` varchar(128),
-	ADD `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default '0.00',
-	ADD `show_public_prices` tinyint(1) unsigned NOT NULL default '0',
-	ADD `max_payment_days` int(10) unsigned NOT NULL default '60';
+/* PHP:add_missing_columns_customer(); */;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_risk` (
   `id_risk` int(11) NOT NULL AUTO_INCREMENT,
@@ -56,3 +48,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
   PRIMARY KEY (`id_risk`,`id_lang`),
   KEY `id_risk` (`id_risk`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+UPDATE `PREFIX_tab` SET `class_name`="AdminShopGroup" WHERE class_name="AdminGroupShop";
+

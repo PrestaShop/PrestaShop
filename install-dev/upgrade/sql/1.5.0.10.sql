@@ -5,12 +5,18 @@ ALTER TABLE `PREFIX_supplier` DROP `id_address`;
 UPDATE `PREFIX_meta` SET `page` = 'contact' WHERE `page` = 'contact-form';
 
 RENAME TABLE `PREFIX_group_shop` TO `PREFIX_shop_group`;
+ALTER TABLE `PREFIX_shop_group` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `PREFIX_shop` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_stock_available` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `PREFIX_cart` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `PREFIX_configuration` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_connections` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `PREFIX_customer` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_delivery` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_orders` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_page_viewed` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_specific_price` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `PREFIX_product` ADD  `id_tax_rules_group` int(10) unsigned NOT NULL;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_product_shop_TMP` (
   `id_product` int(10) unsigned NOT NULL,
