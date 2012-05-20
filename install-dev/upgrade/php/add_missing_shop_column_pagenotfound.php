@@ -20,23 +20,28 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 13573 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function module_blockwishlist_multishop()
+function add_missing_shop_column_pagenotfound()
 {
-	$id_module = Db::getInstance()->getValue('SELECT id_module FROM '._DB_PREFIX_.'module where name="blockwishlist"');
-	if ($id_module)
+	$res = true;
+	$exists = Db::getInstance()->executeS('SHOW TABLE LIKE "'._DB_PREFIX_.'pagenotfound"');
+	if (count($exists))
 	{
-		$res = Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'wishlist`
-		ADD `id_shop` INTEGER NOT NULL default \'1\' AFTER `counter`,
-		ADD `id_group_shop` INTEGER NOT NULL default \'1\' AFTER `id_shop`');
-		
-		return $res;
+		$fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'pagenotfound`');
+		foreach ($fields as $k => $field)
+			$fields[$k] = $field['Field'];
+
+		if (!in_array('id_shop_group', $fields))
+			$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound` 
+				ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`');
+
+		if (!in_array('id_shop', $fields))
+			$res &= DB::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound` 
+				ADD `id_shop` INT(10) AFTER `id_pagenotfound`');
 	}
-	return true;
+	return $res;
 }
-
-

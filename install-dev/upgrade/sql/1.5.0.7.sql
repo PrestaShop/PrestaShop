@@ -19,6 +19,7 @@ CREATE TABLE `PREFIX_product_tax_rules_group_shop` (
 
 INSERT INTO `PREFIX_product_tax_rules_group_shop` (`id_product`, `id_tax_rules_group`, `id_shop`)
 	(SELECT `id_product`, `id_tax_rules_group`, `id_shop` FROM `PREFIX_product`, `PREFIX_shop`);
+ALTER TABLE `PREFIX_product` DROP `id_tax_rules_group`;
 
 CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (
 	`id_carrier` int(11) unsigned NOT NULL,
