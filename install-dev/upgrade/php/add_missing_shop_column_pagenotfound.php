@@ -28,7 +28,7 @@
 function add_missing_shop_column_pagenotfound()
 {
 	$res = true;
-	$exists = Db::getInstance()->executeS('SHOW TABLE LIKE "'._DB_PREFIX_.'pagenotfound"');
+	$exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'pagenotfound"');
 	if (count($exists))
 	{
 		$fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'pagenotfound`');
