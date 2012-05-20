@@ -252,7 +252,7 @@ if (empty($fail_result))
 		if (!file_exists($file))
 		{
 			$logger->logError('Error while loading sql upgrade file.');
-			$fail_result .= '<action result="fail" error="33" />'."\n";
+			$fail_result .= '<action result="fail" error="33" sqlfile="'.$version.'" />'."\n";
 		}
 		if (!$sqlContent = file_get_contents($file))
 		{
