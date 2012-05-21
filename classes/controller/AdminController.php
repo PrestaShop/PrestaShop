@@ -900,7 +900,7 @@ class AdminControllerCore extends Controller
 					if (Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 						continue;
 
-					if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($_POST['multishopOverrideOption'][$key]))
+					if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key]))
 					{
 						Configuration::deleteFromContext($key);
 						continue;
