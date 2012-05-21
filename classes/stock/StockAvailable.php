@@ -187,19 +187,20 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $depends_on_stock Optional : true by default
 	 * @param int $id_shop Optional : gets context by default
 	 */
-	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null)
+	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 
-		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
+		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
 
 		if ($existing_id > 0)
 		{
 			Db::getInstance()->update(
 				'stock_available',
 				array('depends_on_stock' => (int)(bool)$depends_on_stock),
-				'id_product = '.(int)$id_product.
+				'id_product = '.(int)$id_product,
+				'id_product_attribute = '.(int)$id_product_attribute.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
@@ -208,7 +209,7 @@ class StockAvailableCore extends ObjectModel
 			$params = array(
 				'depends_on_stock' => (int)(bool)$depends_on_stock,
 				'id_product' => (int)$id_product,
-				'id_product_attribute' => 0
+				'id_product_attribute' => (int)$id_product_attribute
 			);
 
 			StockAvailable::addSqlShopParams($params, $id_shop);
@@ -228,19 +229,20 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $out_of_stock Optional false by default
 	 * @param int $id_shop Optional gets context by default
 	 */
-	public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null)
+	public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 
-		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
+		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
 
 		if ($existing_id > 0)
 		{
 			Db::getInstance()->update(
 				'stock_available',
 				array('out_of_stock' => (int)$out_of_stock),
-				'id_product = '.(int)$id_product.
+				'id_product = '.(int)$id_product,
+				'id_product_attribute = '.(int)$id_product_attribute.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
@@ -249,11 +251,10 @@ class StockAvailableCore extends ObjectModel
 			$params = array(
 				'out_of_stock' => (int)$out_of_stock,
 				'id_product' => (int)$id_product,
-				'id_product_attribute' => 0
+				'id_product_attribute' => (int)$id_product_attribute
 			);
 
 			StockAvailable::addSqlShopParams($params, $id_shop);
-
 			Db::getInstance()->insert('stock_available', $params);
 		}
 	}
