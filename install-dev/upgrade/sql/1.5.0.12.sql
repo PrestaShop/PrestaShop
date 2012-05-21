@@ -51,3 +51,4 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
 UPDATE `PREFIX_tab` SET `class_name`="AdminShopGroup" WHERE class_name="AdminGroupShop";
 
 /* PHP:upgrade_cms_15_rename(); */;
+/* PHP:migrate_tabs_multi_shop(); */;
