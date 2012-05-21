@@ -75,8 +75,7 @@ class GroupCore extends ObjectModel
 	{
 		$shop_criteria = '';
 		if ($id_shop)
-			$shop_criteria = 'LEFT JOIN `'._DB_PREFIX_.'group_shop` gs ON (gs.`id_group` = g.`id_group`)
-			 			      WHERE `id_shop` = '.(int)$id_shop;
+			$shop_criteria = Shop::addSqlAssociation('group', 'g');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
