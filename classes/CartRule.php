@@ -720,7 +720,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
 		{
 			if (!$this->carrier_restriction)
-				$reduction_value += $context->cart->getTotalShippingCost(null, $useTax, $context->country);
+				$reduction_value += $context->cart->getPackageShippingCost(is_null($package) ? null : $package['id_carrier'], $useTax, $context->country, is_null($package) ? null : $package['products']);
 			else
 			{
 				$data = Db::getInstance()->executeS('
