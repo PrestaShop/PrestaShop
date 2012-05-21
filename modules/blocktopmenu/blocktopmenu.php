@@ -341,7 +341,7 @@ class Blocktopmenu extends Module
 			$this->_html .= '<input type="hidden" name="id_linksmenutop" value="'.(int)Tools::getValue('id_linksmenutop').'" />';
 
 		if (Tools::isSubmit('submitBlocktopmenuEdit'))
-			$this->_html .= '<input type="submit" name="submitBlocktopmenuEdit" value="'.$this->l('	Edit	').'" class="button" />';
+			$this->_html .= '<input type="submit" name="submitBlocktopmenuEdit" value="'.$this->l('Edit').'" class="button" />';
 
 		$this->_html .= '
 					<input type="submit" name="submitBlocktopmenuLinks" value="'.$this->l('	Add	').'" class="button" />
