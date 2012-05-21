@@ -882,10 +882,14 @@ class CartRuleCore extends ObjectModel
 				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
 				{
 					// The free gift coupon must be applied to one product only (needed for multi-shipping which manage multiple product lists)
-					if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == $id_address)
+					if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product])
+						|| CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == $id_address
+						|| CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0
+						|| $id_address == 0)
 					{
 						$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
-						CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
+						if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0)
+							CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
 					}
 				}
 		}
