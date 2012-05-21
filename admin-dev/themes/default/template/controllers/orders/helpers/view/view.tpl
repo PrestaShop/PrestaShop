@@ -238,7 +238,7 @@
 				</p>
 				{/if}
 
-				<form id="formAddPayment" method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<colgroup>
 							<col width="15%"></col>
@@ -510,7 +510,7 @@
 		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
 
-	<form style="width: 98%" class="container-command-top-spacing" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
+	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
 			<div style="display: none">
@@ -635,7 +635,7 @@
 							</td>
 							{if $can_edit}
 							<td class="center">
-								<a href="{$currentIndex}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
+								<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
 							</td>
 							{/if}
 						</tr>
@@ -731,5 +731,5 @@
 
 
 	<div class="clear">&nbsp;</div>
-	<br /><br /><a href="{$currentIndex}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
+	<br /><br /><a href="{$current_index}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
 {/block}
