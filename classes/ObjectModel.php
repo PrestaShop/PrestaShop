@@ -135,8 +135,6 @@ abstract class ObjectModelCore
 	 */
 	protected $update_fields = null;
 
-	public $insert_missing_shop = true;
-
 	/**
 	 * Returns object validation rules (fields validity)
 	 *
@@ -259,8 +257,8 @@ abstract class ObjectModelCore
 		$this->validateFields();
 		$fields = $this->formatFields(self::FORMAT_COMMON);
 
-		// For retro compatibility, get common fields for default shop
-		if (!empty($this->def['multishop']) && $this->id_shop == Configuration::get('PS_SHOP_DEFAULT'))
+		// For retro compatibility
+		if (!empty($this->def['multishop']))
 			$fields = array_merge($fields, $this->getFieldsShop());
 
 		// Ensure that we get something to insert
@@ -386,6 +384,9 @@ abstract class ObjectModelCore
 				return (float)$value;
 
 			case self::TYPE_DATE :
+				if (!$value)
+					return '0000-00-00';
+
 				if ($with_quotes)
 					return '\''.pSQL($value).'\'';
 				return pSQL($value);
@@ -547,7 +548,15 @@ abstract class ObjectModelCore
 			{
 				$fields['id_shop'] = (int)$id_shop;
 				$all_fields['id_shop'] = (int)$id_shop;
-				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values, true, Db::REPLACE);
+				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
+
+				// A little explanation of what we do here : we want to create multishop entry when update is called, but
+				// only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
+				$shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
+				if ($shop_exists)
+					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
+				else if (Shop::getContext() == Shop::CONTEXT_SHOP)
+					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
 			}
 		}
 
@@ -577,7 +586,10 @@ abstract class ObjectModelCore
 										.' AND id_lang = '.(int)$field['id_lang']
 										.' AND id_shop = '.$field['id_shop'];
 
-							$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
+							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
+								$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
+							else
+								$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 						}
 					}
 					// If this table is not linked to multishop system ...
@@ -678,7 +690,6 @@ abstract class ObjectModelCore
 	 	$this->active = !(int)$this->active;
 
 		// Change status to active/inactive
-		$this->insert_missing_shop = false;
 		return $this->update(false);
 	}
 
@@ -1172,7 +1183,6 @@ abstract class ObjectModelCore
 	{
 		$def = ObjectModel::getDefinition($classname);
 		$update_data = array();
-		$is_default_shop = Context::getContext()->shop->id == Configuration::get('PS_SHOP_DEFAULT');
 		foreach ($data as $field => $value)
 		{
 			if (!isset($def['fields'][$field]))
@@ -1180,8 +1190,7 @@ abstract class ObjectModelCore
 
 			if (!empty($def['fields'][$field]['shop']))
 			{
-				if ($is_default_shop)
-					$update_data[] = "a.$field = '$value'";
+				$update_data[] = "a.$field = '$value'";
 				$update_data[] = "{$def['table']}_shop.$field = '$value'";
 			}
 			else
