@@ -2,7 +2,7 @@
         <module>
             <name>gsitemap</name>
             <displayName><![CDATA[Google sitemap]]></displayName>
-            <version><![CDATA[1.8]]></version>
+            <version><![CDATA[1.9]]></version>
             <description><![CDATA[Generate your Google sitemap file]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[seo]]></tab>
