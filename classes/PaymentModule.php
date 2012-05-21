@@ -247,6 +247,8 @@ abstract class PaymentModuleCore extends Module
 			// Next !
 			$only_one_gift = false;
 			$cart_rule_used = array();
+			$products = $cart->getProducts();
+			$cart_rules = $cart->getCartRules();
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
@@ -275,7 +277,6 @@ abstract class PaymentModuleCore extends Module
 					// Construct order detail table for the email
 					$products_list = '';
 					$virtual_product = true;
-					$products = $cart->getProducts();
 					foreach ($products as $key => $product)
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -327,7 +328,7 @@ abstract class PaymentModuleCore extends Module
 					} // end foreach ($products)
 
 					$cart_rules_list = '';
-					foreach ($cart->getCartRules() as $cart_rule)
+					foreach ($cart_rules as $cart_rule)
 					{
 						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
 						$values = array(
