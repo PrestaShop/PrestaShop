@@ -369,7 +369,7 @@ class HelperCore
 		$html .= '<option value="" class="first">'.Translate::getAdminTranslation('All shops').'</option>';
 		foreach ($tree as $gID => $group_data)
 		{
-			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP) && count($group_data['shops']) > 1)
+			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
 				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
 				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'">';
