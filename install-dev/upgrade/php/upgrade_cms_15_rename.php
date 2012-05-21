@@ -39,11 +39,11 @@ function upgrade_cms_15_rename()
 			(SELECT 1, id_cms FROM '._DB_PREFIX_.'cms)');
 
 		// cms_block table is blockcms module dependant. Don't update table that does not exists
-		$id_module_cms = Db::getInstance()->getValue('SELECT id_module from `'._DB_PREFIX_.'module 
-			WHERE name="blockcms"`');
-		if (!$id_module_cms)
+		$table_cms_block_exists = $db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'cms"');
+		if (!$table_cms_block_exists)
 			return $res;
-		$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'cms_block` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_cms_block`');
+		$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'cms` 
+			ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_cms`');
 	}
 
 	return $res;
