@@ -149,9 +149,13 @@ abstract class PaymentModuleCore extends Module
 					{
 						$carrier = new Carrier($package['id_carrier'], $cart->id_lang);
 						$order->id_carrier = (int)$carrier->id;
+						$id_carrier = (int)$carrier->id;
 					}
 					else
+					{
 						$order->id_carrier = 0;
+						$id_carrier = 0;
+					}
 					
 					$order->id_customer = (int)$cart->id_customer;
 					$order->id_address_invoice = (int)$cart->id_address_invoice;
@@ -176,26 +180,26 @@ abstract class PaymentModuleCore extends Module
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
 					
-					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrier->id);
-					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrier->id);
+					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
+					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
 
-					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrier->id));
-					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrier->id));
+					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
+					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
 					$order->total_discounts = $order->total_discounts_tax_incl;
 
-					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$carrier->id, false, null, $order->product_list);
-					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $order->product_list);
+					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$id_carrier, false, null, $order->product_list);
+					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $order->product_list);
 					$order->total_shipping = $order->total_shipping_tax_incl;
 					
 					if (!is_null($carrier) && Validate::isLoadedObject($carrier))
 						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrier->id));
-					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrier->id));
+					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
+					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
 					$order->total_wrapping = $order->total_wrapping_tax_incl;
 
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrier->id), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrier->id), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), 2);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
 					$order->total_paid = $order->total_paid_tax_incl;
 
 					$order->invoice_date = '0000-00-00 00:00:00';
@@ -230,7 +234,7 @@ abstract class PaymentModuleCore extends Module
 					{
 						$order_carrier = new OrderCarrier();
 						$order_carrier->id_order = (int)$order->id;
-						$order_carrier->id_carrier = (int)$carrier->id;
+						$order_carrier->id_carrier = (int)$id_carrier;
 						$order_carrier->weight = (float)$order->getTotalWeight();
 						$order_carrier->shipping_cost_tax_excl = (float)$order->total_shipping_tax_excl;
 						$order_carrier->shipping_cost_tax_incl = (float)$order->total_shipping_tax_incl;
