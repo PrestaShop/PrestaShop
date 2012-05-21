@@ -27,6 +27,9 @@
 
 function add_default_restrictions_modules_groups()
 {
+	// Table module_group had another use in previous versions, we need to clean it up.
+	Db::getInstance()->executeS('TRUNCATE TABLE `'._DB_PREFIX_.'module_group`');
+
 	$groups = Db::getInstance()->executeS('
 		SELECT `id_group`
 		FROM `'._DB_PREFIX_.'group`');
@@ -45,7 +48,7 @@ function add_default_restrictions_modules_groups()
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 			foreach ($modules as $mod)
 				foreach ($shops as $s)
-				$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
+					$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
 			Db::getInstance()->execute($sql);
