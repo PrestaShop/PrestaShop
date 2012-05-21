@@ -291,16 +291,21 @@ function deleteProductFromSummary(id)
 					location.reload();
 				if (parseInt(jsonData.summary.products.length) == 0)
 				{
-					$('#center_column').children().each(function() {
-						if ($(this).attr('id') != 'emptyCartWarning' && $(this).attr('class') != 'breadcrumb' && $(this).attr('id') != 'cart_title')
-						{
-							$(this).fadeOut('slow', function () {
-								$(this).remove();
-							});
-						}
-					});
-					$('#summary_products_label').remove();
-					$('#emptyCartWarning').fadeIn('slow');
+					if (typeof(orderProcess) == 'undefined' || orderProcess != 'order-opc')
+						document.location.href = document.location.href; // redirection
+					else
+					{
+						$('#center_column').children().each(function() {
+							if ($(this).attr('id') != 'emptyCartWarning' && $(this).attr('class') != 'breadcrumb' && $(this).attr('id') != 'cart_title')
+							{
+								$(this).fadeOut('slow', function () {
+									$(this).remove();
+								});
+							}
+						});
+						$('#summary_products_label').remove();
+						$('#emptyCartWarning').fadeIn('slow');
+					}
 				}
 				else
 				{
