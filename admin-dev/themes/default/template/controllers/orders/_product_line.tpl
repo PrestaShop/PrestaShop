@@ -97,7 +97,7 @@
 	</td>
 	<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
 		<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input onchange="checkPartialRefundProductQuantity(this)" type="text" size="3" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" /> 0/{$productQuantity-$product['product_quantity_refunded']}</div>
-		<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left"><input onchange="checkPartialRefundProductAmount(this)" type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']}]" /> &euro;</div> ({l s='%s refund' sprintf=$product['amount_refund']})
+		<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left"><input onchange="checkPartialRefundProductAmount(this)" type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']}]" /> &euro;</div> {if !empty($product['amount_refund']) && $product['amount_refund'] > 0}({l s='%s refund' sprintf=$product['amount_refund']}){/if}
 		<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
 		<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 	</td>
