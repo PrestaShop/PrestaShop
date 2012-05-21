@@ -179,27 +179,27 @@ abstract class PaymentModuleCore extends Module
 					$order->conversion_rate = $currency->conversion_rate;
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
-					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
-					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
+					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $carrier->id);
+					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $carrier->id);
 
-					$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
-					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
-					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $id_carrier));
+					$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
+					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
+					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
 
-					$order->total_shipping = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
-					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$id_carrier, false, null, $product_list, $id_carrier);
-					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$id_carrier, true, null, $product_list, $id_carrier);
+					$order->total_shipping = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $product_list);
+					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$carrier->id, false, null, $product_list);
+					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $product_list);
 
 					if (!is_null($carrier) && Validate::isLoadedObject($carrier))
 						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-					$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
-					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
-					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
+					$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
+					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
+					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
 
-					$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $id_carrier), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
+					$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $carrier->id), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $carrier->id), 2);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $carrier->id), 2);
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
