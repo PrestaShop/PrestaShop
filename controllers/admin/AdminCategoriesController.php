@@ -156,6 +156,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
 		$this->_select = 'category_shop.`position` ';
 		$this->_join = Shop::addSqlAssociation('category', 'a');
+		$this->_group = 'GROUP BY a.id_category';
 		// we add restriction for shop
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
 			$this->_where = ' AND category_shop.`id_shop` = '.(int)Context::getContext()->shop->id;
