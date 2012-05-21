@@ -128,8 +128,7 @@ class QqUploadedFileForm
 			$imagesTypes = ImageType::getImagesTypes('products');
 			foreach ($imagesTypes as $imageType)
 			{
-				$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
-				if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+				if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 					return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
 			}
 		}
