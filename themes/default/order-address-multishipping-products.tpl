@@ -42,7 +42,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{foreach from=$products item=product name=productLoop}
+		{foreach from=$product_list item=product name=productLoop}
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
