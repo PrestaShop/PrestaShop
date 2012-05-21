@@ -139,7 +139,7 @@ abstract class ControllerCore
 
 		$this->context = Context::getContext();
 		$this->context->controller = $this;
-		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
+		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax') || $this->isXmlHttpRequest();
 	}
 
 	/**
@@ -267,7 +267,6 @@ abstract class ControllerCore
 	 */
 	public function addJS($js_uri)
 	{
-//elog($js_uri);
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
@@ -337,5 +336,14 @@ abstract class ControllerCore
 
 		$this->addCSS($plugin_path['css']);
 		$this->addJS($plugin_path['js']);
+	}
+
+	/**
+	 * @since 1.5
+	 * @return bool return true if Controller is called from XmlHttpRequest
+	 */
+	public function isXmlHttpRequest()
+	{
+		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 	}
 }
