@@ -208,7 +208,6 @@ ALTER TABLE `PREFIX_product` ADD `is_virtual` TINYINT( 1 ) NOT NULL DEFAULT '0' 
 
 /* PHP:add_new_tab(AdminProducts, fr:Produits|es:Productos|en:Products|de:Produkten|it:Prodotti, 1); */;
 /* PHP:add_new_tab(AdminCategories, fr:Catégories|es:Categoria|en:Categories|de:Kategorien|it:Categories, 1); */;
-/* PHP:add_default_restrictions_modules_groups(); */;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_employee_shop` (
 `id_employee` INT( 11 ) UNSIGNED NOT NULL ,
