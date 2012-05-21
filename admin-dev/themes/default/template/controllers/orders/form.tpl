@@ -866,6 +866,17 @@
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
 			addresses_invoice_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_invoice ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
 		});
+		if (addresses.length == 0)
+		{
+			$('#addresses_err').show().html('{l s='You must add at least one address to process the order.'}');
+			$('#address_delivery, #address_invoice').hide();
+		}
+		else
+		{
+			$('#addresses_err').hide();
+			$('#address_delivery, #address_invoice').show();
+		}
+			
 		$('#id_address_delivery').html(addresses_delivery_options);
 		$('#id_address_invoice').html(addresses_invoice_options);
 		$('#address_delivery_detail').html(address_delivery_detail);
@@ -1076,6 +1087,7 @@
 <br />
 <fieldset id="address_part" style="display:none;">
 	<legend><img src="../img/t/AdminAddresses.gif" />{l s='Addresses'}</legend>
+	<div id="addresses_err" class="warn" style="display:none;"></div>
 	<div id="address_delivery">
 		<h3>{l s='Delivery:'}</h3>
 		<select id="id_address_delivery" name="id_address_delivery">
