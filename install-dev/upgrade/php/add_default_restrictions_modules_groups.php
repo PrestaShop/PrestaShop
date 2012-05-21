@@ -27,8 +27,9 @@
 
 function add_default_restrictions_modules_groups()
 {
+	$res = true;
 	// Table module_group had another use in previous versions, we need to clean it up.
-	Db::getInstance()->executeS('TRUNCATE TABLE `'._DB_PREFIX_.'module_group`');
+	$res &= Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'module_group`');
 
 	$groups = Db::getInstance()->executeS('
 		SELECT `id_group`
@@ -51,7 +52,8 @@ function add_default_restrictions_modules_groups()
 					$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
-			Db::getInstance()->execute($sql);
+			$res &= Db::getInstance()->execute($sql);
 		}
 	}
+	return $res;
 }
