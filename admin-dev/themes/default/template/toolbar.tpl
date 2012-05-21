@@ -77,7 +77,8 @@
 						//bind enter key press to validate form
 						$('#{$table}_form').keypress(function (e) {
 							key = window.event ? window.event.keyCode : e.which;
-							if (key == 13 && window.event.target.localName != 'textarea')
+							target = window.event ? window.event.target.localName : e.target.localName
+							if (key == 13 && target != 'textarea')
 								$('#desc-{$table}-save').click();
 						});
 						//submit the form
