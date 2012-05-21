@@ -340,8 +340,8 @@ function updateDisplay()
 			$('#not_impacted_by_discount').show();
 		else
 			$('#not_impacted_by_discount').hide();
-		
-		var taxExclPrice = (display_specific_price ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
+
+		var taxExclPrice = (display_specific_price && display_specific_price >= 0  ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
 
 		if (display_specific_price)
 			productPriceWithoutReduction = priceTaxExclWithoutGroupReduction + selectedCombination['price'] * currencyRate; // Need to be global => no var
@@ -374,7 +374,6 @@ function updateDisplay()
 			if (product_specific_price.reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
 		}
-
 		productPriceWithoutReduction = productPrice * group_reduction;
 
 		productPrice -= reduction;
