@@ -28,8 +28,13 @@
 
 {block name="override_tpl"}
 
-	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
-	
+	<div class="hint" style="display:block;">
+		<ul style="margin-left:30px;list-style-type:disc;">
+			<li>{l s='Click on the titles to open fieldsets'}.</li>
+			<li>{l s='Some sentences to translate uses this syntax: %s...: You must let it in your translations.' sprintf='%d, %s, %1$s, %2$d'}</li>
+		</ul>
+	</div><br /><br />
+
 	{$tinyMCE}
 
 	{if $post_limit_exceeded}
@@ -37,7 +42,7 @@
 		{if $limit_warning['error_type'] == 'suhosin'}
 			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
 
-			<b>{$limit_warning['post.max_vars']}</b>{l s='for suhosin.post.max_vars.'}<br/>
+			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
 		{else}
