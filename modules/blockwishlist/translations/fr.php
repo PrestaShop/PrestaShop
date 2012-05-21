@@ -66,6 +66,7 @@ $_MODULE['<{blockwishlist}prestashop>mywishlist_7098d49878bbd102b13038a748125e27
 $_MODULE['<{blockwishlist}prestashop>mywishlist_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
 $_MODULE['<{blockwishlist}prestashop>sendwishlist_8f4be21ec3cfbba15a349e9c5e888579'] = 'Jeton non valable';
 $_MODULE['<{blockwishlist}prestashop>sendwishlist_90d8a44a1fba13198035d86caeeb2d4d'] = 'Liste de cadeaux invalide';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_072df51ea0cb142b770d6209dab5a85b'] = 'Erreur d\'envoi de liste de cadeaux';
 $_MODULE['<{blockwishlist}prestashop>view_7cff73659ca47fea5d29644da84f35e2'] = 'Jeton non valable';
 $_MODULE['<{blockwishlist}prestashop>view_a9839ad48cf107667f73bad1d651f2ca'] = 'Aucun template trouvé';
 $_MODULE['<{blockwishlist}prestashop>view_641254d77e7a473aa5910574f3f9453c'] = 'Liste de cadeaux';
