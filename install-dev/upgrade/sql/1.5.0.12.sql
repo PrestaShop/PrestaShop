@@ -28,7 +28,6 @@ SET total_amount = odt.unit_amount * od.product_quantity;
 
 /* PHP:add_missing_shop_column_pagenotfound(); */;
 
-/* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
 /* PHP:editorial_update_multishop(); */;
 /* PHP:update_module_product_comments(); */;
 
