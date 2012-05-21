@@ -11,6 +11,7 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_3679e307d4a14646c488a65381de82e
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b2385ac89327dbaeb21d35fa016a3e3e'] = 'Veuillez ajouter un label pour le langage par défaut';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_11ad009c1b7c0615be18fe91185c179a'] = 'Le lien a été ajouté';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_15772d25000bce9fc3a2a2fd7d41a717'] = 'Le lien a été supprimé';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_d1156d9314813566c02aedc3852bdcab'] = 'le lien a été modifié';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_242e9577826290307cd3e45a259172cc'] = 'les modifications seront appliquées à';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_fb9ddcf8de4f32e4db61221d5cebb108'] = 'boutique :';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_540c8f06b80b4ec911505764eb455f4d'] = 'toutes les boutiques';
@@ -32,7 +33,9 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_dbd7201170abec94907af0cc1680d22
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_9f1b01ac44ff287d5b8ed20ec8ee180b'] = 'Ajouter un lien';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b021df6aac4654c454f46c77646e745f'] = 'Label';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_97e7c9a7d06eac006a28bf05467fcc8b'] = 'Lien';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_4994a8ffeba4ac3140beb89e8d41f174'] = 'Langue';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_7a115fe2bd8b94ead1550a2da953cf87'] = 'Nouvelle fenêtre';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_5c99ba0242e549e14a00ad361de435d1'] = 'Ajouter';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_814579fdad9baf2cdcac456468265384'] = 'Liste des liens';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_4443702c8a13a65ac66d074b7a82af9a'] = 'ID Lien';

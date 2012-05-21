@@ -534,7 +534,6 @@ $_LANG['order-payment_ec211f7c20af43e742bf2570c3cb84f9'] = 'Ajouter';
 $_LANG['order-payment_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_LANG['order-payment_f5bf48aa40cad7891eb709fcf1fde128'] = 'produit';
 $_LANG['order-payment_f7b96335c6a33477579e43f3da368507'] = 'Profitez de nos offres';
-$_LANG['order-return_17806a71d233a243594b1210af57c245'] = 'Liste des produits faisant l\'objet d\'un retour :';
 $_LANG['order-return_1ac6ee29e9e68fb71bad91c1d34348cc'] = '%s :';
 $_LANG['order-return_1ca819fd1ccd9dfc3a091c66b778271f'] = 'Tous les produits doivent être retournés dans leur emballage et leur état d\'origine.';
 $_LANG['order-return_2a161a7d653aa950ebe6e3637e036048'] = 'Vous devez attendre notre confirmation avant de nous retourner les produits.';
