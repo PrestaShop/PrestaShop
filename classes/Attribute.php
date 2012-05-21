@@ -148,6 +148,8 @@ class AttributeCore extends ObjectModel
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
 			'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
 			ORDER BY agl.`name` ASC, a.`position` ASC
 		');

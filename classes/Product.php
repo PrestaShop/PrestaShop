@@ -2834,6 +2834,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON a.`id_attribute` = al.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON ag.`id_attribute_group` = agl.`id_attribute_group`
+				'.Shop::addSqlAssociation('attribute', 'a').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 					AND al.`id_lang` = '.(int)$id_lang.'
 					AND agl.`id_lang` = '.(int)$id_lang.'
@@ -4592,6 +4593,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				'.Shop::addSqlAssociation('attribute', 'pac').'
 				WHERE pa.`id_product` = '.(int)$id_product.'
 				AND a.`id_attribute` NOT IN('.implode(', ', $tab_id_attribute).')');
 				$result = array_merge($values_not_custom, $result);
@@ -4610,6 +4612,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 					ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				'.Shop::addSqlAssociation('attribute', 'pac').'
 				WHERE pa.`id_product` = '.(int)$id_product);
 			}
 		}
@@ -4627,6 +4630,7 @@ class ProductCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
+			'.Shop::addSqlAssociation('attribute', 'pac').'
 			WHERE pa.`id_product` = '.(int)$id_product);
 		}
 		return $result;
