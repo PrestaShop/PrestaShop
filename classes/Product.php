@@ -1066,6 +1066,10 @@ class ProductCore extends ObjectModel
 		if (!$id_product_attribute || !$result)
 			return false;
 
+		if ($this->getType() == Product::PTYPE_VIRTUAL)
+			StockAvailable::setProductOutOfStock((int)$this->id, 1, null, $id_product_attribute);
+		else
+			StockAvailable::setProductOutOfStock((int)$this->id, 2, null, $id_product_attribute);
 		return $id_product_attribute;
 	}
 
