@@ -698,11 +698,11 @@ class CartRuleCore extends ObjectModel
 	/**
 	 * The reduction value is POSITIVE
 	 *
-	 * @param bool $useTax
+	 * @param bool $use_tax
 	 * @param Context $context
 	 * @return float|int|string
 	 */
-	public function getContextualValue($useTax, Context $context = null, $filter = null, $package = null)
+	public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -720,7 +720,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
 		{
 			if (!$this->carrier_restriction)
-				$reduction_value += $context->cart->getPackageShippingCost(is_null($package) ? null : $package['id_carrier'], $useTax, $context->country, is_null($package) ? null : $package['products']);
+				$reduction_value += $context->cart->getPackageShippingCost(is_null($package) ? null : $package['id_carrier'], $use_tax, $context->country, is_null($package) ? null : $package['products']);
 			else
 			{
 				$data = Db::getInstance()->executeS('
@@ -731,7 +731,7 @@ class CartRuleCore extends ObjectModel
 
 				if ($data)
 					foreach ($data as $cart_rule)
-						$reduction_value += $context->cart->getCarrierCost((int)$cart_rule['id_carrier'], $useTax, $context->country);
+						$reduction_value += $context->cart->getCarrierCost((int)$cart_rule['id_carrier'], $use_tax, $context->country);
 			}
 		}
 
@@ -741,9 +741,9 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_percent && $this->reduction_product == 0)
 			{
 				// Do not give a reduction on free products!
-				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $package_products);
+				$order_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
-					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT, $package), 2);
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), 2);
 
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
@@ -753,7 +753,7 @@ class CartRuleCore extends ObjectModel
 			{
 				foreach ($package_products as $product)
 					if ($product['id_product'] == $this->reduction_product)
-						$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
+						$reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
 
 			// Discount (%) on the cheapest product
@@ -763,7 +763,7 @@ class CartRuleCore extends ObjectModel
 				$cheapest_product = null;
 				foreach ($all_products as $product)
 				{
-					$price = ($useTax ? $product['price_wt'] : $product['price']);
+					$price = ($use_tax ? $product['price_wt'] : $product['price']);
 					if ($price > 0 && ($minPrice === false || $minPrice > $price))
 					{
 						$minPrice = $price;
@@ -790,7 +790,7 @@ class CartRuleCore extends ObjectModel
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
-							$price = ($useTax ? $product['price_wt'] : $product['price']);
+							$price = ($use_tax ? $product['price_wt'] : $product['price']);
 							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
 				$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
@@ -801,7 +801,7 @@ class CartRuleCore extends ObjectModel
 			{
 				$prorata = 1;
 				if (!is_null($package))
-					$prorata = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $package['products']) / $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS);
+					$prorata = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package['products']) / $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
 
 				$reduction_amount = $this->reduction_amount;
 				// If we need to convert the voucher value to the cart currency
@@ -821,7 +821,7 @@ class CartRuleCore extends ObjectModel
 				}
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!
-				if ($this->reduction_tax == $useTax)
+				if ($this->reduction_tax == $use_tax)
 					$reduction_value += $prorata * $reduction_amount;
 				else
 				{
@@ -839,9 +839,9 @@ class CartRuleCore extends ObjectModel
 								else
 									$product_vat_rate = $product_vat_amount / $product_price_te;
 
-								if ($this->reduction_tax && !$useTax)
+								if ($this->reduction_tax && !$use_tax)
 									$reduction_value += $prorata * $reduction_amount / (1 + $product_vat_rate);
-								elseif (!$this->reduction_tax && $useTax)
+								elseif (!$this->reduction_tax && $use_tax)
 									$reduction_value += $prorata * $reduction_amount * (1 + $product_vat_rate);
 							}
 					}
@@ -859,9 +859,9 @@ class CartRuleCore extends ObjectModel
 						else
 							$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
 
-						if ($this->reduction_tax && !$useTax)
+						if ($this->reduction_tax && !$use_tax)
 							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);
-						elseif (!$this->reduction_tax && $useTax)
+						elseif (!$this->reduction_tax && $use_tax)
 							$reduction_value += $prorata * $reduction_amount * (1 + $cart_average_vat_rate);
 					}
 					/*
@@ -887,7 +887,7 @@ class CartRuleCore extends ObjectModel
 						|| CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0
 						|| $id_address == 0)
 					{
-						$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
+						$reduction_value += ($use_tax ? $product['price_wt'] : $product['price']);
 						if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0)
 							CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
 					}
