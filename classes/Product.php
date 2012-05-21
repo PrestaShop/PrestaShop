@@ -2426,6 +2426,7 @@ class ProductCore extends ObjectModel
 								WHERE pa.id_product = '.(int)$id_product.'
 								AND product_attribute_shop.default_on = 1
 								GROUP BY pa.id_product_attribute
+								LIMIT 1
 							),
 							0
 						) AS attribute_price'
