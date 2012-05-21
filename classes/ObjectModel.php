@@ -473,7 +473,9 @@ abstract class ObjectModelCore
 		if (!empty($this->def['multilang']))
 		{
 			$fields = $this->getFieldsLang();
-			$shops = Shop::getShops(true, null, true);
+
+			// @todo : try to do something better than this
+			$shops = Shop::getCompleteListOfShopsID();
 			if ($fields && is_array($fields))
 				foreach ($fields as $field)
 				{
