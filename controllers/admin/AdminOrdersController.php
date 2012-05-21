@@ -1272,7 +1272,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currencies' => Currency::getCurrencies(),
 			'previousOrder' => $order->getPreviousOrderId(),
 			'nextOrder' => $order->getNextOrderId(),
-			'currentIndex' => self::$currentIndex,
+			'current_index' => self::$currentIndex,
 			'carrierModuleCall' => $carrier_module_call,
 			'iso_code_lang' => $this->context->language->iso_code,
 			'id_lang' => $this->context->language->id,
@@ -1631,7 +1631,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $invoice_collection,
 			'current_id_lang' => Context::getContext()->language->id,
 			'link' => Context::getContext()->link,
-			'currentIndex' => self::$currentIndex
+			'current_index' => self::$currentIndex
 		));
 
 		die(Tools::jsonEncode(array(
@@ -1767,6 +1767,8 @@ class AdminOrdersControllerCore extends AdminController
 			$res &= $order->update();
 		}
 
+		$old_quantity = $order_detail->product_quantity;
+
 		$order_detail->product_quantity = $product_quantity;
 		// Save order detail
 		$res &= $order_detail->update();
@@ -1781,6 +1783,9 @@ class AdminOrdersControllerCore extends AdminController
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+
+		// Update product available quantity
+		StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], ($old_quantity - $product['product_quantity']), $order->id_shop);
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
