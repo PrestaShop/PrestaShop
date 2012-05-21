@@ -700,6 +700,8 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestriction($share = false, $alias = null)
 	{
+		if (!Shop::isFeatureActive())
+			return;
 		if ($alias)
 			$alias .= '.';
 
@@ -745,6 +747,8 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
+		if (!Shop::isFeatureActive())
+			return;
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
