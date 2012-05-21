@@ -136,15 +136,13 @@ abstract class PaymentModuleCore extends Module
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
 					foreach ($data['package_list'] as $id_package)
-					{
 						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
-					}
-			
+
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
 				{
-					$product_list = $package['product_list'];
 					$order = new Order();
+					$order->product_list = $package['product_list'];
 					
 					$carrier = null;
 					if (!$cart->isVirtualCart() && isset($package['id_carrier']))
@@ -177,27 +175,28 @@ abstract class PaymentModuleCore extends Module
 					$order->conversion_rate = $currency->conversion_rate;
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
-					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $carrier->id);
-					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $carrier->id);
+					
+					$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrier->id);
+					$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrier->id);
 
-					$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
-					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
-					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $product_list, $carrier->id));
+					$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $carrier->id));
+					$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $carrier->id));
+					$order->total_discounts = $order->total_discounts_tax_incl;
 
-					$order->total_shipping = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $product_list);
-					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$carrier->id, false, null, $product_list);
-					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $product_list);
-
+					$order->total_shipping_tax_excl = (float)$cart->getPackageShippingCost((int)$carrier->id, false, null, $order->product_list);
+					$order->total_shipping_tax_incl = (float)$cart->getPackageShippingCost((int)$carrier->id, true, null, $order->product_list);
+					$order->total_shipping = $order->total_shipping_tax_incl;
+					
 					if (!is_null($carrier) && Validate::isLoadedObject($carrier))
 						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-					$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
-					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
-					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $carrier->id));
+					$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $carrier->id));
+					$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrier->id));
+					$order->total_wrapping = $order->total_wrapping_tax_incl;
 
-					$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $carrier->id), 2);
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $carrier->id), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $carrier->id), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrier->id), 2);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrier->id), 2);
+					$order->total_paid = $order->total_paid_tax_incl;
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
@@ -223,7 +222,7 @@ abstract class PaymentModuleCore extends Module
 
 					// Insert new Order detail list using cart for the current order
 					$order_detail = new OrderDetail(null, null, $this->context);
-					$order_detail->createList($order, $cart, $id_order_state, $product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
+					$order_detail->createList($order, $cart, $id_order_state, $order->product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
 					$order_detail_list[] = $order_detail;
 
 					// Adding an entry in order_carrier table
@@ -322,63 +321,18 @@ abstract class PaymentModuleCore extends Module
 					} // end foreach ($products)
 
 					$cart_rules_list = '';
-					$cart_rules = $cart->getCartRules();
-					$total_cart_rules = array('tax_incl' => 0, 'tax_excl' => 0);
-					foreach ($cart_rules as $cart_rule)
+					foreach ($cart->getCartRules() as $cart_rule)
 					{
-						$values = array('tax_incl' => 0, 'tax_excl' => 0);
+						$values = array(
+							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $order->product_list),
+							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $order->product_list)
+						);
 
-						// If the cart is split in multiple orders, the cart rule must be split too
-						if (count($order_list) > 1)
-						{
-							// If the cart rule is a fee gift, then add the free gift value only if the gift is in this order
-							if ((int)$cart_rule['obj']->gift_product && !$only_one_gift)
-							{
-								$in_order = (bool)Db::getInstance()->getValue('
-								SELECT product_id
-								FROM '._DB_PREFIX_.'order_detail
-								WHERE product_id = '.(int)$cart_rule['obj']->gift_product.'
-								AND product_attribute_id = '.(int)$cart_rule['obj']->gift_product_attribute.'
-								AND id_order = '.(int)$order->id);
-
-								if ($in_order)
-								{
-									$values['tax_incl'] += $cart_rule['obj']->getContextualValue(true, null, CartRule::FILTER_ACTION_GIFT);
-									$values['tax_excl'] += $cart_rule['obj']->getContextualValue(false, null, CartRule::FILTER_ACTION_GIFT);
-									$only_one_gift = true;
-								}
-							}
-
-							// If the cart rule offers free shipping, add the shipping cost
-							if ($cart_rule['obj']->free_shipping)
-							{
-								$values['tax_incl'] += $order->total_shipping_tax_incl;
-								$values['tax_excl'] += $order->total_shipping_tax_excl;
-							}
-
-							// If the cart rule offers a reduction, the amount is prorated
-							if ($cart_rule['obj']->reduction_amount || $cart_rule['obj']->reduction_percent)
-							{
-								$prorata = $order->total_paid_tax_incl / $cart_total_paid;
-								$values['tax_incl'] += Tools::ps_round($prorata * $cart_rule['obj']->getContextualValue(true, null, CartRule::FILTER_ACTION_REDUCTION), 2);
-								$values['tax_excl'] += Tools::ps_round($prorata * $cart_rule['obj']->getContextualValue(false, null, CartRule::FILTER_ACTION_REDUCTION), 2);
-							}
-						}
-						else
-						{
-							$values = array(
-								'tax_incl' => $cart_rule['obj']->getContextualValue(true),
-								'tax_excl' => $cart_rule['obj']->getContextualValue(false)
-							);
-						}
-
-						// If the reduction is not applicable to this order (in a multi-shipping case), then try the next
+						// If the reduction is not applicable to this order, then continue with the next one
 						if (!$values['tax_excl'])
 							continue;
 
-						$total_cart_rules['tax_incl'] += $values['tax_incl'];
-						$total_cart_rules['tax_excl'] += $values['tax_excl'];
-
+						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
 						/* IF
 						** - This is not multi-shipping
@@ -422,12 +376,6 @@ abstract class PaymentModuleCore extends Module
 								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order ', (int)$order->id_lang).$order->reference, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
 							}
 						}
-
-						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
-
-						$order->total_discounts = $order->total_discounts_tax_incl = round($total_cart_rules['tax_incl'], 9);
-						$order->total_discounts_tax_excl = round($total_cart_rules['tax_excl'], 9);
-						$order->update();
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{

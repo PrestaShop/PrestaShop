@@ -699,7 +699,7 @@ class CartRuleCore extends ObjectModel
 	 * @param Context $context
 	 * @return float|int|string
 	 */
-	public function getContextualValue($useTax, Context $context = null, $filter = null)
+	public function getContextualValue($useTax, Context $context = null, $filter = null, $products = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -735,9 +735,9 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_percent && $this->reduction_product == 0)
 			{
 				// Do not give a reduction on free products!
-				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS);
+				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
-					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT), 2);
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT, $products), 2);
 
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
@@ -745,7 +745,8 @@ class CartRuleCore extends ObjectModel
 			// Discount (%) on a specific product
 			if ($this->reduction_percent && $this->reduction_product > 0)
 			{
-				foreach ($context->cart->getProducts() as $product)
+				$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
+				foreach ($products2 as $product)
 					if ($product['id_product'] == $this->reduction_product)
 						$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
@@ -754,13 +755,25 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_percent && $this->reduction_product == -1)
 			{
 				$minPrice = false;
-				foreach ($context->cart->getProducts() as $product)
+				$cheapest_product = null;
+				$products2 = $context->cart->getProducts();
+				foreach ($products2 as $product)
 				{
 					$price = ($useTax ? $product['price_wt'] : $product['price']);
 					if ($price > 0 && ($minPrice === false || $minPrice > $price))
+					{
 						$minPrice = $price;
+						$cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
+					}
 				}
-				$reduction_value += $minPrice * $this->reduction_percent / 100;
+				
+				// Check if the cheapest product is in the package
+				$in_package = false;
+				foreach ($products as $product)
+					if ($product['id_product'].'-'.$product['id_product_attribute'] == $cheapest_product || $product['id_product'].'-0' == $cheapest_product)
+						$in_package = true;
+				if ($in_package)
+					$reduction_value += $minPrice * $this->reduction_percent / 100;
 			}
 
 			// Discount (%) on the selection of products
@@ -768,8 +781,9 @@ class CartRuleCore extends ObjectModel
 			{
 				$selected_products_reduction = 0;
 				$selected_products = $this->checkProductRestrictions($context, true);
+				$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
 				if (is_array($selected_products))
-					foreach ($context->cart->getProducts() as $product)
+					foreach ($products2 as $product)
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
@@ -855,7 +869,8 @@ class CartRuleCore extends ObjectModel
 		// Free gift
 		if ((int)$this->gift_product && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_GIFT))
 		{
-			foreach ($context->cart->getProducts() as $product)
+			$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
+			foreach ($products2 as $product)
 				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
 					$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
 		}

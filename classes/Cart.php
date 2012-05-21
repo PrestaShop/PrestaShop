@@ -1425,7 +1425,8 @@ class CartCore extends ObjectModel
 
 		$order_total_discount = 0;
 		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
-		{			
+		{
+			// First, retrieve the cart rules associated to this "getOrderTotal"
 			if ($with_shipping)
 				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
 			else
@@ -1443,14 +1444,32 @@ class CartCore extends ObjectModel
 				}
 			}				
 	
+			// Then, calculate the contextual value for each one
 			foreach ($cart_rules as $cart_rule)
-				if ($with_shipping)
+			{
+				// If the cart rule offers free shipping, add the shipping cost
+				if ($with_shipping && $cart_rule['obj']->free_shipping)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_ALL), 2);
-				else
+
+				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
+				if ((int)$cart_rule['obj']->gift_product)
 				{
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION), 2);
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_GIFT), 2);
+					$in_order = false;
+					if (is_null($products))
+						$in_order = true;
+					else
+						foreach ($products as $products)
+							if ($cart_rule['obj']->gift_product == $product['id_product'] && ($cart_rule['obj']->gift_product_attribute == 0 || $cart_rule['obj']->gift_product_attribute = $product['id_product_attribute']))
+								$in_order = true;
+
+					if ($in_order)
+						$order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, null, CartRule::FILTER_ACTION_GIFT);
 				}
+
+				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
+				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $products), 2);
+			}
 
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
