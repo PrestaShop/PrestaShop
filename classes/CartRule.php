@@ -593,10 +593,7 @@ class CartRuleCore extends ObjectModel
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-					//		p($matchingProductsList);
-				//			p($eligibleProductsList);
 							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
-//							d($eligibleProductsList);
 							break;
 						case 'categories':
 							$cartCategories = Db::getInstance()->executeS('
@@ -890,6 +887,7 @@ class CartRuleCore extends ObjectModel
 						$reduction_value += ($use_tax ? $product['price_wt'] : $product['price']);
 						if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0)
 							CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
+						break;
 					}
 				}
 		}

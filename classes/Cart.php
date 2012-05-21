@@ -1442,8 +1442,11 @@ class CartCore extends ObjectModel
 					if (!$flag)
 						$cart_rules[] = $tmp_cart_rule;
 				}
-			}				
+			}
 
+			$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
+			$package = array('id_carrier' => $id_carrier, 'id_address' => $id_address_delivery, 'products' => $products);
+			
 			// Then, calculate the contextual value for each one
 			foreach ($cart_rules as $cart_rule)
 			{
@@ -1463,14 +1466,12 @@ class CartCore extends ObjectModel
 								$in_order = true;
 
 					if ($in_order)
-						$order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, null, CartRule::FILTER_ACTION_GIFT);
+						$order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, null, CartRule::FILTER_ACTION_GIFT, $package);
 				}
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 				{
-					$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
-					$package = array('id_carrier' => $id_carrier, 'id_address' => $id_address_delivery, 'products' => $products);
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package), 2);
 				}
 			}
@@ -2700,6 +2701,8 @@ class CartCore extends ObjectModel
 						$gift_product['total'] = 0;
 						$gift_product['gift'] = true;
 						$gift_products[] = $gift_product;
+						
+						break; // One gift product per cart rule
 					}
 			}
 		}
