@@ -547,8 +547,7 @@ abstract class ObjectModelCore
 			{
 				$fields['id_shop'] = (int)$id_shop;
 				$all_fields['id_shop'] = (int)$id_shop;
-				$where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
-				$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
+				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values, true, Db::REPLACE);
 			}
 		}
 
