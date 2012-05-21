@@ -77,6 +77,10 @@ class Autoload
 	 */
 	public function load($classname)
 	{
+		// Smarty uses its own autoloader, so we exclude all Smarty classes
+		if (strpos(strtolower($classname), 'smarty_') === 0)
+			return;
+
 		// regenerate the class index if the requested class is not found in the index or if the requested file doesn't exists
 		if (!isset($this->index[$classname])
 			|| ($this->index[$classname] && !is_file($this->root_dir.$this->index[$classname]))
