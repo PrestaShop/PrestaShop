@@ -970,6 +970,7 @@
 			<tbody>
 			</tbody>
 		</table>
+		<p><b>{l s='The prices are without taxes.'}</b></p>
 	</div>
 	<div>
 		<p><label for="id_currency">{l s='Currency:'}</label>
