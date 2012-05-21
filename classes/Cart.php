@@ -1424,7 +1424,7 @@ class CartCore extends ObjectModel
 		}
 
 		$order_total_discount = 0;
-		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
+		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
 		{
 			// First, retrieve the cart rules associated to this "getOrderTotal"
 			if ($with_shipping)
@@ -2664,11 +2664,7 @@ class CartCore extends ObjectModel
 			{
 				$cart_rule['value_real'] -= $total_shipping;
 				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
-				
-				// Update total discounts
-				$total_discounts = Tools::ps_round($total_discounts - $total_shipping, (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-				$total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $total_shipping_tax_exc, (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-				
+
 				// Update total shipping
 				$total_shipping = 0;
 				$total_shipping_tax_exc = 0;
