@@ -660,36 +660,30 @@ class ShopCore extends ObjectModel
 	{
 		// Always use global context for mono-shop mode
 		if (!Shop::isFeatureActive())
+			$type = self::CONTEXT_ALL;
+
+		switch ($type)
 		{
-			self::$context_id_shop = (int)Context::getContext()->shop->id;
-			self::$context_id_shop_group = (int)Context::getContext()->shop->id_shop_group;
-			self::$context = self::CONTEXT_ALL;
+			case self::CONTEXT_ALL :
+				self::$context_id_shop = null;
+				self::$context_id_shop_group = null;
+			break;
+
+			case self::CONTEXT_GROUP :
+				self::$context_id_shop = null;
+				self::$context_id_shop_group = (int)$id;
+			break;
+
+			case self::CONTEXT_SHOP :
+				self::$context_id_shop = (int)$id;
+				self::$context_id_shop_group = Shop::getGroupFromShop($id);
+			break;
+
+			default :
+				throw new PrestaShopException('Unknown context for shop');
 		}
-		else
-		{
-			switch ($type)
-			{
-				case self::CONTEXT_ALL :
-					self::$context_id_shop = null;
-					self::$context_id_shop_group = null;
-				break;
 
-				case self::CONTEXT_GROUP :
-					self::$context_id_shop = null;
-					self::$context_id_shop_group = (int)$id;
-				break;
-
-				case self::CONTEXT_SHOP :
-					self::$context_id_shop = (int)$id;
-					self::$context_id_shop_group = Shop::getGroupFromShop($id);
-				break;
-
-				default :
-					throw new PrestaShopException('Unknown context for shop');
-			}
-
-			self::$context = $type;
-		}
+		self::$context = $type;
 	}
 
 	public static function getContext()
@@ -718,7 +712,7 @@ class ShopCore extends ObjectModel
 		if ($alias)
 			$alias .= '.';
 
-		if ($share == Shop::SHARE_CUSTOMER)
+		if ($share == Shop::SHARE_CUSTOMER && Shop::getContext() == Shop::CONTEXT_SHOP)
 			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
