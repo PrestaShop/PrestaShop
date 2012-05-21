@@ -806,10 +806,22 @@ class ShopCore extends ObjectModel
 					if (isset($row['primary']))
 						unset($res[$row['primary']]);
 
-					$keys = implode('`, `', array_keys($res));
-					$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, '.$id.')
+					$categories = Tools::getValue('categoryBox');
+					if ($table_name == 'product_shop' && count($categories) > 0)
+					{
+						unset($res['id_category_default']);
+						$keys = implode('`, `', array_keys($res));
+						$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, `id_category_default`, '.$id.')
+								(SELECT `'.$keys.'`, '.(int)$categories[0].', '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
+								WHERE `'.$id.'` = '.(int)$old_id.')';
+					}
+					else
+					{
+						$keys = implode('`, `', array_keys($res));
+						$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$table_name.'` (`'.$keys.'`, '.$id.')
 								(SELECT `'.$keys.'`, '.(int)$this->id.' FROM '._DB_PREFIX_.$table_name.'
 								WHERE `'.$id.'` = '.(int)$old_id.')';
+					}
 					Db::getInstance()->execute($sql);
 				}
 			}
