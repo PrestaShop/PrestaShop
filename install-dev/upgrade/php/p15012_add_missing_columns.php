@@ -121,7 +121,6 @@ function p15012_add_missing_columns()
   $q_list['orders']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `id_shop_group` id_shop_group int(11) unsigned NOT NULL DEFAULT "1"';
 
-
   $q_list['product']['unity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `unity` unity varchar(255) DEFAULT NULL';
 
@@ -157,22 +156,6 @@ function p15012_add_missing_columns()
 
   $q_list['carrier']['need_range']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'carrier`
 		CHANGE `need_range` need_range tinyint(1) unsigned NOT NULL DEFAULT "0" AFTER shipping_external';
-
-
-/* 
-  $q_list['cart_product']['']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'TABLE `
-		DROP ``';
-	$q_list['TABLE']['']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'TABLE `
-		DROP ``';
-	$q_list['TABLE']['']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'TABLE `
-		DROP ``';
-	$q_list['TABLE']['']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'TABLE `
-		DROP ``';
-	$q_list['TABLE']['']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'TABLE `
-		DROP ``';
- */
-	// column must NOT exists
-
 
 	foreach($q_list as $table => $cols)
 	{
