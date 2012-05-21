@@ -139,6 +139,7 @@ abstract class ControllerCore
 
 		$this->context = Context::getContext();
 		$this->context->controller = $this;
+		// Usage of ajax parameter is deprecated
 		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax') || $this->isXmlHttpRequest();
 	}
 
