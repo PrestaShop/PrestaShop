@@ -1154,13 +1154,6 @@ CREATE TABLE `PREFIX_order_detail` (
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_order_tax` (
-  `id_order` int(11) NOT NULL,
-  `tax_name` varchar(40) NOT NULL,
-  `tax_rate` decimal(6,3) NOT NULL,
-  `amount` decimal(20,6) NOT NULL
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
