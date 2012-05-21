@@ -1443,13 +1443,13 @@ class CartCore extends ObjectModel
 						$cart_rules[] = $tmp_cart_rule;
 				}
 			}				
-	
+
 			// Then, calculate the contextual value for each one
 			foreach ($cart_rules as $cart_rule)
 			{
 				// If the cart rule offers free shipping, add the shipping cost
 				if ($with_shipping && $cart_rule['obj']->free_shipping)
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_ALL), 2);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING), 2);
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
 				if ((int)$cart_rule['obj']->gift_product)
@@ -1474,7 +1474,7 @@ class CartCore extends ObjectModel
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package), 2);
 				}
 			}
-
+			
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
