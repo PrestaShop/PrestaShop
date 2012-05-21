@@ -150,11 +150,11 @@
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
 				<li>
-					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
+					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 					<label for="active_on" class="radioCheck">{l s='Enabled'}</label>
 				</li>
 				<li>
-					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
+					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 					<label for="active_off" class="radioCheck">{l s='Disabled'}</label>
 				</li>
 			</ul>
