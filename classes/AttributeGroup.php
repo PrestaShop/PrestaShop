@@ -43,7 +43,6 @@ class AttributeGroupCore extends ObjectModel
 		'table' => 'attribute_group',
 		'primary' => 'id_attribute_group',
 		'multilang' => true,
-		'multishop' => true,
 		'fields' => array(
 			'is_color_group' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'group_type' => 	array('type' => self::TYPE_STRING),
