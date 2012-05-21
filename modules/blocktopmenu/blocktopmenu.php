@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require dirname(__FILE__).'/menutoplinks.class.php';
+require (dirname(__FILE__).'/menutoplinks.class.php');
 
 class Blocktopmenu extends Module
 {
@@ -52,7 +52,7 @@ class Blocktopmenu extends Module
 	{
 		$this->name = 'blocktopmenu';
 		$this->tab = 'front_office_features';
-		$this->version = 1.4;
+		$this->version = 1.5;
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -79,15 +79,15 @@ class Blocktopmenu extends Module
 			`id_linksmenutop` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			`id_shop` INT UNSIGNED NOT NULL,
 			`new_window` TINYINT( 1 ) NOT NULL,
-			`link` VARCHAR( 128 ) NOT NULL,
 			INDEX (`id_shop`)
 		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;') &&
-		Db::getInstance()->execute('
+			Db::getInstance()->execute('
 			 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
 			`id_linksmenutop` INT NOT NULL,
 			`id_lang` INT NOT NULL,
 			`id_shop` INT NOT NULL,
 			`label` VARCHAR( 128 ) NOT NULL ,
+			`link` VARCHAR( 128 ) NOT NULL ,
 			INDEX ( `id_linksmenutop` , `id_lang`, `id_shop`)
 		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;'));
 	}
@@ -116,6 +116,7 @@ class Blocktopmenu extends Module
 		$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
 
 		$labels = Tools::getValue('label') ? array_filter(Tools::getValue('label'), 'strlen') : array();
+		$links_label = Tools::getValue('link') ? array_filter(Tools::getValue('link'), 'strlen') : array();
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
 		$divLangName = 'link_label';
 
@@ -130,9 +131,9 @@ class Blocktopmenu extends Module
 		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
 
-			if ((Tools::getValue('link') == '') && (!count($labels)))
+			if ((!count($links_label)) && (!count($labels)))
 				;
-			else if (Tools::getValue('link') == '')
+			else if (!count($links_label))
 				$this->_html .= $this->displayError($this->l('Please, fill the "Link" field'));
 			else if (!count($labels))
 				$this->_html .= $this->displayError($this->l('Please add a label'));
@@ -150,6 +151,24 @@ class Blocktopmenu extends Module
 			MenuTopLinks::remove($id_linksmenutop, (int)Shop::getContextShopID());
 			Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_linksmenutop.',', 'LNK'.$id_linksmenutop), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
 			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
+		}
+		else if (Tools::isSubmit('submitBlocktopmenuEdit'))
+		{
+			$id_linksmenutop = (int)Tools::getValue('id_linksmenutop', 0);
+			$id_shop = (int)Shop::getContextShopID();
+
+			if (!Tools::isSubmit('link'))
+			{
+				$tmp = MenuTopLinks::getLinkLang($id_linksmenutop, $id_shop);
+				$links_label_edit = $tmp['link'];
+				$labels_edit = $tmp['label'];
+				$new_window_edit = $tmp['new_window'];
+			}
+			else
+			{
+				MenuTopLinks::update(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)$id_shop, (int)$id_linksmenutop, (int)$id_linksmenutop);
+				$this->_html .= $this->displayConfirmation($this->l('The link has been edited'));
+			}
 		}
 
 		$this->_html .= '
@@ -172,59 +191,59 @@ class Blocktopmenu extends Module
 						<tr>
 							<td>
 								<select multiple="multiple" id="items" style="width: 300px; height: 160px;">';
-								$this->makeMenuOption();
-								$this->_html .= '</select><br/>
+		$this->makeMenuOption();
+		$this->_html .= '</select><br/>
 								<br/>
 								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Remove').' &gt;&gt;</a>
 							</td>
 							<td style="padding-left: 20px;">
 								<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 
-								// BEGIN CMS
-								$this->_html .= '<optgroup label="'.$this->l('CMS').'">';
-								$this->getCMSOptions(0, 1, $id_lang);
-								$this->_html .= '</optgroup>';
+		// BEGIN CMS
+		$this->_html .= '<optgroup label="'.$this->l('CMS').'">';
+		$this->getCMSOptions(0, 1, $id_lang);
+		$this->_html .= '</optgroup>';
 
-								// BEGIN SUPPLIER
-								$this->_html .= '<optgroup label="'.$this->l('Supplier').'">';
-								$suppliers = Supplier::getSuppliers(false, $id_lang);
-								foreach ($suppliers as $supplier)
-									$this->_html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
-								$this->_html .= '</optgroup>';
+		// BEGIN SUPPLIER
+		$this->_html .= '<optgroup label="'.$this->l('Supplier').'">';
+		$suppliers = Supplier::getSuppliers(false, $id_lang);
+		foreach ($suppliers as $supplier)
+			$this->_html .= '<option value="SUP'.$supplier['id_supplier'].'">'.$spacer.$supplier['name'].'</option>';
+		$this->_html .= '</optgroup>';
 
-								// BEGIN Manufacturer
-								$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
-								$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
-								foreach ($manufacturers as $manufacturer)
-									$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
-								$this->_html .= '</optgroup>';
+		// BEGIN Manufacturer
+		$this->_html .= '<optgroup label="'.$this->l('Manufacturer').'">';
+		$manufacturers = Manufacturer::getManufacturers(false, $id_lang);
+		foreach ($manufacturers as $manufacturer)
+			$this->_html .= '<option value="MAN'.$manufacturer['id_manufacturer'].'">'.$spacer.$manufacturer['name'].'</option>';
+		$this->_html .= '</optgroup>';
 
-								// BEGIN Categories
-								$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
-								$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
-								$this->_html .= '</optgroup>';
+		// BEGIN Categories
+		$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
+		$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
+		$this->_html .= '</optgroup>';
 
-								// BEGIN Products
-								$this->_html .= '<optgroup label="'.$this->l('Products').'">';
-									$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose ID product').'</option>';
-								$this->_html .= '</optgroup>';
+		// BEGIN Products
+		$this->_html .= '<optgroup label="'.$this->l('Products').'">';
+		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose ID product').'</option>';
+		$this->_html .= '</optgroup>';
 
-								// BEGIN Menu Top Links
-								$this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
-								$links = MenuTopLinks::gets($id_lang, null, (int)Shop::getContextShopID());
-								foreach ($links as $link)
-								{
-									if ($link['label'] == '')
-									{
-										$link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
-										$this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
-									}
-									else
-										$this->_html .= '<option value="LNK'.$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
-								}
-								$this->_html .= '</optgroup>';
+		// BEGIN Menu Top Links
+		$this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
+		$links = MenuTopLinks::gets($id_lang, null, (int)Shop::getContextShopID());
+		foreach ($links as $link)
+		{
+			if ($link['label'] == '')
+			{
+				$link = MenuTopLinks::get($link['id_linksmenutop'], $default_language, (int)Shop::getContextShopID());
+				$this->_html .= '<option value="LNK'.(int)$link[0]['id_linksmenutop'].'">'.$spacer.$link[0]['label'].'</option>';
+			}
+			else
+				$this->_html .= '<option value="LNK'.(int)$link['id_linksmenutop'].'">'.$spacer.$link['label'].'</option>';
+		}
+		$this->_html .= '</optgroup>';
 
-								$this->_html .= '</select><br />
+		$this->_html .= '</select><br />
 								<br />
 								<a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Add').'</a>
 							</td>
@@ -289,29 +308,45 @@ class Blocktopmenu extends Module
 		<fieldset>
 			<legend><img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
-				<label>'.$this->l('Label').'</label>
-				<div class="margin-form">';
-				foreach ($languages as $language)
-				{
-					$this->_html .= '
-					<div id="link_label_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang ? 'block' : 'none').';float: left;">
-						<input type="text" name="label['.$language['id_lang'].']" id="label_'.$language['id_lang'].'" size="70" value="'.(isset($labels[$language['id_lang']]) ? (int)$labels[$language['id_lang']] : '').'" />
-					</div>';
-				 }
-				$this->_html .= $this->displayFlags($languages, (int)$id_lang, $divLangName, 'link_label', true);
 
-				$this->_html .= '</div><p class="clear"> </p>
-				<label>'.$this->l('Link').'</label>
+				';
+		foreach ($languages as $language)
+		{
+			$this->_html .= '
+					<div id="link_label_'.(int)$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang ? 'block' : 'none').';">
+				<label>'.$this->l('Label').'</label>
 				<div class="margin-form">
-					<input type="text" name="link" value="'.Tools::getValue('link').'" size="70" />
-				</div>
-				<label>'.$this->l('New Window').'</label>
+						<input type="text" name="label['.(int)$language['id_lang'].']" id="label_'.(int)$language['id_lang'].'" size="70" value="'.(isset($labels_edit[$language['id_lang']]) ? Tools::safeOutput($labels_edit[$language['id_lang']]) : '').'" />
+			  </div>
+					';
+
+			$this->_html .= '
+				  <label>'.$this->l('Link').'</label>
 				<div class="margin-form">
-					<input type="checkbox" name="new_window" value="1" '.(Tools::getValue('new_window') ? 'checked' : '').'/>
+					<input type="text" name="link['.(int)$language['id_lang'].']" id="link_'.(int)$language['id_lang'].'" value="'.(isset($links_label_edit[$language['id_lang']]) ? Tools::safeOutput($links_label_edit[$language['id_lang']]) : '').'" size="70" />
 				</div>
-				<p class="center">
+				</div>';
+		}
+
+		$this->_html .= '<label>'.$this->l('Language').'</label>
+				<div class="margin-form">'.$this->displayFlags($languages, (int)$id_lang, $divLangName, 'link_label', true).'</div><p style="clear: both;"> </p>';
+
+		$this->_html .= '<label style="clear: both;">'.$this->l('New Window').'</label>
+				<div class="margin-form">
+					<input style="clear: both;" type="checkbox" name="new_window" value="1" '.(isset($new_window_edit) && $new_window_edit ? 'checked' : '').'/>
+				</div>
+<div class="margin-form">';
+
+		if (Tools::isSubmit('id_linksmenutop'))
+			$this->_html .= '<input type="hidden" name="id_linksmenutop" value="'.(int)Tools::getValue('id_linksmenutop').'" />';
+
+		if (Tools::isSubmit('submitBlocktopmenuEdit'))
+			$this->_html .= '<input type="submit" name="submitBlocktopmenuEdit" value="'.$this->l('	Edit	').'" class="button" />';
+
+		$this->_html .= '
 					<input type="submit" name="submitBlocktopmenuLinks" value="'.$this->l('	Add	').'" class="button" />
-				</p>
+</div>
+
 			</form>
 		</fieldset><br />';
 
@@ -325,7 +360,7 @@ class Blocktopmenu extends Module
 			<legend><img src="../img/admin/details.gif" alt="" title="" />'.$this->l('List Menu Top Link').'</legend>
 			<table style="width:100%;">
 				<thead>
-					<tr>
+					<tr style="text-align: left;">
 						<th>'.$this->l('Id Link').'</th>
 						<th>'.$this->l('Label').'</th>
 						<th>'.$this->l('Link').'</th>
@@ -334,23 +369,24 @@ class Blocktopmenu extends Module
 					</tr>
 				</thead>
 				<tbody>';
-				foreach ($links as $link)
-				{
-					$this->_html .= '
+		foreach ($links as $link)
+		{
+			$this->_html .= '
 					<tr>
-						<td>'.$link['id_linksmenutop'].'</td>
-						<td>'.$link['label'].'</td>
-						<td><a href="'.$link['link'].'"'.(($link['new_window']) ? ' target="_blank"' : '').'>'.$link['link'].'</a></td>
+						<td>'.(int)$link['id_linksmenutop'].'</td>
+						<td>'.Tools::safeOutput($link['label']).'</td>
+						<td><a href="'.Tools::safeOutput($link['link']).'"'.(($link['new_window']) ? ' target="_blank"' : '').'>'.Tools::safeOutput($link['link']).'</a></td>
 						<td>'.(($link['new_window']) ? $this->l('Yes') : $this->l('No')).'</td>
 						<td>
-							<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
-								<input type="hidden" name="id_linksmenutop" value="'.$link['id_linksmenutop'].'" />
+							<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
+								<input type="hidden" name="id_linksmenutop" value="'.(int)$link['id_linksmenutop'].'" />
+								<input type="submit" name="submitBlocktopmenuEdit" value="'.$this->l('Edit').'" class="button" />
 								<input type="submit" name="submitBlocktopmenuRemove" value="'.$this->l('Remove').'" class="button" />
 							</form>
 						</td>
 					</tr>';
-				}
-				$this->_html .= '</tbody>
+		}
+		$this->_html .= '</tbody>
 			</table>
 		</fieldset>';
 		return $this->_html;
