@@ -2,7 +2,7 @@
         <module>
             <name>blocktopmenu</name>
             <displayName><![CDATA[Top horizontal menu]]></displayName>
-            <version><![CDATA[1.4]]></version>
+            <version><![CDATA[1.5]]></version>
             <description><![CDATA[Add a new menu on top of your shop.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
