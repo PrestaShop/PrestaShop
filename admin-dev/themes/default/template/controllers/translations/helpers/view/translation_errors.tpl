@@ -28,15 +28,6 @@
 
 {block name="override_tpl"}
 
-	<div class="hint" style="display:block;">
-		{l s='Some sentences to translate uses this syntax: %s...: You must let it in your translations.' sprintf='%d, %s, %1$s, %2$d'}
-	</div><br /><br />
-
-	<p>
-		{l s='Expressions to translate: %d.' sprintf=$count}<br />
-		{l s='Total missing expresssions: %d.' sprintf=$missing_translations|array_sum}<br />
-	</p>
-
 	{if $post_limit_exceeded}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
@@ -53,6 +44,43 @@
 		{l s='%s at least or edit the translation file manually.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
+
+		<div class="hint" style="display:block;">
+			{l s='Some sentences to translate uses this syntax: %s...: You must let it in your translations.' sprintf='%d, %s, %1$s, %2$d'}
+		</div><br /><br />
+
+		<p>
+			{l s='Expressions to translate: %d.' sprintf=$count}<br />
+			{l s='Total missing expresssions: %d.' sprintf=$missing_translations|array_sum}<br />
+		</p>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('a.useSpecialSyntax').click(function(){
+					var syntax = $(this).find('img').attr('alt');
+					$('#BoxUseSpecialSyntax .syntax span').html(syntax);
+					$('#BoxUseSpecialSyntax').toggle(1000);
+				});
+				$('#BoxUseSpecialSyntax').click(function(){
+					$('#BoxUseSpecialSyntax').toggle(1000);
+				});
+			});
+		</script>
+
+		<div id="BoxUseSpecialSyntax">
+			<div class="warn">
+				<p class="syntax">
+					{l s='This expression uses this special syntax:'} <span>%d</span><br />
+					{l s='You must use this syntax in your tanslations. Here are several examples of use:'}
+				</p>
+				<ul>
+					<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
+					<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
+					<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
+				</ul>
+			</div>
+		</div>
+
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 			{*{$auto_translate}$*}
 			<input type="hidden" name="lang" value="{$lang}" />
@@ -62,9 +90,16 @@
 			<br /><br />
 			<table cellpadding="0" cellspacing="0" class="table">
 			{foreach $errorsArray as $key => $value}
-				<tr {if empty($value)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
+				<tr {if empty($value.trad)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
 					<td>{$key|stripslashes}</td>
-					<td style="width: 430px">= <input type="text" name="{$key|md5}" value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px"></td>
+					<td style="width: 430px">=
+						<input type="text" name="{$key|md5}" value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px">
+						{if isset($value.use_sprintf) && $value.use_sprintf}
+							<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}" style="cursor:pointer">
+								<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
+							</a>
+						{/if}
+					</td>
 				</tr>
 			{/foreach}
 			</table>

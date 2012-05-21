@@ -28,13 +28,6 @@
 
 {block name="override_tpl"}
 
-	<div class="hint" style="display:block;">
-		<ul style="margin-left:30px;list-style-type:disc;">
-			<li>{l s='Click on the titles to open fieldsets'}.</li>
-			<li>{l s='Some sentences to translate uses this syntax: %s...: You must let it in your translations.' sprintf='%d, %s, %1$s, %2$d'}</li>
-		</ul>
-	</div><br /><br />
-
 	{$tinyMCE}
 
 	{if $post_limit_exceeded}
@@ -53,6 +46,13 @@
 		{l s='%s at least or edit the translation file manually.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
+
+		<div class="hint" style="display:block;">
+			<ul style="margin-left:30px;list-style-type:disc;">
+				<li>{l s='Click on the titles to open fieldsets'}.</li>
+			</ul>
+		</div><br /><br />
+
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 			{$toggle_button}
 			<input type="hidden" name="lang" value="{$lang}" />
