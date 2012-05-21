@@ -66,7 +66,7 @@ class CartCore extends ObjectModel
 	/** @var string secure_key */
 	public $secure_key;
 
-	/* @var integer Carrier ID */
+	/** @var integer Carrier ID */
 	public $id_carrier = 0;
 
 	/** @var string Object last modification date */
