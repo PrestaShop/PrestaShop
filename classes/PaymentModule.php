@@ -327,7 +327,7 @@ abstract class PaymentModuleCore extends Module
 					$cart_rules_list = '';
 					foreach ($cart->getCartRules() as $cart_rule)
 					{
-						$package = array('id_address' => $order->id_address_delivery, 'products' => $order->product_list);
+						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
 						$values = array(
 							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $package),
 							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $package)
