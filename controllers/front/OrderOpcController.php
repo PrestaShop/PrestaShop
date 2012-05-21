@@ -223,6 +223,8 @@ class OrderOpcControllerCore extends ParentOrderController
 
 						case 'multishipping':
 							$this->_assignSummaryInformations();
+							$this->context->smarty->assign('product_list', $this->context->cart->getProducts());
+							
 							if ($this->context->customer->id)
 								$this->context->smarty->assign('address_list', $this->context->customer->getAddresses($this->context->language->id));
 							else
