@@ -678,6 +678,8 @@ class AdminManufacturersControllerCore extends AdminController
 
 	protected function afterImageUpload()
 	{
+		$res = true;
+
 		/* Generate image with differents size */
 		if (($id_manufacturer = (int)Tools::getValue('id_manufacturer')) &&
 			isset($_FILES) &&
@@ -687,7 +689,7 @@ class AdminManufacturersControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('manufacturers');
 			foreach ($images_types as $k => $image_type)
 			{
-				ImageManager::resize(
+				$res &= ImageManager::resize(
 					_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
 					_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'.jpg',
 					(int)$image_type['width'],
@@ -695,6 +697,11 @@ class AdminManufacturersControllerCore extends AdminController
 				);
 			}
 		}
+
+		if (!$res)
+			$this->errors[] = Tools::displayError('Unable to resize one or more pictures');
+
+		return $res;
 	}
 }
 
