@@ -25,7 +25,6 @@ $_LANGPDF['PDF3796bba38e4bc7dbc3ec97d73be42328'] = 'Si les conditions suivantes 
 $_LANGPDF['PDF3a6a6d37bea2c7567f8599ea88b47930'] = 'Total HT';
 $_LANGPDF['PDF3a80d6ec5285dd5d3930db30d04e2b9e'] = 'RE : Remises exclues';
 $_LANGPDF['PDF448634536559b1f8aaa975e0aa12b930'] = 'TOTAL A REGLER';
-$_LANGPDF['PDF4efeae9def7927946cb4929e0d298825'] = 'Total restant à payé';
 $_LANGPDF['PDF5082245495aa792b3d0874088d2b111b'] = 'Total Produits';
 $_LANGPDF['PDF59aac4eb50a8249cbc9c12240c6a0a14'] = 'Pour toute assistance, merci de nous contacter :';
 $_LANGPDF['PDF5e5f0a863cd129317037e3def37b4097'] = 'Société :';

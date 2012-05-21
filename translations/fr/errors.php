@@ -544,7 +544,6 @@ $_ERRORS['e21c3c406358073b38d481fd3d88221c'] = 'Aucune facture trouvée';
 $_ERRORS['e22a6ea51eb74bee7acaa4acf2846c7b'] = 'Cette déclinaison existe déjà.';
 $_ERRORS['e267d34972b3ab66b987fbad59fba513'] = 'Format de date non valable';
 $_ERRORS['e2865d85227e45bdc6fb87bf5df2b1f3'] = 'Le nom du mail est invalide \"%s\"';
-$_ERRORS['e2b7dec8fa4b498156dfee6e4c84b156'] = 'Ce mode de paiement n\'est pas disponible.';
 $_ERRORS['e325f16a2ee86d0c775898dec73af2d1'] = 'Impossible d\'installer le module';
 $_ERRORS['e389fb6a0b1d8aba957ef5bd33929e86'] = 'Les noms des champs ne sont pas valables.';
 $_ERRORS['e3ac5a39682f9b3a09f6063f714ffc48'] = 'Aucune méthode de paiement disponible';
