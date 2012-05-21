@@ -222,6 +222,7 @@
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
 			{assign var='cannotModify' value=1}
+			{assign var='odd' value=$product@iteration%2}
 			{* Display the product line *}
 			{include file="$tpl_dir./shopping-cart-product-line.tpl"}
 			{* Then the customized datas ones*}
@@ -273,6 +274,17 @@
 				{* If it exists also some uncustomized products *}
 				{if $product.quantity-$quantityDisplayed > 0}{include file="$tpl_dir./shopping-cart-product-line.tpl"}{/if}
 			{/if}
+		{/foreach}
+		{assign var='last_was_odd' value=$product@iteration%2}
+		{foreach $gift_products as $product}
+			{assign var='productId' value=$product.id_product}
+			{assign var='productAttributeId' value=$product.id_product_attribute}
+			{assign var='quantityDisplayed' value=0}
+			{assign var='odd' value=($product@iteration+$last_was_odd)%2}
+			{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
+			{assign var='cannotModify' value=1}
+			{* Display the gift product line *}
+			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 		{/foreach}
 		</tbody>
 	{if sizeof($discounts)}
