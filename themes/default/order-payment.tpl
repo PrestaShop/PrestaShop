@@ -102,7 +102,7 @@
 					{l s='Total vouchers:'}
 				{/if}
 				</td>
-				<td class="price-discount" id="total_discount">
+				<td class="price-discount price" id="total_discount">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{displayPrice price=$total_discounts_tax_exc}
@@ -126,7 +126,7 @@
 					{l s='Total gift-wrapping:'}
 				{/if}
 				</td>
-				<td class="price-discount" id="total_wrapping">
+				<td class="price-discount price" id="total_wrapping">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{displayPrice price=$total_wrapping_tax_exc}
@@ -170,7 +170,7 @@
 					{/if}
 				{/if}
 				</td>
-				<td colspan="2" class="price" id="total_price_container">
+				<td colspan="2" class="price total_price_container" id="total_price_container">
 					<p>{l s='Total:'}</p>
 					<span>{displayPrice price=$total_price}</span>
 				</td>
@@ -209,9 +209,9 @@
 				</div>
 				{/if}
 				</td>
-				<td colspan="2" id="total_price_container" class="price">
+				<td colspan="2" class="price total_price_container" id="total_price_container">
 					<p>{l s='Total:'}</p>
-					<span>{displayPrice price=$total_price_without_tax}</span>
+					<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
 				</td>
 			</tr>
 			{/if}

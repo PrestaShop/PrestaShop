@@ -1326,7 +1326,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$return['request.max_vars'] = ini_get('suhosin.request.max_vars');
 			$return['needed_limit'] = $count + 100;
 		}
-		else if (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
+		elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
 		{
 			$this->post_limit_exceed = true;
 			$return['error_type'] = 'conf';
