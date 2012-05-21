@@ -12,7 +12,7 @@ ALTER TABLE `PREFIX_cart` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIG
 ALTER TABLE `PREFIX_configuration` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NULL;
 ALTER TABLE `PREFIX_connections` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
-ALTER TABLE `PREFIX_delivery` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE `PREFIX_delivery` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NULL;
 ALTER TABLE `PREFIX_orders` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_page_viewed` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
 ALTER TABLE `PREFIX_specific_price` CHANGE `id_group_shop` `id_shop_group` INT( 11 ) UNSIGNED NOT NULL;
