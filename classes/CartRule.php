@@ -27,10 +27,14 @@
 
 class CartRuleCore extends ObjectModel
 {
+	/* Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction */
 	const FILTER_ACTION_ALL = 1;
 	const FILTER_ACTION_SHIPPING = 2;
 	const FILTER_ACTION_REDUCTION = 3;
 	const FILTER_ACTION_GIFT = 4;
+	
+	/* This variable controls that a free gift is offered only once, even when multi-shippping is activated and the same product is delivered in both addresses */
+	protected static $only_one_gift = array();
 
 	public $id;
 	public $name;
@@ -356,7 +360,6 @@ class CartRuleCore extends ObjectModel
 		return $productRules;
 	}
 
-	// Todo : Add shop management
 	/**
 	 * Check if this cart rule can be applied
 	 *
@@ -699,7 +702,7 @@ class CartRuleCore extends ObjectModel
 	 * @param Context $context
 	 * @return float|int|string
 	 */
-	public function getContextualValue($useTax, Context $context = null, $filter = null, $products = null)
+	public function getContextualValue($useTax, Context $context = null, $filter = null, $package = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -707,6 +710,9 @@ class CartRuleCore extends ObjectModel
 			$context = Context::getContext();
 		if (!$filter)
 			$filter = CartRule::FILTER_ACTION_ALL;
+		
+		$all_products = $context->cart->getProducts();
+		$package_products = (is_null($package) ? $all_products : $package['products']);
 
 		$reduction_value = 0;
 
@@ -735,9 +741,9 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_percent && $this->reduction_product == 0)
 			{
 				// Do not give a reduction on free products!
-				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $products);
+				$order_total = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $package_products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
-					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT, $products), 2);
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($useTax, $context, CartRule::FILTER_ACTION_GIFT, $package_products), 2);
 
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
@@ -745,8 +751,7 @@ class CartRuleCore extends ObjectModel
 			// Discount (%) on a specific product
 			if ($this->reduction_percent && $this->reduction_product > 0)
 			{
-				$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
-				foreach ($products2 as $product)
+				foreach ($package_products as $product)
 					if ($product['id_product'] == $this->reduction_product)
 						$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
@@ -756,8 +761,7 @@ class CartRuleCore extends ObjectModel
 			{
 				$minPrice = false;
 				$cheapest_product = null;
-				$products2 = $context->cart->getProducts();
-				foreach ($products2 as $product)
+				foreach ($all_products as $product)
 				{
 					$price = ($useTax ? $product['price_wt'] : $product['price']);
 					if ($price > 0 && ($minPrice === false || $minPrice > $price))
@@ -769,7 +773,7 @@ class CartRuleCore extends ObjectModel
 				
 				// Check if the cheapest product is in the package
 				$in_package = false;
-				foreach ($products as $product)
+				foreach ($package_products as $product)
 					if ($product['id_product'].'-'.$product['id_product_attribute'] == $cheapest_product || $product['id_product'].'-0' == $cheapest_product)
 						$in_package = true;
 				if ($in_package)
@@ -781,9 +785,8 @@ class CartRuleCore extends ObjectModel
 			{
 				$selected_products_reduction = 0;
 				$selected_products = $this->checkProductRestrictions($context, true);
-				$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
 				if (is_array($selected_products))
-					foreach ($products2 as $product)
+					foreach ($package_products as $product)
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
@@ -796,6 +799,10 @@ class CartRuleCore extends ObjectModel
 			// Discount (¤)
 			if ($this->reduction_amount)
 			{
+				$prorata = 1;
+				if (!is_null($package))
+					$prorata = $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS, $package['products']) / $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS);
+
 				$reduction_amount = $this->reduction_amount;
 				// If we need to convert the voucher value to the cart currency
 				if ($this->reduction_currency != $context->currency->id)
@@ -815,7 +822,7 @@ class CartRuleCore extends ObjectModel
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!
 				if ($this->reduction_tax == $useTax)
-					$reduction_value += $reduction_amount;
+					$reduction_value += $prorata * $reduction_amount;
 				else
 				{
 					if ($this->reduction_product > 0)
@@ -833,14 +840,15 @@ class CartRuleCore extends ObjectModel
 									$product_vat_rate = $product_vat_amount / $product_price_te;
 
 								if ($this->reduction_tax && !$useTax)
-									$reduction_value += $reduction_amount / (1 + $product_vat_rate);
+									$reduction_value += $prorata * $reduction_amount / (1 + $product_vat_rate);
 								elseif (!$this->reduction_tax && $useTax)
-									$reduction_value += $reduction_amount * (1 + $product_vat_rate);
+									$reduction_value += $prorata * $reduction_amount * (1 + $product_vat_rate);
 							}
 					}
 					// Discount (¤) on the whole order
 					elseif ($this->reduction_product == 0)
 					{
+						// TODO : this should not use the prorata
 						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 
@@ -852,9 +860,9 @@ class CartRuleCore extends ObjectModel
 							$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
 
 						if ($this->reduction_tax && !$useTax)
-							$reduction_value += $reduction_amount / (1 + $cart_average_vat_rate);
+							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);
 						elseif (!$this->reduction_tax && $useTax)
-							$reduction_value += $reduction_amount * (1 + $cart_average_vat_rate);
+							$reduction_value += $prorata * $reduction_amount * (1 + $cart_average_vat_rate);
 					}
 					/*
 					 * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
@@ -869,10 +877,17 @@ class CartRuleCore extends ObjectModel
 		// Free gift
 		if ((int)$this->gift_product && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_GIFT))
 		{
-			$products2 = (is_null($products) ? $context->cart->getProducts() : $products);
-			foreach ($products2 as $product)
+			$id_address = (is_null($package) ? 0 : $package['id_address']);
+			foreach ($package_products as $product)
 				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
-					$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
+				{
+					// The free gift coupon must be applied to one product only (needed for multi-shipping which manage multiple product lists)
+					if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == $id_address)
+					{
+						$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
+						CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
+					}
+				}
 		}
 
 		return $reduction_value;

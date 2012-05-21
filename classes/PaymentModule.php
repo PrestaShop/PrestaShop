@@ -327,9 +327,10 @@ abstract class PaymentModuleCore extends Module
 					$cart_rules_list = '';
 					foreach ($cart->getCartRules() as $cart_rule)
 					{
+						$package = array('id_address' => $order->id_address_delivery, 'products' => $order->product_list);
 						$values = array(
-							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $order->product_list),
-							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $order->product_list)
+							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $package),
+							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $package)
 						);
 
 						// If the reduction is not applicable to this order, then continue with the next one
