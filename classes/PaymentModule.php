@@ -119,8 +119,6 @@ abstract class PaymentModuleCore extends Module
 			$id_currency = $currency_special ? (int)$currency_special : (int)$cart->id_currency;
 			$currency = new Currency($id_currency);
 
-			$cart->order_reference = $reference;
-
 			$order_creation_failed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH), 2);
 
