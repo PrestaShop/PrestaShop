@@ -155,9 +155,9 @@ class OrderControllerCore extends ParentOrderController
 				// Check the delivery option is setted
 				if (!$this->context->cart->isVirtualCart())
 				{
-					if (!Tools::getValue('delivery_option'))
+					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier'))
 						Tools::redirect('index.php?controller=order&step=2');
-					else
+					elseif (!Tools::getValue('id_carrier'))
 					{
 						foreach (Tools::getValue('delivery_option') as $delivery_option)
 						if (empty($delivery_option))
