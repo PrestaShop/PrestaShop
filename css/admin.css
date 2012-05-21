@@ -2344,3 +2344,21 @@ margin-bottom:7px;
 	position: relative;
 	z-index:20;
 }
+
+#BoxUseSpecialSyntax{
+	position:fixed;
+	z-index:10;
+	width:100%;
+	bottom:50px;
+	display:none;
+}
+
+#BoxUseSpecialSyntax .warn{
+	margin:0 auto;
+	width:500px;
+}
+
+#BoxUseSpecialSyntax ul{
+	margin-left:30px;
+	list-style-type:disc;
+}
