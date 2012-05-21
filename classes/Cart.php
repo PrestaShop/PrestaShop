@@ -1459,7 +1459,7 @@ class CartCore extends ObjectModel
 						$in_order = true;
 					else
 						foreach ($products as $product)
-							if ($cart_rule['obj']->gift_product == $product['id_product'] && $cart_rule['obj']->gift_product_attribute = $product['id_product_attribute'])
+							if ($cart_rule['obj']->gift_product == $product['id_product'] && $cart_rule['obj']->gift_product_attribute == $product['id_product_attribute'])
 								$in_order = true;
 
 					if ($in_order)
@@ -1469,12 +1469,8 @@ class CartCore extends ObjectModel
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 				{
-					$package = null;
-					if (!is_null($products))
-					{
-						$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
-						$package = array('id_address' => $id_address_delivery, 'products' => $products);
-					}
+					$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
+					$package = array('id_address' => $id_address_delivery, 'products' => $products);
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package), 2);
 				}
 			}
