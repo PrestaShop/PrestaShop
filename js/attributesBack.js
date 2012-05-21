@@ -44,9 +44,11 @@ function populate_attrs()
 
 	var list = attrs[number];
 	attr_name.options.length = 0;
-
-	for(i = 0; i < list.length; i += 2)
-		attr_name.options[i / 2] = new Option(list[i + 1], list[i]);
+	if (typeof list !== 'undefined')
+	{
+		for(i = 0; i < list.length; i += 2)
+			attr_name.options[i / 2] = new Option(list[i + 1], list[i]);
+	}
 }
 
 function check_impact()
