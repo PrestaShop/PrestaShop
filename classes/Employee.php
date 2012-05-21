@@ -78,7 +78,6 @@ class EmployeeCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'employee',
 		'primary' => 'id_employee',
-		'multishop' => 'true',
 		'fields' => array(
 			'lastname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
 			'firstname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
