@@ -1443,8 +1443,10 @@ class CartCore extends ObjectModel
 						$cart_rules[] = $tmp_cart_rule;
 				}
 			}
-
-			$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
+			
+			$id_address_delivery = 0;
+			if (isset($products[0]))
+				$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
 			$package = array('id_carrier' => $id_carrier, 'id_address' => $id_address_delivery, 'products' => $products);
 			
 			// Then, calculate the contextual value for each one
