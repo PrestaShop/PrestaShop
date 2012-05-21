@@ -651,30 +651,36 @@ class ShopCore extends ObjectModel
 	{
 		// Always use global context for mono-shop mode
 		if (!Shop::isFeatureActive())
-			$type = self::CONTEXT_ALL;
-
-		switch ($type)
 		{
-			case self::CONTEXT_ALL :
-				self::$context_id_shop = null;
-				self::$context_id_shop_group = null;
-			break;
-
-			case self::CONTEXT_GROUP :
-				self::$context_id_shop = null;
-				self::$context_id_shop_group = (int)$id;
-			break;
-
-			case self::CONTEXT_SHOP :
-				self::$context_id_shop = (int)$id;
-				self::$context_id_shop_group = Shop::getGroupFromShop($id);
-			break;
-
-			default :
-				throw new PrestaShopException('Unknown context for shop');
+			self::$context_id_shop = (int)Context::getContext()->shop->id;
+			self::$context_id_shop_group = (int)Context::getContext()->shop->id_shop_group;
+			self::$context = self::CONTEXT_ALL;
 		}
+		else
+		{
+			switch ($type)
+			{
+				case self::CONTEXT_ALL :
+					self::$context_id_shop = null;
+					self::$context_id_shop_group = null;
+				break;
 
-		self::$context = $type;
+				case self::CONTEXT_GROUP :
+					self::$context_id_shop = null;
+					self::$context_id_shop_group = (int)$id;
+				break;
+
+				case self::CONTEXT_SHOP :
+					self::$context_id_shop = (int)$id;
+					self::$context_id_shop_group = Shop::getGroupFromShop($id);
+				break;
+
+				default :
+					throw new PrestaShopException('Unknown context for shop');
+			}
+
+			self::$context = $type;
+		}
 	}
 
 	public static function getContext()
@@ -700,8 +706,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestriction($share = false, $alias = null)
 	{
-		if (!Shop::isFeatureActive())
-			return;
 		if ($alias)
 			$alias .= '.';
 
@@ -747,8 +751,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
-		if (!Shop::isFeatureActive())
-			return;
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
