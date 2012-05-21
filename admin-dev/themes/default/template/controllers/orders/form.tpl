@@ -150,7 +150,31 @@
 			useCart($(this).attr('rel'));
 			return false;
 		});
-
+		$('#free_shipping').click(function() {
+			var free_shipping = 0;
+			if (this.checked)
+				free_shipping = 1;
+			$.ajax({
+				type:"POST",
+				url: "{$link->getAdminLink('AdminCarts')}",
+				async: true,
+				dataType: "json",
+				data : {
+					ajax: "1",
+					token: "{getAdminToken tab='AdminCarts'}",
+					tab: "AdminCarts",
+					action: "updateFreeShipping",
+					id_cart: id_cart,
+					id_customer: id_customer,
+					'free_shipping': free_shipping
+					},
+				success : function(res)
+				{
+					displaySummary(res);
+				}
+			});
+		});
+		
 		$('.duplicate_order').live('click', function(e) {
 			e.preventDefault();
 			duplicateOrder($(this).attr('rel'));
@@ -669,9 +693,14 @@
 			$('#carrier_recycled_package').attr('checked', true);
 		else
 			$('#carrier_recycled_package').removeAttr('checked');
+		if (jsonSummary.free_shipping)
+			$('#free_shipping').attr('checked', true);
+		else
+			$('#free_shipping').removeAttr('checked');
+		
 		$('#gift_message').html(jsonSummary.cart.gift_message);
 		if(!changed_shipping_price)
-			$('#shipping_price').val(jsonSummary.summary.total_shipping);
+			$('#shipping_price').html('<b>'+jsonSummary.summary.total_shipping+'</b>');
 		shipping_price_selected_carrier = jsonSummary.summary.total_shipping;
 
 		$('#total_vouchers').html(jsonSummary.summary.total_discounts_tax_exc);
@@ -1116,8 +1145,11 @@
 					</select>
 				</p>
 				<p>
-					<label for="shipping_price">{l s='Shipping price:'}</label> <input type="text" id="shipping_price"  name="shipping_price" size="7" />&nbsp;<span class="currency_sign"></span>&nbsp;
-					<a class="button" href="#" onclick="resetShippingPrice();return false;">{l s='Reset shipping price'}</a>
+					<label for="shipping_price">{l s='Shipping price:'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+				</p>
+				<p>
+					<label for="free_shipping">{l s='Free shipping:'}</label>
+					<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
 				</p>
 			</div>
 			<div id="float:left;">

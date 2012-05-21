@@ -91,6 +91,8 @@ abstract class PaymentModuleCore extends Module
 
 		if (!$shop)
 			$shop = Context::getContext()->shop;
+		if (!$this->active)
+			die(Tools::displayError());
 		// Does order already exists ?
 		if (Validate::isLoadedObject($cart) && $cart->OrderExists() == false)
 		{

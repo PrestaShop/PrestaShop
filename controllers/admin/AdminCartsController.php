@@ -415,6 +415,7 @@ class AdminCartsControllerCore extends AdminController
 			echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
 	}
+
 	public function ajaxProcessDuplicateOrder()
 	{
 		if ($this->tabAccess['edit'] === '1')
@@ -444,7 +445,38 @@ class AdminCartsControllerCore extends AdminController
 				echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
 	}
+	
+	public function ajaxProcessupdateFreeShipping()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+			{
+				$cart_rule = new CartRule();
+				$cart_rule->code = 'BO_ORDER_'.(int)$this->context->cart->id;
+				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping'));
+				$cart_rule->id_customer = (int)$this->context->cart->id_customer;
+				$cart_rule->free_shipping = true;
+				$cart_rule->quantity = 1;
+				$cart_rule->quantity_per_user = 1;
+				$cart_rule->minimum_amount_currency = (int)$this->context->cart->id_currency;
+				$cart_rule->reduction_currency = (int)$this->context->cart->id_currency;
+				$cart_rule->date_from = date('Y-m-d H:i:s', time());
+				$cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
+				$cart_rule->active = 1;
+				$cart_rule->add();
+			}
+			else
+				$cart_rule = new CartRule((int)$id_cart_rule);
 
+			$this->context->cart->removeCartRule((int)$cart_rule->id);			
+			if (Tools::getValue('free_shipping'))
+				$this->context->cart->addCartRule((int)$cart_rule->id);
+
+			echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
+	}
+	
 	public function ajaxProcessAddVoucher()
 	{
 		if ($this->tabAccess['edit'] === '1')
@@ -617,7 +649,8 @@ class AdminCartsControllerCore extends AdminController
 						'link_order' => $this->context->link->getPageLink(
 							'order', false,
 							(int)$this->context->cart->id_lang,
-							'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart))
+							'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)),
+						'free_shipping' => (bool)CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id)
 						);
 	}
 
