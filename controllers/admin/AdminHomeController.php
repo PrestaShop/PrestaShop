@@ -486,8 +486,8 @@ class AdminHomeControllerCore extends AdminController
 		else
 			$result['discover_prestashop'] .= '';
 
-		// SHOW PAYPAL TIPS
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		// SHOW TIPS OF THE DAY
+		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -521,7 +521,7 @@ class AdminHomeControllerCore extends AdminController
 		if (is_writable('../config/xml/') && (!file_exists('../config/xml/preactivation.xml') || (time() - filemtime('../config/xml/preactivation.xml')) > 86400))
 		{
 			$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
-			$content = @file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
+			$content = @file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?protocol='.$protocol.'&iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
 			@unlink('../config/xml/preactivation.xml');
 			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
