@@ -74,7 +74,12 @@
 
 						//hide standard submit button
 						btn_submit.hide();
-
+						//bind enter key press to validate form
+						$('#{$table}_form').keypress(function (e) {
+							key = window.event ? window.event.keyCode : e.which;
+							if (key == 13 && window.event.target.localName != 'textarea')
+								$('#desc-{$table}-save').click();
+						});
 						//submit the form
 						{block name=formSubmit}
 							btn_save.click(function() {
