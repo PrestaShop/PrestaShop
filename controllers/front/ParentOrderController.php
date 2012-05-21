@@ -30,6 +30,7 @@
  */
 class FreeOrder extends PaymentModule
 {
+	public $active = 1;
 }
 
 class ParentOrderControllerCore extends FrontController
