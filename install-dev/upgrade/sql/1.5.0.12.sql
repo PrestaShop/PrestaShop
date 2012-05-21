@@ -8,6 +8,12 @@ DROP TABLE `PREFIX_accounting_product_zone_shop`;
 ALTER TABLE `PREFIX_tax` DROP `account_number`;
 ALTER TABLE `PREFIX_customer` DROP `account_number`;
 
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` IN (
+	SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` LIKE('%Accounting%')
+);
+
+DELETE FROM `PREFIX_tab` WHERE `class_name` LIKE('%Accounting%');
+
 /* PHP:move_translations_module_file(); */;
 
 ALTER TABLE `PREFIX_tax_rule` CHANGE `zipcode_from` `zipcode_from` VARCHAR(12) NOT NULL, CHANGE `zipcode_to` `zipcode_to` VARCHAR(12) NOT NULL;
