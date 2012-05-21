@@ -59,3 +59,6 @@ UPDATE `PREFIX_tab` SET `class_name`="AdminShopGroup" WHERE class_name="AdminGro
 /* PHP:upgrade_cms_15_rename(); */;
 /* PHP:migrate_tabs_multi_shop(); */;
 /* PHP:add_default_restrictions_modules_groups(); */;
+
+/* PHP:p15012_add_missing_columns(); */;
+
