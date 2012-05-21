@@ -691,8 +691,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$item = &$this->_list[$i];
 
 				$query = new DbQuery();
-				$query->select('COUNT(id_attribute) as count_values');
+				$query->select('COUNT(a.id_attribute) as count_values');
 				$query->from('attribute', 'a');
+				$query->join(Shop::addSqlAssociation('attribute', 'a'));
 				$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
 				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 				$item['count_values'] = (int)$res;
