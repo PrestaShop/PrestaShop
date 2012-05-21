@@ -131,6 +131,7 @@ class OrderControllerCore extends ParentOrderController
 				if (Tools::getValue('multi-shipping') == 1)
 				{
 					$this->_assignSummaryInformations();
+					$this->context->smarty->assign('product_list', $this->context->cart->getProducts());
 					$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping.tpl');
 				}
 				else
