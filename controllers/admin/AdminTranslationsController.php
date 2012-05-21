@@ -709,16 +709,17 @@ class AdminTranslationsControllerCore extends AdminController
 					if (!in_array($module_key, $array_check_duplicate))
 					{
 						$array_check_duplicate[] = $module_key;
-						if (!isset($this->modules_translations[$theme_name][$module_name][$template_name][$key]))
+						if (!isset($this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad']))
 							$this->total_expression++;
 
 						if (array_key_exists($module_key, $GLOBALS[$name_var]))
-							$this->modules_translations[$theme_name][$module_name][$template_name][$key] = html_entity_decode($GLOBALS[$name_var][$module_key], ENT_COMPAT, 'UTF-8');
+							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$module_key], ENT_COMPAT, 'UTF-8');
 						else
 						{
-							$this->modules_translations[$theme_name][$module_name][$template_name][$key] = '';
+							$this->modules_translations[$theme_name][$module_name][$template_name][$key]['trad'] = '';
 							$this->missing_translations++;
 						}
+						$this->modules_translations[$theme_name][$module_name][$template_name][$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 					}
 				}
 			}
@@ -1337,6 +1338,19 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
+	 * Find sentence which use %d, %s, %%, %1$d, %1$s...
+	 *
+	 * @param $key : english sentence
+	 * @return array|bool return list of matches
+	 */
+	public function checkIfKeyUseSprintf($key)
+	{
+		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $key, $matches))
+			return implode(', ', $matches[0]);
+		return false;
+	}
+
+	/**
 	 * This method generate the form for front translations
 	 */
 	public function initFormFront()
@@ -1380,18 +1394,19 @@ class AdminTranslationsControllerCore extends AdminController
 						{
 							// Caution ! front has underscore between prefix key and md5, back has not
 							if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)]))
-								$new_lang[$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+								$new_lang[$key]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
 							else
 							{
-								if (!isset($new_lang[$key]))
+								if (!isset($new_lang[$key]['trad']))
 								{
-									$new_lang[$key] = '';
+									$new_lang[$key]['trad'] = '';
 									if (!isset($missing_translations_front[$prefix_key]))
 										$missing_translations_front[$prefix_key] = 1;
 									else
 										$missing_translations_front[$prefix_key]++;
 								}
 							}
+							$new_lang[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 						}
 					}
 
@@ -1453,18 +1468,19 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						// Caution ! front has underscore between prefix key and md5, back has not
 						if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-							$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+							$tabs_array[$prefix_key][$key]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 						else
 						{
-							if (!isset($tabs_array[$prefix_key][$key]))
+							if (!isset($tabs_array[$prefix_key][$key]['trad']))
 							{
-								$tabs_array[$prefix_key][$key] = '';
+								$tabs_array[$prefix_key][$key]['trad'] = '';
 								if (!isset($missing_translations_back[$prefix_key]))
 									$missing_translations_back[$prefix_key] = 1;
 								else
 									$missing_translations_back[$prefix_key]++;
 							}
 						}
+						$tabs_array[$prefix_key][$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 					}
 				}
 
@@ -1484,18 +1500,19 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						// Caution ! front has underscore between prefix key and md5, back has not
 						if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-							$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+							$tabs_array[$prefix_key][$key]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 						else
 						{
-							if (!isset($tabs_array[$prefix_key][$key]))
+							if (!isset($tabs_array[$prefix_key][$key]['trad']))
 							{
-								$tabs_array[$prefix_key][$key] = '';
+								$tabs_array[$prefix_key][$key]['trad'] = '';
 								if (!isset($missing_translations_back[$prefix_key]))
 									$missing_translations_back[$prefix_key] = 1;
 								else
 									$missing_translations_back[$prefix_key]++;
 							}
 						}
+						$tabs_array[$prefix_key][$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 					}
 				}
 
@@ -1551,18 +1568,19 @@ class AdminTranslationsControllerCore extends AdminController
 							$trans_key = $prefix_key.md5($english_string);
 
 							if (isset($GLOBALS[$name_var][$trans_key]))
-								$new_lang[$english_string] = html_entity_decode($GLOBALS[$name_var][$trans_key], ENT_COMPAT, 'UTF-8');
+								$new_lang[$english_string]['trad'] = html_entity_decode($GLOBALS[$name_var][$trans_key], ENT_COMPAT, 'UTF-8');
 							else
 							{
-								if (!isset($new_lang[$english_string]))
+								if (!isset($new_lang[$english_string]['trad']))
 								{
-									$new_lang[$english_string] = '';
+									$new_lang[$english_string]['trad'] = '';
 									if (!isset($missing_translations_back[$prefix_key]))
 										$missing_translations_back[$prefix_key] = 1;
 									else
 										$missing_translations_back[$prefix_key]++;
 								}
 							}
+							$new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 						}
 					}
 					if (isset($tabs_array[$prefix_key]))
@@ -1663,13 +1681,14 @@ class AdminTranslationsControllerCore extends AdminController
 					foreach ($matches as $key)
 					{
 						if (array_key_exists(md5($key), $GLOBALS[$name_var]))
-							$string_to_translate[$key] = html_entity_decode($GLOBALS[$name_var][md5($key)], ENT_COMPAT, 'UTF-8');
+							$string_to_translate[$key]['trad'] = html_entity_decode($GLOBALS[$name_var][md5($key)], ENT_COMPAT, 'UTF-8');
 						else
 						{
-							$string_to_translate[$key] = '';
+							$string_to_translate[$key]['trad'] = '';
 							if (!isset($count_empty[$key]))
 								$count_empty[$key] = 1;
 						}
+						$string_to_translate[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 					}
 				}
 
@@ -1717,16 +1736,17 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			if (isset($rules['validate']))
 				foreach ($rules['validate'] as $key => $value)
+				{
 					if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)]))
 					{
-						$tabs_array[$prefix_key][$key] = html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
+						$tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
 						$count++;
 					}
 					else
 					{
-						if (!isset($tabs_array[$prefix_key][$key]))
+						if (!isset($tabs_array[$prefix_key][$key]['trad']))
 						{
-							$tabs_array[$prefix_key][$key] = '';
+							$tabs_array[$prefix_key][$key]['trad'] = '';
 							if (!isset($missing_translations_fields[$prefix_key]))
 								$missing_translations_fields[$prefix_key] = 1;
 							else
@@ -1734,21 +1754,23 @@ class AdminTranslationsControllerCore extends AdminController
 							$count++;
 						}
 					}
+				}
 			if (isset($rules['validateLang']))
 				foreach ($rules['validateLang'] as $key => $value)
+				{
 					if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)]))
 					{
-						$tabs_array[$prefix_key][$key] = '';
+						$tabs_array[$prefix_key][$key]['trad'] = '';
 						if (array_key_exists($prefix_key.'_'.md5(addslashes($key)), $GLOBALS[$name_var]))
-							$tabs_array[$prefix_key][$key] = html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
+							$tabs_array[$prefix_key][$key]['trad'] = html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
 
 						$count++;
 					}
 					else
 					{
-						if (!isset($tabs_array[$prefix_key][$key]))
+						if (!isset($tabs_array[$prefix_key][$key]['trad']))
 						{
-							$tabs_array[$prefix_key][$key] = '';
+							$tabs_array[$prefix_key][$key]['trad'] = '';
 							if (!isset($missing_translations_fields[$prefix_key]))
 								$missing_translations_fields[$prefix_key] = 1;
 							else
@@ -1756,6 +1778,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$count++;
 						}
 					}
+				}
 		}
 
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
@@ -2308,16 +2331,19 @@ class AdminTranslationsControllerCore extends AdminController
 		$matches = $this->userParseFile($content, $this->type_selected, $file_type);
 
 		foreach ($matches as $key)
+		{
 			if (stripslashes(array_key_exists($tab.md5(addslashes($key)), $lang_array)))
-				$tabs_array[$tab][$key] = html_entity_decode($lang_array[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
+				$tabs_array[$tab][$key]['trad'] = html_entity_decode($lang_array[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
 			else
 			{
-				$tabs_array[$tab][$key] = '';
+				$tabs_array[$tab][$key]['trad'] = '';
 				if (!isset($count_missing[$tab]))
 					$count_missing[$tab] = 1;
 				else
 					$count_missing[$tab]++;
 			}
+			$tabs_array[$tab][$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+		}
 
 		return $tabs_array;
 	}
@@ -2376,19 +2402,22 @@ class AdminTranslationsControllerCore extends AdminController
 								$matches = $this->userParseFile($content, $this->type_selected, 'tpl');
 
 								foreach ($matches as $key)
+								{
 									if (isset($GLOBALS[$name_var][$prefix_key.md5($key)]))
-										$tabs_array[$prefix_key][$key] = (html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+										$tabs_array[$prefix_key][$key]['trad'] = (html_entity_decode($GLOBALS[$name_var][$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 									else
 									{
-										if (!isset($tabs_array[$prefix_key][$key]))
+										if (!isset($tabs_array[$prefix_key][$key]['trad']))
 										{
-											$tabs_array[$prefix_key][$key] = '';
+											$tabs_array[$prefix_key][$key]['trad'] = '';
 											if (!isset($missing_translations_pdf[$prefix_key]))
 												$missing_translations_pdf[$prefix_key] = 1;
 											else
 												$missing_translations_pdf[$prefix_key]++;
 										}
 									}
+									$tabs_array[$prefix_key][$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+								}
 							}
 						}
 						else
