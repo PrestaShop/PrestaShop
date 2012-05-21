@@ -1299,6 +1299,7 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function ajaxProcessSearchProducts()
 	{
+		Context::getContext()->customer = new Customer((int)Tools::getValue('id_customer'));
 		$currency = new Currency(Tools::getValue('id_currency'));
 		if ($products = Product::searchByName((int)$this->context->language->id, pSQL(Tools::getValue('product_search'))))
 		{
@@ -1332,7 +1333,7 @@ class AdminOrdersControllerCore extends AdminController
 						$price_tax_excl = Product::getPriceStatic((int)$product['id_product'], false, $attribute['id_product_attribute']);
 						$combinations[$attribute['id_product_attribute']]['price_tax_incl'] = Tools::ps_round(Tools::convertPrice($price_tax_incl, $currency), 2);
 						$combinations[$attribute['id_product_attribute']]['price_tax_excl'] = Tools::ps_round(Tools::convertPrice($price_tax_excl, $currency), 2);
-						$combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_incl, $currency), $currency);
+						$combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_excl, $currency), $currency);
 					}
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
 						$combinations[$attribute['id_product_attribute']]['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->id);
