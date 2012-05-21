@@ -41,7 +41,7 @@
   <tab id="Addresses" name="Direcciones"/>
   <tab id="Groups" name="Grupos"/>
   <tab id="Shopping_Carts" name="Carro de compras"/>
-  <tab id="Customer_Service" name="Atención al cliente"/>
+  <tab id="Customer_Service" name="Atenci&#xF3;n al cliente"/>
   <tab id="Contacts" name="Contacto"/>
   <tab id="Genders" name="Generos"/>
   <tab id="Outstanding" name="No resuelto"/>
@@ -90,7 +90,7 @@
   <tab id="Employees" name="Empleados"/>
   <tab id="Profiles" name="Perfiles"/>
   <tab id="Permissions" name="Permisos"/>
-  <tab id="Tabs" name="Pesta�as"/>
+  <tab id="Tabs" name="Pesta&#xF1;as"/>
   <tab id="Stats_1" name="Estad&#xED;sticas"/>
   <tab id="Search_Engines" name="Motores de b&#xFA;squeda"/>
   <tab id="Referrers" name="Referidos"/>
