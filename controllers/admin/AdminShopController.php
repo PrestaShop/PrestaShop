@@ -540,39 +540,44 @@ class AdminShopControllerCore extends AdminController
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
 				$this->updateAssoShop($object->id);
+
+				// datas to import
+				$import_data = Tools::getValue('importData');
+
+				// specific import for stock
+				if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
+				{
+					$id_src_shop = (int)Tools::getValue('importFromShop');
+					if ($object->getGroup()->share_stock == false)
+						StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
+				}
+
+				// if we import datas from another shop, we do not update the shop categories
+				if (!Category::updateFromShop(Tools::getValue('categoryBox'), $object->id))
+					$this->errors[] = $this->l('You need to select at least the root category.');
+
 				// Save and stay on same form
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
-				// Save and back to parent
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token;
-				// Default behavior (save and back)
-				if (empty($this->redirect_after))
-					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token;
+				if (!$this->errors)
+				{
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
+					// Save and back to parent
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token;
+					// Default behavior (save and back)
+					if (empty($this->redirect_after))
+						$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token;
+				}
 			}
 		}
 
 		$this->errors = array_unique($this->errors);
-		if (count($this->errors) > 0)
+		if (!empty($this->errors))
 		{
-            $this->display = 'add';
-            return;
+			// if we have errors, we stay on the form instead of going back to the list
+			$this->display = 'edit';
+			return false;
 		}
-
-		// datas to import
-		$import_data = Tools::getValue('importData');
-
-		// specific import for stock
-		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
-		{
-			$id_src_shop = (int)Tools::getValue('importFromShop');
-			if ($object->getGroup()->share_stock == false)
-				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
-		}
-
-		// if we import datas from another shop, we do not update the shop categories
-		if (!isset($import_data['category']))
-			Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
 
 		return $object;
 	}
