@@ -40,25 +40,19 @@ abstract class PaymentModuleCore extends Module
 		// Insert currencies availability
 		if ($this->currencies_mode == 'checkbox')
 		{
-			if (!Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			SELECT '.(int)$this->id.', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0'))
+			if (!$this->addCheckboxCurrencyRestrictionsForModule(Shop::getShops(true, null, true)))
 				return false;
 		}
 		elseif ($this->currencies_mode == 'radio')
 		{
-			if (!Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			VALUES ('.(int)$this->id.', -2)'))
+			if (!$this->addRadioCurrencyRestrictionsForModule(Shop::getShops(true, null, true)))
 				return false;
 		}
 		else
 			Tools::displayError('No currency mode for payment module');
 
 		// Insert countries availability
-		$return = Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
-		SELECT '.(int)$this->id.', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
+		$return = $this->addCheckboxCountryRestrictionsForModule(Shop::getShops(true, null, true));
 
 		return $return;
 	}
@@ -71,6 +65,57 @@ abstract class PaymentModuleCore extends Module
 			return false;
 		return parent::uninstall();
 	}
+
+
+	/**
+	 * Add checkbox currency restrictions for a new module
+	 * @param integer id_module
+	 * @param array $shops
+	 */
+	public function addCheckboxCurrencyRestrictionsForModule($shops = array(1))
+	{
+		foreach ($shops as $s)
+		{
+			if (!Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
+					SELECT '.(int)$this->id.', "'.(int)$s.'", `id_currency` FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0'))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Add radio currency restrictions for a new module
+	 * @param integer id_module
+	 * @param array $shops
+	 */
+	public function addRadioCurrencyRestrictionsForModule($shops = array(1))
+	{
+		foreach ($shops as $s)
+			if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
+				VALUES ('.(int)$this->id.', "'.(int)$s.'", -2)'))
+				return false;
+		return true;
+	}
+
+	/**
+	 * Add checkbox country restrictions for a new module
+	 * @param integer id_module
+	 * @param array $shops
+	 */
+	public function addCheckboxCountryRestrictionsForModule($shops = array(1))
+	{
+		foreach ($shops as $s)
+		{
+			if (!Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'module_country` (`id_module`, `id_shop`, `id_country`)
+					SELECT '.(int)$this->id.', "'.(int)$s.'", `id_country` FROM `'._DB_PREFIX_.'country` WHERE active = 1'))
+				return false;
+		}
+		return true;
+	}
+
+
 
 	/**
 	* Validate an order in database
