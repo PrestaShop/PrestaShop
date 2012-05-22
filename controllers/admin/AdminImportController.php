@@ -978,8 +978,12 @@ class AdminImportControllerCore extends AdminController
 			}
 			else
 				$product = new Product();
+
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
+
+			// link product to shops
+			$product->id_shop_list = explode(',', $product->shop);
 
 			if ((int)$product->id_tax_rules_group != 0)
 			{
@@ -1033,9 +1037,14 @@ class AdminImportControllerCore extends AdminController
 				{
 					$supplier = new Supplier();
 					$supplier->name = $product->supplier;
+					$supplier->active = true;
+
 					if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add())
+					{
 						$product->id_supplier = (int)$supplier->id;
+						$supplier->associateTo($product->id_shop_list);
+					}
 					else
 					{
 						$this->errors[] = sprintf(
@@ -1149,9 +1158,6 @@ class AdminImportControllerCore extends AdminController
 
 			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
-			// link product to shops
-			$product->id_shop_list = explode(',', $product->shop);
-
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
 			$lang_field_error = $product->validateFieldsLang(UNFRIENDLY_ERROR, true);
@@ -1209,6 +1215,23 @@ class AdminImportControllerCore extends AdminController
 			}
 			else
 			{
+				// Product supplier
+				if (isset($product->id_supplier) && isset($product->supplier_reference))
+				{
+					$id_product_supplier = ProductSupplier::getIdByProductAndSupplier((int)$product->id, 0, (int)$product->id_supplier);
+					if ($id_product_supplier)
+						$product_supplier = new ProductSupplier((int)$id_product_supplier);
+					else
+						$product_supplier = new ProductSupplier();
+
+					$product_supplier->id_product = $product->id;
+					$product_supplier->id_product_attribute = 0;
+					$product_supplier->id_supplier = $product->id_supplier;
+					$product_supplier->product_supplier_price_te = $product->wholesale_price;
+					$product_supplier->product_supplier_reference = $product->supplier_reference;
+					$product_supplier->save();
+				}
+
 				// SpecificPrice (only the basic reduction feature is supported by the import)
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
 				{
