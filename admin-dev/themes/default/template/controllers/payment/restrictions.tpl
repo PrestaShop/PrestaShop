@@ -52,8 +52,9 @@
 				{foreach $payment_modules as $key_module => $module}
 					{if $module->active}
 						<td style="text-align: center">
+							{assign var='type' value='null'}
 							{if !$item['check_list'][$key_module]}
-								{$type = null}
+								{* Keep $type to null *}
 							{elseif $list['name_id'] === 'currency'}
 								{if $module->currencies && $module->currencies_mode == 'checkbox'}
 									{$type = 'checkbox'}
@@ -63,7 +64,7 @@
 							{else}
 								{$type = 'checkbox'}
 							{/if}
-							{if $type != null}
+							{if $type != 'null'}
 								<input type="checkbox" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"
 									{if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if} 
 								/>
