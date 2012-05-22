@@ -969,12 +969,12 @@ class CartRuleCore extends ObjectModel
 
 	public static function autoRemoveFromCart($context = null)
 	{
+		if (!$context)
+			$context = Context::getContext();
 		if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart))
 			return array();
 
 		$errors = array();
-		if (!$context)
-			$context = Context::getContext();
 		foreach ($context->cart->getCartRules() as $cart_rule)
 		{
 			if ($error = $cart_rule['obj']->checkValidity($context, true))
