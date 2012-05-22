@@ -91,8 +91,8 @@ class AdminLanguagesControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-	 	$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to delete this language?');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to delete this language?');
 
 		parent::__construct();
 	}
@@ -103,6 +103,7 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
+		$this->displayInformation($this->l('Your .htaccess file must be writable.'));
 		return parent::renderList();
 	}
 
