@@ -177,10 +177,6 @@ class FrontControllerCore extends Controller
 		{
 			$this->context->customer->logout();
 
-			// Login information have changed, so we check if the cart rules still apply
-			CartRule::autoRemoveFromCart($this->context);
-			CartRule::autoAddToCart($this->context);
-
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		}
 		elseif (isset($_GET['mylogout']))
@@ -249,6 +245,10 @@ class FrontControllerCore extends Controller
 				$cart->id_address_delivery = 0;
 				$cart->id_address_invoice = 0;
 			}
+
+			// Needed if the merchant want to give a free product to every visitors
+			$this->context->cart = $cart;
+			CartRule::autoAddToCart($this->context);
 		}
 
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
