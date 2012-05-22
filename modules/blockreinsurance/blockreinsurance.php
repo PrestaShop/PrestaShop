@@ -211,7 +211,7 @@ class Blockreinsurance extends Module
 		$tab_texts = array(
 			$this->l('Money back'),
 			$this->l('Exchange in-store'),
-			$this->l('Payment for shipping'),
+			$this->l('Deferred payment'),
 			$this->l('Free Shipping'),
 			$this->l('100% secured payment'),
 		);
