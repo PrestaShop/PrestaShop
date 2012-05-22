@@ -281,14 +281,16 @@ class ShopCore extends ObjectModel
 						$main_uri = $row['uri'];
 						break;
 					}
+				if (isset($main_uri))
+				{
+					// extract url parameters
+					$request_uri = substr($request_uri, strlen($found_uri));
 
-				// extract url parameters
-				$request_uri = substr($request_uri, strlen($found_uri));
-
-				header('HTTP/1.1 301 Moved Permanently');
-				header('Cache-Control: no-cache');
-				header('location: http://'.$row['domain'].$main_uri.$request_uri);
-				exit;
+					header('HTTP/1.1 301 Moved Permanently');
+					header('Cache-Control: no-cache');
+					header('location: http://'.$row['domain'].$main_uri.$request_uri);
+					exit;
+				}
 			}
 		}
 
