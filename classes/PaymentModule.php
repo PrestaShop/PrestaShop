@@ -40,19 +40,19 @@ abstract class PaymentModuleCore extends Module
 		// Insert currencies availability
 		if ($this->currencies_mode == 'checkbox')
 		{
-			if (!$this->addCheckboxCurrencyRestrictionsForModule(Shop::getShops(true, null, true)))
+			if (!$this->addCheckboxCurrencyRestrictionsForModule())
 				return false;
 		}
 		elseif ($this->currencies_mode == 'radio')
 		{
-			if (!$this->addRadioCurrencyRestrictionsForModule(Shop::getShops(true, null, true)))
+			if (!$this->addRadioCurrencyRestrictionsForModule())
 				return false;
 		}
 		else
 			Tools::displayError('No currency mode for payment module');
 
 		// Insert countries availability
-		$return = $this->addCheckboxCountryRestrictionsForModule(Shop::getShops(true, null, true));
+		$return = $this->addCheckboxCountryRestrictionsForModule();
 
 		return $return;
 	}
@@ -72,8 +72,11 @@ abstract class PaymentModuleCore extends Module
 	 * @param integer id_module
 	 * @param array $shops
 	 */
-	public function addCheckboxCurrencyRestrictionsForModule($shops = array(1))
+	public function addCheckboxCurrencyRestrictionsForModule(array $shops = array())
 	{
+		if (!$shops)
+			$shops = Shop::getShops(true, null, true);
+
 		foreach ($shops as $s)
 		{
 			if (!Db::getInstance()->execute('
@@ -89,8 +92,11 @@ abstract class PaymentModuleCore extends Module
 	 * @param integer id_module
 	 * @param array $shops
 	 */
-	public function addRadioCurrencyRestrictionsForModule($shops = array(1))
+	public function addRadioCurrencyRestrictionsForModule(array $shops = array())
 	{
+		if (!$shops)
+			$shops = Shop::getShops(true, null, true);
+
 		foreach ($shops as $s)
 			if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
 				VALUES ('.(int)$this->id.', "'.(int)$s.'", -2)'))
@@ -103,8 +109,11 @@ abstract class PaymentModuleCore extends Module
 	 * @param integer id_module
 	 * @param array $shops
 	 */
-	public function addCheckboxCountryRestrictionsForModule($shops = array(1))
+	public function addCheckboxCountryRestrictionsForModule(array $shops = array())
 	{
+		if (!$shops)
+			$shops = Shop::getShops(true, null, true);
+
 		foreach ($shops as $s)
 		{
 			if (!Db::getInstance()->execute('
