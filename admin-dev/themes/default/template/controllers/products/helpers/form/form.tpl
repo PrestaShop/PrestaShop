@@ -234,6 +234,7 @@
 
 	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
 		<input type="hidden" name="id_product" value="{$id_product}" />
+		<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
 		<div class="tab-pane" id="tabPane1">
 		{if !$product->active && $product->isAssociatedToShop()}
 			<div class="warn draft" >
