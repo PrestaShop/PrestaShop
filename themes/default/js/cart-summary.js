@@ -523,6 +523,7 @@ function updateCartSummary(json)
 	if (typeof json == 'undefined')
 		return;
 
+	$('.cart_quantity_input').val(0);
 	for (i=0;i<json.products.length;i++)
 	{
 		// if reduction, we need to show it in the cart by showing the initial price above the current one
@@ -570,6 +571,7 @@ function updateCartSummary(json)
 		}
 		else
 		{
+			// @todo Check if the next line needs to be removed or not
 			//$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_customization+'_'+json.products[i].id_address_delivery+']')
 			//	.val(json.products[i].cart_quantity);
 			$('#cart_quantity_custom_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery)
@@ -582,6 +584,20 @@ function updateCartSummary(json)
 		else
 			$('#cart_quantity_down_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+Number(json.products[i].id_customization)+'_'+json.products[i].id_address_delivery).fadeTo('slow',1);
 
+	}
+	
+	// Update gift product quantity
+	for (i=0;i<json.gift_products.length;i++)
+	{
+		if(json.gift_products[i].id_customization == null)
+		{
+			$('.multishipping-cart input[name=quantity_'+json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_0_'+json.gift_products[i].id_address_delivery+']').val(
+					parseInt($('#.multishipping-cart input[name=quantity_'+json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_0_'+json.gift_products[i].id_address_delivery+']').val()) + parseInt(json.gift_products[i].cart_quantity)
+			);
+			$('.multishipping-cart input[name=quantity_'+json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_0_'+json.gift_products[i].id_address_delivery+'_hidden]').val(
+					parseInt($('.multishipping-cart input[name=quantity_'+json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_0_'+json.gift_products[i].id_address_delivery+']').val()) + parseInt(json.gift_products[i].cart_quantity)
+			);
+		}
 	}
 
 	// Update discounts
