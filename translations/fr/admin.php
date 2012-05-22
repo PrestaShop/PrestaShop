@@ -1533,6 +1533,7 @@ $_LANGADM['AdminLanguages0eaadb4fcb48a0a0ed7bc9868be9fbaa'] = 'Attention';
 $_LANGADM['AdminLanguages0ef690ce6c7546881f13a870acda9cdb'] = 'Format de date, court (par exemple, Y-m-d, d/m/Y)';
 $_LANGADM['AdminLanguages1044b6aeffc2c0ae2044fd7c1a6296ba'] = 'Aucun pack de langue n\'est disponible sur PrestaShop.com pour ce code ISO';
 $_LANGADM['AdminLanguages104f1a7d59077b514d4105fcee0e42ff'] = 'Format de date :';
+$_LANGADM['AdminLanguages1214646a8e239537981e729a0f16f3e9'] = 'Votre fichier .htaccess doit être disponible en écriture.';
 $_LANGADM['AdminLanguages14828817dac9b8636a1341b4fb0155d9'] = 'Code langue complet (ex. : en-us, pt-br)';
 $_LANGADM['AdminLanguages2426cdf3330e330b60bb7004015207ba'] = 'Image affichée lorsqu\'aucune image n\'est disponible';
 $_LANGADM['AdminLanguages24a23d787190f2c4812ff9ab11847a72'] = 'État :';
