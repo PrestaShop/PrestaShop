@@ -1512,6 +1512,8 @@ class AdminImportControllerCore extends AdminController
 						else
 							$id_shop_list[] = $shop;
 
+					$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
+
 					// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
 					if (isset($info['reference']) && !empty($info['reference']))
 					{
@@ -1539,7 +1541,7 @@ class AdminImportControllerCore extends AdminController
 										(int)$info['default_on'],
 										0,
 										strval($info['upc']),
-										(int)$info['quantity'],
+										(int)$info['minimal_quantity'],
 										0,
 										null,
 										$id_shop_list
@@ -1565,7 +1567,7 @@ class AdminImportControllerCore extends AdminController
 								(int)$info['default_on'],
 								0,
 								strval($info['upc']),
-								(int)$info['quantity'],
+								(int)$info['minimal_quantity'],
 								$id_shop_list
 							);
 					}
