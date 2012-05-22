@@ -452,7 +452,7 @@ class AdminHomeControllerCore extends AdminController
 		else
 		{
 			$result['result'] = 'error';
-			$result['msg'] = $this->l('an error occured');
+			$result['msg'] = $this->l('an error occurred');
 		}
 		$this->content = Tools::jsonEncode($result);
 
