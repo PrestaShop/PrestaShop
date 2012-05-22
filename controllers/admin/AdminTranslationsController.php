@@ -772,13 +772,15 @@ class AdminTranslationsControllerCore extends AdminController
 				$directories['php'] = array(
 					_PS_ROOT_DIR_.'/' => scandir(_PS_ROOT_DIR_),
 					_PS_ADMIN_DIR_.'/' => scandir(_PS_ADMIN_DIR_),
-					_PS_CLASS_DIR_.'/' => scandir(_PS_CLASS_DIR_),
 					_PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
 					_PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
-					_PS_OVERRIDE_DIR_.'classes/' => scandir(_PS_OVERRIDE_DIR_.'classes/'),
 					_PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
 					_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/')
 				);
+
+				// Get all files for folders classes/ and override/classes/ recursively
+				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
+				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
 				break;
 
 			case 'fields':
@@ -805,13 +807,16 @@ class AdminTranslationsControllerCore extends AdminController
 				$directories['php'] = array(
 					_PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
 					_PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_),
-					_PS_OVERRIDE_DIR_.'classes/' => scandir(_PS_OVERRIDE_DIR_.'classes/'),
 					_PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
 					_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
-					_PS_CLASS_DIR_ => scandir(_PS_CLASS_DIR_),
 					_PS_ADMIN_DIR_.'/' => scandir(_PS_ADMIN_DIR_),
 					_PS_ADMIN_DIR_.'/tabs/' => scandir(_PS_ADMIN_DIR_.'/tabs')
 				);
+
+				// Get all files for folders classes/ and override/classes/ recursively
+				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
+				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
+
 				$directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
 				break;
 
