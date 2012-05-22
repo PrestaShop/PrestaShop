@@ -816,9 +816,11 @@ product_tabs['Informations'] = new function(){
 			$('li.tab-row a[id*="Pack"]').hide();
 			$('li.tab-row a[id*="VirtualProduct"]').hide();
 			$('div.ppack').hide();
-			$('#is_virtual_good').removeAttr('checked');
 			$('div.is_virtual_good').hide();
 			$('#is_virtual').val(0);
+			tabs_manager.onLoad('VirtualProduct', function(){
+				$('#is_virtual_good').removeAttr('checked');
+			});
 
 			product_type = $(this).val();
 
@@ -855,11 +857,11 @@ product_tabs['Informations'] = new function(){
 				else
 				{
 					$('li.tab-row a[id*="VirtualProduct"]').show().click();
+					$('#is_virtual').val(1);
 
 					tabs_manager.onLoad('VirtualProduct', function(){
 						$('#is_virtual_good').attr('checked', true);
 						$('#virtual_good').show();
-						$('#is_virtual').val(1);
 					});
 
 					tabs_manager.onLoad('Quantities', function(){
