@@ -39,7 +39,7 @@ class TranslateCore
 	 * @param bool $htmlentities
 	 * @return string
 	 */
-	public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = false)
+	public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
 	{
 		static $modules_tabs = null;
 
@@ -75,7 +75,7 @@ class TranslateCore
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		$str = str_replace('"', '&quot;', $str);
 
-		if ($sprintf)
+		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $str, $matches) && !is_null($sprintf))
 		{
 			if (!is_array($sprintf))
 				$sprintf = array($sprintf);
@@ -121,7 +121,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source, $sprintf = false)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = null)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -190,7 +190,7 @@ class TranslateCore
 			else
 				$ret = stripslashes($string);
 
-			if ($sprintf)
+			if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $ret, $matches) && !is_null($sprintf))
 			{
 				if (!is_array($sprintf))
 					$sprintf = array($sprintf);
@@ -231,7 +231,7 @@ class TranslateCore
 
 		$key = md5(str_replace('\'', '\\\'', $string));
 
-		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
 		return $str;
 	}
