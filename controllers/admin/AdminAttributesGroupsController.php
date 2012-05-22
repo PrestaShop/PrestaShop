@@ -695,8 +695,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$query->from('attribute', 'a');
 				$query->join(Shop::addSqlAssociation('attribute', 'a'));
 				$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
-				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-				$item['count_values'] = (int)$res;
+				$query->groupBy('attribute_shop.id_shop');
+				$query->orderBy('count_values DESC');
+				$item['count_values'] = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 				unset($query);
 			}
 		}
