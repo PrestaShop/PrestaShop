@@ -300,7 +300,7 @@ class CartControllerCore extends FrontController
 
 				Cart::addExtraCarriers($result);
 			}
-			$result['summary'] = $this->context->cart->getSummaryDetails();
+			$result['summary'] = $this->context->cart->getSummaryDetails(null, true);
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
 			$result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);
 			$result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('displayShoppingCart', $result['summary']);
