@@ -2447,7 +2447,7 @@ class ProductCore extends ObjectModel
 			$price = Tools::convertPrice($price, $id_currency);
 
 		// Attribute price
-		if (!$specific_price || !$specific_price['id_product_attribute'])
+		if (is_array($result) && (!$specific_price || !$specific_price['id_product_attribute']))
 		{
 			$attribute_price = Tools::convertPrice(array_key_exists('attribute_price', $result) ? (float)$result['attribute_price'] : 0, $id_currency);
 			if ($id_product_attribute !== false) // If you want the default combination, please use NULL value instead
