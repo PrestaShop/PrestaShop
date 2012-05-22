@@ -751,7 +751,8 @@ class AdminTranslationsControllerCore extends AdminController
 						_PS_ADMIN_CONTROLLER_DIR_.'/' => scandir(_PS_ADMIN_CONTROLLER_DIR_),
 						_PS_OVERRIDE_DIR_.'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_.'controllers/admin/'),
 						_PS_CLASS_DIR_.'helper/' => scandir(_PS_CLASS_DIR_.'helper/'),
-						_PS_CLASS_DIR_.'controller/' => array('AdminController.php')
+						_PS_CLASS_DIR_.'controller/' => array('AdminController.php'),
+						_PS_CLASS_DIR_ => array('PaymentModule.php')
 					),
 					'tpl' => $this->listFiles(_PS_ADMIN_DIR_.'/themes/'),
 					'specific' => array(
@@ -1457,6 +1458,9 @@ class AdminTranslationsControllerCore extends AdminController
 
 					if ($prefix_key == 'Admin')
 						$prefix_key = 'AdminController';
+
+					if ($prefix_key == 'PaymentModule.php')
+						$prefix_key = 'PaymentModule';
 
 					// Get content for this file
 					$content = file_get_contents($file_path);
