@@ -116,7 +116,6 @@
 	</div>
 	{* [begin] virtual product *}
 	<div id="virtual_good" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
-		<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
 		<div>
 			<label>{l s='Does this product has an associated file?'}</label>
 			<label style="width:50px"><input type="radio" value="1"  name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
