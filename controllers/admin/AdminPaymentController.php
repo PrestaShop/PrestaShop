@@ -205,6 +205,10 @@ class AdminPaymentControllerCore extends AdminController
 
 					if (!isset($module->$name_id))
 						$module->$name_id = array();
+					if (!isset($module->currencies_mode))
+						$module->currencies_mode = '';
+					if (!isset($module->currencies))
+						$module->currencies = '';
 
 					// If is a country list and the country is limited, remove it from list
 					if ($name_id == 'country'
