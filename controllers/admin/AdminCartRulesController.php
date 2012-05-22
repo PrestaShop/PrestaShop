@@ -479,13 +479,13 @@ class AdminCartRulesControllerCore extends AdminController
 		if (Validate::isUnsignedId($current_object->gift_product) &&
 			($product = new Product($current_object->gift_product, false, $this->context->language->id)) &&
 			Validate::isLoadedObject($product))
-			$gift_product_filter = trim($product->reference.' '.$product->name);
+			$gift_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
 
 		$reduction_product_filter = '';
 		if (Validate::isUnsignedId($current_object->reduction_product) &&
 			($product = new Product($current_object->reduction_product, false, $this->context->language->id)) &&
 			Validate::isLoadedObject($product))
-			$reduction_product_filter = trim($product->reference.' '.$product->name);
+			$reduction_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
 
 		$product_rule_groups = $this->getProductRuleGroupsDisplay($current_object);
 		
