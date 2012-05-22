@@ -794,12 +794,9 @@ class WebserviceRequestCore
 				$this->setError(500, 'This group shop doesn\'t have shops', 999);
 				return false;
 			}
-			return true;
 		}
-
-		// @FIXME Set ErrorCode !
-		$this->setError(404, 'This group shop id doesn\'t exist', 999);
-		return false;
+		// id_group_shop isn't mandatory
+		return true;
 	}
 
 	/**
