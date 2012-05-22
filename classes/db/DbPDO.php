@@ -52,7 +52,7 @@ class DbPDOCore extends Db
 		}
 		catch (PDOException $e)
 		{
-			throw new PrestaShopDatabaseException(Tools::displayError('Link to database cannot be established. ('.$e->getMessage().')'));
+			throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), $e->getMessage()));
 		}
 
 		// UTF-8 support
