@@ -25,7 +25,7 @@
 */
 
 $(document).ready(function() {
-    initTableDnD();
+	initTableDnD();
 });
 
 function initTableDnD(table)
