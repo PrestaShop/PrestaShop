@@ -784,9 +784,7 @@ class AdminTranslationsControllerCore extends AdminController
 				break;
 
 			case 'fields':
-				$directories['php'] = array(
-					_PS_CLASS_DIR_.'/' => scandir(_PS_CLASS_DIR_)
-				);
+				$directories['php'] = $this->listFiles(_PS_CLASS_DIR_, array(), 'php');
 				break;
 
 			case 'pdf':
