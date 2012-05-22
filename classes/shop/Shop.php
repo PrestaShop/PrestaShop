@@ -255,29 +255,41 @@ class ShopCore extends ObjectModel
 			$id_shop = '';
 			$found_uri = '';
 			$request_uri = rawurldecode($_SERVER['REQUEST_URI']);
+			$is_main_uri = false;
 			if ($results = Db::getInstance()->executeS($sql))
+			{
 				foreach ($results as $row)
 				{
 					// An URL matching current shop was found
-					if (!$id_shop && preg_match('#^'.preg_quote($row['uri'], '#').'#', $request_uri))
+					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $request_uri))
 					{
 						$id_shop = $row['id_shop'];
 						$found_uri = $row['uri'];
-
-						// If this is the main URL, use it in current script
 						if ($row['main'])
-							break;
-					}
-					else if ($id_shop && $row['main'])
-					{
-						// If an URL was found but is not current URL, redirect to main URL
-						$request_uri = substr($request_uri, strlen($found_uri));
-						header('HTTP/1.1 301 Moved Permanently');
-						header('Cache-Control: no-cache');
-						header('location: http://'.$row['domain'].$row['uri'].$request_uri);
-						exit;
+							$is_main_uri = true;
+						break;
 					}
 				}
+			}
+
+			// If an URL was found but is not the main URL, redirect to main URL
+			if ($id_shop && !$is_main_uri)
+			{
+				foreach ($results as $row)
+					if ($row['id_shop'] == $id_shop && $row['main'])
+					{
+						$main_uri = $row['uri'];
+						break;
+					}
+
+				// extract url parameters
+				$request_uri = substr($request_uri, strlen($found_uri));
+
+				header('HTTP/1.1 301 Moved Permanently');
+				header('Cache-Control: no-cache');
+				header('location: http://'.$row['domain'].$main_uri.$request_uri);
+				exit;
+			}
 		}
 
 		if (!$id_shop && defined('_PS_ADMIN_DIR_'))
