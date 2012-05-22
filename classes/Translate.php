@@ -177,13 +177,13 @@ class TranslateCore
 			if ($_MODULES == null)
 				return str_replace('"', '&quot;', $string);
 
-			$currentKey = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
-			$defaultKey = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
+			$current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
+			$default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
-			if (isset($_MODULES[$currentKey]))
-				$ret = stripslashes($_MODULES[$currentKey]);
-			elseif (isset($_MODULES[$defaultKey]))
-				$ret = stripslashes($_MODULES[$defaultKey]);
+			if (isset($_MODULES[$current_key]))
+				$ret = stripslashes($_MODULES[$current_key]);
+			elseif (isset($_MODULES[$default_key]))
+				$ret = stripslashes($_MODULES[$default_key]);
 			// if translation was not found in module, look for it in AdminController or Helpers
 			elseif (!empty($_LANGADM))
 				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);

@@ -45,7 +45,7 @@ class DbMySQLiCore extends Db
 
 		// Do not use object way for error because this work bad before PHP 5.2.9
 		if (mysqli_connect_error())
-			throw new PrestaShopDatabaseException(Tools::displayError('Link to database cannot be established : '.mysqli_connect_error()));
+			throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), mysqli_connect_error()));
 
 		// UTF-8 support
 		if (!$this->link->query('SET NAMES \'utf8\''))
