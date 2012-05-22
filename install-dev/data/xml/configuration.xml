@@ -609,7 +609,7 @@
       <value>1</value>
     </configuration>
     <configuration id="BLOCKADVERT_LINK" name="BLOCKADVERT_LINK">
-      <value>0</value>
+      <value>http://www.prestashop.com</value>
     </configuration>
     <configuration id="BLOCKSTORE_IMG" name="BLOCKSTORE_IMG">
       <value>store.jpg</value>
