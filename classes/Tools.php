@@ -90,11 +90,10 @@ class ToolsCore
 			$explode = explode('?', $url);
 			// don't use ssl if url is home page
 			// used when logout for example
-			$useSSL = !empty($url);
-			$url = $link->getPageLink($explode[0], $useSSL);
+			$use_ssl = !empty($url);
+			$url = $link->getPageLink($explode[0], $use_ssl);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
-			$base_uri = '';
 		}
 
 		// Send additional headers
@@ -159,7 +158,7 @@ class ToolsCore
 
 	/**
 	 * getProtocol return the set protocol according to configuration (http[s])
-	 * @param Boolean true if require ssl
+	 * @param bool $use_ssl true if require ssl
 	 * @return String (http|https)
 	 */
 	public static function getProtocol($use_ssl = null)
@@ -269,7 +268,7 @@ class ToolsCore
 			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
 
 		return false;
-		}
+	}
 
 	/**
 	* Get the current url prefix protocol (https/http)
@@ -288,7 +287,7 @@ class ToolsCore
 	* Secure an URL referrer
 	*
 	* @param string $referrer URL referrer
-	* @return secured referrer
+	* @return string secured referrer
 	*/
 	public static function secureReferrer($referrer)
 	{
@@ -302,14 +301,14 @@ class ToolsCore
 	* if unavailable, take a default value
 	*
 	* @param string $key Value key
-	* @param mixed $defaultValue (optional)
+	* @param mixed $default_value (optional)
 	* @return mixed Value
 	*/
-	public static function getValue($key, $defaultValue = false)
+	public static function getValue($key, $default_value = false)
 	{
 		if (!isset($key) || empty($key) || !is_string($key))
 			return false;
-		$ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $defaultValue));
+		$ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
 
 		if (is_string($ret) === true)
 			$ret = urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret)));
@@ -353,15 +352,15 @@ class ToolsCore
 				$string = $array[0];
 			if (Validate::isLanguageIsoCode($string))
 			{
-				$lang = new Language((int)(Language::getIdByIso($string)));
+				$lang = new Language(Language::getIdByIso($string));
 				if (Validate::isLoadedObject($lang) && $lang->active)
-					$cookie->id_lang = (int)($lang->id);
+					$cookie->id_lang = (int)$lang->id;
 			}
 		}
 
 		/* If language file not present, you must use default language file */
 		if (!$cookie->id_lang || !Validate::isUnsignedId($cookie->id_lang))
-			$cookie->id_lang = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$cookie->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
 		$iso = Language::getIsoById((int)$cookie->id_lang);
 		@include_once(_PS_THEME_DIR_.'lang/'.$iso.'.php');
@@ -399,9 +398,9 @@ class ToolsCore
 		if (Tools::isSubmit('SubmitCurrency'))
 			if (isset($_POST['id_currency']) && is_numeric($_POST['id_currency']))
 			{
-				$currency = Currency::getCurrencyInstance((int)($_POST['id_currency']));
+				$currency = Currency::getCurrencyInstance($_POST['id_currency']);
 				if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
-					$cookie->id_currency = (int)($currency->id);
+					$cookie->id_currency = (int)$currency->id;
 			}
 
 		if ((int)$cookie->id_currency)
@@ -410,9 +409,9 @@ class ToolsCore
 			if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active && $currency->isAssociatedToShop())
 				return $currency;
 		}
-		$currency = Currency::getCurrencyInstance((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
+		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
 		if (is_object($currency) && $currency->id)
-			$cookie->id_currency = (int)($currency->id);
+			$cookie->id_currency = (int)$currency->id;
 		return $currency;
 	}
 
@@ -433,7 +432,7 @@ class ToolsCore
 			$currency = $context->currency;
 		// if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
 		elseif (is_int($currency))
-			$currency = Currency::getCurrencyInstance((int)($currency));
+			$currency = Currency::getCurrencyInstance((int)$currency);
 
 		if (is_array($currency))
 		{
@@ -454,11 +453,11 @@ class ToolsCore
 
 		$blank = ($c_blank ? ' ' : '');
 		$ret = 0;
-		if (($isNegative = ($price < 0)))
+		if (($is_negative = ($price < 0)))
 			$price *= -1;
 		$price = Tools::ps_round($price, $c_decimals);
 		switch ($c_format)
-	 	{
+		{
 	 	 	/* X 0,000.00 */
 	 	 	case 1:
 				$ret = $c_char.$blank.number_format($price, $c_decimals, '.', ',');
@@ -476,7 +475,7 @@ class ToolsCore
 				$ret = number_format($price, $c_decimals, '.', ',').$blank.$c_char;
 				break;
 		}
-		if ($isNegative)
+		if ($is_negative)
 			$ret = '-'.$ret;
 		if ($no_utf8)
 			return str_replace('€', chr(128), $ret);
@@ -513,7 +512,7 @@ class ToolsCore
 		$c_id = (is_array($currency) ? $currency['id_currency'] : $currency->id);
 		$c_rate = (is_array($currency) ? $currency['conversion_rate'] : $currency->conversion_rate);
 
-		if ($c_id != (int)(Configuration::get('PS_CURRENCY_DEFAULT')))
+		if ($c_id != (int)Configuration::get('PS_CURRENCY_DEFAULT'))
 		{
 			if ($to_currency)
 				$price *= $c_rate;
@@ -647,7 +646,6 @@ class ToolsCore
 			if ($delete_self)
 				rmdir($dirname);
 		}
-		
 	}
 
 	/**
@@ -821,7 +819,7 @@ class ToolsCore
 	* @param boolean $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
 	*/
-	public static function getPath($id_category, $path = '', $linkOntheLastItem = false, $categoryType = 'products', Context $context = null)
+	public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -834,12 +832,12 @@ class ToolsCore
 		if (empty($pipe))
 			$pipe = '>';
 
-		$fullPath = '';
-		if ($categoryType === 'products')
+		$full_path = '';
+		if ($category_type === 'products')
 		{
 			$interval = Category::getInterval($id_category);
 			$id_root_category = $context->shop->getCategory();
-			$intervalRoot = Category::getInterval($id_root_category);
+			$interval_root = Category::getInterval($id_root_category);
 			if ($interval)
 			{
 				$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
@@ -847,41 +845,41 @@ class ToolsCore
 						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
 						WHERE c.nleft <= '.$interval['nleft'].'
 							AND c.nright >= '.$interval['nright'].'
-							AND c.nleft >= '.$intervalRoot['nleft'].'
-							AND c.nright <= '.$intervalRoot['nright'].'
+							AND c.nleft >= '.$interval_root['nleft'].'
+							AND c.nright <= '.$interval_root['nright'].'
 							AND cl.id_lang = '.(int)$context->language->id.'
 							AND c.active = 1
-							AND c.level_depth > '.(int)$intervalRoot['level_depth'].'
+							AND c.level_depth > '.(int)$interval_root['level_depth'].'
 						ORDER BY c.level_depth ASC';
 				$categories = Db::getInstance()->executeS($sql);
 
 				$n = 1;
-				$nCategories = count($categories);
+				$n_categories = count($categories);
 				foreach ($categories as $category)
 				{
-					$fullPath .=
-					(($n < $nCategories || $linkOntheLastItem) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+					$full_path .=
+					(($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-					(($n < $nCategories || $linkOntheLastItem) ? '</a>' : '').
-					(($n++ != $nCategories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
+					(($n < $n_categories || $link_on_the_item) ? '</a>' : '').
+					(($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
 				}
 
-				return $fullPath.$path;
+				return $full_path.$path;
 			}
 		}
-		else if ($categoryType === 'CMS')
+		else if ($category_type === 'CMS')
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
 				die(Tools::displayError());
-			$categoryLink = $context->link->getCMSCategoryLink($category);
+			$category_link = $context->link->getCMSCategoryLink($category);
 
 			if ($path != $category->name)
-				$fullPath .= '<a href="'.Tools::safeOutput($categoryLink).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+				$full_path .= '<a href="'.Tools::safeOutput($category_link).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
 			else
-				$fullPath = ($linkOntheLastItem ? '<a href="'.Tools::safeOutput($categoryLink).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($linkOntheLastItem ? '</a>' : '');
+				$full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
 
-			return Tools::getPath($category->id_parent, $fullPath, $linkOntheLastItem, $categoryType);
+			return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
 		}
 	}
 
@@ -896,18 +894,18 @@ class ToolsCore
 		$id_category = (int)$id_category;
 		$pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 
-		$defaultCategory = 1;
+		$default_category = 1;
 		if ($type_cat === 'products')
 		{
-			$defaultCategory = $context->shop->getCategory();
+			$default_category = $context->shop->getCategory();
 			$category = new Category($id_category, $context->language->id);
 		}
 		else if ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
-			$id_category = $defaultCategory;
-		if ($id_category == $defaultCategory)
+			$id_category = $default_category;
+		if ($id_category == $default_category)
 			return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
 
 		return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
@@ -990,18 +988,18 @@ class ToolsCore
 	* Truncate strings
 	*
 	* @param string $str
-	* @param integer $maxLen Max length
+	* @param integer $max_length Max length
 	* @param string $suffix Suffix optional
 	* @return string $str truncated
 	*/
 	/* CAUTION : Use it only on module hookEvents.
 	** For other purposes use the smarty function instead */
-	public static function truncate($str, $maxLen, $suffix = '...')
+	public static function truncate($str, $max_length, $suffix = '...')
 	{
-	 	if (Tools::strlen($str) <= $maxLen)
+	 	if (Tools::strlen($str) <= $max_length)
 	 		return $str;
 	 	$str = utf8_decode($str);
-	 	return (utf8_encode(substr($str, 0, $maxLen - Tools::strlen($suffix)).$suffix));
+	 	return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
 	}
 
 	/**
@@ -1015,6 +1013,7 @@ class ToolsCore
 	*/
 	public static function dateYears()
 	{
+		$tab = array();
 		for ($i = date('Y') - 10; $i >= 1900; $i--)
 			$tab[] = $i;
 		return $tab;
@@ -1022,6 +1021,7 @@ class ToolsCore
 
 	public static function dateDays()
 	{
+		$tab = array();
 		for ($i = 1; $i != 32; $i++)
 			$tab[] = $i;
 		return $tab;
@@ -1029,6 +1029,7 @@ class ToolsCore
 
 	public static function dateMonths()
 	{
+		$tab = array();
 		for ($i = 1; $i != 13; $i++)
 			$tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
 		return $tab;
@@ -1095,8 +1096,8 @@ class ToolsCore
 		if (is_array($str))
 			return false;
 		if (function_exists('mb_substr'))
-			return mb_substr($str, (int)($start), ($length === false ? Tools::strlen($str) : (int)($length)), $encoding);
-		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)($length)));
+			return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
+		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
 	}
 
 	public static function ucfirst($str)
@@ -1104,11 +1105,11 @@ class ToolsCore
 		return Tools::strtoupper(Tools::substr($str, 0, 1)).Tools::substr($str, 1);
 	}
 
-	public static function orderbyPrice(&$array, $orderWay)
+	public static function orderbyPrice(&$array, $order_way)
 	{
 		foreach ($array as &$row)
-			$row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)($row['id_product_attribute']) : null), 2);
-		if (strtolower($orderWay) == 'desc')
+			$row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null), 2);
+		if (strtolower($order_way) == 'desc')
 			uasort($array, 'cmpPriceDesc');
 		else
 			uasort($array, 'cmpPriceAsc');
@@ -1139,7 +1140,7 @@ class ToolsCore
 	 */
 	public static function ps_round($value, $precision = 0)
 	{
-		$method = (int)(Configuration::get('PS_PRICE_ROUND_MODE'));
+		$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 		if ($method == PS_ROUND_UP)
 			return Tools::ceilf($value, $precision);
 		elseif ($method == PS_ROUND_DOWN)
@@ -1156,15 +1157,15 @@ class ToolsCore
 	 */
 	public static function ceilf($value, $precision = 0)
 	{
-		$precisionFactor = $precision == 0 ? 1 : pow(10, $precision);
-		$tmp = $value * $precisionFactor;
+		$precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+		$tmp = $value * $precision_factor;
 		$tmp2 = (string)$tmp;
 		// If the current value has already the desired precision
 		if (strpos($tmp2, '.') === false)
 			return ($value);
 		if ($tmp2[strlen($tmp2) - 1] == 0)
 			return $value;
-		return ceil($tmp) / $precisionFactor;
+		return ceil($tmp) / $precision_factor;
 	}
 
 	/**
@@ -1176,15 +1177,15 @@ class ToolsCore
 	 */
 	public static function floorf($value, $precision = 0)
 	{
-		$precisionFactor = $precision == 0 ? 1 : pow(10, $precision);
-		$tmp = $value * $precisionFactor;
+		$precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+		$tmp = $value * $precision_factor;
 		$tmp2 = (string)$tmp;
 		// If the current value has already the desired precision
 		if (strpos($tmp2, '.') === false)
 			return ($value);
 		if ($tmp2[strlen($tmp2) - 1] == 0)
 			return $value;
-		return floor($tmp) / $precisionFactor;
+		return floor($tmp) / $precision_factor;
 	}
 
 	/**
@@ -1200,27 +1201,27 @@ class ToolsCore
 		return self::$file_exists_cache[$filename];
 	}
 
-	public static function file_get_contents($url, $useIncludePath = false, $streamContext = null, $curlTimeOut = 5)
+	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
-		if ($streamContext == null)
-			$streamContext = @stream_context_create(array('http' => array('timeout' => 5)));
+		if ($stream_context == null)
+			$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
 
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return @file_get_contents($url, $useIncludePath, $streamContext);
+			return @file_get_contents($url, $use_include_path, $stream_context);
 		elseif (function_exists('curl_init') && in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curlTimeOut);
-			curl_setopt($curl, CURLOPT_TIMEOUT, $curlTimeOut);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curl_timeout);
+			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;
 		}
 		else
 			return false;
-    }
+	}
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
@@ -1244,12 +1245,12 @@ class ToolsCore
 
 	/**
 	* Translates a string with underscores into camel case (e.g. first_name -> firstName)
-	* @prototype string public static function toCamelCase(string $str[, bool $capitaliseFirstChar = false])
+	* @prototype string public static function toCamelCase(string $str[, bool $catapitalise_first_char = false])
 	*/
-	public static function toCamelCase($str, $capitaliseFirstChar = false)
+	public static function toCamelCase($str, $catapitalise_first_char = false)
 	{
 		$str = strtolower($str);
-		if ($capitaliseFirstChar)
+		if ($catapitalise_first_char)
 			$str = ucfirst($str);
 		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
@@ -1362,12 +1363,7 @@ class ToolsCore
 	}
 
 	/**
-	 * addCSS allows you to add stylesheet at any time.
-	 *
 	 * @deprecated as of 1.5 use FrontController->addCSS()
-	 * @param mixed $css_uri
-	 * @param string $css_media_type
-	 * @return true
 	 */
 	public static function addCSS($css_uri, $css_media_type = 'all')
 	{
@@ -1599,8 +1595,8 @@ FileETag INode MTime Size
 		else
 		{
 			include_once(_PS_TOOL_DIR_.'json/json.php');
-			$pearJson = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
-			return $pearJson->decode($json);
+			$pear_json = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
+			return $pear_json->decode($json);
 		}
 	}
 
@@ -1617,8 +1613,8 @@ FileETag INode MTime Size
 		else
 		{
 			include_once(_PS_TOOL_DIR_.'json/json.php');
-			$pearJson = new Services_JSON();
-			return $pearJson->encode($data);
+			$pear_json = new Services_JSON();
+			return $pear_json->encode($data);
 		}
 	}
 
@@ -1687,10 +1683,10 @@ FileETag INode MTime Size
 			return;
 		if ($smarty->force_compile == 0 && $smarty->caching == $level)
 			return;
-		self::$_forceCompile = (int)($smarty->force_compile);
-		self::$_caching = (int)($smarty->caching);
+		self::$_forceCompile = (int)$smarty->force_compile;
+		self::$_caching = (int)$smarty->caching;
 		$smarty->force_compile = 0;
-		$smarty->caching = (int)($level);
+		$smarty->caching = (int)$level;
 	}
 
 	public static function restoreCacheSettings(Context $context = null)
@@ -1699,9 +1695,9 @@ FileETag INode MTime Size
 			$context = Context::getContext();
 
 		if (isset(self::$_forceCompile))
-			$context->smarty->force_compile = (int)(self::$_forceCompile);
+			$context->smarty->force_compile = (int)self::$_forceCompile;
 		if (isset(self::$_caching))
-			$context->smarty->caching = (int)(self::$_caching);
+			$context->smarty->caching = (int)self::$_caching;
 	}
 
 	public static function isCallable($function)
@@ -1726,7 +1722,6 @@ FileETag INode MTime Size
 		return substr_replace($haystack, $replace, $pos, strlen($needle));
 	}
 
-
 	/**
 	 * Function property_exists does not exist in PHP < 5.1
 	 *
@@ -1748,7 +1743,7 @@ FileETag INode MTime Size
             $vars = get_class_vars($class);
 
         return array_key_exists($property, $vars);
-    }
+	}
 
 	/**
      * @desc identify the version of php
@@ -1774,17 +1769,17 @@ FileETag INode MTime Size
      * @desc try to open a zip file in order to check if it's valid
      * @return bool success
      */
-	public static function ZipTest($fromFile)
+	public static function ZipTest($from_file)
 	{
 		if (class_exists('ZipArchive', false))
 		{
 			$zip = new ZipArchive();
-			return ($zip->open($fromFile, ZIPARCHIVE::CHECKCONS) === true);
+			return ($zip->open($from_file, ZIPARCHIVE::CHECKCONS) === true);
 		}
 		else
 		{
 			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
-			$zip = new PclZip($fromFile);
+			$zip = new PclZip($from_file);
 			return ($zip->privCheckFormat() === true);
 		}
 	}
@@ -1793,24 +1788,24 @@ FileETag INode MTime Size
 	 * @desc extract a zip file to the given directory
 	 * @return bool success
 	 */
-	public static function ZipExtract($fromFile, $toDir)
+	public static function ZipExtract($from_file, $to_dir)
 	{
-		if (!file_exists($toDir))
-			mkdir($toDir, 0777);
+		if (!file_exists($to_dir))
+			mkdir($to_dir, 0777);
 		if (class_exists('ZipArchive', false))
 		{
 			$zip = new ZipArchive();
-			if ($zip->open($fromFile) === true && $zip->extractTo($toDir) && $zip->close())
+			if ($zip->open($from_file) === true && $zip->extractTo($to_dir) && $zip->close())
 				return true;
 			return false;
 		}
 		else
 		{
 			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
-			$zip = new PclZip($fromFile);
-			$list = $zip->extract(PCLZIP_OPT_PATH, $toDir);
-			foreach ($list as $extractedFile)
-				if ($extractedFile['status'] != 'ok' && $extractedFile['status'] != 'already_a_directory')
+			$zip = new PclZip($from_file);
+			$list = $zip->extract(PCLZIP_OPT_PATH, $to_dir);
+			foreach ($list as $file)
+				if ($file['status'] != 'ok' && $file['status'] != 'already_a_directory')
 					return false;
 			return true;
 		}
@@ -1833,23 +1828,23 @@ FileETag INode MTime Size
 				$list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
 				$value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
 				$value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
-				$orderByPrefix = '';
+				$order_by_prefix = '';
 				if ($prefix)
 				{
 					if ($value == 'id_product' || $value == 'date_add' || $value == 'date_upd' || $value == 'price')
-						$orderByPrefix = 'p.';
+						$order_by_prefix = 'p.';
 					elseif ($value == 'name')
-						$orderByPrefix = 'pl.';
+						$order_by_prefix = 'pl.';
 					elseif ($value == 'manufacturer_name' && $prefix)
 					{
-						$orderByPrefix = 'm.';
+						$order_by_prefix = 'm.';
 						$value = 'name';
 					}
 					elseif ($value == 'position' || empty($value))
-						$orderByPrefix = 'cp.';
+						$order_by_prefix = 'cp.';
 				}
 
-				return $orderByPrefix.$value;
+				return $order_by_prefix.$value;
 			break;
 
 			case 'way' :
@@ -1916,7 +1911,7 @@ FileETag INode MTime Size
 	 *
 	 * @param string $msg
 	 * @param bool $die
-	 * @return success of logging
+	 * @return bool success of logging
 	 */
 	public static function dieOrLog($msg, $die = true)
 	{
@@ -1939,7 +1934,7 @@ FileETag INode MTime Size
 	/**
 	 * Clear cache for Smarty
 	 *
-	 * @param objet $smarty
+	 * @param Smarty $smarty
 	 */
 	 public static function clearCache($smarty)
 	 {
@@ -2020,13 +2015,13 @@ FileETag INode MTime Size
 	{
 		if (function_exists('apache_get_modules'))
 		{
-			static $apacheModuleList = null;
+			static $apache_module_list = null;
 
-			if (!is_array($apacheModuleList))
-				$apacheModuleList = apache_get_modules();
+			if (!is_array($apache_module_list))
+				$apache_module_list = apache_get_modules();
 
 			// we need strpos (example, evasive can be evasive20)
-			foreach ($apacheModuleList as $module)
+			foreach ($apache_module_list as $module)
 			{
 				if (strpos($module, $name) !== false)
 					return true;
@@ -2134,19 +2129,19 @@ FileETag INode MTime Size
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
-	if ((float)($a['price_tmp']) < (float)($b['price_tmp']))
+	if ((float)$a['price_tmp'] < (float)$b['price_tmp'])
 		return (-1);
-	elseif ((float)($a['price_tmp']) > (float)($b['price_tmp']))
+	elseif ((float)$a['price_tmp'] > (float)$b['price_tmp'])
 		return (1);
-	return (0);
+	return 0;
 }
 
 function cmpPriceDesc($a, $b)
 {
-	if ((float)($a['price_tmp']) < (float)($b['price_tmp']))
-		return (1);
-	elseif ((float)($a['price_tmp']) > (float)($b['price_tmp']))
-		return (-1);
-	return (0);
+	if ((float)$a['price_tmp'] < (float)$b['price_tmp'])
+		return 1;
+	elseif ((float)$a['price_tmp'] > (float)$b['price_tmp'])
+		return -1;
+	return 0;
 }
 
