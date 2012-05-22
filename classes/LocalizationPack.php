@@ -415,7 +415,7 @@ class LocalizationPackCore
 
 				if (isset($name) && isset($attributes['value']) && Configuration::get($name) !== false)
 					if (!Configuration::updateValue($name, (string)$attributes['value']))
-						$this->_errors[] = Tools::displayError('An error has occured during the configuration setup: '.$name);
+						$this->_errors[] = Tools::displayError('An error occurred during the configuration setup: '.$name);
 			}
 
 		return true;
@@ -431,7 +431,7 @@ class LocalizationPackCore
 				$group = new Group((int)_PS_DEFAULT_CUSTOMER_GROUP_);
 				$group->price_display_method = (int)$attributes['price_display_method'];
 				if (!$group->save())
-					$this->_errors[] = Tools::displayError('An error has occurred during the default group update');
+					$this->_errors[] = Tools::displayError('An error occurred during the default group update');
 			}
 			else
 				$this->_errors[] = Tools::displayError('An error has occurred during the default group update');
