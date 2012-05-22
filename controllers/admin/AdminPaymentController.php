@@ -166,7 +166,7 @@ class AdminPaymentControllerCore extends AdminController
 				break;
 			}
 
-		$lists = array('currencies' =>
+		$lists = array(
 					array('items' => Currency::getCurrencies(),
 						  'title' => $this->l('Currency restrictions'),
 						  'desc' => $this->l('Please mark the checkbox(es) for the currency or currencies for which you want the payment module(s) to be available.'),
@@ -202,6 +202,9 @@ class AdminPaymentControllerCore extends AdminController
 						$list['items'][$key_item]['check_list'][$key_module] = 'checked';
 					else
 						$list['items'][$key_item]['check_list'][$key_module] = 'unchecked';
+
+					if (!isset($module->$name_id))
+						$module->$name_id = array();
 
 					// If is a country list and the country is limited, remove it from list
 					if ($name_id == 'country'
