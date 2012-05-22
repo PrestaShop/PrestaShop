@@ -2629,7 +2629,7 @@ class CartCore extends ObjectModel
 	*
 	* @return array Cart details
 	*/
-	public function getSummaryDetails($id_lang = null)
+	public function getSummaryDetails($id_lang = null, $refresh = false)
 	{
 		$context = Context::getContext();
 		if (!$id_lang)
@@ -2649,7 +2649,7 @@ class CartCore extends ObjectModel
 		
 		$currency = new Currency($this->id_currency);
 		
-		$products = $this->getProducts(false);
+		$products = $this->getProducts($refresh);
 		$gift_products = array();
 		$cart_rules = $this->getCartRules();
 		$total_shipping = $this->getTotalShippingCost();
@@ -2723,6 +2723,7 @@ class CartCore extends ObjectModel
 			'formattedAddresses' => $formatted_addresses,
 			'products' => array_values($products),
 			'gift_products' => $gift_products,
+			//'products_raw' => $this->getProducts(false),
 			'discounts' => $cart_rules,
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $total_discounts,
