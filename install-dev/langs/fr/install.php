@@ -69,7 +69,7 @@ return array(
 		'Can create new files and folders ?' => 'Création de fichiers et dossiers autorisée ?',
 		'Is GD Library installed ?' => 'Librairie GD installée ?',
 		'Is MySQL support is on ?' => 'MySQL est installé ?',
-		'Write permissions on files:' => 'Permissions sur les fichiers / dossiers :',
+		'Write permissions on files:' => 'Droits en écriture sur les fichiers / dossiers :',
 		'Can open external URLs ?' => 'Ouverture des URLs externes autorisée ?',
 		'Is PHP register global option off (recommended) ?' => 'Option PHP register_global désactivée (recommandé) ?',
 		'Is GZIP compression activated (recommended) ?' => 'Compression GZIP activée (recommandé) ?',
