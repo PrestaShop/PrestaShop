@@ -855,7 +855,9 @@ function display_action_details(row_id, controller, token, action, params) {
 				}
 				current_element.data('dataMaped',true);
 				current_element.data('opened', false);
-				initTableDnD('.details_'+id+' table.tableDnD');
+				
+				if (typeof(initTableDnD) != 'undefined')
+					initTableDnD('.details_'+id+' table.tableDnD');
 			}
 		});
 	}
