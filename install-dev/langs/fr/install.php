@@ -16,6 +16,7 @@ return array(
 		'Invalid shop name' => 'Nom de la boutique non valide',
 		'Your firstname contains some invalid characters' => 'Votre prénom contient des caractères invalides',
 		'Your lastname contains some invalid characters' => 'Votre nom contient des caractères invalides',
+		'Must be alphanumeric string with at least 8 characters' => 'Le mot de passe doit contenir au moins 8 caractères alpha numériques',
 		'The password is incorrect (alphanumeric string with at least 8 characters)' => 'Le mot de passe est invalide (caractères alpha numériques et au moins 8 lettres)',
 		'Password and its confirmation are different' => 'Le mot de passe de confirmation est différent de l\'original',
 		'This e-mail address is invalid' => 'Cette adresse e-mail est invalide',
