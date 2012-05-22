@@ -190,7 +190,7 @@
 			<div class="warn" style="margin-top: 20px;">
 				<p>{l s='There is no CSV file available, please upload one using the \'Upload\' button above.'}</p>
 				<ul>
-					<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>
+					<li>{l s='You can read informations on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
 					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
 				</ul>
 			</div>
