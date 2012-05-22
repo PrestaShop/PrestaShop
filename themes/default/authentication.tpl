@@ -92,6 +92,7 @@ $(function(){ldelim}
 	});
 	function submitFunction()
 	{
+		$('#create_account_error').html('').hide();
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
@@ -114,8 +115,8 @@ $(function(){ldelim}
 					for(error in jsonData.errors)
 						//IE6 bug fix
 						if(error != 'indexOf')
-							errors += jsonData.errors[error] + "\n";
-					alert(errors);
+							errors += '<li>'+jsonData.errors[error]+'</li>';
+					$('#create_account_error').html('<ol>'+errors+'</ol>').show();
 				}
 				else
 				{
@@ -155,6 +156,7 @@ $(function(){ldelim}
 			<h3>{l s='Create your account'}</h3>
 			<div class="form_content clearfix">
 				<h4>{l s='Enter your e-mail address to create an account'}.</h4>
+				<div class="error" id="create_account_error" style="display:none"></div>
 				<p class="text">
 					<label for="email_create">{l s='E-mail address'}</label>
 					<span><input type="text" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|escape:'htmlall':'UTF-8'|stripslashes}{/if}" class="account_input" /></span>
