@@ -1625,6 +1625,7 @@ $_LANGADM['AdminLogin4ce81305b7edb043d0a7a5c75cab17d0'] = 'Il y a';
 $_LANGADM['AdminLogin6357d3551190ec7e79371a8570121d3a'] = 'Il y a';
 $_LANGADM['AdminLogin69f4ac57f3127f55fffc6a5e65fd2a21'] = 'Veuillez alors accéder à la page par la nouvelle URL, par exemple http://www.domaine.fr/admin123%d';
 $_LANGADM['AdminLogin78e365acb087fd1f8d494dae0001de10'] = 'Adresse e-mail :';
+$_LANGADM['AdminLogin86bbc77fd75ac02c21b84a37b260eadd'] = 'Panneau d\'administration';
 $_LANGADM['AdminLogin94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_LANGADM['AdminLoginafbbe4ce0486fac5cfb8685e4fcb2b8a'] = 'Pour des raisons de sécurité, vous ne pouvez pas vous connecter tant que vous n\'avez pas :';
 $_LANGADM['AdminLoginb341a59d5636ed3d6a819137495b08a0'] = 'Mot de passe :';
