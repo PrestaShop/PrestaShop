@@ -4,8 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{gsitemap}prestashop>gsitemap_3aaaafde6f9b2701f9e6eb9292e95521'] = 'Google Sitemap';
 $_MODULE['<{gsitemap}prestashop>gsitemap_935a6bc13704a117d22333c3155b5dae'] = 'Generieren Sie Ihre Google Sitemap-Datei';
-$_MODULE['<{gsitemap}prestashop>gsitemap_5bbdad908e423585a7ecc6b61b66b313'] = 'Kann nicht erstellt werden';
-$_MODULE['<{gsitemap}prestashop>gsitemap_09fa1e865bdcf4d3215d5b0005b93154'] = 'sitemap.xml Datei.';
 $_MODULE['<{gsitemap}prestashop>gsitemap_5a517cec50ac8e742f6583c6c404c4e9'] = 'Sitemap-Datei erfolgreich erzeugt';
 $_MODULE['<{gsitemap}prestashop>gsitemap_0a6ee1a4f10278211d74152e633d0ed0'] = 'Fehler beim Erstellen der Sitemap-Datei';
 $_MODULE['<{gsitemap}prestashop>gsitemap_eb175747116b689caadea1b84202f513'] = 'Ihr Google-Sitemap-Datei ist online unter folgender Adresse:';

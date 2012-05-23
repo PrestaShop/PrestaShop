@@ -4,7 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{blockspecials}prestashop>blockspecials_c19ed4ea98cbf319735f6d09bde6c757'] = 'Specials Block';
 $_MODULE['<{blockspecials}prestashop>blockspecials_c2fb79a6eca86e519f938a1ef15c3e69'] = 'Fügt einen Block mit aktuellen Produkt-Specials hinzu';
-$_MODULE['<{blockspecials}prestashop>blockspecials_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Bestätigung';
 $_MODULE['<{blockspecials}prestashop>blockspecials_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{blockspecials}prestashop>blockspecials_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{blockspecials}prestashop>blockspecials_530c88f8210e022b39128e3f0409bbcf'] = 'Block immer anzeigen';

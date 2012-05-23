@@ -3,8 +3,6 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_4f29d8c727dcf2022ac241cb96c31083'] = 'Ausgabe Aufnahmeeinstellungen leer';
-$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_eab2b4237a7cd89c309119e35f62d168'] = 'Anzeige';
-$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_8bf8854bebe108183caeb845c7676ae4'] = 'von';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_49ee3087348e8d44e1feda1917443987'] = 'Name';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_eebfd2d9a7ea25b9e61e8260bcd4849c'] = 'Insgesamt verkaufte Menge';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_411919c5d99ff5d0f9770e96ffe22a01'] = 'Gesamtpreis Verkauf';

@@ -3,8 +3,6 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_4f29d8c727dcf2022ac241cb96c31083'] = 'Ausgabe Aufnahmeeinstellungen leer';
-$_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_eab2b4237a7cd89c309119e35f62d168'] = 'Anzeige';
-$_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_8bf8854bebe108183caeb845c7676ae4'] = 'von';
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_dff4bf10409100d989495c6d5486035e'] = 'Nachname';
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_04176f095283bc729f1e3926967e7034'] = 'Vorname';
 $_MODULE['<{statsbestcustomers}prestashop>statsbestcustomers_ce8ae9da5b7cd6c3df2929543a9af92d'] = 'E-Mail';
