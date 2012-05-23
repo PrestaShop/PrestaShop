@@ -74,17 +74,37 @@ class NotificationCore
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)
 	{
-		if ($type == 'order' || $type == 'customer_message')
-			$sql = 'SELECT '.(($type == 'order') ? 'id_order, id_customer, total_paid' : 'c.id_customer_message as id_customer_message, ct.id_customer as id_customer, ct.id_customer_thread as id_customer_thread, ct.email as email').'
-					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s`' : bqSQL($type).'` as c LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON c.id_customer_thread = ct.id_customer_thread').'
-					WHERE '.(($type == 'customer_message') ? 'c.' : '').'`id_'.bqSQL($type).'` > '.(int)$id_last_element.
-					(($type == 'customer_message') ? ' AND c.`id_employee` = 0' : '').'
-					ORDER BY '.(($type == 'customer_message') ? 'c.' : '').'`id_'.bqSQL($type).'` DESC';
-		else
-			$sql = 'SELECT id_'.bqSQL($type).'
-					FROM `'._DB_PREFIX_.bqSQL($type).'`
-					WHERE `id_'.bqSQL($type).'` > '.(int)$id_last_element.'
-					ORDER BY `id_'.bqSQL($type).'` DESC';
+		switch ($type)
+		{
+			case 'order':
+				$sql = '
+					SELECT o.`id_order`, o.`id_customer`, o.`total_paid`
+					FROM `'._DB_PREFIX_.'orders` as o
+					WHERE `id_order` > '.(int)$id_last_element.
+					Shop::addSqlRestriction(false, 'o').'
+					ORDER BY `id_order` DESC
+				';
+				break;
+			case 'customer_message':
+				$sql = '
+					SELECT c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
+					FROM `'._DB_PREFIX_.'customer_message` as c
+					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
+					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
+					AND c.`id_employee` = 0
+					ORDER BY c.`id_customer_message` DESC
+				';
+				break;
+			default:
+				$sql = '
+					SELECT t.`id_'.bqSQL($type).'`
+					FROM `'._DB_PREFIX_.bqSQL($type).'` t
+					WHERE t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
+					Shop::addSqlRestriction(false, 't').'
+					ORDER BY t.`id_'.bqSQL($type).'` DESC
+				';
+				break;
+		}
 
 		$json = array();
 		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $key => $value)
