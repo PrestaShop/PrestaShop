@@ -944,6 +944,10 @@ class AdminImportControllerCore extends AdminController
 				// Associate category to shop
 				if (Shop::isFeatureActive() && $info['shop'])
 				{
+					Db::getInstance()->execute('
+						DELETE FROM '._DB_PREFIX_.'category_shop
+						WHERE id_category = '.(int)$category->id
+					);
 					$info['shop'] = explode(',', $info['shop']);
 					foreach ($info['shop'] as $shop)
 						if (!is_numeric($shop))
@@ -951,8 +955,6 @@ class AdminImportControllerCore extends AdminController
 						else
 							$category->addShop($shop);
 				}
-				else
-					$category->addShop(Configuration::get('PS_SHOP_DEFAULT'));
 			}
 		}
 
@@ -1897,6 +1899,10 @@ class AdminImportControllerCore extends AdminController
 					// Associate supplier to group shop
 					if (Shop::isFeatureActive() && $manufacturer->shop)
 					{
+						Db::getInstance()->execute('
+							DELETE FROM '._DB_PREFIX_.'manufacturer_shop
+							WHERE id_manufacturer = '.(int)$manufacturer->id
+						);
 						$manufacturer->shop = explode(',', $manufacturer->shop);
 						$shops = array();
 						foreach ($manufacturer->shop as $shop)
@@ -1964,6 +1970,10 @@ class AdminImportControllerCore extends AdminController
 					// Associate supplier to group shop
 					if (Shop::isFeatureActive() && $supplier->shop)
 					{
+						Db::getInstance()->execute('
+							DELETE FROM '._DB_PREFIX_.'supplier_shop
+							WHERE id_supplier = '.(int)$supplier->id
+						);
 						$supplier->shop = explode(',', $supplier->shop);
 						$shops = array();
 						foreach ($supplier->shop as $shop)
