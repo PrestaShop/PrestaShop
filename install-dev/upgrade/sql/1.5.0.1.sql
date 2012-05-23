@@ -276,7 +276,7 @@ CREATE TABLE `PREFIX_product_carrier` (
 
 ALTER TABLE `PREFIX_customization` ADD COLUMN `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `id_product_attribute`,
   DROP PRIMARY KEY,
-  ADD PRIMARY KEY  USING BTREE(`id_customization`, `id_cart`, `id_product`, `id_address_delivery`);
+  ADD PRIMARY KEY (`id_customization`, `id_cart`, `id_product`, `id_address_delivery`);
 
 CREATE TABLE `PREFIX_cart_rule` (
 	`id_cart_rule` int(10) unsigned NOT NULL auto_increment,
