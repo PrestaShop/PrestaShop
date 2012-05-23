@@ -1596,20 +1596,23 @@ class AdminImportControllerCore extends AdminController
 					// if no attribute reference is specified, creates a new one
 					if (!$id_product_attribute)
 					{
-						$id_product_attribute = $product->addAttribute(
-								(float)$info['price'],
-								(float)$info['weight'],
-								0,
-								(float)$info['ecotax'],
-								$id_image,
-								strval($info['reference']),
-								strval($info['ean13']),
-								(int)$info['default_on'],
-								0,
-								strval($info['upc']),
-								(int)$info['minimal_quantity'],
-								$id_shop_list
-							);
+						$id_product_attribute = $product->addCombinationEntity(
+							(float)$info['wholesale_price'],
+							(float)$info['price'],
+							(float)$info['weight'],
+							0,
+							(float)$info['ecotax'],
+							(int)$info['quantity'],
+							$id_image,
+							strval($info['reference']),
+							0,
+							strval($info['ean13']),
+							(int)$info['default_on'],
+							0,
+							strval($info['upc']),
+							(int)$info['minimal_quantity'],
+							$id_shop_list
+						);
 					}
 
 					// fills our attributes array, in order to add the attributes to the product_attribute afterwards
