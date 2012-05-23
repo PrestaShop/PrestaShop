@@ -6,7 +6,6 @@ $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f7c34fc4a48bc683445c1e7
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_cc68052332d758d991b64087c6e4352e'] = 'Zeigt einen Block mit neu hinzugefügten Produkten an';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_57af4b7e82ba04c42eb3ac111310a505'] = 'Sie müssen das Feld \"Angezeigte Produkte\" ausfüllen';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_73293a024e644165e9bf48f270af63a0'] = 'Ungültige Anzahl.';
-$_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Bestätigung';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_e451e6943bb539d1bd804d2ede6474b5'] = 'angezeigte Produkte';

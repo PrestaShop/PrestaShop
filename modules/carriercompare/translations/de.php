@@ -10,7 +10,6 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_fb9e838d470b2c27c2c128d1271
 $_MODULE['<{carriercompare}prestashop>carriercompare_b72dd62d03697b37417288c63e78c8c6'] = 'Bitte verwenden Sie eine gültige Postleitzahl / PLZ je nach Land Auswahl';
 $_MODULE['<{carriercompare}prestashop>carriercompare_3f63451bbacbb1c3303d99d0309fdfe9'] = 'Bitte wählen Sie einen Träger';
 $_MODULE['<{carriercompare}prestashop>carriercompare_efaf5c3827ef576b05de32ad458f196c'] = 'Dieser Lieferant steht für diesen Bereich nicht zur Verfüung';
-$_MODULE['<{carriercompare}prestashop>carriercompare_edc5cf1b3bab64b1d45ef51c63b53887'] = 'Warenkorb kann nicht aktualisiert werden';
 $_MODULE['<{carriercompare}prestashop>carriercompare_e7a6ca4e744870d455a57b644f696457'] = 'Gratis!';
 $_MODULE['<{carriercompare}prestashop>carriercompare_fbc1bef527a3a092053a244fd8d87abf'] = 'Versand und Steuern kalkulieren';
 $_MODULE['<{carriercompare}prestashop>carriercompare_59716c97497eb9694541f7c3d37b1a4d'] = 'Land';
