@@ -92,7 +92,7 @@ class CountryCore extends ObjectModel
 		)
 	);
 
-    protected static $cache_iso_by_id = array();
+	protected static $cache_iso_by_id = array();
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'countries',
@@ -110,16 +110,16 @@ class CountryCore extends ObjectModel
 	}
 
 	/**
-	  * Return available countries
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active coutries
-	  * @return array Countries and corresponding zones
-	  */
+	 * Return available countries
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param boolean $active return only active coutries
+	 * @return array Countries and corresponding zones
+	 */
 	public static function getCountries($id_lang, $active = false, $contain_states = null)
 	{
-	 	if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
 
 		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT s.*
@@ -128,7 +128,7 @@ class CountryCore extends ObjectModel
 
 		$sql = 'SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
 				FROM `'._DB_PREFIX_.'country` c
-				'.Shop::addSqlAssociation('country', 'c', false).'
+				'.Shop::addSqlAssociation('country', 'c').'
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
 				WHERE 1'
@@ -158,11 +158,11 @@ class CountryCore extends ObjectModel
 	}
 
 	/**
-	  * Get a country ID with its iso code
-	  *
-	  * @param string $iso_code Country iso code
-	  * @return integer Country ID
-	  */
+	 * Get a country ID with its iso code
+	 *
+	 * @param string $iso_code Country iso code
+	 * @return integer Country ID
+	 */
 	public static function getByIso($iso_code)
 	{
 		if (!Validate::isLanguageIsoCode($iso_code))
@@ -193,12 +193,12 @@ class CountryCore extends ObjectModel
 	}
 
 	/**
-	* Get a country name with its ID
-	*
-	* @param integer $id_lang Language ID
-	* @param integer $id_country Country ID
-	* @return string Country name
-	*/
+	 * Get a country name with its ID
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param integer $id_country Country ID
+	 * @return string Country name
+	 */
 	public static function getNameById($id_lang, $id_country)
 	{
 		$key = 'country_getNameById_'.$id_country.'_'.$id_lang;
@@ -214,31 +214,31 @@ class CountryCore extends ObjectModel
 	}
 
 	/**
-	* Get a country iso with its ID
-	*
-	* @param integer $id_country Country ID
-	* @return string Country iso
-	*/
+	 * Get a country iso with its ID
+	 *
+	 * @param integer $id_country Country ID
+	 * @return string Country iso
+	 */
 	public static function getIsoById($id_country)
 	{
-        if (!isset(Country::$cache_iso_by_id[$id_country]))
-        {
-            Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT `iso_code`
-            FROM `'._DB_PREFIX_.'country`
-            WHERE `id_country` = '.(int)($id_country));
-        }
+		if (!isset(Country::$cache_iso_by_id[$id_country]))
+		{
+			Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `iso_code`
+			FROM `'._DB_PREFIX_.'country`
+			WHERE `id_country` = '.(int)($id_country));
+		}
 
 		return Country::$cache_iso_by_id[$id_country];
 	}
 
 	/**
-	* Get a country id with its name
-	*
-	* @param integer $id_lang Language ID
-	* @param string $country Country Name
-	* @return intval Country id
-	*/
+	 * Get a country id with its name
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param string $country Country Name
+	 * @return intval Country id
+	 */
 	public static function getIdByName($id_lang = null, $country)
 	{
 		$sql = '
@@ -287,20 +287,20 @@ class CountryCore extends ObjectModel
 		return Context::getContext()->country->id;
 	}
 
-    public static function getCountriesByZoneId($id_zone, $id_lang)
-    {
-        if (empty($id_zone) || empty($id_lang))
-            die(Tools::displayError());
+	public static function getCountriesByZoneId($id_zone, $id_lang)
+	{
+		if (empty($id_zone) || empty($id_lang))
+			die(Tools::displayError());
 
 		$sql = ' SELECT DISTINCT c.*, cl.*
-        		FROM `'._DB_PREFIX_.'country` c
+				FROM `'._DB_PREFIX_.'country` c
 				'.Shop::addSqlAssociation('country', 'c', false).'
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
-		        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-        		WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
-        			AND `id_lang` = '.(int)$id_lang;
-        return Db::getInstance()->executeS($sql);
-    }
+				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+				WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
+				AND `id_lang` = '.(int)$id_lang;
+		return Db::getInstance()->executeS($sql);
+	}
 
 	public function isNeedDni()
 	{
