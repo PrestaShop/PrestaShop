@@ -241,8 +241,8 @@ class StockAvailableCore extends ObjectModel
 			Db::getInstance()->update(
 				'stock_available',
 				array('out_of_stock' => (int)$out_of_stock),
-				'id_product = '.(int)$id_product,
-				'id_product_attribute = '.(int)$id_product_attribute.
+				'id_product = '.(int)$id_product.
+				' AND id_product_attribute = '.(int)$id_product_attribute.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
@@ -392,10 +392,9 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = (int)$context->shop->id;
 
-		$id_lang = Context::getContext()->language->id;
 		$depends_on_stock = StockAvailable::dependsOnStock($id_product);
 
-		//Try to set available quantitiy if product does not depend on physical stock
+		//Try to set available quantity if product does not depend on physical stock
 		if (!$depends_on_stock)
 		{
 			$id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
@@ -409,7 +408,6 @@ class StockAvailableCore extends ObjectModel
 			else
 			{
 				$out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
-
 				$stock_available = new StockAvailable();
 				$stock_available->out_of_stock = (int)$out_of_stock;
 				$stock_available->id_product = (int)$id_product;
