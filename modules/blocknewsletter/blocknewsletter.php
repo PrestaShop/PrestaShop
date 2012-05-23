@@ -214,8 +214,8 @@ class Blocknewsletter extends Module
 		else if ($_POST['action'] == '0')
 		{
 			$register_status = $this->isNewsletterRegistered($_POST['email']);
-			//if ($register_status > 0)
-			//	return $this->error = $this->l('E-mail address already registered');
+			if ($register_status > 0)
+				return $this->error = $this->l('E-mail address already registered');
 
 			$email = pSQL($_POST['email']);
 			if (!$this->isRegistered($register_status))
