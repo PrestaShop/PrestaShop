@@ -372,7 +372,7 @@ class AdminModulesControllerCore extends AdminController
 	{
 		if (($list = Tools::getValue('modules_list')) && is_array($list))
 			foreach ($list as $id)
-				if ($obj = Module::getInstanceById($id) && (isset($obj->module_key)))
+				if (($obj = Module::getInstanceById($id)) && (isset($obj->module_key)))
 						$this->sendStatisticRequest($obj->module_key);
 		die();
 	}
@@ -1058,7 +1058,7 @@ class AdminModulesControllerCore extends AdminController
 				// When the XML cache file is up-to-date, the module may not be loaded yet
 				if (!class_exists($module->name))
 					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-				if ($object = new $module->name)
+				if ($object = new $module->name())
 				{
 					$object->runUpgradeModule();
 					if ((count($errors_module_list = $object->getErrors())))

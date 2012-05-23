@@ -361,7 +361,7 @@
  			},
 			error: function(xhr, ajaxOptions, thrownError)
 			{
-				//jAlert("TECHNICAL ERROR"+res);
+				//jAlert("TECHNICAL ERROR"+xhr);
 			}
 		});
 	}
