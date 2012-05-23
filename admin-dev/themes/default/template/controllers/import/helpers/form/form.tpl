@@ -97,8 +97,10 @@
 				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
 				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
 				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
-				<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-				<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
+				{if $PS_ADVANCED_STOCK_MANAGEMENT}
+					<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+					<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
+				{/if}
 			</ul>
 		</div>
 		<div class="clear">&nbsp;</div>

@@ -464,6 +464,7 @@ class AdminImportControllerCore extends AdminController
 			'languages' => Language::getLanguages(false),
 			'id_language' => $this->context->language->id,
 			'available_fields' => $this->getAvailableFields(),
+			'PS_ADVANCED_STOCK_MANAGEMENT' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 		);
 
 		return parent::renderForm();
