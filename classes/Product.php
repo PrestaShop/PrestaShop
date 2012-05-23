@@ -1029,7 +1029,7 @@ class ProductCore extends ObjectModel
 	 * @deprecated since 1.5.0
 	 */
 	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference,
-		$supplier_reference = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
+		$id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
 		Tools::displayAsDeprecated();
 
@@ -1043,7 +1043,7 @@ class ProductCore extends ObjectModel
 
 		StockAvailable::setQuantity($this->id, $id_product_attribute, $quantity);
 		//Try to set the default supplier reference
-		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		return $id_product_attribute;
 	}
 
@@ -1052,13 +1052,13 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
+		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array())
 	{
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
-			$reference, $ean13, $default, $location, $upc, $minimal_quantity);
+			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list);
 
-		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'wholesale_price' => (float)$wholesale_price,
 		), 'a.id_product_attribute = '.(int)$id_product_attribute);
@@ -1127,7 +1127,7 @@ class ProductCore extends ObjectModel
 	*
 	*/
 	public function updateProductAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-		$id_images, $reference, $supplier_reference = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
+		$id_images, $reference, $id_supplier = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
 	{
 		Tools::displayAsDeprecated();
 
@@ -1135,7 +1135,7 @@ class ProductCore extends ObjectModel
 			$id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
 			$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date
 		);
-		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+		$this->addSupplierReference($id_supplier, $id_product_attribute);
 
 		return $return;
 	}
