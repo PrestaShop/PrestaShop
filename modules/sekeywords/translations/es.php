@@ -15,7 +15,11 @@ $_MODULE['<{sekeywords}prestashop>sekeywords_03e0e9ef8b776b5f7bcc590e51bfa63b'] 
 $_MODULE['<{sekeywords}prestashop>sekeywords_7b48f6cc4a1dde7fca9597e717c2465f'] = 'No hay palabras clave';
 $_MODULE['<{sekeywords}prestashop>sekeywords_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guía';
 $_MODULE['<{sekeywords}prestashop>sekeywords_39f040a1f174811285297763fcaada12'] = 'Identifique las palabras claves externas en los motores de la búsqueda';
+$_MODULE['<{sekeywords}prestashop>sekeywords_6534eadba477de8a632ff59ac20b572f'] = 'Una de las maneras más comunes de encontrar un sitio web a través de un motor de búsqueda.';
+$_MODULE['<{sekeywords}prestashop>sekeywords_a2b60d0a1c13e34c03cfc6347ace972d'] = 'La identificación de las palabras clave más populares escritos por sus visitantes nuevosle permite ver los productos que usted debe poner por delante si quiere atraer a más visitantes y clientes potenciales.';
 $_MODULE['<{sekeywords}prestashop>sekeywords_359f9e79e746fa9f684e5cda9e60ca2e'] = '¿Cómo funciona?';
+$_MODULE['<{sekeywords}prestashop>sekeywords_722e091cccbd9a9ec8f4a35bf1f35893'] = 'Cuando un visitante llega a su sitio web, el servidor toma nota de su ubicación anterior.Este módulo analiza la URL y encuentra las palabras clave en ella.';
+$_MODULE['<{sekeywords}prestashop>sekeywords_d8b08c48a8d8e739399594adec89458a'] = 'En la actualidad, gestiona los siguientes motores de búsqueda: %1$s y %2$s.';
 $_MODULE['<{sekeywords}prestashop>sekeywords_474c03326cba5cb2ce6c07ddf3e1e656'] = '¡Pronto será posible agregar dinámicamente un nuevo motor de búsqueda y colaborar en este módulo!';
 $_MODULE['<{sekeywords}prestashop>sekeywords_8d01ac22a68176ddd7067da99508751d'] = '10 primeras palabras clave';
 $_MODULE['<{sekeywords}prestashop>sekeywords_52ef9633d88a7480b3a938ff9eaa2a25'] = 'Otros';

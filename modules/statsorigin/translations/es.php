@@ -16,6 +16,6 @@ $_MODULE['<{statsorigin}prestashop>statsorigin_77de261cf4c31a96146bcf1b52fd9856'
 $_MODULE['<{statsorigin}prestashop>statsorigin_d8d034b6911b1ce74bdb2158a14cd287'] = 'Un referente le permite saber qué palabras claves incorporan los visitantes en motores de búsqueda cuando intentan acceder a su tienda; y también optimizar su promoción en la Webrnrn';
 $_MODULE['<{statsorigin}prestashop>statsorigin_af19c8da1c414055c960a73d86471119'] = 'Un referente puede ser';
 $_MODULE['<{statsorigin}prestashop>statsorigin_a3dec1a06e19a810a9a4884293f666d0'] = 'Alguien ha puesto un link de su tienda en su sitio Web';
-$_MODULE['<{statsorigin}prestashop>statsorigin_95b90f58e843b56885beabf4802676a9'] = 'Un colaborador con quien intercambió enlaces para aumentar las ventas o para atraer nueva clientela. ';
+$_MODULE['<{statsorigin}prestashop>statsorigin_95b90f58e843b56885beabf4802676a9'] = 'Un colaborador con quien intercambió enlaces para aumentar las ventas o para atraer nueva clientela.';
 $_MODULE['<{statsorigin}prestashop>statsorigin_7a82cc29e910ea0c07501d5fe809fd75'] = '10 primeros sitios web';
 $_MODULE['<{statsorigin}prestashop>statsorigin_52ef9633d88a7480b3a938ff9eaa2a25'] = 'Otros';

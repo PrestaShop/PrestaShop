@@ -49,6 +49,7 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_782c8b38bce4f2f6975ca7f33ac8189
 $_MODULE['<{shopimporter}prestashop>shopimporter_f2931b8b1622867fcc461d7de388e319'] = 'Import del historial de los pedidos';
 $_MODULE['<{shopimporter}prestashop>shopimporter_32a6deec3cca312a54d6b8769c9b8dd7'] = 'no se encuentra disponible en este módulo';
 $_MODULE['<{shopimporter}prestashop>shopimporter_1e411d25230ba738b9ae583bcb9b0b57'] = 'Connexión a la base de datos OK';
+$_MODULE['<{shopimporter}prestashop>shopimporter_472f0b8c78cc382302e094c94856c951'] = 'Conección al servicio web OK';
 $_MODULE['<{shopimporter}prestashop>shopimporter_3596c777cbc8b72d678f34daabc9148b'] = 'Mostrar los errores';
 $_MODULE['<{shopimporter}prestashop>shopimporter_89a399eee52b2a6daaea92eba3e14cad'] = 'Lanzar el test de import';
 $_MODULE['<{shopimporter}prestashop>shopimporter_bf79359f8edda6f7df97ef57a4ee09b6'] = 'Ejecutar importación';
@@ -81,6 +82,12 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_807079d19357b6d44089c220f74cc2d
 $_MODULE['<{shopimporter}prestashop>shopimporter_29361e9c6917fb14b43d3e78e2811e56'] = 'La moneda por defecto no coincide:';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6117c4d73fcf0c20fe3946f1d00dde85'] = 'Por favor, cambie la moneda por defecto en la configuración';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8136c99d09cb6e9f0f998dd231fff6ed'] = 'Se produjo un error al agregar el objeto';
+$_MODULE['<{shopimporter}prestashop>shopimporter_2deae2efe4b65df80c188a31fed3cc17'] = 'El campo %s es necesario.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_1086ee44ab3d66a33d23308e942067e0'] = 'El campo %1$s es demasiado largo. (%2$d caracteres máximos)';
+$_MODULE['<{shopimporter}prestashop>shopimporter_3d2496e596f4cbc8045e689d94f77cbd'] = 'El campo %s no es válido.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_c662307430c97af94e120201c8d56c66'] = 'Este campo %1$s se requiere por lo menos en %2$s';
+$_MODULE['<{shopimporter}prestashop>shopimporter_25d42a115ce1c8390ba062cbc958deb3'] = 'Este campo %1$s (%2$s) es demasiado largo:%3$d caracteres máx.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_35f428e10ac312a2d9a32325c8294df9'] = 'El campo %1$s (%2$s) no es válido.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'El archivo no puede extraerse';
 $_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'El servidor no dispone de permisos para la escritura';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'no se encuentra el idioma';
