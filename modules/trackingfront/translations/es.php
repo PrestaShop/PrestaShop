@@ -2,12 +2,12 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{trackingfront}prestashop>account_8954e140059f7b2544469f40161ba507'] = 'espacio afiliados';
+$_MODULE['<{trackingfront}prestashop>account_8954e140059f7b2544469f40161ba507'] = 'Espacio afiliación';
 $_MODULE['<{trackingfront}prestashop>account_0323de4f66a1700e2173e9bcdce02715'] = 'Identificarse';
 $_MODULE['<{trackingfront}prestashop>account_1dd1c5fb7f25cd41b291d43a89e3aefd'] = 'Hoy';
 $_MODULE['<{trackingfront}prestashop>account_7cbb885aa1164b390a0bc050a64e1812'] = 'Mes';
 $_MODULE['<{trackingfront}prestashop>account_537c66b24ef5c83b7382cdc3f34885f2'] = 'Año';
-$_MODULE['<{trackingfront}prestashop>account_1e6d57e813355689e9c77e947d73ad8f'] = 'De: ';
+$_MODULE['<{trackingfront}prestashop>account_1e6d57e813355689e9c77e947d73ad8f'] = 'De:';
 $_MODULE['<{trackingfront}prestashop>account_33caa076f23f453dd4061726f3706325'] = 'a:';
 $_MODULE['<{trackingfront}prestashop>account_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{trackingfront}prestashop>account_49ee3087348e8d44e1feda1917443987'] = 'Nombre';

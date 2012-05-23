@@ -6,7 +6,7 @@ $_MODULE['<{blocksupplier}prestashop>blocksupplier_9ae42413e3cb9596efe3857f75bad
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_efc027d2b1bb88bea7bd7eff273ca4c0'] = 'Añadir un bloque para mostrar los proveedores';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_cf64d2d0bc5de5ce3d309d0e899d36fb'] = 'número de elementos no válido';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_5b2e13ff6fa0da895d14bd56f2cb2d2d'] = 'Por favor, elija al menos uno de la lista';
-$_MODULE['<{blocksupplier}prestashop>blocksupplier_c888438d14855d7d96a2724ee9c306bd'] = 'Configuración actualizada';
+$_MODULE['<{blocksupplier}prestashop>blocksupplier_c888438d14855d7d96a2724ee9c306bd'] = 'Actualización realizada con éxito';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuración';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_bfdff752293014f11f17122c92909ad5'] = 'Usar una lista de texto plano';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activado';

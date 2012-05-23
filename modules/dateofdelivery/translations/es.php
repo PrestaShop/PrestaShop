@@ -3,8 +3,9 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_75261aaef97717dda0ca98743b24f8f3'] = 'Fecha aproximada de entraga con este transportista entre';
+$_MODULE['<{dateofdelivery}prestashop>beforecarrier_c31e7bcb78c69bd37e6e77be0183567f'] = 'Hay paquetes %s, que serán enviados  aproximadamente con la opción de envío que elija entre';
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_be5d5d37542d75f93a87094459f76678'] = 'y';
-$_MODULE['<{dateofdelivery}prestashop>beforecarrier_c9ed8c0b07828727ca6653924b0498d3'] = 'con los modos de pago directos (ejemplo: tarjeta de crédito)';
+$_MODULE['<{dateofdelivery}prestashop>beforecarrier_c9ed8c0b07828727ca6653924b0498d3'] = 'con los modos de pago directo (ejemplo: tarjeta de crédito)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b0f76e26cffaf27784d901a64f39593e'] = 'Fecha de entraga';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_98110868b266d63c3bacdac4430169cf'] = 'Mostrar una fecha aproximada de entraga';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_a39df5444246aeb081729db7e17f51bc'] = 'Configuración de la fecha de entraga';
@@ -32,7 +33,7 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b5813d499e8a122485995dd7851
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_93cba07454f06a4a960172bbd6e2a435'] = 'Sí';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_bafd7322c6e97d25b6299b5d6fe8920b'] = 'No';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7dce122004969d56ae2e0245cb754d35'] = 'Modificar';
-$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_f2a6c498fb90ee345d997f888fce3b18'] = 'Borrar';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_f2a6c498fb90ee345d997f888fce3b18'] = 'Eliminar';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_58f748703db13e81b6ca6c366d1ab50c'] = 'Ninguna regla para este transportista';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_4dab36ac83853282fc0d7bae20c19e90'] = 'Más opciones';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_0008e84621e5c9f21f8a55387a28692f'] = 'Tiempo suplementario cuando un producto no está disponible';

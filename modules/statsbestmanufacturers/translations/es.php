@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{statsbestmanufacturers}prestashop>statsbestmanufacturers_4f29d8c727dcf2022ac241cb96c31083'] = 'Empty recordset returned';
+$_MODULE['<{statsbestmanufacturers}prestashop>statsbestmanufacturers_4f29d8c727dcf2022ac241cb96c31083'] = 'Devolución de recordset vacío';
 $_MODULE['<{statsbestmanufacturers}prestashop>statsbestmanufacturers_f5c493141bb4b2508c5938fd9353291a'] = 'Mostrando %1$s de %2$s';
 $_MODULE['<{statsbestmanufacturers}prestashop>statsbestmanufacturers_49ee3087348e8d44e1feda1917443987'] = 'Nombre';
 $_MODULE['<{statsbestmanufacturers}prestashop>statsbestmanufacturers_2a0440eec72540c5b30d9199c01f348c'] = 'Cantidad vendida';

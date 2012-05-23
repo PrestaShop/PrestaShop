@@ -13,4 +13,4 @@ $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_a0623b78a5f2cfe415d9dbbd4428e
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_83218ac34c1834c26781fe4bde918ee4'] = 'Bienvenido';
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_4b877ba8588b19f1b278510bf2b57ebb'] = 'Cerrer sesión';
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_4394c8d8e63c470de62ced3ae85de5ae'] = 'Salir';
-$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_bffe9a3c9a7e00ba00a11749e022d911'] = 'Entrar';
+$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_bffe9a3c9a7e00ba00a11749e022d911'] = 'Log in';
