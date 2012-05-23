@@ -48,6 +48,8 @@ class AdminImportControllerCore extends AdminController
 
 	public $required_fields = array('name');
 
+	public $cache_image_deleted = array();
+
 	public static $default_values = array();
 
 	public static $validators = array(
@@ -125,6 +127,7 @@ class AdminImportControllerCore extends AdminController
 					'price' => array('label' => $this->l('Impact on price')),
 					'ecotax' => array('label' => $this->l('Ecotax')),
 					'quantity' => array('label' => $this->l('Quantity')),
+					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'weight' => array('label' => $this->l('Impact on weight')),
 					'default_on' => array('label' => $this->l('Default')),
 					'image_position' => array(
@@ -137,7 +140,7 @@ class AdminImportControllerCore extends AdminController
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
-					),
+					)
 				);
 
 				self::$default_values = array(
@@ -149,6 +152,7 @@ class AdminImportControllerCore extends AdminController
 					'price' => 0,
 					'ecotax' => 0,
 					'quantity' => 0,
+					'minimal_quantity' => 1,
 					'weight' => 0,
 					'default_on' => 0,
 					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
@@ -235,8 +239,9 @@ class AdminImportControllerCore extends AdminController
 					'online_only' => array('label' => $this->l('Available online only')),
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
-						'label' => $this->l('ID / Name of shop')
-					),
+						'label' => $this->l('ID / Name of shop'),
+						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+					)
 				);
 
 				self::$default_values = array(
@@ -790,10 +795,9 @@ class AdminImportControllerCore extends AdminController
 		{
 			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
-			foreach ($images_types as $k => $image_type)
-			{
+			foreach ($images_types as $image_type)
 				ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
-			}
+
 			if (in_array($image_type['id_image_type'], $watermark_types))
 				Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 		}
@@ -991,7 +995,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					$address = $this->context->shop->getAddress();
 					$tax_manager = TaxManagerFactory::getManager($address, $product->id_tax_rules_group);
-                    $product_tax_calculator = $tax_manager->getTaxCalculator();
+					$product_tax_calculator = $tax_manager->getTaxCalculator();
 					$product->tax_rate = $product_tax_calculator->getTotalRate();
 				}
 				else
@@ -1391,25 +1395,44 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
+			// Get shops for each attributes
+			$info['shop'] = explode(',', $info['shop']);
+			$id_shop_list = array();
+			foreach ($info['shop'] as $shop)
+				if (!is_numeric($shop))
+					$id_shop_list[] = Shop::getIdByName($shop);
+				else
+					$id_shop_list[] = $shop;
+
 			$product = new Product((int)$info['id_product'], false, $default_language);
 			$id_image = null;
+
 			//delete existing images if "delete_existing_images" is set to 1
-			if (array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'])
+			if (array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id]))
+			{
 				$product->deleteImages();
-			else if (array_key_exists('image_url', $info))
+				$this->cache_image_deleted[(int)$product->id] = true;
+			}
+			else if (array_key_exists('image_url', $info) && !isset($this->cache_image_deleted[(int)$product->id]))
+			{
 				$product->deleteImages();
+				$this->cache_image_deleted[(int)$product->id] = true;
+			}
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{
 				$product_has_images = (bool)Image::getImages($this->context->language->id, $product->id);
+
 				$url = $info['image_url'];
 				$image = new Image();
 				$image->id_product = (int)$product->id;
 				$image->position = Image::getHighestPosition($product->id) + 1;
 				$image->cover = (!$product_has_images) ? true : false;
 
-				if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-					($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
+				$field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
+				$lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
+
+				if ($field_error === true && $lang_field_error === true && $image->add())
 				{
 					if (!AdminImportController::copyImg($product->id, $image->id, $url))
 						$this->warnings[] = Tools::displayError('Error copying image:').$url;
@@ -1418,7 +1441,10 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->warnings[] = sprintf(Tools::displayError('%s cannot be saved'), (isset($image->id_product) ? ' ('.$image->id_product.')' : ''));
+					$this->warnings[] = sprintf(
+						Tools::displayError('%s cannot be saved'),
+						(isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
@@ -1442,7 +1468,6 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$id_attribute_group = 0;
-			$group = '';
 			// groups
 			$groups_attributes = array();
 			foreach (explode($fsep, $info['group']) as $key => $group)
@@ -1527,14 +1552,6 @@ class AdminImportControllerCore extends AdminController
 							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 					}
 
-					$info['shop'] = explode(',', $info['shop']);
-					$id_shop_list = array();
-					foreach ($info['shop'] as $shop)
-						if (!is_numeric($shop))
-							$id_shop_list[] = Shop::getIdByName($shop);
-						else
-							$id_shop_list[] = $shop;
-
 					$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
 
 					// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
@@ -1618,15 +1635,15 @@ class AdminImportControllerCore extends AdminController
 				foreach ($attributes_to_add as $attribute_to_add)
 				{
 					Db::getInstance()->execute('
-						INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+						INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
 						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')');
 				}
 
 				StockAvailable::setQuantity($product->id, $id_product_attribute, (int)$info['quantity']);
 			}
 		}
-		$this->closeCsvFile($handle);
 
+		$this->closeCsvFile($handle);
 	}
 
 	public function customerImport()
