@@ -6,7 +6,6 @@ $_MODULE['<{blocktags}prestashop>blocktags_f2568a62d4ac8d1d5b532556379772ba'] = 
 $_MODULE['<{blocktags}prestashop>blocktags_a332910d45d955dad6c84817fe478e95'] = 'Fügt einen Block mit einer Tag-Cloud hinzu';
 $_MODULE['<{blocktags}prestashop>blocktags_4c1ef2cab0e711084a14f3d367a13c54'] = 'Sie müssen das Feld \"angezeigte Tags\" ausfüllen';
 $_MODULE['<{blocktags}prestashop>blocktags_73293a024e644165e9bf48f270af63a0'] = 'Ungültige Anzahl.';
-$_MODULE['<{blocktags}prestashop>blocktags_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Bestätigung';
 $_MODULE['<{blocktags}prestashop>blocktags_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{blocktags}prestashop>blocktags_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
 $_MODULE['<{blocktags}prestashop>blocktags_a2701a006c71c9097d80ea1ddaea8fa9'] = 'Angezeigte Tags';

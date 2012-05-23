@@ -4,8 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{statscatalog}prestashop>statscatalog_cf3aa21c6a2147ddbd86f34091daeccd'] = 'Katalogstatistik';
 $_MODULE['<{statscatalog}prestashop>statscatalog_226ed1224c5b2db3d3e0716bb4f74da5'] = 'Allgemeine Statistiken über Ihren Katalog';
-$_MODULE['<{statscatalog}prestashop>statscatalog_85dbdb21fe502c4d7a1e81bca0aa396d'] = 'Kauf';
-$_MODULE['<{statscatalog}prestashop>statscatalog_233d48e63da77b092da350559d2f8382'] = 'Besuche';
 $_MODULE['<{statscatalog}prestashop>statscatalog_0173374ac20f5843d58b553d5b226ef6'] = 'Wählen Sie eine Kategorie';
 $_MODULE['<{statscatalog}prestashop>statscatalog_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Alle';
 $_MODULE['<{statscatalog}prestashop>statscatalog_a7b623414d4b6a3225b4e935babec6d2'] = 'Produkte zur Verfügung:';
