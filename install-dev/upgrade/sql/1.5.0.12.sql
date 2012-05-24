@@ -62,3 +62,4 @@ UPDATE `PREFIX_tab` SET `class_name`="AdminShopGroup" WHERE class_name="AdminGro
 
 /* PHP:p15012_add_missing_columns(); */;
 
+UPDATE `PREFIX_specific_price` SET `price` = -1 WHERE `price` = 0;
