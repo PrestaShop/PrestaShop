@@ -226,8 +226,8 @@ abstract class PaymentModuleCore extends Module
 					}
 					else
 					{
-						$order->id_shop = $cart->id_shop;
-						$order->id_shop_group = $cart->id_shop_group;
+						$order->id_shop = (int)$cart->id_shop;
+						$order->id_shop_group = (int)$cart->id_shop_group;
 					}
 
 					$customer = new Customer($order->id_customer);
