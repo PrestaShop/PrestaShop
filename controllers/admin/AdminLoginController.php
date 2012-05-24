@@ -203,29 +203,31 @@ class AdminLoginControllerCore extends AdminController
 			$pwd = Tools::passwdGen();
 			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
-			$result = $employee->update();
-			if (!$result)
-				$this->errors[] = Tools::displayError('An error occurred during your password change.');
-			else
+			
+			$params = array(
+				'{email}' => $employee->email,
+				'{lastname}' => $employee->lastname,
+				'{firstname}' => $employee->firstname,
+				'{passwd}' => $pwd
+			);
+						
+			if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new admin password', (int)Configuration::get('PS_LANG_DEFAULT')), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
-				$params = array(
-					'{email}' => $employee->email,
-					'{lastname}' => $employee->lastname,
-					'{firstname}' => $employee->firstname,
-					'{passwd}' => $pwd
-				);
-							
-				if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new admin password', (int)Configuration::get('PS_LANG_DEFAULT')), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
-					die(Tools::jsonEncode(array(
-						'hasErrors' => false,
-						'confirm' => $this->l('Your password has been e-mailed to you')
-					)));
+				// Update employee only if the mail can be sent
+				$result = $employee->update();
+				if (!$result)
+					$this->errors[] = Tools::displayError('An error occurred during your password change.');
 				else
 					die(Tools::jsonEncode(array(
-						'hasErrors' => true,
-						'errors' => array(Tools::displayError('An error occurred during your password change.'))
+						'hasErrors' => false,
+						'confirm' => $this->l('Your password has been e-mailed to you', 'AdminTab', false, false)
 					)));
 			}
+			else
+				die(Tools::jsonEncode(array(
+					'hasErrors' => true,
+					'errors' => array(Tools::displayError('An error occurred during your password change.'))
+				)));
 		
 		}
 		else if (Tools::isSubmit('ajax'))
