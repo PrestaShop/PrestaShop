@@ -55,6 +55,14 @@ class TranslateCore
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
+		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($sprintf))
+		{
+			if (!is_array($sprintf))
+				$sprintf = array($sprintf);
+
+			$string = vsprintf($string, $sprintf);
+		}
+
 		if (isset($modules_tabs[strtolower($class)]))
 		{
 			$class_name_controller = $class.'controller';
@@ -74,14 +82,6 @@ class TranslateCore
 
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		$str = str_replace('"', '&quot;', $str);
-
-		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $str, $matches) && !is_null($sprintf))
-		{
-			if (!is_array($sprintf))
-				$sprintf = array($sprintf);
-
-			$str = vsprintf($str, $sprintf);
-		}
 
 		return ($addslashes ? addslashes($str) : stripslashes($str));
 	}
@@ -174,6 +174,14 @@ class TranslateCore
 		$cache_key = $name.'|'.$string.'|'.$source;
 		if (!isset($lang_cache[$cache_key]))
 		{
+			if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($sprintf))
+			{
+				if (!is_array($sprintf))
+					$sprintf = array($sprintf);
+
+				$string = vsprintf($string, $sprintf);
+			}
+
 			if ($_MODULES == null)
 				return str_replace('"', '&quot;', $string);
 
@@ -189,14 +197,6 @@ class TranslateCore
 				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 			else
 				$ret = stripslashes($string);
-
-			if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $ret, $matches) && !is_null($sprintf))
-			{
-				if (!is_array($sprintf))
-					$sprintf = array($sprintf);
-
-				$ret = vsprintf($ret, $sprintf);
-			}
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}
