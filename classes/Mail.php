@@ -40,7 +40,7 @@ class MailCore
 	 * Send Email
 	 * 
 	 * @param int $id_lang Language of the email (to translate the template)
-	 * @param string $template Template
+	 * @param string $template Template: the name of template not be a var but a string !
 	 * @param string $subject
 	 * @param string $templateVars
 	 * @param string $to

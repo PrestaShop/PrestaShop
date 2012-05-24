@@ -435,7 +435,14 @@ abstract class PaymentModuleCore extends Module
 									'{lastname}' => $customer->lastname,
 									'{id_order}' => $order->reference
 								);
-								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order ', (int)$order->id_lang).$order->reference, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+								Mail::Send(
+									(int)$order->id_lang,
+									'voucher',
+									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									$params,
+									$customer->email,
+									$customer->firstname.' '.$customer->lastname
+								);
 							}
 						}
 

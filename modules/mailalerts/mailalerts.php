@@ -333,7 +333,6 @@ class MailAlerts extends Module
 
 		// Filling-in vars for email
 		$template = 'new_order';
-		$subject = $this->l('New order', false, $id_lang).' - #'.sprintf('%06d', $order->id);
 		$template_vars = array(
 			'{firstname}' => $customer->firstname,
 			'{lastname}' => $customer->lastname,
@@ -387,17 +386,19 @@ class MailAlerts extends Module
 
 		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
 			file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
-			Mail::Send($id_lang,
-					   $template,
-					   $subject,
-					   $template_vars,
-					   explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
-					   null,
-					   $configuration['PS_SHOP_EMAIL'],
-					   $configuration['PS_SHOP_NAME'],
-					   null,
-					   null,
-					   dirname(__FILE__).'/mails/');
+			Mail::Send(
+				$id_lang,
+				'new_order',
+				sprintf(Mail::l('New order - #%06d', $id_lang), $order->id),
+				$template_vars,
+				explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
+				null,
+				$configuration['PS_SHOP_EMAIL'],
+				$configuration['PS_SHOP_NAME'],
+				null,
+				null,
+				dirname(__FILE__).'/mails/'
+			);
 	}
 
 	public function hookActionProductOutOfStock($params)

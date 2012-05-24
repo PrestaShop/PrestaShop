@@ -55,12 +55,15 @@ if ($context->customer->isLogged())
 		$toName = strval(Configuration::get('PS_SHOP_NAME'));
 		$customer = $context->customer;
 		if (Validate::isLoadedObject($customer))
-			Mail::Send($context->language->id, 'wishlist', Mail::l('Message from ', $context->language->id).$customer->lastname.' '.$customer->firstname,
-			array(
-			'{lastname}' => $customer->lastname, 
-			'{firstname}' => $customer->firstname, 
-			'{wishlist}' => $wishlist['name'],
-			'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist['token']),
-			$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, dirname(__FILE__).'/mails/');
+			Mail::Send(
+				$context->language->id,
+				'wishlist',
+				sprintf(Mail::l('Message from %1$s %2$s', $context->language->id), $customer->lastname, $customer->firstname),
+				array(
+				'{lastname}' => $customer->lastname,
+				'{firstname}' => $customer->firstname,
+				'{wishlist}' => $wishlist['name'],
+				'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist['token']),
+				$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, dirname(__FILE__).'/mails/');
 	}
 }
