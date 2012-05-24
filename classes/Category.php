@@ -744,17 +744,17 @@ class CategoryCore extends ObjectModel
 	public static function getChildren($id_parent, $id_lang, $active = true, $id_shop = false)
 	{
 		if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+			die(Tools::displayError());
 
-        $query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
+		$query = 'SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`, category_shop.`id_shop`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE `id_lang` = '.(int)$id_lang.'
 		AND c.`id_parent` = '.(int)$id_parent.'
 		'.($active ? 'AND `active` = 1' : '').'
+		GROUP BY c.`id_category`
 		ORDER BY category_shop.`position` ASC';
-
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
