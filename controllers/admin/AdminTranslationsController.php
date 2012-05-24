@@ -1907,7 +1907,6 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files))
 				{
-					//d(array($mail_name, $all_subject_mail));
 					if (array_key_exists($mail_name, $all_subject_mail))
 					{
 						$subject_mail = $all_subject_mail[$mail_name];
