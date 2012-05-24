@@ -1907,6 +1907,7 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files))
 				{
+					//d(array($mail_name, $all_subject_mail));
 					if (array_key_exists($mail_name, $all_subject_mail))
 					{
 						$subject_mail = $all_subject_mail[$mail_name];
@@ -1916,8 +1917,14 @@ class AdminTranslationsControllerCore extends AdminController
 							<label style="text-align:right">'.sprintf($this->l('Subject for %s:'), '<em>'.$mail_name.'</em>').'</label>
 							<div class="mail-form" style="text-align:left">
 								<b>'.$subject_mail.'</b><br />
-								<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.$value_subject_mail.'" />
-							</div>
+								<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.$value_subject_mail['trad'].'" />';
+								if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
+								{
+									$str_return .= '<a class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'" style="cursor:pointer">
+										<img src="'._PS_IMG_.'admin/error.png" alt="'.$value_subject_mail['use_sprintf'].'" />
+									</a>';
+								}
+							$str_return .= '</div>
 						</div>';
 					}
 					else
@@ -2189,7 +2196,8 @@ class AdminTranslationsControllerCore extends AdminController
 				$subject = str_replace('\n', ' ', $subject);
 				$subject = str_replace("\\'", "\'", $subject);
 
-				$subject_mail_content[$key] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
+				$subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
+				$subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
 			}
 		}
 		else
