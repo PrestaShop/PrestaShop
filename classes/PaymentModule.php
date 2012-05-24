@@ -143,8 +143,6 @@ abstract class PaymentModuleCore extends Module
 		$cart = new Cart($id_cart);
 		$this->context->cart = $cart;
 
-		if (!$shop)
-			$shop = Context::getContext()->shop;
 		if (!$this->active)
 			die(Tools::displayError());
 		// Does order already exists ?
@@ -221,8 +219,16 @@ abstract class PaymentModuleCore extends Module
 					$order->id_cart = (int)$cart->id;
 					$order->reference = $reference;
 
-					$order->id_shop = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id : $cart->id_shop);
-					$order->id_shop_group = (int)(Shop::getContext() == Shop::CONTEXT_SHOP ? $shop->id_shop_group : $cart->id_shop_group);
+					if (($shop != null) || (Shop::getContext() == Shop::CONTEXT_SHOP))
+					{
+						$order->id_shop = (int)$shop->id;
+						$order->id_shop_group = (int)$shop->id_shop_group;
+					}
+					else
+					{
+						$order->id_shop = $cart->id_shop;
+						$order->id_shop_group = $cart->id_shop_group;
+					}
 
 					$customer = new Customer($order->id_customer);
 					$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));
