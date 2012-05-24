@@ -7,4 +7,4 @@ Existencias restantes: {qty}
 Se aconseja abrir administrador del producto Producto a fin de reponer el inventario.
 
 
-{shop_url} desarrollado por PrestaShopâ„¢
+{shop_url} desarrollado por PrestaShop™

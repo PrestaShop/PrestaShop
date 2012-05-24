@@ -408,7 +408,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					if (Mail::Send(
 						(int)$ct->id_lang,
 						'reply_msg',
-						Mail::l('An answer to your message is available', $ct->id_lang).' #ct'.$ct->id.'#tc'.$ct->token,
+						sprintf(Mail::l('An answer to your message is available #ct%1$s #tc%2$s', $ct->id_lang), $ct->id, $ct->token),
 						$params, Tools::getValue('msg_email'), null, null, null, $file_attachment, null,
 						_PS_MAIL_DIR_, true))
 					{
