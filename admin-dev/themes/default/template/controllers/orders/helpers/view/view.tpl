@@ -322,37 +322,37 @@
 								</td>
 							</tr>
 							{/foreach}
-							{if count($not_paid_invoices_collection) > 0}
-								<tr class="current-edit">
-									<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
-									<td>
-										<select name="payment_method">
-										{foreach from=$payment_methods item=payment_method}
-											<option value="{$payment_method}">{$payment_method}</option>
-										{/foreach}
-										</select>
-									</td>
-									<td>
-										<input type="text" name="payment_transaction_id" value="" />
-									</td>
-									<td>
-										<input type="text" name="payment_amount" size="5" value="" />
-										<select name="payment_currency">
-										{foreach from=$currencies item=current_currency}
-											<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
-										{/foreach}
-										</select>
-									</td>
-									<td>
-										<select name="payment_invoice" id="payment_invoice">
-										{foreach from=$not_paid_invoices_collection item=invoice}
-											<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
-										{/foreach}
-										</select>
-									</td>
-									<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
-								</tr>
-							{/if}
+							<tr class="current-edit">
+								<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
+								<td>
+									<select name="payment_method">
+									{foreach from=$payment_methods item=payment_method}
+										<option value="{$payment_method}">{$payment_method}</option>
+									{/foreach}
+									</select>
+								</td>
+								<td>
+									<input type="text" name="payment_transaction_id" value="" />
+								</td>
+								<td {if count($not_paid_invoices_collection) <= 0}colspan="2"{/if}>
+									<input type="text" name="payment_amount" size="5" value="" />
+									<select name="payment_currency">
+									{foreach from=$currencies item=current_currency}
+										<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
+									{/foreach}
+									</select>
+								</td>
+								{if count($not_paid_invoices_collection) > 0}
+								<td>
+									<select name="payment_invoice" id="payment_invoice">
+									{foreach from=$not_paid_invoices_collection item=invoice}
+										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
+									{/foreach}
+									</select>
+								</td>
+								{/if}
+								<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
+							</tr>
 						</tbody>
 					</table>
 				</form>
