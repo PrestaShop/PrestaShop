@@ -4,7 +4,7 @@ NOTICE OF LICENSE
 
 This source file is subject to the Open Software License (OSL 3.0)
 that is bundled with this package in the file LICENSE.txt.
-It is also available through the world-wide-web at this URL:
+It is also available through the world-wide-web at this URL :
 http://opensource.org/licenses/osl-3.0.php
 If you did not receive a copy of the license and are unable to
 obtain it through the world-wide-web, please send an email
@@ -31,7 +31,7 @@ Pour installer PrestaShop, vous avez besoin d'un serveur web distant ou sur votr
 Vous aurez besoin d'un accès à PhpMyAdmin afin de créer un base de données, et d'indiquer les informations de la base de données dans l'installeur.
 
 Si vous n'avez pas d'hébergeur et pas la possibilité de créer votre boutique, nous vous proposons un service de boutique clé en main, qui vous permet de créer votre boutique en ligne en moins de 10 minutes sans aucunes notions techniques.
-Nous vous invitons à vous rendre sur: 
+Nous vous invitons à vous rendre sur :
 	http://www.prestabox.com/
 
 INSTALLATION
@@ -53,13 +53,13 @@ Il ya toujours des solutions pour vos questions ;-)
 DOCUMENTATION
 =============
 
-Pour toute documentation supplémentaire (how-to), vous trouverez notre wiki à cette adresse:
+Pour toute documentation supplémentaire (how-to), vous trouverez notre wiki à cette adresse :
 	http://doc.prestashop.com
 
 FORUMS
 ======
 
-Vous pouvez également discuter, aider et contribuer avec la communauté PrestaShop sur nos forums:
+Vous pouvez également discuter, aider et contribuer avec la communauté PrestaShop sur nos forums :
 	http://www.prestashop.com/forums/
 
 Merci d'avoir télécharger et d'utiliser PrestaShop, solution e-commerce open-source !
