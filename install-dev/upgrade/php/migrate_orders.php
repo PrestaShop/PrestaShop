@@ -60,9 +60,9 @@ function migrate_orders()
 	$order_res = Db::getInstance()->query(
 			'SELECT *
 			FROM `'._DB_PREFIX_.'orders`');
-	
+
 	// this was done like that previously
-	$wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value 
+	$wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
@@ -87,7 +87,7 @@ function migrate_orders()
 			$products = mo_setProductPrices($order_details, $price_display_method);
 			$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
 			$reduction_amount_tax_incl = (float)$products['reduction_amount'];
-			
+
 			// cart::getTaxesAverageUsed equivalent
 			$sum_total_products += $products['total_wt'];
 			$sum_tax_amount += $products['total_wt'] - $products['total_price'];
@@ -111,18 +111,24 @@ function migrate_orders()
 			$average_tax_used +=  ($sum_tax_amount / $sum_total_products) * 0.01;
 
 		$carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
-		
+
 		$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
 
 		$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
 		$order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
-		$order['total_paid_tax_incl'] = (float)$order['total_paid'];
-		$order['total_paid_tax_excl'] = (float)$order['total_paid'];
+
 		$order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
 		$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
+		$shipping_taxes = $order['total_shipping_tax_incl'] - $order['total_shipping_tax_excl'];
+
 		$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
 		$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
-		// protect text and varchar fields 
+		$wrapping_taxes = $order['total_wrapping_tax_incl'] - $order['total_wrapping_tax_excl'];
+
+		$product_taxes = $order['total_products_wt'] - $order['total_products'];
+		$order['total_paid_tax_incl'] = (float)$order['total_paid'];
+		$order['total_paid_tax_excl'] = (float)$order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
+		// protect text and varchar fields
 		$order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
 		$order['payment'] = Db::getInstance()->escape($order['payment']);
 		$order['module'] = Db::getInstance()->escape($order['module']);
@@ -166,7 +172,7 @@ function migrate_orders()
 	$res &= mo_renameTables();
 	if (!$res)
 		$array_errors[] = 'unable to rename tables orders_2 and order_detail_2 to orders and order_detail';
-	
+
 	if (!$res)
 		return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
 }
@@ -176,8 +182,8 @@ function migrate_orders()
  * mo_ps_round is a simplification of Tools::ps_round:
  * - round is always 2
  * - no call to Configuration class
- * 
- * @param mixed $val 
+ *
+ * @param mixed $val
  * @return void
  */
 function mo_ps_round($val)
@@ -185,7 +191,7 @@ function mo_ps_round($val)
 	static $ps_price_round_mode;
 	if (empty($ps_price_round_mode))
 	{
-		$ps_price_round_mode = Db::getInstance()->getValue('SELECT value 
+		$ps_price_round_mode = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name = "PS_PRICE_ROUND_MODE"');
 	}
@@ -204,9 +210,9 @@ function mo_ps_round($val)
 function mo_duplicateTables()
 {
 	$res = true;
-	$res &= Db::getInstance()->execute('CREATE TABLE 
+	$res &= Db::getInstance()->execute('CREATE TABLE
 		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
-	$res &= Db::getInstance()->execute('CREATE TABLE 
+	$res &= Db::getInstance()->execute('CREATE TABLE
 		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
 	return $res;
 }
