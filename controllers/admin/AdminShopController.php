@@ -548,7 +548,7 @@ class AdminShopControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
-			 /* voluntary do affectation here */
+			/* voluntary do affectation here */
 			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
@@ -569,8 +569,8 @@ class AdminShopControllerCore extends AdminController
 		$this->errors = array_unique($this->errors);
 		if (count($this->errors) > 0)
 		{
-            $this->display = 'add';
-            return;
+			$this->display = 'add';
+			return;
 		}
 
 		// datas to import
@@ -601,11 +601,13 @@ class AdminShopControllerCore extends AdminController
 		if (empty($selected_cat))
 		{
 			// get first category root and preselect all these children
-			$root_category = Category::getRootCategories();
-			$children = Category::getChildren($root_category[0]['id_category'], $this->context->language->id);
-			$selected_cat[] = $root_category[0]['id_category'];
+			$root_categories = Category::getRootCategories();
+			$root_category = new Category($root_categories[0]['id_category']);
+			$children = $root_category->getAllChildren($this->context->language->id);
+			$selected_cat[] = $root_categories[0]['id_category'];
+			
 			foreach ($children as $child)
-				$selected_cat[] = $child['id_category'];
+				$selected_cat[] = $child->id_category;
 		}
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
