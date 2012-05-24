@@ -46,7 +46,7 @@
 	{else}
 
 		<div class="hint" style="display:block;">
-			{l s='Some sentences to translate uses this syntax: %s...: You must let it in your translations.' sprintf='%d, %s, %1$s, %2$d'}
+			{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}
 		</div><br /><br />
 
 		<p>
@@ -58,7 +58,7 @@
 			$(document).ready(function(){
 				$('a.useSpecialSyntax').click(function(){
 					var syntax = $(this).find('img').attr('alt');
-					$('#BoxUseSpecialSyntax .syntax span').html(syntax);
+					$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
 					$('#BoxUseSpecialSyntax').toggle(1000);
 				});
 				$('#BoxUseSpecialSyntax').click(function(){
@@ -70,8 +70,8 @@
 		<div id="BoxUseSpecialSyntax">
 			<div class="warn">
 				<p class="syntax">
-					{l s='This expression uses this special syntax:'} <span>%d</span><br />
-					{l s='You must use this syntax in your tanslations. Here are several examples of use:'}
+					{l s='This expression uses this special syntax:'} <span>%d.</span><br />
+					{l s='You must use this syntax in your translations. Here are several examples:'}
 				</p>
 				<ul>
 					<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
