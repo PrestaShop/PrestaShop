@@ -666,7 +666,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress'))
+		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress'))
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
