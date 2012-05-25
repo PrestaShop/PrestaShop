@@ -556,7 +556,7 @@ class ShopCore extends ObjectModel
 			$shops->where('active', '=', 1);
 
 		if ($id_shop_group)
-			$shops->where('id_shop_group', '=', $id_shop_group);
+			$shops->where('id_shop_group', '=', (int)$id_shop_group);
 
 		return $shops;
 	}
@@ -664,7 +664,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getShopById($id, $identifier, $table)
 	{
-		return Db::getInstance()->executeS('SELECT `id_shop`, `'.pSQL($identifier).'` FROM `'._DB_PREFIX_.pSQL($table).'_shop` WHERE `'.pSQL($identifier).'` = '.(int)$id);
+		return Db::getInstance()->executeS('SELECT `id_shop`, `'.bqSQL($identifier).'` FROM `'._DB_PREFIX_.bqSQL($table).'_shop` WHERE `'.bqSQL($identifier).'` = '.(int)$id);
 	}
 
 	public static function setContext($type, $id = null)
