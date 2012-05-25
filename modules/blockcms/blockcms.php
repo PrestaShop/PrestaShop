@@ -54,7 +54,6 @@ class BlockCms extends Module
 	{
 		if (!parent::install() ||
 			!$this->registerHooks() ||
-			!$this->registerHook('actionShopDataDuplication') ||
 			!BlockCMSModel::createTables() ||
 			!Configuration::updateValue('FOOTER_CMS', '') ||
 			!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) ||
@@ -104,7 +103,6 @@ class BlockCms extends Module
 	{
 		if (!parent::uninstall() ||
 			!BlockCMSModel::DropTables() ||
-			!$this->unregisterHook('actionShopDataDuplication') ||
 			!Configuration::deleteByName('FOOTER_CMS') ||
 			!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') ||
 			!Configuration::deleteByName('FOOTER_POWEREDBY'))
@@ -117,7 +115,7 @@ class BlockCms extends Module
 	{
 		return (
 			$this->registerHook('leftColumn') && $this->registerHook('rightColumn') &&
-			$this->registerHook('header') && $this->registerHook('footer'));
+			$this->registerHook('header') && $this->registerHook('footer') && $this->registerHook('actionShopDataDuplication'));
 	}
 
 	public function initToolbar()
