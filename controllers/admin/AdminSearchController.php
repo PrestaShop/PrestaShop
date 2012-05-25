@@ -154,6 +154,7 @@ class AdminSearchControllerCore extends AdminController
 		}
 		foreach (AdminTab::$tabParenting as $key => $value)
 		{
+			$value = stripslashes($value);
 			$tabs[strtolower($key)] = $tabs[strtolower($value)];
 			$key_match[strtolower($key)] = $key;
 		}
@@ -162,6 +163,7 @@ class AdminSearchControllerCore extends AdminController
 		{
 			if (stripos($value, $this->query) !== false)
 			{
+				$value = stripslashes($value);
 				$key = strtolower(substr($key, 0, -32));
 				if (in_array($key, array('AdminTab', 'index')))
 					continue;
