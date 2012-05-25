@@ -39,7 +39,7 @@ class BlockCms extends Module
 	{
 		$this->name = 'blockcms';
 		$this->tab = 'front_office_features';
-		$this->version = 1.1;
+		$this->version = '1.1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -54,6 +54,7 @@ class BlockCms extends Module
 	{
 		if (!parent::install() ||
 			!$this->registerHooks() ||
+			!$this->registerHook('actionShopDataDuplication') ||
 			!BlockCMSModel::createTables() ||
 			!Configuration::updateValue('FOOTER_CMS', '') ||
 			!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) ||
@@ -103,6 +104,7 @@ class BlockCms extends Module
 	{
 		if (!parent::uninstall() ||
 			!BlockCMSModel::DropTables() ||
+			!$this->unregisterHook('actionShopDataDuplication') ||
 			!Configuration::deleteByName('FOOTER_CMS') ||
 			!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') ||
 			!Configuration::deleteByName('FOOTER_POWEREDBY'))
@@ -541,7 +543,7 @@ class BlockCms extends Module
 		if ($this->_postValidation() == false)
 			return false;
 
-        $this->_errors = array();
+		$this->_errors = array();
 		if (Tools::isSubmit('submitBlockCMS'))
 		{
 			$this->context->controller->getLanguages();
@@ -554,17 +556,17 @@ class BlockCms extends Module
 			{
 				$id_cms_block = BlockCMSModel::insertCMSBlock($id_cms_category, $location, $position, $display_store);
 
-                if ($id_cms_block !== false)
-                {
-                    foreach ($this->context->controller->_languages as $language)
-                        BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
+				if ($id_cms_block !== false)
+				{
+					foreach ($this->context->controller->_languages as $language)
+						BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
 
-                    BlockCMSModel::insertCMSBlockShop($id_cms_block, Shop::getContextShopGroupID(), Shop::getContextShopID());
-                }
+					BlockCMSModel::insertCMSBlockShop($id_cms_block, Shop::getContextShopGroupID(), Shop::getContextShopID());
+				}
 
-                $this->_errors[] = $this->l('New block cannot be created !');
+				$this->_errors[] = $this->l('New block cannot be created !');
 			}
-			else if (Tools::isSubmit('editBlockCMS'))
+			elseif (Tools::isSubmit('editBlockCMS'))
 			{
 				$id_cms_block = Tools::getvalue('id_cms_block');
 				$old_block = BlockCMSModel::getBlockCMS($id_cms_block);
@@ -595,12 +597,12 @@ class BlockCms extends Module
 
 			if (Tools::isSubmit('addBlockCMS'))
 				$redirect = 'addBlockCMSConfirmation';
-			else if (Tools::isSubmit('editBlockCMS'))
+			elseif (Tools::isSubmit('editBlockCMS'))
 				$redirect = 'editBlockCMSConfirmation';
 
 			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&'.$redirect);
 		}
-		else if (Tools::isSubmit('deleteBlockCMS') && Tools::getValue('id_cms_block'))
+		elseif (Tools::isSubmit('deleteBlockCMS') && Tools::getValue('id_cms_block'))
 		{
 			$id_cms_block = Tools::getvalue('id_cms_block');
 
@@ -614,11 +616,11 @@ class BlockCms extends Module
 			else
 				$this->_html .= $this->displayError($this->l('Error: you are trying to delete a non-existent block cms'));
 		}
-		else if (Tools::isSubmit('submitFooterCMS'))
+		elseif (Tools::isSubmit('submitFooterCMS'))
 		{
 			$powered_by = Tools::getValue('cms_footer_powered_by_on') ? 1 : 0;
 			$footer_boxes = Tools::getValue('footerBox') ? implode('|', Tools::getValue('footerBox')) : '';
-            $block_activation = (Tools::getValue('cms_footer_on') == 1) ? 1 : 0;
+			$block_activation = (Tools::getValue('cms_footer_on') == 1) ? 1 : 0;
 
 			Configuration::updateValue('FOOTER_CMS', rtrim($footer_boxes, '|'));
 			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by);
@@ -626,21 +628,21 @@ class BlockCms extends Module
 
 			$this->_html .= $this->displayConfirmation($this->l('Footer\'s informations updated'));
 		}
-		else if (Tools::isSubmit('addBlockCMSConfirmation'))
+		elseif (Tools::isSubmit('addBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Block CMS added'));
-		else if (Tools::isSubmit('editBlockCMSConfirmation'))
+		elseif (Tools::isSubmit('editBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Block CMS edited'));
-		else if (Tools::isSubmit('deleteBlockCMSConfirmation'))
+		elseif (Tools::isSubmit('deleteBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Deletion successful'));
-		else if (Tools::isSubmit('id_cms_block') && Tools::isSubmit('way') && Tools::isSubmit('position') && Tools::isSubmit('location'))
+		elseif (Tools::isSubmit('id_cms_block') && Tools::isSubmit('way') && Tools::isSubmit('position') && Tools::isSubmit('location'))
 			$this->changePosition();
-		else if (Tools::isSubmit('updatePositions'))
+		elseif (Tools::isSubmit('updatePositions'))
 			$this->updatePositionsDnd();
-        if (count($this->_errors))
-        {
-            foreach ($this->_errors as $err)
-                $this->_html .= '<div class="alert error">'.$err.'</div>';
-        }
+		if (count($this->_errors))
+		{
+			foreach ($this->_errors as $err)
+				$this->_html .= '<div class="alert error">'.$err.'</div>';
+		}
 	}
 
 	public function getContent()
@@ -732,5 +734,15 @@ class BlockCms extends Module
 			if (isset($pos[2]))
 				BlockCMSModel::updateCMSBlockPosition($pos[2], $position);
 		}
+	}
+	
+	public function hookActionShopDataDuplication($params)
+	{
+		Db::getInstance()->execute('
+			INSERT INTO '._DB_PREFIX_.'cms_block_shop (id_cms_block, id_shop)
+			SELECT id_cms_block, '.(int)$params['new_id_shop'].'
+			FROM '._DB_PREFIX_.'cms_block_shop
+			WHERE id_shop = '.(int)$params['old_id_shop'].'
+		');
 	}
 }
