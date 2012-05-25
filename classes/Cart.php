@@ -1166,9 +1166,9 @@ class CartCore extends ObjectModel
 
 		if ($result)
 		{
+			$return = $this->update(true);
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			$return = $this->update(true);
 			
 			// If there isn't any product left (which does not belong to a cart rule), remove all the cart rules associated to this cart
 			// Compare the quantity of products in the cart and the quantity of product offered (you can't simply compare the product itself, because the same product can be paid and free (2 products bought, 1 free))
