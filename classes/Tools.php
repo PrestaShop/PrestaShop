@@ -2005,7 +2005,7 @@ FileETag INode MTime Size
 	 * @TODO move this method in class Information (when it will exist)
 	 *
 	 * Notes: This method requires either apache_get_modules or phpinfo()
-	 * to be available.
+	 * to be available. With CGI mod, we cannot get php modules
 	 *
 	 * @param string $name module name
 	 * @return boolean true if exists
