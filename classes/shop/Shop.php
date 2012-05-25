@@ -901,39 +901,4 @@ class ShopCore extends ObjectModel
 
 		return $array;
 	}
-
-	/**
-	 * @static
-	 * @param $id_category
-	 * @return bool
-	 */
-	public static function isCategoryAvailable($id_category)
-	{
-		return (bool)Db::getInstance()->getValue('
-		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'category_shop`
-		WHERE `id_category` = '.(int)$id_category.'
-		AND `id_shop` = '.(int)Context::getContext()->shop->id);
-	}
-
-	/**
-	 * @static
-	 * @param $id_product
-	 * @return bool
-	 */
-	public static function isProductAvailable($id_product)
-	{
-		$id = Context::getContext()->shop->id;
-		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
-		return (bool)Db::getInstance()->getValue('
-		SELECT p.`id_product`
-		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('product', 'p').'
-		LEFT JOIN `'._DB_PREFIX_.'category_product` cp
-			ON p.`id_product` = cp.`id_product`
-		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
-			ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-		WHERE p.`id_product` = '.(int)$id_product.'
-		AND cs.`id_shop` = '.(int)Context::getContext()->shop->id);
-	}
 }
