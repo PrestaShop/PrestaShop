@@ -1690,7 +1690,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				$customer->id_shop_group = Shop::getGroupFromShop($customer->id_shop);
 
-				if ($customer->id && $customer->customerIdExists($customer->id))
+				if (($customer->id && $customer->customerIdExists($customer->id)) || $customer->customerExists($customer->email))
 					$res = $customer->update();
 				if (!$res)
 					$res = $customer->add();
