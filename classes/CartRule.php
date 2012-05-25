@@ -252,7 +252,7 @@ class CartRuleCore extends ObjectModel
 			$cart_rule['value'] = 0;
 			$cart_rule['minimal'] = $cart_rule['minimum_amount'];
 			$cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
-			if ($cart_rule['free_shipping'])
+			if ($cart_rule['free_shipping'] == 0)
 				$cart_rule['id_discount_type'] = Discount::FREE_SHIPPING;
 			elseif ($cart_rule['reduction_percent'] > 0)
 			{
@@ -936,6 +936,14 @@ class CartRuleCore extends ObjectModel
 		if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule', 'shop')))
 			return false;
 
+		$shop_list = '';
+		if ($type == 'shop')
+		{
+			$shop_list = ' AND t.id_shop IN (';
+			$shops = Context::getContext()->employee->getAssociatedShops();
+			$shop_list .= implode(array_map('intval', $shops), ',').')';
+		}
+
 		if (!Validate::isLoadedObject($this) OR $this->{$type.'_restriction'} == 0)
 		{
 			$array['selected'] = Db::getInstance()->executeS('
@@ -945,8 +953,9 @@ class CartRuleCore extends ObjectModel
 			WHERE 1
 			'.($active_only ? 'AND t.active = 1' : '').'
 			'.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').'
-			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').'
-			ORDER BY name ASC');
+			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').
+			$shop_list.
+			' ORDER BY name ASC');
 		}
 		else
 		{
@@ -959,8 +968,9 @@ class CartRuleCore extends ObjectModel
 				FROM `'._DB_PREFIX_.$type.'` t
 				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
 				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
-				'.($active_only ? 'WHERE t.active = 1' : '').'
-				ORDER BY name ASC',
+				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
+				$shop_list.
+				' ORDER BY name ASC',
 				false);
 				while ($row = Db::getInstance()->nextRow($resource))
 					$array[($row['selected'] || $this->{$type.'_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;
