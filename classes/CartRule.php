@@ -252,7 +252,7 @@ class CartRuleCore extends ObjectModel
 			$cart_rule['value'] = 0;
 			$cart_rule['minimal'] = $cart_rule['minimum_amount'];
 			$cart_rule['cumulable'] = !$cart_rule['cart_rule_restriction'];
-			if ($cart_rule['free_shipping'] == 0)
+			if ($cart_rule['free_shipping'])
 				$cart_rule['id_discount_type'] = Discount::FREE_SHIPPING;
 			elseif ($cart_rule['reduction_percent'] > 0)
 			{
