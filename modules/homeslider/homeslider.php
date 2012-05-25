@@ -109,7 +109,7 @@ class HomeSlider extends Module
 	public function uninstall()
 	{
 		/* Deletes Module */
-		if (parent::uninstall() && $this->unregisterHook('displayHome') && $this->unregisterHook('actionShopDataDuplication'))
+		if (parent::uninstall())
 		{
 			/* Deletes tables */
 			$res = $this->deleteTables();
