@@ -340,6 +340,11 @@ class AdminCartsControllerCore extends AdminController
 
 				if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, $operator)))
 					$errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+				elseif ($qty_upd < 0)
+				{
+					$minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int)$id_product_attribute) : $product->minimal_quantity;
+					$errors[] = sprintf(Tools::displayError('You must add a minimum of %d quantity', false), $minimal_qty);
+				}
 			}
 
 			echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
