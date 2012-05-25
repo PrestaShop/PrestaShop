@@ -1,6 +1,6 @@
 /* PHP:module_blockwishlist_multishop(); */;
 
-ALTER TABLE `PREFIX_supplier` DROP `id_address`;
+/* PHP:p15010_drop_column_id_address_if_exists(); */;
 
 UPDATE `PREFIX_meta` SET `page` = 'contact' WHERE `page` = 'contact-form';
 
