@@ -130,6 +130,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		if (!$this->object->id)
 			$this->object->price = -1;
 
+		$shops = Shop::getShops();
+		if (count($this->context->employee->getAssociatedShops()) > 1)
+			$shops = array_merge(array(0 => array('id_shop' => 0, 'name' => $this->l('All shops'))), $shops);
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Specific price rules'),
@@ -149,7 +153,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'label' => $this->l('Shop:'),
 					'name' => 'id_shop',
 					'options' => array(
-						'query' => array_merge(array(0 => array('id_shop' => 0, 'name' => $this->l('All shops'))), Shop::getShops()),
+						'query' => $shops,
 						'id' => 'id_shop',
 						'name' => 'name'
 					),
