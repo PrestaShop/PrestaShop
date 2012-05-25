@@ -49,7 +49,7 @@ class CategoryControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
-		if (!Shop::isCategoryAvailable(Tools::getValue('id_category')))
+		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
 		{
 			$this->redirect_after = '404';
 			$this->redirect();
@@ -64,8 +64,6 @@ class CategoryControllerCore extends FrontController
 	 */
 	public function init()
 	{
-		parent::init();
-
 		// Get category ID
 		$id_category = (int)Tools::getValue('id_category');
 		if (!$id_category || !Validate::isUnsignedId($id_category))
@@ -73,14 +71,8 @@ class CategoryControllerCore extends FrontController
 
 		// Instantiate category
 		$this->category = new Category($id_category, $this->context->language->id);
-		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop())
-		{
-			$this->errors[] = Tools::displayError('Category does not exist');
-			header('HTTP/1.1 404 Not Found');
-			header('Status: 404 Not Found');
-		}
-		else
-			$this->canonicalRedirection();
+
+		parent::init();
 
 		if (!$this->category->checkAccess($this->context->customer->id))
 			$this->errors[] = Tools::displayError('You do not have access to this category.');
