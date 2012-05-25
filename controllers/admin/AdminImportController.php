@@ -1664,7 +1664,12 @@ class AdminImportControllerCore extends AdminController
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
-			$customer = new Customer();
+
+			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
+				$customer = new Customer((int)$info['id']);
+			else
+				$customer = new Customer();
+
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
 			if ($customer->passwd)
