@@ -106,7 +106,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
 		// shop restriction : if category is not available for current shop, we redirect to the list from default category
-		if (!Shop::isCategoryAvailable($this->_category->id))
+		if (!$this->_category->isAssociatedToShop())
 		{
 			$this->redirect_after = self::$currentIndex.'&id_category='.(int)$this->context->shop->getCategory().'&token='.$this->token;
 			$this->redirect();
