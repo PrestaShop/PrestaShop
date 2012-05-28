@@ -1491,10 +1491,16 @@ class AdminProductsControllerCore extends AdminController
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 				{
-					$preview_url = ($this->context->link->getProductLink(
-										$this->getFieldValue($this->object, 'id'),
-										$this->getFieldValue($this->object, 'link_rewrite', $this->context->language->id),
-										Category::getLinkRewrite($this->getFieldValue($this->object, 'id_category_default'), $this->context->language->id)));
+					$preview_url = $this->context->link->getProductLink(
+						$this->getFieldValue($this->object, 'id'),
+						$this->getFieldValue($this->object, 'link_rewrite', $this->context->language->id),
+						Category::getLinkRewrite($this->getFieldValue($this->object, 'id_category_default'), $this->context->language->id),
+						null,
+						null,
+						Context::getContext()->shop->id,
+						0,
+						true
+					);
 
 					if (!$this->object->active)
 					{
@@ -1606,7 +1612,17 @@ class AdminProductsControllerCore extends AdminController
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))
 						{
-							$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->id);
+							$preview_url = $this->context->link->getProductLink(
+								$this->getFieldValue($object, 'id'),
+								$this->getFieldValue($object, 'link_rewrite', $this->context->language->id),
+								Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id),
+								null,
+								null,
+								Context::getContext()->shop->id,
+								0,
+								true
+							);
+
 							if (!$object->active)
 							{
 								$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -2288,10 +2304,27 @@ class AdminProductsControllerCore extends AdminController
 		$preview_url = $this->context->link->getProductLink(
 			$product,
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
-			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->id);
+			Category::getLinkRewrite($product->id_category_default, $this->context->language->id),
+			null,
+			null,
+			Context::getContext()->shop->id,
+			0,
+			true
+		);
+
 		if (!$product->active)
 		{
-			$preview_url = $this->context->link->getProductLink($product, $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id));
+			$preview_url = $this->context->link->getProductLink(
+				$product,
+				$this->getFieldValue($product, 'link_rewrite', $this->default_form_language),
+				Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id),
+				null,
+				null,
+				Context::getContext()->shop->id,
+				0,
+				true
+			);
+
 			if (!$product->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);

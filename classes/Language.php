@@ -736,7 +736,7 @@ class LanguageCore extends ObjectModel
 	{
 		if (!self::$countActiveLanguages)
 			self::$countActiveLanguages = Db::getInstance()->getValue('
-				SELECT COUNT(*) FROM `'._DB_PREFIX_.'lang` l
+				SELECT COUNT(DISTINCT l.id_lang) FROM `'._DB_PREFIX_.'lang` l
 				'.Shop::addSqlAssociation('lang', 'l').'
 				WHERE l.`active` = 1
 			');
