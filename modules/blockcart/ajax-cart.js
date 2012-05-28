@@ -96,7 +96,7 @@ var ajaxCart = {
 			$('#header #cart_block #cart_block_summary').slideUp(200, function(){
 				$(this).addClass('collapsed').removeClass('expanded');
 				$('#header #cart_block #cart_block_list').slideDown({
-					duration: 600,
+					duration: 450,
 					complete: function(){$(this).addClass('expanded').removeClass('collapsed');}
 				});
 			});
@@ -143,7 +143,7 @@ var ajaxCart = {
 		{
 			$('#header #cart_block #cart_block_list').slideUp('slow', function(){
 				$(this).addClass('collapsed').removeClass('expanded');
-				$('#header #cart_block #cart_block_summary').slideDown(700, function(){
+				$('#header #cart_block #cart_block_summary').slideDown(450, function(){
 					$(this).addClass('expanded').removeClass('collapsed');
 				});
 			});
@@ -314,7 +314,7 @@ var ajaxCart = {
 						//if the cart is now empty, show the 'no product in the cart' message
 						if($('#cart_block dl.products dt').length == 0)
 						{
-							$('p#cart_block_no_products:hidden').slideDown('fast');
+							$('p#cart_block_no_products:hidden').slideDown(450);
 							$('div#cart_block dl.products').remove();
 						}
 					});
@@ -489,7 +489,7 @@ var ajaxCart = {
 						}
 					}
 				}
-				$('#cart_block dl.products .hidden').slideDown('slow').removeClass('hidden');
+				$('#cart_block dl.products .hidden').slideDown(450).removeClass('hidden');
 
 			var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
 			if (this.hasCustomizedDatas && removeLinks.length)
