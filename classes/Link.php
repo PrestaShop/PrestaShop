@@ -532,7 +532,7 @@ class LinkCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		var_dump(Language::isMultiLanguageActivated());
+
 		if (!$this->allow || !Language::isMultiLanguageActivated())
 			return '';
 
