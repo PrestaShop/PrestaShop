@@ -519,7 +519,7 @@ class DispatcherCore
 	 * @param bool $use_routes If false, don't use to create this url
 	 * @param string $anchor Optional anchor to add at the end of this url
 	 */
-	public function createUrl($route_id, array $params = array(), $use_routes = true, $anchor = '')
+	public function createUrl($route_id, array $params = array(), $force_routes = false, $anchor = '')
 	{
 		if (!isset($this->routes[$route_id]))
 		{
@@ -541,7 +541,7 @@ class DispatcherCore
 		}
 
 		// Build an url which match a route
-		if ($this->use_routes && $use_routes)
+		if ($this->use_routes || $force_routes)
 		{
 			$url = $route['rule'];
 			$add_param = array();
