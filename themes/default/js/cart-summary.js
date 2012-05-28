@@ -571,11 +571,11 @@ function updateCartSummary(json)
 		}
 		else
 		{
-			// @todo Check if the next line needs to be removed or not
-			//$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_customization+'_'+json.products[i].id_address_delivery+']')
-			//	.val(json.products[i].cart_quantity);
 			$('#cart_quantity_custom_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery)
 				.html(json.products[i].cart_quantity);
+
+			$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_customization+'_0'+']')
+				.val(json.products[i].customization_quantity);
 		}
 
 		// Show / hide quantity button if minimal quantity
