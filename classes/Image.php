@@ -227,6 +227,7 @@ class ImageCore extends ObjectModel
 			$image_new = clone $image_old;
 			unset($image_new->id);
 			$image_new->id_product = (int)$id_product_new;
+
 			// A new id is generated for the cloned image when calling add()
 			if ($image_new->add())
 			{
@@ -241,10 +242,14 @@ class ImageCore extends ObjectModel
 						$new_path.'-'.$image_type['name'].'.jpg');
 					}
 				}
-			if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg'))
-				copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg', $new_path.'.jpg');
+
+				if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg'))
+					copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg', $new_path.'.jpg');
 
 				Image::replaceAttributeImageAssociationId($combination_images, (int)$image_old->id, (int)$image_new->id);
+
+				// Duplicate shop associations for images
+				$image_new->duplicateShops($id_product_old);
 			}
 			else
 				return false;
