@@ -43,15 +43,15 @@ if (isset($_FILES['virtual_product_file_attribute']) && is_uploaded_file($_FILES
 	if (!copy($file, _PS_DOWNLOAD_DIR_.$newfilename))
 	{
 		header('HTTP/1.1 500 Error');
-		echo '<return result="error" msg="No permissions to write in the download folder" filename="'.$filename.'" />';
+		echo '<return result="error" msg="No permissions to write in the download folder" filename="'.Tools::safeOutput($filename).'" />';
 	}
 	@unlink($file);
 
 	header('HTTP/1.1 200 OK');
-	echo '<return result="success" msg="'.$newfilename.'" filename="'.$filename.'" />';
+	echo '<return result="success" msg="'.Tools::safeOutput($newfilename).'" filename="'.Tools::safeOutput($filename).'" />';
 }
 else
 {
 	header('HTTP/1.1 500 Error');
-	echo '<return result="error" msg="Unknown error" filename="'.ProductDownload::getNewFilename().'" />';
+	echo '<return result="error" msg="Unknown error" filename="'.Tools::safeOutput(ProductDownload::getNewFilename()).'" />';
 }
