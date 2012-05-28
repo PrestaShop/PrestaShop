@@ -124,6 +124,8 @@ $(function(){ldelim}
 					$('#center_column').html('<div id="noSlide">'+$('#center_column').html()+'</div>');
 					$('#noSlide').fadeOut('slow', function(){
 						$('#noSlide').html(jsonData.page);
+						// update the state (when this file is called from AJAX you still need to update the state)
+						updateState();
 					});
 					$('#noSlide').fadeIn('slow');
 					document.location = '#account-creation';
