@@ -936,7 +936,6 @@ class ToolsCore
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
-		$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
 		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);
