@@ -4,6 +4,7 @@
  * v 1.0
  */
 
+
 jQuery.extend({createUploadIframe:function(id,uri)
 {var frameId='jUploadFrame'+id;if(window.ActiveXObject){var io=document.createElement('<iframe id="'+frameId+'" name="'+frameId+'" />');if(typeof uri=='boolean'){io.src='javascript:false';}
 else if(typeof uri=='string'){io.src=uri;}}
@@ -51,3 +52,7 @@ return{abort:function(){}};},uploadHttpData:function(r,type){var data=!type;data
 jQuery.globalEval(data);if(type=="json")
 eval("data = "+data);if(type=="html")
 jQuery("<div>").html(data).evalScripts();return data;}})
+
+var is={ie:navigator.appName=='Microsoft Internet Explorer',java:navigator.javaEnabled(),ns:navigator.appName=='Netscape',ua:navigator.userAgent.toLowerCase(),version:parseFloat(navigator.appVersion.substr(21))||parseFloat(navigator.appVersion),win:navigator.platform=='Win32'}
+is.mac=is.ua.indexOf('mac')>=0;if(is.ua.indexOf('opera')>=0){is.ie=is.ns=false;is.opera=true;}
+if(is.ua.indexOf('gecko')>=0){is.ie=is.ns=false;is.gecko=true;}
