@@ -671,22 +671,32 @@ $(document).ready(function(){
 	var cart_block = new HoverWatcher('#cart_block');
 	var shopping_cart = new HoverWatcher('#shopping_cart');
 
-	$("#shopping_cart a:first").hover(function(){
-		$(this).css('border-radius', '3px 3px 0px 0px');
-		$("#header #cart_block").stop(true, true).slideDown(450);
-	},
-	function() {
-		$(this).css('border-radius', '3px');
-		$("#header #cart_block").stop(true, true);
-		if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-			$("#header #cart_block").slideUp(450);
-	});
+	$("#shopping_cart a:first").hover(
+		function() {
+			$(this).css('border-radius', '3px 3px 0px 0px');
+			$("#header #cart_block").stop(true, true).slideDown(450);
+		},
+		function() {
+			$('#shopping_cart a').css('border-radius', '3px');
+			setTimeout(function() {
+				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
+					$("#header #cart_block").stop(true, true).slideUp(450);
+			}, 200);
+		}
+	);
 
-	$("#cart_block").hover(function() {}, function(){
-		$("#header #cart_block").stop(true, true);
-		if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-			$("#header #cart_block").slideUp(450);
-	});
+	$("#cart_block").hover(
+		function() {
+			$('#shopping_cart a').css('border-radius', '3px 3px 0px 0px');
+		},
+		function() {
+			$('#shopping_cart a').css('border-radius', '3px');
+			setTimeout(function() {
+				if (!shopping_cart.isHoveringOver())
+					$("#header #cart_block").stop(true, true).slideUp(450);
+			}, 200);
+		}
+	);
 	
 	$('.delete_voucher').live('click', function() {
 		$.ajax({url:$(this).attr('href')});
