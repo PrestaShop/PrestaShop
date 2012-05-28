@@ -35,12 +35,12 @@ class AdminCmsCategoriesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->table = 'cms_category';
-	 	$this->className = 'CMSCategory';
-	 	$this->lang = true;
+		$this->className = 'CMSCategory';
+		$this->lang = true;
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
 		'id_cms_category' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 30),
@@ -86,6 +86,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			$this->action = 'save';
 			if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 			{
+				$this->id_object = $id_cms_category;
 				if (!CMSCategory::checkBeforeMove($id_cms_category, (int)Tools::getValue('id_parent')))
 				{
 					$this->errors[] = Tools::displayError('CMS Category cannot be moved here');
@@ -193,7 +194,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		parent::postProcess(true);
+		parent::postProcess();
 	}
 
 	public function renderForm()
