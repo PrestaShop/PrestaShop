@@ -942,6 +942,7 @@ class AdminControllerCore extends Controller
 			}
 		}
 
+		$this->display = 'list';
 		if (empty($this->errors))
 			$this->confirmations[] = $this->_conf[6];
 	}
@@ -1491,9 +1492,13 @@ class AdminControllerCore extends Controller
 	{
 		if ($this->fields_options && is_array($this->fields_options))
 		{
-			if ($this->display != 'options')
+			if (isset($this->display) && $this->display != 'options')
 				$this->show_toolbar = false;
+			else if (!isset($this->display))
+				$this->display = 'options';
 
+			unset($this->toolbar_btn);
+			$this->initToolbar();
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
 			$helper->id = $this->id;
