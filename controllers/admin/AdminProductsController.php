@@ -360,7 +360,7 @@ class AdminProductsControllerCore extends AdminController
 				$max_post = (int)ini_get('post_max_size');
 				$upload_mb = min($max_upload, $max_post);
 				$this->errors[] = sprintf(
-					$this->l('The File %1$s exceeds the size allowed by the server. The limit is set to %1$d MB.'),
+					$this->l('The File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
 					'<b>'.$_FILES['attachment_file']['name'].'</b> ',
 					'<b>'.$upload_mb.'</b>'
 				);
