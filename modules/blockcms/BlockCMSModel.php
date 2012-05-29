@@ -119,7 +119,6 @@ class BlockCMSModel extends ObjectModel
 	{
 		$sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_shop` (
 			`id_cms_block` int(10) unsigned NOT NULL auto_increment,
-			`id_group_shop` int(10) unsigned NOT NULL,
 			`id_shop` int(10) unsigned NOT NULL,
 			PRIMARY KEY (`id_cms_block`, `id_shop`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
@@ -158,10 +157,10 @@ class BlockCMSModel extends ObjectModel
 		return Db::getInstance()->Insert_ID();
 	}
 
-	public static function insertCMSBlockShop($id_cms_block, $id_group_shop, $id_shop)
+	public static function insertCMSBlockShop($id_cms_block, $id_shop)
 	{
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'cms_block_shop` (`id_cms_block`, `id_group_shop`, `id_shop`)
-				VALUES('.(int)$id_cms_block.', '.(int)$id_group_shop.', '.(int)$id_shop.')';
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'cms_block_shop` (`id_cms_block`, `id_shop`)
+				VALUES('.(int)$id_cms_block.', '.(int)$id_shop.')';
 
 		Db::getInstance()->execute($sql);
 
