@@ -24,6 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{if $opc}
+	{assign var="back_order_page" value="order-opc.php"}
+	{else}
+	{assign var="back_order_page" value="order.php"}
+{/if}
+
 {if $PS_CATALOG_MODE}
 	{capture name=path}{l s='Your shopping cart'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
@@ -37,7 +43,7 @@
 	var orderOpcUrl = '{$link->getPageLink("order-opc", true)}';
 	var historyUrl = '{$link->getPageLink("history", true)}';
 	var guestTrackingUrl = '{$link->getPageLink("guest-tracking", true)}';
-	var addressUrl = '{$link->getPageLink("address", true)}';
+	var addressUrl = '{$link->getPageLink("address", true, NULL, "back={$back_order_page}")}';
 	var orderProcess = 'order-opc';
 	var guestCheckoutEnabled = {$PS_GUEST_CHECKOUT_ENABLED|intval};
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
