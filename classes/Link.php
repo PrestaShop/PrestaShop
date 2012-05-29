@@ -35,6 +35,8 @@ class LinkCore
 	public $protocol_link;
 	public $protocol_content;
 
+	protected $ssl_enable;
+
 	/**
 	  * Constructor (initialization only)
 	  */
@@ -49,6 +51,8 @@ class LinkCore
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+
+		$this->ssl_enable = Configuration::get('PS_SSL_ENABLED');
 	}
 
 	/**
@@ -209,7 +213,7 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
-		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$base = (($ssl && $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -301,7 +305,7 @@ class LinkCore
 	 */
 	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null)
 	{
-		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$base = (($ssl && $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -401,7 +405,7 @@ class LinkCore
 		unset($request['controller']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
-		$url = ($ssl && Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
+		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
 
 		return $url;

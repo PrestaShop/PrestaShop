@@ -395,7 +395,11 @@ class SpecificPriceCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+		static $feature_active = null;
+
+		if ($feature_active === null)
+			$feature_active = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+		return $feature_active;
 	}
 	
 	public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)

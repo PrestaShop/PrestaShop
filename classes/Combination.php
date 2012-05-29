@@ -200,7 +200,11 @@ class CombinationCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+		static $feature_active = null;
+		
+		if ($feature_active === null)
+			$feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+		return $feature_active;
 	}
 
 	/**
