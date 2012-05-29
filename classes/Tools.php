@@ -771,7 +771,7 @@ class ToolsCore
 	/**
 	* Encrypt password
 	*
-	* @param object $object Object to display
+	* @param string $passwd String to encrypt
 	*/
 	public static function encrypt($passwd)
 	{
@@ -794,9 +794,9 @@ class ToolsCore
 	}
 
 	/**
-	* Encrypt password
+	* Tokenize a string
 	*
-	* @param object $object Object to display
+	* @param string $string string to encript
 	*/
 	public static function getAdminToken($string)
 	{
