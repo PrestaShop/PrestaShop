@@ -31,6 +31,7 @@ class Blocktopmenu extends Module
 {
 	private $_menu = '';
 	private $_html = '';
+	private $user_groups;
 
 	/*
 	 * Pattern for matching config values
@@ -590,8 +591,8 @@ class Blocktopmenu extends Module
 
 		$children = Category::getChildren((int)$id_category, (int)$id_lang, true, (int)$id_shop);
 		$selected = ($this->page_name == 'category' && ((int)Tools::getValue('id_category') == $id_category)) ? ' class="sfHoverForce"' : '';
-		$user_groups = Context::getContext()->customer->isLogged() ? Context::getContext()->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP'));
-		$is_intersected = array_intersect($category->getGroups(), $user_groups);
+
+		$is_intersected = array_intersect($category->getGroups(), $this->user_groups);
 		// filter the categories that the user is allowed to see and browse
 		if (!empty($is_intersected))
 		{
@@ -669,17 +670,26 @@ class Blocktopmenu extends Module
 
 	public function hookTop($param)
 	{
-		$this->makeMenu();
+		$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
+		$smarty_cache_id = 'blocktopmenu-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
 
-		$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
-		$this->smarty->assign('MENU', $this->_menu);
-		$this->smarty->assign('this_path', $this->_path);
+		Tools::enableCache();
+		if (!$this->isCached('blocktopmenu.tpl', $smarty_cache_id))
+		{
+			$this->makeMenu();
+			$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
+			$this->smarty->assign('MENU', $this->_menu);
+			$this->smarty->assign('this_path', $this->_path);
+		}
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
 		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
 		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 
-		return $this->display(__FILE__, 'blocktopmenu.tpl');
+		$this->context->smarty->cache_lifetime = 31536000;
+		$html = $this->display(__FILE__, 'blocktopmenu.tpl', $smarty_cache_id);
+		Tools::restoreCacheSettings();
+		return $html;
 	}
 
 	private function getCMSCategories($recursive = false, $parent = 1, $id_lang = false)
