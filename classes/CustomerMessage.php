@@ -50,8 +50,8 @@ class CustomerMessageCore extends ObjectModel
 			'message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
 			'file_name' => 			array('type' => self::TYPE_STRING),
 			'user_agent' => 		array('type' => self::TYPE_STRING),
-			'private' => 			array('type' => self::TYPE_STRING),
-			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'private' => 			array('type' => self::TYPE_INT),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
