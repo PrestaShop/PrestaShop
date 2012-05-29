@@ -787,14 +787,12 @@ class ShopCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		if (!Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
-			return false;
+		static $feature_active = null;
 
-		static $total = null;
+		if ($feature_active === null)
+			$feature_active = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && (count(Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop')) > 1);
 
-		if (is_null($total))
-			$total = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop');
-		return ($total > 1) ? true : false;
+		return $feature_active;
 	}
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
