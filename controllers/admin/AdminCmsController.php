@@ -35,13 +35,13 @@ class AdminCmsControllerCore extends AdminController
 
 	public function __construct()
 	{
-	 	$this->table = 'cms';
-	 	$this->className = 'CMS';
-	 	$this->lang = true;
+		$this->table = 'cms';
+		$this->className = 'CMS';
+		$this->lang = true;
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fields_list = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -50,6 +50,15 @@ class AdminCmsControllerCore extends AdminController
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 			'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 			);
+
+		// The controller can't be call directly
+		// In this case, AdminCmsContentController::getCurrentCMSCategory() is null
+		if (!AdminCmsContentController::getCurrentCMSCategory())
+		{
+			elog('rrrr');
+			$this->redirect_after = '?controller=AdminCmsContent&token='.Tools::getAdminTokenLite('AdminCmsContent');
+			$this->redirect();
+		}
 
 		$this->_category = AdminCmsContentController::getCurrentCMSCategory();
 		$this->_join = '
