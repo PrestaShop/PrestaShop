@@ -523,6 +523,7 @@ class AdminCarriersControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You do not have permission to add here.');
 				}
 			}
+			parent::postProcess();
 		}
 		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
