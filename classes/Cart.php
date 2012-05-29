@@ -1799,8 +1799,8 @@ class CartCore extends ObjectModel
 	 */
 	public function getDeliveryOptionList(Country $default_country = null, $flush = false)
 	{
-		static $cache = false;
-		if ($cache !== false && !$flush)
+		static $cache = null;
+		if ($cache !== null && !$flush)
 			return $cache;
 
 		$delivery_option_list = array();
@@ -1828,7 +1828,10 @@ class CartCore extends ObjectModel
 			{
 				// No carriers available
 				if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
-					return array();
+				{	
+					$cache = array();
+					return $cache;
+				}
 
 				$carriers_price[$id_address][$id_package] = array();
 

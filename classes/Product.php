@@ -2370,6 +2370,11 @@ class ProductCore extends ObjectModel
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
 		$id_customer = 0, $use_customer_price = true, $id_cart = 0)
 	{
+		static $address = null;
+
+		if ($address === null)
+			$address = new Address();
+		
 		if (!$use_customer_price)
 			$id_customer = 0;
 
@@ -2381,6 +2386,9 @@ class ProductCore extends ObjectModel
 		$cache_id = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.
 			'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
 			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer;
+
+		if (isset(self::$_prices[$cache_id]))
+			return self::$_prices[$cache_id];
 
 		// reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice(
@@ -2394,9 +2402,6 @@ class ProductCore extends ObjectModel
 			$id_customer,
 			$id_cart
 		);
-
-		if (isset(self::$_prices[$cache_id]))
-			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
 		$cache_id_2 = $id_product.'-'.(int)$id_product_attribute;
@@ -2455,7 +2460,6 @@ class ProductCore extends ObjectModel
 		}
 
 		// Tax
-		$address = new Address();
 		$address->id_country = $id_country;
 		$address->id_state = $id_state;
 		$address->postcode = $zipcode;
@@ -3448,7 +3452,7 @@ class ProductCore extends ObjectModel
 		$usetax = Tax::excludeTaxeOption();
 
 		$cache_key = $row['id_product'].'-'.$row['id_product_attribute'].'-'.$id_lang.'-'.(int)$usetax;
-		if (array_key_exists($cache_key, self::$producPropertiesCache))
+		if (isset(self::$producPropertiesCache[$cache_key]))
 			return self::$producPropertiesCache[$cache_key];
 
 		// Datas

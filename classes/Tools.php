@@ -502,6 +502,11 @@ class ToolsCore
 	*/
 	public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
 	{
+		static $default_currency = null;
+		
+		if ($default_currency === null)
+			$default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+
 		if (!$context)
 			$context = Context::getContext();
 		if ($currency === null)
@@ -512,7 +517,7 @@ class ToolsCore
 		$c_id = (is_array($currency) ? $currency['id_currency'] : $currency->id);
 		$c_rate = (is_array($currency) ? $currency['conversion_rate'] : $currency->conversion_rate);
 
-		if ($c_id != (int)Configuration::get('PS_CURRENCY_DEFAULT'))
+		if ($c_id != $default_currency)
 		{
 			if ($to_currency)
 				$price *= $c_rate;
@@ -1139,7 +1144,11 @@ class ToolsCore
 	 */
 	public static function ps_round($value, $precision = 0)
 	{
-		$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+		static $method = null;
+		
+		if ($method == null)
+			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+
 		if ($method == PS_ROUND_UP)
 			return Tools::ceilf($value, $precision);
 		elseif ($method == PS_ROUND_DOWN)
