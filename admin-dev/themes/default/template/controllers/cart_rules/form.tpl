@@ -16,7 +16,7 @@
 		</ul>
 	</div>
 </div>
-<form action="{$currentIndex}&token={$currentToken}&addcart_rule" id="cart_rule_form" method="post">
+<form action="{$currentIndex|escape}&token={$currentToken|escape}&addcart_rule" id="cart_rule_form" method="post">
 	{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 	<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 	<div id="cart_rule_informations" class="cart_rule_tab">
@@ -36,22 +36,22 @@
 	</div>
 	<div class="separation"></div>
 	<div style="text-align:center">
-		<input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" id="{$table}_form_submit_btn" />
+		<input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" id="{$table|escape}_form_submit_btn" />
 		<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</div>
 </form>
 <script type="text/javascript">
-	var product_rule_groups_counter = {if isset($product_rule_groups_counter)}{$product_rule_groups_counter}{else}0{/if};
+	var product_rule_groups_counter = {if isset($product_rule_groups_counter)}{$product_rule_groups_counter|intval}{else}0{/if};
 	var product_rule_counters = new Array();
-	var currentToken = '{$currentToken}';
-	var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape}{else}informations{/if}';
+	var currentToken = '{$currentToken|escape:'quotes'}';
+	var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'quotes'}{else}informations{/if}';
 	
 	var languages = new Array();
 	{foreach from=$languages item=language key=k}
 		languages[{$k}] = {
 			id_lang: {$language.id_lang},
-			iso_code: '{$language.iso_code}',
-			name: '{$language.name}'
+			iso_code: '{$language.iso_code|escape:'quotes'}',
+			name: '{$language.name|escape:'quotes'}'
 		};
 	{/foreach}
 	displayFlags(languages, {$defaultLanguage});
