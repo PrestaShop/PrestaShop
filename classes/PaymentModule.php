@@ -560,8 +560,8 @@ abstract class PaymentModuleCore extends Module
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
 						'{carrier}' => $virtual_product ? $this->l('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
-						'{products}' => $products_list,
-						'{discounts}' => $cart_rules_list,
+						'{products}' => $this->formatProductAndVoucherForEmail($products_list),
+						'{discounts}' => $this->formatProductAndVoucherForEmail($cart_rules_list),
 						'{total_paid}' => Tools::displayPrice($order->total_paid, $currency, false),
 						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency, false),
@@ -628,6 +628,18 @@ abstract class PaymentModuleCore extends Module
 			Logger::addLog($error, 4, '0000001', 'Cart', intval($cart->id));
 			die($error);
 		}
+	}
+
+	public function formatProductAndVoucherForEmail($content)
+	{
+		return '<table style="width: 100%; font-family: Verdana,sans-serif; font-size: 11px; color: #374953;">
+						<colgroup>
+							<col width="15%"/>
+							<col width="30%"/>
+							<col width="20%"/>
+							<col width="15%"/>
+							<col width="20%"/>
+						</colgroup>'.$content.'</table>';
 	}
 
 	/**
