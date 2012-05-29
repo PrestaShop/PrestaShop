@@ -51,7 +51,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->default_form_language = $this->context->language->id;
 
-		$genders = array(0 => $this->l('?'));
+		$genders = array();
 		$genders_icon = array('default' => 'unknown.gif');
 		foreach (Gender::getGenders() as $gender)
 		{
