@@ -68,6 +68,16 @@ class Blocktopmenu extends Module
 			!$this->registerHook('top') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
+			!$this->registerHook('categoryUpdate') ||
+			!$this->registerHook('categoryDeletion') ||
+			!$this->registerHook('cmsUpdate') ||
+			!$this->registerHook('cmsDeletion') ||
+			!$this->registerHook('supplierUpdate') ||
+			!$this->registerHook('supplierDeletion') ||
+			!$this->registerHook('manufacturerUpdate') ||
+			!$this->registerHook('manufacturerDeletion') ||
+			!$this->registerHook('productUpdate') ||
+			!$this->registerHook('productDeletion') ||
 			!$this->installDB())
 			return false;
 		return true;
@@ -120,6 +130,8 @@ class Blocktopmenu extends Module
 		$links_label = Tools::getValue('link') ? array_filter(Tools::getValue('link'), 'strlen') : array();
 		$spacer = str_repeat('&nbsp;', $this->spacer_size);
 		$divLangName = 'link_label';
+		
+		$update_cache = false;
 
 		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
@@ -128,6 +140,7 @@ class Blocktopmenu extends Module
 			else
 				$this->_html .= $this->displayError($this->l('Unable to update settings'));
 			Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', (bool)Tools::getValue('search'));
+			$update_cache = true;
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuLinks'))
 		{
@@ -145,6 +158,7 @@ class Blocktopmenu extends Module
 				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
 				$this->_html .= $this->displayConfirmation($this->l('The link has been added'));
 			}
+			$update_cache = true;
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuRemove'))
 		{
@@ -152,6 +166,7 @@ class Blocktopmenu extends Module
 			MenuTopLinks::remove($id_linksmenutop, (int)Shop::getContextShopID());
 			Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_linksmenutop.',', 'LNK'.$id_linksmenutop), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
 			$this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
+			$update_cache = true;
 		}
 		else if (Tools::isSubmit('submitBlocktopmenuEdit'))
 		{
@@ -170,8 +185,12 @@ class Blocktopmenu extends Module
 				MenuTopLinks::update(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)$id_shop, (int)$id_linksmenutop, (int)$id_linksmenutop);
 				$this->_html .= $this->displayConfirmation($this->l('The link has been edited'));
 			}
+			$update_cache = true;
 		}
-
+		
+		if ($update_cache)
+			$this->clearMenuCache();
+		
 		$this->_html .= '
 		<fieldset>
 			<div class="multishop_info">
@@ -748,5 +767,61 @@ class Blocktopmenu extends Module
 			ORDER BY `position`';
 
 		return Db::getInstance()->executeS($sql);
+	}
+	
+
+	public function hookCategoryUpdate($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookCategoryDeletion($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookCmsUpdate($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookCmsDeletion($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookSupplierUpdate($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookSupplierDeletion($params)
+	{
+		$this->clearMenuCache();
+	}	
+
+	public function hookManufacturerUpdate($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookManufacturerDeletion($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookProductUpdate($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookProductDeletion($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	private function clearMenuCache()
+	{
+		$this->_clearCache('blocktopmenu.tpl');
 	}
 }
