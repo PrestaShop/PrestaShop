@@ -559,7 +559,7 @@ class BlockCms extends Module
 					foreach ($this->context->controller->_languages as $language)
 						BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
 
-					BlockCMSModel::insertCMSBlockShop($id_cms_block, Shop::getContextShopGroupID(), Shop::getContextShopID());
+					BlockCMSModel::insertCMSBlockShop($id_cms_block, $this->context->shop->id_shop_group, $this->context->shop->id);
 				}
 
 				$this->_errors[] = $this->l('New block cannot be created !');
