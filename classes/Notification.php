@@ -102,7 +102,7 @@ class NotificationCore
 				$sql = '
 					SELECT t.`id_'.bqSQL($type).'`
 					FROM `'._DB_PREFIX_.bqSQL($type).'` t
-					WHERE t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
+					WHERE t.`deleted` = 0 AND t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
 					Shop::addSqlRestriction(false, 't').'
 					ORDER BY t.`id_'.bqSQL($type).'` DESC
 				';
