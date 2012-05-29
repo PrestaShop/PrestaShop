@@ -85,16 +85,19 @@ class NotificationCore
 					ORDER BY `id_order` DESC
 				';
 				break;
+
 			case 'customer_message':
 				$sql = '
 					SELECT c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
-					AND c.`id_employee` = 0
+						AND c.`id_employee` = 0
+						AND ct.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					ORDER BY c.`id_customer_message` DESC
 				';
 				break;
+
 			default:
 				$sql = '
 					SELECT t.`id_'.bqSQL($type).'`
@@ -107,7 +110,7 @@ class NotificationCore
 		}
 
 		$json = array();
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $key => $value)
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $value)
 		{
 			$customer = null;
 			$order = null;
@@ -148,8 +151,10 @@ class NotificationCore
 			// We update the last item viewed
 			return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'employee`
-					SET `id_last_'.bqSQL($type).'` = (SELECT MAX(`id_'.$type.'`)
-					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`)
+					SET `id_last_'.bqSQL($type).'` = (
+						SELECT MAX(`id_'.$type.'`)
+						FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
+					)
 					WHERE `id_employee` = '.(int)$cookie->id_employee);
 		else
 			return false;
