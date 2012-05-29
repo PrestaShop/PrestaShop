@@ -52,6 +52,15 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			'align' => 'center','type' => 'bool', 'orderby' => false
 		));
 
+		// The controller can't be call directly
+		// In this case, AdminCmsContentController::getCurrentCMSCategory() is null
+		if (!AdminCmsContentController::getCurrentCMSCategory())
+		{
+			elog('rrrr');
+			$this->redirect_after = '?controller=AdminCmsContent&token='.Tools::getAdminTokenLite('AdminCmsContent');
+			$this->redirect();
+		}
+
 		$this->cms_category = AdminCmsContentController::getCurrentCMSCategory();
 		$this->_filter = 'AND `id_parent` = '.(int)$this->cms_category->id;
 		$this->_select = 'position ';
