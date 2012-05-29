@@ -1545,9 +1545,11 @@ abstract class ModuleCore
 		return $context->smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
 	}
 
-	protected function _clearCache($template, $cacheId = null, $compileId = null)
+	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
-		Tools::clearCache(Context::getContext()->smarty);
+		Tools::enableCache();
+		Tools::clearCache(Context::getContext()->smarty, $template, $cache_id, $compile_id);
+		Tools::restoreCacheSettings();
 	}
 
 	protected function _generateConfigXml()
