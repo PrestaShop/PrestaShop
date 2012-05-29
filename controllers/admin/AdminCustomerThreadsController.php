@@ -44,19 +44,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		foreach ($languages as $language)
 			$language_array[$language['id_lang']] = $language['name'];
 
-		$status_array = array(
-			'open' => $this->l('Open'),
-			'closed' => $this->l('Closed'),
-			'pending1' => $this->l('Pending 1'),
-			'pending2' => $this->l('Pending 2')
+		$images_array = array(
+			'open' => array('src' => 'status_green.png', 'alt' => $this->l('Open')),
+			'closed' => array('src' => 'status_red.png', 'alt' => $this->l('Closed')),
+			'pending1' => array('src' => 'status_orange.png', 'alt' => $this->l('Pending 1')),
+			'pending2' => array('src' => 'status_orange.png', 'alt' => $this->l('Pending 2')),
 		);
 
-		$images_array = array(
-			'open' => 'status_green.png',
-			'closed' => 'status_red.png',
-			'pending1' => 'status_orange.png',
-			'pending2' => 'status_orange.png'
-		);
+		$status_array = array();
+		foreach ($images_array as $k => $v)
+			$status_array[$k] = $v['alt'];
 
 		$this->fields_list = array(
 			'id_customer_thread' => array(
