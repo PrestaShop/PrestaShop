@@ -5,8 +5,8 @@
 			<div class="margin-form">
 				<div class="translatable">
 				{foreach from=$languages item=language}
-					<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultLanguage}block{else}none{/if};float:left">
-						<input type="text" id="name_{$language.id_lang}" name="name_{$language.id_lang}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang)}" style="width:400px" />
+					<div class="lang_{$language.id_lang|intval}" style="display:{if $language.id_lang == $defaultLanguage}block{else}none{/if};float:left">
+						<input type="text" id="name_{$language.id_lang|intval}" name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)}" style="width:400px" />
 						<sup>*</sup>
 					</div>
 				{/foreach}
@@ -15,12 +15,12 @@
 			</div>
 			<label>{l s='Description'}</label>
 			<div class="margin-form">
-				<textarea name="description" style="width:80%;height:100px">{$currentTab->getFieldValue($currentObject, 'description')}</textarea>
+				<textarea name="description" style="width:80%;height:100px">{$currentTab->getFieldValue($currentObject, 'description')|escape}</textarea>
 				<p class="preference_description">{l s='For you only, never displayed to the customer.'}</p>
 			</div>
 			<label>{l s='Code'}</label>
 			<div class="margin-form">
-				<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')}" />
+				<input type="text" id="code" name="code" value="{$currentTab->getFieldValue($currentObject, 'code')|escape}" />
 				<a href="javascript:gencode(8);" class="button">{l s='(Click to generate random code)'}</a>
 				<p class="preference_description">{l s='Caution! The rule will automatically be applied if you leave this field blank.'}</p>
 			</div>
