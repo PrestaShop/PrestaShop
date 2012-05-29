@@ -56,7 +56,6 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		// In this case, AdminCmsContentController::getCurrentCMSCategory() is null
 		if (!AdminCmsContentController::getCurrentCMSCategory())
 		{
-			elog('rrrr');
 			$this->redirect_after = '?controller=AdminCmsContent&token='.Tools::getAdminTokenLite('AdminCmsContent');
 			$this->redirect();
 		}
