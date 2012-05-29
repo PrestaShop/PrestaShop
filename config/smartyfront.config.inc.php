@@ -61,13 +61,7 @@ function smartyTranslate($params, &$smarty)
 	if ($msg != $params['s'])
 		$msg = $params['js'] ? addslashes($msg) : stripslashes($msg);
 
-	if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $msg, $matches) && !is_null($params['sprintf']))
-	{
-		if (!is_array($params['sprintf']))
-			$params['sprintf'] = array($params['sprintf']);
-
-		$msg = vsprintf($msg, $params['sprintf']);
-	}
+	$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
 
 	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
 }

@@ -55,14 +55,6 @@ class TranslateCore
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
-		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($sprintf))
-		{
-			if (!is_array($sprintf))
-				$sprintf = array($sprintf);
-
-			$string = vsprintf($string, $sprintf);
-		}
-
 		if (isset($modules_tabs[strtolower($class)]))
 		{
 			$class_name_controller = $class.'controller';
@@ -82,6 +74,8 @@ class TranslateCore
 
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		$str = str_replace('"', '&quot;', $str);
+
+		$str = Translate::checkAndReplaceArgs($str, $sprintf);
 
 		return ($addslashes ? addslashes($str) : stripslashes($str));
 	}
@@ -172,18 +166,15 @@ class TranslateCore
 		$key = md5(str_replace('\'', '\\\'', $string));
 
 		$cache_key = $name.'|'.$string.'|'.$source;
+
 		if (!isset($lang_cache[$cache_key]))
 		{
-			if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($sprintf))
-			{
-				if (!is_array($sprintf))
-					$sprintf = array($sprintf);
-
-				$string = vsprintf($string, $sprintf);
-			}
 
 			if ($_MODULES == null)
+			{
+				$string = Translate::checkAndReplaceArgs($string, $sprintf);
 				return str_replace('"', '&quot;', $string);
+			}
 
 			$current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
 			$default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
@@ -197,6 +188,8 @@ class TranslateCore
 				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 			else
 				$ret = stripslashes($string);
+
+			$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}
@@ -234,6 +227,25 @@ class TranslateCore
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
 		return $str;
+	}
+
+	/**
+	 * Check if string use a specif syntax for sprintf and replace arguments if use it
+	 *
+	 * @param $string
+	 * @param $args
+	 * @return string
+	 */
+	public static function checkAndReplaceArgs($string, $args)
+	{
+		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args))
+		{
+			if (!is_array($args))
+				$args = array($args);
+
+			return vsprintf($string, $args);
+		}
+		return $string;
 	}
 }
 
