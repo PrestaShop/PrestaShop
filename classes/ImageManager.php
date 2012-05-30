@@ -72,14 +72,14 @@ class ImageManagerCore
 			// We need to resize */
 			else
 			{
-				$ratioX = $x / ($y / $size);
-				if ($ratioX > $max_x)
+				$ratio_x = $x / ($y / $size);
+				if ($ratio_x > $max_x)
 				{
-					$ratioX = $max_x;
+					$ratio_x = $max_x;
 					$size = $y / ($x / $max_x);
 				}
 
-				ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cache_image, $ratioX, $size, $image_type);
+				ImageManager::resize($image, _PS_TMP_IMG_DIR_.$cache_image, $ratio_x, $size, $image_type);
 			}
 		}
 		return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
@@ -122,43 +122,43 @@ class ImageManagerCore
 
 		if ($width_diff > 1 && $height_diff > 1)
 		{
-			$nextWidth = $src_width;
-			$nextHeight = $src_height;
+			$next_width = $src_width;
+			$next_height = $src_height;
 		}
 		else
 		{
 			if (Configuration::get('PS_IMAGE_GENERATION_METHOD') == 2 || (!Configuration::get('PS_IMAGE_GENERATION_METHOD') && $width_diff > $height_diff))
 			{
-				$nextHeight = $dst_height;
-				$nextWidth = round(($src_width * $nextHeight) / $src_height);
-				$dst_width = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_width : $nextWidth);
+				$next_height = $dst_height;
+				$next_width = round(($src_width * $next_height) / $src_height);
+				$dst_width = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_width : $next_width);
 			}
 			else
 			{
-				$nextWidth = $dst_width;
-				$nextHeight = round($src_height * $dst_width / $src_width);
-				$dst_height = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_height : $nextHeight);
+				$next_width = $dst_width;
+				$next_height = round($src_height * $dst_width / $src_width);
+				$dst_height = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_height : $next_height);
 			}
 		}
 
-		$destImage = imagecreatetruecolor($dst_width, $dst_height);
+		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
 		if ($file_type == 'png' && $type == IMAGETYPE_PNG)
 		{
-			imagealphablending($destImage, false);
-			imagesavealpha($destImage, true);
-			$transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
-			imagefilledrectangle($destImage, 0, 0, $dst_width, $dst_height, $transparent);
+			imagealphablending($dest_image, false);
+			imagesavealpha($dest_image, true);
+			$transparent = imagecolorallocatealpha($dest_image, 255, 255, 255, 127);
+			imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $transparent);
 		}
 		else
 		{
-			$white = imagecolorallocate($destImage, 255, 255, 255);
-			imagefilledrectangle ($destImage, 0, 0, $dst_width, $dst_height, $white);
+			$white = imagecolorallocate($dest_image, 255, 255, 255);
+			imagefilledrectangle ($dest_image, 0, 0, $dst_width, $dst_height, $white);
 		}
 
-		imagecopyresampled($destImage, $src_image, (int)(($dst_width - $nextWidth) / 2), (int)(($dst_height - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $src_width, $src_height);
-		return (ImageManager::write($file_type, $destImage, $dst_file));
+		imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+		return (ImageManager::write($file_type, $dest_image, $dst_file));
 	}
 
 	/**
