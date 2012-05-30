@@ -418,7 +418,7 @@ UPDATE `PREFIX_cart_rule` SET product_restriction = 1 WHERE `id_cart_rule` IN (S
 
 ALTER TABLE `PREFIX_cart_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
 ALTER TABLE `PREFIX_order_discount` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
-ALTER TABLE `PREFIX_order_discount` CHANGE `id_order_discount` `id_order_cart_rule` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_order_discount` CHANGE `id_order_discount` `id_order_cart_rule` int(10) unsigned NOT NULL AUTO_INCREMENT;
 
 RENAME TABLE `PREFIX_order_discount` TO `PREFIX_order_cart_rule`;
 RENAME TABLE `PREFIX_cart_discount` TO `PREFIX_cart_cart_rule`;

@@ -334,22 +334,6 @@ ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsign
 
 /* PHP:migrate_orders(); */;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop` (
-	`id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`id_shop` INT UNSIGNED NOT NULL,
-	`new_window` TINYINT( 1 ) NOT NULL,
-	`link` VARCHAR( 128 ) NOT NULL,
-	INDEX (`id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
-	`id_link` INT NOT NULL,
-	`id_lang` INT NOT NULL,
-	`id_shop` INT NOT NULL,
-	`label` VARCHAR( 128 ) NOT NULL ,
-	INDEX ( `id_link` , `id_lang`, `id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_number` int(0) NOT NULL DEFAULT '0' AFTER `number`;
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_date` datetime AFTER `delivery_number`;
 
