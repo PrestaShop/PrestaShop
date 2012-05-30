@@ -155,7 +155,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		{
 			if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 			{
-				include_once _PS_ROOT_DIR_.'/config/settings.inc.php';
+				@include_once _PS_ROOT_DIR_.'/config/settings.inc.php';
 				$this->database_server = _DB_SERVER_;
 				$this->database_name = _DB_NAME_;
 				$this->database_login = _DB_USER_;
@@ -202,3 +202,4 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$this->displayTemplate('database');
 	}
 }
+
