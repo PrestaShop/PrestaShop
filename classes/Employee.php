@@ -174,7 +174,7 @@ class EmployeeCore extends ObjectModel
 		$this->id = $result['id_employee'];
 		$this->id_profile = $result['id_profile'];
 		foreach ($result as $key => $value)
-			if (key_exists($key, $this))
+			if (property_exists($this, $key))
 				$this->{$key} = $value;
 		return $this;
 	}
@@ -220,7 +220,7 @@ class EmployeeCore extends ObjectModel
 
 	public function isLastAdmin()
 	{
-		return ($this->id_profile == _PS_ADMIN_PROFILE_
+		return ($this->isSuperAdmin()
 			&& Employee::countProfile($this->id_profile, true) == 1
 			&& $this->active
 		);
@@ -272,7 +272,7 @@ class EmployeeCore extends ObjectModel
 	 */
 	public function hasAuthOnShop($id_shop)
 	{
-		return $this->id_profile == _PS_ADMIN_PROFILE_ || in_array($id_shop, $this->associated_shops);
+		return $this->isSuperAdmin() || in_array($id_shop, $this->associated_shops);
 	}
 
 	/**
@@ -284,7 +284,7 @@ class EmployeeCore extends ObjectModel
 	 */
 	public function hasAuthOnShopGroup($id_shop_group)
 	{
-		if ($this->id_profile == _PS_ADMIN_PROFILE_)
+		if ($this->isSuperAdmin())
 			return true;
 
 		foreach ($this->associated_shops as $id_shop)
@@ -301,7 +301,7 @@ class EmployeeCore extends ObjectModel
 	 */
 	public function getDefaultShopID()
 	{
-		if ($this->id_profile == _PS_ADMIN_PROFILE_ || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops))
+		if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops))
 			return Configuration::get('PS_SHOP_DEFAULT');
 		return $this->associated_shops[0];
 	}
@@ -313,5 +313,15 @@ class EmployeeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `id_profile` = '.(int)$id_profile.'
 		'.($active_only ? ' AND `active` = 1' : ''));
+	}
+
+	/**
+	 * Check if current employee is super administrator
+	 *
+	 * @return bool
+	 */
+	public function isSuperAdmin()
+	{
+		return $this->id_profile == _PS_ADMIN_PROFILE_;
 	}
 }
