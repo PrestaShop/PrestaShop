@@ -54,7 +54,7 @@ class AdminShopGroupControllerCore extends AdminController
 				'width' => 'auto',
 				'filter_key' => 'a!name',
 			),
-			'active' => array(
+			/*'active' => array(
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
@@ -62,7 +62,7 @@ class AdminShopGroupControllerCore extends AdminController
 				'orderby' => false,
 				'filter_key' => 'active',
 				'width' => 50,
-			),
+			),*/
 		);
 
 		$this->fields_options = array(
@@ -193,7 +193,7 @@ class AdminShopGroupControllerCore extends AdminController
 					),
 					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared among all the shops in this group. This way, any purchase started on one of the shops in this group will be able to be finished in another shop from the same shop group. Warning: you won\'t be able to disable this option once you have orders on at least one shop of this group.')
 				),
-				array(
+				/*array(
 					'type' => 'radio',
 					'label' => $this->l('Status:'),
 					'name' => 'active',
@@ -213,7 +213,7 @@ class AdminShopGroupControllerCore extends AdminController
 						)
 					),
 					'desc' => $this->l('Enable or disable group shop')
-				)
+				)*/
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
