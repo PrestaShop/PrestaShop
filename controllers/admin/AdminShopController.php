@@ -62,7 +62,7 @@ class AdminShopControllerCore extends AdminController
 				'title' => $this->l('Shop main URL'),
 				'havingFilter' => 'url',
 			),
-			'active' => array(
+			/*'active' => array(
 				'title' => $this->l('Enabled'),
 				'align' => 'center',
 				'active' => 'status',
@@ -70,7 +70,7 @@ class AdminShopControllerCore extends AdminController
 				'orderby' => false,
 				'filter_key' => 'active',
 				'width' => 50,
-			)
+			)*/
 		);
 
 		parent::__construct();
@@ -392,7 +392,7 @@ class AdminShopControllerCore extends AdminController
 			'label' => $this->l('Associated categories:'),
 			'category_tree' => $this->initCategoriesAssociation($parent)
 		);
-		$this->fields_form['input'][] = array(
+		/*$this->fields_form['input'][] = array(
 			'type' => 'radio',
 			'label' => $this->l('Status:'),
 			'name' => 'active',
@@ -412,7 +412,7 @@ class AdminShopControllerCore extends AdminController
 				)
 			),
 			'desc' => $this->l('Enable or disable shop')
-		);
+		);*/
 
 		$themes = Theme::getThemes();
 		if (!isset($obj->id_theme))
