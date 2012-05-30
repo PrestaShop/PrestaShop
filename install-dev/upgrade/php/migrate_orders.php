@@ -299,6 +299,9 @@ function mo_setProductPrices($row, $tax_calculation_method)
         $row['product_price_wt'] = mo_ps_round($row['product_price_wt'] + $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100));
     }
 
+	 if ($tax_calculation_method != PS_TAX_EXC)
+	 	$row['product_price'] = $row['product_price_wt'] / (1 + $row['tax_rate'] / 100);
+
     $row['total_wt'] = $row['product_quantity'] * $row['product_price_wt'];
     $row['total_price'] = $row['product_quantity'] * $row['product_price'];
 
