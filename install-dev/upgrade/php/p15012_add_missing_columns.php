@@ -107,7 +107,7 @@ function p15012_add_missing_columns()
 	$q_list['order_detail_tax']['unit_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
 		CHANGE `unit_amount` unit_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
 	$q_list['order_detail_tax']['total_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
-		CHANGE `total_amount` unit_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
+		CHANGE `total_amount` total_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
 
   $q_list['order_invoice']['note']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_invoice`
 		CHANGE `note` note text';
@@ -116,7 +116,7 @@ function p15012_add_missing_columns()
 		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned DEFAULT NULL';
 
   $q_list['orders']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
-		CHANGE `reference` reference varchar(9) DEFAULT NULL,';
+		CHANGE `reference` reference varchar(9) DEFAULT NULL';
   $q_list['orders']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `id_shop_group` id_shop_group int(11) unsigned NOT NULL DEFAULT "1"';
 
@@ -138,13 +138,13 @@ function p15012_add_missing_columns()
   $q_list['product_attribute']['ecotax']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product_attribute`
 		CHANGE `ecotax` ecotax decimal(17,6) NOT NULL DEFAULT "0.000000"';
 
-  $q_list['stock_mvt_reason']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'id_stock_mvt_reason`
+  $q_list['stock_mvt_reason']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason`
 		CHANGE `id_stock_mvt_reason` id_stock_mvt_reason int(11) unsigned NOT NULL';
 
-  $q_list['stock_mvt_reason_lang']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'id_stock_mvt_reason_lang`
+  $q_list['stock_mvt_reason_lang']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
 		CHANGE `id_stock_mvt_reason` id_stock_mvt_reason int(11) unsigned NOT NULL';
 
-  $q_list['stock_mvt_reason_lang']['id_lang']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'id_stock_mvt_reason_lang`
+  $q_list['stock_mvt_reason_lang']['id_lang']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
 		CHANGE `id_lang` id_lang int(11) unsigned NOT NULL';
 
   $q_list['supply_order']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'supply_order`
@@ -174,14 +174,14 @@ function p15012_add_missing_columns()
 			if (!empty($q[$do]))
 			{
 				if (!$db->execute($q[$do]))
-					$errors[] = $db->getMsgError();
+					$errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
 			}
 		}
 	}
 
 	if (sizeof($errors) > 0)
 	{
-		$msg = implode('<br/>', $errors);
+		$msg = implode("\r", $errors);
 		return array('error' => 1, 'msg' => $msg);
 	}
 	else
