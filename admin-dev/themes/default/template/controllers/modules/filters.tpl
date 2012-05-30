@@ -56,7 +56,7 @@
 			<!--start addons login-->
 			<div class="filter-module" id="addons_login_div">
 		
-				<p>{l s='Do you have a PrestaShop Addons account?'}</p>
+				<p>{l s='Do you have a %s account?' sprintf='<a href="http://addons.prestashop.com/">PrestaShop Addons</a>'}</p>
 				<form id="addons_login_form" method="post">
 					<label>{l s='Login to Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
 					<label>{l s= 'Password Addons'} :</label> <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
