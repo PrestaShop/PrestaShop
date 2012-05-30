@@ -30,23 +30,40 @@
  */
 class ShopCore extends ObjectModel
 {
+	/** @var int ID of shop group */
 	public	$id_shop_group;
-	public	$id_theme;
-	public	$name;
-	public	$active = true;
+
+	/** @var int ID of shop category */
 	public	$id_category;
+
+	/** @var int ID of shop theme */
+	public	$id_theme;
+
+	/** @var string Shop name */
+	public	$name;
+
+	public	$active = true;
 	public	$deleted;
 
+	/** @var string Shop theme name (read only) */
 	public $theme_name;
+
+	/** @var string Shop theme directory (read only) */
 	public $theme_directory;
+
+	/** @var string Physical uri of main url (read only) */
 	public $physical_uri;
+
+	/** @var string Virtual uri of main url (read only) */
 	public $virtual_uri;
+
+	/** @var string Domain of main url (read only) */
 	public $domain;
+
+	/** @var string Domain SSL of main url (read only) */
 	public $domain_ssl;
 
-	/**
-	 * @var ShopGroup
-	 */
+	/** @var ShopGroup Shop group object */
 	protected $group;
 
 	/**
@@ -115,8 +132,13 @@ class ShopCore extends ObjectModel
 		),
 	);
 
-    protected static $context;
+	/** @var int Store the current context of shop (CONTEXT_ALL, CONTEXT_GROUP, CONTEXT_SHOP) */
+	protected static $context;
+
+	/** @var int ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
     protected static $context_id_shop;
+
+	/** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
 
 	/**
@@ -132,6 +154,13 @@ class ShopCore extends ObjectModel
 	const SHARE_CUSTOMER = 'share_customer';
 	const SHARE_ORDER = 'share_order';
 
+	/**
+	 * On shop instance, get its theme and URL data too
+	 *
+	 * @param int $id
+	 * @param int $id_lang
+	 * @param int $id_shop
+	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
 		parent::__construct($id, $id_lang, $id_shop);
@@ -159,6 +188,13 @@ class ShopCore extends ObjectModel
 		}
 	}
 
+	/**
+	 * Add a shop, and clear the cache
+	 *
+	 * @param bool $autodate
+	 * @param bool $null_values
+	 * @return bool
+	 */
 	public function add($autodate = true, $null_values = false)
 	{
 		$res = parent::add($autodate, $null_values);
@@ -166,6 +202,11 @@ class ShopCore extends ObjectModel
 		return $res;
 	}
 
+	/**
+	 * Remove a shop only if it has no dependencies, and remove its associations
+	 *
+	 * @return bool
+	 */
 	public function delete()
 	{
 		if (Shop::hasDependency($this->id) || !$res = parent::delete())
@@ -360,11 +401,6 @@ class ShopCore extends ObjectModel
 		return $this->physical_uri.$this->virtual_uri;
 	}
 
-	public function getPhysicalURI()
-	{
-		return $this->physical_uri;
-	}
-
 	/**
 	 * Get shop URL
 	 *
@@ -420,7 +456,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function isDefaultShop()
 	{
-		return ($this->id == Configuration::get('PS_SHOP_DEFAULT'));
+		return $this->id == Configuration::get('PS_SHOP_DEFAULT');
 	}
 
 	/**
@@ -664,9 +700,19 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getShopById($id, $identifier, $table)
 	{
-		return Db::getInstance()->executeS('SELECT `id_shop`, `'.bqSQL($identifier).'` FROM `'._DB_PREFIX_.bqSQL($table).'_shop` WHERE `'.bqSQL($identifier).'` = '.(int)$id);
+		return Db::getInstance()->executeS('
+			SELECT `id_shop`, `'.bqSQL($identifier).'`
+			FROM `'._DB_PREFIX_.bqSQL($table).'_shop`
+			WHERE `'.bqSQL($identifier).'` = '.(int)$id
+		);
 	}
 
+	/**
+	 * Change the current shop context
+	 *
+	 * @param int $type Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
+	 * @param int $id ID shop if CONTEXT_SHOP or id shop group if CONTEXT_GROUP
+	 */
 	public static function setContext($type, $id = null)
 	{
 		// Always use global context for mono-shop mode
@@ -697,16 +743,31 @@ class ShopCore extends ObjectModel
 		self::$context = $type;
 	}
 
+	/**
+	 * Get current context of shop
+	 *
+	 * @return int
+	 */
 	public static function getContext()
 	{
 		return self::$context;
 	}
 
+	/**
+	 * Get current ID of shop if context is CONTEXT_SHOP
+	 *
+	 * @return int
+	 */
 	public static function getContextShopID()
 	{
 		return self::$context_id_shop;
 	}
 
+	/**
+	 * Get current ID of shop group if context is CONTEXT_SHOP or CONTEXT_GROUP
+	 *
+	 * @return int
+	 */
 	public static function getContextShopGroupID()
 	{
 		return self::$context_id_shop_group;
@@ -886,15 +947,6 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0 Use shop->id
-	 */
-	public static function getCurrentShop()
-	{
-		Tools::displayAsDeprecated();
-		return Context::getContext()->shop->id;
-	}
-
-	/**
 	 * @static
 	 * @param int $id
 	 * @return array
@@ -923,5 +975,14 @@ class ShopCore extends ObjectModel
 			return $result;
 
 		return $array;
+	}
+
+	/**
+	 * @deprecated 1.5.0 Use shop->id
+	 */
+	public static function getCurrentShop()
+	{
+		Tools::displayAsDeprecated();
+		return Context::getContext()->shop->id;
 	}
 }
