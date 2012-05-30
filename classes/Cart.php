@@ -2665,7 +2665,8 @@ class CartCore extends ObjectModel
 		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
-			if ($cart_rule['free_shipping'])
+			// If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
+			if ($cart_rule['free_shipping'] && empty($cart_rule['code']))
 			{
 				$cart_rule['value_real'] -= $total_shipping;
 				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
