@@ -219,7 +219,7 @@ abstract class PaymentModuleCore extends Module
 					$order->id_cart = (int)$cart->id;
 					$order->reference = $reference;
 
-					if (($shop != null) || (Shop::getContext() == Shop::CONTEXT_SHOP))
+					if (($shop != null) && (Shop::getContext() == Shop::CONTEXT_SHOP))
 					{
 						$order->id_shop = (int)$shop->id;
 						$order->id_shop_group = (int)$shop->id_shop_group;
