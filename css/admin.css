@@ -161,11 +161,11 @@ form .simulate-disable-input{
 
 .mails_field h3{
 background: -moz-linear-gradient(center top , #F9F9F9, #ECECEC) repeat-x scroll left top #ECECEC;
-    color: #333333;
-    font-size: 13px;
-    padding: 4px 6px;
-    text-align: left;
-    text-shadow: 0 1px 0 #FFFFFF;
+	color: #333333;
+	font-size: 13px;
+	padding: 4px 6px;
+	text-align: left;
+	text-shadow: 0 1px 0 #FFFFFF;
 	margin:0;
 	font-size:1em;
 	padding: 10px 5px;
@@ -866,22 +866,22 @@ table tr th .hint {
 
 /* The pointer image is added by using another span */
 .hint .hint-pointer {
-    position: absolute;
-    left: -10px;
-    top: 5px;
-    width: 10px;
-    height: 19px;
+	position: absolute;
+	left: -10px;
+	top: 5px;
+	width: 10px;
+	height: 19px;
 }
 
 #flagsLanguage img {
-    padding: 3px;
-    margin-bottom: -4px;
+	padding: 3px;
+	margin-bottom: -4px;
 }
 
 #flagsLanguage .selected_language {
-    border: 1px solid #BBB;
-    padding: 2px;
-    margin-bottom: -4px;
+	border: 1px solid #BBB;
+	padding: 2px;
+	margin-bottom: -4px;
 }
 
 .disable, .disable:hover {
@@ -938,9 +938,9 @@ a.confirm_no {
 /* tab: AdminImport */
 
 form#import_form {
-    padding-bottom:22px;
-    margin-left:15px;
-    margin-bottom:20px;
+	padding-bottom:22px;
+	margin-left:15px;
+	margin-bottom:20px;
 }
 .table_overflow {
 	width:900px;
@@ -1023,11 +1023,11 @@ table.permissions td {
 }
 
 #header_shoplist{
-    background-image: url("../img/t/AdminShop.gif");
-    background-position: 0 3px;
-    background-repeat: no-repeat;
-    padding-left: 17px;
-    height: 20px;
+	background-image: url("../img/t/AdminShop.gif");
+	background-position: 0 3px;
+	background-repeat: no-repeat;
+	padding-left: 17px;
+	height: 20px;
 }
 
 	#header_shoplist select.shopList option{
@@ -1723,14 +1723,14 @@ a.blue:hover {
 	margin-left: -10px;
 }
 
-	.multishop_config div{
-	    background-color: #DFFAD3;
-	    border: 1px solid #DFD5C3;
-	    display: none;
-	    margin-top: 2px;
-	    padding: 5px;
-	    width: 200px;
-	}
+.multishop_config div{
+	background-color: #DFFAD3;
+	border: 1px solid #DFD5C3;
+	display: none;
+	margin-top: 2px;
+	padding: 5px;
+	width: 200px;
+}
 
 .multishop_product_checkbox{
 	position: absolute;
@@ -1760,28 +1760,28 @@ a.action_module_delete {
 }
 
 fieldset .optionsDescription, fieldset p.description, .info{
-    background: url("../img/admin/icon-info.png") no-repeat scroll 6px 6px #BDE5F8;
-    border: 1px solid #00529B;
-    color: #00529B;
-    font-family: Arial,Verdana,Helvetica,sans-serif;
-    font-size: 12px;
-    margin-bottom: 15px;
-    padding: 10px 5px 5px 40px;
+	background: url("../img/admin/icon-info.png") no-repeat scroll 6px 6px #BDE5F8;
+	border: 1px solid #00529B;
+	color: #00529B;
+	font-family: Arial,Verdana,Helvetica,sans-serif;
+	font-size: 12px;
+	margin-bottom: 15px;
+	padding: 10px 5px 5px 40px;
 	border-radius:3px;
 	min-height:32px;
 }
 
 fieldset .optionsDescription ul li {
-    color: #00529B;
-    margin:0;
-    padding:0;
+	color: #00529B;
+	margin:0;
+	padding:0;
 }
 
 p.product_description {
 font-family:Georgia, Arial, 'sans-serif';
 	font-style:italic;
-    clear: both;
-    text-align: left;
+	clear: both;
+	text-align: left;
 	color:#7F7F7F;
 	text-align:right;
 }
@@ -1789,11 +1789,11 @@ font-family:Georgia, Arial, 'sans-serif';
 p.preference_description{
 	font-family:Georgia, Arial, 'sans-serif';
 	font-style:italic;
-    clear: both;
-    text-align: left;
-    width: 500px;
-    color:#7F7F7F;
-    font-size:11px;
+	clear: both;
+	text-align: left;
+	width: 500px;
+	color:#7F7F7F;
+	font-size:11px;
 }
 
 p.preference_description .light-warning {
@@ -1808,21 +1808,24 @@ p.preference_description .light-warning {
 }
 
 .multishop_warning {
-    background-image: url("../img/admin/warning.gif");
-    background-repeat: no-repeat;
-    color: #FE2744;
-    font-weight: bold;
-    padding-left: 22px;
-    padding-top: 1px;
+	background-image: url("../img/admin/warning.gif");
+	background-repeat: no-repeat;
+	color: #FE2744;
+	font-weight: bold;
+	padding-left: 22px;
+	padding-top: 1px;
 }
 
 .warning_mod_rewrite{
-	background: #FEEFB3 url(../img/admin/warning.gif) no-repeat;
+	background: #FEEFB3 url(../img/admin/warning.gif) 2px 0 no-repeat;
 	color: #9E6014;
-    font-weight: bold;
-    padding-left: 22px;
-    padding-top: 1px;
-    height:20px;
+	font-weight: bold;
+	padding-left: 22px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 5px;
+	height:20px;
+	line-height: 20px;
 }
 
 
@@ -1839,41 +1842,41 @@ input.disable_me[disabled=disabled]{
 
 div.progressBarImage
 {
-    float: left;
-    height: 15px;
-    margin-left: 3px;
-    width: 233px;
+	float: left;
+	height: 15px;
+	margin-left: 3px;
+	width: 233px;
 }
 #showCounter
 {
 	font-weight: bold;
 	float: left;
-    margin-left: 25px;
-    margin-top: 1px;
+	margin-left: 25px;
+	margin-top: 1px;
 }
 #listImage
 {
-    list-style: none outside none;
-    margin-bottom: 10px;
-    margin-top: 10px;
+	list-style: none outside none;
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 #listImage li
 {
 	clear: both;
-    float: left;
-    font-weight: bold;
-    margin-top: 10px;
+	float: left;
+	font-weight: bold;
+	margin-top: 10px;
 }
 
 #listImage li p.errorImg
 {
 	background: none repeat scroll 0 0 #FAE2E3;
-    border: 1px solid #EC9B9B;
-    clear: both;
+	border: 1px solid #EC9B9B;
+	clear: both;
 	margin-bottom: 18px;
-    padding: 6px;
-    display: none;
+	padding: 6px;
+	display: none;
 }
 #progressBarImage div.ui-progressbar-value
 {
