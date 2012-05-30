@@ -100,38 +100,27 @@
 				<td colspan="2" class="price" id="total_product">{displayPrice price=$total_products}</td>
 			</tr>
 		{/if}
-			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display: none;"{/if}>
+			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display:none"{/if}>
 				<td colspan="5">
-				{if $use_taxes}
-					{if $priceDisplay}
-						{if $display_tax_label}{l s='Total vouchers (tax excl.):'}{else}{l s='Total vouchers:'}{/if}
-					{else}
-						{if $display_tax_label}{l s='Total vouchers (tax incl.):'}{else}{l s='Total vouchers:'}{/if}
-					{/if}
+				{if $use_taxes && $display_tax_label}
+					{l s='Total vouchers (tax excl.):'}
 				{else}
 					{l s='Total vouchers:'}
 				{/if}
 				</td>
 				<td colspan="2" class="price-discount price" id="total_discount">
-				{if $use_taxes}
-					{if $priceDisplay}
-						{displayPrice price=$total_discounts_tax_exc}
-					{else}
-						{displayPrice price=$total_discounts}
-					{/if}
+				{if $use_taxes && !$priceDisplay}
+					{assign var='total_discounts_negative' value=$total_discounts * -1}
 				{else}
-					{displayPrice price=$total_discounts_tax_exc}
+					{assign var='total_discounts_negative' value=$total_discounts_tax_exc * -1}
 				{/if}
+				{displayPrice price=$total_discounts_negative}
 				</td>
 			</tr>
 			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display: none;"{/if}>
 				<td colspan="5">
 				{if $use_taxes}
-					{if $priceDisplay}
-						{if $display_tax_label}{l s='Total gift-wrapping (tax excl.):'}{else}{l s='Total gift-wrapping:'}{/if}
-					{else}
-						{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift-wrapping:'}{/if}
-					{/if}
+					{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift-wrapping:'}{/if}
 				{else}
 					{l s='Total gift-wrapping:'}
 				{/if}

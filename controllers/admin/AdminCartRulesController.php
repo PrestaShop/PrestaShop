@@ -226,7 +226,7 @@ class AdminCartRulesControllerCore extends AdminController
 	}
 
 	/* Retrieve the cart rule product rule groups in the POST data if available, and in the database if there is none */
-	public function getProductRuleGroupsDisplay($cartRule)
+	public function getProductRuleGroupsDisplay($cart_rule)
 	{
 		$productRuleGroupsArray = array();
 		if (Tools::getValue('product_restriction') && is_array($array = Tools::getValue('product_rule_group')) && count($array))
@@ -258,7 +258,7 @@ class AdminCartRulesControllerCore extends AdminController
 		else
 		{
 			$i = 1;
-			foreach ($cartRule->getProductRuleGroups() as $productRuleGroup)
+			foreach ($cart_rule->getProductRuleGroups() as $productRuleGroup)
 			{
 				$j = 1;
 				$productRulesDisplay = array();
