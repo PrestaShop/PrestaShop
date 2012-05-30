@@ -797,9 +797,34 @@ class ShopCore extends ObjectModel
 
 	public function copyShopData($old_id, $tables_import = false, $deleted = false)
 	{
+		// If we duplicate some specific data, automatically duplicate other data linked to the first
+		// E.g. if carriers are duplicated for the shop, duplicate carriers langs too
 		if (isset($tables_import['carrier']))
+		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;
+			$tables_import['carrier_lang'] = true;
+		}
 
+		if (isset($tables_import['carrier']))
+			$tables_import['category_lang'] = true;
+
+		if (isset($tables_import['product']))
+			$tables_import['product_lang'] = true;
+
+		if (isset($tables_import['module']))
+		{
+			$tables_import['module_currency'] = true;
+			$tables_import['module_country'] = true;
+			$tables_import['module_group'] = true;
+		}
+
+		if (isset($tables_import['hook_module']))
+			$tables_import['hook_module_exceptions'] = true;
+
+		if (isset($tables_import['attribute_group']))
+			$tables_import['attribute'] = true;
+
+		// Browse and duplicate data
 		foreach (Shop::getAssoTables() as $table_name => $row)
 		{
 			if ($tables_import && !isset($tables_import[$table_name]))
