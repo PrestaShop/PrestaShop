@@ -694,7 +694,7 @@ function checkUrl()
 			count = 0;
 			for (z in tabValues)
 				for (a in attributesCombinations)
-					if (attributesCombinations[a]['group'] == tabValues[z][0]
+					if (attributesCombinations[a]['group'] == decodeURIComponent(tabValues[z][0])
 						&& attributesCombinations[a]['attribute'] == tabValues[z][1])
 					{
 						count++;
