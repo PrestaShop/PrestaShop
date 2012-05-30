@@ -110,7 +110,7 @@ class BlockSupplier extends Module
 					<label class="t" for="text_list_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 					<input type="radio" name="text_list" id="text_list_off" value="0" '.(!Tools::getValue('text_list', Configuration::get('SUPPLIER_DISPLAY_TEXT')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="text_list_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					&nbsp;&nbsp;&nbsp;'.$this->l('Display').' <input type="text" size="2" name="text_nb" value="'.Tools::getValue('text_nb', Configuration::get('SUPPLIER_DISPLAY_TEXT_NB')).'" /> '.$this->l('elements').'
+					&nbsp;&nbsp;&nbsp;'.$this->l('Display').' <input type="text" size="2" name="text_nb" value="'.(int)Tools::getValue('text_nb', Configuration::get('SUPPLIER_DISPLAY_TEXT_NB')).'" /> '.$this->l('elements').'
 					<p class="clear">'.$this->l('To display suppliers as a plain-text list').'</p>
 				</div>
 				<label>'.$this->l('Use a drop-down list').'</label>

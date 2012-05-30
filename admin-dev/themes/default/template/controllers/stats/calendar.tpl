@@ -34,10 +34,10 @@
 					<input type="submit" name="submitDateMonthPrev" class="button submitDateMonthPrev" value="{$translations.Month}-1">
 					<input type="submit" name="submitDateYearPrev" class="button submitDateYearPrev" value="{$translations.Year}-1">
 					<p><span>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}</span>
-						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom}" class="datepicker">
+						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker">
 					</p>
 					<p><span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='From:'}</span>{/if}</span>
-						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}" class="datepicker">
+						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker">
 					</p>
 					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='Save'}{/if}" />
 				</form>

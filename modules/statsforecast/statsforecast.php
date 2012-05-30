@@ -130,7 +130,7 @@ class StatsForecast extends Module
 		$this->_html .= '<div>
 		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<p>'.$this->l('All amounts are without taxes.').'</p>
-			<form id="granularity" action="'.$ru.'#granularity" method="post">
+			<form id="granularity" action="'.Tools::safeOutput($ru).'#granularity" method="post">
 				<input type="hidden" name="submitGranularity" value="1" />
 				'.$this->l('Mode:').' <select name="stats_granularity" onchange="this.form.submit();" style="width:100px">
 					<option value="10">'.$this->l('Day').'</option>

@@ -501,9 +501,20 @@ class AdminOrdersControllerCore extends AdminController
 				else
 				{
 					$productList = Tools::getValue('id_order_detail');
+					if ($productList)
+						$productList = array_map('intval', $productList);
+					
 					$customizationList = Tools::getValue('id_customization');
+					if ($customizationList)
+						$customizationList = array_map('intval', $customizationList);
+						
 					$qtyList = Tools::getValue('cancelQuantity');
+					if ($qtyList)
+						$qtyList = array_map('intval', $qtyList);
+						
 					$customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
+					if ($customizationQtyList)
+						$customizationQtyList = array_map('intval', $customizationQtyList);
 
 					$full_product_list = $productList;
 					$full_quantity_list = $qtyList;
