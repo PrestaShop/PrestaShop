@@ -3195,6 +3195,7 @@ $_LANGADM['AdminShopUrl37d00f4554dc3c0baeb34a9c22d787d9'] = 'URL de la boutique'
 $_LANGADM['AdminShopUrl3cbc37f94997d23bfe2824165dc45549'] = 'Ajouter une URL';
 $_LANGADM['AdminShopUrl676e457154510d142765d535fbf11df0'] = 'URL principale';
 $_LANGADM['AdminShopUrl873646ada13763eda1a5393d99973204'] = 'Domaine SSL :';
+$_LANGADM['AdminShopUrl8d3057653243d8dc92ef854144b299cc'] = 'Attention : La  réécriture d\'url (mod_rewrite) semble être desactivée.';
 $_LANGADM['AdminShopUrl9b5ee5e0b5aed007f4192b3252a0eccf'] = 'Vous devez activer la réécriture d\'url si vous voulez ajouter une URL virtuelle.';
 $_LANGADM['AdminShopUrl9c8417aa5dbcccb5b4c48b4176ae1e8a'] = 'URI physique :';
 $_LANGADM['AdminShopUrl9efaaad2d5b51cd643529cd6872e169a'] = 'URL principale :';
