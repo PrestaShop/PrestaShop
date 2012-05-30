@@ -103,7 +103,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->multiple_fieldsets = true;
 		if (!$update_htaccess)
 			$desc_virtual_uri = array(
-				$this->l('You need to activate the URL Rewriting if you want to add a virtual URI.')
+				'<span class="warning_mod_rewrite">'.$this->l('You need to activate the URL Rewriting if you want to add a virtual URI.').'</span>'
 			);
 		else
 			$desc_virtual_uri = array(
@@ -219,9 +219,9 @@ class AdminShopUrlControllerCore extends AdminController
 							'type' => 'text',
 							'label' => $this->l('Virtual URI:'),
 							'name' => 'virtual_uri',
-							'disabled' => !$update_htaccess,
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
+							'hint' => (!$update_htaccess) ? $this->l('Warning: The URL rewriting (mod_rewrite) seems to be disable.') : '',
 						),
 						array(
 							'type' => 'text',
