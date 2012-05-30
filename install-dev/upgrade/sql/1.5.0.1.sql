@@ -423,9 +423,6 @@ ALTER TABLE `PREFIX_order_discount` CHANGE `id_order_discount` `id_order_cart_ru
 RENAME TABLE `PREFIX_order_discount` TO `PREFIX_order_cart_rule`;
 RENAME TABLE `PREFIX_cart_discount` TO `PREFIX_cart_cart_rule`;
 
-CREATE VIEW `PREFIX_order_discount` AS SELECT *, id_cart_rule as id_discount FROM `PREFIX_order_cart_rule`;
-CREATE VIEW `PREFIX_cart_discount` AS SELECT *, id_cart_rule as id_discount FROM `PREFIX_cart_cart_rule`;
-
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) (
 	SELECT 'PS_CART_RULE_FEATURE_ACTIVE', `value`, NOW(), NOW() FROM `PREFIX_configuration` WHERE `name` = 'PS_DISCOUNT_FEATURE_ACTIVE' LIMIT 1
 );
