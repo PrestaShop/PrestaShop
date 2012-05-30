@@ -43,10 +43,15 @@ function deactivate_custom_modules()
 	$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
 
 	if (!file_exists($module_list_xml))
+	{
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		if (!file_exists($module_list_xml))
 		return false;
+	}
 
 	$nativeModules = simplexml_load_file($module_list_xml);
 	$nativeModules = $nativeModules->modules;
+	$arrNativeModules = array();
 	foreach ($nativeModules as $nativeModulesType)
 		if (in_array($nativeModulesType['type'],array('native','partner')))
 		{
