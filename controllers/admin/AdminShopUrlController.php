@@ -221,7 +221,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'name' => 'virtual_uri',
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: The URL rewriting (mod_rewrite) seems to be disable.') : '',
+							'hint' => (!$update_htaccess) ? $this->l('Warning: the URL rewriting (E.g. mod_rewrite for Apache) seems to be disabled. If your URL don\'t work, please check with your host provider how to activate URL rewriting.') : '',
 						),
 						array(
 							'type' => 'text',
