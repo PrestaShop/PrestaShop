@@ -268,7 +268,7 @@ class FrontControllerCore extends Controller
 		elseif (Tools::getValue('fc') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
 			$page_name = 'module-payment-submit';
 		// @retrocompatibility Are we in a module ?
-		elseif (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
+		elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
 			$page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
 		else
 		{
