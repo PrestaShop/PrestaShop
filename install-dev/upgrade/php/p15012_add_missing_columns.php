@@ -28,7 +28,6 @@
 function p15012_add_missing_columns()
 {
 	$errors = array();
-	$res = true;
 	$db = Db::getInstance();
 	$q_list = array();
 	// columns must exists
@@ -172,7 +171,7 @@ function p15012_add_missing_columns()
 			else
 				$do = 'add';
 
-			if(!empty($q[$do]))
+			if (!empty($q[$do]))
 			{
 				if (!$db->execute($q[$do]))
 					$errors[] = $db->getMsgError();
@@ -180,12 +179,11 @@ function p15012_add_missing_columns()
 		}
 	}
 
-	if(!$res)
+	if (sizeof($errors) > 0)
+	{
 		$msg = implode('<br/>', $errors);
-	else
-		$msg = '';
-	if (!$res)
-		return array('error' => $res, 'msg' => $msg);
+		return array('error' => 1, 'msg' => $msg);
+	}
 	else
 		return true;
 }
