@@ -15,6 +15,7 @@ function move_translations_module_file()
 	// Get the list of modules
 	$modules = scandir(_PS_MODULE_DIR_);
 
+	$error_list = array();
 	// Scan all modules and check if translation file exists
 	foreach ($modules as $module_name)
 	{
@@ -37,11 +38,15 @@ function move_translations_module_file()
 				$res &= mkdir($dir_translations, 0777);
 
 				if (!rename($old_file, $new_file))
+				{
+					$error_list[] = $module_name.' - '.$lang['iso_code']."<br/>\r\n";
 					$res &= false;
+				}
 		}
 	}
-	if ($res)
-		return true;
+
+	if (!$res||(count($error_list)>0))
+		return array('error' => 1, 'msg' => implode("\r\n<br/>", $error_list));
 	else
-		return array('error' => 1, 'msg' => 'An error has been encoutered for at least one module');
+		return true;
 }
