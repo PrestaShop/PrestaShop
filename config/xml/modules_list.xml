@@ -18,6 +18,7 @@
 		<module name="blocklink"/>
 		<module name="blockmanufacturer"/>
 		<module name="blockmyaccount"/>
+		<module name="blockmyaccountfooter"/>
 		<module name="blocknewproducts"/>
 		<module name="blocknewsletter"/>
 		<module name="blockpaymentlogo"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockreinsurance</name>
-            <displayName><![CDATA[Bloc r&eacute;assurance]]></displayName>
+            <displayName><![CDATA[Bloc reinsurance]]></displayName>
             <version><![CDATA[1.0]]></version>
-            <description><![CDATA[Ajoute un bloc pour afficher des informations pour rassurer vos clients]]></description>
+            <description><![CDATA[Add a block to display more infos to reassure your customers]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
