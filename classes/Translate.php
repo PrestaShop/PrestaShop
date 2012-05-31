@@ -89,7 +89,7 @@ class TranslateCore
 	 * @param $lang_array global array of admin translations
 	 * @return string translation
 	 */
-	public static function getGenericAdminTranslation($string, $key = null, $lang_array)
+	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
 	{
 		if (is_null($key))
 			$key = md5(str_replace('\'', '\\\'', $string));
