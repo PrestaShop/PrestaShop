@@ -1310,8 +1310,7 @@ CREATE TABLE `PREFIX_page_viewed` (
 
 CREATE TABLE `PREFIX_order_payment` (
 	`id_order_payment` INT NOT NULL auto_increment,
-	`id_order_invoice` INT UNSIGNED NULL,
-	`id_order` INT UNSIGNED NULL,
+	`order_reference` VARCHAR(9),
 	`id_currency` INT UNSIGNED NOT NULL,
 	`amount` DECIMAL(10,2) NOT NULL,
 	`payment_method` varchar(255) NOT NULL,
@@ -1323,7 +1322,7 @@ CREATE TABLE `PREFIX_order_payment` (
 	`card_holder` VARCHAR(254) NULL,
 	`date_add` DATETIME NOT NULL,
 	PRIMARY KEY (`id_order_payment`),
-	KEY `id_order` (`id_order`)
+	KEY `order_reference`(`order_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_product` (
@@ -2407,4 +2406,15 @@ CREATE TABLE `PREFIX_module_preference` (
 	`id_shop` int(11) unsigned NOT NULL,
 	PRIMARY KEY (`id_carrier`, `id_tax_rules_group`, `id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `PREFIX_order_invoice_payment` (
+	`id_order_invoice` int(11) unsigned NOT NULL,
+	`id_order_payment` int(11) unsigned NOT NULL,
+	`id_order` int(11) unsigned NOT NULL,
+	PRIMARY KEY (`id_order_invoice`,`id_order_payment`),
+	KEY `order_payment` (`id_order_payment`),
+	KEY `id_order` (`id_order`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 
