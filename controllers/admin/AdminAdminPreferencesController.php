@@ -82,6 +82,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 				),
+				'submit' => array()
 			),
 			'upload' => array(
 				'title' =>	$this->l('Upload quota'),
