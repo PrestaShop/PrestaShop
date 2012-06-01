@@ -111,6 +111,12 @@ class AdminBackupControllerCore extends AdminController
 					'desc' => $this->l('Cancel')
 				);
 				break;
+			case 'options':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+				break;
 		}
 	}
 
