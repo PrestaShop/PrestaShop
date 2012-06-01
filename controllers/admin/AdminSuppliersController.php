@@ -400,6 +400,9 @@ class AdminSuppliersControllerCore extends AdminController
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are any pending supply order.');
 			else
 			{
+				//delete all product_supplier linked to this supplier
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id); 
+				
 				$id_address = Address::getAddressIdBySupplierId($obj->id);
 				$address = new Address($id_address);
 				if (Validate::isLoadedObject($address))
