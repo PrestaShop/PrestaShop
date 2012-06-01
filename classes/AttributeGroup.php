@@ -228,8 +228,10 @@ class AttributeGroupCore extends ObjectModel
 	public function getWsProductOptionValues()
 	{
 		$result = Db::getInstance()->executeS('
-			SELECT id_attribute AS id from `'._DB_PREFIX_.'attribute`
-			WHERE id_attribute_group = '.(int)$this->id
+			SELECT a.id_attribute AS id
+			FROM `'._DB_PREFIX_.'attribute` a
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE a.id_attribute_group = '.(int)$this->id
 		);
 		return $result;
 	}

@@ -4176,9 +4176,10 @@ class ProductCore extends ObjectModel
 	public function getWsCategories()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-			'SELECT `id_category` AS id
-			FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_product` = '.(int)$this->id
+			'SELECT cp.`id_category` AS id
+			FROM `'._DB_PREFIX_.'category_product` cp
+			'.Shop::addSqlAssociation('category', 'cp').'
+			WHERE cp.`id_product` = '.(int)$this->id
 		);
 		return $result;
 	}
@@ -4354,10 +4355,11 @@ class ProductCore extends ObjectModel
 	public function	getWsImages()
 	{
 		return Db::getInstance()->executeS('
-		SELECT `id_image` as id
-		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)$this->id.'
-		ORDER BY `position`');
+		SELECT i.`id_image` as id
+		FROM `'._DB_PREFIX_.'image` i
+		'.Shop::addSqlAssociation('image', 'i').'
+		WHERE i.`id_product` = '.(int)$this->id.'
+		ORDER BY i.`position`');
 	}
 
 	public function getWsTags()
