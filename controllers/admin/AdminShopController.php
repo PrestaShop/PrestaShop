@@ -209,7 +209,7 @@ class AdminShopControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('id_category_default'))
 			$_POST['id_category'] = Tools::getValue('id_category_default');
-		if ((Tools::isSubmit('status') ||
+		/*if ((Tools::isSubmit('status') ||
 			Tools::isSubmit('status'.$this->table) ||
 			(Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue($this->identifier) && !Tools::getValue('active'))) &&
 			$this->loadObject() && $this->loadObject()->active)
@@ -218,7 +218,7 @@ class AdminShopControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You cannot disable the default shop.');
 			else if (Shop::getTotalShops() == 1)
 				$this->errors[] = Tools::displayError('You cannot disable the last shop.');
-		}
+		}*/
 
 		if ($this->errors)
 			return false;
