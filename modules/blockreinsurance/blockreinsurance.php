@@ -28,6 +28,8 @@
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
 
+include_once _PS_MODULE_DIR_.'blockreinsurance/reinsuranceClass.php';
+
 class Blockreinsurance extends Module
 {
 	public function __construct()
@@ -37,49 +39,104 @@ class Blockreinsurance extends Module
 			$this->tab = 'front_office_features';
 		else
 			$this->tab = 'Blocks';
-		$this->version = '1.0';
+		$this->version = '2.0';
 
 		parent::__construct();
 
 		$this->displayName = $this->l('Bloc reinsurance');
 		$this->description = $this->l('Add a block to display more infos to reassure your customers');
+
+		$this->fields_list = array(
+			'id_reinsurance' => array(
+				'title' => $this->l('Id'),
+				'width' => 120,
+				'type' => 'text',
+			),
+			'text' => array(
+				'title' => $this->l('Text'),
+				'width' => 140,
+				'type' => 'text',
+				'filter_key' => 'a!lastname'
+			),
+		);
+
+		if (Shop::isFeatureActive())
+			$this->fields_list['id_shop'] = array('title' => $this->l('ID Shop'), 'align' => 'center', 'width' => 25, 'type' => 'int');
+
+		$this->fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Reinsurance new block'),
+			),
+			'input' => array(
+				array(
+					'type' => 'file',
+					'label' => $this->l('Image:'),
+					'name' => 'image',
+					'value' => true
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Text:'),
+					'lang' => true,
+					'name' => 'text',
+					'cols' => 40,
+					'rows' => 10
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
 	}
 
 	public function install()
 	{
-		$return = (parent::install() && $this->installDB() && Configuration::updateValue('blockreinsurance_nbblocks', 5) && $this->registerHook('footer'));
-		$return &= $this->installFixtures();
-		return $return;
+		return parent::install() &&
+			$this->installDB() &&
+			Configuration::updateValue('blockreinsurance_nbblocks', 5) &&
+			$this->registerHook('footer') && $this->installFixtures();
 	}
 	
 	public function installDB()
 	{
-		return Db::getInstance()->execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance` (
-			`id_contactinfos` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-			`id_shop` int(10) unsigned NOT NULL ,
-			`filename` VARCHAR(100) NOT NULL,
-			`text` VARCHAR(300) NOT NULL,
-			PRIMARY KEY (`id_contactinfos`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+		$return = true;
+		$return &= Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance` (
+				`id_reinsurance` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+				`id_shop` int(10) unsigned NOT NULL ,
+				`file_name` VARCHAR(100) NOT NULL,
+				PRIMARY KEY (`id_reinsurance`)
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+		
+		$return &= Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance_lang` (
+				`id_reinsurance` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+				`id_lang` int(10) unsigned NOT NULL ,
+				`text` VARCHAR(300) NOT NULL,
+				PRIMARY KEY (`id_reinsurance`, `id_lang`)
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
+		
+		return $return;
 	}
-	
+
 	public function uninstall()
 	{
 		// Delete configuration
-		return (Configuration::deleteByName('blockreinsurance_nbblocks') && $this->uninstallDB() && parent::uninstall());
+		return Configuration::deleteByName('blockreinsurance_nbblocks') &&
+			$this->uninstallDB() &&
+			parent::uninstall();
 	}
-	
+
 	public function uninstallDB()
 	{
-		return Db::getInstance()->execute('
-		DROP TABLE IF EXISTS `'._DB_PREFIX_.'reinsurance`');
+		return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'reinsurance`') && Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'reinsurance_lang`');
 	}
-	
+
 	public function addToDB()
 	{
 		if (isset($_POST['nbblocks']))
-		{			
+		{
 			for ($i = 1; $i <= (int)$_POST['nbblocks']; $i++)
 			{
 				$filename = explode('.', $_FILES['info'.$i.'_file']['name']);
@@ -93,21 +150,21 @@ class Blockreinsurance extends Module
 						return false;
 					unlink($tmpName);
 				}
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`,`text`) 
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`,`text`)
 											VALUES ("'.((isset($filename[0]) && $filename[0] != '') ? pSQL($filename[0]) : '').
-											'", "'.((isset($_POST['info'.$i.'_text']) && $_POST['info'.$i.'_text'] != '') ? pSQL($_POST['info'.$i.'_text']) : '').'")');
+					'", "'.((isset($_POST['info'.$i.'_text']) && $_POST['info'.$i.'_text'] != '') ? pSQL($_POST['info'.$i.'_text']) : '').'")');
 			}
 			return true;
 		} else
 			return false;
 	}
-	
+
 	public function removeFromDB()
-	{		 
+	{
 		$dir = opendir(dirname(__FILE__).'/img');
 		while (false !== ($file = readdir($dir)))
 		{
-			$path = dirname(__FILE__).'/img/'.$file; 
+			$path = dirname(__FILE__).'/img/'.$file;
 			if ($file != '..' && $file != '.' && !is_dir($file))
 				unlink($path);
 		}
@@ -115,113 +172,172 @@ class Blockreinsurance extends Module
 
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'reinsurance`');
 	}
-		
-	public function getAllFromDB()
-	{
-		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'reinsurance`');
-	}
-		
+
 	public function getContent()
 	{
-		// If we try to update the settings
-		$output = '';
+		$html = '';
+		$id_reinsurance = (int)Tools::getValue('id_reinsurance');
+		if (Tools::isSubmit('saveblockreinsurance'))
+		{
+			$reinsurance = new reinsuranceClass();
+			$reinsurance->copyFromPost();
+			$reinsurance->id_shop = $this->context->shop->id;
+			
+			if ($reinsurance->validateFields(false) && $reinsurance->validateFieldsLang(false))
+			{
+				$reinsurance->save();
+				if (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !empty($_FILES['image']['tmp_name']))
+				{
+					if ($error = ImageManager::validateUpload($_FILES['image']))
+						return false;
+					elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image']['tmp_name'], $tmpName))
+						return false;
+					elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/img/reinsurance-'.(int)$reinsurance->id.'-'.(int)$reinsurance->id_shop.'.jpg'))
+						return false;
+					unlink($tmpName);
+					$reinsurance->file_name = 'reinsurance-'.(int)$reinsurance->id.'-'.(int)$reinsurance->id_shop.'.jpg';
+					$reinsurance->save();
+				}
+			}
+			else
+				$html .= '<div class="conf error">'.$this->l('An error occurred during the save').'</div>';
+		}
+		
+		if (Tools::isSubmit('updateblockreinsurance') || Tools::isSubmit('addblockreinsurance'))
+		{
+			$helper = $this->initForm();
+			foreach (Language::getLanguages(false) as $lang)
+				if ($id_reinsurance)
+				{
+					$reinsurance = new reinsuranceClass((int)$id_reinsurance);
+					$helper->fields_value['text'][(int)$lang['id_lang']] = $reinsurance->text[(int)$lang['id_lang']];
+				}	
+				else
+					$helper->fields_value['text'][(int)$lang['id_lang']] = Tools::getValue('text_'.(int)$lang['id_lang'], '');
+
+			return $html.$helper->generateForm($this->fields_form);
+		}
+		else if (Tools::isSubmit('deleteblockreinsurance'))
+		{
+			$reinsurance = new reinsuranceClass((int)$id_reinsurance);
+			if (file_exists(dirname(__FILE__).'/img/'.$reinsurance->file_name))
+				unlink(dirname(__FILE__).'/img/'.$reinsurance->file_name);
+			$reinsurance->delete();
+			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+		}
+		else
+		{
+			$helper = $this->initList();
+			return $html.$helper->generateList($this->getListContent((int)Configuration::get('PS_LANG_DEFAULT')), $this->fields_list);
+		}
+
 		if (isset($_POST['submitModule']))
-		{				
+		{
 			Configuration::updateValue('blockreinsurance_nbblocks', ((isset($_POST['nbblocks']) && $_POST['nbblocks'] != '') ? (int)$_POST['nbblocks'] : ''));
 			if ($this->removeFromDB() && $this->addToDB())
 				$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 			else
 				$output = '<div class="conf error"><img src="../img/admin/disabled.gif"/>'.$this->l('An error occurred during the save').'</div>';
 		}
-		
-		$nb_blocks = Configuration::get('blockreinsurance_nbblocks');
-		$infos = $this->getAllFromDB();
-
-		$content = '
-		<script type="text/javascript">
-			$(document).ready(function(){
-				var nb_blocks = 5;
-				nb_blocks = $("select[name=nbblocks]").val();
-				$("div.container_infos").each(function(){
-					id_div = $(this).attr("id").split("container_infos");
-					if(parseInt(id_div[1]) <= nb_blocks)
-						$(this).show();
-					else
-						$(this).hide();
-				});
-					
-				$("select[name=nbblocks]").change(function(){
-					nb_blocks = $("select[name=nbblocks]").val();
-					$("div.container_infos").each(function(){
-						id_div = $(this).attr("id").split("container_infos");
-						if(parseInt(id_div[1]) <= nb_blocks)
-							$(this).show();
-						else
-							$(this).hide();
-					});
-				});	
-			});	
-		</script>
-		<h2>'.$this->displayName.'</h2>
-		'.$output.'
-		<form method="post" action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
-			<fieldset class="width2">
-				<select name="nbblocks">';	
-					// Show by default 5 blocks maximum
-					for ($i = 1; $i <= 5; $i++)
-						$content .= '<option value="'.$i.'" '.(($i == $nb_blocks) ? 'selected="selected"' : '').'>'.$i.' '.$this->l('block(s)').'</option>';
-		$content .= '</select>
-				<div class="clear">&nbsp;</div>';					
-				// Show by default 5 blocks maximum
-				for ($i = 1; $i <= 5; $i++)
-				{
-					$content .= '<div id="container_infos'.$i.'" class="container_infos"><h3>'.$this->l('Block number').' '.$i.'</h3>'.
-							((!empty($infos[$i - 1]) && $infos[$i - 1]['filename'] != '') ? '<img src="'.Tools::getHttpHost(true)._MODULE_DIR_.$this->name.'/img/'.$infos[$i - 1]['filename'].'.jpg" />' : '').
-							'<div class="clear">&nbsp;</div>
-							<p><label for="info'.$i.'_file">'.$this->l('Image for this block').' :</label>
-							<input type="file" name="info'.$i.'_file" /></p>
-							<p><label for="info'.$i.'_text">'.$this->l('Alternative text for this block').' :</label>
-							<input type="text" id="info'.$i.'_text" name="info'.$i.'_text" value="'.((!empty($infos[$i - 1]) && $infos[$i - 1]['text'] != '') ? $infos[$i - 1]['text'] : '').'" /></p></div>';
-				}					
-		$content .= '<div class="clear">&nbsp;</div>
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-			</fieldset>
-		</form>';
-		
-		return $content;
 	}
-	
+
+	protected function getListContent($id_lang)
+	{
+		return  Db::getInstance()->executeS('
+			SELECT r.`id_reinsurance`, r.`id_shop`, r.`file_name`, rl.`text`
+			FROM `'._DB_PREFIX_.'reinsurance` r
+			LEFT JOIN `'._DB_PREFIX_.'reinsurance_lang` rl ON (r.`id_reinsurance` = rl.`id_reinsurance`)
+			WHERE `id_lang` = '.(int)$id_lang.' '.Shop::addSqlRestrictionOnLang());
+	}
+
+	protected function initForm()
+	{
+		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
+		$helper = new HelperForm();
+		$helper->module = $this;
+		$helper->name_controller = 'blockreinsurance';
+		$helper->identifier = $this->identifier;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		foreach (Language::getLanguages(false) as $lang)
+			$helper->languages[] = array(
+				'id_lang' => $lang['id_lang'],
+				'iso_code' => $lang['iso_code'],
+				'name' => $lang['name'],
+				'is_default' => ($default_lang == $lang['id_lang'] ? 1 : 0)
+			);
+
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		$helper->default_form_language = $default_lang;
+		$helper->allow_employee_form_lang = $default_lang;
+		$helper->toolbar_scroll = true;
+		$helper->title = $this->displayName;
+		$helper->submit_action = 'saveblockreinsurance';
+		$helper->toolbar_btn =  array(
+			'save' =>
+			array(
+				'desc' => $this->l('Save'),
+				'href' => AdminController::$currentIndex.'&configure='.$this->name.'&save'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+			),
+			'back' =>
+			array(
+				'href' => AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+				'desc' => $this->l('Back to list')
+			)
+		);
+		return $helper;
+	}
+
+	protected function initList()
+	{
+		$helper = new HelperList();
+		$helper->shopLinkType = '';
+		$helper->simple_header = true;
+		$helper->identifier = 'id_reinsurance';
+		$helper->actions = array('edit', 'delete');
+		$helper->show_toolbar = true;
+		$helper->imageType = 'jpg';
+		$helper->toolbar_btn['new'] =  array(
+			'href' => AdminController::$currentIndex.'&configure='.$this->name.'&add'.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'),
+			'desc' => $this->l('Add new')
+		);
+
+		$helper->title = $this->displayName;
+		$helper->table = $this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+		return $helper;
+
+	}
+
 	public function hookFooter($params)
-	{	
-		global $smarty;
-
+	{
 		$this->context->controller->addCSS($this->_path.'style.css', 'all');
-		$infos = $this->getAllFromDB();
-
-		$smarty->assign(array(
-			'nbblocks' => Configuration::get('blockreinsurance_nbblocks'),
-			'infos' => $infos
-		));
+		$infos = $this->getListContent($this->context->language->id);
+		$this->context->smarty->assign(array('infos' => $infos, 'nbblocks' => count($infos)));
 		return $this->display(__FILE__, 'blockreinsurance.tpl');
 	}
 
 	public function installFixtures()
 	{
-		$nb_blocks = Configuration::get('blockreinsurance_nbblocks');
+		$return = true;
 		$tab_texts = array(
-			$this->l('Money back'),
-			$this->l('Exchange in-store'),
-			$this->l('Payment upon shipment'),
-			$this->l('Free Shipping'),
-			$this->l('100% secured payment'),
-		);
-		$success = true;
-		for ($a = 1; $a <= $nb_blocks; $a++)
+			array('text' => 'Money back', 'file_name' => 'reinsurance-1-1.jpg'),
+			array('text' => 'Exchange in-store', 'file_name' => 'reinsurance-2-1.jpg'),
+			array('text' => 'Payment upon shipment', 'file_name' => 'reinsurance-3-1.jpg'),
+			array('text' => 'Free Shipping', 'file_name' => 'reinsurance-4-1.jpg'),
+			array('text' => '100% secured payment', 'file_name' => 'reinsurance-5-1.jpg')
+			);
+		
+		foreach($tab_texts as $tab)
 		{
-			$success &= Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'reinsurance` (`filename`, `text`, `id_shop`)
-					VALUES ("reassurance'.$a.'", "'.$tab_texts[($a-1)].'", '.(int)$this->context->shop->id.')');
+			$reinsurance = new reinsuranceClass();
+			foreach (Language::getLanguages(false) as $lang)
+				$reinsurance->text[$lang['id_lang']] = $tab['text'];
+			$reinsurance->file_name = $tab['file_name'];
+			$reinsurance->id_shop = $this->context->shop->id;
+			$return &= $reinsurance->save();
 		}
-		return $success;
+		return $return;
 	}
 }

@@ -2,7 +2,7 @@
         <module>
             <name>blockreinsurance</name>
             <displayName><![CDATA[Bloc reinsurance]]></displayName>
-            <version><![CDATA[1.0]]></version>
+            <version><![CDATA[2.0]]></version>
             <description><![CDATA[Add a block to display more infos to reassure your customers]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[front_office_features]]></tab>
