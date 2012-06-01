@@ -195,7 +195,7 @@ class ProductSupplierCore extends ObjectModel
 	public static function getSupplierCollection($id_product, $group_by_supplier = true)
 	{
 		$suppliers = new Collection('ProductSupplier');
-		$suppliers->where('id_product', '=', $id_product);
+		$suppliers->where('id_product', '=', (int)$id_product);
 
 		if ($group_by_supplier)
 			$suppliers->groupBy('id_supplier');
