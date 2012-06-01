@@ -144,9 +144,10 @@ class CombinationCore extends ObjectModel
 	public function getWsProductOptionValues()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT id_attribute AS id
-			FROM `'._DB_PREFIX_.'product_attribute_combination`
-			WHERE id_product_attribute = '.(int)$this->id);
+			SELECT a.id_attribute AS id
+			FROM `'._DB_PREFIX_.'product_attribute_combination` a
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE a.id_product_attribute = '.(int)$this->id);
 
 		return $result;
 	}
@@ -154,9 +155,10 @@ class CombinationCore extends ObjectModel
 	public function getWsImages()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_image` as id
-			FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_product_attribute` = '.(int)$this->id.'
+			SELECT a.`id_image` as id
+			FROM `'._DB_PREFIX_.'product_attribute_image` a
+			'.Shop::addSqlAssociation('product_attribute', 'a').'
+			WHERE a.`id_product_attribute` = '.(int)$this->id.'
 		');
 	}
 

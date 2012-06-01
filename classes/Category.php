@@ -1306,11 +1306,18 @@ class CategoryCore extends ObjectModel
 	public function getWsNbProductsRecursive()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT count(distinct(id_product)) as nb_product_recursive FROM  `'._DB_PREFIX_.'category_product`
-		WHERE id_category IN (SELECT id_category
-		FROM `'._DB_PREFIX_.'category`
-		WHERE nleft > '.(int)$this->nleft.
-		' AND nright < '.(int)$this->nright.' AND active = 1 UNION SELECT '.(int)$this->id.')');
+			SELECT COUNT(distinct(id_product)) as nb_product_recursive
+			FROM  `'._DB_PREFIX_.'category_product`
+			WHERE id_category IN (
+				SELECT c2.id_category
+				FROM `'._DB_PREFIX_.'category` c2
+				'.Shop::addSqlAssociation('category', 'c2').'
+				WHERE c2.nleft > '.(int)$this->nleft.'
+					AND c2.nright < '.(int)$this->nright.'
+					AND c2.active = 1
+				UNION SELECT '.(int)$this->id.'
+			)
+		');
 		if (!$result)
 			return -1;
 		return $result[0]['nb_product_recursive'];
