@@ -1736,5 +1736,14 @@ class OrderCore extends ObjectModel
 			return new OrderState($this->current_state);
 		return null;
 	}
+
+	/**
+	 * @see ObjectModel::getWebserviceObjectList()
+	 */
+	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
+	{
+		$sql_filter .= Shop::addSqlRestriction(Shop::SHARE_ORDER, 'main');
+		return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
+	}
 }
 

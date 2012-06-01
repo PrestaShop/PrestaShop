@@ -441,7 +441,8 @@ class ManufacturerCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT a.id_address as id
 			FROM `'._DB_PREFIX_.'address` AS a
-			WHERE `id_manufacturer` = '.(int)$this->id.'
+			'.Shop::addSqlAssociation('manufacturer', 'a').'
+			WHERE a.`id_manufacturer` = '.(int)$this->id.'
 			AND a.`deleted` = 0'
 		);
 	}

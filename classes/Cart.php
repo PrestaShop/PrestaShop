@@ -3017,7 +3017,8 @@ class CartCore extends ObjectModel
 		$query = '
 			SELECT id_product, id_product_attribute, quantity
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE id_cart = '.(int)$this->id;
+			WHERE id_cart = '.(int)$this->id.'
+				AND id_shop = '.(int)Context::getContext()->shop->id;
 
 		$result = Db::getInstance()->executeS($query);
 		return $result;
@@ -3027,11 +3028,11 @@ class CartCore extends ObjectModel
 	{
 		if ($this->deleteAssociations())
 		{
-			$query = 'INSERT INTO `'._DB_PREFIX_.'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`) VALUES ';
+			$query = 'INSERT INTO `'._DB_PREFIX_.'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`, `id_shop`) VALUES ';
 
 			foreach ($values as $value)
 				$query .= '('.(int)$this->id.', '.(int)$value['id_product'].', '.
-					(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.(int)$value['quantity'].', NOW()),';
+					(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.(int)$value['quantity'].', NOW(), '.(int)Context::getContext()->shop->id.'),';
 
 			Db::getInstance()->execute(rtrim($query, ','));
 		}

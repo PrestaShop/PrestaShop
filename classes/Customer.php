@@ -144,7 +144,7 @@ class CustomerCore extends ObjectModel
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
 		'associations' => array(
-				'groups' => array('resource' => 'group'),
+			'groups' => array('resource' => 'group'),
 		)
 	);
 
@@ -741,9 +741,11 @@ class CustomerCore extends ObjectModel
 	public function getWsGroups()
 	{
 		return Db::getInstance()->executeS('
-				SELECT cg.`id_group` as id
-				FROM '._DB_PREFIX_.'customer_group cg
-				WHERE cg.`id_customer` = '.(int)$this->id);
+			SELECT cg.`id_group` as id
+			FROM '._DB_PREFIX_.'customer_group cg
+			'.Shop::addSqlAssociation('group', 'cg').'
+			WHERE cg.`id_customer` = '.(int)$this->id
+		);
 	}
 
 	public function setWsGroups($result)
@@ -754,5 +756,14 @@ class CustomerCore extends ObjectModel
 		$this->cleanGroups();
 		$this->addGroups($groups);
 		return true;
+	}
+
+	/**
+	 * @see ObjectModel::getWebserviceObjectList()
+	 */
+	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
+	{
+		$sql_filter .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'main');
+		return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
 	}
 }
