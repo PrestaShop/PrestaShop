@@ -84,6 +84,7 @@ class PaymentCCCore extends OrderPayment
 	public static function getByOrderId($id_order)
 	{
 		Tools::displayAsDeprecated();
-		return OrderPayment::getByOrderId($id_order);
+		$order = new Order($id_order);
+		return OrderPayment::getByOrderReference($order->reference);
 	}
 }

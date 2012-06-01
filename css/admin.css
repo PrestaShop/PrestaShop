@@ -471,10 +471,17 @@ select optgroup option {
 	margin:0 5px 0 0;
 }
 
-#content .error  {
+#content .error {
 	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
 	border: 1px solid #CC0000;
 	color:#D8000C;
+}
+#content .conf a, #content .warn a, #content .error a {
+	color:#D8000C;
+	font-weight: bold;
+}
+#content .conf a:hover, #content .warn a:hover, #content .error a:hover {
+	text-decoration: underline;
 }
 
 #ajax_confirmation .error  {

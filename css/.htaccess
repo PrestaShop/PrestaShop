@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine on
+	Options +FollowSymLinks
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule "(.*)\.css$" retro-compat.css.php?file=$1.css [QSA,L]
 </IfModule>

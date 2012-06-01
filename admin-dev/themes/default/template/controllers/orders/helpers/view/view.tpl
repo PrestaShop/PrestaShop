@@ -202,6 +202,50 @@
 				{if $nextOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$nextOrder}">{l s='Next >'}</a>{/if}
 			</div>
 			<div class="clear"></div>
+			
+			<!-- linked orders block -->
+			{if count($order->getBrother()) > 0}
+				<fieldset>
+					<legend><img src="../img/admin/tab-orders.gif" /> {l s='Linked orders'}</legend>
+					<table class="table" width="100%;" cellspacing="0" cellpadding="0">
+						<thead>
+							<tr>
+								<th width="10%">
+									{l s='Order n°'}
+								</th>
+								<th>
+									{l s='Status'}
+								</th>
+								<th width="10%">
+									{l s='Amount'}
+								</th>
+								<th width="5%">
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach $order->getBrother() as $brother_order}
+								<tr>
+									<td>
+										<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
+									</td>
+									<td>
+										{$brother_order->getCurrentOrderState()->name[$current_id_lang]}
+									</td>
+									<td>
+										{displayPrice price=$brother_order->total_paid_tax_incl currency=$currency->id}
+									</td>
+									<td>
+										<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img alt="{l s='See the order'}" src="../img/admin/details.gif"></a>
+									</td>
+								</tr>
+							{/foreach}
+						</tbody>
+					</table>
+				</fieldset>
+				<br />
+			{/if}
+			
 			<!-- Documents block -->
 			<fieldset>
 				<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
@@ -230,15 +274,26 @@
 				</form>
 				<hr />
 				{/if}
-				{if $order->hasBeenPaid()}
+				
+				{if count($order->getOrderPayments()) > 0}
 				<p class="error" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
 					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
-					
 					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$orders_total_paid_tax_incl currency=$currency->id}</span>
+					
+					{foreach $order->getBrother() as $brother_order}
+						{if $brother_order@first}
+							{if count($order->getBrother()) == 1}
+								<br />{l s='This warning also concerns the order '}
+							{else}
+								<br />{l s='This warning also concerns the next orders:'}
+							{/if}
+						{/if}
+						<a href="{$current_index}&vieworder&id_order={$brother_order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">#{'%06d'|sprintf:$brother_order->id}</a>
+					{/foreach}
 				</p>
 				{/if}
 
-				<form id="formAddPayment" method="post" action="{$current_index}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<colgroup>
 							<col width="15%"></col>
@@ -266,8 +321,8 @@
 								<td>{$payment->transaction_id}</td>
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 								<td>
-								{if $payment->id_order_invoice}
-									{OrderInvoice::retrieveOneById($payment->id_order_invoice)->getInvoiceNumberFormatted($current_id_lang)}
+								{if $invoice = $payment->getOrderInvoice($order->id)}
+									{$invoice->getInvoiceNumberFormatted($current_id_lang)}
 								{else}
 									{l s='No invoice'}
 								{/if}

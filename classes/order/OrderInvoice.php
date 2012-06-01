@@ -442,11 +442,11 @@ class OrderInvoiceCore extends ObjectModel
 		return $carrier;
 	}
 
-    /**
-     * @since 1.5
-     * @static
-     * @param $id_order_invoice
-     */
+	/**
+	 * @since 1.5
+	 * @static
+	 * @param $id_order_invoice
+	 */
 	public static function getCarrierId($id_order_invoice)
 	{
 		$sql = 'SELECT `id_carrier`
@@ -497,6 +497,39 @@ class OrderInvoiceCore extends ObjectModel
 	}
 
 	/**
+	 * Get global rest to paid
+	 *    This method will return something different of the method getRestPaid if
+	 *    there is an other invoice linked to the payments of the current invoice
+	 * @since 1.5.0.13
+	 */
+	public function getGlobalRestPaid()
+	{
+		static $cache;
+		
+		if (!isset($cache[$this->id]))
+		{
+			$res = Db::getInstance()->getRow('
+			SELECT SUM(sub.paid) paid, SUM(sub.to_paid) to_paid
+			FROM (
+				SELECT
+					op.amount as paid, SUM(oi.total_paid_tax_incl) to_paid
+				FROM `'._DB_PREFIX_.'order_invoice_payment` oip1
+				INNER JOIN `'._DB_PREFIX_.'order_invoice_payment` oip2
+					ON oip2.id_order_payment = oip1.id_order_payment
+				INNER JOIN `'._DB_PREFIX_.'order_invoice` oi
+					ON oi.id_order_invoice = oip2.id_order_invoice
+				INNER JOIN `'._DB_PREFIX_.'order_payment` op
+					ON op.id_order_payment = oip2.id_order_payment
+				WHERE oip1.id_order_invoice = '.(int)$this->id.'
+				GROUP BY op.id_order_payment
+			) sub');
+			$cache[$this->id] = round($res['to_paid'] - $res['paid'], 2);
+		}
+		
+		return $cache[$this->id];
+	}
+
+	/**
 	 * @since 1.5.0.2
 	 * @return bool Is paid ?
 	 */
@@ -511,9 +544,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getOrderPaymentCollection()
 	{
-		$order_payments = new Collection('OrderPayment');
-		$order_payments->where('id_order_invoice', '=', $this->id);
-		return $order_payments;
+		return OrderPayment::getByInvoiceId($this->id);
 	}
 
 	/**

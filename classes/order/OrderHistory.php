@@ -226,16 +226,19 @@ class OrderHistoryCore extends ObjectModel
 			foreach ($invoices as $invoice)
 			{
 				$rest_paid = $invoice->getRestPaid();
-				if ($rest_paid)
+				if ($rest_paid > 0)
 				{
 					$payment = new OrderPayment();
-					$payment->id_order = $order->id;
-					$payment->id_order_invoice = $invoice->id;
+					$payment->order_reference = $order->reference;
 					$payment->id_currency = $order->id_currency;
 					$payment->amount = $rest_paid;
 					$payment->payment_method = $payment_method->displayName;
 					$payment->conversion_rate = 1;
 					$payment->save();
+					
+					Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+					VALUES('.(int)$invoice->id.', '.(int)$payment->id.', '.(int)$order->id.')');
 				}
 			}
 		}

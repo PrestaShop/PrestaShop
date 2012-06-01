@@ -143,6 +143,10 @@ abstract class PaymentModuleCore extends Module
 		$cart = new Cart($id_cart);
 		$this->context->cart = $cart;
 
+		$order_status = new OrderState((int)$id_order_state, (int)$cart->id_lang);
+		if (!Validate::isLoadedObject($order_status))
+			throw new PrestaShopException('Can\'t load Order state status');
+
 		if (!$this->active)
 			die(Tools::displayError());
 		// Does order already exists ?
@@ -182,10 +186,6 @@ abstract class PaymentModuleCore extends Module
 				Logger::addLog($error, 4, '0000001', 'Cart', intval($cart->id));
 				die($error);
 			}
-
-			$order_status = new OrderState((int)$id_order_state, (int)$cart->id_lang);
-			if (!Validate::isLoadedObject($order_status))
-				throw new PrestaShopException('Can\'t load Order state status');
 
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
@@ -270,18 +270,14 @@ abstract class PaymentModuleCore extends Module
 					// Creating order
 					$result = $order->add();
 
-					// Register Payment only if the order status validate the order
-					if ($result && $order_status->logable)
-					{
-						if (!$order->addOrderPayment($amount_paid))
-							throw new PrestaShopException('Can\'t save Order Payment');
-					}
+					if (!$result)
+						throw new PrestaShopException('Can\'t save Order');
 
 					// Amount paid by customer is not the right one -> Status = payment error
 					// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
 					// if ($order->total_paid != $order->total_paid_real)
 					// We use number_format in order to compare two string
-					if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($order->total_paid_real, 2))
+					if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($amount_paid, 2))
 						$id_order_state = Configuration::get('PS_OS_ERROR');
 
 					$order_list[] = $order;
@@ -303,6 +299,16 @@ abstract class PaymentModuleCore extends Module
 						$order_carrier->add();
 					}
 				}
+
+			// Register Payment only if the order status validate the order
+			if ($order_status->logable)
+			{
+				// $order is the last order loop in the foreach
+				// The method addOrderPayment of the class Order make a create a paymentOrder
+				//     linked to the order reference and not to the order id
+				if (!$order->addOrderPayment($amount_paid))
+					throw new PrestaShopException('Can\'t save Order Payment');
+			}
 
 			// Next !
 			$only_one_gift = false;
@@ -617,7 +623,7 @@ abstract class PaymentModuleCore extends Module
 					Logger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
 					die($error);
 				}
-			}
+			} // End foreach $order_detail_list
 			// Use the last order as currentOrder
 			$this->currentOrder = (int)$order->id;
 			return true;
