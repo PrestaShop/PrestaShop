@@ -112,7 +112,7 @@
 												name="{$input.name}"
 												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
-												class="{if $input.type == 'tags'}tagify {/if}"
+												class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 												{if isset($input.size)}size="{$input.size}"{/if}
 												{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 												{if isset($input.class)}class="{$input.class}"{/if}

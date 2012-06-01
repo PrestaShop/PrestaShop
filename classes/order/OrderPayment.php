@@ -27,9 +27,8 @@
 
 class OrderPaymentCore extends ObjectModel
 {
-	public $id_order;
+	public $order_reference;
 	public $id_currency;
-	public $id_order_invoice;
 	public $amount;
 	public $payment_method;
 	public $conversion_rate;
@@ -47,9 +46,8 @@ class OrderPaymentCore extends ObjectModel
 		'table' => 'order_payment',
 		'primary' => 'id_order_payment',
 		'fields' => array(
-			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'order_reference' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 9),
 			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order_invoice' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'amount' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'conversion_rate' => 	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
@@ -79,12 +77,27 @@ class OrderPaymentCore extends ObjectModel
 	*/
 	public static function getByOrderId($id_order)
 	{
-		return Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_payment`
-			WHERE `id_order` = '.(int)$id_order);
+		Tools::displayAsDeprecated();
+		$order = new Order($id_order);
+		return OrderPayment::getByOrderReference($order->reference);
 	}
 
+	/**
+	 * Get the detailed payment of an order
+	 * @param int $order_reference
+	 * @return array
+	 * @since 1.5.0.13
+	 */
+	public static function getByOrderReference($order_reference)
+	{
+		return ObjectModel::hydrateCollection('OrderPayment',
+			Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'order_payment`
+			WHERE `order_reference` = \''.pSQL($order_reference).'\'')
+		);
+	}
+	
 	/**
 	 * Get Order Payments By Invoice ID
 	 * @static
@@ -93,9 +106,38 @@ class OrderPaymentCore extends ObjectModel
 	 */
 	public static function getByInvoiceId($id_invoice)
 	{
+		$payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `'._DB_PREFIX_.'order_invoice_payment` WHERE id_order_invoice = '.(int)$id_invoice);
+		if (!$payments)
+			return array();
+		
+		$payment_list = array();
+		foreach ($payments as $payment)
+			$payment_list[] = $payment['id_order_payment'];
+		
 		$payments = new Collection('OrderPayment');
-		$payments->where('id_order_invoice', '=', $id_invoice);
+		$payments->where('id_order_payment', 'IN', $payment_list);
 		return $payments;
+	}
+	
+	/**
+	 * Return order invoice object linked to the payment
+	 * 
+	 * @param int $id_order Order Id
+	 *
+	 * @since 1.5.0.13
+	 */
+	public function getOrderInvoice($id_order)
+	{
+		$res = Db::getInstance()->getValue('
+		SELECT id_order_invoice
+		FROM `'._DB_PREFIX_.'order_invoice_payment`
+		WHERE id_order_payment = '.(int)$this->id.'
+		AND id_order = '.(int)$id_order);
+		
+		if (!$res)
+			return false;
+		
+		return new OrderInvoice($res['id_order_invoice']);
 	}
 }
 

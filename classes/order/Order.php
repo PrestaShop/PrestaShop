@@ -1116,9 +1116,15 @@ class OrderCore extends ObjectModel
 
 			// Update order payment
 			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'order_payment`
-				SET `id_order_invoice` = '.(int)$order_invoice->id.'
-				WHERE `id_order` = '.(int)$order_invoice->id_order);
+				INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+				SET
+					`id_order_invoice` = '.(int)$order_invoice->id.',
+					`id_order_payment` = (
+						SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
+						INNER JOIN `'._DB_PREFIX_.'orders` o
+						ON o.reference = op.order_reference
+						WHERE id_order = '.(int)$order_invoice->id_order.' LIMIT 1),
+					`id_order` = '.(int)$order_invoice->id_order);
 
 			// Update order cart rule
 			Db::getInstance()->execute('
@@ -1357,7 +1363,7 @@ class OrderCore extends ObjectModel
 	public function getOrderPaymentCollection()
 	{
 		$order_payments = new Collection('OrderPayment');
-		$order_payments->where('id_order', '=', $this->id);
+		$order_payments->where('order_reference', '=', $this->reference);
 		return $order_payments;
 	}
 
@@ -1376,8 +1382,7 @@ class OrderCore extends ObjectModel
 	public function addOrderPayment($amount_paid, $payment_method = null, $payment_transaction_id = null, $currency = null, $date = null, $order_invoice = null)
 	{
 		$order_payment = new OrderPayment();
-		$order_payment->id_order = $this->id;
-		$order_payment->id_order_invoice = (!is_null($order_invoice) ? $order_invoice->id : null);
+		$order_payment->order_reference = $this->reference;
 		$order_payment->id_currency = ($currency ? $currency->id : $this->id_currency);
 		// we kept the currency rate for historization reasons
 		$order_payment->conversion_rate = ($currency ? $currency->conversion_rate : 1);
@@ -1394,7 +1399,19 @@ class OrderCore extends ObjectModel
 			$this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false), 2);
 
 		// We put autodate parameter of add method to true if date_add field is null
-		return $order_payment->add(is_null($order_payment->date_add)) && $this->update();
+		$res = $order_payment->add(is_null($order_payment->date_add)) && $this->update();
+		
+		if (!$res)
+			return false;
+	
+		if (!is_null($order_invoice))
+		{
+			$res = Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+			VALUES('.(int)$order_invoice->id.', '.(int)$order_payment->id.', '.(int)$this->id.')');
+		}
+		
+		return $res;
 	}
 
 	/**
@@ -1745,5 +1762,29 @@ class OrderCore extends ObjectModel
 		$sql_filter .= Shop::addSqlRestriction(Shop::SHARE_ORDER, 'main');
 		return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
 	}
+	
+	/**
+	 * Get all other orders with the same reference
+	 * 
+	 * @since 1.5.0.13
+	 */
+	public function getBrother()
+	{
+		$collection = new Collection('order');
+		$collection->where('reference', '=', $this->reference);
+		$collection->where('id_order', '<>', $this->id);
+		return $collection;
+	}
+	
+	/**
+	 * Get a collection of order payments
+	 * 
+	 * @since 1.5.0.13
+	 */
+	public function getOrderPayments()
+	{
+		return OrderPayment::getByOrderReference($this->reference);
+	}
+
 }
 
