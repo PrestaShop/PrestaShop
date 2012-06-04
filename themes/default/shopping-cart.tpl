@@ -228,12 +228,13 @@
 					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" class="product_customization_for_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval} {if $odd}odd{else}even{/if} customization alternate_item {if $product@last && $customization@last && !count($gift_products)}last_item{/if}">
 						<td></td>
 						<td colspan="3">
-							{foreach $customization.datas as $type=>$custom_data}
-
+							{foreach $customization.datas as $type => $custom_data}
 								{if $type == $CUSTOMIZE_FILE}
 									<div class="customizationUploaded">
 										<ul class="customizationUploaded">
-											{foreach $datas as $picture}<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>{/foreach}
+											{foreach $custom_data as $picture}
+												<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>
+											{/foreach}
 										</ul>
 									</div>
 								{elseif $type == $CUSTOMIZE_TEXTFIELD}
