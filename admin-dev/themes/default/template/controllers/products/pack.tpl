@@ -71,7 +71,7 @@
 				</div>
 
 				<br />
-				<p class="hint" style="display:block">{l s='You cannot add combinations or virtual products to a pack.'}</p>
+				<p class="hint" style="display:block">{l s='You cannot add combinations to a pack.'}</p>
 
 			</td>
 		</div>
