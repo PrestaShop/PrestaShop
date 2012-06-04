@@ -837,7 +837,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			case 'front':
 					// Parsing file in Front office
-					$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?\}/U';
+					$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
 				break;
 
 			case 'back':
@@ -847,12 +847,12 @@ class AdminTranslationsControllerCore extends AdminController
 					else if ($type_file == 'specific')
 						$regex = '/translate\(\''._PS_TRANS_PATTERN_.'\'\)/U';
 					else
-						$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?( slashes=1)?\}/U';
+						$regex = '/\{l\s*s\s*=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?\s*\}/U';
 				break;
 
 			case 'errors':
 					// Parsing file for all errors syntax
-					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(, ?(true|false))?\)/U';
+					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(,\s*(true|false))?\)/U';
 				break;
 
 			case 'modules':
@@ -860,7 +860,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
-						$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( mod=\'.+\')?( js=1)?\}/U';
+						$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*mod=\'.+\')?(\s*js=1)?\s*\}/U';
 				break;
 
 			case 'pdf':
@@ -868,7 +868,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/HTMLTemplate.*::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 					else
-						$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( sprintf=.*)?( js=1)?( pdf=\'true\')?\}/U';
+						$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
 				break;
 		}
 
