@@ -48,7 +48,11 @@ function migrate_orders()
 	$values_order = array();
 	$col_orders = Db::getInstance()->query('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 	if (!$col_orders)
-		$array_errors[] = 'unable to get fields list from orders table';
+	{
+		$res = false;
+		return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
+	}
+
 	$col_orders = $col_orders->fetchAll(PDO::FETCH_COLUMN);
 	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
 
@@ -141,12 +145,16 @@ function migrate_orders()
 		if ($cpt >= $flush_limit)
 		{
 			$cpt = 0;
-			$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
-			if (!$res)
+			if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
+			{
+				$res = false;
 				$array_errors[] = '[insert order detail] - '.Db::getInstance()->getMsgError();
-			$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
-			if (!$res)
+			}
+			if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
+			{
+				$res = false;
 				$array_errors[] = '[insert order] - '.Db::getInstance()->getMsgError();
+			}
 			$values_order = array();
 			$values_order_detail = array();
 		}
@@ -155,23 +163,23 @@ function migrate_orders()
 	if ($cpt > 0)
 	{
 
-		$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
-		if (!$res)
+		if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 		{
-			info($values_order_detail, "order detail error");
+			$res = false;
 			$array_errors[] = Db::getInstance()->getMsgError();
 		}
-		$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
-		if (!$res)
+		if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
 		{
-			info($values_order_detail, "orders error");
+			$res = false;
 			$array_errors[] = Db::getInstance()->getMsgError();
 		}
 	}
 
-	$res &= mo_renameTables();
-	if (!$res)
+	if (!mo_renameTables())
+	{
+		$res = false;
 		$array_errors[] = 'unable to rename tables orders_2 and order_detail_2 to orders and order_detail';
+	}
 
 	if (!$res)
 		return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
