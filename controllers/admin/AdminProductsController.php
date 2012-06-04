@@ -2018,7 +2018,7 @@ class AdminProductsControllerCore extends AdminController
 
 			// Generate category selection tree
 			$helper = new Helper();
-			$this->tpl_list_vars['category_tree'] = $helper->renderCategoryTree(null, array((int)$id_category), 'categoryBox', true, false);
+			$this->tpl_list_vars['category_tree'] = $helper->renderCategoryTree(null, array((int)$id_category), 'categoryBox', true, false, array(), false, true);
 
 			// used to build the new url when changing category
 			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
@@ -2890,9 +2890,11 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$current_specific_currency = $currencies[($specific_price['id_currency'] ? $specific_price['id_currency'] : $defaultCurrency->id)];
 				if ($specific_price['reduction_type'] == 'percentage')
-					$reduction = ($specific_price['reduction'] * 100).' %';
+					$impact = '- '.($specific_price['reduction'] * 100).' %';
+				elseif ($specific_price['reduction'] > 0)
+					$impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency);
 				else
-					$reduction = Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency);
+					$impact = '--';
 
 				if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00')
 					$period = $this->l('Unlimited');
@@ -2936,17 +2938,17 @@ class AdminProductsControllerCore extends AdminController
 						$content .= '
 						<td class="cell border">'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
 					}
-					$new_price = $specific_price['price'] == -1 ? $obj->price : $specific_price['price'];
+					$price = Tools::ps_round($specific_price['price'], 2);
+					$fixed_price = ($price == Tools::ps_round($obj->price, 2)) ? '--' : Tools::displayPrice($price);
 					$content .= '
 						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
 						<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
 						<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
-						<td class="cell border">'.Tools::displayPrice((float)$new_price, $current_specific_currency).'</td>
-						<td class="cell border">'.$reduction.'</td>
+						<td class="cell border">'.$fixed_price.'</td>
+						<td class="cell border">'.$impact.'</td>
 						<td class="cell border">'.$period.'</td>
 						<td class="cell border">'.$specific_price['from_quantity'].'</th>
-						<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)$this->_getFinalPrice($specific_price, (float)$obj->price, $tax_rate)), $current_specific_currency).'</b></td>
 						<td class="cell border">'.((!$rule->id && $can_delete_specific_prices) ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 					</tr>';
 					$i++;
