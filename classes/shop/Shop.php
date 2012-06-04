@@ -916,7 +916,7 @@ class ShopCore extends ObjectModel
 						unset($res[$row['primary']]);
 
 					$categories = Tools::getValue('categoryBox');
-					if ($table_name == 'product_shop' && count($categories) > 0)
+					if ($table_name == 'product_shop' && count($categories) == 1)
 					{
 						unset($res['id_category_default']);
 						$keys = implode('`, `', array_keys($res));
