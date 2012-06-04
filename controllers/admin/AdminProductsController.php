@@ -1640,7 +1640,12 @@ class AdminProductsControllerCore extends AdminController
 						{
 							// Save and stay on same form
 							if ($this->display == 'edit')
+							{
 								$this->confirmations[] = $this->l('Update successful');
+								$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
+									.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
+									.'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
+							}
 							else
 								// Default behavior (save and back)
 								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
