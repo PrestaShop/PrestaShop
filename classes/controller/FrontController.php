@@ -616,7 +616,7 @@ class FrontControllerCore extends Controller
 		}
 	}
 
-	protected function geolocationManagement($defaultCountry)
+	protected function geolocationManagement($default_country)
 	{
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
@@ -654,11 +654,11 @@ class FrontControllerCore extends Controller
 				if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
-					if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country)
-						$defaultCountry = new Country($id_country);
+					if ($default_country->iso_code != $this->context->cookie->iso_code_country)
+						$default_country = new Country($id_country);
 					if (isset($has_been_set) && $has_been_set)
-						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
-					return $defaultCountry;
+						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($default_country->id_currency ? (int)$default_country->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
+					return $default_country;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 					$this->restrictedCountry = true;
@@ -751,23 +751,23 @@ class FrontControllerCore extends Controller
 		// 'orderwayposition' => Tools::getProductsOrder('way'), // Deprecated: orderwayposition
 		// 'orderwaydefault' => Tools::getProductsOrder('way'),
 
-		$stock_management = (int)(Configuration::get('PS_STOCK_MANAGEMENT')) ? true : false; // no display quantity order if stock management disabled
-		$orderByValues = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
-		$orderWayValues = array(0 => 'asc', 1 => 'desc');
-		$this->orderBy = Tools::strtolower(Tools::getValue('orderby', $orderByValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_BY'))]));
-		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $orderWayValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_WAY'))]));
-		if (!in_array($this->orderBy, $orderByValues))
-			$this->orderBy = $orderByValues[0];
-		if (!in_array($this->orderWay, $orderWayValues))
-			$this->orderWay = $orderWayValues[0];
+		$stock_management = Configuration::get('PS_STOCK_MANAGEMENT') ? true : false; // no display quantity order if stock management disabled
+		$order_by_values = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity');
+		$order_way_values = array(0 => 'asc', 1 => 'desc');
+		$this->orderBy = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
+		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));
+		if (!in_array($this->orderBy, $order_by_values))
+			$this->orderBy = $order_by_values[0];
+		if (!in_array($this->orderWay, $order_way_values))
+			$this->orderWay = $order_way_values[0];
 
 		$this->context->smarty->assign(array(
 			'orderby' => $this->orderBy,
 			'orderway' => $this->orderWay,
-			'orderbydefault' => $orderByValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_BY'))],
-			'orderwayposition' => $orderWayValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_WAY'))], // Deprecated: orderwayposition
-			'orderwaydefault' => $orderWayValues[(int)(Configuration::get('PS_PRODUCTS_ORDER_WAY'))],
-			'stock_management' => (int)($stock_management)));
+			'orderbydefault' => $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')],
+			'orderwayposition' => $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')], // Deprecated: orderwayposition
+			'orderwaydefault' => $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')],
+			'stock_management' => (int)$stock_management));
 	}
 
 	public function pagination($nbProducts = 10)
@@ -777,12 +777,12 @@ class FrontControllerCore extends Controller
 		elseif (!$this->context)
 			$this->context = Context::getContext();
 
-		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
+		$nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50);
 		// Clean duplicate values
 		$nArray = array_unique($nArray);
 		asort($nArray);
-		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
-		$this->p = abs((int)(Tools::getValue('p', 1)));
+		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)Configuration::get('PS_PRODUCTS_PER_PAGE')))));
+		$this->p = abs((int)Tools::getValue('p', 1));
 
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
 		{
@@ -808,14 +808,14 @@ class FrontControllerCore extends Controller
 			$this->redirect();
 		}
 
-		$pages_nb = ceil($nbProducts / (int)($this->n));
+		$pages_nb = ceil($nbProducts / (int)$this->n);
 
 		$start = (int)($this->p - $range);
 		if ($start < 1)
 			$start = 1;
 		$stop = (int)($this->p + $range);
 		if ($stop > $pages_nb)
-			$stop = (int)($pages_nb);
+			$stop = (int)$pages_nb;
 		$this->context->smarty->assign('nb_products', $nbProducts);
 		$pagination_infos = array(
 			'products_per_page' => (int)Configuration::get('PS_PRODUCTS_PER_PAGE'),
@@ -839,7 +839,7 @@ class FrontControllerCore extends Controller
 		$context = Context::getContext();
 		if (!isset($context->customer))
 			return array();
-		
+
 		if (!is_array(self::$currentCustomerGroups))
 		{
 			self::$currentCustomerGroups = array();
