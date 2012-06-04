@@ -473,10 +473,46 @@ class AdminTranslationsControllerCore extends AdminController
 
 				// Move the old file theme in the new folder
 				foreach ($themes_selected as $theme_name)
-					copy($theme_file_old, str_replace($name_default_theme, $theme_name, $theme_file_old));
+					if (file_exists($theme_file_old))
+						copy($theme_file_old, str_replace($name_default_theme, $theme_name, $theme_file_old));
 
 				if ($deleted_old_theme)
 					@unlink($theme_file_old);
+			}
+		}
+	}
+
+	/**
+	 * Add new translations tabs by code ISO
+	 *
+	 * @param array $iso_code
+	 * @param array $files
+	 */
+	public function addNewTabs($iso_code, $files)
+	{
+		foreach ($files as $file)
+		{
+			// Check if file is a file theme
+			if (preg_match('#^translations\/'.$iso_code.'\/tabs.php#Ui', $file['filename'], $matches) && Validate::isLanguageIsoCode($iso_code))
+			{
+				// Include array width new translations tabs
+				$tabs = include _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename'];
+
+				foreach ($tabs as $class_name => $translations)
+				{
+					// Get instance of this tab by class name
+					$tab = Tab::getInstanceFromClassName($class_name);
+
+					//Check if class name exists
+					if (isset($tab->class_name) && !empty($tab->class_name))
+					{
+						$id_lang = Language::getIdByIso($iso_code);
+						$tab->name[(int)$id_lang] = pSQL($translations);
+
+						// Update this tab
+						$tab->update();
+					}
+				}
 			}
 		}
 	}
@@ -488,13 +524,14 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 		{
 			$gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
-			$iso_code = str_replace('.gzip', '', $_FILES['file']['name']);
+			$iso_code = str_replace(array('.tar.gz', '.gzip'), '', $_FILES['file']['name']);
 			$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
 			$files_list = $gz->listContent();
 			if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 			{
 				$this->checkAndAddMailsFiles($iso_code, $files_list);
 				$this->checkAndAddThemesFiles($files_list, $themes_selected);
+				$this->addNewTabs($iso_code, $files_list);
 				if (Validate::isLanguageFileName($_FILES['file']['name']))
 				{
 					if (!Language::checkAndAddLanguage($iso_code))
