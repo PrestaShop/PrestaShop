@@ -34,7 +34,7 @@ class AdminZonesControllerCore extends AdminController
 	 	$this->table = 'zone';
 		$this->className = 'Zone';
 	 	$this->lang = false;
-
+		
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
@@ -54,9 +54,12 @@ class AdminZonesControllerCore extends AdminController
 				'orderby' => false
 			)
 		);
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
+		$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection'))
+			);
+			
 		parent::__construct();
 	}
 
