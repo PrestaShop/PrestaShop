@@ -323,7 +323,7 @@ class OrderCore extends ObjectModel
 		{
 			$key = $this->id_address_delivery.'_'
 				.$product['id_product'].'_'
-				.$product['id_product_attribute'].'_'
+				.(isset($product['id_product_attribute']) ? $product['id_product_attribute'] : '0').'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
 
 			if (in_array($key, $product_id_list))
