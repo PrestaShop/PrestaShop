@@ -274,14 +274,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function initialize()
 	{
-		// Get list of excluded uri
-		$dirname = dirname(__FILE__);
-		$directories = scandir($dirname.'/../');
-		$excluded_uris = array();
-		foreach ($directories as $directory)
-			if (is_dir($dirname.'/../'.$directory) && (!preg_match ('/^\./', $directory)))
-				$excluded_uris[] = $directory;
-
 		// Find current shop from URL
 		if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_'))
 		{
@@ -339,23 +331,28 @@ class ShopCore extends ObjectModel
 			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
-			return $shop;
 		}
-
-		$shop = new Shop($id_shop);
-		if (!Validate::isLoadedObject($shop) || !$shop->active || !$id_shop)
+		else
 		{
-			// No shop found ... too bad, let's redirect to default shop
-			$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$shop = new Shop($id_shop);
+			if (!Validate::isLoadedObject($shop) || !$shop->active || !$id_shop)
+			{
+				// No shop found ... too bad, let's redirect to default shop
+				$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 
-			// Hmm there is something really bad in your Prestashop !
-			if (!Validate::isLoadedObject($default_shop))
-				throw new PrestaShopException('Shop not found');
+				// Hmm there is something really bad in your Prestashop !
+				if (!Validate::isLoadedObject($default_shop))
+					throw new PrestaShopException('Shop not found');
 
-			$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.$_SERVER['QUERY_STRING'];
-			header('location: '.$url);
-			exit;
+				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.$_SERVER['QUERY_STRING'];
+				header('location: '.$url);
+				exit;
+			}
 		}
+
+		self::$context_id_shop = $shop->id;
+		self::$context_id_shop_group = $shop->id_shop_group;
+		self::$context = self::CONTEXT_SHOP;
 
 		return $shop;
 	}
