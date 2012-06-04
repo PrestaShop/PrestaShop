@@ -43,7 +43,7 @@
   <tab id="Shopping_Carts" name="Carro de compras"/>
   <tab id="Customer_Service" name="Atenci&#xF3;n al cliente"/>
   <tab id="Contacts" name="Contacto"/>
-  <tab id="Genders" name="Generos"/>
+  <tab id="Social_titles" name="Generos"/>
   <tab id="Outstanding" name="No resuelto"/>
   <tab id="Cart_Rules" name="Reglas de cesta"/>
   <tab id="Catalog_price_rules" name="Reglas de precio del cat&#xE1;logo"/>

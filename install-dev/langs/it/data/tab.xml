@@ -43,7 +43,7 @@
   <tab id="Shopping_Carts" name="Carrelli"/>
   <tab id="Customer_Service" name="Servizio clienti"/>
   <tab id="Contacts" name="Contatti"/>
-  <tab id="Genders" name="Genere"/>
+  <tab id="Social_titles" name="Genere"/>
   <tab id="Outstanding" name="Insoluti"/>
   <tab id="Cart_Rules" name="Regole Carrello"/>
   <tab id="Catalog_price_rules" name="Regole catalogo prezzi"/>
