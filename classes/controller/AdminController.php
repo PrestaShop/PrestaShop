@@ -1366,6 +1366,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif (!$this->ajax)
 		{
+
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
 
@@ -1493,9 +1494,9 @@ class AdminControllerCore extends Controller
 	{
 		if ($this->fields_options && is_array($this->fields_options))
 		{
-			if (isset($this->display) && $this->display != 'options')
+			if (isset($this->display) && $this->display != 'options' && $this->display != 'list')
 				$this->show_toolbar = false;
-			else if (!isset($this->display))
+			else
 				$this->display = 'options';
 
 			unset($this->toolbar_btn);
