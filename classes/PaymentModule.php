@@ -370,7 +370,7 @@ abstract class PaymentModuleCore extends Module
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.$this->l('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
+								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
 								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $currency, false).'</td>
 								<td style="padding: 0.6em 0.4em; text-align: center;">'.$customization_quantity.'</td>
 								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $currency, false).'</td>
@@ -470,7 +470,7 @@ abstract class PaymentModuleCore extends Module
 
 						$cart_rules_list .= '
 						<tr style="background-color:#EBECEE;">
-							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.$this->l('Voucher name:').' '.$cart_rule['obj']->name.'</td>
+							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</td>
 							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $currency, false).'</td>
 						</tr>';
 					}
@@ -564,7 +564,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => sprintf('#%06d', (int)$order->id),
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
-						'{carrier}' => $virtual_product ? $this->l('No carrier') : $carrier->name,
+						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $this->formatProductAndVoucherForEmail($products_list),
 						'{discounts}' => $this->formatProductAndVoucherForEmail($cart_rules_list),
