@@ -354,6 +354,11 @@ abstract class InstallControllerHttp
 		return $this->language->getInformation('support');
 	}
 
+	public function getDocumentationUpgradeLink()
+	{
+		return $this->language->getInformation('documentation_upgrade', true);
+	}
+
 	/**
 	 * Send AJAX response in JSON format {success: bool, message: string}
 	 *

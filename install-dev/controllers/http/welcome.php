@@ -68,6 +68,17 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
 	 */
 	public function display()
 	{
+		$this->can_upgrade = false;
+		if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
+		{
+			@include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+			if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<'))
+			{
+				$this->can_upgrade = true;
+				$this->ps_version = _PS_VERSION_;
+			}
+		}
+
 		$this->displayTemplate('welcome');
 	}
 }
