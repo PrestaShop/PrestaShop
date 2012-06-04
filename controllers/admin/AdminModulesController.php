@@ -889,7 +889,7 @@ class AdminModulesControllerCore extends AdminController
 				$this->serial_modules .= $module->name.' '.$module->version.'-'.($module->active ? 'a' : 'i')."\n";
 			$module_author = $module->author;
 			if (!empty($module_author) && ($module_author != ''))
-				$this->modules_authors[(string)$module_author] = 'notselected';
+				$this->modules_authors[strtolower($module_author)] = 'notselected';
 		}
 		$this->serial_modules = urlencode($this->serial_modules);
 	}
@@ -974,7 +974,7 @@ class AdminModulesControllerCore extends AdminController
 			// setting selected author in authors set
 			$author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
 			$this->modules_authors[$author_selected] = 'selected';
-			if (empty($module->author) || $module->author != $author_selected)
+			if (empty($module->author) || strtolower($module->author) != $author_selected)
 				return true;
 		}
 
