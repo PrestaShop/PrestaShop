@@ -589,30 +589,30 @@ class FrontControllerCore extends Controller
 		exit;
 	}
 
-	protected function canonicalRedirection($canonicalURL = '')
+	protected function canonicalRedirection($canonical_url = '')
 	{
-		if (!$canonicalURL || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET')
+		if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET')
 			return;
 
-		$matchUrl = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-		$matchUrl = rawurldecode($matchUrl);
-		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonicalURL), '/').'([&?].*)?$/', $matchUrl))
+		$match_url = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$match_url = rawurldecode($match_url);
+		if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url))
 		{
 			$params = array();
-			$excludedKey = array('isolang', 'id_lang', 'controller', 'fc');
+			$excluded_key = array('isolang', 'id_lang', 'controller', 'fc');
 			foreach ($_GET as $key => $value)
-				if (!in_array($key, $excludedKey))
+				if (!in_array($key, $excluded_key))
 					$params[$key] = $value;
 
-			$strParams = '';
+			$str_params = '';
 			if ($params)
-				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').http_build_query($params, '', '&');
+				$str_params = ((strpos($canonical_url, '?') === false) ? '?' : '&').http_build_query($params, '', '&');
 
 			header('HTTP/1.0 301 Moved');
 			header('Cache-Control: no-cache');
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
-				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.Tools::safeOutput($strParams).'">'.$canonicalURL.Tools::safeOutput($strParams).'</a>');
-			Tools::redirectLink($canonicalURL.$strParams);
+				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonical_url.Tools::safeOutput($str_params).'">'.$canonical_url.Tools::safeOutput($str_params).'</a>');
+			Tools::redirectLink($canonical_url.$str_params);
 		}
 	}
 
