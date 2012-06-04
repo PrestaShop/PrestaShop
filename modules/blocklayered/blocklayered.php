@@ -1413,13 +1413,10 @@ class BlockLayered extends Module
 					$shop_list = array();
 					if (isset($_POST['checkBoxShopAsso_layered_filter']))
 					{
-						foreach ($_POST['checkBoxShopAsso_layered_filter'] as $id_asso_object => $row)
+						foreach ($_POST['checkBoxShopAsso_layered_filter'] as $id_shop => $row)
 						{
-							foreach ($row as $id_shop => $value)
-							{
-								$assos[] = array('id_object' => (int)$id_layered_filter, 'id_shop' => (int)$id_shop);
-								$shop_list[] = (int)$id_shop;
-							}
+							$assos[] = array('id_object' => (int)$id_layered_filter, 'id_shop' => (int)$id_shop);
+							$shop_list[] = (int)$id_shop;
 						}
 					}
 					else
