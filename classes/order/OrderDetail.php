@@ -525,7 +525,7 @@ class OrderDetailCore extends ObjectModel
 
 		if ($use_taxes)
 			$this->setProductTax($order, $product);
-        $this->setShippingCost($order, $product);
+		$this->setShippingCost($order, $product);
 		$this->setDetailProductPrice($order, $cart, $product);
 
 		// Set order invoice id
