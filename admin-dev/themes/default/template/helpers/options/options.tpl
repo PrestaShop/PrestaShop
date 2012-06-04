@@ -68,7 +68,7 @@
 					<input type="hidden" name="{$key}" value="{$field['value']}" />
 				{else}
 					<div style="clear: both; padding-top:15px;" id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
-					{if $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
+					{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
 						<div class="preference_default_multishop">
 							<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 						</div>
