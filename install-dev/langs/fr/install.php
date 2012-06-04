@@ -194,5 +194,6 @@ return array(
 		'"%s" must be an instane of "InstallXmlLoader"' => '"%s" doit être une instance de "InstallXmlLoader"',
 		'Display' => 'Afficher',
 		'You already have PrestaShop version %1$s installed. If you want to upgrade to the latest version please read our documentation : <a href="%2$s">%2$s</a>' => 'Vous avez déjà PrestaShop version %1$s d\'installé. Si vous souhaitez utiliser la dernière version, merci de vous référer à notre documentation pour la mise à jour : <a href="%2$s">%2$s</a>',
+		'PrestaShop Wizard Installer' => 'Installation de PrestaShop',
 	),
 );
