@@ -836,6 +836,7 @@ class AdminControllerCore extends Controller
 
 		$languages = Language::getLanguages(false);
 
+		$hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
 		foreach ($this->fields_options as $category_data)
 		{
 			if (!isset($category_data['fields']))
@@ -862,7 +863,7 @@ class AdminControllerCore extends Controller
 			foreach ($fields as $field => $values)
 			{
 				// We don't validate fields with no visibility
-				if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Shop::getContext()))
+				if (!$hide_multishop_checkbox && Shop::isFeatureActive() && isset($values['visibility']) && $values['visibility'] > Shop::getContext())
 					continue;
 
 				// Check if field is required
@@ -897,10 +898,10 @@ class AdminControllerCore extends Controller
 			{
 				foreach ($fields as $key => $options)
 				{
-					if (Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
+					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 						continue;
 
-					if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key]))
+					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key]))
 					{
 						Configuration::deleteFromContext($key);
 						continue;

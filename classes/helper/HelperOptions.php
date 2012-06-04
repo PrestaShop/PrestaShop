@@ -52,6 +52,7 @@ class HelperOptionsCore extends Helper
 			$languages = Language::getLanguages(false);
 
 		$use_multishop = false;
+		$hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
 		foreach ($option_list as $category => $category_data)
 		{
 			if (!is_array($category_data))
@@ -66,7 +67,7 @@ class HelperOptionsCore extends Helper
 			$category_data['hide_multishop_checkbox'] = true;
 			foreach ($category_data['fields'] as $key => $field)
 			{
-				if (empty($field['no_multishop_checkbox']))
+				if (empty($field['no_multishop_checkbox']) && !$hide_multishop_checkbox)
 					$category_data['hide_multishop_checkbox'] = false;
 
 				// Set field value unless explicitly denied
