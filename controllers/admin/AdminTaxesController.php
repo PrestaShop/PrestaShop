@@ -34,13 +34,19 @@ class AdminTaxesControllerCore extends AdminController
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		
+	 	$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection'))
+			);
 
 		$this->fields_list = array(
-		'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
-		'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
-		'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false));
+			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
+			'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%', 'width' => 50),
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			);
 
 		$ecotax_desc = '';
 		if (Configuration::get('PS_USE_ECOTAX'))
@@ -50,18 +56,52 @@ class AdminTaxesControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Tax options'),
 				'fields' =>	array(
-					'PS_TAX' => array('title' => $this->l('Enable tax:'), 'desc' => $this->l('Select whether or not to include tax on purchases'), 'cast' => 'intval', 'type' => 'bool'),
-					'PS_TAX_DISPLAY' => array('title' => $this->l('Display tax in cart:'), 'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'), 'cast' => 'intval', 'type' => 'bool'),
-					'PS_TAX_ADDRESS_TYPE' => array('title' => $this->l('Base on:'), 'cast' => 'pSQL', 'type' => 'select', 'list' => array(array('name' => $this->l('Invoice Address'), 'id' => 'id_address_invoice'), array('name' => $this->l('Delivery Address'), 'id' => 'id_address_delivery')), 'identifier' => 'id'),
-					'PS_USE_ECOTAX' => array('title' => $this->l('Use ecotax'), 'desc' => $ecotax_desc, 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX' => array(
+						'title' => $this->l('Enable tax:'),
+						'desc' => $this->l('Select whether or not to include tax on purchases'),
+						'cast' => 'intval', 'type' => 'bool'),
+					'PS_TAX_DISPLAY' => array(
+						'title' => $this->l('Display tax in cart:'),
+						'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'),
+						'cast' => 'intval',
+						'type' => 'bool'),
+					'PS_TAX_ADDRESS_TYPE' => array(
+						'title' => $this->l('Base on:'),
+						'cast' => 'pSQL',
+						'type' => 'select',
+						'list' => array(
+							array(
+								'name' => $this->l('Invoice Address'),
+								'id' => 'id_address_invoice'
+								),
+							array(
+								'name' => $this->l('Delivery Address'),
+								'id' => 'id_address_delivery')
+								),
+						'identifier' => 'id'
+						),
+					'PS_USE_ECOTAX' => array(
+						'title' => $this->l('Use ecotax'),
+						'desc' => $ecotax_desc,
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+						),
 				),
 				'submit' => array()
 			),
 		);
 
 		if (Configuration::get('PS_USE_ECOTAX'))
-			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array('title' => $this->l('Ecotax:'), 'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
-				'cast' => 'intval', 'type' => 'select', 'identifier' => 'id_tax', 'identifier' => 'id_tax_rules_group', 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions());
+			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
+				'title' => $this->l('Ecotax:'),
+				'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
+				'cast' => 'intval',
+				'type' => 'select',
+				'identifier' => 'id_tax',
+				'identifier' => 'id_tax_rules_group',
+				'list' => TaxRulesGroup::getTaxRulesGroupsForOptions()
+				);
 
 		parent::__construct();
 	}

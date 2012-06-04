@@ -41,14 +41,14 @@ class AdminStatesControllerCore extends AdminController
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-
-		$this->bulk_actions = array('delete' => array(
-									'text' => $this->l('Delete selected'),
-									'confirm' => $this->l('Delete selected items?')),
-								'affectzone' => array(
-									'text' => $this->l('Affect a new zone'))
-								);
-
+		
+		$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection')),
+			'affectzone' => array('text' => $this->l('Affect a new zone'))
+			);
+		
 		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),
