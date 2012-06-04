@@ -1115,16 +1115,19 @@ class OrderCore extends ObjectModel
 				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
 			// Update order payment
-			Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
-				SET
-					`id_order_invoice` = '.(int)$order_invoice->id.',
-					`id_order_payment` = (
-						SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
-						INNER JOIN `'._DB_PREFIX_.'orders` o
-						ON o.reference = op.order_reference
-						WHERE id_order = '.(int)$order_invoice->id_order.' LIMIT 1),
-					`id_order` = '.(int)$order_invoice->id_order);
+			$id_order_payment = Db::getInstance()->getValue('
+				SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
+				INNER JOIN `'._DB_PREFIX_.'orders` o
+				ON o.reference = op.order_reference
+				WHERE id_order = '.(int)$order_invoice->id_order);
+			
+			if ($id_order_payment)
+				Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+					SET
+						`id_order_invoice` = '.(int)$order_invoice->id.',
+						`id_order_payment` = '.(int)$id_order_payment.',
+						`id_order` = '.(int)$order_invoice->id_order);
 
 			// Update order cart rule
 			Db::getInstance()->execute('
