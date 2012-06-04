@@ -965,7 +965,7 @@ class ThemeInstallator extends Module
 			if (!($zip->open(_EXPORT_FOLDER_.'archive.zip', ZipArchive::OVERWRITE) === true) || !$zip->addEmptyDir('test') === true)
 				$this->_html .= parent::displayError(sprintf(
 					$this->l('Permission denied. Please set permisssion to 666 on this folder: %s'),
-					EXPORT_FOLDER_
+					_EXPORT_FOLDER_
 				));
 			$zip->close();
 			if ($this->error === false)
