@@ -1503,7 +1503,18 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		// Add product to cart
-		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 0, 'up', new Shop($cart->id_shop));
+		$update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
+			isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+			
+		if ($update_quantity < 0)
+		{
+			// If product has attribute, minimal quantity is set with minimal quantity of attribute
+			$minimal_quantity = ($product_informations['product_attribute_id']) ? Attribute::getAttributeMinimalQty($product_informations['product_attribute_id']) : $product->minimal_quantity;
+			die(Tools::jsonEncode(array('error' => sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity))));
+		}
+		elseif (!$update_quantity)
+			die(Tools::jsonEncode(array('error' => Tools::displayError('You already have the maximum quantity available for this product.', false))));
+		
 		// If order is valid, we can create a new invoice or edit an existing invoice
 		if ($order->hasInvoice())
 		{
@@ -1617,7 +1628,7 @@ class AdminOrdersControllerCore extends AdminController
 		$products = $this->getProducts($order);
 
 		// Get the last product
-		$product = $products[max(array_keys($products))];
+		$product = end($products);
 		$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
