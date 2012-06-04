@@ -2527,6 +2527,46 @@ class AdminControllerCore extends Controller
 		else
 			return false;
 	}
+	
+	/**
+	 * Enable multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkEnableSelection()
+	{
+		return $this->processBulkStatusSelection(1);
+	}
+	
+	/**
+	 * Disable multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkDisableSelection()
+	{
+		return $this->processBulkStatusSelection(0);
+	}
+	
+	/**
+	 * Toggle status of multiple items
+	 *
+	 * @return boolean true if succcess
+	 */
+	protected function processBulkStatusSelection($status)
+	{
+		$result = true;
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			foreach ($this->boxes as $id)
+			{
+				$object = new $this->className((int)$id);
+				$object->active = (int)$status;
+				$result &= $object->update();
+			}
+		}
+		return $result;
+	}
 
 	protected function processBulkAffectZone()
 	{

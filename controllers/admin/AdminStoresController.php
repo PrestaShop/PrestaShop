@@ -58,7 +58,11 @@ class AdminStoresControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'width' => 70, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+	 	$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection'))
+			);
 
 		$this->fields_options = array(
 			'general' => array(
@@ -496,6 +500,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 		);
+
 		return $formFields;
 	}
 

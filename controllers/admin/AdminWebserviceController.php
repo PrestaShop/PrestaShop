@@ -39,7 +39,13 @@ class AdminWebserviceControllerCore extends AdminController
 	 	$this->edit = true;
 	 	$this->delete = true;
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
-
+		
+		$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection'))
+			);
+		
 		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),

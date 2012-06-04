@@ -39,14 +39,14 @@ class AdminCountriesControllerCore extends AdminController
 		$this->requiredDatabase = true;
 
 		$this->context = Context::getContext();
-
-	 	$this->bulk_actions = array('delete' => array(
-										'text' => $this->l('Delete selected'),
-										'confirm' => $this->l('Delete selected items?')),
-									'affectzone' => array(
-										'text' => $this->l('Assign to a new zone'))
-									);
-
+		
+		$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
+			'enableSelection' => array('text' => $this->l('Enable selection')),
+			'disableSelection' => array('text' => $this->l('Disable selection')),
+			'affectzone' => array('text' => $this->l('Assign to a new zone'))
+			);
+		
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 'st'
