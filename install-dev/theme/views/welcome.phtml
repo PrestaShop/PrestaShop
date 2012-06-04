@@ -4,6 +4,10 @@
 	<div class="warnBlock"><?php echo $this->l('PrestaShop requires at least 16M of memory to run, please check the memory_limit directive in php.ini or contact your host provider'); ?></div>
 <?php endif; ?>
 
+<?php if ($this->can_upgrade): ?>
+	<div class="warnBlock"><?php echo $this->l('You already have PrestaShop version %1$s installed. If you want to upgrade to the latest version please read our documentation : <a href="%2$s">%2$s</a>', $this->ps_version, $this->getDocumentationUpgradeLink()) ?></div>
+<?php endif; ?>
+
 <h2><?php echo $this->l('Welcome to the PrestaShop %s Installer.', _PS_INSTALL_VERSION_) ?></h2>
 <p><?php echo $this->l('The installation process should take only few minutes!') ?></p>
 <p><?php echo $this->l('If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s', $this->getDocumentationLink(), $this->getPhone()) ?></p>
@@ -15,7 +19,7 @@
 	<?php foreach ($this->language->getIsoList() as $iso): ?>
 		<li>
 			<label>
-				<input type="radio" value="<?php echo $iso ?>" <?php echo ($iso == $this->language->getLanguageIso()) ? "checked=\"checked\"" : '' ?> name="language" style="vertical-align: middle; margin-right: 0;" />
+				<input type="radio" value="<?php echo $iso ?>" <?php echo ($iso == $this->language->getLanguageIso()) ? 'checked="checked"' : '' ?> name="language" style="vertical-align: middle; margin-right: 0;" />
 				<?php if (file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg')): ?>
 					<img src="langs/<?php echo $iso ?>/flag.jpg" alt="<?php echo $iso ?>" style="vertical-align: middle;" />
 				<?php else: ?>
