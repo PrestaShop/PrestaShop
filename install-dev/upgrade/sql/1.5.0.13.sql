@@ -38,5 +38,5 @@ ALTER TABLE `PREFIX_order_payment`
 -- update for all employee the last ids for notifications
 UPDATE `PREFIX_employee` 
 	SET `id_last_order`= (SELECT max(`id_order`) FROM `PREFIX_orders`),
-	SET `id_last_customer_message`= (SELECT max(`id_customer_message`) FROM `PREFIX_customer_message`),
-	SET `id_last_customer`= (SELECT max(`id_customer`) FROM `PREFIX_customer`);
+	`id_last_customer_message`= (SELECT max(`id_customer_message`) FROM `PREFIX_customer_message`),
+	`id_last_customer`= (SELECT max(`id_customer`) FROM `PREFIX_customer`);
