@@ -30,6 +30,7 @@ function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
 	this.current_request;
+	this.stack_error = [];
 
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
@@ -118,6 +119,7 @@ function ProductTabsManager(){
 					$("#link-"+tab_name).addClass('selected');
 					tab_selector.show();
 				}
+				tab_selector.trigger('loaded');
 			},
 			complete : function(data)
 			{
@@ -127,7 +129,7 @@ function ProductTabsManager(){
 					$('#product-tab-content-wait').hide();
 					tab_selector.trigger('displayed');
 				}
-				tab_selector.trigger('loaded');
+				console.log(tab_selector);
 			},
 			beforeSend : function(data)
 			{
@@ -148,11 +150,25 @@ function ProductTabsManager(){
 
 		if (this.current_request !== undefined)
 		{
-			this.current_request.complete(function(request, status){
-				stack.shift();
+			this.current_request.complete(function(request, status) {
+				if (status === 'abort' || status === 'error')
+					self.stack_error.push(stack.shift());
+				else
+					stack.shift()
 				if (stack.length !== 0 && status !== 'abort')
 				{
 					self.displayBulk(stack);
+				} else if (self.stack_error.length !== 0)
+				{
+					jConfirm('Some tabs was not loaded correctly, do you want to reload them?', 'Confirmation', function(confirm) {
+						if (confirm === true)
+						{
+							self.displayBulk(self.stack_error.slice(0));
+							self.stack_error = [];
+						}
+						else
+							return false;
+					});
 				}
 			});
 		}
