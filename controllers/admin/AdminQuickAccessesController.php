@@ -32,7 +32,6 @@ class AdminQuickAccessesControllerCore extends AdminController
 	 	$this->table = 'quick_access';
 		$this->className = 'QuickAccess';
 	 	$this->lang = true;
-		$this->requiredDatabase = true;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');

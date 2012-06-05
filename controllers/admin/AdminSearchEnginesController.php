@@ -32,7 +32,6 @@ class AdminSearchEnginesControllerCore extends AdminController
 	 	$this->table = 'search_engine';
 	 	$this->className = 'SearchEngine';
 	 	$this->lang = false;
-		$this->requiredDatabase = true;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');

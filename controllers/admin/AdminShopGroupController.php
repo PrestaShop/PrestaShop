@@ -32,7 +32,6 @@ class AdminShopGroupControllerCore extends AdminController
 		$this->table = 'shop_group';
 		$this->className = 'ShopGroup';
 		$this->lang = false;
-		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->addRowAction('edit');

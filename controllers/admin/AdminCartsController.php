@@ -32,7 +32,6 @@ class AdminCartsControllerCore extends AdminController
 		$this->table = 'cart';
 		$this->className = 'Cart';
 		$this->lang = false;
-		$this->requiredDatabase = true;
 
 		$this->addRowAction('view');
 		$this->addRowAction('delete');

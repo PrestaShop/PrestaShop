@@ -36,8 +36,6 @@ class AdminCountriesControllerCore extends AdminController
 
 		$this->addRowAction('edit');
 
-		$this->requiredDatabase = true;
-
 		$this->context = Context::getContext();
 		
 		$this->bulk_actions = array(
