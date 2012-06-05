@@ -2,8 +2,6 @@
 
 global $_LANGADM;
 $_LANGADM = array();
-$_LANGADM['AdminCarriersede4759c9afae620fd586628789fa304'] = 'Activer la sélection';
-$_LANGADM['AdminCarriersab7fd6e250b64a46027a996088fdff74'] = 'Désactiver la sélection';
 $_LANGADM['AdminAccess151648106e4bf98297882ea2ea1c4b0e'] = 'Mise à jour réussie';
 $_LANGADM['AdminAccess4351cfebe4b61d8aa5efa1d020710005'] = 'Voir';
 $_LANGADM['AdminAccess501faad2df9c231576549a068fcf61ca'] = 'Pas de modules installés';
@@ -249,6 +247,7 @@ $_LANGADM['AdminCarriers94f9328aae40bd711c2c1032c9c9411d'] = 'Si la valeur est �
 $_LANGADM['AdminCarriers9d5b8360a1232c6d3e5e005eff4a7131'] = 'Quand vous avez terminé, cliquez sur \"Enregistrer\".';
 $_LANGADM['AdminCarriersa2fb5420f32b0749ad87318f82c0db2c'] = 'Comportement des tranches :';
 $_LANGADM['AdminCarriersa617573fb9cb14e1c414b8f00dd57b6b'] = 'Délai de livraison affiché durant la commande';
+$_LANGADM['AdminCarriersab7fd6e250b64a46027a996088fdff74'] = 'Désactiver la sélection';
 $_LANGADM['AdminCarriersac59c677a41a315dad52c50d476d24a5'] = 'Choisissez un nouveau transporteur par défaut avant de supprimer celui-ci';
 $_LANGADM['AdminCarriersacd7b45c9d50280a52990015b2c24ba8'] = 'Logo :';
 $_LANGADM['AdminCarriersb00b85425e74ed2c85dc3119b78ff2c3'] = 'Transporteur gratuit';
@@ -272,6 +271,7 @@ $_LANGADM['AdminCarrierse6e42855066e7a3ae050b2c698021b14'] = 'Zone :';
 $_LANGADM['AdminCarrierse7ee1cd1aabd8efc05494dd9e11e3598'] = 'Comment créer un nouveau transporteur ?';
 $_LANGADM['AdminCarrierse81c4e4f2b7b93b481e13a8553c2ae1b'] = 'ou';
 $_LANGADM['AdminCarriersec53a8c4f07baed5d8825072c89799be'] = 'État';
+$_LANGADM['AdminCarriersede4759c9afae620fd586628789fa304'] = 'Activer la sélection';
 $_LANGADM['AdminCarriersefca20dbfee520e00c9eed7617c17152'] = 'Largeur maximum gérée par ce transporteur. Mettre à \"0\" ou laisser vide pour ignorer ce champ.';
 $_LANGADM['AdminCarriersf16b5952df8d25ea30b25ff95ee8fedf'] = 'Boutique associée :';
 $_LANGADM['AdminCarriersf172bfcf581aed3daf7cff5c03363e83'] = '\"0\" pour le délai de livraison le plus long, \"9\" pour le délai le plus court';
@@ -2664,6 +2664,7 @@ $_LANGADM['AdminProductsb0ae1c78575f8631338b57015604519b'] = 'Veuillez choisir u
 $_LANGADM['AdminProductsb287d004082f0d743a49dc7360d4fbbe'] = 'La quantité minimale pour commander ce produit (définir 1 pour désactiver cette fonctionnalité)';
 $_LANGADM['AdminProductsb2e3e379189bcd9251937acc4dcf37e8'] = 'Une phrase de description';
 $_LANGADM['AdminProductsb2f40690858b404ed10e62bdf422c704'] = 'Montant';
+$_LANGADM['AdminProductsb486f53c585274d3bfcb3c0423b1984b'] = 'Certain onglets n\'ont pas été chargés correctement, voulez-vous les recharger ?';
 $_LANGADM['AdminProductsb51a231babbab8586d70830dd7c96653'] = 'Partageable';
 $_LANGADM['AdminProductsb54431f36761311b49af51be8407da30'] = 'Longueur (du paquet) :';
 $_LANGADM['AdminProductsb55e509c697e4cca0e1d160a7806698f'] = 'Heure';
