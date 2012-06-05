@@ -40,7 +40,6 @@ class AdminCarriersControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->_defaultOrderBy = 'position';
-		$this->requiredDatabase = true;
 
 		$this->context = Context::getContext();
 

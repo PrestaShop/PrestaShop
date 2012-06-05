@@ -39,8 +39,6 @@ class AdminManufacturersControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->requiredDatabase = true;
-
 		$this->context = Context::getContext();
 
 		$this->fieldImageSettings = array(

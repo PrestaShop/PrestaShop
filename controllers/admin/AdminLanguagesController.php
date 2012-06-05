@@ -35,8 +35,6 @@ class AdminLanguagesControllerCore extends AdminController
 		$this->deleted = false;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
-		$this->requiredDatabase = true;
-
 		$this->context = Context::getContext();
 
  		$this->fieldImageSettings = array(

@@ -42,8 +42,6 @@ class AdminStatusesControllerCore extends AdminController
 			'dir' => 'os'
 		);
 
-		$this->requiredDatabase = true;
-
 		$this->fieldImageSettings = array(
 			'name' => 'icon',
 			'dir' => 'os'
@@ -100,6 +98,12 @@ class AdminStatusesControllerCore extends AdminController
 
 		parent::__construct();
 	}
+	
+	
+	
+	
+	
+	
 
 	public function renderList()
 	{
@@ -149,7 +153,6 @@ class AdminStatusesControllerCore extends AdminController
 
 		// call postProcess() for take care about actions and filters
 		$this->postProcess();
-
 		$this->toolbar_title = $this->l('Return statuses');
 		$list_orders_returns_status = parent::renderList();
 
@@ -393,7 +396,7 @@ class AdminStatusesControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'editstatus':
-				$this->toolbar_btn['save'] = array(
+				$this->toolbar_btn['add'] = array(
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
@@ -411,7 +414,6 @@ class AdminStatusesControllerCore extends AdminController
 					);
 				}
 			break;
-
 			default:
 				parent::initToolbar();
 		}

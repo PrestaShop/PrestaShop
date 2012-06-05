@@ -32,7 +32,6 @@ class AdminStoresControllerCore extends AdminController
 	 	$this->table = 'store';
 		$this->className = 'Store';
 	 	$this->lang = false;
-		$this->requiredDatabase = true;
 		$this->toolbar_scroll = false;
 
 		$this->context = Context::getContext();

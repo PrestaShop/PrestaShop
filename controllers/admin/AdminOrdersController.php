@@ -37,7 +37,6 @@ class AdminOrdersControllerCore extends AdminController
 		$this->addRowAction('view');
 
 		$this->deleted = false;
-		$this->requiredDatabase = false;
 		$this->context = Context::getContext();
 
 		$this->_select = '

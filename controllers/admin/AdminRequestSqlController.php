@@ -41,7 +41,6 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->className = 'RequestSql';
 	 	$this->lang = false;
 		$this->export = true;
-		$this->requiredDatabase = true;
 
 		$this->context = Context::getContext();
 
