@@ -34,7 +34,6 @@ class AdminSearchConfControllerCore extends AdminController
 		$this->table = 'alias';
 		$this->className = 'Alias';
 		$this->lang = false;
-		$this->requiredDatabase = true;
 
 		parent::__construct();
 

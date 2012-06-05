@@ -32,8 +32,6 @@ class AdminGendersControllerCore extends AdminController
 	 	$this->table = 'gender';
 		$this->className = 'Gender';
 		$this->lang = true;
-		$this->requiredDatabase = true;
-
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 

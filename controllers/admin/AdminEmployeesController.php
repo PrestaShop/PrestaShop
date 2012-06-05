@@ -45,8 +45,6 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->requiredDatabase = true;
-
 		$this->context = Context::getContext();
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));

@@ -37,7 +37,6 @@ class AdminAddressesControllerCore extends AdminController
 	 	$this->table = 'address';
 	 	$this->className = 'Address';
 	 	$this->lang = false;
-		$this->requiredDatabase = true;
 		$this->addressType = 'customer';
 		$this->context = Context::getContext();
 
