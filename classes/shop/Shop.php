@@ -864,9 +864,7 @@ class ShopCore extends ObjectModel
 			$tables_import['carrier_lang'] = true;
 		}
 
-		if (isset($tables_import['carrier']))
-			$tables_import['category_lang'] = true;
-
+		$tables_import['category_lang'] = true;
 		if (isset($tables_import['product']))
 			$tables_import['product_lang'] = true;
 
