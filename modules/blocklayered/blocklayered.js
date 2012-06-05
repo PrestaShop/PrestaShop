@@ -55,8 +55,14 @@ $(document).ready(function()
 	{
 		if ($(this).attr('timeout_id'))
 			window.clearTimeout($(this).attr('timeout_id'));
+
+		// IE Hack, setTimeout do not acept the third parameter
+		var reference = this;
 		
 		$(this).attr('timeout_id', window.setTimeout(function(it) {
+			if (!$(it).attr('id'))
+				it = reference;
+			
 			var filter = $(it).attr('id').replace(/^layered_(.+)_range_.*$/, '$1');
 			
 			var value_min = parseInt($('#layered_'+filter+'_range_min').val()); 
@@ -405,19 +411,26 @@ function reloadContent(params_plus)
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
 				$('#product_list').css('filter', '');
 
-			if ($(result.pagination).find('ul.pagination').length)
-			{
-				$('div#pagination').show();
-				$('ul.pagination').each(function () {
-					$(this).replaceWith($(result.pagination).find('ul.pagination'));
-				});
-			}
-			else if (!$('ul.pagination').length)
-			{
-				$('div#pagination').show();
-				$('div#pagination').each(function () {
-					$(this).html($(result.pagination));
-				});
+			if (result.pagination.search(/[^\s]/) > 0) {
+				if ($(result.pagination).find('ul.pagination').length)
+				{
+					$('div#pagination').show();
+					$('ul.pagination').each(function () {
+						$(this).replaceWith($(result.pagination).find('ul.pagination'));
+					});
+				}
+				else if (!$('ul.pagination').length)
+				{
+					$('div#pagination').show();
+					$('div#pagination').each(function () {
+						$(this).html($(result.pagination));
+					});
+				}
+				else
+				{
+					$('ul.pagination').html('');
+					$('div#pagination').hide();
+				}
 			}
 			else
 			{
