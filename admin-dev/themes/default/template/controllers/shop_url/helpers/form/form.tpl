@@ -53,6 +53,14 @@
 				$('#domain_ssl').val($('#domain').val());
 			}
 		});
+
+		$('#virtual_uri').keyup(function()
+		{
+			txt = $('#virtual_uri').val()
+			txt = txt.replace(' ', '-');
+			$('#virtual_uri').val(txt);
+		});
+
 	});
 
 	var shopUrl = {$js_shop_url};
