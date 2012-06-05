@@ -94,6 +94,9 @@
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save the pack.' slashes=1}';
 		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save the product.' slashes=1}';
 		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly URL at least for the default language before you can save the product.' slashes=1}';
+		var reload_tab_title = '{l s='Confirmation' slashes=1}';
+		var reload_tab_description = '{l s='Some tabs was not loaded correctly, do you want to reload them?' slashes=1}';
+
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 		var save_error = {if $save_error}true{else}false{/if};
