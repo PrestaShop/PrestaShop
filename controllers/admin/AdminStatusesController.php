@@ -42,11 +42,6 @@ class AdminStatusesControllerCore extends AdminController
 			'dir' => 'os'
 		);
 
-		$this->fieldImageSettings = array(
-			'name' => 'icon',
-			'dir' => 'os'
-		);
-
 		$this->fields_list = array(
 			'id_order_state' => array(
 				'title' => $this->l('ID'),
