@@ -327,7 +327,7 @@ class ProductComments extends Module
 		$this->_html = '<script type="text/javascript" src="'.$this->_path.'js/moderate.js"></script>
 			<fieldset class="width2">
 				<legend><img src="../img/admin/cog.gif" alt="" title="" />'.$this->l('Configuration').'</legend>
-				<form action="'.$this->_baseUrl.'" method="post" name="comment_configuration">
+				<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_configuration">
 					<label style="padding-top: 0;">'.$this->l('All comments must be validated by an employee').'</label>
 					<div class="margin-form">
 						<input type="radio" name="moderate" id="moderate_on" value="1" '.(Configuration::get('PRODUCT_COMMENTS_MODERATE') ? 'checked="checked" ' : '').'/>
@@ -364,7 +364,7 @@ class ProductComments extends Module
 				if (count($comments))
 				{
 					$this->_html .= '
-					<form action="'.$this->_baseUrl.'" method="post" name="comment_form">
+					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_form">
 					<input type="hidden" name="id_product_comment[]" id="id_product_comment" />
 					<input type="hidden" name="action" id="action" />
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
@@ -413,7 +413,7 @@ class ProductComments extends Module
 				if (count($comments))
 				{
 					$this->_html .= '
-					<form action="'.$this->_baseUrl.'" method="post" name="comment_form">
+					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_form">
 					<input type="hidden" name="id_product_comment[]" id="id_product_comment" />
 					<input type="hidden" name="action" id="action" />
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
@@ -461,10 +461,10 @@ class ProductComments extends Module
 		$languageIds = 'criterion';
 		$this->_html .= '
 		<fieldset class="width2">
-			<legend><img src="'.$this->_path.'img/note.png" alt="" />'.$this->l('Add a new comment criterion').'</legend>
+			<legend><img src="'.Tools::safeOutput($this->_path).'img/note.png" alt="" />'.$this->l('Add a new comment criterion').'</legend>
 				<p style="margin-bottom: 20px;">'.$this->l('You can define several criterions to help your customers during their review. For instance: efficiency, lightness, design.').'<br />
 				<br />'.$this->l('You can add a new criterion below:').'</p>
-				<form action="'.$this->_baseUrl.'" method="post" name="criterion_form">
+				<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="criterion_form">
 				<label>'.$this->l('Name').'</label>
 				<div class="margin-form">
 				<input type="hidden" name="id_product_comment_criterion" value="'.(int)$criterion->id.'" />';
@@ -517,8 +517,8 @@ class ProductComments extends Module
 							<td>'.$criterion['name'].'</td>
 							<td>'.$this->_productCommentsCriterionTypes[(int)$criterion['id_product_comment_criterion_type']].'</td>
 							<td style="text-align:center;"><img src="../img/admin/'.($criterion['active'] ? 'enabled' : 'disabled').'.gif" /></td>
-							<td><a href="'.$this->_baseUrl.'&editCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/edit.gif" alt="'.$this->l('Edit').'" /></a>
-								<a href="'.$this->_baseUrl.'&deleteCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td><tr>';
+							<td><a href="'.Tools::safeOutput($this->_baseUrl).'&editCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/edit.gif" alt="'.$this->l('Edit').'" /></a>
+								<a href="'.Tools::safeOutput($this->_baseUrl).'&deleteCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td><tr>';
 						}
 					$this->_html .= '</tbody></table>';
 				}
@@ -557,11 +557,11 @@ class ProductComments extends Module
 			<fieldset class="width2">
 				<legend><img src="'.$this->_path.'img/note_go.png" alt="" title="" />'.$this->l('Manage criterions scope').'</legend>
 				<p style="margin-bottom: 15px;">'.$this->l('Only criterions restricted to categories or products can be configured below:').'</p>
-				<form action="'.$this->_baseUrl.'" method="post" name="product_criterion_form">
+				<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="product_criterion_form">
 					<label>'.$this->l('Criterion').'</label>
 					<div class="margin-form">
 ">
-						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.$this->_baseUrl.'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
+						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.Tools::safeOutput($this->_baseUrl).'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
 							<option value="--">-- '.$this->l('Choose a criterion').' --</option>';
 						foreach ($criterions as $foo)
 								$this->_html .= '<option value="'.(int)($foo['id_product_comment_criterion']).'" '.($foo['id_product_comment_criterion'] == $id_criterion ? 'selected="selected"' : '').'>'.$foo['name'].'</option>';
@@ -572,7 +572,7 @@ class ProductComments extends Module
 			if ($id_criterion && $criterion->id_product_comment_criterion_type != 1)
 			{
 				$this->_html .='<label for="id_product_comment_criterion">'.($criterion->id_product_comment_criterion_type == 3 ? $this->l('Products') : $this->l('Categories')).'</label>
-					<form action="'.$this->_baseUrl.'" method="post" name="comment_form">
+					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_form">
 						<div id="product_criterions" class="margin-form">
 							<input type="hidden" name="id_criterion" id="id_criterion" value="'.(int)$id_criterion.'" />
 							<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
@@ -617,7 +617,7 @@ class ProductComments extends Module
 				if (count($comments))
 				{
 					$this->_html .= '
-					<form action="'.$this->_baseUrl.'" method="post" name="delete_comment_form">
+					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="delete_comment_form">
 					<input type="hidden" name="delete_id_product_comment[]" id="delete_id_product_comment" />
 					<input type="hidden" name="delete_action" id="delete_action" />
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
