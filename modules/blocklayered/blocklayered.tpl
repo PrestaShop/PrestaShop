@@ -192,7 +192,7 @@ param_product_url = '';
 									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
 									{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range layered_input_range_max layered_input_range" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}"/>
 									<span class="layered_{$filter.type}_range_unit">{$filter.unit}</span>
-									<span class="layered_{$filter.type}_format">{$filter.format}</span>
+									<span class="layered_{$filter.type}_format" style="display:none;">{$filter.format}</span>
 									<script type="text/javascript">
 									{literal}
 										$('#layered_{/literal}{$filter.type}{literal}_range_min').attr('limitValue', {/literal}{$filter.min}{literal});
