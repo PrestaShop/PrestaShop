@@ -158,9 +158,10 @@ function ProductTabsManager(){
 				if (stack.length !== 0 && status !== 'abort')
 				{
 					self.displayBulk(stack);
-				} else if (self.stack_error.length !== 0)
+				}
+				else if (self.stack_error.length !== 0)
 				{
-					jConfirm('Some tabs was not loaded correctly, do you want to reload them?', 'Confirmation', function(confirm) {
+					jConfirm(reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
 							self.displayBulk(self.stack_error.slice(0));
