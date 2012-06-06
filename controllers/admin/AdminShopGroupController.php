@@ -91,15 +91,19 @@ class AdminShopGroupControllerCore extends AdminController
 		$this->list_simple_header = true;
 		parent::initContent();
 
-		unset($this->toolbar_btn);
-		$this->toolbar_btn['new'] = array(
-			'desc' => $this->l('Add new shop group'),
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,		);
-		$this->toolbar_btn['new_2'] = array(
-			'desc' => $this->l('Add new shop'),
-			'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
-			'imgclass' => 'new'
-		);
+		if ($this->display == 'options')
+		{
+			unset($this->toolbar_btn);
+			$this->toolbar_btn['new'] = array(
+				'desc' => $this->l('Add new shop group'),
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+			);
+			$this->toolbar_btn['new_2'] = array(
+				'desc' => $this->l('Add new shop'),
+				'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
+				'imgclass' => 'new'
+			);
+		}
 
 		$this->addJqueryPlugin('cooki');
 		$this->addJqueryPlugin('jstree');
