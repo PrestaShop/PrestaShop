@@ -142,8 +142,7 @@ abstract class ModuleCore
 			if (self::$modules_cache == null && !is_array(self::$modules_cache))
 			{
 				// Join clause is done to check if the module is activated in current shop context
-				$list = Shop::getContextListShopID();
-				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` IN ('.implode(',', $list).')';
+				$sql_limit_shop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` = '.(int)Context::getContext()->shop->id;
 				$sql = 'SELECT m.`id_module`, m.`name`, ('.$sql_limit_shop.') as total FROM `'._DB_PREFIX_.'module` m';
 
 				// Result is cached
@@ -152,7 +151,7 @@ abstract class ModuleCore
 				foreach ($result as $row)
 				{
 					self::$modules_cache[$row['name']] = $row;
-					self::$modules_cache[$row['name']]['active'] = ($row['total'] == count($list)) ? true : false;
+					self::$modules_cache[$row['name']]['active'] = ($row['total'] > 0) ? 1 : 0;
 				}
 			}
 
