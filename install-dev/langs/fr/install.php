@@ -193,7 +193,7 @@ return array(
 		'Fixtures class "%s" not found' => 'La classe "%s" pour les fixtures n\'a pas été trouvée',
 		'"%s" must be an instane of "InstallXmlLoader"' => '"%s" doit être une instance de "InstallXmlLoader"',
 		'Display' => 'Afficher',
-		'You already have PrestaShop version %1$s installed. If you want to upgrade to the latest version please read our documentation : <a href="%2$s">%2$s</a>' => 'Vous avez déjà PrestaShop version %1$s d\'installé. Si vous souhaitez utiliser la dernière version, merci de vous référer à notre documentation pour la mise à jour : <a href="%2$s">%2$s</a>',
+		'<b>Warning: You cannot use anymore this tool to upgrade your store.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Attention: Vous ne pouvez plus utiliser cet outil pour mettre à jour votre boutique.</b><br /><br />Vous avez déjà <b>PrestaShop version %1$s d\'installé.</b><br /><br />Si vous souhaitez utiliser la dernière version, merci de vous référer à notre documentation pour la mise à jour : <a href="%2$s">%2$s</a>',
 		'PrestaShop Wizard Installer' => 'Installation de PrestaShop',
 	),
 );
