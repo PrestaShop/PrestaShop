@@ -57,8 +57,8 @@
   <tab id="Countries" name="Countries"/>
   <tab id="States" name="States"/>
   <tab id="Currencies" name="Currencies"/>
-  <tab id="Tax_Rules" name="Tax Rules"/>
   <tab id="Taxes" name="Taxes"/>
+  <tab id="Tax_Rules" name="Tax Rules"/>
   <tab id="Translations" name="Translations"/>
   <tab id="Modules_1" name="Modules"/>
   <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
