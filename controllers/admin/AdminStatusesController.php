@@ -441,7 +441,7 @@ class AdminStatusesControllerCore extends AdminController
 			$order_return_state = new OrderReturnState((int)$id_order_return_state);
 			
 			if (!$order_return_state->delete())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t dekete the current order return state');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order return state');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
 		}
