@@ -260,7 +260,9 @@ class FrontControllerCore extends Controller
 		/* get page name to display it in body id */
 
 		// Are we in a payment module
-		$module_name = Tools::getValue('module');
+		$module_name = '';
+		if (Validate::isModuleName(Tools::getValue('module')))
+			$module_name = Tools::getValue('module');
 		if (!empty($this->page_name))
 			$page_name = $this->page_name;
 		elseif (!empty($this->php_self))
@@ -601,7 +603,7 @@ class FrontControllerCore extends Controller
 			$params = array();
 			$excluded_key = array('isolang', 'id_lang', 'controller', 'fc');
 			foreach ($_GET as $key => $value)
-				if (!in_array($key, $excluded_key))
+				if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value))
 					$params[$key] = $value;
 
 			$str_params = '';

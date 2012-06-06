@@ -29,7 +29,8 @@ include_once(dirname(__FILE__).'/../config/config.inc.php');
 
 /* Getting cookie or logout */
 require_once(dirname(__FILE__).'/init.php');
-
+if (Tools::getValue('token') != Tools::getAdminTokenLite('AdminEmails'))
+	die(Tools::displayError());
 $smtpChecked = (trim($_POST['mailMethod']) ==  'smtp');
 $smtpServer = $_POST['smtpSrv'];
 $content = urldecode($_POST['testMsg']);

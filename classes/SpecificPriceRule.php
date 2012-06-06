@@ -108,8 +108,8 @@ class SpecificPriceRuleCore extends ObjectModel
 			$result = Db::getInstance()->insert('specific_price_rule_condition', array(
 				'id_specific_price_rule_condition' => '',
 				'id_specific_price_rule_condition_group' => (int)$id_specific_price_rule_condition_group,
-				'type' => $condition['type'],
-				'value' => $condition['value'],
+				'type' => pSQL($condition['type']),
+				'value' => (float)$condition['value'],
 			));
 			if (!$result)
 				return false;

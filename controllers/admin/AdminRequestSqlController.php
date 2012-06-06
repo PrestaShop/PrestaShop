@@ -285,7 +285,8 @@ class AdminRequestSqlControllerCore extends AdminController
 	public function generateExport()
 	{
 		$id = Tools::getValue($this->identifier);
-
+		if (!Validate::isFileName($id))
+			die(Tools::displayError());
 		$file = 'request_sql_'.$id.'.csv';
 		if ($csv = fopen(_PS_ADMIN_DIR_.'/export/'.$file, 'w'))
 		{
