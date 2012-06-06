@@ -5,7 +5,12 @@
 <?php endif; ?>
 
 <?php if ($this->can_upgrade): ?>
-	<div class="warnBlock"><?php echo $this->l('You already have PrestaShop version %1$s installed. If you want to upgrade to the latest version please read our documentation : <a href="%2$s">%2$s</a>', $this->ps_version, $this->getDocumentationUpgradeLink()) ?></div>
+	<div class="warnBlock">
+		<img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
+		<?php echo $this->l(
+			'<b>Warning: You cannot use anymore this tool to upgrade your store.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version please read our documentation: <a href="%2$s">%2$s</a>',
+			$this->ps_version, $this->getDocumentationUpgradeLink()
+		) ?></div>
 <?php endif; ?>
 
 <h2><?php echo $this->l('Welcome to the PrestaShop %s Installer.', _PS_INSTALL_VERSION_) ?></h2>
