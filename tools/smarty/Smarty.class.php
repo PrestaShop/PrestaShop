@@ -1502,8 +1502,8 @@ function smartyAutoload($class)
         'smarty_resource_recompiled' => true,
     );
 
-    if (!strncmp($_class, 'smarty_internal_', 16) || isset($_classes[$_class])) {
-        include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
+    if (preg_match('/^[0-9a-z_-]+$/i', $_class) && !strncmp($_class, 'smarty_internal_', 16) || isset($_classes[$_class])) {
+       include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
     }
 }
 
