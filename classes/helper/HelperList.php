@@ -550,7 +550,7 @@ class HelperListCore extends Helper
 				case 'date':
 				case 'datetime':
 					if (is_string($value))
-						$value = unserialize($value);
+						$value = Tools::unSerialize($value);
 					if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1]))
 						$value = '';
 					$name = $this->table.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);

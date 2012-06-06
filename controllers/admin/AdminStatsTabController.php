@@ -154,7 +154,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$tpl = $this->createTemplate('stats.tpl');
 
-		if (!($module_name = Tools::getValue('module')) && ($module_instance = Module::getInstanceByName('statsforecast')) && $module_instance->active)
+		if ((!($module_name = Tools::getValue('module')) || !Validate::isModuleName($module_name)) && ($module_instance = Module::getInstanceByName('statsforecast')) && $module_instance->active)
 			$module_name = 'statsforecast';
 
 		if ($module_name)
@@ -163,7 +163,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 			if (!isset($module_instance))
 				$module_instance = Module::getInstanceByName($module_name);
-
+				
 			if ($module_instance && $module_instance->active)
 				$hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
 		}

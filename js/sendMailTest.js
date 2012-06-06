@@ -61,7 +61,8 @@ function verifyMail(testMsg, testSubject)
 				"smtpPort"		: $("input[name=PS_MAIL_SMTP_PORT]").val(),
 				"smtpEnc"		: $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
 				"testMsg"		: textMsg,
-				"testSubject"	: textSubject
+				"testSubject"	: textSubject,
+				"token"			: token_mail
 			},
 		   success: function(ret)
 		   {

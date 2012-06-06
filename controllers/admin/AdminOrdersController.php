@@ -805,7 +805,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitAddOrder') && ($id_cart = Tools::getValue('id_cart')) &&
 			($module_name = Tools::getValue('payment_module_name')) &&
-			($id_order_state = Tools::getValue('id_order_state')))
+			($id_order_state = Tools::getValue('id_order_state')) && Validate::isModuleName($module_name))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
