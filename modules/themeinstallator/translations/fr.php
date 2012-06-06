@@ -63,6 +63,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a33388a338ee2b199d66112
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_cd8d9cc19984ccf9d314eee5eebfc2cc'] = 'Importer depuis le serveur FTP';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_94f2371003860a92b12bf4c66b2851ac'] = 'Sélectionnez l\'archive';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_43eed730e20e1fc8e2245e20046733ea'] = 'Sélectionnez le fichier .zip que vous souhaitez utiliser (déjà mis en ligne dans votre répertoire %s)';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_ed5778790800282a0e2044e50ac20de3'] = 'Vous n\'avez pas les droits. S\'il vous plaît, veuillez paramétrer les droits du dossier (666) suivant : %s';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ad8161d79988145440845b927e3708d4'] = 'Remplissez ce formulaire pour exporter le thème dans un fichier .zip';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_1031371f906a92891140f384d04b3421'] = 'Une erreur est survenue durant la génération de l\'archive';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_2c19b34eebed37ccc288c518006615b3'] = 'Il y a une erreur de syntaxe dans le champ \"e-mail\" !';
