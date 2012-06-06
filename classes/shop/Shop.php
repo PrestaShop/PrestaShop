@@ -770,6 +770,14 @@ class ShopCore extends ObjectModel
 	{
 		return self::$context_id_shop_group;
 	}
+	
+	public static function getContextShopGroup()
+	{
+		static $context_shop_group = null;
+		if ($context_shop_group === null)
+			$context_shop_group = new ShopGroup((int)self::$context_id_shop_group);
+		return $context_shop_group;
+	}
 
 	/**
 	 * Add an sql restriction for shops fields

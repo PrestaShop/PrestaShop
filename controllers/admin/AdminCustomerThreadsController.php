@@ -426,7 +426,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']))
+		if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']) && Validate::isFileName($_GET['filename']))
 			AdminCustomerThreadsController::openUploadedFile();
 
 		return parent::initContent();
@@ -449,7 +449,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'.jpg' => 'image/jpeg',
 		);
 
-		$extension = '';
+		$extension = false;
 		foreach ($extensions as $key => $val)
 			if (substr($filename, -4) == $key || substr($filename, -5) == $key)
 			{
@@ -457,6 +457,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				break;
 			}
 
+		if (!$extension || !Validate::isFileName($filename))
+			die(Tools::displayError());
+			
 		ob_end_clean();
 		header('Content-Type: '.$extension);
 		header('Content-Disposition:attachment;filename="'.$filename.'"');

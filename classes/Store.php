@@ -122,7 +122,7 @@ class StoreCore extends ObjectModel
 
 	public function getWsHours()
 	{
-		return implode(';', unserialize($this->hours));
+		return implode(';', Tools::unSerialize($this->hours));
 	}
 
 	public function setWsHours($hours)

@@ -418,7 +418,7 @@ class AdminControllerCore extends Controller
 				if ($field = $this->filterToField($key, $filter))
 				{
 					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));					if (($type == 'date' || $type == 'datetime') && is_string($value))
-						$value = unserialize($value);
+						$value = Tools::unSerialize($value);
 					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
 
 					// Assignement by reference

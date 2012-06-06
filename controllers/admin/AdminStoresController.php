@@ -303,7 +303,7 @@ class AdminStoresControllerCore extends AdminController
 
 		$hours = $this->getFieldValue($obj, 'hours');
 		if (!empty($hours))
-			$hours_unserialized = unserialize($hours);
+			$hours_unserialized = Tools::unSerialize($hours);
 
 		$this->fields_value = array(
 			'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),

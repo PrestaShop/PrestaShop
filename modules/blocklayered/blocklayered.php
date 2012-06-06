@@ -1362,7 +1362,7 @@ class BlockLayered extends Module
 		$layered_filter_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter');
 		foreach ($layered_filter_list as $layered_filter)
 		{
-			$data = unserialize($layered_filter_list['filters']);
+			$data = Tools::unSerialize($layered_filter_list['filters']);
 			if (in_array((int)$params['category']->id, $data['categories']))
 			{
 				unset($data['categories'][array_search((int)$params['category']->id, $data['categories'])]);
@@ -2224,7 +2224,7 @@ class BlockLayered extends Module
 						{
 							$data = Db::getInstance()->getValue('SELECT data FROM `'._DB_PREFIX_.'layered_friendly_url` WHERE `url_key` = \''.md5('/'.$attribute_name.'-'.$url_parameter).'\'');
 							if ($data)
-								foreach (unserialize($data) as $key_params => $params)
+								foreach (Tools::unSerialize($data) as $key_params => $params)
 								{
 									if (!isset($selected_filters[$key_params]))
 										$selected_filters[$key_params] = array();
@@ -3457,7 +3457,7 @@ class BlockLayered extends Module
 		{
 			$layered_filter = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$id_layered_filter);
 			if ($layered_filter && isset($layered_filter['filters']) && !empty($layered_filter['filters']))
-				$layered_values = unserialize($layered_filter['filters']);
+				$layered_values = Tools::unSerialize($layered_filter['filters']);
 			if (isset($layered_values['categories']) && count($layered_values['categories']))
 				foreach ($layered_values['categories'] as $id_category)
 					$category_box[] = (int)$id_category;
@@ -4122,7 +4122,7 @@ class BlockLayered extends Module
 		$values = false;
 		foreach ($res as $filter_template)
 		{
-			$data = unserialize($filter_template['filters']);
+			$data = Tools::unSerialize($filter_template['filters']);
 			foreach ($data['categories'] as  $id_category)
 			{
 				$n = 0;

@@ -164,7 +164,7 @@ class UpgraderCore
 	 */
 	public function loadFromConfig()
 	{
-		$last_version_check = @unserialize(Configuration::get('PS_LAST_VERSION'));
+		$last_version_check = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
 		if($last_version_check)
 		{
 			if (isset($last_version_check['name']))
