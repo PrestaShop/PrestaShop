@@ -129,7 +129,6 @@ function ProductTabsManager(){
 					$('#product-tab-content-wait').hide();
 					tab_selector.trigger('displayed');
 				}
-				console.log(tab_selector);
 			},
 			beforeSend : function(data)
 			{
