@@ -2,6 +2,7 @@
 
 global $_ERRORS;
 $_ERRORS = array();
+$_ERRORS['00877b7927a1dd2521d05d2c905c64c6'] = 'Vous n\'avez pas assez de quantité utilisable. Impossible d\'en supprimer %d sur %d.';
 $_ERRORS['00a787b177245e0a3b230263621fdcae'] = 'La date indiquée n\'est pas valide';
 $_ERRORS['00fbde21769ef563a5e3502bcd18c4f2'] = 'La valeur de la remise est incorrecte (un pourcentage est attendu)';
 $_ERRORS['01816dd287bcb3b88ad3f63970ce045f'] = 'Quantité non valable';
@@ -15,7 +16,6 @@ $_ERRORS['059d29a2088bcf0b9bae76a11f3a07e3'] = 'Le service de validation du num�
 $_ERRORS['05f89c31663a09912af64c539524588f'] = 'Numéro de TVA non valable';
 $_ERRORS['07523464c7e282675a7f0181c321bdc7'] = 'Vous ne pouvez pas désactiver une URL principale';
 $_ERRORS['0773497a933e6c2b618678b02cbdf7a1'] = 'Impossible de créer l\'image \"Aucune image\" dans le dossier des catégories.';
-$_ERRORS['07769d17f9ccd3b90a8d5cb54a5c5609'] = 'Cette catégorie n\'existe pas';
 $_ERRORS['0791970c961c09eb8caaa61aba6a3ca4'] = 'Une erreur est survenue lors de l\'enregistrement du message.';
 $_ERRORS['07b8c09e490f7afbdcfa9cd5bfcfd4a9'] = 'Une erreur est survenue lors de la mise en ligne de l\'image.';
 $_ERRORS['082affe316f8b191109538194f9af07d'] = 'Merci de choisir une langue et un thème.';
@@ -461,6 +461,7 @@ $_ERRORS['be694d5db9d32c43014995441a5939c4'] = 'Nom de fichier non valable';
 $_ERRORS['be9fddade234ff9b16a1d92d62963b8e'] = 'Propriété d\'état invalide.';
 $_ERRORS['beab08f29e61dd1802f7fcd23b41931d'] = 'Impossible de mettre à jour les informations';
 $_ERRORS['bede40c4ff02d7aa6d924fabcfc53c21'] = 'Type de remise non valable';
+$_ERRORS['befed760df818825e3828b470a471a59'] = 'Vous n\'avez pas assez de quantité réservée. Impossible d\'en supprimer %d sur %d.';
 $_ERRORS['bf15c16588ad281d34bc455f51e0cd97'] = 'Vous ne pouvez pas changer la devise';
 $_ERRORS['bf1af96a1c2127082822a24bca0dfa4f'] = 'Ce module est déjà installé :';
 $_ERRORS['bf57e7854dd04a357194e6752c094bd6'] = 'La facture n\'est pas valable';
