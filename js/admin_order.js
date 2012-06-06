@@ -654,7 +654,7 @@ function init()
 			return false;
 		}
 
-		if (confirm(txt_confirm+2))
+		if (confirm(txt_confirm))
 		{
 			var element = $(this);
 			
@@ -737,7 +737,7 @@ function init()
 
 	$('.delete_product_line').unbind('click');
 	$('.delete_product_line').click(function() {
-		if (!confirm(txt_confirm+1))
+		if (!confirm(txt_confirm))
 			return false;
 
 		var tr_product = $(this).parent().parent();
