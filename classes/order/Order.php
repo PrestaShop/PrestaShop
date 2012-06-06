@@ -781,8 +781,7 @@ class OrderCore extends ObjectModel
 		$order_state = $this->getCurrentOrderState();
 		if ($order_state && $order_state->paid && $order_state->shipped)
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	/**
