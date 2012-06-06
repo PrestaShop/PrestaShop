@@ -224,7 +224,7 @@ function refreshProductLineView(element, view)
 			element_list = $(element.parent().parent());
 
 	var current_product_line = element.parent().parent();
-	current_product_line.before(new_product_line);
+	current_product_line.replaceWith(new_product_line);
 	current_product_line.remove();
 	element_list.remove();
 
@@ -295,6 +295,7 @@ function closeAddProduct()
  */
 function init()
 {
+	$('.add_product').unbind('click');
 	$('.add_product').click(function() {
 		$('.cancel_product_change_link:visible').trigger('click');
 		$('.add_product_fields').show();
@@ -389,6 +390,7 @@ function init()
 		}
 	});
 
+	$('select#add_product_product_attribute_id').unbind('change');
 	$('select#add_product_product_attribute_id').change(function() {
 		$('#add_product_product_price_tax_incl').val(current_product.combinations[$(this).val()].price_tax_incl);
 		$('#add_product_product_price_tax_excl').val(current_product.combinations[$(this).val()].price_tax_excl);
@@ -400,6 +402,7 @@ function init()
 		$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
 	});
 
+	$('input#add_product_product_quantity').unbind('keyup');
 	$('input#add_product_product_quantity').keyup(function() {
 		var quantity = parseInt($(this).val());
 		if (quantity < 1 || isNaN(quantity))
@@ -415,6 +418,7 @@ function init()
 			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');;
 	});
 
+	$('#submitAddProduct').unbind('click');
 	$('#submitAddProduct').click(function(e) {
 		e.preventDefault();
 		stopAjaxQuery();
@@ -488,6 +492,7 @@ function init()
 		}
 	});
 
+	$('.edit_shipping_number_link').unbind('click');
 	$('.edit_shipping_number_link').click(function() {
 		$(this).parent().find('.shipping_number_show').hide();
 		$(this).parent().find('.shipping_number_edit').show();
@@ -498,6 +503,7 @@ function init()
 		return false;
 	});
 
+	$('.cancel_shipping_number_link').unbind('click');
 	$('.cancel_shipping_number_link').click(function() {
 		$(this).parent().find('.shipping_number_show').show();
 		$(this).parent().find('.shipping_number_edit').hide();
@@ -508,6 +514,7 @@ function init()
 		return false;
 	});
 
+	$('#add_product_product_invoice').unbind('change');
 	$('#add_product_product_invoice').change(function() {
 		if ($(this).val() == '0')
 			$('#new_invoice').slideDown('slow');
@@ -515,6 +522,7 @@ function init()
 			$('#new_invoice').slideUp('slow');
 	});
 
+	$('#add_product_product_price_tax_excl').unbind('keyup');
 	$('#add_product_product_price_tax_excl').keyup(function() {
 		var price_tax_excl = parseFloat($(this).val());
 		if (price_tax_excl < 0 || isNaN(price_tax_excl))
@@ -527,6 +535,7 @@ function init()
 		addProductRefreshTotal();
 	});
 
+	$('#add_product_product_price_tax_incl').unbind('keyup');
 	$('#add_product_product_price_tax_incl').keyup(function() {
 		var price_tax_incl = parseFloat($(this).val());
 		if (price_tax_incl < 0 || isNaN(price_tax_incl))
@@ -539,6 +548,7 @@ function init()
 		addProductRefreshTotal();
 	});
 
+	$('.edit_product_change_link').unbind('click');
 	$('.edit_product_change_link').click(function() {
 		$('.add_product_fields').hide();
 		$('.standard_refund_fields').hide();
@@ -581,6 +591,11 @@ function init()
 					element_list.find('td.cancelQuantity').hide();
 					element_list.find('td.product_invoice').show();
 
+					$('td.product_action').attr('colspan', 3);
+					$('th.edit_product_fields').show();
+					$('th.edit_product_fields').attr('colspan',  2);
+					element_list.find('td.product_action').attr('colspan', 1);
+
 					element.parent().children('.delete_product_line').hide();
 					element.parent().children('.edit_product_change_link').hide();
 					element.parent().children('input[name=submitProductChange]').show();
@@ -597,6 +612,7 @@ function init()
 		return false;
 	});
 
+	$('.cancel_product_change_link').unbind('click');
 	$('.cancel_product_change_link').click(function() {
 		current_product = null;
 		$('.edit_product_fields').hide();
@@ -624,6 +640,7 @@ function init()
 		return false;
 	});
 
+	$('input[name=submitProductChange]').unbind('click');
 	$('input[name=submitProductChange]').click(function() {
 		if ($(this).parent().parent().find('td .edit_product_quantity').val() <= 0)
 		{
@@ -637,7 +654,7 @@ function init()
 			return false;
 		}
 
-		if (confirm(txt_confirm))
+		if (confirm(txt_confirm+2))
 		{
 			var element = $(this);
 			
@@ -681,6 +698,7 @@ function init()
 		return false;
 	});
 
+	$('.edit_product_price_tax_excl').unbind('keyup');
 	$('.edit_product_price_tax_excl').keyup(function() {
 		var price_tax_excl = parseFloat($(this).val());
 		if (price_tax_excl < 0 || isNaN(price_tax_excl))
@@ -693,6 +711,7 @@ function init()
 		editProductRefreshTotal($(this));
 	});
 
+	$('.edit_product_price_tax_incl').unbind('keyup');
 	$('.edit_product_price_tax_incl').keyup(function() {
 		var price_tax_incl = parseFloat($(this).val());
 		if (price_tax_incl < 0 || isNaN(price_tax_incl))
@@ -705,6 +724,7 @@ function init()
 		editProductRefreshTotal($(this));
 	});
 
+	$('.edit_product_quantity').unbind('keyup');
 	$('.edit_product_quantity').keyup(function() {
 		var quantity = parseInt($(this).val());
 		if (quantity < 1 || isNaN(quantity))
@@ -715,8 +735,9 @@ function init()
 		editProductRefreshTotal($(this));
 	});
 
+	$('.delete_product_line').unbind('click');
 	$('.delete_product_line').click(function() {
-		if (!confirm(txt_confirm))
+		if (!confirm(txt_confirm+1))
 			return false;
 
 		var tr_product = $(this).parent().parent();
@@ -748,6 +769,7 @@ function init()
 		return false;
 	});
 
+	$('.js-set-payment').unbind('click');
 	$('.js-set-payment').click(function() {
 		var amount = $(this).attr('data-amount');
 		$('input[name=payment_amount]').val(amount);
@@ -759,6 +781,7 @@ function init()
 		return false;
 	});
 
+	$('#add_voucher').unbind('click');
 	$('#add_voucher').click(function() {
 		$(this).parent().parent().hide();
 		$('#voucher_form').parent().show();
@@ -766,6 +789,7 @@ function init()
 		return false;
 	});
 
+	$('#cancel_add_voucher').unbind('click');
 	$('#cancel_add_voucher').click(function() {
 		$('#voucher_form').parent().hide();
 		$('#add_voucher').parent().parent().show();
@@ -773,6 +797,7 @@ function init()
 		return false;
 	});
 
+	$('#discount_type').unbind('click');
 	$('#discount_type').change(function() {
 		// Percent type
 		if ($(this).val() == 1)
@@ -797,6 +822,7 @@ function init()
 		}
 	});
 
+	$('#discount_all_invoices').unbind('change');
 	$('#discount_all_invoices').change(function() {
 		if ($(this).is(':checked'))
 			$('select[name=discount_invoice]').attr('disabled', true);
@@ -804,6 +830,7 @@ function init()
 			$('select[name=discount_invoice]').attr('disabled', false);
 	});
 
+	$('.open_payment_information').unbind('click');
 	$('.open_payment_information').click(function() {
 		if ($(this).parent().parent().next('tr').is(':visible'))
 			$(this).parent().parent().next('tr').hide();
