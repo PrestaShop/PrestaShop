@@ -177,11 +177,11 @@
     <tab id="Currencies" id_parent="Localization" active="1">
       <class_name>AdminCurrencies</class_name>
     </tab>
-    <tab id="Tax_Rules" id_parent="Localization" active="1">
-      <class_name>AdminTaxRulesGroup</class_name>
-    </tab>
     <tab id="Taxes" id_parent="Localization" active="1">
       <class_name>AdminTaxes</class_name>
+    </tab>
+    <tab id="Tax_Rules" id_parent="Localization" active="1">
+      <class_name>AdminTaxRulesGroup</class_name>
     </tab>
     <tab id="Translations" id_parent="Localization" active="1">
       <class_name>AdminTranslations</class_name>
