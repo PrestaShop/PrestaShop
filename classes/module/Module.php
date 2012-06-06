@@ -1459,6 +1459,19 @@ abstract class ModuleCore
 		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
 
+	public static function isEnabled($module_name)
+	{
+		if (!Cache::isStored('Module::isEnabled'.$module_name))
+		{
+			$active = false;
+			$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+			if (Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$id_module.' AND `id_shop` = '.(int)Context::getContext()->shop->id))
+				$active = true;
+			Cache::store('Module::isEnabled'.$module_name, (bool)$active);
+		}
+		return Cache::retrieve('Module::isEnabled'.$module_name);
+	}
+
 	public function isRegisteredInHook($hook)
 	{
 		if (!$this->id)
