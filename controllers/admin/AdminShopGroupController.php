@@ -42,6 +42,8 @@ class AdminShopGroupControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
+		$this->show_toolbar = false;
+
 		$this->fields_list = array(
 			'id_shop_group' => array(
 				'title' => $this->l('ID'),
@@ -84,19 +86,20 @@ class AdminShopGroupControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initToolbar()
-	{
-		parent::initToolbar();
-
-		$this->show_toolbar = false;
-		if (isset($this->toolbar_btn['new']))
-			$this->toolbar_btn['new']['desc'] = $this->l('Add new shop group');
-	}
-
 	public function initContent()
 	{
 		$this->list_simple_header = true;
 		parent::initContent();
+
+		unset($this->toolbar_btn);
+		$this->toolbar_btn['new'] = array(
+			'desc' => $this->l('Add new shop group'),
+			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,		);
+		$this->toolbar_btn['new_2'] = array(
+			'desc' => $this->l('Add new shop'),
+			'href' => $this->context->link->getAdminLink('AdminShop').'&amp;addshop',
+			'imgclass' => 'new'
+		);
 
 		$this->addJqueryPlugin('cooki');
 		$this->addJqueryPlugin('jstree');
@@ -287,6 +290,25 @@ class AdminShopGroupControllerCore extends AdminController
 	{
 		//Reset available quantitites
 		StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
+	}
+
+	public function renderOptions()
+	{
+		if ($this->fields_options && is_array($this->fields_options))
+		{
+			$this->display = 'options';
+			$this->show_toolbar = true;
+
+			unset($this->toolbar_btn);
+			$this->initToolbar();
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
+			$helper->id = $this->id;
+			$helper->tpl_vars = $this->tpl_option_vars;
+			$options = $helper->generateOptions($this->fields_options);
+
+			return $options;
+		}
 	}
 }
 
