@@ -290,6 +290,7 @@ class OrderHistoryCore extends ObjectModel
 			$context = Context::getContext();
 		$order = new Order($this->id_order);
 		$last_order_state = $order->getCurrentOrderState();
+		$new_order_state = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT'));
 
 		if (!parent::add($autodate))
 			return false;
@@ -313,11 +314,6 @@ class OrderHistoryCore extends ObjectModel
 
 			// An additional email is sent the first time a virtual item is validated
 			$virtual_products = $order->getVirtualProducts();
-
-			$new_order_state = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT'));
-			// Update id_order_state attribute in Order
-			$order->current_state = $new_order_state->id;
-			$order->update();
 
 			if ($virtual_products && (!$last_order_state || !$last_order_state->logable) && $new_order_state && $new_order_state->logable)
 			{
@@ -354,6 +350,10 @@ class OrderHistoryCore extends ObjectModel
 			if (Validate::isLoadedObject($order))
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname']);
 		}
+
+		// Update id_order_state attribute in Order
+		$order->current_state = $new_order_state->id;
+		$order->update();
 
 		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
 
