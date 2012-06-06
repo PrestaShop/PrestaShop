@@ -453,7 +453,7 @@ class CartCore extends ObjectModel
 		);
 
 		// @todo test if everything is ok, then refactorise call of this method
-		Product::sqlStock('cp', 'cp', false, null, $sql);
+		$sql->join(Product::sqlStock('cp', 'cp'));
 
 		// Build WHERE clauses
 		$sql->where('cp.`id_cart` = '.(int)$this->id);
