@@ -1813,7 +1813,7 @@ class ProductCore extends ObjectModel
 		);
 		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-		Product::sqlStock('p', 0, false, null, $sql);
+		$sql->join(Product::sqlStock('p', 0));
 
 		$sql->where('product_shop.`active` = 1');
 		if ($front)
@@ -2672,48 +2672,29 @@ class ProductCore extends ObjectModel
 	 * @param string $productAlias Alias of product table
 	 * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
 	 * @param bool $innerJoin LEFT JOIN or INNER JOIN
-	 * @param Context $context
+	 * @param Shop $shop
 	 * @return string
 	 */
-	public static function sqlStock($product_alias, $product_attribute = 0, $inner_join = false, Shop $shop = null, DbQuery $sql = null)
+	public static function sqlStock($product_alias, $product_attribute = 0, $inner_join = false, Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		if ($sql)
-		{
-			// @todo remove this code when query builder is accepted or removed
-			$method = ($inner_join) ? 'innerJoin' : 'leftJoin';
-			$sql->$method('stock_available', 'stock', 'stock.id_product = '.pSQL($product_alias).'.id_product');
-			if (!is_null($product_attribute))
-			{
-				if (!Combination::isFeatureActive())
-					$sql->where('stock.id_product_attribute = 0');
-				else if (is_numeric($product_attribute))
-					$sql->where('stock.id_product_attribute = '.$product_attribute);
-				else if (is_string($product_attribute))
-					$sql->where('stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)');
-			}
-			$sql = StockAvailable::addSqlShopRestriction($sql, $shop->id, 'stock');
-		}
-		else
-		{
-			$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
-				JOIN '._DB_PREFIX_.'stock_available stock
-				ON (stock.id_product = '.pSQL($product_alias).'.id_product';
+		$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
+			JOIN '._DB_PREFIX_.'stock_available stock
+			ON (stock.id_product = '.pSQL($product_alias).'.id_product';
 
-			if (!is_null($product_attribute))
-			{
-				if (!Combination::isFeatureActive())
-					$sql .= ' AND stock.id_product_attribute = 0';
-				else if (is_numeric($product_attribute))
-					$sql .= ' AND stock.id_product_attribute = '.$product_attribute;
-				else if (is_string($product_attribute))
-					$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)';
-			}
-
-			$sql .= StockAvailable::addSqlShopRestriction(null, $shop->id, 'stock').' )';
+		if (!is_null($product_attribute))
+		{
+			if (!Combination::isFeatureActive())
+				$sql .= ' AND stock.id_product_attribute = 0';
+			else if (is_numeric($product_attribute))
+				$sql .= ' AND stock.id_product_attribute = '.$product_attribute;
+			else if (is_string($product_attribute))
+				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)';
 		}
+
+		$sql .= StockAvailable::addSqlShopRestriction(null, $shop->id, 'stock').' )';
 
 		return $sql;
 	}
@@ -3098,7 +3079,7 @@ class ProductCore extends ObjectModel
 			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
 		}
 		$sql->where($where);
-		Product::sqlStock('p', 'pa', false, $context->shop, $sql);
+		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
 
 		$result = Db::getInstance()->executeS($sql);
 
