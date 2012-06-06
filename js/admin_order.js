@@ -221,11 +221,10 @@ function refreshProductLineView(element, view)
 	if (element.parent().parent().find('.edit_product_id_order_detail').length)
 		var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
 	if (!element_list.length)
-			element_list = $(element.parent().parent());
+		element_list = $(element.parent().parent());
 
 	var current_product_line = element.parent().parent();
 	current_product_line.replaceWith(new_product_line);
-	current_product_line.remove();
 	element_list.remove();
 
 	new_product_line.find('td').each(function() {
