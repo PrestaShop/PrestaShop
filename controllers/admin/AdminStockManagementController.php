@@ -681,7 +681,7 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
 					$not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
 					if ($usable_quantity_in_stock < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity (usable or not). Could not remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Could not remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
 					else if ($not_usable_quantity < $quantity)
 						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough quantity (not usable). Could not remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
 					else
