@@ -31,7 +31,6 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_4395d1c88a7f0796edc652d2b57bc664'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'Aucun message';
 $_MODULE['<{mailalerts}prestashop>mailalerts_1d744a9ad1dac20645cfc4a36b77323b'] = 'image(s)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9137796c15dd92e5553c3f29574d0968'] = 'Code de réduction :';
-$_MODULE['<{mailalerts}prestashop>mailalerts_4c9120f1a5947445c0e9620254ceb30b'] = 'Nouvelle commande';
 $_MODULE['<{mailalerts}prestashop>mailalerts-account_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mon compte';
 $_MODULE['<{mailalerts}prestashop>mailalerts-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Mes alertes';
 $_MODULE['<{mailalerts}prestashop>mailalerts-account_8bb23c2ae698681ebb650f43acb54dab'] = 'Aucune alerte mail.';
