@@ -503,7 +503,7 @@ class ToolsCore
 	public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
 	{
 		static $default_currency = null;
-		
+
 		if ($default_currency === null)
 			$default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 
@@ -550,8 +550,9 @@ class ToolsCore
 			$amount *= $currency_to->conversion_rate;
 		else
 		{
+            $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
 			// Convert amount to default currency (using the old currency rate)
-			$amount = Tools::ps_round($amount / $currency_from->conversion_rate, 2);
+			$amount = Tools::ps_round($amount / $conversion_rate, 2);
 			// Convert to new currency
 			$amount *= $currency_to->conversion_rate;
 		}
@@ -1145,7 +1146,7 @@ class ToolsCore
 	public static function ps_round($value, $precision = 0)
 	{
 		static $method = null;
-		
+
 		if ($method == null)
 			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 
@@ -2125,12 +2126,12 @@ FileETag INode MTime Size
 	{
 		return Tools::apacheModExists('mod_rewrite');
 	}
-	
+
 	public static function unSerialize($serialized, $object = false)
 	{
 		if (is_string($serialized) && (strpos($serialized, 'O:') === false || !preg_match('/(^|;|{|})O:[0-9]+:"/', $serialized)) && !$object || $object)
 			return @unserialize($serialized);
-		
+
 		return false;
 	}
 }
