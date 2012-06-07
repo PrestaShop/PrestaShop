@@ -51,6 +51,7 @@
 	var currencyBlank = '{$currencyBlank|intval}';
 	var txtProduct = "{l s='product'}";
 	var txtProducts = "{l s='products'}";
+	var deliveryAddress = {$cart->id_address_delivery|intval};
 	// ]]>
 	</script>
 	<p style="display:none" id="emptyCartWarning" class="warning">{l s='Your shopping cart is empty.'}</p>
