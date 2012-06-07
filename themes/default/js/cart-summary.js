@@ -543,9 +543,7 @@ function updateCartSummary(json)
 				initial_price_text = '<span style="text-decoration:line-through;">'+initial_price+'</span><br />';
 		}
 
-		key_for_blockcart = json.products[i].id_product+'_'+json.products[i].id_product_attribute;
-		if (json.products[i].id_product_attribute == 0)
-			key_for_blockcart = json.products[i].id_product;
+		key_for_blockcart = json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery;
 
 		$('#cart_block_product_'+key_for_blockcart+' span.quantity').html(json.products[i].cart_quantity);
 
