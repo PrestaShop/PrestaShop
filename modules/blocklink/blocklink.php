@@ -384,12 +384,15 @@ class BlockLink extends Module
 	{
 		$links = $this->getLinks();
 		$languages = Language::getLanguages();
+		$token = Tools::safeOutput(Tools::getValue('token'));
+		if (!Validate::isCleanHtml($token))
+			$token = '';
 		if ($links)
 	 	{
 			$this->_html .= '
 			<script type="text/javascript">
-				var currentUrl = \''.addslashes(AdminController::$currentIndex.'&configure='.$this->name).'\';
-				var token=\''.addslashes(Tools::getValue('token')).'\';
+				var currentUrl = \''.Tools::safeOutput(AdminController::$currentIndex.'&configure='.$this->name).'\';
+				var token=\''.$token.'\';
 				var links = new Array();';
 			foreach ($links as $link)
 	 		{

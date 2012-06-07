@@ -693,7 +693,7 @@
 			$('#carrier_recycled_package').attr('checked', true);
 		else
 			$('#carrier_recycled_package').removeAttr('checked');
-		if (jsonSummary.free_shipping)
+		if (jsonSummary.free_shipping == 1)
 			$('#free_shipping').attr('checked', true);
 		else
 			$('#free_shipping').removeAttr('checked');
