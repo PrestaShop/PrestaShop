@@ -45,3 +45,6 @@ UPDATE `PREFIX_category_shop` cs
 	SET `position` = (SELECT `position` FROM `PREFIX_category` c WHERE cs.`id_category` = c.`id_category`);
 
 ALTER TABLE  `PREFIX_stock_available` CHANGE  `out_of_stock`  `out_of_stock` INT(2) UNSIGNED NOT NULL DEFAULT  '0';
+
+/* PHP:p15013_add_missing_columns(); */;
+
