@@ -38,7 +38,7 @@
 	var currency_format = "{$currency->format}";
 	var currency_blank = "{$currency->blank}";
 	var priceDisplayPrecision = 2;
-	var use_taxes = {$order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
+	var use_taxes = {$order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC};
 	var token = "{$smarty.get.token|escape:'htmlall':'UTF-8'}";
 
 	var txt_add_product_stock_issue = "{l s='You want to add more product than are available in stock, are you sure you want to add this quantity?' js=1}";
