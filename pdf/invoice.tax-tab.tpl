@@ -62,6 +62,15 @@
 				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
+
+				{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
+					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
+						<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
+						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate} %</td>
+						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
+					</tr>
+				{/foreach}
 			</table>
 			{/if}
 		</td>

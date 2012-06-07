@@ -349,11 +349,13 @@ class OrderInvoiceCore extends ObjectModel
 	public function getEcoTaxTaxesBreakdown()
 	{
 		return Db::getInstance()->executeS('
-		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
+		SELECT `ecotax_tax_rate` as `rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$this->id_order.'
-		AND `id_order_invoice` = '.(int)$this->id
+		AND `id_order_invoice` = '.(int)$this->id.'
+		GROUP BY `ecotax_tax_rate`'
 		);
+
 	}
 
 	/**
