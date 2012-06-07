@@ -35,7 +35,7 @@
 		<input type="hidden" value="{$order->id}" name="id_order"/>
 		<h4>
 			<input type="submit" value="{l s='Reorder'}" name="submitReorder" class="button exclusive" />
-			{l s='Order #%s - placed on' sprintf=$order->id|string_format:"%06d"}{dateFormat date=$order->date_add full=0}
+			{l s='Order #%s - placed on' sprintf=$order->id|string_format:"%06d"} {dateFormat date=$order->date_add full=0}
 		</h4>
 	</div>
 </form>
@@ -321,10 +321,10 @@
 			<tr class="item">
 				<td>{$line.date_add}</td>
 				<td>{$line.state_name}</td>
-				<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+				<td>{if $line.weight > 0}{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}{else}-{/if}</td>
 				<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
 				<td>
-					<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+					<span id="shipping_number_show">{if $line.tracking_number}{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}{else}-{/if}</span>
 				</td>
 			</tr>
 			{/foreach}
