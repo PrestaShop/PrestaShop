@@ -73,6 +73,38 @@ function updateAddressSelection()
 			}
 			else
 			{
+				// Update all product keys with the new address id
+				$('#cart_summary .address_'+deliveryAddress).each(function() {
+					$(this)
+						.removeClass('address_'+deliveryAddress)
+						.addClass('address_'+idAddress_delivery);
+					
+					if ($(this).find('.cart_unit span').length > 0 && $(this).find('.cart_unit span').attr('id').length > 0)
+						$(this).find('.cart_unit span').attr('id', $(this).find('.cart_unit span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+
+					if ($(this).find('.cart_total span').length > 0 && $(this).find('.cart_total span').attr('id').length > 0)
+						$(this).find('.cart_total span').attr('id', $(this).find('.cart_total span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+
+					if ($(this).find('.cart_quantity_input').length > 0 && $(this).find('.cart_quantity_input').attr('name').length > 0)
+					{
+						name = $(this).find('.cart_quantity_input').attr('name')+'_hidden';
+						
+						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_'+idAddress_delivery));
+						
+						if ($(this).find('[name='+name+']')> 0)
+							$(this).find('[name='+name+']').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
+					}
+
+					if ($(this).find('.cart_quantity_delete').length > 0 && $(this).find('.cart_quantity_delete').attr('id').length > 0) {
+						$(this).find('.cart_quantity_delete')
+							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'))
+					}
+				});
+
+				// Update global var deliveryAddress
+				deliveryAddress = idAddress_delivery;
+
 				updateCarrierList(jsonData.carrier_data);
 				updatePaymentMethods(jsonData);
 				updateCartSummary(jsonData.summary);
