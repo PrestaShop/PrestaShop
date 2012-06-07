@@ -282,12 +282,12 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				$this->list_countries[] = array('iso' => $iso, 'name' => $lang);
 
 		// Try to detect default country
-		if (!$this->session->shop_country)
+		if (1||!$this->session->shop_country)
 		{
 			$detect_language = $this->language->detectLanguage();
 			if (isset($detect_language['primarytag']))
 			{
-				$this->session->shop_country = (isset($detect_language['subtag'])) ? $detect_language['subtag'] : $detect_language['primarytag'];
+				$this->session->shop_country = strtolower(isset($detect_language['subtag']) ? $detect_language['subtag'] : $detect_language['primarytag']);
 				$this->session->shop_timezone = $this->getTimezoneByIso($this->session->shop_country);
 			}
 		}
