@@ -63,7 +63,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Print PDF delivery slips'),
-				'image' => '../img/t/AdminPdf.gif'
+				'image' => '../img/admin/AdminPdf.gif'
 			),
 			'input' => array(
 				array(
