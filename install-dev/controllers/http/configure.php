@@ -282,7 +282,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				$this->list_countries[] = array('iso' => $iso, 'name' => $lang);
 
 		// Try to detect default country
-		if (1||!$this->session->shop_country)
+		if (!$this->session->shop_country)
 		{
 			$detect_language = $this->language->detectLanguage();
 			if (isset($detect_language['primarytag']))
