@@ -171,7 +171,7 @@
 								</td>
 							</tr>
 						</table>
-						<table class="delivery_option_carrier {if $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
+						<table class="delivery_option_carrier {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
 							{foreach $option.carrier_list as $carrier}
 							<tr>
 								{if !$option.unique_carrier}
