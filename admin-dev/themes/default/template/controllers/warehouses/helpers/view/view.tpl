@@ -69,7 +69,7 @@
 					</tr>
 					<tr>
 						<td>{l s='Stock valuation:'}</td>
-						<td>{$currency->prefix} {$warehouse_value} {$currency->suffix}</td>
+						<td>{$warehouse_value}</td>
 					</tr>
 				</table>
 			</fieldset>

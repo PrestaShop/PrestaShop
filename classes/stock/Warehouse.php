@@ -425,7 +425,7 @@ class WarehouseCore extends ObjectModel
 	public function getStockValue()
 	{
 		$query = new DbQuery();
-		$query->select('SUM(s.`price_te`)');
+		$query->select('SUM(s.`price_te` * s.`physical_quantity`)');
 		$query->from('stock', 's');
 		$query->where('s.`id_warehouse` = '.(int)$this->id);
 
