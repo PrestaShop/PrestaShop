@@ -1511,6 +1511,8 @@ html[xmlns] .clearfix {
 #table_customer thead span{
 	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	filter:  progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F9F9F9', endColorstr='#ECECEC'); /* IE6 & IE7 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#F9F9F9', endColorstr='#ECECEC')"; /* IE8 */
 	color: #000;
 	text-shadow: 0 1px 0 #fff;
 	line-height: 35px;
