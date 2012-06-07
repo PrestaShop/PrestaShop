@@ -389,7 +389,7 @@ class LinkCore
 	 */
 	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false)
 	{
-		$controller = str_replace('.php', '', $controller);
+		$controller = Tools::strReplaceFirst('.php', '', $controller);
 
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
@@ -546,3 +546,4 @@ class LinkCore
 		return Language::getIsoById($id_lang).'/';
 	}
 }
+
