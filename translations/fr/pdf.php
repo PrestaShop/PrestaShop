@@ -70,6 +70,7 @@ $_LANGPDF['PDFe2f324b87eac820c81e4d4a1105dcddf'] = 'Adresses de livraison et fac
 $_LANGPDF['PDFe36ba4b339b83cbb3c807bd0eb5610bc'] = 'QTE';
 $_LANGPDF['PDFe40007b408ac5f66d2c2e6c54f787c99'] = 'Pas de paiement';
 $_LANGPDF['PDFe7bbf027179f23c92bec649fa6ae78e4'] = 'Exempté de TVA conformément au Code Général des Impôts, Art 259B.';
+$_LANGPDF['PDFe92cfa244b5eb9025d07522080468445'] = 'Eco taxe';
 $_LANGPDF['PDFea62a2e28a800c367509773730120a67'] = 'jours après la date de réception de votre commande.';
 $_LANGPDF['PDFea9cf7e47ff33b2be14e6dd07cbcefc6'] = 'Transport';
 $_LANGPDF['PDFf107f5a9ee4ecea58d0f29ae7959baa8'] = 'Désignation';
