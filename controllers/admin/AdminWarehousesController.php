@@ -413,7 +413,7 @@ class AdminWarehousesControllerCore extends AdminController
 			'address' => $address,
 			'shops' => $shops,
 			'warehouse_num_products' => $warehouse->getNumberOfProducts(),
-			'warehouse_value' => Tools::ps_round($warehouse->getStockValue(), 2),
+			'warehouse_value' => Tools::displayPrice(Tools::ps_round($warehouse->getStockValue(), 2), $currency),
 			'warehouse_quantities' => $warehouse->getQuantitiesofProducts(),
 		);
 
