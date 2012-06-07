@@ -40,3 +40,7 @@ UPDATE `PREFIX_employee`
 	SET `id_last_order`= (SELECT max(`id_order`) FROM `PREFIX_orders`),
 	`id_last_customer_message`= (SELECT max(`id_customer_message`) FROM `PREFIX_customer_message`),
 	`id_last_customer`= (SELECT max(`id_customer`) FROM `PREFIX_customer`);
+
+UPDATE `PREFIX_category_shop` cs 
+	SET `position` = (SELECT `position` FROM `PREFIX_category` c WHERE cs.`id_category` = c.`id_category`);
+
