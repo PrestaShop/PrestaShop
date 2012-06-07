@@ -78,7 +78,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (isset($_POST['generate']))
+		if (Tools::isSubmit('generate'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'generate';
@@ -101,7 +101,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');
 		else
 		{
-			$tab = array_values($_POST['options']);
+			$tab = array_values(Tools::getValue('options'));
 			if (count($tab) && Validate::isLoadedObject($this->product))
 			{
 				AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
