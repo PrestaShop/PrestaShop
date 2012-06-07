@@ -1133,7 +1133,6 @@ $_LANGADM['AdminGroupsbafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_LANGADM['AdminGroupsbefcac0f9644a7abee43e69f49252ac4'] = 'Taxes exclues';
 $_LANGADM['AdminGroupsc38266740494aa4980d05c606fccac10'] = 'Groupe clients';
 $_LANGADM['AdminGroupsc59cf956f6bda9274a7e28d32daaaf34'] = 'Réduction : %d%%';
-$_LANGADM['AdminGroupsd1457b72c3fb323a2671125aef3eab5d'] = '?';
 $_LANGADM['AdminGroupsd3b206d196cd6be3a2764c1fb90b200f'] = 'Supprimer la sélection';
 $_LANGADM['AdminGroupse25f0ecd41211b01c83e5fec41df4fe7'] = 'Supprimer les éléments sélectionnés ?';
 $_LANGADM['AdminGroupse7446ea32216e8bf4fa8cb6460b725d6'] = 'Ajouter une réduction sur une catégorie';
