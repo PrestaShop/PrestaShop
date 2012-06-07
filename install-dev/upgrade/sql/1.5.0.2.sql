@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_stock_available` (
   `id_group_shop` int(11) unsigned NOT NULL,
   `quantity` int(10) NOT NULL DEFAULT '0',
   `depends_on_stock` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `out_of_stock` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `out_of_stock` int(2) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_stock_available`),
   KEY `id_shop` (`id_shop`),
   KEY `id_group_shop` (`id_group_shop`),
