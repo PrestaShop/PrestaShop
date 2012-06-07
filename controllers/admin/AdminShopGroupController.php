@@ -86,6 +86,11 @@ class AdminShopGroupControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function viewAccess($disable = false)
+	{
+		return Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+	}
+
 	public function initContent()
 	{
 		$this->list_simple_header = true;
