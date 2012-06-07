@@ -98,7 +98,7 @@ class AdminHomeControllerCore extends AdminController
 		1 => array('image'=>'error.png','color'=>'orange'),
 		2 => array('image'=>'tick.png','color'=>'green'));
 
-		$opti_list[] = null;
+		$opti_list = array();
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
 			$this->context->smarty->assign('hide_tips', Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
