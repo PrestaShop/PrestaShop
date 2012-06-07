@@ -303,7 +303,7 @@ class ParentOrderControllerCore extends FrontController
 			'token_cart' => Tools::getToken(false),
 			'isVirtualCart' => $this->context->cart->isVirtualCart(),
 			'productNumber' => $this->context->cart->nbProducts(),
-			'voucherAllowed' => Configuration::get('PS_VOUCHERS'),
+			'voucherAllowed' => Configuration::get('PS_VOUCHERS') && CartRule::isFeatureActive(),
 			'shippingCost' => $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING),
 			'shippingCostTaxExc' => $this->context->cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
 			'customizedDatas' => $customizedDatas,
