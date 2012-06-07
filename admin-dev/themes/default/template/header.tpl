@@ -51,17 +51,17 @@
 			{/if}
 		{* Notifications vars *}
 		var autorefresh_notifications = '{$autorefresh_notifications}';
-		var new_order_msg = '{l s='A new order has been made on your shop.' slashes=1}';
+		var new_order_msg = '{l s='A new order has been placed on your shop.' slashes=1}';
 		var order_number_msg = '{l s='Order number: ' slashes=1}';
 		var total_msg = '{l s='Total: ' slashes=1}';
 		var from_msg = '{l s='From: ' slashes=1}';
-		var see_order_msg = '{l s='Click here to see that order' slashes=1}';
+		var see_order_msg = '{l s='View this order' slashes=1}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' slashes=1}';
 		var customer_name_msg = '{l s='Customer name: ' slashes=1}';
-		var see_customer_msg = '{l s='Click here to see that customer' slashes=1}';
+		var see_customer_msg = '{l s='View this customer' slashes=1}';
 		var new_msg = '{l s='A new message posted on your shop.' slashes=1}';
 		var excerpt_msg = '{l s='Excerpt: ' slashes=1}';
-		var see_msg = '{l s='Click here to see that message' slashes=1}';
+		var see_msg = '{l s='Read this message' slashes=1}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders' slashes=1}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers' slashes=1}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads' slashes=1}';
@@ -110,7 +110,7 @@
 						</span>
 					<div id="orders_notif_wrapper" class="notifs_wrapper">
 						<h3>{l s='Last orders'}</h3>
-						<p class="no_notifs">{l s='No new orders has been made on your shop'}</p>
+						<p class="no_notifs">{l s='No new orders has been placed on your shop'}</p>
 						<ul id="list_orders_notif"></ul>
 						<p><a href="index.php?controller=AdminOrders&token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
 					</div>
