@@ -31,6 +31,7 @@ class AdminSlipControllerCore extends AdminController
 	{
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
+		$this->addRowAction('delete');
 
 		$this->fields_list = array(
 			'id_order_slip' => array(
@@ -54,14 +55,6 @@ class AdminSlipControllerCore extends AdminController
 		$this->optionTitle = $this->l('Slip');
 
 		parent::__construct();
-	}
-
-	public function renderList()
-	{
-		$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
-
-		return parent::renderList();
 	}
 
 	public function renderForm()
