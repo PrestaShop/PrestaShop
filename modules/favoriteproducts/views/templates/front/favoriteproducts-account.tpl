@@ -69,7 +69,7 @@ $('document').ready(function()
 				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}" class="product_img_link">
 					<img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')|escape:'htmlall':'UTF-8'}" alt=""/></a>
 				<h3><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}">{$favoriteProduct.name|escape:'htmlall':'UTF-8'}</a></h3>
-				<div class="product_desc">{$favoriteProduct.description_short|escape:'htmlall':'UTF-8'}</div>
+				<div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'htmlall':'UTF-8'}</div>
 
 				<div class="remove">
 					<img rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}" src="{$img_dir}icon/delete.gif" alt="" class="icon" />

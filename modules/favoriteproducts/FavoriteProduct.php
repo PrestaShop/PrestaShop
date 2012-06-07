@@ -71,9 +71,8 @@ class FavoriteProduct extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 			WHERE product_shop.`active` = 1
-				AND product_attribute_shop.`default_on` = 1
-				'.($id_customer ? ' AND fp.id_customer = '.(int)$id_customer : '').'
-				'.Shop::addSqlRestriction(false, 'fp')
+			'.($id_customer ? ' AND fp.id_customer = '.(int)$id_customer : '').'
+			'.Shop::addSqlRestriction(false, 'fp')
 		);
 	}
 
