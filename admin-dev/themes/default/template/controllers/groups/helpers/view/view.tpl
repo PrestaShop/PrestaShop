@@ -52,7 +52,7 @@
 				{l s='Tax excluded'}
 			{else}
 				{l s='Tax included'}
-				{/if}
+			{/if}
 		</li>
 		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Show prices:'}</span> {if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}
 		</li>
