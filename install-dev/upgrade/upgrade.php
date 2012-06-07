@@ -25,10 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-// note : this value wil l
-if (!isset($display_type))
-	$display_type = 'xml';
-
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
 
@@ -400,16 +396,52 @@ if (empty($fail_result))
 else
 	$result = $fail_result;
 
-switch ($display_type)
+if (!isset($return_type))
+	$return_type = 'xml';
+
+// format available 
+// 1) output on screen
+// - xml (default)
+// - json 
+// 2) return value in php
+// - include : variable $result available after inclusion
+// 3) file_get_contents()
+// - eval : $res = eval(file_get_contents());
+if (empty($return_type) || $return_type == 'xml')
 {
-	case 'json':
-		$result = json_encode(simplexml_load_string($result));
-		break;
-	default:
-	case 'xml':
-		// XML Header
-		header('Content-Type: text/xml');
-		break;
+	header('Content-Type: text/xml');
+	echo $result;
+}
+else
+{
+	// result in xml to array
+	$result = simplexml_load_string($result);
+	if (!class_exists('ToolsInstall', false))
+		if(file_exists(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php'))
+			include_once(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php');
+
+	if (class_exists('ToolsInstall', false))
+	{
+		$result = ToolsInstall::simpleXMLToArray($result);
+		switch ($return_type)
+		{
+			case 'json':
+				header('Content-Type: application/json');
+				if (function_exists('json_encode'))
+					$result = json_encode($result);
+				else
+				{
+					include_once(INSTALL_PATH.'/../tools/json/json.php');
+					$pearJson = new Services_JSON();
+					$result = $pearJson->encode($result);
+				}
+				echo $result;
+				break;
+			case 'eval':
+				return $result;
+			case 'include':
+				break;
+		}
+	}
 }
 
-echo $result;
