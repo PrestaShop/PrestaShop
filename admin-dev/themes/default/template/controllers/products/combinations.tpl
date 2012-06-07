@@ -50,7 +50,14 @@
 	<div class="separation"></div> {l s='or use the'}
 		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
 		{l s='in order to create automatically a set of combinations'}
-
+	{if $combination_exists}
+	<div class="warn" style="display:block">
+		<ul>
+			<li>{l s='Some combinations already exist. If you want to generate some new combinations, the quantities for the actual combinations will be lost.'}</li>
+			<li>{l s='You still can add a combination by clicking the link "Add new combination" on the toolbar.'}</li>
+		</ul>
+	</div>
+	{/if}
 	{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 		<br />
 		{include file="controllers/products/multishop/check_fields.tpl" product_tab="Combinations"}

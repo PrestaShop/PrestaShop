@@ -641,6 +641,7 @@ class AdminProductsControllerCore extends AdminController
 								Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
 								Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
 								Tools::getValue('attribute_ecotax'),
+								0,
 								Tools::getValue('id_image_attr'),
 								Tools::getValue('attribute_reference'),
 								null,
@@ -3380,7 +3381,8 @@ class AdminProductsControllerCore extends AdminController
 					'list' => $this->renderListAttributes($product, $currency),
 					'product' => $product,
 					'id_category' => $product->getDefaultCategory(),
-					'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator')
+					'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
+					'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0)
 				));
 			}
 		}
