@@ -25,7 +25,7 @@ function migrate_tabs_multi_shop()
 	Db::getInstance()->delete('tab_lang', 'id_tab IN ('.(int)$admin_shop_group_id.', '.(int)$admin_parent_shop_id.')');
 	
 	// ===== add AdminShopGroup to parent AdminTools =====
-	$admin_shop_group_id = add_new_tab('AdminShopGroup', 'en:Multi-shop|fr:Multi-boutiques|es:Multi-tienda|de:Multi-shop|it:Multi-shop', get_tab_id('AdminTools'), true);
+	$admin_shop_group_id = add_new_tab('AdminShopGroup', 'en:Multi-shop|fr:Multiboutique|es:Multi-tienda|de:Multi-shop|it:Multi-shop', get_tab_id('AdminTools'), true);
 	Db::getInstance()->update('tab', array('active' => $tab_shop_group_active), 'id_tab = '.(int)$admin_shop_group_id);
 	
 	// ===== hide AdminShopUrl and AdminShop =====
