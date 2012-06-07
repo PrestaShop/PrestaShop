@@ -88,7 +88,7 @@
 <div class="adresses_bloc clearfix">
 <br />
 <ul class="address item {if $order->isVirtual()}full_width{/if}">
-	<li class="address_title">{l s='Invoice'}</li>
+	<li class="address_title">{l s='Billing'}</li>
 	{foreach from=$inv_adr_fields name=inv_loop item=field_item}
 		{if $field_item eq "company" && isset($address_invoice->company)}<li class="address_company">{$address_invoice->company|escape:'htmlall':'UTF-8'}</li>
 		{elseif $field_item eq "address2" && $address_invoice->address2}<li class="address_address2">{$address_invoice->address2|escape:'htmlall':'UTF-8'}</li>
@@ -227,7 +227,7 @@
 								<ul class="typedText">{counter start=0 print=false}
 									{foreach from=$datas item='data'}
 										{assign var='customizationFieldName' value="Text #"|cat:$data.id_customization_field}
-										<li>{$data.name|default:$customizationFieldName}{l s=':'} {$data.value}</li>
+										<li>{$data.name|default:$customizationFieldName} : {$data.value}</li>
 									{/foreach}
 								</ul>
 								{/if}
@@ -295,7 +295,7 @@
 				<td>{l s='Voucher:'} {$discount.name|escape:'htmlall':'UTF-8'}</td>
 				<td><span class="order_qte_span editable">1</span></td>
 				<td>&nbsp;</td>
-				<td>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</td>
+				<td>{if $discount.value != 0.00}-{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</td>
 				{if $return_allowed}
 				<td>&nbsp;</td>
 				{/if}
