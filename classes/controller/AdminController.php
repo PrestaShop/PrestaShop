@@ -2463,9 +2463,14 @@ class AdminControllerCore extends Controller
 			if (!move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
 				return false;
 
+			// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+			if (!ImageManager::checkImageMemoryLimit($tmp_name))
+				$this->errors[] = Tools::displayError('This image cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration.');
+
 			// Copy new image
-			if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
+			if (empty($this->errors) && !ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
 				$this->errors[] = Tools::displayError('An error occurred while uploading image.');
+
 			if (count($this->errors))
 				return false;
 			if ($this->afterImageUpload())
