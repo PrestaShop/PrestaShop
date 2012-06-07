@@ -643,7 +643,16 @@ class AdminCartsControllerCore extends AdminController
 		$message_content = '';
 		if ($message = Message::getMessageByCartId((int)$this->context->cart->id))
 			$message_content = $message['message'];
-	
+		$cart_rules = $this->context->cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+
+		$free_shipping = false;
+		if (count($cart_rules))
+			foreach ($cart_rules as $cart_rule)
+				if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+				{
+					$free_shipping = true;
+					break;
+				}
 		return array('summary' => $this->getCartSummary(),
 						'delivery_option_list' => $this->getDeliveryOptionList(),
 						'cart' => $this->context->cart,
@@ -654,7 +663,7 @@ class AdminCartsControllerCore extends AdminController
 							'order', false,
 							(int)$this->context->cart->id_lang,
 							'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)),
-						'free_shipping' => (bool)CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id)
+						'free_shipping' => (int)$free_shipping
 						);
 	}
 

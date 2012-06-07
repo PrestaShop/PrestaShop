@@ -521,8 +521,8 @@ class AdminOrdersControllerCore extends AdminController
 					if ($customizationList)
 						foreach ($customizationList as $key => $id_order_detail)
 						{
-							$full_product_list[$id_order_detail] = $id_order_detail;
-							$full_quantity_list[$id_order_detail] += $customizationQtyList[$key];
+							$full_product_list[(int)$id_order_detail] = $id_order_detail;
+							$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
 						}
 
 					if ($productList || $customizationList)
@@ -627,7 +627,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_detail = new OrderDetail((int)$id_order_detail);
 								if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
 									$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
-								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => $id_order_detail));
+								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail));
 							}
 						if (!count($this->errors) && $customizationList)
 							foreach ($customizationList as $id_customization => $id_order_detail)
