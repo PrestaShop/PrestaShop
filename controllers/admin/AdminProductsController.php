@@ -2306,7 +2306,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!ShopUrl::getMainShopDomain())
 			return false;
-
+		$is_rewrite_active = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$preview_url = $this->context->link->getProductLink(
 			$product,
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
@@ -2315,9 +2315,8 @@ class AdminProductsControllerCore extends AdminController
 			null,
 			Context::getContext()->shop->id,
 			0,
-			true
+			$is_rewrite_active
 		);
-
 		if (!$product->active)
 		{
 			$preview_url = $this->context->link->getProductLink(
