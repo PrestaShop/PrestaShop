@@ -159,18 +159,21 @@ class AdminMetaControllerCore extends AdminController
 				'fields' =>	$general_fields,
 				'submit' => array()
 			),
-			'shop_url' => $shop_url_options,
-			'routes' => array(
-				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
-				'fields' => array(),
-			),
-			'robots' => $robots_options,
+			'shop_url' => $shop_url_options
 		);
 
 		// Add display route options to options form
-		if (Configuration::get('PS_REWRITING_SETTINGS') && Tools::getValue('PS_REWRITING_SETTINGS'))
+		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		{
+			$this->fields_options['routes'] = array(
+				'title' =>	$this->l('Schema of URLs'),
+				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'fields' => array()
+			);
 			$this->addAllRouteFields();
+		}
+
+		$this->fields_options['robots'] = $robots_options;
 	}
 
 	public function initProcess()
