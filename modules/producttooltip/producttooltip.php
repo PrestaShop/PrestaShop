@@ -133,8 +133,7 @@ class ProductToolTip extends Module
 
 	public function hookHeader($params)
 	{
-		$this->context->controller->addCSS(__PS_BASE_URI__.'css/jquery.jgrowl.css', 'all');
-		$this->context->controller->addJS(__PS_BASE_URI__.'js/jquery/jquery.jgrowl-1.2.1.min.js');
+		$this->context->controller->addJQueryPlugin('jgrowl');
 	}
 
 	public function hookProductFooter($params)
