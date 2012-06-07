@@ -51,16 +51,9 @@ class ImageManagerCore
 		{
 			$infos = getimagesize($image);
 
-			$memory_limit = Tools::getMemoryLimit();
-			// memory_limit == -1 => unlimited memory
-			if (function_exists('memory_get_usage') && (int)$memory_limit != -1)
-			{
-				$current_memory = memory_get_usage();
-
-				// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-				if (($infos[0] * $infos[1] * $infos['bits'] * (isset($infos['channels']) ? ($infos['channels'] / 8) : 1) + pow(2, 16)) * 1.8 + $current_memory > $memory_limit - 1024 * 1024)
-					return false;
-			}
+			// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+			if (!ImageManager::checkImageMemoryLimit($image))
+				return false;
 
 			$x = $infos[0];
 			$y = $infos[1];
@@ -83,6 +76,32 @@ class ImageManagerCore
 			}
 		}
 		return '<img src="'._PS_TMP_IMG_.$cache_image.(!$disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+	}
+
+	/**
+	 * Check if memory limit is too long or not
+	 *
+	 * @static
+	 * @param $image
+	 * @return bool
+	 */
+	public static function checkImageMemoryLimit($image)
+	{
+		$infos = getimagesize($image);
+
+		$memory_limit = Tools::getMemoryLimit();
+		// memory_limit == -1 => unlimited memory
+		if (function_exists('memory_get_usage') && (int)$memory_limit != -1)
+		{
+			$current_memory = memory_get_usage();
+			$channel = isset($infos['channels']) ? ($infos['channels'] / 8) : 1;
+
+			// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+			if (($infos[0] * $infos[1] * $infos['bits'] * $channel + pow(2, 16)) * 1.8 + $current_memory > $memory_limit - 1024 * 1024)
+				return false;
+		}
+
+		return true;
 	}
 
 	/**

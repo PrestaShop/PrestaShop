@@ -790,6 +790,11 @@ class AdminImportControllerCore extends AdminController
 			break;
 		}
 		$url = str_replace(' ', '%20', trim($url));
+
+		// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+		if (!ImageManager::checkImageMemoryLimit($url))
+			return false;
+
 		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
 		// Just hide the warning, the traitment will be the same.
 		if (@copy($url, $tmpfile))
