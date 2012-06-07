@@ -31,6 +31,7 @@ function ProductTabsManager(){
 	this.product_tabs = [];
 	this.current_request;
 	this.stack_error = [];
+	this.page_reloading = false;
 
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
@@ -46,11 +47,24 @@ function ProductTabsManager(){
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
 
-		$(document).bind('change', function(){
+		// @see with tDidierjean
+		//$(document).bind('change', function(){
+		//	if (self.current_request)
+		//	{
+		//		self.current_request.abort();
+		//	}
+		//});
+
+		$('.shopList.chzn-done').bind('change', function(){
 			if (self.current_request)
 			{
+				self.page_reloading = true;
 				self.current_request.abort();
 			}
+		});
+
+		$(window).bind('beforeunload', function() {
+			self.page_reloading = true;
 		});
 	}
 
@@ -158,7 +172,7 @@ function ProductTabsManager(){
 				{
 					self.displayBulk(stack);
 				}
-				else if (self.stack_error.length !== 0)
+				else if (self.stack_error.length !== 0 && !self.page_reloading)
 				{
 					jConfirm(reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
