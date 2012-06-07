@@ -52,7 +52,7 @@
 		<label>{l s='File'}</label>
 		<div class="margin-form">
 			<p><input type="file" name="attachment_file" /></p>
-			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE} {l s='MB maximum'})</p>
+			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:"%.2f"} {l s='MB max.'})</p>
 		</div>
 		<div class="clear">&nbsp;</div>
 		<div class="margin-form">
