@@ -39,7 +39,7 @@
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Tax Rate' pdf='true'}</td>
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax Excl' pdf='true'}</td>
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax' pdf='true'}</td>
-				</tr>			
+				</tr>
 
 				{foreach $product_tax_breakdown as $rate => $product_tax_infos}
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
@@ -64,12 +64,14 @@
 				{/foreach}
 
 				{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
+					{if $ecotax_tax_infos.ecotax_tax_excl > 0}
 					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 						<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
-						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate} %</td>
+						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
 						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
 						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
 					</tr>
+					{/if}
 				{/foreach}
 			</table>
 			{/if}
