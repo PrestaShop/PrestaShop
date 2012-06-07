@@ -301,8 +301,8 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 
 
 ALTER TABLE  `PREFIX_order_detail`
-ADD `reduction_amount_tax_incl` FLOAT( 20, 6 ) NOT NULL AFTER  `reduction_amount` ,
-ADD `reduction_amount_tax_excl` FLOAT( 20, 6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
+ADD `reduction_amount_tax_incl` DECIMAL( 20, 6 ) NOT NULL AFTER  `reduction_amount` ,
+ADD `reduction_amount_tax_excl` DECIMAL( 20, 6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
 ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,
 ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
 ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
