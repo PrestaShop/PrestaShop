@@ -105,7 +105,7 @@
       <value>3</value>
     </configuration>
     <configuration id="PS_PRODUCT_PICTURE_MAX_SIZE" name="PS_PRODUCT_PICTURE_MAX_SIZE">
-      <value>131072</value>
+      <value>8388608</value>
     </configuration>
     <configuration id="PS_PRODUCT_PICTURE_WIDTH" name="PS_PRODUCT_PICTURE_WIDTH">
       <value>64</value>
@@ -306,7 +306,7 @@
       <value>fr</value>
     </configuration>
     <configuration id="PS_ATTACHMENT_MAXIMUM_SIZE" name="PS_ATTACHMENT_MAXIMUM_SIZE">
-      <value>2</value>
+      <value>8</value>
     </configuration>
     <configuration id="PS_SMARTY_CACHE" name="PS_SMARTY_CACHE">
       <value>1</value>
