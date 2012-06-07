@@ -79,7 +79,7 @@
   <tab id="Configuration_Information" name="Informations"/>
   <tab id="Performance" name="Performances"/>
   <tab id="E-mail" name="Emails"/>
-  <tab id="Multi-shop" name="Multi-boutique"/>
+  <tab id="Multi-shop" name="Multiboutique"/>
   <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="Sauvegarde BDD"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
