@@ -40,10 +40,7 @@ function set_stock_available()
 		if (count($attributes) == 0)
 			$quantity = (int)$row['quantity'];
 
-		if ($quantity == 0)
-			continue;
-
-		//Add stock available for product
+		//Add stock available for product;
 		$res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'stock_available`
 			(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
