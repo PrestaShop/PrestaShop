@@ -301,8 +301,8 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 
 
 ALTER TABLE  `PREFIX_order_detail`
-ADD `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
-ADD `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
+ADD `reduction_amount_tax_incl` FLOAT( 20, 6 ) NOT NULL AFTER  `reduction_amount` ,
+ADD `reduction_amount_tax_excl` FLOAT( 20, 6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
 ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,
 ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
 ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
@@ -365,14 +365,14 @@ INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`
 	FROM `PREFIX_orders` o
 );
 
-INSERT IGNORE INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) 
+INSERT IGNORE INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`)
 	(
 		SELECT
 		(
 			SELECT oi.`id_order_invoice`
 			  FROM `PREFIX_order_invoice` oi
 			  WHERE oi.`id_order` = o.`id_order`
-		), 
+		),
 		o.`id_order`, o.`id_currency`, o.`total_paid_real`, o.`payment`, o.`conversion_rate`, o.`date_add`
 		FROM `PREFIX_orders` o
 		LEFT JOIN `PREFIX_order_payment` op ON (op.`id_order` = o.`id_order`)
@@ -420,3 +420,4 @@ PRIMARY KEY (`id_webservice_account` , `id_shop`),
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 ALTER TABLE `PREFIX_group` ADD `show_prices` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `price_display_method`;
+
