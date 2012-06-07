@@ -9,13 +9,13 @@
     <tab id="Home" id_parent="-1" active="1">
       <class_name>AdminHome</class_name>
     </tab>
-    <tab id="CMS_pages" id_parent="-1" active="1">
+    <tab id="CMS_Pages" id_parent="-1" active="1">
       <class_name>AdminCms</class_name>
     </tab>
-    <tab id="CMS_categories" id_parent="-1" active="1">
+    <tab id="CMS_Categories" id_parent="-1" active="1">
       <class_name>AdminCmsCategories</class_name>
     </tab>
-    <tab id="Combinations_generator" id_parent="-1" active="1">
+    <tab id="Combinations_Generator" id_parent="-1" active="1">
       <class_name>AdminAttributeGenerator</class_name>
     </tab>
     <tab id="Search" id_parent="-1" active="1">
@@ -27,7 +27,7 @@
     <tab id="Shops" id_parent="-1" active="1">
       <class_name>AdminShop</class_name>
     </tab>
-    <tab id="Shop_Urls" id_parent="-1" active="1">
+    <tab id="Shop_URLs" id_parent="-1" active="1">
       <class_name>AdminShopUrl</class_name>
     </tab>
     <tab id="Catalog" id_parent="" active="1">
@@ -39,7 +39,7 @@
     <tab id="Customers" id_parent="" active="1">
       <class_name>AdminParentCustomer</class_name>
     </tab>
-    <tab id="Price_rules" id_parent="" active="1">
+    <tab id="Price_Rules" id_parent="" active="1">
       <class_name>AdminPriceRule</class_name>
     </tab>
     <tab id="Shipping" id_parent="" active="1">
@@ -54,7 +54,7 @@
     <tab id="Preferences" id_parent="" active="1">
       <class_name>AdminParentPreferences</class_name>
     </tab>
-    <tab id="Advanced_parameters" id_parent="" active="1">
+    <tab id="Advanced_Parameters" id_parent="" active="1">
       <class_name>AdminTools</class_name>
     </tab>
     <tab id="Administration" id_parent="" active="1">
@@ -135,16 +135,16 @@
     <tab id="Contacts" id_parent="Customers" active="1">
       <class_name>AdminContacts</class_name>
     </tab>
-    <tab id="Social_titles" id_parent="Customers" active="1">
+    <tab id="Titles" id_parent="Customers" active="1">
       <class_name>AdminGenders</class_name>
     </tab>
     <tab id="Outstanding" id_parent="Customers" active="0">
       <class_name>AdminOutstanding</class_name>
     </tab>
-    <tab id="Cart_Rules" id_parent="Price_rules" active="1">
+    <tab id="Cart_Rules" id_parent="Price_Rules" active="1">
       <class_name>AdminCartRules</class_name>
     </tab>
-    <tab id="Catalog_price_rules" id_parent="Price_rules" active="1">
+    <tab id="Catalog_Price_Rules" id_parent="Price_Rules" active="1">
       <class_name>AdminSpecificPriceRule</class_name>
     </tab>
     <tab id="Shipping_1" id_parent="Shipping" active="1">
@@ -222,7 +222,7 @@
     <tab id="Images" id_parent="Preferences" active="1">
       <class_name>AdminImages</class_name>
     </tab>
-    <tab id="Contact_stores" id_parent="Preferences" active="1">
+    <tab id="Store_Contacts" id_parent="Preferences" active="1">
       <class_name>AdminStores</class_name>
     </tab>
     <tab id="Search_1" id_parent="Preferences" active="1">
@@ -234,31 +234,31 @@
     <tab id="Geolocation" id_parent="Preferences" active="1">
       <class_name>AdminGeolocation</class_name>
     </tab>
-    <tab id="Configuration_Information" id_parent="Advanced_parameters" active="1">
+    <tab id="Configuration_Information" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminInformation</class_name>
     </tab>
-    <tab id="Performance" id_parent="Advanced_parameters" active="1">
+    <tab id="Performance" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminPerformance</class_name>
     </tab>
-    <tab id="E-mail" id_parent="Advanced_parameters" active="1">
+    <tab id="E-mail" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminEmails</class_name>
     </tab>
-    <tab id="Multi-shop" id_parent="Advanced_parameters" active="0">
+    <tab id="Multistore" id_parent="Advanced_Parameters" active="0">
       <class_name>AdminShopGroup</class_name>
     </tab>
-    <tab id="CSV_Import" id_parent="Advanced_parameters" active="1">
+    <tab id="CSV_Import" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminImport</class_name>
     </tab>
-    <tab id="DB_Backup" id_parent="Advanced_parameters" active="1">
+    <tab id="DB_Backup" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminBackup</class_name>
     </tab>
-    <tab id="SQL_Manager" id_parent="Advanced_parameters" active="1">
+    <tab id="SQL_Manager" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminRequestSql</class_name>
     </tab>
-    <tab id="Logs" id_parent="Advanced_parameters" active="1">
+    <tab id="Logs" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminLogs</class_name>
     </tab>
-    <tab id="Webservice" id_parent="Advanced_parameters" active="1">
+    <tab id="Webservice" id_parent="Advanced_Parameters" active="1">
       <class_name>AdminWebservice</class_name>
     </tab>
     <tab id="Preferences_1" id_parent="Administration" active="1">
@@ -297,10 +297,10 @@
     <tab id="Stock_Movement" id_parent="Stock" active="1">
       <class_name>AdminStockMvt</class_name>
     </tab>
-    <tab id="Stock_instant_state" id_parent="Stock" active="1">
+    <tab id="Instant_Stock_Status" id_parent="Stock" active="1">
       <class_name>AdminStockInstantState</class_name>
     </tab>
-    <tab id="Stock_cover" id_parent="Stock" active="1">
+    <tab id="Stock_Coverage" id_parent="Stock" active="1">
       <class_name>AdminStockCover</class_name>
     </tab>
     <tab id="Supply_orders" id_parent="Stock" active="1">

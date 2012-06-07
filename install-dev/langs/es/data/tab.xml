@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <entity_tab>
   <tab id="Home" name="Inicio"/>
-  <tab id="CMS_pages" name="P&#xE1;ginas CMS"/>
-  <tab id="CMS_categories" name="Categor&#xED;as CMS"/>
-  <tab id="Combinations_generator" name="Generador de combinaciones"/>
+  <tab id="CMS_Pages" name="P&#xE1;ginas CMS"/>
+  <tab id="CMS_Categories" name="Categor&#xED;as CMS"/>
+  <tab id="Combinations_Generator" name="Generador de combinaciones"/>
   <tab id="Search" name="B&#xFA;squeda"/>
   <tab id="Login" name="Login"/>
   <tab id="Shops" name="Tiendas"/>
-  <tab id="Shop_Urls" name="URL de las tiendas"/>
+  <tab id="Shop_URLs" name="URL de las tiendas"/>
   <tab id="Catalog" name="Cat&#xE1;logo"/>
   <tab id="Orders" name="Pedidos"/>
   <tab id="Customers" name="Clientes"/>
-  <tab id="Price_rules" name="Reglas de precios"/>
+  <tab id="Price_Rules" name="Reglas de precios"/>
   <tab id="Shipping" name="Env&#xED;o"/>
   <tab id="Localization" name="Localizaci&#xF3;n"/>
   <tab id="Modules" name="M&#xF3;dulos"/>
   <tab id="Preferences" name="Preferencias"/>
-  <tab id="Advanced_parameters" name="Parametros avanzados"/>
+  <tab id="Advanced_Parameters" name="Parametros avanzados"/>
   <tab id="Administration" name="Administraci&#xF3;n"/>
   <tab id="Stats" name="Estad&#xED;sticas"/>
   <tab id="Stock" name="Existencias"/>
@@ -43,10 +43,10 @@
   <tab id="Shopping_Carts" name="Carro de compras"/>
   <tab id="Customer_Service" name="Atenci&#xF3;n al cliente"/>
   <tab id="Contacts" name="Contacto"/>
-  <tab id="Social_titles" name="Generos"/>
+  <tab id="Titles" name="Generos"/>
   <tab id="Outstanding" name="No resuelto"/>
   <tab id="Cart_Rules" name="Reglas de cesta"/>
-  <tab id="Catalog_price_rules" name="Reglas de precio del cat&#xE1;logo"/>
+  <tab id="Catalog_Price_Rules" name="Reglas de precio del cat&#xE1;logo"/>
   <tab id="Shipping_1" name="Env&#xED;o"/>
   <tab id="Carriers" name="Transportistas"/>
   <tab id="Price_Ranges" name="Rangos de precio"/>
@@ -72,14 +72,14 @@
   <tab id="SEO_URLs" name="SEO y URL"/>
   <tab id="CMS" name="CMS"/>
   <tab id="Images" name="Im&#xE1;genes"/>
-  <tab id="Contact_stores" name="Contacto y tiendas"/>
+  <tab id="Store_Contacts" name="Contacto y tiendas"/>
   <tab id="Search_1" name="B&#xFA;squeda"/>
   <tab id="Maintenance" name="Mantenimiento"/>
   <tab id="Geolocation" name="Geolocalizaci&#xF3;n"/>
   <tab id="Configuration_Information" name="Informaci&#xF3;n de configuraci&#xF3;n"/>
   <tab id="Performance" name="Rendimiento"/>
   <tab id="E-mail" name="E-mail"/>
-  <tab id="Multi-shop" name="Multi-tienda"/>
+  <tab id="Multistore" name="Multi-tienda"/>
   <tab id="CSV_Import" name="Importar CVS"/>
   <tab id="DB_Backup" name="Backup de BD"/>
   <tab id="SQL_Manager" name="Administrador SQL"/>
@@ -97,8 +97,8 @@
   <tab id="Warehouses" name="Almacenes"/>
   <tab id="Stock_Management" name="Administraci&#xF3;n de existencias"/>
   <tab id="Stock_Movement" name="Movimiento de existencias"/>
-  <tab id="Stock_instant_state" name="Estado instantaneo de existencia"/>
-  <tab id="Stock_cover" name="Portada de existencias"/>
+  <tab id="Instant_Stock_Status" name="Estado instantaneo de existencia"/>
+  <tab id="Stock_Coverage" name="Portada de existencias"/>
   <tab id="Supply_orders" name="Pedidos de distribuidores"/>
   <tab id="Configuration" name="Configuraci&#xF3;n"/>
 </entity_tab>
