@@ -1087,6 +1087,16 @@ class ProductCore extends ObjectModel
 			{
 				$obj->default_on = $default_value;
 				$default_value = 0;
+				// if we add a combination for this shop and this product does not use the combination feature in other shop,
+				// we clone the default combination in every shop linked to this product
+				if (!$this->hasAttributesInOtherShops())
+				{
+					$id_shop_list_array = Product::getShopsByProduct($this->id);
+					$id_shop_list = array();
+					foreach ($id_shop_list_array as $array_shop)
+						$id_shop_list[] = $array_shop['id_shop'];
+					$obj->id_shop_list = $id_shop_list;
+				}
 			}
 			$obj->add();
 			$return[] = $obj->id;
@@ -1279,6 +1289,15 @@ class ProductCore extends ObjectModel
 		$combination->upc = pSQL($upc);
 		$combination->default_on = (int)$default;
 		$combination->minimal_quantity = (int)$minimal_quantity;
+
+		// if we add a combination for this shop and this product does not use the combination feature in other shop,
+		// we clone the default combination in every shop linked to this product
+		if ($default && !$this->hasAttributesInOtherShops())
+		{
+			$id_shop_list_array = Product::getShopsByProduct($this->id);
+			foreach ($id_shop_list_array as $array_shop)
+				$id_shop_list[] = $array_shop['id_shop'];
+		}
 
 		if (count($id_shop_list))
 			$combination->id_shop_list = $id_shop_list;
@@ -4866,6 +4885,17 @@ class ProductCore extends ObjectModel
 			return Product::PTYPE_VIRTUAL;
 
 		return Product::PTYPE_SIMPLE;
+	}
+
+	public function hasAttributesInOtherShops()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'product_attribute` pa
+			LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` pas
+				ON (pa.`id_product_attribute` = pas.`id_product_attribute`)
+			WHERE pa.`id_product` = '.(int)$this->id
+		);
 	}
 }
 
