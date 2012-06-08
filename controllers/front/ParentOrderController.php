@@ -334,7 +334,7 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		else if (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back=order.php&step=1&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1&multi-shipping='.(int)Tools::getValue('multi-shipping')));
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{
