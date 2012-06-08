@@ -195,12 +195,14 @@ class AdminOrdersControllerCore extends AdminController
 					'desc' => $this->l('Add a product'),
 					'class' => 'add_product'
 				);
-			$this->toolbar_btn['standard_refund'] = array(
-				'short' => 'Create',
-				'href' => '',
-				'desc' => $type,
-				'class' => 'process-icon-standardRefund'
-			);
+
+			if (Configuration::get('PS_ORDER_RETURN'))
+				$this->toolbar_btn['standard_refund'] = array(
+					'short' => 'Create',
+					'href' => '',
+					'desc' => $type,
+					'class' => 'process-icon-standardRefund'
+				);
 			
 			if ($order->hasBeenPaid())
 				$this->toolbar_btn['partial_refund'] = array(
