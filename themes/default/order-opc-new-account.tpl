@@ -375,7 +375,7 @@
 				<p class="submit">
 					<input type="submit" class="exclusive button" name="submitAccount" id="submitAccount" value="{l s='Save'}" />
 				</p>
-				<p style="float: right;color: green;display: none;" id="opc_account_saved">
+				<p style="display: none;" id="opc_account_saved">
 					{l s='Account informations saved successfully'}
 				</p>
 				<p class="required opc-required" style="clear: both;">
