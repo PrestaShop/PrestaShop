@@ -397,7 +397,7 @@ class AdminProductsControllerCore extends AdminController
 						$id_product = (int)Tools::getValue($this->identifier);
 						$res = $attachment->attachProduct($id_product);
 						if (!$res)
-							$this->errors[] = Tools::displayErrors('Unable to associate this attachment to product');
+							$this->errors[] = Tools::displayError('Unable to associate this attachment to product');
 					}
 				}
 				else
