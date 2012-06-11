@@ -611,10 +611,11 @@ class FrontControllerCore extends Controller
 			if ($params)
 				$str_params = ((strpos($canonical_url, '?') === false) ? '?' : '&').http_build_query($params, '', '&');
 
-			header('HTTP/1.0 301 Moved');
-			header('Cache-Control: no-cache');
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonical_url.Tools::safeOutput($str_params).'">'.$canonical_url.Tools::safeOutput($str_params).'</a>');
+
+			header('HTTP/1.0 301 Moved');
+			header('Cache-Control: no-cache');
 			Tools::redirectLink($canonical_url.$str_params);
 		}
 	}
