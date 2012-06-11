@@ -384,7 +384,7 @@ jQuery(document).ready(Customer.init);
 		</div>
 	</div>
 
-	<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0" id="specific_prices_list">
+	<table style="text-align: left;width:100%" class="table" cellpadding="0" cellspacing="0" id="specific_prices_list">
 		<thead>
 			<tr>
 				<th class="cell border" style="width: 12%;">{l s='Rule'}</th>
@@ -394,11 +394,10 @@ jQuery(document).ready(Customer.init);
 				<th class="cell border" style="width: 11%;">{l s='Country'}</th>
 				<th class="cell border" style="width: 13%;">{l s='Group'}</th>
 				<th class="cell border" style="width: 13%;">{l s='Customer'}</th>
-				<th class="cell border" style="width: 12%;">{l s='Price'} {if $country_display_tax_label}{l s='(tax excl.)'}{/if}</th>
-				<th class="cell border" style="width: 10%;">{l s='Reduction'}</th>
+				<th class="cell border" style="width: 13%;">{l s='Fixed price'}</th>
+				<th class="cell border" style="width: 13%;">{l s='Impact'}</th>
 				<th class="cell border" style="width: 15%;">{l s='Period'}</th>
-				<th class="cell border" style="width: 10%;">{l s='From (quantity)'}</th>
-				<th class="cell border" style="width: 15%;">{l s='Final price'} {if $country_display_tax_label}{l s='(tax excl.)'}{/if}</th>
+				<th class="cell border" style="width: 13%;">{l s='From (quantity)'}</th>
 				<th class="cell border" style="width: 2%;">{l s='Action'}</th>
 			</tr>
 		</thead>
