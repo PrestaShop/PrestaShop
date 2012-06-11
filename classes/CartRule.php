@@ -799,8 +799,12 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_amount)
 			{
 				$prorata = 1;
-				if (!is_null($package))
-					$prorata = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package['products']) / $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+				if (!is_null($package) && count($all_products))
+				{
+					$total_products = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+					if ($total_products)
+						$prorata = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package['products']) / $total_products;
+				}
 
 				$reduction_amount = $this->reduction_amount;
 				// If we need to convert the voucher value to the cart currency
