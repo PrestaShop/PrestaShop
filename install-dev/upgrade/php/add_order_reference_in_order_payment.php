@@ -27,6 +27,7 @@
 
 function add_order_reference_in_order_payment()
 {
+	$res = true;
 	$payments = Db::getInstance()->executeS('
 	SELECT op.id_order_payment, o.reference
 	FROM `'._DB_PREFIX_.'order_payment` op
