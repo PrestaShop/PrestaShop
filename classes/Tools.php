@@ -377,7 +377,11 @@ class ToolsCore
 			$context = Context::getContext();
 
 		// update language only if new id is different from old id
-		if (($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $context->cookie->id_lang != (int)$id_lang)
+		// or if default language changed
+		$cookie_id_lang = $context->cookie->id_lang;
+		$configuration_id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
+		if ((($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $cookie_id_lang != (int)$id_lang)
+			|| (($id_lang = $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang))
 		{
 			$context->cookie->id_lang = $id_lang;
 			$language = new Language($id_lang);
