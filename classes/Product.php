@@ -1573,7 +1573,7 @@ class ProductCore extends ObjectModel
 			return array();
 
 		$sql = 'SELECT pa.*, product_attribute_shop.*, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',
-					al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
+					al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
