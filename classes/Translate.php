@@ -75,7 +75,8 @@ class TranslateCore
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		$str = str_replace('"', '&quot;', $str);
 
-		$str = Translate::checkAndReplaceArgs($str, $sprintf);
+		if ($sprintf !== null)
+			$str = Translate::checkAndReplaceArgs($str, $sprintf);
 
 		return ($addslashes ? addslashes($str) : stripslashes($str));
 	}
@@ -135,32 +136,31 @@ class TranslateCore
 			$local_path = _PS_MODULE_DIR_.$module.'/';
 		}
 
-		// @retrocompatibility with translations files in module root
-		// @since 1.5 modules have a translations/ folder
-		if (Tools::file_exists_cache($local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
-			$file = $local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
-		else
-			$file = $local_path.'/'.Context::getContext()->language->iso_code.'.php';
-
-		// Load translations file if it has not been already done
-		if (!isset($translations_merged[md5($file)]) && Tools::file_exists_cache($file) && include_once($file))
+		if (!isset($translations_merged[$name]))
 		{
-			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-			$translations_merged[md5($file)] = true;
-		}
+			// Check if translations exists in a current theme
+			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php'))
+				$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php';
+			elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php'))
+				$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php';
+			else
+				$file_theme = false;
 
-		// Check if translations exists in a current theme
-		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php'))
-			$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php';
-		else if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php'))
-			$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php';
-		else
-			$file_theme = false;
-
-		if ($file_theme && !isset($translations_merged[md5($file_theme)]) && Tools::file_exists_cache($file_theme) && include_once($file_theme))
-		{
-			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-			$translations_merged[md5($file_theme)] = true;
+			if ($file_theme && !isset($translations_merged[$name]) && Tools::file_exists_cache($file_theme) && include_once($file_theme))
+				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+			else
+			{
+				// @retrocompatibility with translations files in module root
+				// @since 1.5 modules have a translations/ folder
+				if (Tools::file_exists_cache($local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
+					$file = $local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
+				else
+					$file = $local_path.'/'.Context::getContext()->language->iso_code.'.php';
+				// Load translations file if it has not been already done
+				if (Tools::file_exists_cache($file) && include_once($file))
+					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+			}
+			$translations_merged[$name] = true;
 		}
 
 		$key = md5(str_replace('\'', '\\\'', $string));
@@ -169,10 +169,10 @@ class TranslateCore
 
 		if (!isset($lang_cache[$cache_key]))
 		{
-
 			if ($_MODULES == null)
 			{
-				$string = Translate::checkAndReplaceArgs($string, $sprintf);
+				if ($sprintf !== null)
+					$string = Translate::checkAndReplaceArgs($string, $sprintf);
 				return str_replace('"', '&quot;', $string);
 			}
 
@@ -189,7 +189,8 @@ class TranslateCore
 			else
 				$ret = stripslashes($string);
 
-			$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
+			if ($sprintf !== null)
+				$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}
