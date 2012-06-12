@@ -287,10 +287,10 @@ abstract class ModuleCore
 	 * @param $module_version
 	 * @return bool
 	 */
-	public static function initUpgradeModule($module_name, $module_version)
+	public static function initUpgradeModule($module)
 	{
 		// Init cache upgrade details
-		self::$modules_cache[$module_name]['upgrade'] = array(
+		self::$modules_cache[$module->name]['upgrade'] = array(
 			'success' => false, // bool to know if upgrade succeed or not
 			'available_upgrade' => 0, // Number of available module before any upgrade
 			'number_upgraded' => 0, // Number of upgrade done
@@ -300,9 +300,9 @@ abstract class ModuleCore
 			'upgraded_from' => 0, // Version number before upgrading anything
 			'upgraded_to' => 0, // Last upgrade applied
 		);
-
+		
 		// Need Upgrade will check and load upgrade file to the moduleCache upgrade case detail
-		$ret = Module::isInstalled($module_name) && Module::needUpgrade($module_name, $module_version);
+		$ret = $module->installed && Module::needUpgrade($module);
 		return $ret;
 	}
 
@@ -378,17 +378,13 @@ abstract class ModuleCore
 	 * @param $module_version
 	 * @return bool
 	 */
-	public static function needUpgrade($module_name, $module_version)
+	public static function needUpgrade($module)
 	{
-		$registered_version = Db::getInstance()->getValue('
-			SELECT m.`version` FROM `'._DB_PREFIX_.'module` m
-			WHERE m.`name` = \''.bqSQL($module_name).'\'');
-
-		self::$modules_cache[$module_name]['upgrade']['upgraded_from'] = $registered_version;
-		Tools::alignVersionNumber($module_version, $registered_version);
+		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
+		Tools::alignVersionNumber($module->version, $module->database_version);
 		// Check the version of the module with the registered one and look if any upgrade file exist
-		return version_compare($module_version, $registered_version, '>')
-				&& Module::loadUpgradeVersionList($module_name, $module_version, $registered_version);
+		return version_compare($module->version, $module->database_version, '>')
+				&& Module::loadUpgradeVersionList($module->name, $module->version, $module->database_version);
 	}
 
 	/**
@@ -918,7 +914,7 @@ abstract class ModuleCore
 	 * @param boolean $useConfig in order to use config.xml file in module dir
 	 * @return array Modules
 	 */
-	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false)
+	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false, $id_employee = false)
 	{
 		global $_MODULES;
 
@@ -931,6 +927,14 @@ abstract class ModuleCore
 		// Get modules directory list and memory limit
 		$modules_dir = Module::getModulesDirOnDisk();
 		$memory_limit = Tools::getMemoryLimit();
+		
+		$modules_installed = array();
+		$result = Db::getInstance()->executeS('
+		SELECT name, version, interest
+		FROM `'._DB_PREFIX_.'module`
+		LEFT JOIN `'._DB_PREFIX_.'module_preference` ON (`module` = `name` AND `id_employee` = '.(int)$id_employee.')');
+		foreach ($result as $row)
+			$modules_installed[$row['name']] = $row;
 
 		foreach ($modules_dir as $module)
 		{
@@ -986,6 +990,7 @@ abstract class ModuleCore
 						$item->confirmUninstall = Translate::getModuleTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
+					
 					$module_list[] = $item;
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
 					$modulesNameToCursor[strval($item->name)] = $item;
@@ -1120,6 +1125,20 @@ abstract class ModuleCore
 							$module_list[] = $item;
 						}
 					}
+			}
+			
+		foreach ($module_list as &$module)
+			if (isset($modules_installed[$module->name]))
+			{
+				$module->installed = true;
+				$module->database_version = $modules_installed[$module->name]['version'];
+				$module->interest = $modules_installed[$module->name]['interest'];
+			}
+			else
+			{
+				$module->installed = false;
+				$module->database_version = 0;
+				$module->interest = 0;
 			}
 
 		usort($module_list, create_function('$a,$b', '
