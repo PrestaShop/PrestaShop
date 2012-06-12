@@ -108,10 +108,10 @@
 							{$missing_translations_module = 0}
 						{/if}
 						<fieldset>
-							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name}').slideToggle();">{if $theme_name === 'default'}{l s='default'}{else}{$theme_name}{/if} - {$template_name}
+							<legend style="cursor : pointer" onclick="$('#{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}').slideToggle();">{if $theme_name === 'default'}{l s='default'}{else}{$theme_name}{/if} - {$template_name}
 								<font color="blue">{$newLang|count}</font> {l s='expressions'} (<font color="red">{$missing_translations_module}</font>)
 							</legend>
-							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name}" style="display:{if $missing_translations_module}block{else}none{/if}">
+							<div name="{$type}_div" id="{$theme_name}_{$module_name}_{$template_name|replace:'.':'_'}" style="display:{if $missing_translations_module}block{else}none{/if}">
 								<table cellpadding="2">
 									{foreach $newLang as $key => $value}
 										<tr>
