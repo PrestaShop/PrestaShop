@@ -361,10 +361,36 @@ class AdminTranslationsControllerCore extends AdminController
 		return $bool_flag;
 	}
 
+	public function exportTabs()
+	{
+		// Get tabs by iso code
+		$tabs = Tab::getTabs($this->lang_selected->id);
+
+		// Create content
+		$content = "<?php\n\n\$tabs = array();";
+		if (!empty($tabs))
+			foreach ($tabs as $tab)
+				$content .= "\n\$tabs['".$tab['class_name']."'] = '".utf8_decode($tab['name'])."';";
+		$content .= "\n\nreturn \$tabs;";
+
+		$dir = _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.DIRECTORY_SEPARATOR;
+		$path = $dir.'tabs.php';
+
+		// Check if tabs.php exists for the selected Iso Code
+		if (!Tools::file_exists_cache($dir))
+			if (!mkdir($dir, 0777, true))
+				throw new PrestaShopException('The file '.$dir.' cannot be created.');
+		if (!file_put_contents($path, $content))
+				throw new PrestaShopException('File "'.$path.'" doesn\'t exists and cannot be created in '.$dir);
+		if (!is_writable($path))
+			$this->displayWarning(sprintf(Tools::displayError('This file must be writable: %s'), $path));
+	}
+
 	public function submitExportLang()
 	{
 		if ($this->lang_selected->iso_code && $this->theme_selected)
 		{
+			$this->exportTabs();
 			$items = array_flip(Language::getFilesList($this->lang_selected->iso_code, $this->theme_selected, false, false, false, false, true));
 			$gz = new Archive_Tar(_PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip', true);
 			$file_name = Tools::getCurrentUrlProtocolPrefix().Tools::getShopDomain().__PS_BASE_URI__.'translations/export/'.$this->lang_selected->iso_code.'.gzip';
