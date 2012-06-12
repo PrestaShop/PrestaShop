@@ -344,7 +344,9 @@ class ShopCore extends ObjectModel
 				if (!Validate::isLoadedObject($default_shop))
 					throw new PrestaShopException('Shop not found');
 
-				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.$_SERVER['QUERY_STRING'];
+				$params = $_GET;
+				unset($params['id_shop']);
+				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.http_build_query($params);
 				header('location: '.$url);
 				exit;
 			}
