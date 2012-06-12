@@ -1952,8 +1952,12 @@ class AdminTranslationsControllerCore extends AdminController
 						<div class="label-subject" style="text-align:center;">
 							<label style="text-align:right">'.sprintf($this->l('Subject for %s:'), '<em>'.$mail_name.'</em>').'</label>
 							<div class="mail-form" style="text-align:left">
-								<b>'.$subject_mail.'</b><br />
-								<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.$value_subject_mail['trad'].'" />';
+								<b>'.$subject_mail.'</b><br />';
+								if (isset($value_subject_mail['trad']) && $value_subject_mail['trad'])
+									$str_return .= '<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="'.$value_subject_mail['trad'].'" />';
+								else
+									$str_return .= '<input type="text" name="subject['.$group_name.']['.$subject_mail.']" value="" />';
+
 								if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf'])
 								{
 									$str_return .= '<a class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'" style="cursor:pointer">
