@@ -203,7 +203,7 @@ class StockAvailableCore extends ObjectModel
 		else
 		{
 			$params = array(
-				'depends_on_stock' => (int)(bool)$depends_on_stock,
+				'depends_on_stock' => (int)$depends_on_stock,
 				'id_product' => (int)$id_product,
 				'id_product_attribute' => (int)$id_product_attribute
 			);
