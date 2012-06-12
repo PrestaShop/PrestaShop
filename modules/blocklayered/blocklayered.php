@@ -139,7 +139,8 @@ class BlockLayered extends Module
 			`price_max` INT NOT NULL,
 		PRIMARY KEY (`id_product`, `id_currency`, `id_shop`),
 		INDEX `id_currency` (`id_currency`),
-		INDEX `price_min` (`price_min`), INDEX `price_max` (`price_max`)) ENGINE = '._MYSQL_ENGINE_);
+		INDEX `price_min` (`price_min`), INDEX `price_max` (`price_max`)
+		)  ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
 	
 	private function installFriendlyUrlTable()
@@ -152,7 +153,8 @@ class BlockLayered extends Module
 		`data` varchar(200) NOT NULL,
 		`id_lang` INT NOT NULL,
 		PRIMARY KEY (`id_layered_friendly_url`),
-		INDEX `id_lang` (`id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		INDEX `id_lang` (`id_lang`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 
 		Db::getInstance()->execute('CREATE INDEX `url_key` ON `'._DB_PREFIX_.'layered_friendly_url`(url_key(5))');
 	}
@@ -165,7 +167,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group` (
 		`id_attribute_group` INT NOT NULL,
 		`indexable` BOOL NOT NULL DEFAULT 0,
-		PRIMARY KEY (`id_attribute_group`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_attribute_group`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_attribute_group`
 		SELECT id_attribute_group, 1 FROM `'._DB_PREFIX_.'attribute_group`');
@@ -177,7 +180,8 @@ class BlockLayered extends Module
 		`id_lang` INT NOT NULL,
 		`url_name` VARCHAR(20),
 		`meta_title` VARCHAR(20),
-		PRIMARY KEY (`id_attribute_group`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_attribute_group`, `id_lang`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
 		// Attributes
 		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_lang_value`');
@@ -187,7 +191,8 @@ class BlockLayered extends Module
 		`id_lang` INT NOT NULL,
 		`url_name` VARCHAR(20),
 		`meta_title` VARCHAR(20),
-		PRIMARY KEY (`id_attribute`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_attribute`, `id_lang`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
 		
 		// Features
@@ -196,7 +201,8 @@ class BlockLayered extends Module
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature` (
 		`id_feature` INT NOT NULL,
 		`indexable` BOOL NOT NULL DEFAULT 0,
-		PRIMARY KEY (`id_feature`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_feature`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
 		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_feature`
@@ -209,7 +215,8 @@ class BlockLayered extends Module
 		`id_lang` INT NOT NULL,
 		`url_name` VARCHAR(20) NOT NULL,
 		`meta_title` VARCHAR(20),
-		PRIMARY KEY (`id_feature`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_feature`, `id_lang`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
 		// Features values
 		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_value_lang_value`');
@@ -219,7 +226,8 @@ class BlockLayered extends Module
 		`id_lang` INT NOT NULL,
 		`url_name` VARCHAR(20),
 		`meta_title` VARCHAR(20),
-		PRIMARY KEY (`id_feature_value`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
+		PRIMARY KEY (`id_feature_value`, `id_lang`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
 	
 	/**
@@ -236,7 +244,7 @@ class BlockLayered extends Module
 		`id_attribute_group` int(10) unsigned NOT NULL DEFAULT "0",
 		`id_shop` int(10) unsigned NOT NULL DEFAULT "1",
 		KEY `id_attribute` (`id_attribute`)
-		) ENGINE= '._MYSQL_ENGINE_);
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
 	
 	/**
@@ -3922,14 +3930,16 @@ class BlockLayered extends Module
 		`name` VARCHAR(64) NOT NULL,
 		`filters` TEXT NULL,
 		`n_categories` INT(10) UNSIGNED NOT NULL,
-		`date_add` DATETIME NOT NULL)');
+		`date_add` DATETIME NOT NULL
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 		
 		Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter_shop` (
 		`id_layered_filter` INT(10) UNSIGNED NOT NULL,
 		`id_shop` INT(11) UNSIGNED NOT NULL,
 		PRIMARY KEY (`id_layered_filter`, `id_shop`),
-		KEY `id_shop` (`id_shop`))');
+		KEY `id_shop` (`id_shop`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
 	
 	public function rebuildLayeredCache($products_ids = array(), $categories_ids = array())
