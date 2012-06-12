@@ -987,7 +987,7 @@ abstract class ModuleCore
 					$item->author = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Translate::getModuleTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
+						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
 					
