@@ -563,6 +563,7 @@
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
+						stock[id_product] = new Array();
 						if (this.customizable == '1')
 						{
 							customization_html += '<fieldset class="width3"><legend>{l s='Customization'}</legend><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
@@ -587,10 +588,10 @@
 						
 						$.each(this.combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
+							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 						
-						stock[this.id_product] = this.stock;
-
+						stock[this.id_product][0] = this.stock;
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
