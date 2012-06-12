@@ -1118,7 +1118,8 @@ abstract class ModuleCore
 							if (isset($modaddons->img))
 							{
 								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-									@copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
+									if (!@copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg'))
+										@copy('../img/404.gif', '../img/tmp/'.md5($modaddons->name).'.jpg');
 								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
 							}
