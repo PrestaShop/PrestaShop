@@ -137,7 +137,7 @@ class OrderPaymentCore extends ObjectModel
 		if (!$res)
 			return false;
 		
-		return new OrderInvoice($res['id_order_invoice']);
+		return new OrderInvoice((int)$res);
 	}
 }
 
