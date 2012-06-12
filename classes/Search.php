@@ -384,7 +384,7 @@ class SearchCore
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$max_possibilities = $total_languages * count(Shop::getShops(true));
-		$limit = max(1, floor($limit / $max_possibilities, 0) * $max_possibilities);
+		$limit = max(1, floor($limit / $max_possibilities) * $max_possibilities);
 
 		return Db::getInstance()->executeS('
 			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
