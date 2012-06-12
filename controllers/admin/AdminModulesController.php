@@ -1028,7 +1028,6 @@ class AdminModulesControllerCore extends AdminController
 		foreach ($this->list_modules_categories as $k => $v)
 			$this->list_modules_categories[$k]['nb'] = 0;
 
-
 		// Retrieve Modules Preferences
 		$modules_preferences = '';
 		$modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
@@ -1042,7 +1041,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 		// Retrieve Modules List
-		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons);
+		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
 		$this->initModulesList($modules);
 		$this->nb_modules_total = count($modules);
 
@@ -1053,7 +1052,7 @@ class AdminModulesControllerCore extends AdminController
 		foreach ($modules as $km => $module)
 		{
 			// Upgrade Module process, init check if a module could be upgraded
-			if (Module::initUpgradeModule($module->name, $module->version))
+			if (Module::initUpgradeModule($module))
 			{
 				// When the XML cache file is up-to-date, the module may not be loaded yet
 				if (!class_exists($module->name))
