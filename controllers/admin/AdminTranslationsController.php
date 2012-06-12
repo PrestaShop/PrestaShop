@@ -363,13 +363,22 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function exportTabs()
 	{
-		// Get tabs by iso code
+		// Get name tabs by iso code
 		$tabs = Tab::getTabs($this->lang_selected->id);
+
+		// Get name of the default tabs
+		$id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, (int)$this->context->shop->id_shop_group, (int)$this->context->shop->id);
+		$tabs_default_lang = Tab::getTabs($id_lang_default);
+
+		$tabs_default = array();
+		foreach ($tabs_default_lang as $tab)
+			$tabs_default[$tab['class_name']] = utf8_decode($tab['name']);
 
 		// Create content
 		$content = "<?php\n\n\$tabs = array();";
 		if (!empty($tabs))
 			foreach ($tabs as $tab)
+				if ($tabs_default[$tab['class_name']] != utf8_decode($tab['name']))
 				$content .= "\n\$tabs['".$tab['class_name']."'] = '".utf8_decode($tab['name'])."';";
 		$content .= "\n\nreturn \$tabs;";
 
