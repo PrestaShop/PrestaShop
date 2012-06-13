@@ -428,6 +428,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
 		if (!$this->context->cookie->checkedTOS && Configuration::get('PS_CONDITIONS'))
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service').'</p>';
+		
 		/* If some products have disappear */
 		if (!$this->context->cart->checkQuantities())
 			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available, you cannot proceed with your order.').'</p>';
