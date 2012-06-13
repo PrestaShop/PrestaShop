@@ -1331,7 +1331,10 @@ class AdminImportControllerCore extends AdminController
 								// associate image to selected shops
 								$image->associateTo($shops);
 								if (!AdminImportController::copyImg($product->id, $image->id, $url))
-									$this->warnings[] = Tools::displayError('Error copying image:').' '.$url;
+								{
+									$image->delete();
+									$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
+								}
 							}
 							else
 								$error = true;
