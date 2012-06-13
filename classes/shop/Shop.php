@@ -991,4 +991,21 @@ class ShopCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return Context::getContext()->shop->id;
 	}
+
+	/**
+	 * @param string $entity
+	 * @param int $id_shop
+	 * @return array|bool
+	 */
+	public static function getEntityIds($entity, $id_shop)
+	{
+		if (!Shop::isTableAssociated($entity))
+			return false;
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT `id_'.pSQL($entity).'`
+			FROM `'._DB_PREFIX_.pSQL($entity).'_shop`
+			WHERE `id_shop` = '.(int)$id_shop
+		);
+	}
 }
