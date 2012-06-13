@@ -222,7 +222,9 @@ class OrderHistoryCore extends ObjectModel
 		if ($new_os->paid == 1)
 		{
 			$invoices = $order->getInvoicesCollection();
-			$payment_method = Module::getInstanceByName($order->module);
+			if ($order->total_paid != 0)
+				$payment_method = Module::getInstanceByName($order->module);
+
 			foreach ($invoices as $invoice)
 			{
 				$rest_paid = $invoice->getRestPaid();
@@ -232,10 +234,14 @@ class OrderHistoryCore extends ObjectModel
 					$payment->order_reference = $order->reference;
 					$payment->id_currency = $order->id_currency;
 					$payment->amount = $rest_paid;
-					$payment->payment_method = $payment_method->displayName;
+
+					if ($order->total_paid != 0)
+						$payment->payment_method = $payment_method->displayName;
+					else 
+						$payment->payment_method = null;
+
 					$payment->conversion_rate = 1;
 					$payment->save();
-					
 					Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
 					VALUES('.(int)$invoice->id.', '.(int)$payment->id.', '.(int)$order->id.')');

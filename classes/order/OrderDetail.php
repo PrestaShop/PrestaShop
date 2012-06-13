@@ -303,7 +303,10 @@ class OrderDetailCore extends ObjectModel
 
 		if (count($this->tax_calculator->taxes) == 0)
 			return true;
-
+			
+		if ($order->total_products <= 0)
+			return true;
+		
 		$ratio = $this->unit_price_tax_excl / $order->total_products;
 		$order_reduction_amount = $order->total_discounts_tax_excl * $ratio;
 		$discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
