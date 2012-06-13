@@ -121,6 +121,9 @@ class StockAvailableCore extends ObjectModel
 		$ids_product_attribute = array();
 		foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute)
 			$ids_product_attribute[] = $id_product_attribute['id_product_attribute'];
+		
+		// Allow to order the product when out of stock?
+		$out_of_stock = StockAvailable::outOfStock($id_product);
 
 		$manager = StockManagerFactory::getManager();
 		// loops on $ids_warehouse to synchronize quantities
@@ -140,23 +143,50 @@ class StockAvailableCore extends ObjectModel
 				foreach ($ids_product_attribute as $id_product_attribute)
 				{
 					$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
-					$query = array(
-						'table' => 'stock_available',
-						'data' => array('quantity' => $quantity),
-						'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
-						StockAvailable::addSqlShopRestriction(null, $id_shop)
-					);
-					Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+					
+					$query = new DbQuery();
+					$query->select('COUNT(*)');
+					$query->from('stock_available');
+					$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute);
+			
+					
+					if ((int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query))
+					{
+						$query = array(
+							'table' => 'stock_available',
+							'data' => array('quantity' => $quantity),
+							'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
+							StockAvailable::addSqlShopRestriction(null, $id_shop)
+						);
+						Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+					}
+					else
+					{
+						$shop = new Shop($id_shop);
+						$query = array(
+							'table' => 'stock_available',
+							'data' => array(
+								'quantity' => $quantity,
+								'depends_on_stock' => 1,
+								'out_of_stock' => $out_of_stock,
+								'id_product' => (int)$id_product,
+								'id_product_attribute' => (int)$id_product_attribute,
+								'id_shop' => $id_shop,
+								'id_shop_group' => $shop->id_shop_group
+							)
+						);
+						Db::getInstance()->insert($query['table'], $query['data']);
+					}
 
 					$product_quantity += $quantity;
 
 					Hook::exec('actionUpdateQuantity',
-				   				array(
-				   					'id_product' => $id_product,
-				   					'id_product_attribute' => $id_product_attribute,
-				   					'quantity' => $quantity
-				   				)
-				  	);
+								array(
+									'id_product' => $id_product,
+									'id_product_attribute' => $id_product_attribute,
+									'quantity' => $quantity
+								)
+					);
 				}
 
 				// updates
