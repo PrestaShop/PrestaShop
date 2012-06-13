@@ -414,12 +414,21 @@ class ToolsCore
 		if ((int)$cookie->id_currency)
 		{
 			$currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
-			if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active && $currency->isAssociatedToShop())
-				return $currency;
+			if (is_object($currency) && (int)$currency->id && (int)$currency->deleted != 1 && $currency->active)
+				if ($currency->isAssociatedToShop())
+					return $currency;
+				else
+				{
+					// get currency from context
+					$currency = Shop::getEntityIds('currency', Context::getContext()->shop->id);
+					$cookie->id_currency = $currency[0]['id_currency'];
+					return Currency::getCurrencyInstance((int)$cookie->id_currency);
+				}
 		}
 		$currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
 		if (is_object($currency) && $currency->id)
 			$cookie->id_currency = (int)$currency->id;
+
 		return $currency;
 	}
 

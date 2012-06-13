@@ -279,7 +279,11 @@ class AdminProductsControllerCore extends AdminController
 		{
 			/* update product final price */
 			for ($i = 0; $i < $nb; $i++)
+			{
+				// convert price with the currency from context
+				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
 				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 6, null, false, true, 1, true);
+			}
 		}
 
 		if ($orderByPriceFinal == 'price_final')
@@ -2686,6 +2690,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
 		$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
 		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+		$product_price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
 		if ($product->unit_price_ratio != 0)
 			$data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 2));
 		else
@@ -3423,7 +3428,8 @@ class AdminProductsControllerCore extends AdminController
 				$combination_images = $product->getCombinationImages($this->context->language->id);
 				foreach ($combinations as $k => $combination)
 				{
-					$price = Tools::displayPrice($combination['price'], $currency);
+					$price_to_convert = Tools::convertPrice($combination['price'], $currency);
+					$price = Tools::displayPrice($price_to_convert, $currency);
 
 					$comb_array[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
 					$comb_array[$combination['id_product_attribute']]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);

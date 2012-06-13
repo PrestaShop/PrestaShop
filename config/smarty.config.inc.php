@@ -70,6 +70,7 @@ smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug o
 smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
+smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
 
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
@@ -186,6 +187,11 @@ function smartyHook($params, &$smarty)
 		unset($hook_params['h']);
 		return Hook::exec($params['h'], $hook_params, $id_module);
 	}
+}
+
+function toolsConvertPrice($params, &$smarty)
+{
+	return Tools::convertPrice($params['price'], Context::getContext()->currency);
 }
 
 /**
