@@ -27,80 +27,81 @@
 <script type="text/javascript">
 
 var product_url = '{$link->getAdminLink('AdminProducts', true)}';
-
-var Customer = {
-	"hiddenField": jQuery('#id_customer'),
-	"field": jQuery('#customer'),
-	"container": jQuery('#customers'),
-	"loader": jQuery('#customerLoader'),
-	"init": function() {
-		jQuery(Customer.field).typeWatch({
-			"captureLength": 1,
-			"highlight": true,
-			"wait": 50,
-			"callback": Customer.search
-		}).focus(Customer.placeholderIn).blur(Customer.placeholderOut);
-	},
-	"placeholderIn": function() {
-		if (this.value == '{l s='All customers'}') {
-			this.value = '';
-		}
-	},
-	"placeholderOut": function() {
-		if (this.value == '') {
-			this.value = '{l s='All customers'}';
-		}
-	},
-	"search": function()
-	{
-		Customer.showLoader();
-		jQuery.ajax({
-			"type": "POST",
-			"url": "{$link->getAdminLink('AdminCustomers')}",
-			"async": true,
-			"dataType": "json",
-			"data": {
-				"ajax": "1",
-				"token": "{getAdminToken tab='AdminCustomers'}",
-				"tab": "AdminCustomers",
-				"action": "searchCustomers",
-				"customer_search": Customer.field.val()
-			},
-			"success": Customer.success
-		});
-	},
-	"success": function(result)
-	{
-		if(result.found) {
-			var html = '<ul class="clearfix">';
-			jQuery.each(result.customers, function() {
-				html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
-				html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
-				html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{l s='Choose'}</a></li>';
+$(document).ready(function () {
+	var Customer = {
+		"hiddenField": jQuery('#id_customer'),
+		"field": jQuery('#customer'),
+		"container": jQuery('#customers'),
+		"loader": jQuery('#customerLoader'),
+		"init": function() {
+			jQuery(Customer.field).typeWatch({
+				"captureLength": 1,
+				"highlight": true,
+				"wait": 50,
+				"callback": Customer.search
+			}).focus(Customer.placeholderIn).blur(Customer.placeholderOut);
+		},
+		"placeholderIn": function() {
+			if (this.value == '{l s='All customers'}') {
+				this.value = '';
+			}
+		},
+		"placeholderOut": function() {
+			if (this.value == '') {
+				this.value = '{l s='All customers'}';
+			}
+		},
+		"search": function()
+		{
+			Customer.showLoader();
+			jQuery.ajax({
+				"type": "POST",
+				"url": "{$link->getAdminLink('AdminCustomers')}",
+				"async": true,
+				"dataType": "json",
+				"data": {
+					"ajax": "1",
+					"token": "{getAdminToken tab='AdminCustomers'}",
+					"tab": "AdminCustomers",
+					"action": "searchCustomers",
+					"customer_search": Customer.field.val()
+				},
+				"success": Customer.success
 			});
-			html += '</ul>';
+		},
+		"success": function(result)
+		{
+			if(result.found) {
+				var html = '<ul class="clearfix">';
+				jQuery.each(result.customers, function() {
+					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
+					html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
+					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{l s='Choose'}</a></li>';
+				});
+				html += '</ul>';
+			}
+			else
+				html = '<div class="warn">{l s='No customers found'}</div>';
+			Customer.hideLoader();
+			Customer.container.html(html);
+			jQuery('.fancybox', Customer.container).fancybox();
+		},
+		"select": function(id_customer, fullname)
+		{
+			Customer.hiddenField.val(id_customer);
+			Customer.field.val(fullname);
+			Customer.container.empty();
+			return false;
+		},
+		"showLoader": function() {
+			Customer.loader.fadeIn();
+		},
+		"hideLoader": function() {
+			Customer.loader.fadeOut();
 		}
-		else
-			html = '<div class="warn">{l s='No customers found'}</div>';
-		Customer.hideLoader();
-		Customer.container.html(html);
-		jQuery('.fancybox', Customer.container).fancybox();
-	},
-	"select": function(id_customer, fullname)
-	{
-		Customer.hiddenField.val(id_customer);
-		Customer.field.val(fullname);
-		Customer.container.empty();
-		return false;
-	},
-	"showLoader": function() {
-		Customer.loader.fadeIn();
-	},
-	"hideLoader": function() {
-		Customer.loader.fadeOut();
-	}
-};
-jQuery(document).ready(Customer.init);
+	};
+	Customer.init();
+});
 </script>
 
 {* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
