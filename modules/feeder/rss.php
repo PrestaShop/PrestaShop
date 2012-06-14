@@ -31,9 +31,9 @@ require_once(dirname(__FILE__).'/../../init.php');
 $number = ((int)(Tools::getValue('n')) ? (int)(Tools::getValue('n')) : 10);
 $orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 $orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
-$id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : 1);
-$products = Product::getProducts((int)($cookie->id_lang), 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
-$currency = new Currency((int)($cookie->id_currency));
+$id_category = ((int)(Tools::getValue('id_category')) ? (int)(Tools::getValue('id_category')) : Configuration::get('PS_HOME_CATEGORY'));
+$products = Product::getProducts((int)Context::getContext()->language->id, 0, ($number > 10 ? 10 : $number), $orderBy, $orderWay, $id_category, true);
+$currency = new Currency((int)Context::getContext()->currency->id);
 $affiliate = (Tools::getValue('ac') ? '?ac='.(int)(Tools::getValue('ac')) : '');
 
 // Send feed
