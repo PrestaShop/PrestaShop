@@ -68,7 +68,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 		$result = true;
 		$id_guest = 0;
 		$id_customer = $this->context->customer->id;
-		if ($id_customer)
+		if (!$id_customer)
 			$id_guest = $this->context->cookie->id_guest;
 
 		$errors = array();
@@ -99,10 +99,10 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 				$comment = new ProductComment();
 				$comment->content = strip_tags(Tools::getValue('content'));
 				$comment->id_product = (int)Tools::getValue('id_product');
-				$comment->id_customer = $id_customer;
+				$comment->id_customer = (int)$id_customer;
 				$comment->id_guest = $id_guest;
 				$comment->customer_name = Tools::getValue('customer_name');
-				if (!$comment->id_customer)
+				if (!$comment->customer_name)
 					$comment->customer_name = pSQL($this->context->customer->firstname.' '.$this->context->customer->lastname);
 				$comment->title = Tools::getValue('title');
 				$comment->grade = 0;
