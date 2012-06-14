@@ -524,7 +524,8 @@ class DispatcherCore
 		if (!isset($this->routes[$route_id]))
 		{
 			$query = http_build_query($params, '', '&');
-			return ($route_id == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
+			$index_link = Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php';
+			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$route_id];
 
