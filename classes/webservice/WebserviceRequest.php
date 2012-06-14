@@ -777,8 +777,12 @@ class WebserviceRequestCore
 				return true;
 			}
 		}
-
-		$this->setError(404, 'This shop id doesn\'t exist', 129);
+		else
+		{
+			self::$shopIDs[] = Context::getContext()->shop->id;
+			return true;
+		}
+		$this->setError(404, 'This shop id does not exist', 999);
 		return false;
 	}
 
