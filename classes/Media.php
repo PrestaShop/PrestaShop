@@ -209,7 +209,7 @@ class MediaCore
 	 */
 	public static function getJSPath($js_uri)
 	{
-		if (is_array($js_uri) || is_null($js_uri) || empty($js_uri))
+		if (is_array($js_uri) || $js_uri === null || empty($js_uri))
 			return false;
 		$url_data = parse_url($js_uri);
 		if (!array_key_exists('host', $url_data))
@@ -258,14 +258,14 @@ class MediaCore
 	public static function getJqueryPath($version = null, $folder = null, $minifier = true)
 	{
 		$add_no_conflict = false;
-		if (is_null($version))
+		if ($version === null)
 			$version = _PS_JQUERY_VERSION_; //set default version
 		else if (preg_match('/^([0-9]+\.)+[0-9]$/Ui', $version))
 			$add_no_conflict = true;
 		else
 			return false;
 
-		if (is_null($folder))
+		if ($folder === null)
 			$folder = _PS_JS_DIR_.'jquery/'; //set default folder
 		//check if file exist
 		$file = $folder.'jquery-'.$version.($minifier ? '.min.js' : '.js');
@@ -345,7 +345,7 @@ class MediaCore
 	public static function getJqueryPluginPath($name, $folder)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
-		if (is_null($folder))
+		if ($folder === null)
 			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder
 
 		$file = 'jquery.'.$name.'.js';

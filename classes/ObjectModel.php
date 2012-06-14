@@ -166,7 +166,7 @@ abstract class ObjectModelCore
 		$this->def = self::getDefinition($this);
 		$this->setDefinitionRetrocompatibility();
 
-		if (!is_null($id_lang))
+		if ($id_lang !== null)
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($id_shop && $this->isMultishop())
@@ -299,7 +299,7 @@ abstract class ObjectModelCore
 		$is_lang_multishop = $this->isLangMultishop();
 
 		$fields = array();
-		if (is_null($this->id_lang))
+		if ($this->id_lang === null)
 			foreach (Language::getLanguages(false) as $language)
 			{
 				$fields[$language['id_lang']] = $this->formatFields(self::FORMAT_LANG, $language['id_lang']);
@@ -943,7 +943,7 @@ abstract class ObjectModelCore
 			),
 		);
 
-		if (is_null($ws_params_attribute_name))
+		if ($ws_params_attribute_name === null)
 			$ws_params_attribute_name = 'webserviceParameters';
 
 		if (!isset($this->{$ws_params_attribute_name}['objectNodeName']))
@@ -1068,7 +1068,7 @@ abstract class ObjectModelCore
 	 */
 	public function isAssociatedToShop($id_shop = null)
 	{
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Context::getContext()->shop->id;
 
 		$sql = 'SELECT id_shop
