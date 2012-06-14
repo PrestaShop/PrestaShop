@@ -269,7 +269,9 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
 			'desc' => $this->l('Transplant a module')
 		);
-				
+		
+		$live_edit_params = array('live_edit' => true, 'ad' => $admin_dir, 'liveToken' => sha1($admin_dir._COOKIE_KEY_));
+
 		$this->context->smarty->assign(array(
 			'show_toolbar' => true,
 			'toolbar_btn' => $this->toolbar_btn,
@@ -281,7 +283,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
 			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-			'url_live_edit' => $this->context->shop->getBaseUrl().'index.php?live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_),
+			'url_live_edit' => $this->context->link->getPageLink('index.php', true, null, $live_edit_params),
 			'display_key' => $this->display_key,
 			'hooks' => $hooks,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
