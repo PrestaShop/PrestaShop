@@ -93,9 +93,9 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function getIdByName($key, $id_shop_group = null, $id_shop = null)
 	{
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID();
-		if (is_null($id_shop_group))
+		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID();
 
 		$sql = 'SELECT id_configuration
@@ -147,9 +147,9 @@ class ConfigurationCore extends ObjectModel
 	public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
 		$id_lang = (int)$id_lang;
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID();
-		if (is_null($id_shop_group))
+		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID();
 
 		if (!isset(self::$_CONF[$id_lang]))
@@ -203,9 +203,9 @@ class ConfigurationCore extends ObjectModel
 	 		throw new PrestaShopException('keys var is not an array');
 
 		$id_lang = (int)$id_lang;
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID();
-		if (is_null($id_shop_group))
+		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID();
 
 	 	$results = array();
@@ -246,9 +246,9 @@ class ConfigurationCore extends ObjectModel
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
 
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID();
-		if (is_null($id_shop_group))
+		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID();
 
 		if (!is_array($values))
@@ -293,9 +293,9 @@ class ConfigurationCore extends ObjectModel
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
 
-		if (is_null($id_shop))
+		if ($id_shop === null)
 			$id_shop = Shop::getContextShopID();
-		if (is_null($id_shop_group))
+		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID();
 
 		if (!is_array($values))

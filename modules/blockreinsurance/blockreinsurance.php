@@ -45,49 +45,6 @@ class Blockreinsurance extends Module
 
 		$this->displayName = $this->l('Bloc reinsurance');
 		$this->description = $this->l('Add a block to display more infos to reassure your customers');
-
-		$this->fields_list = array(
-			'id_reinsurance' => array(
-				'title' => $this->l('Id'),
-				'width' => 120,
-				'type' => 'text',
-			),
-			'text' => array(
-				'title' => $this->l('Text'),
-				'width' => 140,
-				'type' => 'text',
-				'filter_key' => 'a!lastname'
-			),
-		);
-
-		if (Shop::isFeatureActive())
-			$this->fields_list['id_shop'] = array('title' => $this->l('ID Shop'), 'align' => 'center', 'width' => 25, 'type' => 'int');
-
-		$this->fields_form[0]['form'] = array(
-			'legend' => array(
-				'title' => $this->l('Reinsurance new block'),
-			),
-			'input' => array(
-				array(
-					'type' => 'file',
-					'label' => $this->l('Image:'),
-					'name' => 'image',
-					'value' => true
-				),
-				array(
-					'type' => 'textarea',
-					'label' => $this->l('Text:'),
-					'lang' => true,
-					'name' => 'text',
-					'cols' => 40,
-					'rows' => 10
-				)
-			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			)
-		);
 	}
 
 	public function install()
@@ -254,6 +211,32 @@ class Blockreinsurance extends Module
 	{
 		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
+		$this->fields_form[0]['form'] = array(
+			'legend' => array(
+				'title' => $this->l('Reinsurance new block'),
+			),
+			'input' => array(
+				array(
+					'type' => 'file',
+					'label' => $this->l('Image:'),
+					'name' => 'image',
+					'value' => true
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Text:'),
+					'lang' => true,
+					'name' => 'text',
+					'cols' => 40,
+					'rows' => 10
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
 		$helper = new HelperForm();
 		$helper->module = $this;
 		$helper->name_controller = 'blockreinsurance';
@@ -290,6 +273,23 @@ class Blockreinsurance extends Module
 
 	protected function initList()
 	{
+		$this->fields_list = array(
+			'id_reinsurance' => array(
+				'title' => $this->l('Id'),
+				'width' => 120,
+				'type' => 'text',
+			),
+			'text' => array(
+				'title' => $this->l('Text'),
+				'width' => 140,
+				'type' => 'text',
+				'filter_key' => 'a!lastname'
+			),
+		);
+
+		if (Shop::isFeatureActive())
+			$this->fields_list['id_shop'] = array('title' => $this->l('ID Shop'), 'align' => 'center', 'width' => 25, 'type' => 'int');
+
 		$helper = new HelperList();
 		$helper->shopLinkType = '';
 		$helper->simple_header = true;

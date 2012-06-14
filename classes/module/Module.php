@@ -1430,7 +1430,7 @@ abstract class ModuleCore
 	protected static $exceptionsCache = null;
 	public function getExceptions($hookID, $dispatch = false)
 	{
-		if (is_null(self::$exceptionsCache))
+		if (self::$exceptionsCache === null)
 		{
 			self::$exceptionsCache = array();
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
@@ -1557,7 +1557,7 @@ abstract class ModuleCore
 	public function getTemplatePath($template)
 	{
 		$overloaded = $this->_isTemplateOverloaded($template);
-		if (is_null($overloaded))
+		if ($overloaded === null)
 			return null;
 		if ($overloaded)
 			return _PS_THEME_DIR_.'modules/'.$this->name.'/'.$template;

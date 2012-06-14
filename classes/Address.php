@@ -278,9 +278,12 @@ class AddressCore extends ObjectModel
 	{
 		if (isset(self::$_idCountries[$id_address]))
 			return self::$_idCountries[$id_address];
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `'._DB_PREFIX_.'address`
-		WHERE `id_address` = '.(int)$id_address);
+		if ($id_address)
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `'._DB_PREFIX_.'address`
+			WHERE `id_address` = '.(int)$id_address);
+		else
+			$result = false;
 		self::$_idCountries[$id_address] = $result;
 		return $result;
 	}

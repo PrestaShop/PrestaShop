@@ -531,7 +531,7 @@ class CustomerCore extends ObjectModel
 
 	public static function getGroupsStatic($id_customer)
 	{
-		if (!Group::isFeatureActive())
+		if (!Group::isFeatureActive() || $id_customer = 0)
 			return array(Configuration::get('PS_CUSTOMER_GROUP'));
 
 		if (!isset(self::$_customer_groups[$id_customer]))
