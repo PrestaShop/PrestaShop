@@ -45,23 +45,23 @@ function smartyTranslate($params, &$smarty)
 	if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false))
 		$key = 'override_'.$key;
 
-	$lang_array = $_LANG;
 	if ($params['mod'])
 		return Translate::getModuleTranslation($params['mod'], $params['s'], $basename, $params['sprintf']);
 	else if ($params['pdf'])
 		return Translate::getPdfTranslation($params['s']);
 
-	if ($lang_array != null && isset($lang_array[$key]))
-		$msg = $lang_array[$key];
-	elseif ($lang_array != null && isset($lang_array[Tools::strtolower($key)]))
-		$msg = $lang_array[Tools::strtolower($key)];
+	if ($_LANG != null && isset($_LANG[$key]))
+		$msg = $_LANG[$key];
+	elseif ($_LANG != null && isset($_LANG[Tools::strtolower($key)]))
+		$msg = $_LANG[Tools::strtolower($key)];
 	else
 		$msg = $params['s'];
 
 	if ($msg != $params['s'])
 		$msg = $params['js'] ? addslashes($msg) : stripslashes($msg);
 
-	$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
+	if ($params['sprintf'] !== null)
+		$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
 
 	return $params['js'] ? $msg : Tools::htmlentitiesUTF8($msg);
 }

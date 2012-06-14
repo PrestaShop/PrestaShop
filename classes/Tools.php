@@ -963,8 +963,7 @@ class ToolsCore
 		// Remove all non-whitelist chars.
 		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);
 		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
-		$str = preg_replace('/[ ]/', '-', $str);
-		$str = preg_replace('/[\/]/', '-', $str);
+		$str = str_replace(array(' ', '/'), '-', $str);
 
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
 		// This way we lose fewer special chars.

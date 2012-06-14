@@ -96,6 +96,9 @@ class FavoriteProduct extends ObjectModel
 
 	public static function isCustomerFavoriteProduct($id_customer, $id_product, Shop $shop = null)
 	{
+		if (!$id_customer)
+			return false;
+
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 

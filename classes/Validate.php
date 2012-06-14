@@ -490,7 +490,7 @@ class ValidateCore
 	 */
 	public static function isBool($bool)
 	{
-		return is_null($bool) || is_bool($bool) || preg_match('/^0|1$/', $bool);
+		return $bool === null || is_bool($bool) || preg_match('/^0|1$/', $bool);
 	}
 
 	/**
@@ -655,7 +655,7 @@ class ValidateCore
 
 	public static function isNullOrUnsignedId($id)
 	{
-		return is_null($id) || Validate::isUnsignedId($id);
+		return $id === null || Validate::isUnsignedId($id);
 	}
 
 	/**
@@ -803,7 +803,7 @@ class ValidateCore
 	 */
 	public static function isSortDirection($value)
 	{
-		return (!is_null($value) && ($value === 'ASC' || $value === 'DESC'));
+		return ($value !== null && ($value === 'ASC' || $value === 'DESC'));
 	}
 
 	/**
@@ -909,7 +909,7 @@ class ValidateCore
 	 */
 	public static function isSerializedArray($data)
 	{
-		return is_null($data) || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
+		return $data === null || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
 	}
 
 	/**
@@ -920,7 +920,7 @@ class ValidateCore
 	 */
 	public static function isCoordinate($data)
 	{
-		return is_null($data) || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
+		return $data === null || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
 	}
 
 	/**

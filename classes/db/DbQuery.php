@@ -96,7 +96,7 @@ class DbQueryCore
 	 */
 	public function leftJoin($table, $alias = null, $on = null)
 	{
-		return $this->join('LEFT JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : '').($on ? ' ON '.$on : ''));
+		return $this->join('LEFT JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' `'.pSQL($alias).'`' : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
