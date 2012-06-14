@@ -118,7 +118,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 						$product_comment_criterion->addGrade($comment->id, $grade);
 				}
 
-				if (count(Tools::getValue('criterion')) > 1)
+				if (count(Tools::getValue('criterion')) >= 1)
 				{
 					$comment->grade = $grade_sum / count(Tools::getValue('criterion'));
 					// Update Grade average of comment
