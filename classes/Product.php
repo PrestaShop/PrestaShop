@@ -1123,7 +1123,7 @@ class ProductCore extends ObjectModel
 
 		$result &= ObjectModel::updateMultishopTable('product', array(
 			'cache_default_attribute' => (int)$id_product_attribute,
-		), '`a.id_product` = '.(int)$this->id);
+		), 'a.`id_product` = '.(int)$this->id);
 
 		return $result;
 	}
