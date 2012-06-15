@@ -72,6 +72,7 @@
 	var txtInvoiceAddress = "{l s='Invoice address'}";
 	var txtModifyMyAddress = "{l s='Modify my address'}";
 	var txtInstantCheckout = "{l s='Instant checkout'}";
+	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address'}";
 	var errorCarrier = "{$errorCarrier}";
 	var errorTOS = "{$errorTOS}";
 	var checkedCarrier = "{if isset($checked)}{$checked}{else}0{/if}";

@@ -69,6 +69,7 @@
 	var currencyBlank = '{$currencyBlank|intval}';
 	var txtProduct = "{l s='product'}";
 	var txtProducts = "{l s='products'}";
+	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address'}";
 	{/if}
 
 	var formatedAddressFieldsValuesList = new Array();

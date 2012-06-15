@@ -140,7 +140,7 @@ function changeAddressDelivery(obj)
 		// This test is will not usefull in the future
 		if (old_id_address_delivery == 0)
 		{
-			alert('Please select first an address'); // @todo translate
+			alert(txtSelectAnAddressFirst);
 			return false;
 		}
 		
