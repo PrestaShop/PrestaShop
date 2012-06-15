@@ -3831,6 +3831,12 @@ class BlockLayered extends Module
 		
 		$this->getProducts($selected_filters, $products, $nb_products, $p, $n, $pages_nb, $start, $stop, $range);
 		
+		// Add pagination variable
+		$nArray = (int)Configuration::get('PS_PRODUCTS_PER_PAGE') != 10 ? array((int)Configuration::get('PS_PRODUCTS_PER_PAGE'), 10, 20, 50) : array(10, 20, 50);
+		// Clean duplicate values
+		$nArray = array_unique($nArray);
+		asort($nArray);
+		
 		$smarty->assign(
 			array(
 				'homeSize' => Image::getSize('home'),
@@ -3848,6 +3854,7 @@ class BlockLayered extends Module
 				'products_per_page' => (int)Configuration::get('PS_PRODUCTS_PER_PAGE'),
 				'static_token' => Tools::getToken(false),
 				'page_name' => 'category',
+				'nArray' => $nArray,
 			)
 		);
 		
