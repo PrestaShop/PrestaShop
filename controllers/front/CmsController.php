@@ -56,7 +56,7 @@ class CmsControllerCore extends FrontController
 
 		/* assignCase (1 = CMS page, 2 = CMS category) */
 		if (Validate::isLoadedObject($this->cms)
-			&& ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id))))
+			&& ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)Tools::getValue('id_employee')))))
 			$this->assignCase = 1;
 		else if (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;

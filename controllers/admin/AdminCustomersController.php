@@ -882,6 +882,28 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->content = Tools::jsonEncode($to_return);
 	}
+	
+	/**
+	 * Uodate the customer note
+	 * 
+	 * @return void
+	 */
+	public function ajaxProcessUpdateCustomerNote()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$note = Tools::htmlentitiesDecodeUTF8(Tools::getValue('note'));
+			$customer = new Customer((int)Tools::getValue('id_customer'));
+			if (!Validate::isLoadedObject($customer))
+				die ('error:update');
+			if (!empty($note) && !Validate::isCleanHtml($note))
+				die ('error:validation');
+			$customer->note = $note;
+			if (!$customer->update())
+				die ('error:update');
+			die('ok');
+		}
+	}
 }
 
 

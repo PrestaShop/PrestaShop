@@ -234,7 +234,7 @@ class AdminCmsControllerCore extends AdminController
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
 				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-				$redir .= '?adtoken='.Tools::encrypt('PreviewCMS'.$cms->id).'&ad='.$admin_dir;
+				$redir .= '?adtoken='.Tools::getAdminTokenLite('AdminCmsContent').'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 			}
 			Tools::redirectAdmin($redir);
 		}
@@ -312,9 +312,7 @@ class AdminCmsControllerCore extends AdminController
                     {
                         $admin_dir = dirname($_SERVER['PHP_SELF']);
                         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-                        $token = Tools::encrypt('PreviewCMS'.$cms->id);
-
-                        $preview_url .= $cms->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
+                        $preview_url .= $cms->active ? '' : '&adtoken='.Tools::getAdminTokenLite('AdminCmsContent').'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
                     }
                     Tools::redirectAdmin($preview_url);
                 }

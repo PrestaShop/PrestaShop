@@ -386,7 +386,7 @@ class FrontControllerCore extends Controller
 			$this->displayRestrictedCountryPage();
 
 		//live edit
-		if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
 				die(Tools::displayError());
 
@@ -556,7 +556,7 @@ class FrontControllerCore extends Controller
 				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 
 			// live edit
-			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 			{
 				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
 				$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
@@ -686,7 +686,7 @@ class FrontControllerCore extends Controller
 		$this->addjqueryPlugin('easing');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 
-		if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 		{
 			$this->addJqueryUI('ui.sortable');
 			$this->addjqueryPlugin('fancybox');
@@ -732,7 +732,7 @@ class FrontControllerCore extends Controller
 	{
 		if (Tools::isSubmit('live_edit')
 			&& ($ad = Tools::getValue('ad'))
-			&& (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+			&& Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 		{
 			$data = $this->context->smarty->createData();
 			$data->assign(array(
