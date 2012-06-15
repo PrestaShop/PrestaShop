@@ -256,12 +256,18 @@ class CategoryCore extends ObjectModel
 					$children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
 				}
 			}
-
+		
+		if (is_array($this->description))
+			foreach ($this->description as $lang => $description)
+				$this->description[$lang] = Category::getDescriptionClean($description);
+		else
+			$this->description = Category::getDescriptionClean($this->description);
+			
 		return array(
 			'id' => (int)$this->id_category,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
-			'desc'=> Category::getDescriptionClean($this->description),
+			'desc'=> $this->description,
 			'children' => $children
 		);
 	}
