@@ -157,57 +157,90 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCmsPositions()
 	{
-		$id_cms = (int)Tools::getValue('id_cms');
-		$id_category = (int)Tools::getValue('id_cms_category');
-		$way = (int)Tools::getValue('way');
-		$positions = Tools::getValue('cms');
-		if (is_array($positions))
-			foreach ($positions as $key => $value)
-			{
-				$pos = explode('_', $value);
-				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms))
-				{
-					$position = $key;
-					break;
-				}
-			}
-		$cms = new CMS($id_cms);
-		if (Validate::isLoadedObject($cms))
+		if ($this->tabAccess['edit'] === '1')
 		{
-			if (isset($position) && $cms->updatePosition($way, $position))
-				die(true);
+			$id_cms = (int)Tools::getValue('id_cms');
+			$id_category = (int)Tools::getValue('id_cms_category');
+			$way = (int)Tools::getValue('way');
+			$positions = Tools::getValue('cms');
+			if (is_array($positions))
+				foreach ($positions as $key => $value)
+				{
+					$pos = explode('_', $value);
+					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms))
+					{
+						$position = $key;
+						break;
+					}
+				}
+			$cms = new CMS($id_cms);
+			if (Validate::isLoadedObject($cms))
+			{
+				if (isset($position) && $cms->updatePosition($way, $position))
+					die(true);
+				else
+					die('{"hasError" : true, "errors" : "Can not update cms position"}');
+			}
 			else
-				die('{"hasError" : true, "errors" : "Can not update cms position"}');
+				die('{"hasError" : true, "errors" : "This cms can not be loaded"}');
 		}
-		else
-			die('{"hasError" : true, "errors" : "This cms can not be loaded"}');
 	}
 
 	public function ajaxProcessUpdateCmsCategoriesPositions()
 	{
-		$id_cms_category_to_move = (int)Tools::getValue('id_cms_category_to_move');
-		$id_cms_category_parent = (int)Tools::getValue('id_cms_category_parent');
-		$way = (int)Tools::getValue('way');
-		$positions = Tools::getValue('cms_category');
-		if (is_array($positions))
-			foreach ($positions as $key => $value)
-			{
-				$pos = explode('_', $value);
-				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move))
-				{
-					$position = $key;
-					break;
-				}
-			}
-		$cms_category = new CMSCategory($id_cms_category_to_move);
-		if (Validate::isLoadedObject($cms_category))
+		if ($this->tabAccess['edit'] === '1')
 		{
-			if (isset($position) && $cms_category->updatePosition($way, $position))
-				die(true);
+			$id_cms_category_to_move = (int)Tools::getValue('id_cms_category_to_move');
+			$id_cms_category_parent = (int)Tools::getValue('id_cms_category_parent');
+			$way = (int)Tools::getValue('way');
+			$positions = Tools::getValue('cms_category');
+			if (is_array($positions))
+				foreach ($positions as $key => $value)
+				{
+					$pos = explode('_', $value);
+					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move))
+					{
+						$position = $key;
+						break;
+					}
+				}
+			$cms_category = new CMSCategory($id_cms_category_to_move);
+			if (Validate::isLoadedObject($cms_category))
+			{
+				if (isset($position) && $cms_category->updatePosition($way, $position))
+					die(true);
+				else
+					die('{"hasError" : true, "errors" : "Can not update cms categories position"}');
+			}
 			else
-				die('{"hasError" : true, "errors" : "Can not update cms categories position"}');
+				die('{"hasError" : true, "errors" : "This cms category can not be loaded"}');
 		}
-		else
-			die('{"hasError" : true, "errors" : "This cms category can not be loaded"}');
 	}
+
+	public function ajaxProcessPublishCMS()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if ($id_cms = (int)Tools::getValue('id_cms'))
+			{
+				$bo_cms_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCmsContent&id_cms='.(int)$id_cms.'&updatecms&token='.$this->token;
+
+				if (Tools::getValue('redirect'))
+					die($bo_cms_url);
+
+				$cms = new CMS((int)(Tools::getValue('id_cms')));
+				if (!Validate::isLoadedObject($cms))
+					die('error: invalid id');
+
+				$cms->active = 1;
+				if ($cms->save())
+					die($bo_cms_url);
+				else
+					die('error: saving');
+			}
+			else
+				die ('error: parameters');
+		}
+	}
+
 }

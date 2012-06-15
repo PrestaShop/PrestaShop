@@ -94,8 +94,8 @@ class ProductControllerCore extends FrontController
 			 * In all the others cases => 404 "Product is no longer available"
 			 */
 			if (!$this->product->isAssociatedToShop()
-			|| ((!$this->product->active && ((Tools::getValue('adtoken') != Tools::encrypt('PreviewProduct'.$this->product->id))
-			|| !file_exists(_PS_ROOT_DIR_.'/'.Tools::getValue('ad').'/ajax.php')))))
+			|| ((!$this->product->active && ((Tools::getValue('adtoken') != Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
+			|| !file_exists(_PS_ROOT_DIR_.'/'.Tools::getValue('ad').'/index.php')))))
 			{
 				header('HTTP/1.1 404 page not found');
 				$this->errors[] = Tools::displayError('Product is no longer available.');

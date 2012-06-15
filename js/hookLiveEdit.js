@@ -143,23 +143,26 @@ function getHookableList() {
 	}); 
 
     $.ajax({
-        type: 'POST',
-        url: baseDir + ad + '/ajax.php',
-        async: true,
-        dataType: 'json',
-        data: {ajax:"true",
-        'getHookableList':1,
-        'hooks_list' : hooks_list,
-        modules_list : modules_list,
-        id_shop : get('id_shop')
-        },
-        success: function(jsonData) {
+			type: 'POST',
+			url: baseDir + ad + '/index.php',
+			async: true,
+			dataType: 'json',
+			data: {
+				action: 'getHookableList',
+				tab: 'AdminModulesPositions',
+				ajax:1,
+				hooks_list: hooks_list,
+				modules_list: modules_list,
+				id_shop: get('id_shop'),
+				token: get('liveToken')
+			},
+			success: function(jsonData) {
 			if (jsonData.hasError) {
 	        	var errors = '';
 				for (error in jsonData.errors) //IE6 bug fix
 				if (error != 'indexOf')
 					errors += jsonData.errors[error] + "\n";
-					alert(errors);
+				alert(errors);
         }
         else
         	hookable_list = jsonData;// create and fill input array
@@ -174,10 +177,17 @@ function getHookableList() {
 function getHookableModuleList(hook) {
     $.ajax({
         type: 'GET',
-        url: baseDir + ad + '/ajax.php',
+        url: baseDir + ad + '/index.php',
         async: true,
         dataType: 'json',
-        data: 'ajax=true&getHookableModuleList&hook=' + hook + '&id_shop=' + get('id_shop'),
+        data: {
+        	ajax:1,
+			tab: 'AdminModulesPositions',
+        	action:'getHookableModuleList',
+        	hook: hook,
+			id_shop: get('id_shop'),
+			token: get('liveToken')
+        },
         success: function(jsonData) {
             var select = '<select id="select_module">';
             for (var i = 0; i < jsonData.length; i++) {
@@ -213,7 +223,7 @@ function saveModulePosition()
 
     $.ajax({
         type: 'POST',
-        url: baseDir + ad + "/ajax.php", 
+        url: baseDir + ad + "/index.php", 
         async: true,
         dataType: 'json',
         data: datas,
