@@ -147,8 +147,8 @@ class StockAvailableCore extends ObjectModel
 					$query = new DbQuery();
 					$query->select('COUNT(*)');
 					$query->from('stock_available');
-					$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute);
-			
+					$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
+						StockAvailable::addSqlShopRestriction(null, $id_shop));
 					
 					if ((int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query))
 					{
@@ -162,7 +162,6 @@ class StockAvailableCore extends ObjectModel
 					}
 					else
 					{
-						$shop = new Shop($id_shop);
 						$query = array(
 							'table' => 'stock_available',
 							'data' => array(
@@ -171,10 +170,9 @@ class StockAvailableCore extends ObjectModel
 								'out_of_stock' => $out_of_stock,
 								'id_product' => (int)$id_product,
 								'id_product_attribute' => (int)$id_product_attribute,
-								'id_shop' => $id_shop,
-								'id_shop_group' => $shop->id_shop_group
 							)
 						);
+						StockAvailable::addSqlShopParams($query['data']);
 						Db::getInstance()->insert($query['table'], $query['data']);
 					}
 
@@ -583,11 +581,17 @@ class StockAvailableCore extends ObjectModel
 			$alias .= '.';
 
 		// if there is no $id_shop, gets the context one
+		// get shop group too
 		if ($id_shop === null)
+		{
 			$id_shop = $context->shop->id;
-
-		// if we are in $shop_group context
-		$shop_group = Shop::getContextShopGroup();
+			$shop_group = $context->shop->getGroup();
+		}
+		else
+		{
+			$shop = new Shop($id_shop);
+			$shop_group = $shop->getGroup();
+		}
 
 		// if quantities are shared between shops of the group
 		if ($shop_group->share_stock)
@@ -636,10 +640,17 @@ class StockAvailableCore extends ObjectModel
 		$group_ok = false;
 
 		// if there is no $id_shop, gets the context one
-		if ($id_shop === null)
+		// get shop group too
+			if ($id_shop === null)
+		{
 			$id_shop = $context->shop->id;
-
-		$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+			$shop_group = $context->shop->getGroup();
+		}
+		else
+		{
+			$shop = new Shop($id_shop);
+			$shop_group = $shop->getGroup();
+		}
 
 		// if quantities are shared between shops of the group
 		if ($shop_group->share_stock)
