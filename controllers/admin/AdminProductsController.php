@@ -1504,15 +1504,14 @@ class AdminProductsControllerCore extends AdminController
 						null,
 						Context::getContext()->shop->id,
 						0,
-						true
+						(bool)Configuration::get('PS_REWRITING_SETTINGS')
 					);
 
 					if (!$this->object->active)
 					{
 						$admin_dir = dirname($_SERVER['PHP_SELF']);
 						$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-						$token = Tools::encrypt('PreviewProduct'.$this->object->id);
-						$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
+						$preview_url .= '&adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 					}
 
 					$this->redirect_after = $preview_url;
@@ -1625,19 +1624,18 @@ class AdminProductsControllerCore extends AdminController
 								null,
 								Context::getContext()->shop->id,
 								0,
-								true
+								(bool)Configuration::get('PS_REWRITING_SETTINGS')
 							);
 
 							if (!$object->active)
 							{
 								$admin_dir = dirname($_SERVER['PHP_SELF']);
 								$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-								$token = Tools::encrypt('PreviewProduct'.$object->id);
 								if (strpos($preview_url, '?') === false)
 									$preview_url .= '?';
 								else
 									$preview_url .= '&';
-								$preview_url .= 'adtoken='.$token.'&ad='.$admin_dir;
+								$preview_url .= 'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 							}
 							$this->redirect_after = $preview_url;
 						}
@@ -2331,16 +2329,15 @@ class AdminProductsControllerCore extends AdminController
 				null,
 				Context::getContext()->shop->id,
 				0,
-				true
+				$is_rewrite_active
 			);
 
 			if (!$product->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
 				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-				$token = Tools::encrypt('PreviewProduct'.$product->id);
 
-				$preview_url .= $product->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
+				$preview_url .= $product->active ? '' : '&adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
 			}
 		}
 		return $preview_url;
@@ -3976,44 +3973,76 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessCheckProductName()
 	{
-		$search = Tools::getValue('q');
-		$id_lang = Tools::getValue('id_lang');
-		$limit = Tools::getValue('limit');
-		$result = Db::getInstance()->executeS('
-			SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
-			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-				ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
-			WHERE pl.`name` LIKE "%'.pSQL($search).'%"
-			GROUP BY pl.`id_product`
-			LIMIT '.(int)$limit);
-		die(Tools::jsonEncode($result));
+		if ($this->tabAccess['view'] === '1')
+		{
+			$search = Tools::getValue('q');
+			$id_lang = Tools::getValue('id_lang');
+			$limit = Tools::getValue('limit');
+			$result = Db::getInstance()->executeS('
+				SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
+				FROM `'._DB_PREFIX_.'product` p
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
+				WHERE pl.`name` LIKE "%'.pSQL($search).'%"
+				GROUP BY pl.`id_product`
+				LIMIT '.(int)$limit);
+			die(Tools::jsonEncode($result));
+		}
 	}
 
 	public function ajaxProcessUpdatePositions()
 	{
-		$way = (int)(Tools::getValue('way'));
-		$id_product = (int)(Tools::getValue('id_product'));
-		$id_category = (int)(Tools::getValue('id_category'));
-		$positions = Tools::getValue('product');
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$way = (int)(Tools::getValue('way'));
+			$id_product = (int)(Tools::getValue('id_product'));
+			$id_category = (int)(Tools::getValue('id_category'));
+			$positions = Tools::getValue('product');
 
-		if (is_array($positions))
-			foreach ($positions as $position => $value)
-			{
-				$pos = explode('_', $value);
-
-				if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
+			if (is_array($positions))
+				foreach ($positions as $position => $value)
 				{
-					if ($product = new Product((int)$pos[2]))
-						if (isset($position) && $product->updatePosition($way, $position))
-							echo 'ok position '.(int)$position.' for product '.(int)$pos[2].'\r\n';
-						else
-							echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
-					else
-						echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
+					$pos = explode('_', $value);
 
-					break;
+					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
+					{
+						if ($product = new Product((int)$pos[2]))
+							if (isset($position) && $product->updatePosition($way, $position))
+								echo 'ok position '.(int)$position.' for product '.(int)$pos[2].'\r\n';
+							else
+								echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
+						else
+							echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
+
+						break;
+					}
 				}
+		}
+	}
+	
+	public function ajaxProcessPublishProduct()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if ($id_product = (int)Tools::getValue('id_product'))
+			{
+				$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminProducts'));
+				$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$this->token;
+				
+				if (Tools::getValue('redirect'))
+					die($bo_product_url);
+
+					$product = new Product((int)$id_product);
+					if (!Validate::isLoadedObject($product))
+						die('error: invalid id');
+
+					$product->active = 1;
+
+					if ($product->save())
+						die($bo_product_url);
+					else
+						die('error: saving');
 			}
+		}
 	}
 }

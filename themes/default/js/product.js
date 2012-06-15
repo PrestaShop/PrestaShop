@@ -588,16 +588,24 @@ function saveCustomization()
 	$('#customizationForm').submit();
 }
 
-function submitPublishProduct(url, redirect)
+function submitPublishProduct(url, redirect, token)
 {
 	var id_product = $('#admin-action-product-id').val();
 
 	$.ajaxSetup({async: false});
-	$.post(url+'/ajax.php', { submitPublishProduct: '1', id_product: id_product, status: 1, redirect: redirect },
+	$.post(url+'/index.php', { 
+		action:'publishProduct',
+		id_product: id_product, 
+		status: 1, 
+		redirect: redirect,
+		ajax: 1,
+		tab: 'AdminProducts',
+		token: token
+		},
 		function(data)
 		{
 			if (data.indexOf('error') === -1)
-				document.location.href = data;
+			document.location.href = data;
 		}
 	);
 

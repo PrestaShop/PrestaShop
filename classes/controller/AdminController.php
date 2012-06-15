@@ -1349,6 +1349,7 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		$this->getLanguages();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
@@ -1458,6 +1459,9 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderForm()
 	{
+		if (!$this->default_form_language)
+			$this->getLanguages();
+
 		if (Tools::getValue('submitFormAjax'))
 			$this->content .= $this->context->smarty->fetch('form_submit_ajax.tpl');
 		if ($this->fields_form && is_array($this->fields_form))
@@ -1469,7 +1473,6 @@ class AdminControllerCore extends Controller
 			if (is_array($this->fields_form_override) && !empty($this->fields_form_override))
 				$this->fields_form[0]['form']['input'][] = $this->fields_form_override;
 
-			$this->getlanguages();
 			$helper = new HelperForm($this);
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $this->getFieldsValue($this->object);
