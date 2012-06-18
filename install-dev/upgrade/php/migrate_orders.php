@@ -39,10 +39,7 @@ function migrate_orders()
 	$values_order_detail = array();
 	$col_order_detail = Db::getInstance()->query('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
 	if (!$col_order_detail)
-	{
-		$array_errors[] = 'unable to get fields list from order_detail table';
-		return false;
-	}
+		return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table';
 
 	$col_order_detail = $col_order_detail->fetchAll(PDO::FETCH_COLUMN);
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
