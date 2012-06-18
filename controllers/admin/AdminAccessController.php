@@ -30,9 +30,6 @@ class AdminAccessControllerCore extends AdminController
 	/* @var array : Black list of id_tab that do not have access */
 	public $accesses_black_list = array();
 
-	/* @var int : id tab of controller AdminAccess */
-	public $id_tab_access;
-
 	public function __construct()
 	{
 		$this->table = 'access';
@@ -43,9 +40,6 @@ class AdminAccessControllerCore extends AdminController
 
 		// Blacklist AdminLogin
 		$this->accesses_black_list[] = Tab::getIdFromClassName('AdminLogin');
-
-		// Get id tab of controller AdminAccess
-		$this->id_tab_access = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = "AdminAccess"');
 
 		parent::__construct();
 	}
@@ -107,8 +101,7 @@ class AdminAccessControllerCore extends AdminController
 			'access_edit' => $this->tabAccess['edit'],
 			'perms' => array('view', 'add', 'edit', 'delete'),
 			'modules' => $modules,
-			'link' => $this->context->link,
-			'id_tab_access' => (int)$this->id_tab_access
+			'link' => $this->context->link
 		);
 
 		return parent::renderForm();
