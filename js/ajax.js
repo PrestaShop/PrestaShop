@@ -60,7 +60,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	var right = 0;
 	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
 
-	while (i != tabsize + 1)
+	while (i != parseInt(tabsize) + 1)
 	{
 		if ($('#view'+i).prop('checked') == false || $('#edit'+i).prop('checked') == false || $('#add'+i).prop('checked') == false || $('#delete'+i).prop('checked') == false)
 			$('#all'+i).attr('checked', false);
@@ -87,7 +87,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	}
 }
 
-function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table, id_tab_access)
+function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, table)
 {
  	if (id_tab == '-1' && action == 'all')
  	{
@@ -96,15 +96,11 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
  		$(table+' .delete').attr('checked', src.checked);
 		$(table+' .view').attr('checked', src.checked);
 		$(table+' .all').attr('checked', src.checked);
-		$(table+' .'+id_tab_access).attr('checked', "checked");
  	}
 	else if (action == 'all')
 		$(table+' .'+id_tab).attr('checked', src.checked);
  	else if (id_tab == '-1')
- 	{
  		$(table+' .'+action).attr('checked', src.checked);
- 		$(table+' #'+action+id_tab_access).attr('checked', "checked");
- 	}
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
