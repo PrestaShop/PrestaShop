@@ -742,6 +742,7 @@ function multishippingMode(it)
 					cache: false,
 					success: function(data) {
 						$('#cart_summary').replaceWith($(data).find('#cart_summary'));
+						$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el) } });
 					}
 				});
 				updateCarrierSelectionAndGift();
@@ -756,6 +757,7 @@ function multishippingMode(it)
 			},
 			'onComplete': function()
 			{
+				$('#fancybox-content .cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, false, this.el)} });
 				cleanSelectAddressDelivery();
 				$('#fancybox-content').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="button_large" href="#">' + CloseTxt + '</a></div>'));
 				$('#multishipping-close').click(function() {
