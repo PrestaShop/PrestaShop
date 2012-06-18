@@ -18,6 +18,6 @@ $_MODULE['<{cashondelivery}prestashop>validation_d538c5b86e9a71455ba27412f4e9ab5
 $_MODULE['<{cashondelivery}prestashop>validation_8861c5d3fa54b330d1f60ba50fcc4aab'] = 'Sie haben die Nachnahme-Methode gewählt.';
 $_MODULE['<{cashondelivery}prestashop>validation_e2867a925cba382f1436d1834bb52a1c'] = 'Der Gesamtbetrag Ihrer Bestellung beträgt';
 $_MODULE['<{cashondelivery}prestashop>validation_1f87346a16cf80c372065de3c54c86d9'] = '(inkl. MwSt.)';
-$_MODULE['<{cashondelivery}prestashop>validation_0881a11f7af33bc1b43e437391129d66'] = 'Bitte bestätigen Sie Ihre Bestellung durch Klicken auf \\BESTELLEN\"\"';
+$_MODULE['<{cashondelivery}prestashop>validation_0881a11f7af33bc1b43e437391129d66'] = 'Bitte bestätigen Sie Ihre Bestellung durch Klicken auf BESTELLEN\"\"';
 $_MODULE['<{cashondelivery}prestashop>validation_569fd05bdafa1712c4f6be5b153b8418'] = 'Andere Zahlungsmethoden';
 $_MODULE['<{cashondelivery}prestashop>validation_46b9e3665f187c739c55983f757ccda0'] = 'BESTELLEN';
