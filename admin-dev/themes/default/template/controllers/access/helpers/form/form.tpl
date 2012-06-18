@@ -83,7 +83,7 @@
 					}
 				});
 			}
-			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table, '{$id_tab_access}');
+			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table);
 
 			$.ajax({
 				url: "{$link->getAdminLink('AdminAccess')}",
