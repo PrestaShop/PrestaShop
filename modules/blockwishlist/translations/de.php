@@ -64,6 +64,9 @@ $_MODULE['<{blockwishlist}prestashop>mywishlist_b30545c7b2d429352b9afdd85be810c7
 $_MODULE['<{blockwishlist}prestashop>mywishlist_b74c118d823d908d653cfbf1c877ae55'] = 'Dieser Name wird bereits von einer anderen Liste verwendet';
 $_MODULE['<{blockwishlist}prestashop>mywishlist_7098d49878bbd102b13038a748125e27'] = 'kann diese Wunschliste nicht löschen';
 $_MODULE['<{blockwishlist}prestashop>mywishlist_a9839ad48cf107667f73bad1d651f2ca'] = 'Keine Größe gefunden';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_8f4be21ec3cfbba15a349e9c5e888579'] = 'Token ungültig';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_90d8a44a1fba13198035d86caeeb2d4d'] = 'Ungültiger Wunschzettel';
+$_MODULE['<{blockwishlist}prestashop>sendwishlist_072df51ea0cb142b770d6209dab5a85b'] = 'Fehler beim Versenden des Wunschzettel';
 $_MODULE['<{blockwishlist}prestashop>view_7cff73659ca47fea5d29644da84f35e2'] = 'Token der Whitelist ungültig';
 $_MODULE['<{blockwishlist}prestashop>view_a9839ad48cf107667f73bad1d651f2ca'] = 'Keine Größe gefunden';
 $_MODULE['<{blockwishlist}prestashop>view_641254d77e7a473aa5910574f3f9453c'] = 'Wunschliste';
