@@ -2497,7 +2497,7 @@ class BlockLayered extends Module
 				p.*,
 				'.($alias_where == 'p' ? '' : 'product_shop.*,' ).'
 				'.$alias_where.'.id_category_default,
-				pl.available_later, pl.description_short, pl.link_rewrite, pl.name,
+				pl.*,
 				i.id_image,
 				il.legend, 
 				m.name manufacturer_name,
