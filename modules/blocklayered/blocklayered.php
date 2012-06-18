@@ -486,7 +486,7 @@ class BlockLayered extends Module
 		// List of product to overrride categoryController
 		$params['catProducts'] = array();
 		$selected_filters = $this->getSelectedFilters();
-		$filter_block = self::getFilterBlock($selected_filters);
+		$filter_block = $this->getFilterBlock($selected_filters);
 		$title = '';
 		if (is_array($filter_block['title_values']))
 			foreach ($filter_block['title_values'] as $key => $val)
@@ -3281,8 +3281,8 @@ class BlockLayered extends Module
 			'filters' => $filter_blocks,
 			'title_values' => $title_values,
 			'meta_values' => $meta_values,
-			'current_friendly_url' => htmlentities($param_selected),
-			'param_product_url' => htmlentities($param_product_url),
+			'current_friendly_url' => $param_selected,
+			'param_product_url' => $param_product_url,
 			'no_follow' => (!empty($param_selected) || $nofollow)
 		);
 		
@@ -3871,7 +3871,7 @@ class BlockLayered extends Module
 		
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
-		'filtersBlock' => $this->generateFiltersBlock($selected_filters),
+		'filtersBlock' => utf8_encode($this->generateFiltersBlock($selected_filters)),
 		'productList' => utf8_encode($product_list),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
 		'categoryCount' => $category_count));
