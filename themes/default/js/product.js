@@ -118,13 +118,13 @@ function findCombination(firstTime)
 			else
 				selectedCombination['ecotax'] = default_eco_tax;
 
-            //show the large image in relation to the selected combination
-            if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-                displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
+			//show the large image in relation to the selected combination
+			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+				displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
 
-            //show discounts values according to the selected combination
-            if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
-                displayDiscounts(combinations[combination]['idCombination']);
+			//show discounts values according to the selected combination
+			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
+				displayDiscounts(combinations[combination]['idCombination']);
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
