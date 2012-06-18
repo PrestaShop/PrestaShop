@@ -61,13 +61,13 @@ class AdminModulesControllerCore extends AdminController
 	protected $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
 	protected $cache_file_customer_modules_list = '/config/xml/customer_modules_list.xml';
 
-	/*
-	** Admin Modules Controller Constructor
-	** Init list modules categories
-	** Load id employee
-	** Load filter configuration
-	** Load cache file
-	*/
+	/**
+	 * Admin Modules Controller Constructor
+	 * Init list modules categories
+	 * Load id employee
+	 * Load filter configuration
+	 * Load cache file
+	 */
 
 	public function __construct()
 	{
@@ -132,14 +132,14 @@ class AdminModulesControllerCore extends AdminController
 			$this->logged_on_addons = true;
 	}
 
-	/*
-	** Ajax Request Methods
-	**
-	** if modules_list.xml is outdated,
-	** this function will re-upload it from prestashop.com
-	**
-	** @return null
-	*/
+	/**
+	 * Ajax Request Methods
+	 *
+	 * if modules_list.xml is outdated,
+	 * this function will re-upload it from prestashop.com
+	 *
+	 * @return null
+	 */
 
 	public function isFresh($file, $timeout = 604800000)
 	{
@@ -200,12 +200,12 @@ class AdminModulesControllerCore extends AdminController
 
 		// Make the request
 		$opts = array(
-  			'http'=>array(
+			'http'=>array(
 				'method'=> 'POST',
 				'content' => $postData,
 				'header'  => 'Content-type: application/x-www-form-urlencoded',
 				'timeout' => 5,
- 			)
+			)
 		);
 		$context = stream_context_create($opts);
 		foreach ($protocolsList as $protocol => $port)
