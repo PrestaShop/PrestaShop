@@ -149,7 +149,7 @@ class CarrierCore extends ObjectModel
 
 	protected static $cache_tax_rule = array();
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'deleted' => array(),
 			'is_module' => array(),
