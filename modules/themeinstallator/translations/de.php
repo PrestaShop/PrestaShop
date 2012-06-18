@@ -19,6 +19,8 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b67
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Folgende Module wurden deaktiviert:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Folgende Module wurden aktiviert:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Bilder wurden korrekt in der Datenbank aktualisiert';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Breite:';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_e933dc24fb245d863a43b4fefe9b45f5'] = 'Höhe:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_dd1f775e443ff3b9a89270713580a51b'] = 'Zurück';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a20ddccbb6f808ec42cd66323e6c6061'] = 'Fertig';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_33167fe8de7517798cf2e95c7680d6a4'] = 'Die folgenden Themen wurden erfolgreich importiert';

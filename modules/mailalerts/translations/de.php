@@ -16,10 +16,13 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_86e8d61297942b00e9937299735df971'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_38fb7d24e0d60a048f540ecb18e13376'] = 'Speichern';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9204d21640382a89a95ec42f44f9051c'] = 'Neue Bestellung:';
 $_MODULE['<{mailalerts}prestashop>mailalerts_ebc3ccf8441dba3c1615afa6acb3282a'] = 'Nicht auf Lager:';
+$_MODULE['<{mailalerts}prestashop>mailalerts_02505a778171466cc5e4f96c4eeaa9da'] = 'Schwelle ';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'Keine Nachricht';
 $_MODULE['<{mailalerts}prestashop>mailalerts_1d744a9ad1dac20645cfc4a36b77323b'] = 'Bild(er)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9137796c15dd92e5553c3f29574d0968'] = 'Gutschein-Code:';
-$_MODULE['<{mailalerts}prestashop>mailalerts_4c9120f1a5947445c0e9620254ceb30b'] = 'Neue Bestellung';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mein Konto';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Meine Benachrichtigungen';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_0b3db27bc15f682e92ff250ebb167d4b'] = 'Zurück zu Ihrem Konto';
 $_MODULE['<{mailalerts}prestashop>my-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Meine Benachrichtigungen';
 $_MODULE['<{mailalerts}prestashop>product_67135a14d3ac4f1369633dd006d6efec'] = 'your@email.com';
 $_MODULE['<{mailalerts}prestashop>product_61172eb93737ebf095d3fa02119ce1df'] = 'Anfragenachricht registriert';
