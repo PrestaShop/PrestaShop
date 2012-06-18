@@ -235,8 +235,7 @@ class AdminWebserviceControllerCore extends AdminController
 	public function checkForWarning()
 	{
 		if (!file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->warnings[] = $this->l('In order to enable the PrestaShop Webservice, 
-				please generate the .htaccess file via the "Generators" tab (in the "Tools" tab).');
+			$this->warnings[] = $this->l('In order to enable the PrestaShop Webservice, please generate the .htaccess file in "Preferences" > "SEO & URLs".');
 		if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false)
 		{
 			$this->warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
@@ -249,14 +248,12 @@ class AdminWebserviceControllerCore extends AdminController
 					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow the PrestaShop webservice.');
 			}
 			else
-				$this->warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. 
-					Please manually check if they are activated in order to use the PrestaShop webservice.');
+				$this->warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. Please manually check if they are activated in order to use the PrestaShop webservice.');
 		}
 		if (!extension_loaded('SimpleXML'))
 			$this->warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop webservice.');
 		if (!configuration::get('PS_SSL_ENABLED'))
-			$this->warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, 
-				as it avoids the security issues of type "man in the middle".');
+			$this->warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, as it avoids the security issues of type "man in the middle".');
 
 		foreach ($this->_list as $k => $item)
 			if ($item['is_module'] && $item['class_name'] && $item['module_name'] &&
