@@ -26,6 +26,8 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
+Tools::displayFileAsDeprecated();
+
 include(dirname(__FILE__).'/../../header.php');
 include(dirname(__FILE__).'/cashondelivery.php');
 
