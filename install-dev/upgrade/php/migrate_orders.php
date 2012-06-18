@@ -49,14 +49,17 @@ function migrate_orders()
 
 	// init insert order query
 	$values_order = array();
-	$col_orders = Db::getInstance()->query('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
+	$col_orders = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
+
 	if (!$col_orders)
 	{
 		$res = false;
 		return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
 	}
 
-	$col_orders = $col_orders->fetchAll(PDO::FETCH_COLUMN);
+	foreach($col_order_detail as $k => $field)
+		$col_orders[$k] = $field['Field'];
+
 	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
 
 	// create temporary tables
