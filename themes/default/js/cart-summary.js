@@ -32,7 +32,7 @@ $(document).ready(function()
 		$('.cart_quantity_up').unbind('click').live('click', function(){ upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;	});
 		$('.cart_quantity_down').unbind('click').live('click', function(){ downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false; });
 		$('.cart_quantity_delete' ).unbind('click').live('click', function(){ deleteProductFromSummary($(this).attr('id')); return false; });
-		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: updateQty });
+		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el) } });
 	}
 	
 	$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
@@ -224,15 +224,20 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 		.attr('id', 'select_address_delivery_' + id_product+'_' + id_product_attribute + '_' + id_address_delivery);
 }
 
-function updateQty(val)
+function updateQty(val, cart, el)
 {
-	var id = $(this.el).attr('name');
+	if (typeof(cart) == 'undefined' || cart)
+		var prefix = '#order-detail-content ';
+	else
+		var prefix = '#fancybox-content ';
+
+	var id = $(el).attr('name');
 	var exp = new RegExp("^[0-9]+$");
 
 	if (exp.test(val) == true)
 	{
-		var hidden = $('input[name='+ id +'_hidden]').val();
-		var input = $('input[name='+ id +']').val();
+		var hidden = $(prefix+'input[name='+ id +'_hidden]').val();
+		var input = $(prefix+'input[name='+ id +']').val();
 		var QtyToUp = parseInt(input) - parseInt(hidden);
 
 		if (parseInt(QtyToUp) > 0)
@@ -241,7 +246,7 @@ function updateQty(val)
 			downQuantity(id.replace('quantity_', ''), QtyToUp);
 	}
 	else
-		$('input[name='+ id +']').val($('input[name='+ id +'_hidden]').val());
+		$(prefix+'input[name='+ id +']').val($(prefix+'input[name='+ id +'_hidden]').val());
 	
 	if (typeof(getCarrierListAndUpdate) != 'undefined')
 		getCarrierListAndUpdate();
