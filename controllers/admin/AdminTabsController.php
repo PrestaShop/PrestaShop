@@ -271,7 +271,7 @@ class AdminTabsControllerCore extends AdminController
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
-		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') == Tools::getValue('id_parent'))
+		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
 			$this->errors[] = Tools::displayError('You can\'t put this tab in itself');
 		else
 		{
