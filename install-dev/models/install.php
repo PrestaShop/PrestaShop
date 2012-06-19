@@ -319,7 +319,8 @@ class InstallModelInstall extends InstallAbstractModel
 
 			// Copy language flag
 			if (is_writable(_PS_IMG_DIR_.'l/'))
-				copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$language->id.'.jpg');
+				if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$language->id.'.jpg'))
+					throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$language->id.'.jpg'));
 		}
 
 		return $languages;
