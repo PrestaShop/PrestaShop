@@ -62,7 +62,7 @@ class BlockLink extends Module
 			!Db::getInstance()->execute('
 			CREATE TABLE '._DB_PREFIX_.'blocklink_shop (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
-			`id_shop` varchar(255) NOT NULL,
+			`id_shop` int(2) NOT NULL,
 			PRIMARY KEY(`id_blocklink`, `id_shop`))
 			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') ||
 			!Db::getInstance()->execute('
