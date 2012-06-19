@@ -325,7 +325,7 @@
 	</table>
 </div>
 
-{if $show_option_allow_sparate_package}
+{if $show_option_allow_separate_package}
 <p>
 	<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} />
 	<label for="allow_seperated_package">{l s='Send the available products first'}</label>
