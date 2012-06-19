@@ -1759,9 +1759,9 @@ a.action_module_delete {
 .select_theme{
 	text-align: center;
 	width: 220px;
-	height: 235px;
 	float: left;
-	margin-bottom: 20px;
+	margin: 10px;
+	padding: 10px;
 	cursor: pointer;
 	border: 1px solid #FFFFF0;
 	color: #000000;
