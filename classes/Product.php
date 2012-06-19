@@ -2698,9 +2698,7 @@ class ProductCore extends ObjectModel
 	 */
 	public static function sqlStock($product_alias, $product_attribute = 0, $inner_join = false, Shop $shop = null)
 	{
-		if (!$shop)
-			$shop = Context::getContext()->shop;
-
+		$id_shop = ($shop !== null ? (int)$shop->id : null);
 		$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
 			JOIN '._DB_PREFIX_.'stock_available stock
 			ON (stock.id_product = '.pSQL($product_alias).'.id_product';
@@ -2715,7 +2713,7 @@ class ProductCore extends ObjectModel
 				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)';
 		}
 
-		$sql .= StockAvailable::addSqlShopRestriction(null, $shop->id, 'stock').' )';
+		$sql .= StockAvailable::addSqlShopRestriction(null, $id_shop, 'stock').' )';
 
 		return $sql;
 	}
