@@ -15,6 +15,7 @@ function migrate_tabs_15()
 		'AdminGenerator',
 		'AdminPdf',
 		'AdminSubDomains',
+		'AdminStatsConf',
 	);
 
 	$ids = array();
