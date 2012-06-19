@@ -78,8 +78,9 @@ class NotificationCore
 		{
 			case 'order':
 				$sql = '
-					SELECT o.`id_order`, o.`id_customer`, o.`total_paid`
+					SELECT o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, c.`firstname`, c.`lastname`
 					FROM `'._DB_PREFIX_.'orders` as o
+					LEFT JOIN `'._DB_PREFIX_.'customer` as c ON (c.`id_customer` = o.`id_customer`)
 					WHERE `id_order` > '.(int)$id_last_element.
 					Shop::addSqlRestriction(false, 'o').'
 					ORDER BY `id_order` DESC
@@ -97,10 +98,9 @@ class NotificationCore
 					ORDER BY c.`id_customer_message` DESC
 				';
 				break;
-
 			default:
 				$sql = '
-					SELECT t.`id_'.bqSQL($type).'`
+					SELECT t.`id_'.bqSQL($type).'`, t.*
 					FROM `'._DB_PREFIX_.bqSQL($type).'` t
 					WHERE t.`deleted` = 0 AND t.`id_'.bqSQL($type).'` > '.(int)$id_last_element.
 					Shop::addSqlRestriction(false, 't').'
@@ -110,26 +110,23 @@ class NotificationCore
 		}
 
 		$json = array();
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $value)
-		{
-			$customer = null;
-			$order = null;
-			$currency = null;
-			if (isset($value['id_order']))
-			{
-				$order = new Order(intval($value['id_order']));
-				$currency = new Currency(intval($order->id_currency));
-			}
-			if (!empty($value['id_customer']))
-				$customer = new Customer(intval($value['id_customer']));
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
+		foreach ($result as $value)
+		{
+			$customer_name = '';
+			if (isset($value['firstname']) && isset($value['lastname']))
+				$customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
+			else if (isset($value['email']))
+				$customer_name = Tools::safeOutput($value['email']);
+			
 			$json[] = array(
 				'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
-				'total_paid' => ((!empty($value['total_paid']) && $currency != null) ? Tools::displayPrice((float)$value['total_paid'], $currency, false) : 0),
-				'customer_name' => (($customer != null) ? $customer->firstname.' '.$customer->lastname : (isset($value['email']) ? $value['email'] : ''))
+				'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
+				'customer_name' => $customer_name
 			);
 		}
 
