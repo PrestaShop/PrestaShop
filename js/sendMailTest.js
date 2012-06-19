@@ -48,7 +48,7 @@ function verifyMail(testMsg, testSubject)
 		//external verifications and sets
 		$.ajax(
 		{
-		   url: "ajax_send_mail_test.php",
+		   url: "index.php",
 		   cache: false,
 		   type : "POST",
 		   data:
@@ -62,7 +62,10 @@ function verifyMail(testMsg, testSubject)
 				"smtpEnc"		: $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
 				"testMsg"		: textMsg,
 				"testSubject"	: textSubject,
-				"token"			: token_mail
+				"token"			: token_mail,
+				"ajax"			: 1,
+				"tab"				: 'AdminEmails',
+				"action"			: 'sendMailTest'
 			},
 		   success: function(ret)
 		   {
