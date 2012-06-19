@@ -391,7 +391,7 @@ class BlockLink extends Module
 	 	{
 			$this->_html .= '
 			<script type="text/javascript">
-				var currentUrl = \''.Tools::safeOutput(AdminController::$currentIndex.'&configure='.$this->name).'\';
+				var currentUrl = \''.Tools::safeOutput($_SERVER['REQUEST_URI']).'\';
 				var token=\''.$token.'\';
 				var links = new Array();';
 			foreach ($links as $link)
@@ -429,8 +429,8 @@ class BlockLink extends Module
 					<td>'.Tools::safeOutput($link['text_'.$this->context->language->id]).'</td>
 					<td>'.Tools::safeOutput($link['url']).'</td>
 					<td>
-						<img src="../img/admin/edit.gif" alt="" title="" onclick="linkEdition('.(int)$link['id'].')" style="cursor: pointer" />
-						<img src="../img/admin/delete.gif" alt="" title="" onclick="linkDeletion('.(int)$link['id'].')" style="cursor: pointer" />
+						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&id_link='.(int)$link['id'].'"><img src="../img/admin/edit.gif" alt="" title="" style="cursor: pointer" /></a>
+						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&id='.(int)$link['id'].'&delete_link=1"><img src="../img/admin/delete.gif" alt="" title="" style="cursor: pointer" /></a>
 					</td>
 				</tr>';
 		$i = 0;
