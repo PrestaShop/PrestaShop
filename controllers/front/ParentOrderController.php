@@ -295,7 +295,7 @@ class ParentOrderControllerCore extends FrontController
 				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
 		}
 		
-		$show_option_allow_sparate_package = !$this->context->cart->isAllProductsInStock(true)
+		$show_option_allow_separate_package = !$this->context->cart->isAllProductsInStock(true)
 			&& Configuration::get('PS_SHIP_WHEN_AVAILABLE');
 
 		$this->context->smarty->assign($summary);
@@ -315,7 +315,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
-			'show_option_allow_sparate_package' => $show_option_allow_sparate_package,
+			'show_option_allow_separate_package' => $show_option_allow_separate_package,
 				
 		));
 
