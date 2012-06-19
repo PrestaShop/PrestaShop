@@ -206,4 +206,27 @@ class AdminEmailsControllerCore extends AdminController
 		if ($_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
+
+	public function ajaxProcessSendMailTest()
+	{
+		if ($this->tabAccess['view'] === '1')
+		{
+			$smtpChecked = (trim(Tools::getValue('mailMethod')) == 'smtp');
+			$smtpServer = Tools::getValue('smtpSrv');
+			$content = urldecode(Tools::getValue('testMsg'));
+			$content = utf8_encode(html_entity_decode($content));
+			$subject = urldecode(Tools::getValue('testSubject'));
+			$type = 'text/html';
+			$to = Tools::getValue('testEmail');
+			$from = Configuration::get('PS_SHOP_EMAIL');
+			$smtpLogin = Tools::getValue('smtpLogin');
+			$smtpPassword = Tools::getValue('smtpPassword');
+			$smtpPassword = (!empty($smtpPassword)) ? urldecode($smtpPassword) : Configuration::get('PS_MAIL_PASSWD');
+			$smtpPort = Tools::getValue('smtpPort');
+			$smtpEncryption = Tools::getValue('smtpEnc');
+
+			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), Tools::htmlentitiesUTF8($smtpPassword), Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
+			die($result === true ? 'ok' : $result);
+		}
+	}
 }
