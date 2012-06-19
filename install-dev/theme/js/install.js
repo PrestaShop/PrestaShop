@@ -1,5 +1,10 @@
 $(document).ready(function()
 {
+	$('#mainForm').submit(function()
+	{
+		$('#btNext').hide();
+	});
+
 	// Ajax animation
 	$("#loaderSpace").ajaxStart(function()
 	{
