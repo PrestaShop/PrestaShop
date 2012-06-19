@@ -152,36 +152,6 @@ if (Tools::isSubmit('submitTrackClickOnHelp'))
         HelpAccess::trackClick($label, $version);
 }
 
-if (Tools::isSubmit('saveImportMatchs'))
-{
-   $match = implode('|', Tools::getValue('type_value'));
-   Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
-								`id_import_match` ,
-								`name` ,
-								`match`,
-								`skip`
-								)
-								VALUES (
-								NULL ,
-								\''.pSQL(Tools::getValue('newImportMatchs')).'\',
-								\''.pSQL($match).'\',
-								\''.pSQL(Tools::getValue('skip')).'\'
-								)');
-
-	die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
-}
-
-if (Tools::isSubmit('deleteImportMatchs'))
-{
-   Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
-}
-
-if (Tools::isSubmit('loadImportMatchs'))
-{
-   $return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
-   die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'.$return[0]['skip'].'"}');
-}
-
 if (Tools::isSubmit('toggleScreencast'))
 {
 	if (Validate::isLoadedObject($context->employee))

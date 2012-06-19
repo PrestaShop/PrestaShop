@@ -2490,5 +2490,45 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->warnings[] = $product_name.(isset($product_id) ? ' (ID '.$product_id.')' : '').' '.Tools::displayError($message);
 	}
+	
+	public function ajaxProcessSaveImportMatchs()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$match = implode('|', Tools::getValue('type_value'));
+			Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'import_match` (
+										`id_import_match` ,
+										`name` ,
+										`match`,
+										`skip`
+										)
+										VALUES (
+										NULL ,
+										\''.pSQL(Tools::getValue('newImportMatchs')).'\',
+										\''.pSQL($match).'\',
+										\''.pSQL(Tools::getValue('skip')).'\'
+										)');
+
+			die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
+		}
+	}
+	
+	public function ajaxProcessLoadImportMatchs()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
+			die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'.$return[0]['skip'].'"}');
+		}	
+	}
+	
+	public function ajaxProcessDeleteImportMatchs()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+		   Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
+		   die;
+		}
+	}
 }
 
