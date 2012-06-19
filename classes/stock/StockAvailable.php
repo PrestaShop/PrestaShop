@@ -293,9 +293,6 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function getQuantityAvailableByProduct($id_product = null, $id_product_attribute = null, $id_shop = null)
 	{
-		if ($id_shop === null)
-			$id_shop = Context::getContext()->shop->id;
-
 		// if null, it's a product without attributes
 		if ($id_product_attribute === null)
 			$id_product_attribute = 0;
@@ -309,7 +306,6 @@ class StockAvailableCore extends ObjectModel
 			$query->where('id_product = '.(int)$id_product);
 
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
-
 		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -527,9 +523,6 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function dependsOnStock($id_product, $id_shop = null)
 	{
-		if ($id_shop === null)
-			$id_shop = Context::getContext()->shop->id;
-
 		$query = new DbQuery();
 		$query->select('depends_on_stock');
 		$query->from('stock_available');
@@ -550,9 +543,6 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function outOfStock($id_product, $id_shop = null)
 	{
-		if ($id_shop === null)
-			$id_shop = Context::getContext()->shop->id;
-
 		$query = new DbQuery();
 		$query->select('out_of_stock');
 		$query->from('stock_available');
