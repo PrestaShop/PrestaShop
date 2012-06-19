@@ -1504,7 +1504,7 @@ class ThemeInstallator extends Module
 		$id = 0;
 		foreach ($this->theme_list as $row)
 		{
-			if (!is_dir(_PS_ALL_THEMES_DIR_.$row) || !file_exists(_PS_ALL_THEMES_DIR_.$row.'/index.tpl') || $row == $this->default_theme || $row == Tools::getValue('mainTheme'))
+			if (!is_dir(_PS_ALL_THEMES_DIR_.$row) || !file_exists(_PS_ALL_THEMES_DIR_.$row.'/index.tpl'))
 				continue;
 
 			$this->_html .= 'themes['.$id.'] = "'.$row.'";';
