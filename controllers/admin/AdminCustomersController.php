@@ -148,7 +148,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (!$this->can_add_customer && $this->display)
+		if (!$this->can_add_customer && $this->display == 'add')
 			$this->redirect_after = $this->context->link->getAdminLink('AdminCustomers');
 
 		parent::postProcess();
