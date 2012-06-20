@@ -242,7 +242,21 @@ class Blocktopmenu extends Module
 		$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
 		$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
 		$this->_html .= '</optgroup>';
-
+		
+		// BEGIN Shops
+		if (Shop::isFeatureActive())
+		{
+			$this->_html .= '<optgroup label="'.$this->l('Shops').'">';
+			$shops = Shop::getShopsCollection();
+			foreach ($shops as $shop)
+			{
+				if (!$shop->setUrl() && !$shop->getBaseURL())
+					continue;
+				$this->_html .= '<option value="SHOP'.(int)$shop->id.'">'.$spacer.$shop->name.'</option>';
+			}	
+			$this->_html .= '</optgroup>';
+		}
+		
 		// BEGIN Products
 		$this->_html .= '<optgroup label="'.$this->l('Products').'">';
 		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose ID product').'</option>';
@@ -422,7 +436,6 @@ class Blocktopmenu extends Module
 		$menu_item = $this->getMenuItems();
 		$id_lang = (int)$this->context->language->id;
 		$id_shop = (int)Shop::getContextShopID();
-
 		foreach ($menu_item as $item)
 		{
 			if (!$item)
@@ -481,14 +494,17 @@ class Blocktopmenu extends Module
 						$this->_html .= '<option value="LNK'.$link[0]['id_linksmenutop'].'">'.$link[0]['label'].'</option>';
 					}
 					break;
+				case 'SHOP':
+					$shop = new Shop((int)$id);
+					if (Validate::isLoadedObject($shop))
+						$this->_html .= '<option value="SHOP'.(int)$id.'">'.$shop->name.'</option>'.PHP_EOL;
+					break;
 			}
 		}
 	}
 
 	private function makeMenu()
 	{
-		$this->page_name = Dispatcher::getInstance()->getController();
-
 		$menu_items = $this->getMenuItems();
 		$id_lang = (int)$this->context->language->id;
 		$id_shop = (int)Shop::getContextShopID();
@@ -555,6 +571,15 @@ class Blocktopmenu extends Module
 					}
 					break;
 
+				case 'SHOP':
+					$selected = ($this->page_name == 'index' && (Tools::getValue('id_shop') == $id)) ? ' class="sfHover"' : '';
+					$shop = new Shop((int)$id);
+					if (Validate::isLoadedObject($shop))
+					{
+						$link = new Link;
+						$this->_menu .= '<li'.$selected.'><a href="'.$shop->getBaseURL().'">'.$shop->name.'</a></li>'.PHP_EOL;
+					}
+					break;
 				case 'LNK':
 					$link = MenuTopLinks::get((int)$id, (int)$id_lang, (int)$id_shop);
 					if (count($link))
@@ -690,8 +715,8 @@ class Blocktopmenu extends Module
 	public function hookTop($param)
 	{
 		$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
-		$smarty_cache_id = 'blocktopmenu-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
-
+		$this->page_name = Dispatcher::getInstance()->getController();
+		$smarty_cache_id = 'blocktopmenu-'.$this->page_name.'-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
 		Tools::enableCache();
 		if (!$this->isCached('blocktopmenu.tpl', $smarty_cache_id))
 		{
