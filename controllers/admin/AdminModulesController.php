@@ -881,15 +881,26 @@ class AdminModulesControllerCore extends AdminController
 		return $return;
 	}
 
-	public function initModulesList($modules)
+	public function initModulesList(&$modules)
 	{
-		foreach ($modules as $module)
+		foreach ($modules as $k => $module)
 		{
-			if (!in_array($module->name, $this->list_natives_modules))
-				$this->serial_modules .= $module->name.' '.$module->version.'-'.($module->active ? 'a' : 'i')."\n";
-			$module_author = $module->author;
-			if (!empty($module_author) && ($module_author != ''))
-				$this->modules_authors[strtolower($module_author)] = 'notselected';
+			// Check add permissions, if add permissions not set, addons modules and non installed modules will not be displayed
+			if ($this->tabAccess['add'] !== '1' && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought'))
+				unset($modules[$k]);
+			else if ($this->tabAccess['add'] !== '1' && (!isset($module->id) || $module->id < 1))
+				unset($modules[$k]);
+			else if ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
+				unset($modules[$k]);
+			else
+			{
+				// Init serial and modules author list
+				if (!in_array($module->name, $this->list_natives_modules))
+					$this->serial_modules .= $module->name.' '.$module->version.'-'.($module->active ? 'a' : 'i')."\n";
+				$module_author = $module->author;
+				if (!empty($module_author) && ($module_author != ''))
+					$this->modules_authors[strtolower($module_author)] = 'notselected';
+			}
 		}
 		$this->serial_modules = urlencode($this->serial_modules);
 	}
@@ -913,11 +924,6 @@ class AdminModulesControllerCore extends AdminController
 
 	public function isModuleFiltered($module)
 	{
-		// Beware $module could be an instance of Module or stdClass, that expflain the static call
-		if ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
-			return true;
-
-
 		// If action on module, we display it
 		if (Tools::getValue('module_name') != '' && Tools::getValue('module_name') == $module->name)
 			return false;
@@ -1167,6 +1173,8 @@ class AdminModulesControllerCore extends AdminController
 
 		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
 		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
+
+		$tpl_vars['add_permission'] = $this->tabAccess['add'];
 
 		if ($this->logged_on_addons)
 		{

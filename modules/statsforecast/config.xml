@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsforecast</name>
-            <displayName><![CDATA[Stats Dashboard]]></displayName>
+            <displayName><![CDATA[Tableau de bord statistiques]]></displayName>
             <version><![CDATA[1]]></version>
             <description><![CDATA[]]></description>
             <author><![CDATA[PrestaShop]]></author>
