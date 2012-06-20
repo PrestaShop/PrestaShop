@@ -39,7 +39,7 @@ function migrate_orders()
 	$values_order_detail = array();
 	$col_order_detail = Db::getInstance()->executeS('SHOW FIELDS 
 		FROM `'._DB_PREFIX_.'order_detail`');
-	foreach($col_order_detail as $k => $field)
+	foreach ($col_order_detail as $k => $field)
 		$col_order_detail[$k] = $field['Field'];
 
 	if (!$col_order_detail)
@@ -57,7 +57,7 @@ function migrate_orders()
 		return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
 	}
 
-	foreach($col_order_detail as $k => $field)
+	foreach ($col_orders as $k => $field)
 		$col_orders[$k] = $field['Field'];
 
 	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
