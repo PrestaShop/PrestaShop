@@ -122,15 +122,16 @@
 			var perm = tout[1];
 			var id_profile = tout[2];
 			var enabled = $(this).is(':checked') ? 1 : 0;
+			var enabled_attr = $(this).is(':checked') ? true : false;
 			var table = 'table#table_module_'+id_profile;
 
 			if (id_module == -1)
 				$(table+' .ajax-ma-'+perm).each(function(key, value) {
-					$(this).attr("checked", enabled);
+					$(this).attr("checked", enabled_attr);
 				});
 			else if (!enabled)
 				$(table+' #ajax-ma-'+perm+'-master').each(function(key, value) {
-					$(this).attr("checked", enabled);
+					$(this).attr("checked", enabled_attr);
 				});
 
 			$.ajax({

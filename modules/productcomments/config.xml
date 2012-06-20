@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>productcomments</name>
-            <displayName><![CDATA[Product Comments]]></displayName>
+            <displayName><![CDATA[Commentaires produits]]></displayName>
             <version><![CDATA[2.3]]></version>
-            <description><![CDATA[Allows users to post reviews.]]></description>
+            <description><![CDATA[Permet aux client de commenter les produits.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
