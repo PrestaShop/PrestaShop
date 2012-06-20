@@ -165,27 +165,33 @@ class ShopCore extends ObjectModel
 	{
 		parent::__construct($id, $id_lang, $id_shop);
 		if ($this->id)
-		{
-			$sql = 'SELECT su.physical_uri, su.virtual_uri,
-				su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
-					FROM '._DB_PREFIX_.'shop s
-					LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-					LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
-					WHERE s.id_shop = '.(int)$this->id.'
-						AND s.active = 1
-						AND s.deleted = 0
-						AND su.main = 1';
-			if (!$row = Db::getInstance()->getRow($sql))
-				return;
+			$this->setUrl();
+	}
 
-			$this->theme_id = $row['id_theme'];
-			$this->theme_name = $row['name'];
-			$this->theme_directory = $row['directory'];
-			$this->physical_uri = $row['physical_uri'];
-			$this->virtual_uri = $row['virtual_uri'];
-			$this->domain = $row['domain'];
-			$this->domain_ssl = $row['domain_ssl'];
-		}
+	public function setUrl()
+	{
+		$sql = 'SELECT su.physical_uri, su.virtual_uri,
+			su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
+				FROM '._DB_PREFIX_.'shop s
+				LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
+				LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
+				WHERE s.id_shop = '.(int)$this->id.'
+					AND s.active = 1
+					AND s.deleted = 0
+					AND su.main = 1';
+
+		if (!$row = Db::getInstance()->getRow($sql))
+			return;
+
+		$this->theme_id = $row['id_theme'];
+		$this->theme_name = $row['name'];
+		$this->theme_directory = $row['directory'];
+		$this->physical_uri = $row['physical_uri'];
+		$this->virtual_uri = $row['virtual_uri'];
+		$this->domain = $row['domain'];
+		$this->domain_ssl = $row['domain_ssl'];
+
+		return true;
 	}
 
 	/**
