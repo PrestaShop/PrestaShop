@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
+{if $add_permission eq '1'}
 	{if isset($logged_on_addons)}
 
 			<!--start addons login-->
@@ -70,7 +70,7 @@
 		{/if}
 
 	{/if}
-
+{/if}
 
 	<!--start filter module-->
 	<style>.ac_results { border:1px solid #C2C4D9; }</style>
