@@ -799,7 +799,7 @@ class ProductComments extends Module
 						$list_grades[$criterion['id_product_comment_criterion']] = $criterion['name'];
 				}
 
-				$list_product_average[$id_product] = $grade_total / count($criterion);
+				$list_product_average[$id_product] = $grade_total / count($criterions);
 				$list_product_comment[$id_product] = ProductComment::getByProduct($id_product, 0, 3);
 			}
 		}
