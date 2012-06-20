@@ -58,7 +58,11 @@ class LocalizationPackCore
 				$res &= $this->_installLanguages($xml, $install_mode);
 
 			if ($res && isset($this->iso_code_lang))
-				Configuration::updateValue('PS_LANG_DEFAULT', (int)Language::getIdByIso($this->iso_code_lang));
+			{
+				if (!$id_lang = (int)Language::getIdByIso($this->iso_code_lang))
+					$id_lang = 1;
+				Configuration::updateValue('PS_LANG_DEFAULT', $id_lang);
+			}
 
 			if ($install_mode && $res && isset($this->iso_currency))
 			{
