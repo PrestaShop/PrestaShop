@@ -25,8 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (file_exists(dirname(__FILE__).'/../config/settings.inc.php'))
-	include_once(dirname(__FILE__).'/../config/settings.inc.php');
+if (file_exists(dirname(__FILE__).'/../../config/settings.inc.php'))
+	include_once(dirname(__FILE__).'/../../config/settings.inc.php');
 
 abstract class DbCore
 {
