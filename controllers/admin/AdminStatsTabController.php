@@ -36,7 +36,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function initContent()
 	{
-		$this->toolbar_title = $this->l('Stats');
+		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
 
 		if ($this->display == 'view')
 		{
@@ -98,10 +98,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		$tpl = $this->createTemplate('engines.tpl');
 
 		$autoclean_period = array(
-			'never' => 	$this->l('Never'),
-			'week' => 	$this->l('Week'),
-			'month' => 	$this->l('Month'),
-			'year' => 	$this->l('Year'),
+			'never' => 	$this->l('Never', 'AdminStatsTab'),
+			'week' => 	$this->l('Week', 'AdminStatsTab'),
+			'month' => 	$this->l('Month', 'AdminStatsTab'),
+			'year' => 	$this->l('Year', 'AdminStatsTab')
 		);
 
 		$tpl->assign(array(
