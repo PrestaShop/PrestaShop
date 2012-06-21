@@ -84,7 +84,6 @@ function clearLocations(n)
 	}
 	locationSelect.appendChild(option);
 	$('#stores-table tr.node').remove();
-	initMarkers();
 }
 
 function searchLocationsNear(center)
@@ -96,7 +95,7 @@ function searchLocationsNear(center)
 		var markerNodes = xml.documentElement.getElementsByTagName('marker');
 		var bounds = new google.maps.LatLngBounds();
 
-		clearLocations(markerNodes.length); 
+		clearLocations(markerNodes.length);
 		for (var i = 0; i < markerNodes.length; i++)
 		{
 			var name = markerNodes[i].getAttribute('name');
