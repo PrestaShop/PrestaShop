@@ -59,7 +59,7 @@ class CookieCore
 	 * @param $name Cookie name before encrypting
 	 * @param $path
 	 */
-	public function __construct($name, $path = '', $expire = null)
+	public function __construct($name, $path = '', $expire = null, $shared_urls = null)
 	{
 		$this->_content = array();
 		$this->_expire = isset($expire) ? (int)($expire) : (time() + 1728000);
@@ -71,7 +71,7 @@ class CookieCore
 		$this->_path = str_replace('%7E', '~', $this->_path);
 		$this->_key = _COOKIE_KEY_;
 		$this->_iv = _COOKIE_IV_;
-		$this->_domain = $this->getDomain();
+		$this->_domain = $this->getDomain($shared_urls);
 		if (Configuration::get('PS_CIPHER_ALGORITHM'))
 			$this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
 		else
@@ -79,7 +79,7 @@ class CookieCore
 		$this->update();
 	}
 
-	protected function getDomain()
+	protected function getDomain($shared_urls = null)
 	{
 		$r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 		preg_match ($r, Tools::getHttpHost(false, false), $out);
@@ -89,8 +89,23 @@ class CookieCore
 			return false;
 		if (!strstr(Tools::getHttpHost(false, false), '.'))
 			return false;
-		$domain = $out[4];
-
+		
+		$domain = false;
+		if ($shared_urls !== null)
+		{
+			foreach ($shared_urls as $shared_url)
+			{
+				if ($shared_url == $out[4])
+					continue;
+				if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,3})?\..{2,3})$/Ui', $shared_url, $res))
+				{
+					$domain = '.'.$res[1];
+					break;
+				}
+			}
+		}
+		if (!$domain)
+			$domain = $out[4];
 		return $domain;
 	}
 
