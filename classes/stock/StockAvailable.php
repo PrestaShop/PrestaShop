@@ -343,15 +343,17 @@ class StockAvailableCore extends ObjectModel
 		if ($this->id_product_attribute == 0)
 			return true;
 
+		$id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP ? $this->id_shop : null);
+		
 		$total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(quantity) as quantity
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id_product.'
 			AND id_product_attribute <> 0 '.
-			StockAvailable::addSqlShopRestriction(null, $this->id_shop)
+			StockAvailable::addSqlShopRestriction(null, $id_shop)
 		);
 
-		$this->setQuantity($this->id_product, 0, $total_quantity, $this->id_shop);
+		$this->setQuantity($this->id_product, 0, $total_quantity, $id_shop);
 
 		return true;
 	}
