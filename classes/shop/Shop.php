@@ -583,6 +583,24 @@ class ShopCore extends ObjectModel
 				}
 		return $results;
 	}
+	
+	public function getUrlsSharedCart()
+	{
+		if (!$this->getGroup()->share_order)
+			return false;
+		
+		$query = new DbQuery();
+		$query->select('domain');
+		$query->from('shop_url');
+		$query->where('main = 1');
+		$query->where('active = 1');
+		$query .= $this->addSqlRestriction(Shop::SHARE_ORDER);
+		$domains = array();
+		foreach (Db::getInstance()->executeS($query) as $row)
+			$domains[] = $row['domain'];
+
+		return $domains;
+	}
 
 	/**
 	 * Get a collection of shops

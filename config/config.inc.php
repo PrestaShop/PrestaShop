@@ -116,10 +116,9 @@ if (defined('_PS_ADMIN_DIR_'))
 else
 {
 	if (Context::getContext()->shop->getGroup()->share_order)
-		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookieLifetime);
+		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookieLifetime, Context::getContext()->shop->getUrlsSharedCart());
 	else
 		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookieLifetime);
-	
 }
 
 Context::getContext()->cookie = $cookie;
