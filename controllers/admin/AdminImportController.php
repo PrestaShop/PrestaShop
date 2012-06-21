@@ -994,6 +994,8 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
+			if (!Shop::isFeatureActive() || !isset($product->shop) || empty($product->shop))
+				$product->shop = 1;
 			// link product to shops
 			$product->id_shop_list = explode(',', $product->shop);
 
