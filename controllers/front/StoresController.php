@@ -249,7 +249,8 @@ class StoresControllerCore extends FrontController
 			'mediumSize' => Image::getSize('medium'),
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
-			'searchUrl' => $this->context->link->getPageLink('stores')
+			'searchUrl' => $this->context->link->getPageLink('stores'),
+			'logo_store' => Configuration::get('PS_STORES_ICON')
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'stores.tpl');
