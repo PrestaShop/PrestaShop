@@ -29,6 +29,7 @@
 {block name="override_tpl"}
 	<script type="text/javascript">
 		var errorEmpty = "{l s='Please name your matching configuration to save.'}"
+		var token = '{$token}';
 	</script>
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>

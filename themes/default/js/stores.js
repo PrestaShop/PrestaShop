@@ -137,7 +137,7 @@ function searchLocationsNear(center)
 function createMarker(latlng, name, address, other, id_store, has_store_picture)
 {
 	var html = '<b>'+name+'</b><br/>'+address+(has_store_picture == 1 ? '<br /><br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+other+'<br /><a href="http://maps.google.com/maps?saddr=&daddr='+latlng+'" target="_blank">'+translation_5+'<\/a>';
-	var image = new google.maps.MarkerImage(img_ps_dir+'logo_stores.gif');
+	var image = new google.maps.MarkerImage(img_ps_dir+logo_store);
 	if (hasStoreIcon)
 		var marker = new google.maps.Marker({ map: map, icon: image, position: latlng });
 	else

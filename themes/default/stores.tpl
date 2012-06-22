@@ -69,6 +69,7 @@
 		var img_store_dir = '{$img_store_dir}';
 		var img_ps_dir = '{$img_ps_dir}';
 		var searchUrl = '{$searchUrl}';
+		var logo_store = '{$logo_store}';
 		//]]>
 	</script>
 
