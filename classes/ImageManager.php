@@ -114,7 +114,7 @@ class ImageManagerCore
 	 * @param string $file_type
 	 * @return boolean Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg')
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
 		if (!file_exists($src_file))
 			return false;
@@ -124,7 +124,7 @@ class ImageManagerCore
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
 		// because JPG reencoding by GD, even with max quality setting, degrades the image.
 		if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-			|| (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG))
+			|| (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$force_type)
 			$file_type = 'png';
 
 		if (!$src_width)

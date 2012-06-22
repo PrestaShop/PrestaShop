@@ -46,7 +46,7 @@ class TranslateCore
 		// @todo remove global keyword in translations files and use static
 		global $_LANGADM;
 
-		if (!isset($modules_tabs))
+		if ($modules_tabs !== null)
 			$modules_tabs = Tab::getModuleTabList();
 
 		if ($_LANGADM == null)
