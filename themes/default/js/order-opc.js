@@ -357,6 +357,12 @@ function updateNewAccountToAddressBlock()
 					});
 				}
 				$('#opc_new_account').fadeIn('fast', function() {
+					
+					//After login, the products are automatically associated to an address
+					$.each(json.summary.products, function() {
+						updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
+					});
+					
 					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
 					updateCarrierList(json.carrier_data);
