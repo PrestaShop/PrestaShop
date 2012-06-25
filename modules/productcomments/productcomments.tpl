@@ -27,6 +27,7 @@
 var productcomments_controller_url = '{$productcomments_controller_url}';
 var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
 var secure_key = "{$secure_key}";
+var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 </script>
 
 <div id="idTab5">
