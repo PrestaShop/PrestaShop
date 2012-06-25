@@ -3235,6 +3235,7 @@ class BlockLayered extends Module
 							unset($option_checked_clone_array[Tools::link_rewrite($filter_name)]);
 					}
 					$parameters = '';
+					ksort($option_checked_clone_array); // Order parameters
 					foreach ($option_checked_clone_array as $key_group => $value_group)
 						$parameters .= '/'.str_replace('-', '_', $key_group).$value_group;
 					
