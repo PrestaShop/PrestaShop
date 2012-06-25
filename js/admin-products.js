@@ -527,13 +527,16 @@ product_tabs['Prices'] = new function(){
 			context: this,
 			async: false,
 			success: function(data) {
-				if (data.status == 'ok')
+				if (data !== null)
 				{
-					showSuccessMessage(data.message);
-					parent.remove();
+					if (data.status == 'ok')
+					{
+						showSuccessMessage(data.message);
+						parent.remove();
+					}
+					else
+						showErrorMessage(data.message);
 				}
-				else
-					showErrorMessage(data.message);
 			}
 		});
 	};
