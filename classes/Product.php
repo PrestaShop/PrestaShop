@@ -4810,6 +4810,11 @@ class ProductCore extends ObjectModel
 		$this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
 		$this->out_of_stock = StockAvailable::outOfStock($this->id);
 		$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
+		if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1)
+			
+			$this->advanced_stock_management = Db::getInstance()->getValue('SELECT `advanced_stock_management`
+																FROM '._DB_PREFIX_.'product_shop
+																WHERE id_product='.(int)$this->id.Shop::addSqlRestriction());
 	}
 
 	/**
