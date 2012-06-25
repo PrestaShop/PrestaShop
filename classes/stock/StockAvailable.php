@@ -217,11 +217,8 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
 	{
-		if ($id_shop === null)
-			$id_shop = Context::getContext()->shop->id;
 
-		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
-
+		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, $id_shop);
 		if ($existing_id > 0)
 		{
 			Db::getInstance()->update('stock_available', array(
@@ -638,10 +635,15 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		// get shop group too
-			if ($id_shop === null)
+		if ($id_shop === null)
 		{
-			$id_shop = $context->shop->id;
-			$shop_group = $context->shop->getGroup();
+			if (Shop::getContext() == Shop::CONTEXT_GROUP)
+				$shop_group = Shop::getContextShopGroup();
+			else
+			{
+				$shop_group = $context->shop->getGroup();
+				$id_shop = $context->shop->id;
+			}
 		}
 		else
 		{
