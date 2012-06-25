@@ -49,7 +49,7 @@ class MailAlerts extends Module
 		$this->tab = 'administration';
 		$this->version = '2.4';
 		$this->author = 'PrestaShop';
-        $this->need_instance = 0;
+		$this->need_instance = 0;
 
 		parent::__construct();
 
@@ -264,7 +264,7 @@ class MailAlerts extends Module
 
 		// Getting differents vars
 		$id_lang = (int)Context::getContext()->language->id;
-	 	$currency = $params['currency'];
+		$currency = $params['currency'];
 		$configuration = Configuration::getMultiple(array('PS_SHOP_EMAIL', 'PS_MAIL_METHOD', 'PS_MAIL_SERVER', 'PS_MAIL_USER', 'PS_MAIL_PASSWD', 'PS_SHOP_NAME'));
 		$order = $params['order'];
 		$customer = $params['customer'];
@@ -311,7 +311,7 @@ class MailAlerts extends Module
 					<td style="padding:0.6em 0.4em;">
 						<strong>'
 							.$product['product_name'].(isset($product['attributes_small']) ? ' '.$product['attributes_small'] : '').(!empty($customization_text) ? '<br />'.$customization_text : '').
-					   '</strong>
+						'</strong>
 					</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'.Tools::displayPrice($unit_price, $currency, false).'</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">'.(int)$product['product_quantity'].'</td>
@@ -340,11 +340,11 @@ class MailAlerts extends Module
 			'{delivery_block_txt}' => MailAlert::getFormatedAddress($delivery, "\n"),
 			'{invoice_block_txt}' => MailAlert::getFormatedAddress($invoice, "\n"),
 			'{delivery_block_html}' => MailAlert::getFormatedAddress($delivery, '<br />', array(
-							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
 			'{invoice_block_html}' => MailAlert::getFormatedAddress($invoice, '<br />', array(
-							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+			'firstname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>',
+			'lastname' => '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
 			'{delivery_company}' => $delivery->company,
 			'{delivery_firstname}' => $delivery->firstname,
 			'{delivery_lastname}' => $delivery->lastname,
@@ -438,13 +438,13 @@ class MailAlerts extends Module
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
 			$template_vars = array(
 								'{qty}' => $quantity,
-					      		'{last_qty}' => $ma_last_qties,
-					      		'{product}' => pSQL($product_name));
+								'{last_qty}' => $ma_last_qties,
+								'{product}' => $product_name);
 
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.txt') &&
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/productoutofstock.html'))
 				Mail::Send($id_lang,
-						   'productoutofstock',
+							'productoutofstock',
 							Mail::l('Product out of stock', $id_lang),
 							$template_vars,
 							explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
@@ -546,14 +546,14 @@ class MailAlerts extends Module
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);
 			$template_vars = array(
 								'{current_coverage}' => $coverage,
-					      		'{warning_coverage}' => $warning_coverage,
-					      		'{product}' => pSQL($product_name));
+								'{warning_coverage}' => $warning_coverage,
+								'{product}' => pSQL($product_name));
 
 			if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/productcoverage.txt') &&
 				file_exists(dirname(__FILE__).'/mails/'.$iso.'/productcoverage.html'))
 			{
 				Mail::Send($id_lang,
-						   'productcoverage',
+							'productcoverage',
 							Mail::l('Stock coverage', $id_lang),
 							$template_vars,
 							explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),
@@ -569,6 +569,6 @@ class MailAlerts extends Module
 
 	public function hookDisplayHeader($params)
 	{
-	    $this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
+		$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
 	}
 }
