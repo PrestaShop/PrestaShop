@@ -3799,7 +3799,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!Tools::getValue('actionQty'))
 			return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
 
-		$product = new Product((int)Tools::getValue('id_product'));
+		$product = new Product((int)Tools::getValue('id_product'), true);
 		switch (Tools::getValue('actionQty'))
 		{
 			case 'depends_on_stock':
