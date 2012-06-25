@@ -755,7 +755,8 @@ class ProductComments extends Module
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
 			'mediumSize' => Image::getSize('medium'),
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')),
-			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments')
+			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
+			'productcomments_url_rewriting_activated' => Configuration::get('PS_REWRITING_SETTINGS', 0)
 		));
 
 		$this->context->controller->pagination((int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')));
