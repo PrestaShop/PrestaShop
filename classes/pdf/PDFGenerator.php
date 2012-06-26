@@ -95,6 +95,8 @@ class PDFGeneratorCore extends TCPDF
 	public function setFontForLang($iso_lang)
 	{
 		$this->font = PDFGenerator::DEFAULT_FONT;
+		$this->setHeaderFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
+		$this->setFooterFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
 		if (array_key_exists($iso_lang, $this->font_by_lang))
 			$this->font = $this->font_by_lang[$iso_lang];
 
