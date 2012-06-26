@@ -9409,7 +9409,8 @@ class TCPDF {
 		$nextk = -1;
 		$prevint = false;
 		foreach ($range as $k => $ws) {
-			if (($k == $nextk) AND (!$prevint) AND ((!isset($ws['interval'])) OR (count($ws) < 4))) {
+			$cws = count($ws);
+			if (($k == $nextk) AND (!$prevint) AND ((!isset($ws['interval'])) OR ($cws < 4))) {
 				if (isset($range[$k]['interval'])) {
 					unset($range[$k]['interval']);
 				}
