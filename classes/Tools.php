@@ -2108,6 +2108,22 @@ FileETag INode MTime Size
 		return $filtered_files;
 	}
 
+
+	/**
+	 * Align version sent and use internal function
+	 *
+	 * @static
+	 * @param $v1
+	 * @param $v2
+	 * @param string $operator
+	 * @return mixed
+	 */
+	public static function version_compare($v1, $v2, $operator = '<')
+	{
+		Tools::alignVersionNumber($v1, $v2);
+		return version_compare($v1, $v2, $operator);
+	}
+
 	/**
 	 * Align 2 version with the same number of sub version
 	 * version_compare will work better for its comparison :)

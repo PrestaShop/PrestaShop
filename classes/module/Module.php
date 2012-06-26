@@ -381,9 +381,8 @@ abstract class ModuleCore
 	public static function needUpgrade($module)
 	{
 		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
-		Tools::alignVersionNumber($module->version, $module->database_version);
 		// Check the version of the module with the registered one and look if any upgrade file exist
-		return version_compare($module->version, $module->database_version, '>')
+		return Tools::version_compare($module->version, $module->database_version, '>')
 				&& Module::loadUpgradeVersionList($module->name, $module->version, $module->database_version);
 	}
 
@@ -412,12 +411,10 @@ abstract class ModuleCore
 				{
 					$tab = explode('-', $file);
 					$file_version = basename($tab[1], '.php');
-					Tools::alignVersionNumber($file_version, $module_version);
-					Tools::alignVersionNumber($file_version, $registered_version);
 					// Compare version, if minor than actual, we need to upgrade the module
 					if (count($tab) == 2 &&
-						 (version_compare($file_version, $module_version, '<=') &&
-							version_compare($file_version, $registered_version, '>')))
+						 (Tools::version_compare($file_version, $module_version, '<=') &&
+							Tools::version_compare($file_version, $registered_version, '>')))
 					{
 						$list[] = array(
 							'file' => $upgrade_path.$file,
