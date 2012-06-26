@@ -35,7 +35,7 @@
 		<input type="hidden" value="{$order->id}" name="id_order"/>
 		<h4>
 			<input type="submit" value="{l s='Reorder'}" name="submitReorder" class="button exclusive" />
-			{l s='Order #%s - placed on' sprintf=$order->id|string_format:"%06d"} {dateFormat date=$order->date_add full=0}
+			{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}
 		</h4>
 	</div>
 </form>

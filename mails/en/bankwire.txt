@@ -2,7 +2,7 @@ Hi {firstname} {lastname},
 
 Thank you for shopping at {shop_name}!
 
-Your order {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
+Your order with the reference {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
 
 You have selected to pay by wire transfer.
 

@@ -260,7 +260,7 @@
 				<legend><img src="../img/admin/money.gif" /> {l s='Payment'}</legend>
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
-				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form method="post" action="{$currentIndex}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
 					<label>{l s='Don\'t forget to update your conversion rate before make this change.'}</label>
 					<select name="new_currency">
@@ -293,7 +293,7 @@
 				</p>
 				{/if}
 
-				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<colgroup>
 							<col width="15%"></col>
@@ -473,7 +473,7 @@
 								<td>
 									<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else if isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
 									{if $line.can_edit}
-									<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+									<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
 										<span class="shipping_number_edit" style="display:none;">
 											<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
 											<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
@@ -510,7 +510,7 @@
 					<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
 					{if $can_edit}
-					<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+					<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
 						<div style="margin-bottom:5px;">
 							<p>
 								<select name="id_address">
@@ -540,7 +540,7 @@
 				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
 
 				{if $can_edit}
-				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
 					<div style="margin-bottom:5px;">
 						<p>
 							<select name="id_address">
@@ -565,7 +565,7 @@
 		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
 
-	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
+	<form style="width: 98%" class="container-command-top-spacing" action="{$current_index}&vieworder&token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
 			<div style="display: none">
@@ -690,7 +690,7 @@
 							</td>
 							{if $can_edit}
 							<td class="center">
-								<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
+								<a href="{$current_index}&submitDeleteVoucher&id_order_cart_rule={$discount['id_order_cart_rule']}&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}"><img src="../img/admin/delete.gif" alt="{l s='Delete voucher'}" /></a>
 							</td>
 							{/if}
 						</tr>

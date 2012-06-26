@@ -107,6 +107,7 @@ class OrderDetailControllerCore extends FrontController
 							'{firstname}' => $customer->firstname,
 							'{email}' => $customer->email,
 							'{id_order}' => (int)($order->id),
+							'{order_name}' => $order->getUniqReference(),
 							'{message}' => Tools::nl2br($msgText)
 						),
 						$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);

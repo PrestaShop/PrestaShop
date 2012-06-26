@@ -475,8 +475,8 @@ class ToolsCore
 		$price = Tools::ps_round($price, $c_decimals);
 		switch ($c_format)
 		{
-	 	 	/* X 0,000.00 */
-	 	 	case 1:
+			/* X 0,000.00 */
+			case 1:
 				$ret = $c_char.$blank.number_format($price, $c_decimals, '.', ',');
 				break;
 			/* 0 000,00 X*/

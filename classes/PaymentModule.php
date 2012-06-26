@@ -445,7 +445,8 @@ abstract class PaymentModuleCore extends Module
 									'{voucher_num}' => $voucher->code,
 									'{firstname}' => $customer->firstname,
 									'{lastname}' => $customer->lastname,
-									'{id_order}' => $order->reference
+									'{id_order}' => $order->reference,
+									'{order_name}' => $order->getUniqReference()
 								);
 								Mail::Send(
 									(int)$order->id_lang,
@@ -562,7 +563,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
 						'{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
 						'{invoice_other}' => $invoice->other,
-						'{order_name}' => sprintf('#%06d', (int)$order->id),
+						'{order_name}' => $order->getUniqReference(),
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
 						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),

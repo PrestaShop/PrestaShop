@@ -2153,7 +2153,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					if ($product['id_product'] == $id_product_attribute)
 						$this->errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
-											       $id_product_attribute, $current_line + 1);
+							$id_product_attribute, $current_line + 1);
 					else
 						$product['id_product'] = $id_product_attribute;
 				}
@@ -2163,7 +2163,7 @@ class AdminImportControllerCore extends AdminController
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
 					$this->errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
-											   $id_product_attribute, $current_line + 1);
+						$id_product_attribute, $current_line + 1);
 				if ($unit_price_te < 0)
 					$this->errors[] = sprintf($this->l('Unit Price (tax excl.) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
 				if ($quantity_expected < 0)
