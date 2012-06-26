@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Nous vous informons de la génération d'un avoir à votre nom relatif à votre commande n°{id_order}.
+Nous vous informons de la génération d'un avoir à votre nom relatif à votre commande ayant pour référence {order_name}.
 
 Vous pouvez accéder à cet avoir et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site {shop_url}
 

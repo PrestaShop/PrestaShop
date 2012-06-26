@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Votre commande {id_order} vous a bien été remboursée.
+Votre commande ayant pour référence {order_name} vous a bien été remboursée.
 
 Vous pouvez accéder à tout moment au suivi de votre commande dans la rubrique "Mon compte" du site.
 Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}?controller=guest-tracking

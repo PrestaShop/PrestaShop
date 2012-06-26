@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Nous avons bien enregistré votre commande {id_order}. Celle-ci vous sera envoyée dès réception de votre paiement.
+Nous avons bien enregistré votre commande ayant pour référence {order_name}. Celle-ci vous sera envoyée dès réception de votre paiement.
 Pour rappel, vous avez sélectionné le mode de paiement par virement bancaire et celui-ci est à envoyer à :
 
 {bankwire_owner}

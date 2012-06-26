@@ -4,7 +4,7 @@ Votre message :
 
 {message}
 
-Numéro de commande : {id_order}
+Référence commande : {order_name}
 
 Fichié attaché : {attached_file}
 

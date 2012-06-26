@@ -1,6 +1,6 @@
 Hi {firstname} {lastname},
 
-A voucher has been created in your name as a result of your order #{id_order}.
+A voucher has been created in your name as a result of your order with the reference {order_name}.
 
 Voucher code: {voucher_num}, in the amount of {voucher_amount}.
 

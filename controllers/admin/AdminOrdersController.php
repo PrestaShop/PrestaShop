@@ -285,7 +285,8 @@ class AdminOrdersControllerCore extends AdminController
 							'{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
 							'{firstname}' => $customer->firstname,
 							'{lastname}' => $customer->lastname,
-							'{id_order}' => $order->id
+							'{id_order}' => $order->id,
+							'{order_name}' => $order->getUniqReference()
 						);
 						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
@@ -430,6 +431,7 @@ class AdminOrdersControllerCore extends AdminController
 								'{lastname}' => $customer->lastname,
 								'{firstname}' => $customer->firstname,
 								'{id_order}' => $order->id,
+								'{order_name}' => $order->getUniqReference(),
 								'{message}' => $message
 							);
 							if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
@@ -646,6 +648,7 @@ class AdminOrdersControllerCore extends AdminController
 							$params['{lastname}'] = $customer->lastname;
 							$params['{firstname}'] = $customer->firstname;
 							$params['{id_order}'] = $order->id;
+							$params['{order_name}'] = $order->getUniqReference();
 						}
 
 						// Generate credit slip

@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Nous avons bien enregistré votre commande {order_name}.
+Nous avons bien enregistré votre commande ayant pour référence {order_name}.
 Celle-ci vous sera envoyée dès réception de votre paiement.
 
 Pour rappel, vous avez choisi de régler votre commande par chèque, merci de nous transmettre votre règlement :

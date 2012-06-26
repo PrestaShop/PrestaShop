@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Le paiement pour votre commande {id_order} a été accepté.
+Le paiement pour votre commande ayant pour référence {order_name} a été accepté.
 
 Vous pouvez accéder à tout moment au suivi de votre commande dans "Historique des commandes" de la rubrique "Mon compte" sur notre site.
 Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}?controller=guest-tracking
