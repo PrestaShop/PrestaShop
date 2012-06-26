@@ -69,7 +69,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 			'products' => OrderReturn::getOrdersReturnProducts((int)$this->order_return->id, $this->order),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
-			'shop_address' => AddressFormat::generateAddress($this->address, array(), '<br />', ' ')
+			'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' ')
 		));
 		return $this->smarty->fetch($this->getTemplate('order-return'));
 	}
