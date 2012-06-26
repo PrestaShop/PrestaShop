@@ -1792,7 +1792,7 @@ class OrderCore extends ObjectModel
 	 * Return a unique reference like : GWJTHMZUN#2
 	 * 
 	 * With multishipping, order reference are the same for all orders made with the same cart
-	 * this method suffix the order referece by a # and the order number
+	 * in this case this method suffix the order reference by a # and the order number
 	 * 
 	 * @since 1.5.0.14
 	 */
@@ -1816,7 +1816,7 @@ class OrderCore extends ObjectModel
 	 * Return a unique reference like : GWJTHMZUN#2
 	 * 
 	 * With multishipping, order reference are the same for all orders made with the same cart
-	 * this method suffix the order referece by a # and the order number
+	 * in this case this method suffix the order reference by a # and the order number
 	 * 
 	 * @since 1.5.0.14
 	 */
