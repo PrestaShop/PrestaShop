@@ -151,7 +151,7 @@ class AdminShippingControllerCore extends AdminController
 					$carrier = new Carrier($id_carrier);
 					if (Validate::isLoadedObject($carrier))
 					{
-					 	/* Get configuration values */
+						/* Get configuration values */
 						$shipping_method = $carrier->getShippingMethod();
 						$rangeTable = $carrier->getRangeTable();
 

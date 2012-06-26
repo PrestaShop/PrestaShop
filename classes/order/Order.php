@@ -873,7 +873,7 @@ class OrderCore extends ObjectModel
 	 */
 	public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = null, $type = null)
 	{
-        Tools::displayAsDeprecated();
+		Tools::displayAsDeprecated();
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
@@ -1788,5 +1788,42 @@ class OrderCore extends ObjectModel
 		return OrderPayment::getByOrderReference($this->reference);
 	}
 
+	/**
+	 * Return a unique reference like : GWJTHMZUN#2
+	 * 
+	 * With multishipping, order reference are the same for all orders made with the same cart
+	 * this method suffix the order referece by a # and the order number
+	 * 
+	 * @since 1.5.0.14
+	 */
+	public function getUniqReference()
+	{
+		$query = new DbQuery();
+		$query->select('MIN(id_order) as min, MAX(id_order) as max');
+		$query->from('orders');
+		$query->where('id_cart = '.(int)$this->id_cart);
+		$query->orderBy('id_order');
+		
+		$order = Db::getInstance()->getRow($query);
+		
+		if ($order['min'] == $order['max'])
+			return $this->reference;
+		else
+			return $this->reference.'#'.($this->id + 1 - $order['min']);
+	}
+	
+	/**
+	 * Return a unique reference like : GWJTHMZUN#2
+	 * 
+	 * With multishipping, order reference are the same for all orders made with the same cart
+	 * this method suffix the order referece by a # and the order number
+	 * 
+	 * @since 1.5.0.14
+	 */
+	public static function getUniqReferenceOf($id_order)
+	{
+		$order = new Order($id_order);
+		return $order->getUniqReference();
+	}
 }
 

@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Vous avez reçu un nouveau message concernant la commande n°{id_order} :
+Vous avez reçu un nouveau message concernant la commande ayant pour référence {order_name} :
 {message}
 
 Vous pouvez à tout moment consulter vos anciens messages dans votre suivi de commande.

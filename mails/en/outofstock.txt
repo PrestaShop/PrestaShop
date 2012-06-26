@@ -1,6 +1,6 @@
 Hi {firstname} {lastname},
 
-Thanks for your order #{id_order} from {shop_name}.
+Thanks for your order with the reference {order_name} from {shop_name}.
 
 Unfortunately, one or more items are currently out of stock.
 This may cause a slight delay in your delivery.

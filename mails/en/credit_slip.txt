@@ -2,7 +2,7 @@ Hi {firstname} {lastname},
 
 Thank you for shopping at {shop_name}!
 
-We have generated a credit slip in your name for order #{id_order}.
+We have generated a credit slip in your name for order with the reference {order_name}.
 
 You can review this credit slip and download the invoice from the "Order follow" section of your account by clicking "My account" on our shop.
 

@@ -1,6 +1,6 @@
 Bonjour {firstname} {lastname},
 
-Votre commande {id_order} vient d'être expédiée.
+Votre commande ayant pour référence {order_name} vient d'être expédiée.
 
 Vous recevrez prochainement un lien vous permettant le suivi de votre colis.
 

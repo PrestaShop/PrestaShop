@@ -38,7 +38,7 @@
 	<table id="order-list" class="std">
 		<thead>
 			<tr>
-				<th class="first_item">{l s='Order'}</th>
+				<th class="first_item">{l s='Order Reference'}</th>
 				<th class="item">{l s='Date'}</th>
 				<th class="item">{l s='Total price'}</th>
 				<th class="item">{l s='Payment'}</th>
@@ -52,7 +52,7 @@
 			<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{/if}">
 				<td class="history_link bold">
 					{if isset($order.invoice) && $order.invoice && isset($order.virtual) && $order.virtual}<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Products to download'}" title="{l s='Products to download'}" />{/if}
-					<a class="color-myaccount" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail')}');">{l s='#'}{$order.id_order|string_format:"%06d"}</a>
+					<a class="color-myaccount" href="javascript:showOrder(1, {$order.id_order|intval}, '{$link->getPageLink('order-detail')}');">{Order::getUniqReferenceOf($order.id_order)}</a>
 				</td>
 				<td class="history_date bold">{dateFormat date=$order.date_add full=0}</td>
 				<td class="history_price"><span class="price">{displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</span></td>

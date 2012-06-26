@@ -6,7 +6,7 @@ Your message:
 
 {message}
 
-Order ID : {id_order}
+Order reference : {order_name}
 
 Attached file : {attached_file}
 

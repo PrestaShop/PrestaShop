@@ -121,6 +121,7 @@ class ContactControllerCore extends FrontController
 						'{email}' => $from,
 						'{message}' => Tools::nl2br(stripslashes($message)),
 						'{id_order}' => (int)Tools::getValue('id_order'),
+						'{order_name}' => $order->getUniqReference(),
 						'{attached_file}' => $_FILES['fileUpload']['name'] ? $_FILES['fileUpload']['name'] : '');
 
 					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'),

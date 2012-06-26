@@ -4,3 +4,5 @@ SET NAMES 'utf8';
 
 /* PHP:p15014_add_missing_columns(); */;
 
+UPDATE `PREFIX_orders` SET `reference` = LPAD(reference, 9 , '0');
+

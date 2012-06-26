@@ -312,11 +312,16 @@ class OrderHistoryCore extends ObjectModel
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
 			$topic = $result['osname'];
-			$data = array('{lastname}' => $result['lastname'], '{firstname}' => $result['firstname'], '{id_order}' => (int)$this->id_order);
+			$data = array(
+				'{lastname}' => $result['lastname'],
+				'{firstname}' => $result['firstname'],
+				'{id_order}' => (int)$this->id_order,
+				'{order_name}' => $order->getUniqReference()
+			);
 			if ($template_vars)
 				$data = array_merge($data, $template_vars);
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
-			$data['{order_name}'] = sprintf('#%06d', (int)$order->id);
+			$data['{order_name}'] = $order->getUniqReference();
 
 			// An additional email is sent the first time a virtual item is validated
 			$virtual_products = $order->getVirtualProducts();
