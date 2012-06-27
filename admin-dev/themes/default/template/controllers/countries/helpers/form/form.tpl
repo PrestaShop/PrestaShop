@@ -109,7 +109,7 @@
 	}
 
 	function resetLayout(defaultLayout, type) {
-		if (confirm("{l s='Are you sure you want to restore the default address format for this country?'}"))
+		if (confirm("{l s='Are you sure you want to restore the default address format for this country?' js=1}"))
 		$("#ordered_fields").val(unescape(defaultLayout.replace(/\+/g, " ")));
 	}
 
