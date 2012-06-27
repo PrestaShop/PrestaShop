@@ -110,12 +110,12 @@ abstract class HTMLTemplateCore
 	 */
 	protected function getLogo()
 	{
-      $logo = '';
+		$logo = '';
 
 		// TCPDF check if the document root is present in the image path, if not it will add it.
 		// In our case, _PS_ROOT_DIR_ could be different from document_root if we use symlinks, that's why
 		// we don't use _PS_ROOT_DIR_ and we let TCPDF add the document root.
-      $physical_uri = Context::getContext()->shop->physical_uri.'img/';
+		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists($physical_uri.Configuration::get('PS_LOGO_INVOICE')))
 			$logo = $physical_uri.Configuration::get('PS_LOGO_INVOICE');
@@ -159,26 +159,26 @@ abstract class HTMLTemplateCore
 	 */
 	abstract public function getBulkFilename();
 
-    /**
-     * If the template is not present in the theme directory, it will return the default template
-     * in _PS_PDF_DIR_ directory
-     *
-     * @param $template_name
-     * @return string
-     */
-    protected function getTemplate($template_name)
-    {
-        $template = false;
-        $default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-        $overriden_template = _PS_THEME_DIR_.'/pdf/'.$template_name.'.tpl';
+	/**
+	 * If the template is not present in the theme directory, it will return the default template
+	 * in _PS_PDF_DIR_ directory
+	 *
+	 * @param $template_name
+	 * @return string
+	 */
+	protected function getTemplate($template_name)
+	{
+		$template = false;
+		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
+		$overriden_template = _PS_THEME_DIR_.'/pdf/'.$template_name.'.tpl';
 
-        if (file_exists($overriden_template))
-            $template = $overriden_template;
-        else if (file_exists($default_template))
-            $template = $default_template;
+		if (file_exists($overriden_template))
+			$template = $overriden_template;
+		else if (file_exists($default_template))
+			$template = $default_template;
 
-        return $template;
-    }
+		return $template;
+	}
 
 
 	/**
