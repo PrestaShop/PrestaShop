@@ -48,7 +48,7 @@ abstract class HTMLTemplateCore
 			$shop_name = $this->shop->name;
 
 		$path_logo = $this->getLogo();
-		list($width, $height) = getimagesize(_PS_BASE_URL_.$path_logo);
+		list($width, $height) = getimagesize(_PS_ROOT_DIR_.'/'.str_replace(Context::getContext()->shop->physical_uri, '', $path_logo));
 
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
@@ -106,9 +106,12 @@ abstract class HTMLTemplateCore
 	 */
 	protected function getLogo()
 	{
-        $logo = '';
-        // TCPDF always uses the complete physical path, beware of PrestaShop virtual URI or complete path using symlinks
-        $physical_uri = Context::getContext()->shop->physical_uri.'img/';
+      $logo = '';
+
+		// TCPDF check if the document root is present in the image path, if not it will add it.
+		// In our case, _PS_ROOT_DIR_ could be different from document_root if we use symlinks, that's why
+		// we don't use _PS_ROOT_DIR_ and we let TCPDF add the document root.
+      $physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
 			$logo = $physical_uri.Configuration::get('PS_LOGO_INVOICE');
