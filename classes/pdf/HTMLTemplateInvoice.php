@@ -97,7 +97,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
 				'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
-                'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
+				'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 				'order' => $this->order,
 				'order_invoice' => $this->order_invoice
 			));
@@ -113,12 +113,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	{
 		$file = Configuration::get('PS_INVOICE_MODEL');
 
-        // try to fetch the iso template
-        $template = $this->getTemplate($file.'.'.$iso_country);
+		// try to fetch the iso template
+		$template = $this->getTemplate($file.'.'.$iso_country);
 
-        // else use the default one
-        if (!$template)
-            $template = $this->getTemplate($file);
+		// else use the default one
+		if (!$template)
+			$template = $this->getTemplate($file);
 
 		return $template;
 	}
