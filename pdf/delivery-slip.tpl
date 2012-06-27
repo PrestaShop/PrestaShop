@@ -75,7 +75,7 @@
 		<td style="width: 20%; padding-right: 7px; text-align: right; vertical-align: top">
 			<!-- CUSTOMER INFORMATIONS -->
 			<b>{l s='Order Number:' pdf='true'}</b><br />
-			{'%06d'|sprintf:$order->id}<br />
+			{$order->getUniqReference()}<br />
 			<br />
 			<b>{l s='Order Date:' pdf='true'}</b><br />
 			{$order->date_add|date_format:"%d-%m-%Y %H:%M"}<br />
