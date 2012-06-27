@@ -2519,6 +2519,10 @@ class BlockLayered extends Module
 			.' GROUP BY p.id_product ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
 		}
+		
+		if (Tools::getValue('orderby') == 'price')
+			Tools::orderbyPrice($this->products, Tools::getProductsOrder('way', Tools::getValue('orderway')));
+			
 		return $this->products;
 	}
 	
