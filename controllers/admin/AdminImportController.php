@@ -1215,6 +1215,16 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$shops = array();
+			$product_shop = explode(',', $product->shop);
+			foreach ($product_shop as $shop)
+			{
+				$shop = trim($shop);
+				if (!is_numeric($shop))
+					$shop = ShopGroup::getIdByName($shop);
+				$shops[] = $shop;
+			}
+			if (empty($shops))
+				$shops = Shop::getContextListShopID();
 			// If both failed, mysql error
 			if (!$res)
 			{
