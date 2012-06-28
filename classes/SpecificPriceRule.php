@@ -185,32 +185,51 @@ class SpecificPriceRuleCore extends ObjectModel
 			$where = '(';
 			foreach ($conditions_group as $id_condition_group => $condition_group)
 			{
+				$fields = array(
+					'category' => array(
+						'name' => 'cp.id_category',
+						'values' => array()
+					),
+					'manufacturer' => array(
+						'name' => 'p.id_manufacturer',
+						'values' => array(),
+					),
+					'supplier' => array(
+						'name' => 'p.id_supplier',
+						'values' => array()
+					),
+					'feature' => array(
+						'name' => 'fp.id_feature_value',
+						'values' => array()
+					),
+					'attribute' => array(
+						'name'=> 'pac.id_attribute',
+						'values' => array()
+					)
+				);
+				
 				foreach ($condition_group as $condition)
 				{
-					$field = false;
 					if ($condition['type'] == 'category')
-					{
-						$field = 'cp.id_category';
 						$categories = true;
-					}
-					elseif ($condition['type'] == 'manufacturer')
-						$field = 'p.id_manufacturer';
-					elseif ($condition['type'] == 'supplier')
-						$field = 'p.id_supplier';
 					elseif ($condition['type'] == 'feature')
-					{
-						$field = 'fp.id_feature_value';
 						$features = true;
-					}
 					elseif ($condition['type'] == 'attribute')
-					{
-						$field = 'pac.id_attribute';
 						$attributes = true;
-					}
-					if ($field)
-						$where .= $field.'='.(int)$condition['value'].' AND ';
-
+						
+					$fields[$condition['type']]['values'][] = $condition['value'];
 				}
+				
+				foreach ($fields as $field)
+				{
+					if (!$n_conditions = count($field['values']))
+						continue;
+
+					$where .= $field['name'].' IN ('.implode(',', array_map('intval', $field['values'])).') AND ';
+					if ($n_conditions > 1)
+						$query->having('COUNT('.bqSQL($field['name']).') >='.(int)$n_conditions);
+				}
+				
 				$where = rtrim($where, ' AND ').') OR (';
 			}
 			$where = rtrim($where, 'OR (');
