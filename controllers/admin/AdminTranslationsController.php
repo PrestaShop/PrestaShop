@@ -2450,20 +2450,20 @@ class AdminTranslationsControllerCore extends AdminController
 		$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
 		$default_i18n_file = $i18n_dir.$this->translations_informations[$this->type_selected]['file'];
 
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME)
+		if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+			$i18n_file = $default_i18n_file;
+		else
 		{
 			$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
 			$i18n_file = $i18n_dir.$this->translations_informations[$this->type_selected]['override']['file'];
 		}
-		else
-			$i18n_file = $default_i18n_file;
 
-        $this->checkDirAndCreate($i18n_file);
-		if (!Tools::file_exists_cache($i18n_file))
-			throw new PrestaShopException(sprintf(Tools::displayError('Please create a "%1$s.php" file in "%2$s"'), $this->lang_selected->iso_code, $i18n_dir));
+		$this->checkDirAndCreate($i18n_file);
+		if (!file_exists($i18n_file))
+			$this->errors[] = sprintf(Tools::displayError('Please create a "%1$s.php" file in "%2$s"'), $this->lang_selected->iso_code, $i18n_dir);
 
 		if (!is_writable($i18n_file))
-			throw new PrestaShopException(sprintf(Tools::displayError('Cannot write into the "%s"'), $i18n_file));
+			$this->errors[] = sprintf(Tools::displayError('Cannot write into the "%s"'), $i18n_file);
 
 		@include($i18n_file);
 
