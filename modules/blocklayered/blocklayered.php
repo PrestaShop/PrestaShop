@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.6';
+		$this->version = '1.8.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -2520,7 +2520,7 @@ class BlockLayered extends Module
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
 		}
 		
-		if (Tools::getValue('orderby') == 'price')
+		if (Tools::getProductsOrder('by', Tools::getValue('orderby'), true) == 'p.price')
 			Tools::orderbyPrice($this->products, Tools::getProductsOrder('way', Tools::getValue('orderway')));
 			
 		return $this->products;
