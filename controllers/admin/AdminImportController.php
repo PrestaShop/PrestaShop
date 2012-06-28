@@ -1327,6 +1327,7 @@ class AdminImportControllerCore extends AdminController
 					$product_has_images = (bool)Image::getImages($this->context->language->id, (int)$product->id);
 					foreach ($product->image as $key => $url)
 					{
+						$url = trim($url);
 						$error = false;
 						if (!empty($url))
 						{
@@ -1357,7 +1358,6 @@ class AdminImportControllerCore extends AdminController
 						if ($error)
 						{
 							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d : the picture cannot be saved : %2$s'), $image->id_product, $url);
-							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 						}
 					}
 				}
