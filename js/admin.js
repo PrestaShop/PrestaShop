@@ -176,7 +176,7 @@ function checkAll(pForm)
 	{
 		var objName = pForm.elements[i].name;
 		var objType = pForm.elements[i].type;
-		if (objType = 'checkbox' && objName != 'checkme')
+		if (objType == 'checkbox' && objName != 'checkme')
 		{
 			box = eval(pForm.elements[i]);
 			box.checked = !box.checked;
