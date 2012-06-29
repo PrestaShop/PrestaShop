@@ -99,11 +99,11 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 								<li>
 									<label>{$criterion.name|escape:'html':'UTF-8'}:</label>
 									<div class="star_content">
-										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|intval}]" value="1" />
-										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|intval}]" value="2" />
-										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|intval}]" value="3" checked="checked" />
-										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|intval}]" value="4" />
-										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|intval}]" value="5" />
+										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
+										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
+										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" checked="checked" />
+										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" />
+										<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" />
 									</div>
 									<div class="clearfix"></div>
 								</li>
