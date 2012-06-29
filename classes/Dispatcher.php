@@ -218,15 +218,10 @@ class DispatcherCore
 			$this->controller_not_found = 'pagenotfound';
 			$this->default_controller = 'index';
 		}
+		
+		$this->setRequestUri();
 
 		$this->loadRoutes();
-
-		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
-		if (isset($_SERVER['REQUEST_URI']))
-			$this->request_uri = $_SERVER['REQUEST_URI'];
-		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
-			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
-		$this->request_uri = rawurldecode($this->request_uri);
 	}
 
 	/**
@@ -235,15 +230,6 @@ class DispatcherCore
 	public function dispatch()
 	{
 		$controller_class = '';
-		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
-
-		// If there are several languages, get language from uri
-		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
-			{
-				$_GET['isolang'] = $m[1];
-				$this->request_uri = substr($this->request_uri, 3);
-			}
 
 		// Get current controller
 		$this->getController();
@@ -357,6 +343,29 @@ class DispatcherCore
 			$e->displayMessage();
 		}
 	}
+	
+	/**
+	 * Set request uri and iso lang
+	 */
+	protected function setRequestUri()
+	{
+		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
+		if (isset($_SERVER['REQUEST_URI']))
+			$this->request_uri = $_SERVER['REQUEST_URI'];
+		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
+			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
+		$this->request_uri = rawurldecode($this->request_uri);
+		
+		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
+
+		// If there are several languages, get language from uri
+		if ($this->use_routes && Language::isMultiLanguageActivated())
+			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
+			{
+				$_GET['isolang'] = $m[1];
+				$this->request_uri = substr($this->request_uri, 3);
+			}
+	}
 
 	/**
 	 * Load default routes
@@ -375,11 +384,17 @@ class DispatcherCore
 
 		if ($this->use_routes)
 		{
+			// Get iso lang
+			$iso_lang = Tools::getValue('isolang');
+			$id_lang = $context->language->id;
+			if (!empty($iso_lang))
+				$id_lang = Language::getIdByIso($iso_lang);
+
 			// Load routes from meta table
 			$sql = 'SELECT m.page, ml.url_rewrite
 					FROM `'._DB_PREFIX_.'meta` m
 					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml').')
-					WHERE id_lang = '.(int)$context->language->id.'
+					WHERE id_lang = '.(int)$id_lang.'
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
