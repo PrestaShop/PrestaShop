@@ -50,7 +50,7 @@ function getPush(refresh)
 	$.post("ajax.php",{"getNotifications" : "1"}, function(data) {
 		if (data)
 		{
-			json = jQuery.parseJSON(data);
+			var json = jQuery.parseJSON(data);
 
 			// Add orders notifications to the list
 			html = "";
