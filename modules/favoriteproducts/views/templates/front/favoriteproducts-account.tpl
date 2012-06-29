@@ -33,10 +33,11 @@ $('document').ready(function()
 		var parent = $(this).parent().parent();
 
 		$.ajax({
-			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)|escape:'htmlall':'UTF-8'}",
+			url: "{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}",
 			type: "POST",
 			data: {
-				'id_product': idFavoriteProduct
+				'id_product': idFavoriteProduct,
+				'ajax': true
 			},
 			success: function(result)
 			{
