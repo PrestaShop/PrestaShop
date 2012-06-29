@@ -1314,6 +1314,8 @@ class AdminImportControllerCore extends AdminController
 							}
 						}
 					}
+					// we have to index new tags to be able to search new created tags
+					Search::indexation(false);
 				}
 				//delete existing images if "delete_existing_images" is set to 1
 				if (isset($product->delete_existing_images))
