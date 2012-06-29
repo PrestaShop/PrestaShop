@@ -153,7 +153,7 @@ class AdminReturnControllerCore extends AdminController
 	public function initToolbar()
 	{
 		// If display list, we don't want the "add" button
-		if (!$this->display)
+		if (!$this->display || $this->display == 'list')
 			return;
 		parent::initToolbar();
 	}
