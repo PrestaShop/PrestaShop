@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>cashondelivery</name>
-            <displayName><![CDATA[Comptant &agrave; la livraison]]></displayName>
+            <displayName><![CDATA[Cash on delivery (COD)]]></displayName>
             <version><![CDATA[0.4]]></version>
-            <description><![CDATA[Accepte le paiement lors de la livraison]]></description>
+            <description><![CDATA[Accept cash on delivery payments]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
             <is_configurable>0</is_configurable>
