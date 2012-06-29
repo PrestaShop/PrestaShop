@@ -1400,9 +1400,11 @@ class AdminImportControllerCore extends AdminController
 	public function attributeImport()
 	{
 		$default_language = Configuration::get('PS_LANG_DEFAULT');
+
 		$groups = array();
 		foreach (AttributeGroup::getAttributesGroups($default_language) as $group)
 			$groups[$group['name']] = (int)$group['id_attribute_group'];
+
 		$attributes = array();
 		foreach (Attribute::getAttributes($default_language) as $attribute)
 			$attributes[$attribute['attribute_group'].'_'.$attribute['name']] = (int)$attribute['id_attribute'];
@@ -1413,6 +1415,9 @@ class AdminImportControllerCore extends AdminController
 		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
+			if (count($line) == 1 && empty($line[0]))
+				continue;
+
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
@@ -1459,6 +1464,7 @@ class AdminImportControllerCore extends AdminController
 
 				if ($field_error === true && $lang_field_error === true && $image->add())
 				{
+					$image->associateTo($id_shop_list);
 					if (!AdminImportController::copyImg($product->id, $image->id, $url))
 						$this->warnings[] = Tools::displayError('Error copying image:').$url;
 					else
@@ -1512,6 +1518,7 @@ class AdminImportControllerCore extends AdminController
 					$position = $tab_group[2];
 				else
 					$position = false;
+
 				if (!isset($groups[$group]))
 				{
 					$obj = new AttributeGroup();
@@ -1520,10 +1527,12 @@ class AdminImportControllerCore extends AdminController
 					$obj->name[$default_language] = $group;
 					$obj->public_name[$default_language] = $group;
 					$obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
+
 					if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 					{
 						$obj->add();
+						$obj->associateTo($id_shop_list);
 						$groups[$group] = $obj->id;
 					}
 					else
@@ -1567,10 +1576,12 @@ class AdminImportControllerCore extends AdminController
 						$obj->id_attribute_group = $groups_attributes[$key]['id'];
 						$obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
 						$obj->position = (!$position) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
+
 						if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 							($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 						{
 							$obj->add();
+							$obj->associateTo($id_shop_list);
 							$attributes[$group.'_'.$attribute] = $obj->id;
 						}
 						else
@@ -2504,7 +2515,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->warnings[] = $product_name.(isset($product_id) ? ' (ID '.$product_id.')' : '').' '.Tools::displayError($message);
 	}
-	
+
 	public function ajaxProcessSaveImportMatchs()
 	{
 		if ($this->tabAccess['edit'] === '1')
@@ -2526,16 +2537,16 @@ class AdminImportControllerCore extends AdminController
 			die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
 		}
 	}
-	
+
 	public function ajaxProcessLoadImportMatchs()
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
 			die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'.$return[0]['skip'].'"}');
-		}	
+		}
 	}
-	
+
 	public function ajaxProcessDeleteImportMatchs()
 	{
 		if ($this->tabAccess['edit'] === '1')
