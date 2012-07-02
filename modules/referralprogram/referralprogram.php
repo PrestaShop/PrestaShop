@@ -77,7 +77,7 @@ class ReferralProgram extends Module
 		Configuration::updateValue('REFERRAL_PERCENTAGE', 5);
 
 		/* This hook is optional */
-		$this->registerHook('myAccountBlock');
+		$this->registerHook('displayMyAccountBlock');
 
 		return true;
 	}
@@ -387,7 +387,7 @@ class ReferralProgram extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
-	public function hookMyAccountBlock($params)
+	public function hookDisplayMyAccountBlock($params)
 	{
 		return $this->hookCustomerAccount($params);
 	}

@@ -72,7 +72,7 @@ class BlockWishList extends Module
 					)
 			return false;
 		/* This hook is optional */
-		$this->registerHook('myAccountBlock');
+		$this->registerHook('displayMyAccountBlock');
 		return true;
 	}
 	
@@ -225,7 +225,7 @@ class BlockWishList extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
-	public function hookMyAccountBlock($params)
+	public function hookDisplayMyAccountBlock($params)
 	{
 		return $this->hookCustomerAccount($params);
 	}
