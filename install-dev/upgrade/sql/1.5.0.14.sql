@@ -6,3 +6,4 @@ SET NAMES 'utf8';
 
 UPDATE `PREFIX_orders` SET `reference` = LPAD(reference, 9 , '0');
 
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayMyAccountBlock', 'myAccountBlock');

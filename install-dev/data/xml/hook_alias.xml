@@ -345,5 +345,9 @@
       <alias>taxManager</alias>
       <name>actionTaxManager</name>
     </hook_alias>
+    <hook_alias id="myAccountBlock">
+      <alias>myAccountBlock</alias>
+      <name>displayMyAccountBlock</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>
