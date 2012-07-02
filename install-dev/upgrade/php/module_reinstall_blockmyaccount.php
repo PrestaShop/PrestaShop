@@ -33,7 +33,7 @@ function module_reinstall_blockmyaccount()
 	{
 		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'hook` 
 			(`name`, `title`, `description`, `position`) VALUES 
-			("myAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
+			("displayMyAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
 		// register left column, and header, and addmyaccountblockhook
 		$hooks = array('leftColumn', 'header');
 		foreach($hooks as $hook_name)
