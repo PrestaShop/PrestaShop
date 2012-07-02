@@ -353,7 +353,7 @@ function reloadContent(params_plus)
 		}
 	});
 	
-	if ($('.selectPrductSort').length)
+	if ($('.selectPrductSort').length && $('.selectPrductSort').val())
 	{
 		if ($('.selectPrductSort').val().search(/orderby=/) > 0)
 		{
