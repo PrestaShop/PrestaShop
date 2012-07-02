@@ -378,6 +378,9 @@ class ToolsCore
 		if (!$context)
 			$context = Context::getContext();
 
+		if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso)))
+			$_GET['id_lang'] = $id_lang;
+
 		// update language only if new id is different from old id
 		// or if default language changed
 		$cookie_id_lang = $context->cookie->id_lang;
@@ -392,7 +395,19 @@ class ToolsCore
 
 			$params = $_GET;
 			unset($params['id_lang']);
-			Tools::redirect('index.php?'.http_build_query($params));
+
+			if (!Configuration::get('PS_REWRITING_SETTINGS'))
+			{
+				if (empty($params['controller']))
+					unset($params['controller']);
+				elseif (!empty(Context::getContext()->controller->php_self))
+					$params['controller'] = Context::getContext()->controller->php_self;
+					
+				if (empty($params))
+					Tools::redirect('index.php');
+				else
+					Tools::redirect('index.php?'.http_build_query($params));
+			}
 		}
 	}
 
