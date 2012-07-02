@@ -221,6 +221,9 @@ class DispatcherCore
 		
 		$this->setRequestUri();
 
+		// Switch language if needed
+		Tools::switchLanguage();
+
 		$this->loadRoutes();
 	}
 
@@ -368,19 +371,23 @@ class DispatcherCore
 	}
 
 	/**
-	 * Load default routes
+	 * Load default routes group by languages
 	 */
 	protected function loadRoutes()
 	{
 		$context = Context::getContext();
-		foreach ($this->default_routes as $id => $route)
-			$this->addRoute(
-				$id,
-				$route['rule'],
-				$route['controller'],
-				$route['keywords'],
-				isset($route['params']) ? $route['params'] : array()
-			);
+		
+		// Set default routes
+		foreach (Language::getLanguages() as $lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$lang['id_lang'],
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array()
+				);
 
 		if ($this->use_routes)
 		{
@@ -391,16 +398,15 @@ class DispatcherCore
 				$id_lang = Language::getIdByIso($iso_lang);
 
 			// Load routes from meta table
-			$sql = 'SELECT m.page, ml.url_rewrite
+			$sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
 					FROM `'._DB_PREFIX_.'meta` m
 					LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON (m.id_meta = ml.id_meta'.Shop::addSqlRestrictionOnLang('ml').')
-					WHERE id_lang = '.(int)$id_lang.'
 					ORDER BY LENGTH(ml.url_rewrite) DESC';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
 				{
 					if ($row['url_rewrite'])
-						$this->addRoute($row['page'], $row['url_rewrite'], $row['page']);
+						$this->addRoute($row['page'], $row['url_rewrite'], $row['page'], $row['id_lang']);
 					else
 						$this->empty_route = array(
 							'routeID' =>	$row['page'],
@@ -420,24 +426,30 @@ class DispatcherCore
 			// Load custom routes
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
-					$this->addRoute(
-						$route_id,
-						$custom_route,
-						$route_data['controller'],
-						$route_data['keywords'],
-						isset($route_data['params']) ? $route_data['params'] : array()
-					);
+					foreach (Language::getLanguages() as $lang)
+						$this->addRoute(
+							$route_id,
+							$custom_route,
+							$route_data['controller'],
+							$lang['id_lang'],
+							$route_data['keywords'],
+							isset($route_data['params']) ? $route_data['params'] : array()
+						);
 		}
 	}
 
 	/**
 	 *
-	 * @param string $id Name of the route (need to be uniq, a second route with same name will override the first)
+	 * @param string $route_id Name of the route (need to be uniq, a second route with same name will override the first)
 	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
+	 * @param int $id_lang
 	 */
-	public function addRoute($route_id, $rule, $controller, array $keywords = array(), array $params = array())
+	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array())
 	{
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+		
 		$regexp = preg_quote($rule, '#');
 		if ($keywords)
 		{
@@ -471,7 +483,10 @@ class DispatcherCore
 		}
 
 		$regexp = '#^/'.$regexp.'(\?.*)?$#u';
-		$this->routes[$route_id] = array(
+		if (!isset($this->routes[$id_lang]))
+			$this->routes[$id_lang] = array();
+		
+		$this->routes[$id_lang][$route_id] = array(
 			'rule' =>		$rule,
 			'regexp' =>		$regexp,
 			'controller' =>	$controller,
@@ -484,26 +499,31 @@ class DispatcherCore
 	 * Check if a route exists
 	 *
 	 * @param string $route_id
+	 * @param int $id_lang
 	 * @return bool
 	 */
-	public function hasRoute($route_id)
+	public function hasRoute($route_id, $id_lang = null)
 	{
-		return isset($this->routes[$route_id]);
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+		
+		return isset($this->routes[$id_lang]) && isset($this->routes[$id_lang][$route_id]);
 	}
 
 	/**
 	 * Check if a keyword is written in a route rule
 	 *
 	 * @param string $route_id
+	 * @param int $id_lang
 	 * @param string $keyword
 	 * @return bool
 	 */
-	public function hasKeyword($route_id, $keyword)
+	public function hasKeyword($route_id, $id_lang, $keyword)
 	{
-		if (!isset($this->routes[$route_id]))
+		if (!isset($this->routes[$id_lang]) && !isset($this->routes[$id_lang][$route_id]))
 			return false;
 
-		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$route_id]['rule']);
+		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$id_lang][$route_id]['rule']);
 	}
 
 	/**
@@ -530,19 +550,23 @@ class DispatcherCore
 	 * Create an url from
 	 *
 	 * @param string $route_id Name the route
+	 * @param int $id_lang
 	 * @param array $params
 	 * @param bool $use_routes If false, don't use to create this url
 	 * @param string $anchor Optional anchor to add at the end of this url
 	 */
-	public function createUrl($route_id, array $params = array(), $force_routes = false, $anchor = '')
+	public function createUrl($route_id, $id_lang = null, array $params = array(), $force_routes = false, $anchor = '')
 	{
-		if (!isset($this->routes[$route_id]))
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+		
+		if (!isset($this->routes[$id_lang][$route_id]))
 		{
 			$query = http_build_query($params, '', '&');
 			$index_link = Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php';
 			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
 		}
-		$route = $this->routes[$route_id];
+		$route = $this->routes[$id_lang][$route_id];
 
 		// Check required fields
 		$query_params = isset($route['params']) ? $route['params'] : array();
@@ -630,33 +654,34 @@ class DispatcherCore
 
 			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 			if ($this->empty_route)
-				$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller']);
+				$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller'], Context::getContext()->language->id);
 
-			foreach ($this->routes as $route)
-				if (preg_match($route['regexp'], $this->request_uri, $m))
-				{
-					// Route found ! Now fill $_GET with parameters of uri
-					foreach ($m as $k => $v)
-						if (!is_numeric($k))
-							$_GET[$k] = $v;
-
-					$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
-					if (!empty($route['params']))
-						foreach ($route['params'] as $k => $v)
-							$_GET[$k] = $v;
-
-					// A patch for module friendly urls
-					if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+			if (isset($this->routes[Context::getContext()->language->id]))
+				foreach ($this->routes[Context::getContext()->language->id] as $route)
+					if (preg_match($route['regexp'], $this->request_uri, $m))
 					{
-						$_GET['module'] = $m[1];
-						$_GET['fc'] = 'module';
-						$controller = $m[2];
+						// Route found ! Now fill $_GET with parameters of uri
+						foreach ($m as $k => $v)
+							if (!is_numeric($k))
+								$_GET[$k] = $v;
+	
+						$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
+						if (!empty($route['params']))
+							foreach ($route['params'] as $k => $v)
+								$_GET[$k] = $v;
+	
+						// A patch for module friendly urls
+						if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+						{
+							$_GET['module'] = $m[1];
+							$_GET['fc'] = 'module';
+							$controller = $m[2];
+						}
+	
+						if (isset($_GET['fc']) && $_GET['fc'] == 'module')
+							$this->front_controller = self::FC_MODULE;
+						break;
 					}
-
-					if (isset($_GET['fc']) && $_GET['fc'] == 'module')
-						$this->front_controller = self::FC_MODULE;
-					break;
-				}
 
 			if ($controller == 'index' || $this->request_uri == '/index.php')
 				$controller = $this->default_controller;

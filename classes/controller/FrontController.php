@@ -145,12 +145,10 @@ class FrontControllerCore extends Controller
 
 		ob_start();
 
-		// Switch language if needed and init cookie language
-		if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso)))
-			$_GET['id_lang'] = $id_lang;
-
-		Tools::switchLanguage();
+		// Init cookie language
+		// @TODO This method must be moved into switchLanguage
 		Tools::setCookieLanguage($this->context->cookie);
+		
 		$currency = Tools::setCurrency($this->context->cookie);
 
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
@@ -525,7 +523,7 @@ class FrontControllerCore extends Controller
 		if (Tools::isSubmit('live_edit'))
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
 
-        $layout = $this->getLayout();
+		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
@@ -608,15 +606,26 @@ class FrontControllerCore extends Controller
 					$params[$key] = $value;
 
 			$str_params = '';
-			if ($params)
-				$str_params = ((strpos($canonical_url, '?') === false) ? '?' : '&').http_build_query($params, '', '&');
+			$url_details = parse_url($canonical_url);
+			if (!empty($url_details['query']))
+			{
+				parse_str($url_details['query'], $query);
+				foreach ($query as $key => $value)
+					$params[$key] = $value;
+			}
+			
+			$str_params = http_build_query($params, '', '&');
+			if (!empty($str_params))
+				$final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url).'?'.Tools::safeOutput($str_params);
+			else
+				$final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
 
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
-				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonical_url.Tools::safeOutput($str_params).'">'.$canonical_url.Tools::safeOutput($str_params).'</a>');
+				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$final_url.'">'.$final_url.'</a>');
 
 			header('HTTP/1.0 301 Moved');
 			header('Cache-Control: no-cache');
-			Tools::redirectLink($canonical_url.$str_params);
+			Tools::redirectLink($final_url);
 		}
 	}
 
