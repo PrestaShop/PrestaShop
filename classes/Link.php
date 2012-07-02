@@ -112,19 +112,19 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($product->getFieldByLang('meta_keywords'));
 		$params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
 
-		if ($dispatcher->hasKeyword('product_rule', 'manufacturer'))
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'manufacturer'))
 			$params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
 
-		if ($dispatcher->hasKeyword('product_rule', 'supplier'))
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'supplier'))
 			$params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
 
-		if ($dispatcher->hasKeyword('product_rule', 'price'))
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'price'))
 			$params['price'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
 
-		if ($dispatcher->hasKeyword('product_rule', 'tags'))
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 
-		if ($dispatcher->hasKeyword('product_rule', 'categories'))
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'categories'))
 		{
 			$cats = array();
 			foreach ($product->getParentCategories() as $cat)
@@ -133,7 +133,7 @@ class LinkCore
 		}
 		$anchor = $ipa ? $product->getAnchor($ipa) : '';
 
-		return $url.$dispatcher->createUrl('product_rule', $params, $force_routes, $anchor);
+		return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor);
 	}
 
 	/**
@@ -172,7 +172,7 @@ class LinkCore
 			$params['selected_filters'] = $selected_filters;
 		}
 
-		return $url.Dispatcher::getInstance()->createUrl($rule, $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl($rule, $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -199,7 +199,7 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($category->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl('cms_category_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -237,7 +237,7 @@ class LinkCore
 		else
 			$params['meta_title'] = '';
 
-		return $url.Dispatcher::getInstance()->createUrl('cms_rule', $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl('cms_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -264,7 +264,7 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($supplier->meta_keywords);
 		$params['meta_title'] = Tools::str2url($supplier->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl('supplier_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -291,7 +291,7 @@ class LinkCore
 		$params['meta_keywords'] =	Tools::str2url($manufacturer->meta_keywords);
 		$params['meta_title'] = Tools::str2url($manufacturer->meta_title);
 
-		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', $params, $this->allow);
+		return $url.Dispatcher::getInstance()->createUrl('manufacturer_rule', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -316,10 +316,10 @@ class LinkCore
 		$params['controller'] = $controller ? $controller : 'default';
 
 		// If the module has its own route ... just use it !
-		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller))
+		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $params);
 		else
-			return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
+			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow);
 	}
 
 	/**
@@ -331,8 +331,10 @@ class LinkCore
 	 */
 	public function getAdminLink($controller, $with_token = true)
 	{
+		$id_lang = Context::getContext()->language->id;
+		
 		$params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
-		return Dispatcher::getInstance()->createUrl($controller, $params, false);
+		return Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
 	}
 
 	/**
@@ -404,7 +406,7 @@ class LinkCore
 		}
 		unset($request['controller']);
 
-		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
+		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request);
 		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
 
@@ -426,24 +428,20 @@ class LinkCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$matches = array();
-		$request = $_SERVER['REQUEST_URI'];
-		preg_match('#^/([a-z]{2})/([^\?]*).*$#', $request, $matches);
-		if ($matches)
-		{
-			$current_iso = $matches[1];
-			$rewrite = $matches[2];
-			$url_rewrite = Meta::getEquivalentUrlRewrite($id_lang, Language::getIdByIso($current_iso), $rewrite);
-			$request = str_replace($rewrite, $url_rewrite, $request);
-		}
 
 		$params = $_GET;
 		unset($params['isolang'], $params['controller']);
 
 		if (!$this->allow)
 			$params['id_lang'] = $id_lang;
+		else
+			unset($params['id_lang']);
 
-		return $this->getPageLink(Dispatcher::getInstance()->getController(), false, $id_lang, $params);
+		$controller = Dispatcher::getInstance()->getController();
+		if (!empty(Context::getContext()->controller->php_self))
+			$controller = Context::getContext()->controller->php_self;
+		
+		return $this->getPageLink($controller, false, $id_lang, $params);
 	}
 
 	public function goPage($url, $p)
