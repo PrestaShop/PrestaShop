@@ -90,7 +90,7 @@ class Loyalty extends Module
 		Configuration::updateValue('PS_LOYALTY_VOUCHER_CATEGORY', $category_config);
 
 		/* This hook is optional */
-		$this->registerHook('myAccountBlock');
+		$this->registerHook('displayMyAccountBlock');
 		if (!LoyaltyStateModule::insertDefaultData())
 			return false;
 		return true;
@@ -475,7 +475,7 @@ class Loyalty extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 	
-	public function hookMyAccountBlock($params)
+	public function hookDisplayMyAccountBlock($params)
 	{
 		return $this->hookCustomerAccount($params);
 	}

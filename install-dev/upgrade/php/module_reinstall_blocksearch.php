@@ -33,7 +33,7 @@ function module_reinstall_blocksearch()
 	{
 		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'hook` 
 			(`name`, `title`, `description`, `position`) VALUES 
-			("myAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
+			("displayMyAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
 		// register left column, and header, and addmyaccountblockhook
 		$hooks = array('top', 'header');
 		foreach($hooks as $hook_name)
