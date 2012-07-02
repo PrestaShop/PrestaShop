@@ -183,11 +183,9 @@ class CarrierCore extends ObjectModel
 			$this->position = Carrier::getHigherPosition() + 1;
 		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
 			return false;
-		if (!Db::getInstance()->executeS('SELECT `id_carrier` FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE `deleted` = 0'))
+		if (!$count = Db::getInstance()->getValue('SELECT count(`id_carrier`) FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE `deleted` = 0'))
 			return false;
-		if (!$num_rows = Db::getInstance()->NumRows())
-			return false;
-		if ((int)$num_rows == 1)
+		if ($count == 1)
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$this->id);
 
 		// Register reference
