@@ -184,11 +184,15 @@
 				<!-- END PRODUCTS -->
 
 				<!-- CART RULES -->
+				{assign var="shipping_discount_tax_incl" value="0"}
 				{foreach $cart_rules as $cart_rule}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 					<tr style="line-height:6px;background-color:{$bgcolor};" text-align="left">
 						<td colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
 						<td>
+							{if $cart_rule.free_shipping}
+								{assign var="shipping_discount_tax_incl" value=$order_invoice->total_shipping_tax_incl}
+							{/if}
 							{if $tax_excluded_display}
 								- {$cart_rule.value_tax_excl}
 							{else}
@@ -221,7 +225,7 @@
 				{if $order_invoice->total_discount_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total Vouchers' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">-{displayPrice currency=$order->id_currency price=$order_invoice->total_discount_tax_incl}</td>
+					<td style="width: 15%; text-align: right;">-{displayPrice currency=$order->id_currency price=($order_invoice->total_discount_tax_incl + $shipping_discount_tax_incl)}</td>
 				</tr>
 				{/if}
 
