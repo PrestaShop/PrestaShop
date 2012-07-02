@@ -65,19 +65,19 @@ class Blocktopmenu extends Module
 	public function install()
 	{
 		if (!parent::install() ||
-			!$this->registerHook('top') ||
+			!$this->registerHook('displayTop') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
 			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
-			!$this->registerHook('categoryUpdate') ||
-			!$this->registerHook('categoryDeletion') ||
-			!$this->registerHook('cmsUpdate') ||
-			!$this->registerHook('cmsDeletion') ||
-			!$this->registerHook('supplierUpdate') ||
-			!$this->registerHook('supplierDeletion') ||
-			!$this->registerHook('manufacturerUpdate') ||
-			!$this->registerHook('manufacturerDeletion') ||
-			!$this->registerHook('productUpdate') ||
-			!$this->registerHook('productDeletion') ||
+			!$this->registerHook('actionObjectCategoryUpdateAfter') ||
+			!$this->registerHook('actionObjectCategoryDeleteAfter') ||
+			!$this->registerHook('actionObjectCmsUpdateAfter') ||
+			!$this->registerHook('actionObjectCmsDeleteAfter') ||
+			!$this->registerHook('actionObjectSupplierUpdateAfter') ||
+			!$this->registerHook('actionObjectSupplierDeleteAfter') ||
+			!$this->registerHook('actionObjectManufacturerUpdateAfter') ||
+			!$this->registerHook('actionObjectManufacturerDeleteAfter') ||
+			!$this->registerHook('actionObjectProductUpdateAfter') ||
+			!$this->registerHook('actionObjectProductDeleteAfter') ||
 			!$this->installDB())
 			return false;
 		return true;
@@ -712,7 +712,7 @@ class Blocktopmenu extends Module
 			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
 	}
 
-	public function hookTop($param)
+	public function hookDisplayTop($param)
 	{
 		$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
 		$this->page_name = Dispatcher::getInstance()->getController();
@@ -795,52 +795,52 @@ class Blocktopmenu extends Module
 	}
 	
 
-	public function hookCategoryUpdate($params)
+	public function hookActionObjectCategoryUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookCategoryDeletion($params)
+	public function hookActionObjectCategoryDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookCmsUpdate($params)
+	public function hookActionObjectCmsUpdateUpdate($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookCmsDeletion($params)
+	public function hookActionObjectCmsDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookSupplierUpdate($params)
+	public function hookActionObjectSupplierUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookSupplierDeletion($params)
+	public function hookActionObjectSupplierDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}	
 
-	public function hookManufacturerUpdate($params)
+	public function hookActionObjectManufacturerUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookManufacturerDeletion($params)
+	public function hookActionObjectManufacturerDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookProductUpdate($params)
+	public function hookActionObjectProductUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
 	
-	public function hookProductDeletion($params)
+	public function hookActionObjectProductDeleteAfter($params)
 	{
 		$this->clearMenuCache();
 	}
