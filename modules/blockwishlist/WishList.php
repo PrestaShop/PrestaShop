@@ -272,17 +272,17 @@ class WishList extends ObjectModel
 		$products = Db::getInstance()->executeS('
 		SELECT wp.`id_product`, wp.`quantity`, p.`quantity` AS product_quantity, pl.`name`, wp.`id_product_attribute`, wp.`priority`, pl.link_rewrite, cl.link_rewrite AS category_rewrite
 		FROM `'._DB_PREFIX_.'wishlist_product` wp
-		JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = wp.`id_product`
+		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = wp.`id_product`
 		'.Shop::addSqlAssociation('product', 'p').'
-		JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = wp.`id_product`'.Shop::addSqlRestrictionOnLang('pl').'
-		JOIN `'._DB_PREFIX_.'wishlist` w ON w.`id_wishlist` = wp.`id_wishlist`
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = wp.`id_product`'.Shop::addSqlRestrictionOnLang('pl').'
+		LEFT JOIN `'._DB_PREFIX_.'wishlist` w ON w.`id_wishlist` = wp.`id_wishlist`
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON cl.`id_category` = product_shop.`id_category_default` AND cl.id_lang='.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 		WHERE w.`id_customer` = '.(int)($id_customer).'
 		AND pl.`id_lang` = '.(int)($id_lang).'
 		AND wp.`id_wishlist` = '.(int)($id_wishlist).
 		(empty($id_product) === false ? ' AND wp.`id_product` = '.(int)($id_product) : '').
 		($quantity == true ? ' AND wp.`quantity` != 0': '').'
-		GROUP BY p.id_product');
+		GROUP BY p.id_product, wp.id_product_attribute');
 		if (empty($products) === true OR !sizeof($products))
 			return array();
 		for ($i = 0; $i < sizeof($products); ++$i)
@@ -292,7 +292,7 @@ class WishList extends ObjectModel
 			{
 				$result = Db::getInstance()->executeS('
 				SELECT al.`name` AS attribute_name, pa.`quantity` AS "attribute_quantity"
-				  FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+				FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)($id_lang).')

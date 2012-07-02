@@ -124,6 +124,7 @@
 
 /* form add ****************************************** */
 #form_wishlist {}
+#form_wishlist fieldset { padding: 20px }
 #form_wishlist label {
     display:inline-block;
     padding:6px 15px;
