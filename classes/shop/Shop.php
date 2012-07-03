@@ -136,10 +136,10 @@ class ShopCore extends ObjectModel
 	protected static $context;
 
 	/** @var int ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
-    protected static $context_id_shop;
+	protected static $context_id_shop;
 
 	/** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
-    protected static $context_id_shop_group;
+	protected static $context_id_shop_group;
 
 	/**
 	 * There are 3 kinds of shop context : shop, group shop and general
@@ -352,7 +352,22 @@ class ShopCore extends ObjectModel
 
 				$params = $_GET;
 				unset($params['id_shop']);
-				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.http_build_query($params);
+				if (!Configuration::get('PS_REWRITING_SETTINGS'))
+					$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.http_build_query($params);
+				else
+				{
+					// Catch url with subdomain "www"
+					if (strpos($default_shop->domain, 'www.') === 0 && 'www.'.$_SERVER['HTTP_HOST'] === $default_shop->domain
+						|| $_SERVER['HTTP_HOST'] === 'www.'.$default_shop->domain)
+						$uri = $default_shop->domain.$_SERVER['REQUEST_URI'];
+					else
+						$uri = $default_shop->domain.$default_shop->getBaseURI();
+					
+					if (count($params))
+						$url = 'http://'.$uri.'?'.http_build_query($params);
+					else
+						$url = 'http://'.$uri;
+				}
 				header('location: '.$url);
 				exit;
 			}
