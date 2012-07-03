@@ -377,6 +377,11 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
+		
+		// Install call the dispatcher and so the switchLanguage
+		// Stop this method by checking the cookie
+		if (!isset($context->cookie))
+			return;
 
 		if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso)))
 			$_GET['id_lang'] = $id_lang;
