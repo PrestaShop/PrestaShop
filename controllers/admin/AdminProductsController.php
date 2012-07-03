@@ -282,7 +282,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				// convert price with the currency from context
 				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 6, null, false, true, 1, true);
+				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true);
 			}
 		}
 
@@ -1075,7 +1075,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!$this->redirect_after)
 			parent::postProcess();
-		
+
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->addjQueryPlugin(array(
@@ -4019,7 +4019,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 		}
 	}
-	
+
 	public function ajaxProcessPublishProduct()
 	{
 		if ($this->tabAccess['edit'] === '1')
@@ -4028,7 +4028,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminProducts'));
 				$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$this->token;
-				
+
 				if (Tools::getValue('redirect'))
 					die($bo_product_url);
 
@@ -4046,3 +4046,4 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 }
+
