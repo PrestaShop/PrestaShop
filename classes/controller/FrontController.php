@@ -277,10 +277,6 @@ class FrontControllerCore extends Controller
 			$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
 		}
 
-		// If column left is not displayed, we rename page name
-		if ($this->display_column_left == false)
-			$page_name = 'order-opc';
-
 		$this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
 		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
@@ -314,6 +310,8 @@ class FrontControllerCore extends Controller
 			'currency' => $currency,
 			'cookie' => $this->context->cookie,
 			'page_name' => $page_name,
+			'hide_left_column' => !$this->display_column_left,
+			'hide_right_column' => !$this->display_column_right,
 			'base_dir' => _PS_BASE_URL_.__PS_BASE_URI__,
 			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
 			'content_dir' => $protocol_content.Tools::getHttpHost().__PS_BASE_URI__,
