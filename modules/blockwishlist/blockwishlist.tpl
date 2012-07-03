@@ -60,7 +60,7 @@
 			{/foreach}
 			</select>
 		{/if}
-			<a href="{$base_dir_ssl}modules/blockwishlist/mywishlist.php" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
+			<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
 		</p>
 	</div>
 </div>

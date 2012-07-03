@@ -26,7 +26,7 @@
 
 <!-- MODULE WishList -->
 <li class="lnk_wishlist">
-	<a href="{$base_dir_ssl}modules/blockwishlist/mywishlist.php" title="{l s='My wishlists' mod='blockwishlist'}">
+	<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">
 		<img src="{$module_template_dir}img/gift.gif" alt="{l s='wishlist' mod='blockwishlist'}" class="icon" />
 		{l s='My wishlists' mod='blockwishlist'}
 	</a>
