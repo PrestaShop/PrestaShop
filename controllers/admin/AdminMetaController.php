@@ -380,8 +380,9 @@ class AdminMetaControllerCore extends AdminController
 
 			// Files
 			fwrite($write_fd, "# Files\n");
-			foreach ($this->rb_data['Files'] as $file)
-				fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$file."\n");
+			foreach ($this->rb_data['Files'] as $iso_code => $files)
+				foreach ($files as $file)
+					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$iso_code.'/'.$file."\n");
 
 			// Sitemap
 			fwrite($write_fd, "# Sitemap\n");
@@ -584,13 +585,14 @@ class AdminMetaControllerCore extends AdminController
 		$tab['Files'] = array();
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
 		{
-			$sql = 'SELECT ml.url_rewrite
+			$sql = 'SELECT ml.url_rewrite, l.iso_code
 					FROM '._DB_PREFIX_.'meta m
 					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
-					WHERE m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
+					INNER JOIN ps_lang l ON l.id_lang = ml.id_lang
+					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
 			if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 				foreach ($results as $row)
-					$tab['Files'][] = $row['url_rewrite'];
+					$tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
 		}
 
 		$tab['GB'] = array(
