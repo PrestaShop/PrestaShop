@@ -14,7 +14,7 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_a0593567d9366b570d33cd3ac81
 $_MODULE['<{carriercompare}prestashop>carriercompare_e7a6ca4e744870d455a57b644f696457'] = 'Gratis!';
 $_MODULE['<{carriercompare}prestashop>carriercompare_fbc1bef527a3a092053a244fd8d87abf'] = 'Versand und Steuern kalkulieren';
 $_MODULE['<{carriercompare}prestashop>carriercompare_59716c97497eb9694541f7c3d37b1a4d'] = 'Land';
-$_MODULE['<{carriercompare}prestashop>carriercompare_46a2a41cc6e552044816a2d04634545d'] = 'Bundesland';
+$_MODULE['<{carriercompare}prestashop>carriercompare_46a2a41cc6e552044816a2d04634545d'] = 'Staat';
 $_MODULE['<{carriercompare}prestashop>carriercompare_e0ed8e71dbd22a1e91cb570b52443fd5'] = 'PLZ';
 $_MODULE['<{carriercompare}prestashop>carriercompare_51e304bfd2872c9f53c99054b8fb8381'] = 'Erforderlich für bestimmte Träger';
 $_MODULE['<{carriercompare}prestashop>carriercompare_914419aa32f04011357d3b604a86d7eb'] = 'Versender';

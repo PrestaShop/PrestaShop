@@ -26,5 +26,5 @@ $_MODULE['<{newsletter}prestashop>newsletter_1aa14f5a6423dbde1ef2cfe4734980b4'] 
 $_MODULE['<{newsletter}prestashop>newsletter_7f5c4d54d8602ab7234a715a2a10b98e'] = 'Export Newsletter-Abonnenten';
 $_MODULE['<{newsletter}prestashop>newsletter_a60401e616125189d78605b2ddd7ff45'] = 'Erzeugen Sie eine. CSV-Datei aus BlockNewsletter Abonnenten-Daten.';
 $_MODULE['<{newsletter}prestashop>newsletter_dbb392a2dc9b38722e69f6032faea73e'] = '.CSV-Datei exportieren';
-$_MODULE['<{newsletter}prestashop>newsletter_4713ef5f2d6fc1e8f088c850e696a04b'] = 'Kunden exportieren ';
+$_MODULE['<{newsletter}prestashop>newsletter_4713ef5f2d6fc1e8f088c850e696a04b'] = 'Kunden exportieren';
 $_MODULE['<{newsletter}prestashop>newsletter_2a96d838a5e89b86792669f0ab422987'] = '.CSV-Datei aus Kunden-Konto-Daten generieren.';

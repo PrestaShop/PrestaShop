@@ -13,7 +13,7 @@ $_MODULE['<{statssales}prestashop>statssales_998e4c5c80f27dec552e99dfed34889a'] 
 $_MODULE['<{statssales}prestashop>statssales_ec3e48bb9aa902ba2ad608547fdcbfdc'] = 'Verkäufe:';
 $_MODULE['<{statssales}prestashop>statssales_0718e1ec4754e199aa9cb4bc43a6ff53'] = 'Hier können Sie die Bestellstatusverteilung sehen.';
 $_MODULE['<{statssales}prestashop>statssales_da80af4de99df74dd59e665adf1fac8f'] = 'Keine Bestellung für diesen Zeitraum';
-$_MODULE['<{statssales}prestashop>statssales_6602bbeb2956c035fb4cb5e844a4861b'] = 'Erklärung';
+$_MODULE['<{statssales}prestashop>statssales_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{statssales}prestashop>statssales_75288849ad081e6ef15e00c37b7570f2'] = 'Verschiedene Bestellstatus';
 $_MODULE['<{statssales}prestashop>statssales_94272e39a7493ab1baf7600d78926024'] = 'In Ihrem Back Office finden Sie viele andere Bestellstatus: Scheckzahlung in Bearbeitung, Zahlung akzeptiert, Vorbereitung im Gang, Versand, Geliefert, Abgebrochen, Rückzahlung, Fehler bei Zahlung, Lagerfehlbestand sowie Zahlung durch Banküberweisung in Bearbeitung.';
 $_MODULE['<{statssales}prestashop>statssales_d3ca3781ea021039c95d2830dd6db169'] = 'Dieses Satatus können nicht aus dem Back Office entfernt werden, neue können jedoch hinzugefügt werden.';

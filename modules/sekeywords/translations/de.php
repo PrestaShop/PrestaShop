@@ -11,9 +11,9 @@ $_MODULE['<{sekeywords}prestashop>sekeywords_0849140171616600e8f2c35f0a225212'] 
 $_MODULE['<{sekeywords}prestashop>sekeywords_188ef1f71ff3ef1c5501dc5c8ee27f88'] = 'und Mindestvorkommen';
 $_MODULE['<{sekeywords}prestashop>sekeywords_03e0e9ef8b776b5f7bcc590e51bfa63b'] = 'Anwenden';
 $_MODULE['<{sekeywords}prestashop>sekeywords_7b48f6cc4a1dde7fca9597e717c2465f'] = 'Keine Keywords';
-$_MODULE['<{sekeywords}prestashop>sekeywords_6602bbeb2956c035fb4cb5e844a4861b'] = 'Erklärung';
+$_MODULE['<{sekeywords}prestashop>sekeywords_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{sekeywords}prestashop>sekeywords_39f040a1f174811285297763fcaada12'] = 'Externe Suchmaschinen-Keywords identifizieren';
 $_MODULE['<{sekeywords}prestashop>sekeywords_359f9e79e746fa9f684e5cda9e60ca2e'] = 'Wie funktioniert das?';
 $_MODULE['<{sekeywords}prestashop>sekeywords_474c03326cba5cb2ce6c07ddf3e1e656'] = 'Bald wird es möglich sein, eine neue Suchmaschine dynamisch hinzufügen und zu diesem Modul beizutragen!';
 $_MODULE['<{sekeywords}prestashop>sekeywords_8d01ac22a68176ddd7067da99508751d'] = '10 erste Keywords';
-$_MODULE['<{sekeywords}prestashop>sekeywords_52ef9633d88a7480b3a938ff9eaa2a25'] = 'Weitere';
+$_MODULE['<{sekeywords}prestashop>sekeywords_52ef9633d88a7480b3a938ff9eaa2a25'] = 'Andere';
