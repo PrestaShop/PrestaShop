@@ -7,7 +7,7 @@
   <entities>
     <risk id="None" percent="0" color="LimeGreen"/>
     <risk id="Low" percent="35" color="DarkOrange"/>
-    <risk id="Middle" percent="75" color="Crimson"/>
-    <risk id="Hight" percent="100" color="#ec2e15"/>
+    <risk id="Medium" percent="75" color="Crimson"/>
+    <risk id="High" percent="100" color="#ec2e15"/>
   </entities>
 </entity_risk>

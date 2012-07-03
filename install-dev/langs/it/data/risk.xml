@@ -2,6 +2,6 @@
 <entity_risk>
   <risk id="None" name="None"/>
   <risk id="Low" name="Low"/>
-  <risk id="Middle" name="Middle"/>
-  <risk id="Hight" name="Hight"/>
+  <risk id="Medium" name="Medium"/>
+  <risk id="High" name="High"/>
 </entity_risk>
