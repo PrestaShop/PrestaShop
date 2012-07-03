@@ -8,12 +8,14 @@ $_MODULE['<{statscheckup}prestashop>statscheckup_20015706a8cbd457cbb6ea3e7d5dc9b
 $_MODULE['<{statscheckup}prestashop>statscheckup_bae60998ffe4923b131e3d6e4c19993e'] = 'schlecht';
 $_MODULE['<{statscheckup}prestashop>statscheckup_6927a3a7218a3195858411433ec20a21'] = 'Durchschnitt';
 $_MODULE['<{statscheckup}prestashop>statscheckup_755f85c2723bb39381c7379a604160d8'] = 'gut';
+$_MODULE['<{statscheckup}prestashop>statscheckup_44fb451a35a1c382da79166dc8c78e43'] = 'Kein Artikel gefunden';
 $_MODULE['<{statscheckup}prestashop>statscheckup_8bc84316c4078bf66723fd019616d920'] = 'Beschreibungen';
 $_MODULE['<{statscheckup}prestashop>statscheckup_5cd1930570823694abdd596f29c8943d'] = 'Zeichen (ohne HTML)';
 $_MODULE['<{statscheckup}prestashop>statscheckup_fff0d600f8a0b5e19e88bfb821dd1157'] = 'Bilder';
 $_MODULE['<{statscheckup}prestashop>statscheckup_59b514174bffe4ae402b3d63aad79fe0'] = 'Bilder';
 $_MODULE['<{statscheckup}prestashop>statscheckup_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'Verkäufe';
 $_MODULE['<{statscheckup}prestashop>statscheckup_c3917e1f7138a24c6dc954fe81b86679'] = 'Bestellungen/ Monat';
+$_MODULE['<{statscheckup}prestashop>statscheckup_cf173b732a2a0377698d631db6185836'] = 'Verfügbare Verkaufsmenge';
 $_MODULE['<{statscheckup}prestashop>statscheckup_691d502cfd0e0626cd3b058e5682ad1c'] = 'Artikel';
 $_MODULE['<{statscheckup}prestashop>statscheckup_dc270bcf468689b19074a5eef7581b52'] = 'Nicht genug';
 $_MODULE['<{statscheckup}prestashop>statscheckup_f4abc77d498c89880f67331609406774'] = 'In Ordnung';

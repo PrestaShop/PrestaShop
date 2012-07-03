@@ -18,7 +18,7 @@ $_MODULE['<{statscatalog}prestashop>statscatalog_51b8891d531ad91128ba58c8928322a
 $_MODULE['<{statscatalog}prestashop>statscatalog_8725647ef741e5d48c1e6f652ce80b50'] = 'Nie gekaufte Produkte:';
 $_MODULE['<{statscatalog}prestashop>statscatalog_b86770bc713186bcf43dbb1164c5fd28'] = 'Umwandlungsrate*:';
 $_MODULE['<{statscatalog}prestashop>statscatalog_64de80ec5f50aefd6ab2b9260a1f4055'] = 'Durchschnittliche Umwandlungsrate für die Produktseite. Man kann ein Produkt kaufen, ohne die Produktseite anzusehen. In dem Fall kann diese Rate größer als 1 sein.';
-$_MODULE['<{statscatalog}prestashop>statscatalog_58a714d3e9bb2902a5b688c99bd4d8e6'] = 'Nie gekaufte Produkte ';
+$_MODULE['<{statscatalog}prestashop>statscatalog_58a714d3e9bb2902a5b688c99bd4d8e6'] = 'Nie gekaufte Produkte';
 $_MODULE['<{statscatalog}prestashop>statscatalog_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{statscatalog}prestashop>statscatalog_49ee3087348e8d44e1feda1917443987'] = 'Name';
 $_MODULE['<{statscatalog}prestashop>statscatalog_8e7c9a35104a5a68199678bd6bc5d187'] = 'Bearbeiten/ Ansehen';

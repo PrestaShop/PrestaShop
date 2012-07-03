@@ -13,8 +13,8 @@ $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a6105c0a611b41b08f1209506
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_7fa3b767c460b54a2be4d49030b349c7'] = 'nein';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b68ae6efae2fca059754c27ff94494cd'] = 'Bestätigungsmail nach Abonnement senden?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_506e58042922bff5bd753dc612e84f5b'] = 'Willkommensgutschein-Code';
-$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_de3bd7faad12c79178b1b22bf6119e35'] = 'Zur Deaktivierung leer lassen ';
-$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_06933067aafd48425d67bcb01bba5cb6'] = 'Aktualisierung';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_de3bd7faad12c79178b1b22bf6119e35'] = 'Zur Deaktivierung leer lassen';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_06933067aafd48425d67bcb01bba5cb6'] = 'Aktualisieren';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_6e659c47c94d1e1dc7121859f43fb2b0'] = 'Ungültige E-Mail-Adresse';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_9e6df6e72be5be5b8ff962ee3406907e'] = 'E-Mail-Adresse nicht registriert';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_29003419c075963848f1907174bdc224'] = 'Fehler bei der Abo-Abmeldung';

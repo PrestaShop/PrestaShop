@@ -26,7 +26,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_2e53b6c4c0d39a73718342ab2
 $_MODULE['<{productcomments}prestashop>productcomments_783e8e29e6a8c3e22baa58a19420eb4f'] = 'Sekunden';
 $_MODULE['<{productcomments}prestashop>productcomments_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{productcomments}prestashop>productcomments_0a36c5f3ea6825804e6b4314c4084a12'] = 'Kommentare moderieren';
-$_MODULE['<{productcomments}prestashop>productcomments_a517747c3d12f99244ae598910d979c5'] = 'Verfasser';
+$_MODULE['<{productcomments}prestashop>productcomments_a517747c3d12f99244ae598910d979c5'] = 'Autor';
 $_MODULE['<{productcomments}prestashop>productcomments_0be8406951cdfda82f00f79328cf4efc'] = 'Kommentieren';
 $_MODULE['<{productcomments}prestashop>productcomments_df644ae155e79abf54175bd15d75f363'] = 'Produktname';
 $_MODULE['<{productcomments}prestashop>productcomments_06df33001c1d7187fdd81ea1f5b277aa'] = 'Handlungen';
@@ -53,12 +53,13 @@ $_MODULE['<{productcomments}prestashop>productcomments_068f80c7519d0528fb08e8213
 $_MODULE['<{productcomments}prestashop>productcomments_af1b98adf7f686b84cd0b443e022b7a0'] = 'Kategorien';
 $_MODULE['<{productcomments}prestashop>productcomments_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{productcomments}prestashop>productcomments_b9aefa40a54680bb258f9f9569290fae'] = 'Name des Produkts';
-$_MODULE['<{productcomments}prestashop>productcomments_99121ab27aaa7472cfada9071c5ba434'] = 'Name der Kategorie ';
+$_MODULE['<{productcomments}prestashop>productcomments_99121ab27aaa7472cfada9071c5ba434'] = 'Name der Kategorie';
 $_MODULE['<{productcomments}prestashop>productcomments_729a51874fe901b092899e9e8b31c97a'] = 'Sind Sie sicher?';
 $_MODULE['<{productcomments}prestashop>productcomments_4b3b9db8c9784468094acde0f8bf7071'] = 'Stufe';
 $_MODULE['<{productcomments}prestashop>productcomments_a6105c0a611b41b08f1209506350279e'] = 'ja';
 $_MODULE['<{productcomments}prestashop>productcomments_7fa3b767c460b54a2be4d49030b349c7'] = 'nein';
 $_MODULE['<{productcomments}prestashop>productcomments_b78a3223503896721cca1303f776159b'] = 'Titel';
+$_MODULE['<{productcomments}prestashop>productcomments_221e705c06e231636fdbccfdd14f4d5c'] = 'Ihr Name:';
 $_MODULE['<{productcomments}prestashop>productcomments_70397c4b252a5168c5ec003931cea215'] = 'Pflichtfelder';
 $_MODULE['<{productcomments}prestashop>productcomments_94966d90747b97d1f0f206c98a8b1ac3'] = 'Senden';
 $_MODULE['<{productcomments}prestashop>productcomments_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'oder';

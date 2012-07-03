@@ -15,12 +15,12 @@ $_MODULE['<{referralprogram}prestashop>referralprogram-program_83fc792f687bc45d7
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_1019072b9e450c8652590cda2db45e49'] = 'Mindestens ein Vorname oder Nachname ist ungültig!';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_ff2d2e45b90b4426c3bb14bd56b95a2d'] = 'Jemand mit dieser E-Mail-Adresse ist bereits gesponsert worden!';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_3f8a4c7f93945fea0d951fa402ee4272'] = 'Bitte kreuzen Sie mindestens ein Kontrollkästchen an';
-$_MODULE['<{referralprogram}prestashop>referralprogram-program_dcc99d8715486f570db3ec5ee469a828'] = 'Kann  keine Freunde zur Datenbank hinzufügen ';
+$_MODULE['<{referralprogram}prestashop>referralprogram-program_dcc99d8715486f570db3ec5ee469a828'] = 'Kann  keine Freunde zur Datenbank hinzufügen';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_f6cb78f0afcf7c3a06048a7a5855d6a1'] = 'Es wurden E-Mails an Ihre Freunde gesendet!';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_79cd362fc64832faa0a2079f1142aa12'] = 'Eine E-Mail wurde an Ihren Freund geschickt!';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_2b90ca4a7b1c83e0a3bb65899725cd65'] = 'Erinnerungs-E-Mails wurden an Ihre Freunde verschickt!';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_819e52b3c6ca4db131dcfea19188a0c3'] = 'Eine Erinnerungs-E-Mail wurde an Ihren Freund verschickt!';
-$_MODULE['<{referralprogram}prestashop>referralprogram-program_46ee2fe8845962d24bf5178a26e109f3'] = 'Meine Freunde sponsern ';
+$_MODULE['<{referralprogram}prestashop>referralprogram-program_46ee2fe8845962d24bf5178a26e109f3'] = 'Meine Freunde sponsern';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_c56567bc42584de1a7ac430039b3a87e'] = 'Anhängige Freunde';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_58c7f2542ab2e2c3e4e39e851ea0f225'] = 'Freunde, die ich gesponsert habe';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_8d3ae82bfa996855cdf841dd9e15a7e3'] = 'Es ist schnell und einfach. Nur denVornamen, Nachnamen un d die E-Mail-Adresse (n) Ihres (r) Freunds (e) in die Felder unten eintragen.';
@@ -29,7 +29,7 @@ $_MODULE['<{referralprogram}prestashop>referralprogram-program_20db0bfeecd8fe605
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_1e884e3078d9978e216a027ecd57fb34'] = 'E-Mail';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_9386de858384e7f790a28beecdb986dd'] = 'Wichtig: Die E-Mail-Adressen Ihrer Freunde werden nur im Referral-Programm verwendet. Sie werden niemals für andere Zwecke verwendet werden.';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_605eef3cad421619ce034ab48415190f'] = 'Ich stimme den Nutzungsbedingungen zu und halte sie bedingungslos ein.';
-$_MODULE['<{referralprogram}prestashop>referralprogram-program_6b719c160f9b08dad4760bcc4b52ed48'] = 'Geschäftsbedingungen des Referral-Programms';
+$_MODULE['<{referralprogram}prestashop>referralprogram-program_6b719c160f9b08dad4760bcc4b52ed48'] = 'Geschäftsbedingungen des Referral-Programm';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_868ca5fe643791c23b47c75fb833c9b8'] = 'Lesen Sie die Nutzungsbedingungen.';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_31fde7b05ac8952dacf4af8a704074ec'] = 'Vorschau';
 $_MODULE['<{referralprogram}prestashop>referralprogram-program_8e8dc296c6bf3876468aa028974bfebe'] = 'Einladungs-E-Mail';

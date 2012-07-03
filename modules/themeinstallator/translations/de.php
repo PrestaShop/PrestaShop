@@ -14,10 +14,10 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_0210b6456cdccad569cb560
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0a9c7fd9de'] = 'Diese Funktion wurde entfernt.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Dokumentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Sie möchten eventuell die Dokumentation prüfen';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Rechtsklick auf den Namen  und \"Link speichern unter\" wählen';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Folgende Module wurden installiert:';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Rechtsklick auf den Namen  und \\\"Link speichern unter\\\" wählen';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Folgende Module wurden installiert';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Folgende Module wurden deaktiviert:';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Folgende Module wurden aktiviert:';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Folgende Module wurden aktiviert';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Bilder wurden korrekt in der Datenbank aktualisiert';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Breite:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_e933dc24fb245d863a43b4fefe9b45f5'] = 'Höhe:';
@@ -56,7 +56,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_129b7dae66f0029381da645
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_87e0eaf3f9614cb904fafb0d4f4c1f56'] = 'Dateierweiterung muss .txt oder .pdf sein';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_550a06d4fd147c22a4c921036003abf6'] = 'Fehler beim heraufladen der Dokumentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ecd8e7704f6f4f730f6a43bfb24a9546'] = 'Bitte geben Sie einen gültigen Dokumentationsnamen an';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_623e4ca0275c19c3134b7290fdd19264'] = 'Bitte geben Sie einen gültigen Autornamen an ';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_623e4ca0275c19c3134b7290fdd19264'] = 'Bitte geben Sie einen gültigen Autornamen an';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a43f1054076c2389afd746ec3d5d1c71'] = 'Bitte geben Sie einen gültigen Themennamen an';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_03d105aa95f842fc54b18ca8a73109ca'] = 'Bitte geben Sie einen gültigen Themavariationsnamen an';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_9891d2e13ad8b753833055c5809a733e'] = 'Syntaxfehler im Versionsfeld. Nur Ziffern und Punkte sind erlaubt und die Kompatibilität sollte steigend oder gleich sein.';

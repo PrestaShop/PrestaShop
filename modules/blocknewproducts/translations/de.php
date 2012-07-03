@@ -8,7 +8,7 @@ $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_57af4b7e82ba04c42eb3ac1
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_73293a024e644165e9bf48f270af63a0'] = 'Ungültige Anzahl.';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
-$_MODULE['<{blocknewproducts}prestashop>blocknewproducts_e451e6943bb539d1bd804d2ede6474b5'] = 'angezeigte Produkte';
+$_MODULE['<{blocknewproducts}prestashop>blocknewproducts_e451e6943bb539d1bd804d2ede6474b5'] = 'Angezeigte Produkte';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_cc4bbebd6a8d2fb633a1dd8ceda3fc8d'] = 'Anzahl der Produkte einstellen, die in diesem Block angezeigt werden sollen';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_530c88f8210e022b39128e3f0409bbcf'] = 'Block immer anzeigen';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Aktiviert';

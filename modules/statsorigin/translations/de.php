@@ -10,7 +10,7 @@ $_MODULE['<{statsorigin}prestashop>statsorigin_b5c1b8a326be0d2fb25b3cf6da677d0e'
 $_MODULE['<{statsorigin}prestashop>statsorigin_998e4c5c80f27dec552e99dfed34889a'] = 'CSV-Export';
 $_MODULE['<{statsorigin}prestashop>statsorigin_96b0141273eabab320119c467cdcaf17'] = 'Insgesamt';
 $_MODULE['<{statsorigin}prestashop>statsorigin_0bebf95ee829c33f34fde535ed4ed100'] = 'Nur direkte Links';
-$_MODULE['<{statsorigin}prestashop>statsorigin_6602bbeb2956c035fb4cb5e844a4861b'] = 'Erklärung';
+$_MODULE['<{statsorigin}prestashop>statsorigin_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{statsorigin}prestashop>statsorigin_64ae584c62d0992a911d52122ebefc9a'] = 'Was ist eine Referrer-Webseite?';
 $_MODULE['<{statsorigin}prestashop>statsorigin_77de261cf4c31a96146bcf1b52fd9856'] = 'Beim Besuch einer Webseite ist der Referrer die URL der vorherigen Webseite, von der ein Link folgte.';
 $_MODULE['<{statsorigin}prestashop>statsorigin_d8d034b6911b1ce74bdb2158a14cd287'] = 'Ein Referrer informiert Sie darüber, welche Keywords  Besucher in  Suchmaschinen eingeben, wenn sie zu ihrem Shop kommen wollen, und optimiert damit auch Ihre Werbung im Web.';

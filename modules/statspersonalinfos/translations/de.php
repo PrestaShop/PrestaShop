@@ -11,7 +11,7 @@ $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_d053730180bf7c54024
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_bcfebaf66fa6f885171c63997e2613d5'] = 'Mit den Währungsbereichen können Sie erkennen, mit welcher Währung Ihre Kunden bezahlen.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_e0c88fe08ea4e9b77760ed2429628dea'] = 'Mit der Sprachenverteilung können Sie die allgemeine Sprache, die Ihre Kunden in Ihrem Shop verwenden, erkennen.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_7a7012cc5c52802b45aed45d1f616f1e'] = 'Noch keine Kunden registriert.';
-$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_6602bbeb2956c035fb4cb5e844a4861b'] = 'Erklärung';
+$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_3ca26e413e485538a7f3e610c0324636'] = 'Visieren Sie Ihre Zielgruppe an';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_c8eb1ba430d9ae8fe45fe2d990a481f5'] = 'Damit jede Nachricht ihre Wirkung erzielt, müssen Sie wissen,an wen sie gerichtet werden sollte.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_5beafb6329f9718aa46293a7433697e5'] = 'Auf die richtige Zielgruppe zu antworten ist entscheidend für die Wahl der richtigen Werkzeuge, um sie zu überzeugen.';

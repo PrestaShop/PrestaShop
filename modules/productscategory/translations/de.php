@@ -6,7 +6,7 @@ $_MODULE['<{productscategory}prestashop>productscategory_db33983df8ef521000b0ab6
 $_MODULE['<{productscategory}prestashop>productscategory_0157084bddd8b408e1cdaba00f54a009'] = 'Zeigt Produkte der gleichen Kategorie auf der Produktseite an';
 $_MODULE['<{productscategory}prestashop>productscategory_462390017ab0938911d2d4e964c0cab7'] = 'Einstellungen erfolgreich aktualisiert';
 $_MODULE['<{productscategory}prestashop>productscategory_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
-$_MODULE['<{productscategory}prestashop>productscategory_b6bf131edd323320bac67303a3f4de8a'] = 'Preis auf Produkten anzeigen ';
+$_MODULE['<{productscategory}prestashop>productscategory_b6bf131edd323320bac67303a3f4de8a'] = 'Preis auf Produkten anzeigen';
 $_MODULE['<{productscategory}prestashop>productscategory_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Aktiviert';
 $_MODULE['<{productscategory}prestashop>productscategory_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiviert';
 $_MODULE['<{productscategory}prestashop>productscategory_70f9a895dc3273d34a7f6d14642708ec'] = 'Preise auf den Produkten im Block anzeigen.';
