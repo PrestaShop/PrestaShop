@@ -48,7 +48,11 @@ function smarty_modifier_escape($string, $esc_type = 'html', $char_set = null, $
             }
 
             // no MBString fallback
+        		/* PrestaShop 
             return htmlentities($string, ENT_QUOTES, $char_set, $double_encode);
+            */
+            return htmlentities($string, ENT_QUOTES, $char_set);
+            /* END */
 
         case 'url':
             return rawurlencode($string);

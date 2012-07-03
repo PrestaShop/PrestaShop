@@ -36,12 +36,19 @@ function smarty_modifiercompiler_escape($params, $compiler)
 
         switch ($esc_type) {
             case 'html':
+        		/* PrestaShop 
                 return 'htmlspecialchars('
                     . $params[0] .', ENT_QUOTES, '
                     . var_export($char_set, true) . ', '
                     . var_export($double_encode, true) . ')';
+            */
+                return 'htmlspecialchars('
+                    . $params[0] .', ENT_QUOTES, '
+                    . var_export($char_set, true) . ')';
+            /* END */
 
             case 'htmlall':
+        		/* PrestaShop 
                 if (Smarty::$_MBSTRING) {
                     return 'mb_convert_encoding(htmlspecialchars('
                         . $params[0] .', ENT_QUOTES, '
@@ -50,12 +57,27 @@ function smarty_modifiercompiler_escape($params, $compiler)
                         . '), "HTML-ENTITIES", '
                         . var_export($char_set, true) . ')';
                 }
+            */
+                if (Smarty::$_MBSTRING) {
+                    return 'mb_convert_encoding(htmlspecialchars('
+                        . $params[0] .', ENT_QUOTES, '
+                        . var_export($char_set, true)
+                        . '), "HTML-ENTITIES", '
+                        . var_export($char_set, true) . ')';
+                }
+            /* END */
 
                 // no MBString fallback
+        		/* PrestaShop 
                 return 'htmlentities('
                     . $params[0] .', ENT_QUOTES, '
                     . var_export($char_set, true) . ', '
                     . var_export($double_encode, true) . ')';
+            */
+                return 'htmlentities('
+                    . $params[0] .', ENT_QUOTES, '
+                    . var_export($char_set, true) . ')';
+            /* END */
 
             case 'url':
                 return 'rawurlencode(' . $params[0] . ')';
