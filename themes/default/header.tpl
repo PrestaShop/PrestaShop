@@ -61,7 +61,7 @@
 		{$HOOK_HEADER}
 	</head>
 	
-	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if}>
+	<body {if isset($page_name)}id="{$page_name|escape:'htmlall':'UTF-8'}"{/if} class="{if $hide_left_column}hide-left-column{/if} {if $hide_right_column}hide-right-column{/if}">
 	{if !$content_only}
 		{if isset($restricted_country_mode) && $restricted_country_mode}
 		<div id="restricted-country">

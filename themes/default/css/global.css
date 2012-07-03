@@ -79,6 +79,9 @@ h4 {
 	font-size:14px
 }
 
+.hide-left-column #left_column {display:none}
+.hide-left-column #center_column {width:757px}
+
 /* text **************************************************************************************** */
 p {padding-bottom:20px}
 
