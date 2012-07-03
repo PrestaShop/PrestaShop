@@ -55,20 +55,6 @@
 <div id="country_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
-			<td>
-				<p><strong>{l s='Selected countries'}</strong></p>
-				<select name="country_select[]" id="country_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
-					{foreach from=$countries.selected item='country'}
-						<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
-					{/foreach}
-				</select><br /><br />
-				<a
-					id="country_select_remove"
-					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-				>
-					{l s='Remove'} &gt;&gt;
-				</a>
-			</td>
 			<td style="padding-left:20px;">
 				<p><strong>{l s='Unselected countries'}</strong></p>
 				<select id="country_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
@@ -80,7 +66,21 @@
 					id="country_select_add"
 					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					&lt;&lt; {l s='Add'}
+					{l s='Add'} &gt;&gt;
+				</a>
+			</td>
+			<td>
+				<p><strong>{l s='Selected countries'}</strong></p>
+				<select name="country_select[]" id="country_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$countries.selected item='country'}
+						<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
+					{/foreach}
+				</select><br /><br />
+				<a
+					id="country_select_remove"
+					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+				>
+					&lt;&lt; {l s='Remove'}
 				</a>
 			</td>
 		</tr>
@@ -93,20 +93,6 @@
 <div id="carrier_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
-			<td>
-				<p><strong>{l s='Selected carriers'}</strong></p>
-				<select name="carrier_select[]" id="carrier_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
-					{foreach from=$carriers.selected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
-					{/foreach}
-				</select><br /><br />
-				<a
-					id="carrier_select_remove"
-					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-				>
-					{l s='Remove'} &gt;&gt;
-				</a>
-			</td>
 			<td style="padding-left:20px;">
 				<p><strong>{l s='Unselected carriers'}</strong></p>
 				<select id="carrier_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
@@ -118,7 +104,21 @@
 					id="carrier_select_add"
 					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					&lt;&lt; {l s='Add'}
+					{l s='Add'} &gt;&gt;
+				</a>
+			</td>
+			<td>
+				<p><strong>{l s='Selected carriers'}</strong></p>
+				<select name="carrier_select[]" id="carrier_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$carriers.selected item='carrier'}
+						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+					{/foreach}
+				</select><br /><br />
+				<a
+					id="carrier_select_remove"
+					style="cursor:pointer;text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+				>
+					&lt;&lt; {l s='Remove'}
 				</a>
 			</td>
 		</tr>
@@ -132,20 +132,6 @@
 <div id="group_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
-			<td>
-				<p><strong>{l s='Selected groups'}</strong></p>
-				<select name="group_select[]" id="group_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
-					{foreach from=$groups.selected item='group'}
-						<option value="{$group.id_group|intval}">&nbsp;{$group.name|escape}</option>
-					{/foreach}
-				</select><br /><br />
-				<a
-					id="group_select_remove"
-					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-				>
-					{l s='Remove'} &gt;&gt;
-				</a>
-			</td>
 			<td style="padding-left:20px;">
 				<p><strong>{l s='Unselected groups'}</strong></p>
 				<select id="group_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
@@ -157,7 +143,21 @@
 					id="group_select_add"
 					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					&lt;&lt; {l s='Add'}
+					{l s='Add'} &gt;&gt;
+				</a>
+			</td>
+			<td>
+				<p><strong>{l s='Selected groups'}</strong></p>
+				<select name="group_select[]" id="group_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$groups.selected item='group'}
+						<option value="{$group.id_group|intval}">&nbsp;{$group.name|escape}</option>
+					{/foreach}
+				</select><br /><br />
+				<a
+					id="group_select_remove"
+					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+				>
+					&lt;&lt; {l s='Remove'}
 				</a>
 			</td>
 		</tr>
@@ -171,20 +171,6 @@
 <div id="cart_rule_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
-			<td>
-				<p><strong>{l s='Combinable cart rules'}</strong></p>
-				<select name="cart_rule_select[]" id="cart_rule_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
-					{foreach from=$cart_rules.selected item='cart_rule'}
-						<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-					{/foreach}
-				</select><br /><br />
-				<a
-					id="cart_rule_select_remove"
-					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-				>
-					{l s='Remove'} &gt;&gt;
-				</a>
-			</td>
 			<td style="padding-left:20px;">
 				<p><strong>{l s='Uncombinable cart rules'}</strong></p>
 				<select id="cart_rule_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple="">
@@ -196,7 +182,21 @@
 					id="cart_rule_select_add"
 					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					&lt;&lt; {l s='Add'}
+					{l s='Add'} &gt;&gt;
+				</a>
+			</td>
+			<td>
+				<p><strong>{l s='Combinable cart rules'}</strong></p>
+				<select name="cart_rule_select[]" id="cart_rule_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$cart_rules.selected item='cart_rule'}
+						<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
+					{/foreach}
+				</select><br /><br />
+				<a
+					id="cart_rule_select_remove"
+					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+				>
+					
 				</a>
 			</td>
 		</tr>
@@ -221,20 +221,6 @@
 <div id="shop_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
 	<table>
 		<tr>
-			<td>
-				<p><strong>{l s='Selected shops'}</strong></p>
-				<select name="shop_select[]" id="shop_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
-					{foreach from=$shops.selected item='shop'}
-						<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
-					{/foreach}
-				</select><br /><br />
-				<a
-					id="shop_select_remove"
-					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-				>
-					{l s='Remove'} &gt;&gt;
-				</a>
-			</td>
 			<td style="padding-left:20px;">
 				<p><strong>{l s='Unselected shops'}</strong></p>
 				<select id="shop_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
@@ -246,7 +232,21 @@
 					id="shop_select_add"
 					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					&lt;&lt; {l s='Add'}
+					
+				</a>
+			</td>
+			<td>
+				<p><strong>{l s='Selected shops'}</strong></p>
+				<select name="shop_select[]" id="shop_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$shops.selected item='shop'}
+						<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
+					{/foreach}
+				</select><br /><br />
+				<a
+					id="shop_select_remove"
+					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
+				>
+					&lt;&lt; {l s='Remove'}
 				</a>
 			</td>
 		</tr>
