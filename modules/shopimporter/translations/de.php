@@ -5,7 +5,7 @@ $_MODULE = array();
 $_MODULE['<{shopimporter}prestashop>ajax_10f237be40b3205ba97da9b89d290c30'] = 'Kann keine Datenbank auswählen.';
 $_MODULE['<{shopimporter}prestashop>ajax_49bd922182bd3518641589e3077eacd3'] = 'Kann keine Verbindung zur Datenbank herstellen.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_d714c742b360a8ecbb124c15e9a391a1'] = 'Shop Importeur';
-$_MODULE['<{shopimporter}prestashop>shopimporter_8c0fe18034f47d7d3dd3e58098e3ffdb'] = 'Dieses Modul ermöglicht es Ihnen, Ihren Shop aus einem anderen System zu prestashop zu importieren ';
+$_MODULE['<{shopimporter}prestashop>shopimporter_8c0fe18034f47d7d3dd3e58098e3ffdb'] = 'Dieses Modul ermöglicht es Ihnen, Ihren Shop aus einem anderen System zu prestashop zu importieren';
 $_MODULE['<{shopimporter}prestashop>shopimporter_4994a8ffeba4ac3140beb89e8d41f174'] = 'Sprache';
 $_MODULE['<{shopimporter}prestashop>shopimporter_a9db6adcdafc85c5830439401fd866f6'] = 'Sprachen importieren';
 $_MODULE['<{shopimporter}prestashop>shopimporter_b8b8ca447e355455b8dc638993c41ae7'] = 'Neue Sprachen fügen automatisch Übersetzungen hinzu!';
@@ -35,7 +35,7 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_3adbdb3ac060038aa0e6e6c138ef987
 $_MODULE['<{shopimporter}prestashop>shopimporter_1db7ae20c24e257b6f1a7def365da1ad'] = 'Kategorien importieren';
 $_MODULE['<{shopimporter}prestashop>shopimporter_1f5a36b380c53d7f82e762baa08c2e5c'] = 'Attributgruppen';
 $_MODULE['<{shopimporter}prestashop>shopimporter_7eb915ee907703ede51dabab88fc1701'] = 'Attributgruppen importieren';
-$_MODULE['<{shopimporter}prestashop>shopimporter_f2bbdf9f72c085adc4d0404e370f0f4c'] = 'Attribute';
+$_MODULE['<{shopimporter}prestashop>shopimporter_f2bbdf9f72c085adc4d0404e370f0f4c'] = 'Attribut';
 $_MODULE['<{shopimporter}prestashop>shopimporter_66e2d23b2d257d56af6f1d6443ce0ce3'] = 'Attribute importieren';
 $_MODULE['<{shopimporter}prestashop>shopimporter_deb10517653c255364175796ace3553f'] = 'Produkt';
 $_MODULE['<{shopimporter}prestashop>shopimporter_4bfc4a7632bae0877b798dbd9efc4f70'] = 'Produkte importieren';
@@ -58,7 +58,7 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_e905d0eb5204b761d8c0e3eebed4a0e
 $_MODULE['<{shopimporter}prestashop>shopimporter_596403b61367ca30d6de75812275f9cd'] = 'Daten entfernen';
 $_MODULE['<{shopimporter}prestashop>shopimporter_edc186cbc5cc897a79312880ec16c621'] = 'Bitte wählen Sie etwas zum Importieren';
 $_MODULE['<{shopimporter}prestashop>shopimporter_81b33153f65252001fe132d74b658fbe'] = 'Aus einem anderen System importieren';
-$_MODULE['<{shopimporter}prestashop>shopimporter_dd4c0c798ebbf8c6e15dcba8632f558d'] = 'Vor dem Start des Import, sichern Sie bitte eine Kopie Ihrer Datenbank.  ';
+$_MODULE['<{shopimporter}prestashop>shopimporter_dd4c0c798ebbf8c6e15dcba8632f558d'] = 'Vor dem Start des Import, sichern Sie bitte eine Kopie Ihrer Datenbank.';
 $_MODULE['<{shopimporter}prestashop>shopimporter_60474e812295a5adc371de63dc62a164'] = 'Für das Backup hier klicken';
 $_MODULE['<{shopimporter}prestashop>shopimporter_05f4be265d59ea66f3a1fb12ba103583'] = 'Wählen Sie Ihren Import';
 $_MODULE['<{shopimporter}prestashop>shopimporter_961f2247a2070bedff9f9cd8d64e2650'] = 'Wählen';

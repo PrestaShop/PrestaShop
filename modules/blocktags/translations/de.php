@@ -13,4 +13,4 @@ $_MODULE['<{blocktags}prestashop>blocktags_ba1ebc23c8fd03e9b97da2f856f70765'] = 
 $_MODULE['<{blocktags}prestashop>blocktags_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{blocktags}prestashop>blocktags_189f63f277cd73395561651753563065'] = 'Tags';
 $_MODULE['<{blocktags}prestashop>blocktags_49fa2426b7903b3d4c89e2c1874d9346'] = 'Mehr darüber';
-$_MODULE['<{blocktags}prestashop>blocktags_70d5e9f2bb7bcb17339709134ba3a2c6'] = 'noch keine Tags angegeben ';
+$_MODULE['<{blocktags}prestashop>blocktags_70d5e9f2bb7bcb17339709134ba3a2c6'] = 'noch keine Tags angegeben';
