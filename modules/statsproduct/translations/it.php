@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{statsproduct}prestashop>statsproduct_78e454064a7d3a7755a011a3b79f31a7'] = 'Dettagli del prodotto';
-$_MODULE['<{statsproduct}prestashop>statsproduct_285201dab507840d082d58dc13602b00'] = 'Ottieni  statistiche dettagliate per ogni prodotto';
+$_MODULE['<{statsproduct}prestashop>statsproduct_285201dab507840d082d58dc13602b00'] = 'Ottieni statistiche dettagliate per ogni prodotto';
 $_MODULE['<{statsproduct}prestashop>statsproduct_3ec365dd533ddb7ef3d1c111186ce872'] = 'Dettagli';
 $_MODULE['<{statsproduct}prestashop>statsproduct_981a6013008c8f4b75836b0f415b05b8'] = 'Totale comprato:';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6780a9268e38d2ddd4f6c4a8ccf83d24'] = 'Vendite (-Tasse):';
@@ -28,7 +28,7 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_3303da9d5241177588a06ad60d7edab
 $_MODULE['<{statsproduct}prestashop>statsproduct_6ccf03bc05e4b749b74b5d577c7e7d3a'] = 'Prodotti disponibili';
 $_MODULE['<{statsproduct}prestashop>statsproduct_12d3c7a4296542c62474856ec452c045'] = 'Rif.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_49ee3087348e8d44e1feda1917443987'] = 'Nome';
-$_MODULE['<{statsproduct}prestashop>statsproduct_27ce7f8b5623b2e2df568d64cf051607'] = 'Magazzino';
+$_MODULE['<{statsproduct}prestashop>statsproduct_7bd5825a187064017975513b95d7f7de'] = 'Quantità disponibile per la vendita';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guida';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6c1a8292e4da90e1ef19ae9444226d8f'] = 'Numero di acquisti rispetto al numero di visualizzazioni';
 $_MODULE['<{statsproduct}prestashop>statsproduct_1d0ba341c7847cbff109276485417a1c'] = 'Dopo aver scelto una categoria e selezionato un prodotto disponibile in questa categoria, appariranno dei grafici. Poi, potrai analizzarli.';
@@ -36,3 +36,4 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_6559cc601f073740b825a4fc9b76149
 $_MODULE['<{statsproduct}prestashop>statsproduct_e22269bb51f9f2394e148716babbafbb'] = 'Popolarità';
 $_MODULE['<{statsproduct}prestashop>statsproduct_5e9613e58f3bdbc89b1fef07274c0877'] = 'Visite (x100)';
 $_MODULE['<{statsproduct}prestashop>statsproduct_287234a1ff35a314b5b6bc4e5828e745'] = 'Attributi';
+$_MODULE['<{statsproduct}prestashop>statsproduct_27ce7f8b5623b2e2df568d64cf051607'] = 'Magazzino';
