@@ -17,5 +17,6 @@ $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_b9f5c797ebbf55adccdd853
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_53d61d1ac0507b1bd8cd99db8d64fb19'] = 'Mostra il blocco anche se nessun prodotto è disponibile.';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_9ff0635f5737513b1a6f559ac2bff745'] = 'Nuovi prodotti';
+$_MODULE['<{blocknewproducts}prestashop>blocknewproducts_43340e6cc4e88197d57f8d6d5ea50a46'] = 'Maggiori informazioni';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_60efcc704ef1456678f77eb9ee20847b'] = 'Tutti i nuovi prodotti';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_2bc4c1efe10bba9f03fac3c59b4d2ae9'] = 'Nessun nuovo prodotto in questo momento';

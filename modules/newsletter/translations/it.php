@@ -15,8 +15,7 @@ $_MODULE['<{newsletter}prestashop>newsletter_011d8c5d94f729f013963d856cd78745'] 
 $_MODULE['<{newsletter}prestashop>newsletter_793ee192a9124cd6f529460eef17d3e5'] = 'Iscritti opt-in';
 $_MODULE['<{newsletter}prestashop>newsletter_7b15c043d66fecc45c8752592aa38e38'] = 'Sottoscrittori opt-in filtri';
 $_MODULE['<{newsletter}prestashop>newsletter_82e5e0bc0f9c776c98253d569c111c0f'] = 'Nessun cliente trovato con questi filtri!';
-$_MODULE['<{newsletter}prestashop>newsletter_d526d090aa22242fa5f6acfccc6bd007'] = 'Il file. CSV è stato esportato con successo';
-$_MODULE['<{newsletter}prestashop>newsletter_55caa4828d4e935c2ba9f1558f1c4edd'] = 'cliente trovato';
+$_MODULE['<{newsletter}prestashop>newsletter_04e7c39a16e4d89fe9c3861af82ececa'] = 'Il file .CSV è stato esportato con successo (%d clienti trovati)';
 $_MODULE['<{newsletter}prestashop>newsletter_48e3d5f66961b621c78f709afcd7d437'] = 'Scarica il file';
 $_MODULE['<{newsletter}prestashop>newsletter_faa1115fbab933e7178ee43ce1590977'] = '. ATTENZIONE: Se si tenta di aprire questo file .csv con Excel, non dimenticare di scegliere la codifica UTF-8 o puoi vedere caratteri strani';
 $_MODULE['<{newsletter}prestashop>newsletter_81573e0ea79138f02fd2cee94786d7e9'] = 'Errore: impossibile scrivere a';
@@ -27,6 +26,7 @@ $_MODULE['<{newsletter}prestashop>newsletter_74ca54506cdbc82e3aa763ba91b8fa39'] 
 $_MODULE['<{newsletter}prestashop>newsletter_1aa14f5a6423dbde1ef2cfe4734980b4'] = 'La sezione seguente \"Esporta clienti\" filtra a quali clienti si desidera inviare una newsletter.';
 $_MODULE['<{newsletter}prestashop>newsletter_7f5c4d54d8602ab7234a715a2a10b98e'] = 'Export Newsletter Iscritti';
 $_MODULE['<{newsletter}prestashop>newsletter_a60401e616125189d78605b2ddd7ff45'] = 'Genera un file. CSV sulla base dei dati abbonati BlockNewsletter.';
+$_MODULE['<{newsletter}prestashop>newsletter_769050278dda5e93374adda37811e413'] = 'Solo iscritti alla newsletter senza un account nel negozio saranno esportati.';
 $_MODULE['<{newsletter}prestashop>newsletter_dbb392a2dc9b38722e69f6032faea73e'] = 'Esporta file. CSV';
 $_MODULE['<{newsletter}prestashop>newsletter_4713ef5f2d6fc1e8f088c850e696a04b'] = 'Esporta clienti';
 $_MODULE['<{newsletter}prestashop>newsletter_2a96d838a5e89b86792669f0ab422987'] = 'Genera un file. CSV dai dati account clienti.';

@@ -20,3 +20,8 @@ $_MODULE['<{importerosc}prestashop>importerosc_14ae0ea02f571a833786d13d9ca6a897'
 $_MODULE['<{importerosc}prestashop>importerosc_e307db07b3975fef922a80d07455ee5e'] = 'Database';
 $_MODULE['<{importerosc}prestashop>importerosc_dac130bdd2c5492a8108a4145bd9f04a'] = 'Database prefisso';
 $_MODULE['<{importerosc}prestashop>importerosc_6bdc02625540b5264cffe801c37a82dd'] = '(Il prefisso è opzionale. Se tutte le tabelle del database iniziano con \"pref_\", il prefisso è \"pref_\")';
+$_MODULE['<{importerosc}prestashop>importerosc_4685343b5e2e0f0fbee63dddafde693f'] = 'Tu stai cercando di importare le categorie, e abbiamo trovato che il tuo database di oscommerce non ha i livelli di categorie. Tu devi avere questo campo per poter continuare l\'import delle categorie.';
+$_MODULE['<{importerosc}prestashop>importerosc_16f35420186575c2a1d9c0b59edf6ad3'] = 'Clicca qui per calcolare il \"livello\" dei campi';
+$_MODULE['<{importerosc}prestashop>importerosc_fced104d747e0855ceff3020653104ab'] = 'Il livello dei campi è stato creato e calcolato, Tu puoi continuare';
+$_MODULE['<{importerosc}prestashop>importerosc_b405d0bebeedbdc1773a44ac36b8ffc4'] = 'E\' fortemente raccomandato di fare un backup del tuo database prima di procedere. Hai fatto il backup?';
+$_MODULE['<{importerosc}prestashop>importerosc_9f95fc55011203d91d50a0ed512f805f'] = 'Non possiamo MODIFICARE le TABELLE (ALTER TABLE)';

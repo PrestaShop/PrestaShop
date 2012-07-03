@@ -15,7 +15,7 @@ $_MODULE['<{statssales}prestashop>statssales_0718e1ec4754e199aa9cb4bc43a6ff53'] 
 $_MODULE['<{statssales}prestashop>statssales_da80af4de99df74dd59e665adf1fac8f'] = 'Nessun ordine per questo periodo';
 $_MODULE['<{statssales}prestashop>statssales_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guida';
 $_MODULE['<{statssales}prestashop>statssales_75288849ad081e6ef15e00c37b7570f2'] = 'Vari status degli ordini';
-$_MODULE['<{statssales}prestashop>statssales_94272e39a7493ab1baf7600d78926024'] = 'Nel tuo back-office, è possibile trovare molti stati dell\'ordine: In attesa di pagamento con assegno, Pagamento accettato, Preparazione in corso,  Spedizione, Consegnato, Annullato, Rimborso, Errore di pagamento, Esaurito, e In attesa di pagamento con bonifico bancario.';
+$_MODULE['<{statssales}prestashop>statssales_94272e39a7493ab1baf7600d78926024'] = 'Nel tuo back-office, è possibile trovare molti stati dell\'ordine: In attesa di pagamento con assegno, Pagamento accettato, Preparazione in corso, Spedizione, Consegnato, Annullato, Rimborso, Errore di pagamento, Esaurito, e In attesa di pagamento con bonifico bancario.';
 $_MODULE['<{statssales}prestashop>statssales_d3ca3781ea021039c95d2830dd6db169'] = 'Questi stati non possono essere rimossi dal back-office, ma si ha la possibilità di aggiungerne altri';
 $_MODULE['<{statssales}prestashop>statssales_bb7ad89807bf69ddca986c142311f936'] = 'Prodotti e ordini';
 $_MODULE['<{statssales}prestashop>statssales_7442e29d7d53e549b78d93c46b8cdcfc'] = 'Ordini';
