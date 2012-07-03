@@ -6,9 +6,9 @@ $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_8063f7c341dbe2cadc2
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_ff9c34d2829b95a0936b22b409640143'] = 'Mostra caratteristiche come sesso ed età';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_0df28a79b0b6ee5f2a91da83bb07117c'] = 'La distribuzione di sesso ti permette di determinare la percentuale di uomini e donne tra i tuoi clienti.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_998e4c5c80f27dec552e99dfed34889a'] = 'Esporta CSV';
-$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_66ea53c179f966ec08fc4710c60a85be'] = 'Le fasce di età ti permettono  di determinare in quale fascia di età si trovano i tuoi clienti.';
+$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_66ea53c179f966ec08fc4710c60a85be'] = 'Le fasce di età ti permettono di determinare in quale fascia di età si trovano i tuoi clienti.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_d053730180bf7c54024068ab2a2edf5c'] = 'La distribuzione del paese ti permette di determinare da quale parte del mondo provengono i tuoi clienti.';
-$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_bcfebaf66fa6f885171c63997e2613d5'] = 'Le fasce di valuta ti permettono di determinare con quale  valuta i tuoi clienti effettuano i pagamenti.';
+$_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_bcfebaf66fa6f885171c63997e2613d5'] = 'Le fasce di valuta ti permettono di determinare con quale valuta i tuoi clienti effettuano i pagamenti.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_e0c88fe08ea4e9b77760ed2429628dea'] = 'La distribuzione delle lingue ti permette di determinare la lingua chei clienti usano nel tuo negozio.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_7a7012cc5c52802b45aed45d1f616f1e'] = 'Nessun cliente ancora registrato.';
 $_MODULE['<{statspersonalinfos}prestashop>statspersonalinfos_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guida';

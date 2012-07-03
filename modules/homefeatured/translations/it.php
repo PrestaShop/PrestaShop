@@ -12,6 +12,7 @@ $_MODULE['<{homefeatured}prestashop>homefeatured_3c230497560c52be92b93c65de9defc
 $_MODULE['<{homefeatured}prestashop>homefeatured_5bc8290012fcc597689ef8959c2fc969'] = 'Il numero di prodotti esposti in homepage (default: 10)';
 $_MODULE['<{homefeatured}prestashop>homefeatured_c9cc8cce247e49bae79f15173ce97354'] = 'Salva';
 $_MODULE['<{homefeatured}prestashop>homefeatured_ca7d973c26c57b69e0857e7a0332d545'] = 'prodotti in vetrina';
+$_MODULE['<{homefeatured}prestashop>homefeatured_03c2e7e41ffc181a4e84080b4710e81e'] = 'Nuovo';
 $_MODULE['<{homefeatured}prestashop>homefeatured_d3da97e2d9aee5c8fbe03156ad051c99'] = 'Più';
 $_MODULE['<{homefeatured}prestashop>homefeatured_4351cfebe4b61d8aa5efa1d020710005'] = 'Visualizza';
 $_MODULE['<{homefeatured}prestashop>homefeatured_2d0f6b8300be19cf35e89e66f0677f95'] = 'Aggiungi al carrello';

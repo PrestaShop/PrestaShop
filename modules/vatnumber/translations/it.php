@@ -2,6 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{vatnumber}prestashop>vatnumber_b0b9a606a1c251323825ca45d40964dc'] = 'Nessuna Nazione di default è impostata.';
 $_MODULE['<{vatnumber}prestashop>vatnumber_cee549912e318726d2c4989bb507665f'] = 'Partita IVA Europea';
 $_MODULE['<{vatnumber}prestashop>vatnumber_daa44329eceb03dc085a668376af07f5'] = 'Abilita inserimento del numero di Partita IVA intracomunitaria quando si crea l\'indirizzo (è necessario compilare il campo società per consentire partita IVA digitazione)';
 $_MODULE['<{vatnumber}prestashop>vatnumber_162b29cf61678af2aaac37f440265c28'] = 'Il suo paese è stato aggiornato.';
