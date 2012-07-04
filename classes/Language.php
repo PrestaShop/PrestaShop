@@ -83,6 +83,7 @@ class LanguageCore extends ObjectModel
 			'errors' => '_ERRORS',
 			'admin' => '_LANGADM',
 			'pdf' => '_LANGPDF',
+			'tabs' => 'tabs',
 		);
 
 	public	function __construct($id = null, $id_lang = null)
@@ -113,11 +114,23 @@ class LanguageCore extends ObjectModel
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
 			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
 		foreach ($this->translationsFilesAndVars as $file => $var)
-			if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php'))
-				file_put_contents(_PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php', '<?php
+		{
+			$path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
+			if (!file_exists($path_file))
+				if ($file != 'tabs')
+					file_put_contents($path_file, '<?php
 	global $'.$var.';
 	$'.$var.' = array();
 ?>');
+				else
+					file_put_contents($path_file, '<?php
+	$'.$var.' = array();
+	return $'.$var.';
+?>');
+
+			@chmod($path_file, 0777);
+		}
+
 	}
 
 	/**
