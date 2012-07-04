@@ -4,7 +4,6 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{blockspecials}prestashop>blockspecials_c19ed4ea98cbf319735f6d09bde6c757'] = 'Blocco offerte speciali';
 $_MODULE['<{blockspecials}prestashop>blockspecials_c2fb79a6eca86e519f938a1ef15c3e69'] = 'Aggiunge un blocco con le offerte speciali del momento';
-$_MODULE['<{blockspecials}prestashop>blockspecials_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Conferma';
 $_MODULE['<{blockspecials}prestashop>blockspecials_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
 $_MODULE['<{blockspecials}prestashop>blockspecials_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
 $_MODULE['<{blockspecials}prestashop>blockspecials_530c88f8210e022b39128e3f0409bbcf'] = 'Visualizza sempre il blocco';
