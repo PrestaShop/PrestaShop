@@ -558,6 +558,10 @@ class AuthControllerCore extends FrontController
 
 							// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
 							$this->context->cart->update();
+
+							// Avoid articles without delivery address on the cart
+							$this->context->cart->autosetProductAddress();
+
 							Hook::exec('actionCustomerAccountAdd', array(
 									'_POST' => $_POST,
 									'newCustomer' => $customer
