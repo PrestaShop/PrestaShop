@@ -126,7 +126,10 @@ class AdminCarriersControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_carrier',
-						'list' => Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS)
+						'list' => array(
+							-1 => array('id_carrier' => -1, 'name' => $this->l('Best price')),
+							-2 =>  array('id_carrier' => -2, 'name' => $this->l('Best grade'))) +
+							Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::ALL_CARRIERS)
 					),
 					'PS_CARRIER_DEFAULT_SORT' => array(
 						'title' => $this->l('Sort by:'),
