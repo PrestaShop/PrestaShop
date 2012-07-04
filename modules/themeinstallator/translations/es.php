@@ -12,11 +12,13 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5fd13c2b89a6eaaa4614bfe
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dea6caeb83e5c11d3678284e64ebed8'] = 'Se ha producido un error durante el envío del archivo';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_c186217583219f4cd040d9ee8d388ffb'] = 'Se ha producido un error durante la extracción del archivo zip';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0210b6456cdccad569cb56026bb0f689'] = 'Configuración de archivo errónea';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_416fa810b877005364d8dc1f61a2b7f0'] = 'Debe seleccionar al menos un tema... ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0a9c7fd9de'] = 'Esta característica ha sido deshabilitada.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentación';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Puede consultar la documentación';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Haga clic derecho en el nombre y elija \"guardar el enlace bajo\"';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Se han instalado los siguientes módulos';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Los siguientes módulos han sido desanclados: ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Se han activado los siguientes módulos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Se han actualizado las imágenes en la base de datos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Advertencia: Copiar / Pegar sus errores si desea configurar manualmente el tipo de imagen (en la ficha Preferencias> Imágenes):';
@@ -29,10 +31,12 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a20ddccbb6f808ec42cd663
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_33167fe8de7517798cf2e95c7680d6a4'] = 'Los siguientes temas se han importado correctamente';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f4ef3a40f287dd9849004a7f5af73f00'] = 'Atención: ya existe un módulo con ese nombre';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_df8703a4066393da85e8188261660717'] = 'Seleccione los módulos del tema que desea instalar';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_7b8e139260e50dd81e70b6ef6910e6f6'] = 'Seleccione los módulos que deben ser desactivados para este tema... ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de988ce574b0'] = 'Configuración de los módulos nativos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'Configuración actual';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'Configuración de los temas';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_130c5b3473c57faa76e2a1c54e26f88e'] = 'Ambos';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_20be6bcfa3d8c557253841bf7b22235a'] = 'Seleccione la tienda en la que va a utilizar este tema: ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Siguiente';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5138a89d1b730dacf446855e15c24496'] = 'Está a punto de instalar los siguientes temas';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f364da141450380ae79d7a45528f4c06'] = 'Este tema es para PrestaShop';
@@ -50,6 +54,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_dc87369c7dd7d760c8076a4
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_d1baba351b02042982a133c4df5d4924'] = 'Exportar un tema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5092965125a28a17f49ee460fbc1f62c'] = 'Seleccionar un tema';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0557cae4cf5b379e665910d701210f69'] = 'Exportar este tema';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_73b423af0106343c060aefb660e79ff2'] = 'Por favor, seleccione un tema ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7961c4434751797a383d52d647e044d6'] = 'Importar a partir del ordenador';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_bc52857ec49d8de10e55171f5bbc7f2a'] = 'Fichero del archivo';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_24ad8bfdfce09842a83f10d59a8ef01f'] = '¿Dónde está su archivo zip?';
@@ -58,6 +63,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_a33388a338ee2b199d66112
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_cd8d9cc19984ccf9d314eee5eebfc2cc'] = 'Importar a partir del FTP';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_94f2371003860a92b12bf4c66b2851ac'] = 'Seleccionar el archivo';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_43eed730e20e1fc8e2245e20046733ea'] = 'Seleccione el archivo ZIP que desea utilizar (previamente cargado en el directorio %s)';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_ed5778790800282a0e2044e50ac20de3'] = 'Permiso denegado. Por favor, establece permisssion a 666 en esta carpeta: %s ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ad8161d79988145440845b927e3708d4'] = 'Rellena este formulario se puede exportar el tema %s en un archivo ZIP';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_1031371f906a92891140f384d04b3421'] = 'Se ha producido un error al general el archivo';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_2c19b34eebed37ccc288c518006615b3'] = '¡Hay un error de sintaxis en el campo \"email\"!';
@@ -72,6 +78,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_9891d2e13ad8b753833055c
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_dd88d85745bba1abfa65cef79472da6a'] = 'Error de sintaxis en el campo versión. Solo se autorizan los números y los puntos y la contabilidad debe ser creciente o igual.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_bf17ac149e2e7a530c677e9bd51d3fd2'] = 'Módulos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_714af595b1403ed23ff51f27e863c9a2'] = 'Seleccione los módulos que quiere exportar';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_fa20578667f2e569f2ed1da415126040'] = 'Es una lista de módulos instalados que no son nativos. ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a517747c3d12f99244ae598910d979c5'] = 'Autor';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_49ee3087348e8d44e1feda1917443987'] = 'Nombre';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_ce8ae9da5b7cd6c3df2929543a9af92d'] = 'Email';
