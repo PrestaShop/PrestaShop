@@ -44,7 +44,7 @@ class AdminCmsContentControllerCore extends AdminController
 		if (!Validate::isLoadedObject(self::$category))
 			die('Category cannot be loaded');
 
-		$this->table = array('cms_category', 'cms');
+		$this->table = 'cms';
 		$this->admin_cms_categories = new AdminCmsCategoriesController();
 		$this->admin_cms = new AdminCmsController();
 
