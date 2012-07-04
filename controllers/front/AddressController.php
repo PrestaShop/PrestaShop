@@ -210,6 +210,8 @@ class AddressControllerCore extends FrontController
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
 				$this->context->cart->updateAddressId($address_old->id, $address->id);
+			else // Update cart address
+				$this->context->cart->autosetProductAddress();
 
 			if ($this->ajax)
 			{
