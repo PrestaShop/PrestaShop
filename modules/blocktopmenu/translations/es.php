@@ -11,6 +11,7 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_3679e307d4a14646c488a65381de82e
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b2385ac89327dbaeb21d35fa016a3e3e'] = 'Por favor, añada una etiqueta para el idioma por defecto';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_11ad009c1b7c0615be18fe91185c179a'] = 'En enlace se ha añadido con éxito';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_15772d25000bce9fc3a2a2fd7d41a717'] = 'El enlace ha sido eliminado';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_d1156d9314813566c02aedc3852bdcab'] = 'El link ha sido editado';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_242e9577826290307cd3e45a259172cc'] = 'Las modificaciones se aplicarán a';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_fb9ddcf8de4f32e4db61221d5cebb108'] = 'Tienda';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_540c8f06b80b4ec911505764eb455f4d'] = 'Todas las tiendas';
