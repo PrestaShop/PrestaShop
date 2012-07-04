@@ -6,7 +6,6 @@ $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f7c34fc4a48bc683445c1e7
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_cc68052332d758d991b64087c6e4352e'] = 'Visualizza un blocco con i prodotti appena aggiunti';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_57af4b7e82ba04c42eb3ac111310a505'] = 'Devi compilare il campo \"prodotti esposti\"';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_73293a024e644165e9bf48f270af63a0'] = 'Numero non valido.';
-$_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Conferma';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';
 $_MODULE['<{blocknewproducts}prestashop>blocknewproducts_e451e6943bb539d1bd804d2ede6474b5'] = 'Prodotti esposti';

@@ -9,7 +9,6 @@ $_MODULE['<{cheque}prestashop>cheque_1fddeba3cee2a70b37a20889e124948a'] = '\'All
 $_MODULE['<{cheque}prestashop>cheque_4402acab1c8f90dcf4a31dc96833bd86'] = 'Nessuna valuta impostata per questo modulo';
 $_MODULE['<{cheque}prestashop>cheque_a0048063a9be52816b7fa7f17aa3a2b7'] = 'Il campo \"all\'ordine di\" è obbligatorio.';
 $_MODULE['<{cheque}prestashop>cheque_4b5e20a521d31cc44b9690bd35eaacfc'] = 'Indirizzo obbligatorio.';
-$_MODULE['<{cheque}prestashop>cheque_e0aa021e21dddbd6d8cecec71e9cf564'] = 'OK';
 $_MODULE['<{cheque}prestashop>cheque_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
 $_MODULE['<{cheque}prestashop>cheque_14e41f4cfd99b10766cc15676d8cda66'] = 'Questo modulo permette di accettare pagamenti tramite assegno.';
 $_MODULE['<{cheque}prestashop>cheque_3b39b241f115e5823eeca07df2949a35'] = 'Se il cliente sceglie questa modalità di pagamento, l\'ordine cambierà il proprio status in \"attesa di pagamento\".';
@@ -38,7 +37,6 @@ $_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418
 $_MODULE['<{cheque}prestashop>payment_a5967aadef7d23b5027d46e107faf6d0'] = 'Paga con assegno';
 $_MODULE['<{cheque}prestashop>payment_30bee0e9549e97b2f65f8fd8fc5948be'] = 'Paga con assegno (l\'elaborazione dell\'ordine sarà più lungo)';
 $_MODULE['<{cheque}prestashop>payment_return_88526efe38fd18179a127024aba8c1d7'] = 'Il tuo ordine su %s è completo.';
-$_MODULE['<{cheque}prestashop>payment_return_75fbf512d744977d62599cc3f0ae2bb4'] = 'è completo.';
 $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] = 'Vi preghiamo di inviarci un assegno con:';
 $_MODULE['<{cheque}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'] = 'un importo di';
 $_MODULE['<{cheque}prestashop>payment_return_84cca8efe379645790938f55b701a1a4'] = 'pagabile all\'ordine di';
