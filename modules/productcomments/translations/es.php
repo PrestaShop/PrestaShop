@@ -83,4 +83,12 @@ $_MODULE['<{productcomments}prestashop>products-comparison_8413c683b4b27cc3f4dbd
 $_MODULE['<{productcomments}prestashop>products-comparison_b1897515d548a960afe49ecf66a29021'] = 'Media';
 $_MODULE['<{productcomments}prestashop>products-comparison_bc976f6c3405523cde61f63a7cbe224b'] = 'Ver las opiniones';
 $_MODULE['<{productcomments}prestashop>tab_8413c683b4b27cc3f4dbd4c90329d8ba'] = 'Comentarios';
+$_MODULE['<{productcomments}prestashop>default_607d7adc590bb9a615b6fa5bc8a4f2f6'] = 'Identificación del producto es incorrecto ';
+$_MODULE['<{productcomments}prestashop>default_7b0bf23ae4079e07a3a4cb4d07e2caef'] = 'El título es incorrecto';
+$_MODULE['<{productcomments}prestashop>default_ddbd56de5feb78ef1aaf60401f8c472b'] = 'Comentario es incorrecto';
+$_MODULE['<{productcomments}prestashop>default_1b1030b6294e9096a7d7c40d83d61872'] = 'Nombre del cliente no es correcto';
+$_MODULE['<{productcomments}prestashop>default_a95dff703b20b1e705210c39b3865bf0'] = 'Tienes que registrarte para poder enviar un comentario ';
+$_MODULE['<{productcomments}prestashop>default_a201fbadca94d310a1b62407cdc775d5'] = 'Usted tiene que dar una calificación ';
 $_MODULE['<{productcomments}prestashop>default_dfbe69c6d9568ecb0e65e7b32ed92a3a'] = 'No encontrado';
+$_MODULE['<{productcomments}prestashop>default_6d28f2900adb9e500868166f6d04da92'] = 'Debería esperar';
+$_MODULE['<{productcomments}prestashop>default_ba8d7ae5dcadfba739f28a777378f208'] = 'segundos antes de postear un nuevo comentario';
