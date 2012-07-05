@@ -590,7 +590,7 @@
 						<th style="width: 15%; text-align: center">{l s='Unit Price'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
 						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
-						{if ($order->hasBeenDelivered())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
+						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
 						<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
 						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>

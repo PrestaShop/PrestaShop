@@ -199,5 +199,22 @@ class OrderReturnCore extends ObjectModel
 	{
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int)($id_order_detail).' AND `id_order_return` = '.(int)($id_order_return).' AND `id_customization` = '.(int)($id_customization));
 	}
+	
+	/**
+	 * 
+	 * Get return details for one product line
+	 * @param $id_order_detail
+	 */
+	public static function getProductReturnDetail($id_order_detail)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT product_quantity, date_add, orsl.name as state
+			FROM `'._DB_PREFIX_.'order_return_detail` ord
+			LEFT JOIN `'._DB_PREFIX_.'order_return` o
+			ON o.id_order_return = ord.id_order_return
+			LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl
+			ON orsl.id_order_return_state = o.state AND orsl.id_lang = '.(int)Context::getContext()->language->id.'
+			WHERE ord.`id_order_detail` = '.(int)$id_order_detail);
+	}
 }
 

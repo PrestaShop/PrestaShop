@@ -499,3 +499,31 @@ ul.listForm li {padding-bottom:3px;}
 .selected-line {background:#fff1b5;}
 
 #changedFiles ul{list-style-type: square; padding-left: 40px;}
+
+.tooltip { position: relative; }
+.tooltip .tooltip_content {
+	z-index: 100;
+	text-align: left;
+	display: none;
+	white-space: nowrap;
+	position: absolute;
+	padding: 5px 5px;
+	background: black;
+	color: white;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+	margin-top: 5px;
+}
+.tooltip .tooltip_label { cursor: pointer; }
+.tooltip .title { text-align: center; padding-bottom: 5px; display: block; font-weight: bold }
+.tooltip:hover .tooltip_content { display: block; }
+.tooltip_button {
+	border: 1px solid silver;
+	border-radius: 3px;
+	padding: 0 3px;
+	background: -moz-linear-gradient(top, #ddd, #aaa);
+	background: -o-linear-gradient(top, #ddd, #aaa);
+	background: -webkit-linear-gradient(top, #ddd, #aaa);
+	background: linear-gradient(top, #ddd, #aaa);
+	color: #666
+}
+
