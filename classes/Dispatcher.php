@@ -221,8 +221,9 @@ class DispatcherCore
 		
 		$this->setRequestUri();
 
-		// Switch language if needed
-		Tools::switchLanguage();
+		// Switch language if needed (only on front)
+		if ($this->front_controller == self::FC_FRONT)
+			Tools::switchLanguage();
 
 		$this->loadRoutes();
 	}
