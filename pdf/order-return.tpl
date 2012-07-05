@@ -143,8 +143,7 @@
             </table>
 
             <br />
-            {l s='Upon receiving your package, we will notify you by e-mail. We will then begin processing the reimbursement of your order total.
-Let us know if you have any questions' pdf='true'}
+            {l s='Upon receiving your package, we will notify you by e-mail. We will then begin processing the reimbursement of your order total. Let us know if you have any questions' pdf='true'}
 		</td>
 	</tr>
 </table>
