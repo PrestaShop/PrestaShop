@@ -943,9 +943,9 @@ class CartRuleCore extends ObjectModel
 		$shop_list = '';
 		if ($type == 'shop')
 		{
-			$shop_list = ' AND t.id_shop IN (';
 			$shops = Context::getContext()->employee->getAssociatedShops();
-			$shop_list .= implode(array_map('intval', $shops), ',').')';
+			if (count($shops))
+				$shop_list = ' AND t.id_shop IN ('.implode(array_map('intval', $shops), ',').') ';
 		}
 
 		if (!Validate::isLoadedObject($this) OR $this->{$type.'_restriction'} == 0)
