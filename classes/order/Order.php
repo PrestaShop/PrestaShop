@@ -552,7 +552,7 @@ class OrderCore extends ObjectModel
 				$row['product_quantity'] = 0;
 				foreach ($selectedProducts as $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
-						$row['producsvt_quantity'] = (int)($selectedQty[$key]);
+						$row['product_quantity'] = (int)($selectedQty[$key]);
 				if (!$row['product_quantity'])
 					continue;
 			}
