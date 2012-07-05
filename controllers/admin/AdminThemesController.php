@@ -304,18 +304,22 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$new_dir = Tools::getValue('directory');
 		$res = true;
-		if (Validate::isDirName($new_dir) && !is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+
+		if ($new_dir != '')
 		{
-			$res &= mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights);
-			if ($res)
-				$this->confirmations[] = $this->l('Directory successfully created');
-		}
-	
-		if (0 !== $id_based = (int)Tools::getValue('based_on'))
-		{
-			$base_theme = new Theme($id_based);
-			$res = $this->copyTheme($base_theme->directory, $new_dir);
-			$base_theme = new Theme((int)Tools::getValue('based_on'));
+			if (Validate::isDirName($new_dir) && !is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+			{
+				$res &= mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights);
+				if ($res)
+					$this->confirmations[] = $this->l('Directory successfully created');
+			}
+
+			if (0 !== $id_based = (int)Tools::getValue('based_on'))
+			{
+				$base_theme = new Theme($id_based);
+				$res = $this->copyTheme($base_theme->directory, $new_dir);
+				$base_theme = new Theme((int)Tools::getValue('based_on'));
+			}
 		}
 
 		return parent::processAdd();
