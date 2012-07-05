@@ -136,7 +136,10 @@ class Blockreinsurance extends Module
 		$id_reinsurance = (int)Tools::getValue('id_reinsurance');
 		if (Tools::isSubmit('saveblockreinsurance'))
 		{
-			$reinsurance = new reinsuranceClass();
+			if ($id_reinsurance = Tools::getValue('id_reinsurance'))
+				$reinsurance = new reinsuranceClass((int)$id_reinsurance);
+			else
+				$reinsurance = new reinsuranceClass();
 			$reinsurance->copyFromPost();
 			$reinsurance->id_shop = $this->context->shop->id;
 			
@@ -171,7 +174,12 @@ class Blockreinsurance extends Module
 				}	
 				else
 					$helper->fields_value['text'][(int)$lang['id_lang']] = Tools::getValue('text_'.(int)$lang['id_lang'], '');
-
+			if ($id_reinsurance = Tools::getValue('id_reinsurance'))
+			{
+				$this->fields_form[0]['form']['input'][] = array('type' => 'hidden', 'name' => 'id_reinsurance');
+				$helper->fields_value['id_reinsurance'] = (int)$id_reinsurance;
+ 			}
+				
 			return $html.$helper->generateForm($this->fields_form);
 		}
 		else if (Tools::isSubmit('deleteblockreinsurance'))
