@@ -92,7 +92,7 @@
 			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl>
 					<dt>{l s='Product #'}</dt> 
-					<dd><a href="index.php?tab=AdminOrders&id_order={$id_order_product}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
+					<dd><a href="index.php?tab=AdminProducts&id_product={$id_order_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">
 					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='view'}" />
 				</a></dd>
 				</dl>
