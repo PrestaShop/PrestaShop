@@ -294,8 +294,18 @@ class OrderOpcControllerCore extends ParentOrderController
 			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 		else
 			$countries = Country::getCountries($this->context->language->id, true);
+		
+		// If a rule offer free-shipping, force hidding shipping prices
+		$free_shipping = false;
+		foreach ($this->context->cart->getCartRules() as $rule)
+			if ($rule['free_shipping'])
+			{
+				$free_shipping = true;
+				break;
+			}
 
 		$this->context->smarty->assign(array(
+			'free_shipping' => $free_shipping,
 			'isLogged' => $this->isLogged,
 			'isGuest' => isset($this->context->cookie->is_guest) ? $this->context->cookie->is_guest : 0,
 			'countries' => $countries,
