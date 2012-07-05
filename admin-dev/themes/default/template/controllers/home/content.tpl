@@ -44,8 +44,10 @@
 		<p>{l s='To receive PrestaShop update warnings, you need to activate'} <b>allow_url_fopen</b> [<a href="http://www.php.net/manual/{$isoUser}/ref.filesystem.php">{l s='more info on php.net'}</a>]</p>
 		<p>{l s='If you don\'t know how to do this, please contact your hosting provider!'}</p><br />
 	{/if}
+
+{* Screencast deprecated, but I keep the code in case it is updated later
 {if $employee->bo_show_screencast}
-<div id="adminpresentation" style="display:block;">
+<div id="adminpresentation" style="display:block">
 <h2>{l s='Video'}</h2>
 		<div id="video">
 			<a href="{$protocol}://screencasts.prestashop.com/v1.5/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="../img/admin/preview_fr.jpg" /><span class="mask-player"></span></a>
@@ -95,6 +97,7 @@ $(document).ready(function() {
 });
 </script>
 {/if}
+*}
 
 <h2>{l s='Quick links'}</h2>
 		<ul class="F_list clearfix">
