@@ -27,6 +27,7 @@
 
 //JS Object : update the cart by ajax actions
 var ajaxCart = {
+	nb_total_products: 0,
 
 	//override every button in the page in relation to the cart
 	overrideButtonsInThePage : function(){
@@ -311,9 +312,10 @@ var ajaxCart = {
 				$('#'+removedProductId).addClass('strike').fadeTo('slow', 0, function(){
 					$(this).slideUp('slow', function(){
 						$(this).remove();
-						//if the cart is now empty, show the 'no product in the cart' message
+						// If the cart is now empty, show the 'no product in the cart' message and close detail
 						if($('#cart_block dl.products dt').length == 0)
 						{
+							$("#header #cart_block").stop(true, true).slideUp(200);
 							$('p#cart_block_no_products:hidden').slideDown(450);
 							$('div#cart_block dl.products').remove();
 						}
@@ -601,6 +603,9 @@ var ajaxCart = {
 		$('.ajax_cart_tax_cost').text(jsonData.taxCost);
 		$('.cart_block_wrapping_cost').text(jsonData.wrappingCost);
 		$('.ajax_block_cart_total').text(jsonData.total);
+
+		this.nb_total_products = jsonData.nbTotalProducts;
+		
 		if(parseInt(jsonData.nbTotalProducts) > 0)
 		{
 			$('.ajax_cart_no_product').hide();
@@ -674,7 +679,8 @@ $(document).ready(function(){
 	$("#shopping_cart a:first").hover(
 		function() {
 			$(this).css('border-radius', '3px 3px 0px 0px');
-			$("#header #cart_block").stop(true, true).slideDown(450);
+			if (ajaxCart.nb_total_products > 0)
+				$("#header #cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
 			$('#shopping_cart a').css('border-radius', '3px');
