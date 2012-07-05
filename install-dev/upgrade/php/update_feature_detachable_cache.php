@@ -32,7 +32,7 @@ function update_feature_detachable_cache()
 		'PS_SCENE_FEATURE_ACTIVE' => 'scene',
 		'PS_PRODUCT_DOWNLOAD_FEATURE_ACTIVE' => 'product_download',
 		'PS_CUSTOMIZATION_FEATURE_ACTIVE' => 'customization_field',
-		'PS_CART_RULE_FEATURE_ACTIVE' => 'cart_rule',
+		'PS_CART_RULE_FEATURE_ACTIVE' => 'discount',
 		'PS_GROUP_FEATURE_ACTIVE' => 'group',
 		'PS_PACK_FEATURE_ACTIVE' => 'pack',
 		'PS_ALIAS_FEATURE_ACTIVE' => 'alias',
