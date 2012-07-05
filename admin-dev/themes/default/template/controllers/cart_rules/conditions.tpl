@@ -232,7 +232,7 @@
 					id="shop_select_add"
 					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					
+					{l s='Add'} &gt;&gt;
 				</a>
 			</td>
 			<td>
