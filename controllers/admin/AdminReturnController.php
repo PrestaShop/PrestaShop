@@ -155,6 +155,14 @@ class AdminReturnControllerCore extends AdminController
 		// If display list, we don't want the "add" button
 		if (!$this->display || $this->display == 'list')
 			return;
+		else if ($this->display != 'options')
+			$this->toolbar_btn['save-and-stay'] = array(
+				'short' => 'SaveAndStay',
+				'href' => '#',
+				'desc' => $this->l('Save and stay'),
+				'force_desc' => true,
+			);
+
 		parent::initToolbar();
 	}
 
@@ -191,7 +199,7 @@ class AdminReturnControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		elseif (Tools::isSubmit('submitAddorder_return'))
+		elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -212,7 +220,11 @@ class AdminReturnControllerCore extends AdminController
 						Mail::Send((int)$order->id_lang, 'order_return_state', Mail::l('Your order return state has changed', $order->id_lang),
 						$vars, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 							null, _PS_MAIL_DIR_, true);
-						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
+
+						if (Tools::isSubmit('submitAddorder_returnAndStay'))
+							Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.'&updateorder_return&id_order_return='.(int)$id_order_return);
+						else
+							Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 					}
 				}
 				else
