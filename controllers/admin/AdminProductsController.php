@@ -3326,16 +3326,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormAttributes($product)
 	{
+		$data = $this->createTemplate($this->tpl_form);
 		if (!Combination::isFeatureActive())
-		{
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').
 				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
-			return;
-		}
-
-		$data = $this->createTemplate($this->tpl_form);
-
-		if (Validate::isLoadedObject($product))
+		else if (Validate::isLoadedObject($product))
 		{
 			if ($product->is_virtual)
 			{
