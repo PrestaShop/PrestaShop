@@ -73,9 +73,9 @@
 			<p class="text">
 				<label for="email">{l s='E-mail address'}</label>
 				{if isset($customerThread.email)}
-					<input type="text" id="email" name="from" value="{$customerThread.email}" readonly="readonly" />
+					<input type="text" id="email" name="from" value="{$customerThread.email|escape:'htmlall':'UTF-8'}" readonly="readonly" />
 				{else}
-					<input type="text" id="email" name="from" value="{$email}" />
+					<input type="text" id="email" name="from" value="{$email|escape:'htmlall':'UTF-8'}" />
 				{/if}
 			</p>
 		{if !$PS_CATALOG_MODE}
@@ -83,7 +83,12 @@
 			<p class="text select">
 				<label for="id_order">{l s='Order ID'}</label>
 				{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
-					<select name="id_order" ><option value="0">{l s='-- Choose --'}</option>{$orderList}</select>
+					<select name="id_order" >
+						<option value="0">{l s='-- Choose --'}</option>
+						{foreach from=$orderList item=order}
+							<option value="{$order.value|intval}">{$order.label|escape:'htmlall':'UTF-8'}</option>
+						{/foreach}
+					</select>
 				{elseif !isset($customerThread.id_order) && !isset($isLogged)}
 					<input type="text" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|intval}{/if}{/if}" />
 				{elseif $customerThread.id_order > 0}
@@ -95,7 +100,14 @@
 			<p class="text select">
 			<label for="id_product">{l s='Product'}</label>
 				{if !isset($customerThread.id_product)}
-					<select name="id_product" style="width:300px;"><option value="0">{l s='-- Choose --'}</option>{$orderedProductList}</select>
+				{foreach from=$orderedProductList key=id_order item=products name=products}
+					<select name="id_product" id="{$id_order}_order_products" class="product_select" style="width:300px;{if !$smarty.foreach.products.first} display:none; {/if}" {if !$smarty.foreach.products.first}disabled="disabled" {/if}>
+						<option value="0">{l s='-- Choose --'}</option>
+						{foreach from=$products item=product}
+							<option value="{$product.value|intval}">{$product.label|escape:'htmlall':'UTF-8'}</option>
+						{/foreach}
+					</select>
+				{/foreach}
 				{elseif $customerThread.id_product > 0}
 					<input type="text" name="id_product" id="id_product" value="{$customerThread.id_product|intval}" readonly="readonly" />
 				{/if}
