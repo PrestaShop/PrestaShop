@@ -286,6 +286,15 @@ class AdminStoresControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+		
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+			);
+		}
 
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -324,7 +333,8 @@ class AdminStoresControllerCore extends AdminController
 		{
 			/* Cleaning fields */
 			foreach ($_POST as $kp => $vp)
-				$_POST[$kp] = trim($vp);
+				if ($kp != 'checkBoxShopAsso_store')
+					$_POST[$kp] = trim($vp);
 
 			/* If the selected country does not contain states */
 			$id_state = (int)Tools::getValue('id_state');
@@ -387,8 +397,8 @@ class AdminStoresControllerCore extends AdminController
 
 		if (!count($this->errors))
 			parent::postProcess();
-        else
-            $this->display = 'add';
+		else
+			$this->display = 'add';
 	}
 
 	protected function postImage($id)
