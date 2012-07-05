@@ -1735,12 +1735,15 @@ class AdminProductsControllerCore extends AdminController
 		// Check multilingual fields sizes
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
-				if ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']) && Tools::strlen($value) > $maxLength)
+		  {
+				$value = Tools::getValue($fieldLang.'_'.$language['id_lang']);
+				if ($value && Tools::strlen($value) > $maxLength)
 					$this->errors[] = sprintf(
 						Tools::displayError('The field %1$s is too long (%2$d chars max).'),
 						call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
 						$maxLength
 					);
+			}
 
 		if ($this->isProductFieldUpdated('description_short') && isset($_POST['description_short']))
 			$_POST['description_short'] = $saveShort;
