@@ -99,7 +99,7 @@ class OrderSlipCore extends ObjectModel
 		ORDER BY `date_add` DESC');
 	}
 
-	public static function getOrdersSlipDetail($id_order_slip = true, $id_order_detail = false)
+	public static function getOrdersSlipDetail($id_order_slip = false, $id_order_detail = false)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
@@ -141,13 +141,33 @@ class OrderSlipCore extends ObjectModel
 			}
 		return $order->getProducts($resTab);
 	}
-	
+
+	/**
+	 * 
+	 * Get resume of all refund for one product line
+	 * @param $id_order_detail
+	 */
 	public static function getProductSlipResume($id_order_detail)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT SUM(product_quantity) product_quantity, SUM(amount_tax_excl) amount_tax_excl, SUM(amount_tax_incl) amount_tax_incl
 			FROM `'._DB_PREFIX_.'order_slip_detail`
 			WHERE `id_order_detail` = '.(int)$id_order_detail);
+	}
+	
+	/**
+	 * 
+	 * Get refund details for one product line
+	 * @param $id_order_detail
+	 */
+	public static function getProductSlipDetail($id_order_detail)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT product_quantity, amount_tax_excl, amount_tax_incl, date_add
+			FROM `'._DB_PREFIX_.'order_slip_detail` osd
+			LEFT JOIN `'._DB_PREFIX_.'order_slip` os
+			ON os.id_order_slip = osd.id_order_slip
+			WHERE osd.`id_order_detail` = '.(int)$id_order_detail);
 	}
 
 	public function getProducts()

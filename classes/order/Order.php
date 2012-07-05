@@ -755,6 +755,21 @@ class OrderCore extends ObjectModel
 	{
 		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_DELIVERY));
 	}
+	
+	/**
+	 * Has products returned by the merchant or by the customer?
+	 */
+	public function hasProductReturned()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT IFNULL(SUM(ord.product_quantity), SUM(product_quantity_return))
+			FROM `'._DB_PREFIX_.'orders` o
+			INNER JOIN `'._DB_PREFIX_.'order_detail` od
+			ON od.id_order = o.id_order
+			LEFT JOIN `'._DB_PREFIX_.'order_return_detail` ord
+			ON ord.id_order_detail = od.id_order_detail
+			WHERE o.id_order = '.(int)$this->id);
+	}
 
 	public function hasBeenPaid()
 	{

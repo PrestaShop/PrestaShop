@@ -1251,6 +1251,8 @@ class AdminOrdersControllerCore extends AdminController
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
+			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 			
 			// if the current stock requires a warning
 			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
