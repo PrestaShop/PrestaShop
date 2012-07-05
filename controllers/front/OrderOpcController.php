@@ -484,6 +484,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			}
 		
 		$carriers = $this->context->cart->simulateCarriersOutput();
+		$delivery_option = $this->context->cart->getDeliveryOption(null, true, false);
 		$vars = array(
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
@@ -497,13 +498,13 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 			'carriers' => $carriers,
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
-			'delivery_option' => $this->context->cart->getDeliveryOption(null, true),
+			'delivery_option' => $delivery_option,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
-				'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
+				'delivery_option' => $delivery_option
 			))
 		);
 		
