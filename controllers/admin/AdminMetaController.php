@@ -588,7 +588,7 @@ class AdminMetaControllerCore extends AdminController
 			$sql = 'SELECT ml.url_rewrite, l.iso_code
 					FROM '._DB_PREFIX_.'meta m
 					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
-					INNER JOIN ps_lang l ON l.id_lang = ml.id_lang
+					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
 					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
 			if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 				foreach ($results as $row)
