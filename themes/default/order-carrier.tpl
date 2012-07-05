@@ -158,7 +158,7 @@
 								</td>
 								<td>
 								<div class="delivery_option_price">
-									{if $option.total_price_with_tax}
+									{if $option.total_price_with_tax && !$free_shipping}
 										{if $use_taxes == 1}
 											{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
 										{else}

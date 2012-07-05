@@ -238,7 +238,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 	}
 
-	/*
+	/**
 	 * Manage address
 	 */
 	public function processAddress()
@@ -328,8 +328,21 @@ class OrderControllerCore extends ParentOrderController
 		parent::_assignCarrier();
 		// Assign wrapping and TOS
 		$this->_assignWrappingAndTOS();
-
-		$this->context->smarty->assign('is_guest', (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0));
+		
+		// If a rule offer free-shipping, force hidding shipping prices
+		$free_shipping = false;
+		foreach ($this->context->cart->getCartRules() as $rule)
+			if ($rule['free_shipping'])
+			{
+				$free_shipping = true;
+				break;
+			}
+		
+		$this->context->smarty->assign(
+			array(
+				'free_shipping' => $free_shipping,
+				'is_guest' => (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0)
+			));
 	}
 
 	/**
