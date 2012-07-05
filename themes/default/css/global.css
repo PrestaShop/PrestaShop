@@ -707,10 +707,11 @@ table#cart_summary .cart_product {
 	border-bottom: 1px solid #999;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
-table#cart_summary  .cart_description {
+table#cart_summary .cart_description {
 	width:230px;
 }
-table#cart_summary  .cart_unit {width:130px}
+table#cart_summary .cart_unit {width:130px;text-align: center}
+table#cart_summary td.cart_unit {text-align: right}
 table#cart_summary  .cart_quantity {width:130px}
 table#cart_summary .customization .cart_quantity {padding: 8px 12px 0;}
 .cart_quantity .cart_quantity_input {
@@ -724,11 +725,13 @@ table#cart_summary .customization .cart_quantity {padding: 8px 12px 0;}
 	position: relative;
 	top: -5px
 }
-table#cart_summary .cart_total {width:120px}
+table#cart_summary .cart_total {width:120px;text-align: center}
+table#cart_summary td.cart_total {text-align: right}
 table#cart_summary .cart_delete {
 	width:64px;
 	text-align:center
 }
+table#cart_summary .cart_discount_price {text-align: right}
 .cart_delete a.cart_quantity_delete,
 a.price_discount_delete {
 	display:inline-block;
@@ -798,6 +801,7 @@ table#cart_summary #total_price_container {
 #cart_summary .price {
 	border-right:none;
 	text-align: right;
+	white-space: nowrap;
 }
 .total_price_container p {text-align: left}
 
