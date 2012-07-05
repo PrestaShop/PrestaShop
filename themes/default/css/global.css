@@ -242,7 +242,8 @@ table.table_block {
 	margin-bottom:20px;
 	width:100%;
 	border:1px solid #999;
-	border-bottom:none
+	border-bottom:none;
+	background:white;
 }
 table.std th,
 table.table_block th {
@@ -675,7 +676,7 @@ table#cart_summary  td {
 	vertical-align:top
 }
 table#cart_summary  td.cart_delete,
-table#cart_summary  td.price_discount_del {border-right:none}
+table#cart_summary  td.price_discount_del {border-right:none;text-align: center}
 table#cart_summary  .last_item  td {border-bottom:1px solid #999}
 
 
@@ -699,9 +700,11 @@ table#cart_summary tr.customization.even {
 table#cart_summary tr ul {
 	list-style: none;
 }
-table#cart_summary  .cart_product {
+table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
+}table#cart_summary tbody tr:last-child td {
+	border-bottom: 1px solid #999;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary  .cart_description {

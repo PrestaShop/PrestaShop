@@ -64,7 +64,6 @@
 			<tr>
 				<th class="cart_product first_item">{l s='Product'}</th>
 				<th class="cart_description item">{l s='Description'}</th>
-				<th class="cart_ref item">{l s='Ref.'}</th>
 				<th class="cart_availability item">{l s='Avail.'}</th>
 				<th class="cart_unit item">{l s='Unit price'}</th>
 				<th class="cart_quantity item">{l s='Qty'}</th>
@@ -75,23 +74,23 @@
 			{if $use_taxes}
 				{if $priceDisplay}
 					<tr class="cart_total_price">
-						<td colspan="6">{if $display_tax_label}{l s='Total products (tax excl.):'}{else}{l s='Total products:'}{/if}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total products (tax excl.):'}{else}{l s='Total products:'}{/if}</td>
 						<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 					</tr>
 				{else}
 					<tr class="cart_total_price">
-						<td colspan="6">{if $display_tax_label}{l s='Total products (tax incl.):'}{else}{l s='Total products:'}{/if}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total products (tax incl.):'}{else}{l s='Total products:'}{/if}</td>
 						<td class="price" id="total_product">{displayPrice price=$total_products_wt}</td>
 					</tr>
 				{/if}
 			{else}
 				<tr class="cart_total_price">
-					<td colspan="6">{l s='Total products:'}</td>
+					<td colspan="5">{l s='Total products:'}</td>
 					<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 				</tr>
 			{/if}
 			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display: none;"{/if}>
-				<td colspan="6">
+				<td colspan="5">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{if $display_tax_label}{l s='Total vouchers (tax excl.):'}{else}{l s='Total vouchers:'}{/if}
@@ -115,7 +114,7 @@
 				</td>
 			</tr>
 			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display: none;"{/if}>
-				<td colspan="6">
+				<td colspan="5">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{if $display_tax_label}{l s='Total gift-wrapping (tax excl.):'}{else}{l s='Total gift-wrapping:'}{/if}
@@ -141,18 +140,18 @@
 			{if $use_taxes}
 				{if $priceDisplay}
 					<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none;"{/if}>
-						<td colspan="6">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}}</td>
 						<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
 					</tr>
 				{else}
 					<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
-						<td colspan="6">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
+						<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
 						<td class="price" id="total_shipping" >{displayPrice price=$shippingCost}</td>
 					</tr>
 				{/if}
 			{else}
 				<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
-					<td colspan="6">{l s='Total shipping:'}</td>
+					<td colspan="5">{l s='Total shipping:'}</td>
 					<td class="price" id="total_shipping" >{displayPrice price=$shippingCostTaxExc}</td>
 				</tr>
 			{/if}
@@ -223,6 +222,7 @@
 			{assign var='quantityDisplayed' value=0}
 			{assign var='cannotModify' value=1}
 			{assign var='odd' value=$product@iteration%2}
+			{assign var='noDeleteButton' value=1}
 			{* Display the product line *}
 			{include file="$tpl_dir./shopping-cart-product-line.tpl"}
 			{* Then the customized datas ones*}
@@ -234,12 +234,25 @@
 								{if $type == $CUSTOMIZE_FILE}
 									<div class="customizationUploaded">
 										<ul class="customizationUploaded">
-											{foreach from=$datas item='picture'}<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>{/foreach}
+											{foreach from=$datas item='picture'}
+												<li>
+													<img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" />
+												</li>
+											{/foreach}
 										</ul>
 									</div>
 								{elseif $type == $CUSTOMIZE_TEXTFIELD}
 									<ul class="typedText">
-										{foreach from=$datas item='textField' name='typedText'}<li>{if $textField.name}{l s='%s:' sprintf=$textField.name}{else}{l s='Text #%s:' sprintf=$smarty.foreach.typedText.index+1}{/if} {$textField.value}</li>{/foreach}
+										{foreach from=$datas item='textField' name='typedText'}
+											<li>
+												{if $textField.name}
+													{l s='%s:' sprintf=$textField.name}
+												{else}
+													{l s='Text #%s:' sprintf=$smarty.foreach.typedText.index+1}
+												{/if}
+												{$textField.value}
+											</li>
+										{/foreach}
 									</ul>
 								{/if}
 							{/foreach}
@@ -287,18 +300,23 @@
 			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 		{/foreach}
 		</tbody>
-	{if sizeof($discounts)}
+	{if count($discounts)}
 		<tbody>
 		{foreach from=$discounts item=discount name=discountLoop}
 			<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
 				<td class="cart_discount_name" colspan="2">{$discount.name}</td>
 				<td class="cart_discount_description" colspan="3">{$discount.description}</td>
-				<td class="cart_discount_delete"><a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" title="{l s='Delete'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="icon" width="11" height="13" /></a></td>
-				<td class="cart_discount_price"><span class="price-discount">
-					{if $discount.value_real > 0}
-						{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}
-					{/if}
-				</span></td>
+				<td class="cart_discount_price">
+					<span class="price-discount">
+						{if $discount.value_real > 0}
+							{if !$priceDisplay}
+								{displayPrice price=$discount.value_real*-1}
+							{else}
+								{displayPrice price=$discount.value_tax_exc*-1}
+							{/if}
+						{/if}
+					</span>
+				</td>
 			</tr>
 		{/foreach}
 		</tbody>
