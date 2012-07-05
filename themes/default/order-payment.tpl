@@ -137,23 +137,30 @@
 				{/if}
 				</td>
 			</tr>
-			{if $use_taxes}
-				{if $priceDisplay}
-					<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none;"{/if}>
-						<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}}</td>
-						<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
-					</tr>
+			{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				<tr class="cart_total_delivery">
+					<td colspan="5">{l s='Shipping:'}</td>
+					<td class="price" id="total_shipping">{l s='Free Shipping!'}</td>
+				</tr>
+			{else}
+				{if $use_taxes}
+					{if $priceDisplay}
+						<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none;"{/if}>
+							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}}</td>
+							<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
+						</tr>
+					{else}
+						<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
+							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
+							<td class="price" id="total_shipping" >{displayPrice price=$shippingCost}</td>
+						</tr>
+					{/if}
 				{else}
 					<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
-						<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
-						<td class="price" id="total_shipping" >{displayPrice price=$shippingCost}</td>
+						<td colspan="5">{l s='Total shipping:'}</td>
+						<td class="price" id="total_shipping" >{displayPrice price=$shippingCostTaxExc}</td>
 					</tr>
 				{/if}
-			{else}
-				<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
-					<td colspan="5">{l s='Total shipping:'}</td>
-					<td class="price" id="total_shipping" >{displayPrice price=$shippingCostTaxExc}</td>
-				</tr>
 			{/if}
 
 			{if $use_taxes}
