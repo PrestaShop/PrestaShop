@@ -117,10 +117,13 @@ class ContactControllerCore extends FrontController
 				}
 				if (!empty($contact->email))
 				{
+					$id_order = (int)Tools::getValue('id_order', 0);
+					$order = new Order($id_order);
+
 					$mail_var_list = array(
 						'{email}' => $from,
 						'{message}' => Tools::nl2br(stripslashes($message)),
-						'{id_order}' => (int)Tools::getValue('id_order'),
+						'{id_order}' => $id_order,
 						'{order_name}' => $order->getUniqReference(),
 						'{attached_file}' => $_FILES['fileUpload']['name'] ? $_FILES['fileUpload']['name'] : '');
 
