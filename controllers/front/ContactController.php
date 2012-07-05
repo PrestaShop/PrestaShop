@@ -199,6 +199,7 @@ class ContactControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'contact-form.css');
+		$this->addJS(_THEME_JS_DIR_.'contact-form.js');
 	}
 
 	/**
@@ -256,18 +257,15 @@ class ContactControllerCore extends FrontController
 				$orders[$row['id_order']] = Tools::displayDate($date[0], $this->context->language->id);
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
-					$products[$val['product_id']] = $val['product_name'];
+					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
 			}
 
-			$orderList = '';
+			$order_tab = array();
 			foreach ($orders as $key => $val)
-				$orderList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_order')) == $key ? 'selected' : '').' >'.$key.' -- '.$val.'</option>';
-			$orderedProductList = '';
-
-			foreach ($products as $key => $val)
-				$orderedProductList .= '<option value="'.$key.'" '.((int)(Tools::getValue('id_product')) == $key ? 'selected' : '').' >'.$val.'</option>';
-			$this->context->smarty->assign('orderList', $orderList);
-			$this->context->smarty->assign('orderedProductList', $orderedProductList);
+				$order_tab[] = array('value' => $key, 'label' => $key.' -- '.$val, 'selected' => (int)(Tools::getValue('id_order')) == $key);
+							
+			$this->context->smarty->assign('orderList', $order_tab);
+			$this->context->smarty->assign('orderedProductList', $products);
 		}
 	}
 }
