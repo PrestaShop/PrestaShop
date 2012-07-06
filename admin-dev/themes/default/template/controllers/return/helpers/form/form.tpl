@@ -28,12 +28,12 @@
 
 {block name="input"}
 	{if $input.type == 'text_customer'}
-		{$customer->firstname} {$customer->lastname}
+		<span class="normal-text">{$customer->firstname} {$customer->lastname}</span>
 		<p style="clear: both">
 			<a href="{$url_customer}">{l s='View details on customer page'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
-		{$text_order}
+		<span class="normal-text">{$text_order}</span>
 		<p style="clear: both">
 			<a href="{$url_order}">{l s='View details on order page'}</a>
 		</p>
