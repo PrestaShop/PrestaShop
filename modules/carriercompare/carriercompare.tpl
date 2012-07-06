@@ -39,7 +39,7 @@
 	var txtFree = "{l s='Free!' mod='carriercompare'}";
 	//]]>
 </script>
-<form class="std" id="compare_shipping_form" method="POST" action="#" >
+<form class="std" id="compare_shipping_form" method="post" action="#" >
 	<fieldset id="compare_shipping">
 		<h3>{l s='Estimate your shipping & taxes' mod='carriercompare'}</h3>
 		

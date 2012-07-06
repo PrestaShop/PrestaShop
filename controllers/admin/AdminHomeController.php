@@ -242,8 +242,8 @@ class AdminHomeControllerCore extends AdminController
 				<h5><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.$this->l('View more').'</a> '.$this->l('Customer service').'</h5>
 				<table class="table_info_details" style="width:100%;">
 					<colgroup>
-						<col width=""></col>
-						<col width="80px"></col>
+						<col width="">
+						<col width="80px">
 					</colgroup>
 					<tr class="tr_odd">
 						<td class="td_align_left">
@@ -318,8 +318,8 @@ class AdminHomeControllerCore extends AdminController
 			<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('This month\'s activity').' </h5>
 			<table class="table_info_details" style="width:100%;">
 					<colgroup>
-						<col width=""></col>
-						<col width="80px"></col>
+						<col width="">
+						<col width="80px">
 					</colgroup>
 				<tr class="tr_odd">
 					<td class="td_align_left">

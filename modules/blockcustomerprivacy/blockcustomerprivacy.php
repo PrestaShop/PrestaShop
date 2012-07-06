@@ -82,7 +82,7 @@ class Blockcustomerprivacy extends Module
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript">id_language = Number('.$defaultLanguage.');</script>';
+			<script language="javascript" type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
 		else
 		{
 			$content .= '

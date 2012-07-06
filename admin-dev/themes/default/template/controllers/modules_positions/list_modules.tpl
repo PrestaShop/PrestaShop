@@ -72,11 +72,11 @@
 	<a name="{$hook['name']}"/>
 	<table cellpadding="0" cellspacing="0" class="table widthfull space {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
 		<colgroup>
-			<col width="10"></col>
-			<col width="30"></col>
-			<col width="40"></col>
-			<col width=""></col>
-			<col width="50"></col>
+			<col width="10">
+			<col width="30">
+			<col width="40">
+			<col width="">
+			<col width="50">
 		</colgroup>
 	<tr class="nodrag nodrop"><th colspan="5">	{if $hook['module_count'] && $can_move}
 		<input type="checkbox" id="Ghook{$hook['id_hook']}" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>

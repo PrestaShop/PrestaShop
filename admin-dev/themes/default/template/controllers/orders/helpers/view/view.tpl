@@ -121,10 +121,10 @@
 			<!-- History of status -->
 			<table cellspacing="0" cellpadding="0" class="table history-status" style="width: 100%;">
 				<colgroup>
-					<col width="1%"></col>
-					<col width=""></col>
-					<col width="20%"></col>
-					<col width="20%"></col>
+					<col width="1%">
+					<col width="">
+					<col width="20%">
+					<col width="20%">
 				</colgroup>
 			{foreach from=$history item=row key=key}
 				{if ($key == 0)}
@@ -155,7 +155,7 @@
 				{if ($customer->isGuest())}
 					{l s='This order has been placed by a guest.'}
 					{if (!Customer::customerExists($customer->email))}
-					<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
+					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
 						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform guest into customer'}" /></p>
 						{l s='This feature will generate a random password and send an e-mail to the customer'}
@@ -296,12 +296,12 @@
 				<form id="formAddPayment" method="post" action="{$current_index}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<colgroup>
-							<col width="15%"></col>
-							<col width=""></col>
-							<col width="20%"></col>
-							<col width="10%"></col>
-							<col width="10%"></col>
-							<col width="1%"></col>
+							<col width="15%">
+							<col width="">
+							<col width="20%">
+							<col width="10%">
+							<col width="10%">
+							<col width="1%">
 						</colgroup>
 						<thead>
 							<tr>
@@ -471,9 +471,9 @@
 								<td>{$line.type}</td>
 								<td>{$line.state_name}</td>
 								<td>
-									<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else if isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
+									<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
 									{if $line.can_edit}
-									<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+									<form style="display: inline;" method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
 										<span class="shipping_number_edit" style="display:none;">
 											<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
 											<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
@@ -504,13 +504,13 @@
 	<div class="container-command container-command-top-spacing">
 		<!-- Addresses -->
 		{if !$order->isVirtual()}
-			<div style="width: 49%; float:left;"></contact>
+			<div style="width: 49%; float:left;">
 				<!-- Shipping address -->
 				<fieldset>
 					<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
 					{if $can_edit}
-					<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
+					<form method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
 						<div style="margin-bottom:5px;">
 							<p>
 								<select name="id_address">
@@ -534,13 +534,13 @@
 				</fieldset>
 			</div>
 		{/if}
-		<div style="width: 49%; float:right;"></contact>
+		<div style="width: 49%; float:right;">
 			<!-- Invoice address -->
 			<fieldset>
 				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
 
 				{if $can_edit}
-				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
+				<form method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
 					<div style="margin-bottom:5px;">
 						<p>
 							<select name="id_address">
@@ -714,21 +714,21 @@
 
 			<div style="clear:both; height:15px;">&nbsp;</div>
 			<div style="float: right; width: 160px; display: none;" class="standard_refund_fields">
-			{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
-				<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
-			{/if}
-			{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateCreditSlip" style="float:none; font-weight:normal;">{l s='Generate a credit slip'}</label><br />
-				<input type="checkbox" id="generateDiscount" name="generateDiscount" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
-				<span id="spanShippingBack" style="display:none;"><input type="checkbox" id="shippingBack" name="shippingBack" class="button" />&nbsp;<label for="shippingBack" style="float:none; font-weight:normal;">{l s='Repay shipping costs'}</label><br /></span>
-			{/if}
-			{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
-				<div style="text-align:center; margin-top:5px;">
-					<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="button" style="margin-top:8px;" />
-				</div>
-			{/if}
+				{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
+					<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
+				{/if}
+				{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+					<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateCreditSlip" style="float:none; font-weight:normal;">{l s='Generate a credit slip'}</label><br />
+					<input type="checkbox" id="generateDiscount" name="generateDiscount" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
+					<span id="spanShippingBack" style="display:none;"><input type="checkbox" id="shippingBack" name="shippingBack" class="button" />&nbsp;<label for="shippingBack" style="float:none; font-weight:normal;">{l s='Repay shipping costs'}</label><br /></span>
+				{/if}
+				{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
+					<div style="text-align:center; margin-top:5px;">
+						<input type="submit" name="cancelProduct" value="{if $order->hasBeenDelivered()}{l s='Return products'}{elseif $order->hasBeenPaid()}{l s='Refund products'}{else}{l s='Cancel products'}{/if}" class="button" style="margin-top:8px;" />
+					</div>
+				{/if}
 			</div>
-			<div style="float: right; width: 160px; display: none;" class="partial_refund_fields">
+			<div style="float: right; width: 160px; display:none;" class="partial_refund_fields">
 				<div style="text-align:center; margin-top:5px;">
 					<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="button" style="margin-top:8px;" />
 				</div>
