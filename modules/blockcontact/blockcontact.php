@@ -104,7 +104,7 @@ class Blockcontact extends Module
 		return $this->display(__FILE__, 'blockcontact.tpl');
 	}
 	
-	public function hookDisplayRightColumn()
+	public function hookDisplayLeftColumn()
 	{
 		return $this->hookDisplayRightColumn();
 	}
