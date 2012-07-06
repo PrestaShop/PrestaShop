@@ -183,7 +183,7 @@
 			</tr>
 			{else}
 			<tr class="cart_total_price">
-				<td colspan="4" id="cart_voucher" class="cart_voucher">
+				<td colspan="5" id="cart_voucher" class="cart_voucher">
 				{if $voucherAllowed}
 				<div id="cart_voucher" class="table_block">
 					{if isset($errors_discount) && $errors_discount}
@@ -236,7 +236,7 @@
 			{if isset($customizedDatas.$productId.$productAttributeId)}
 				{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization'}
 					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}" class="alternate_item cart_item">
-						<td colspan="5">
+						<td colspan="4">
 							{foreach from=$customization.datas key='type' item='datas'}
 								{if $type == $CUSTOMIZE_FILE}
 									<div class="customizationUploaded">
