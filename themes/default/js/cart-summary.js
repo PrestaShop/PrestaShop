@@ -403,7 +403,8 @@ function upQuantity(id, qty)
 			+'&summary'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
-			+'&id_address_delivery='+id_address_delivery + ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+			+'&id_address_delivery='+id_address_delivery
+			+ ( (customizationId != 0) ? '&id_customization='+customizationId : '')
 			+'&qty='+qty
 			+'&token='+static_token
 			+'&allow_refresh=1',
@@ -449,21 +450,24 @@ function downQuantity(id, qty)
 	}
 	else if (qty < 0)
 		qty = -qty;
+	
 	var customizationId = 0;
 	var productId = 0;
 	var productAttributeId = 0;
 	var id_address_delivery = 0;
 	var ids = 0;
+	
+	ids = id.split('_');
+	productId = parseInt(ids[0]);
+	if (typeof(ids[1]) != 'undefined')
+		productAttributeId = parseInt(ids[1]);
+	if (typeof(ids[2]) != 'undefined')
+		customizationId = parseInt(ids[2]);
+	if (typeof(ids[3]) != 'undefined')
+		id_address_delivery = parseInt(ids[3]);
+
 	if (newVal > 0)
 	{
-		ids = id.split('_');
-		productId = parseInt(ids[0]);
-		if (typeof(ids[1]) != 'undefined')
-			productAttributeId = parseInt(ids[1]);
-		if (typeof(ids[2]) != 'undefined')
-			customizationId = parseInt(ids[2]);
-		if (typeof(ids[3]) != 'undefined')
-			id_address_delivery = parseInt(ids[3]);
 		$.ajax({
 			type: 'GET',
 			url: baseDir,
@@ -478,7 +482,8 @@ function downQuantity(id, qty)
 				+'&id_product='+productId
 				+'&ipa='+productAttributeId
 				+'&id_address_delivery='+id_address_delivery
-				+'&op=down' + ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+				+'&op=down'
+				+ ((customizationId != 0) ? '&id_customization='+customizationId : '')
 				+'&qty='+qty
 				+'&token='+static_token
 				+'&allow_refresh=1',
@@ -577,7 +582,7 @@ function updateCartSummary(json)
 			$('#cart_quantity_custom_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery)
 				.html(json.products[i].cart_quantity);
 
-			$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_customization+'_0'+']')
+			$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_customization+'_'+json.products[i].id_address_delivery+']')
 				.val(json.products[i].customization_quantity);
 		}
 
