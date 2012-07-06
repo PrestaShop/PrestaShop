@@ -107,7 +107,16 @@ function updateAddresses()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'processAddress=true&step=2&ajax=true&controller=order&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice+ '&token=' + static_token ,
+		data: {
+			processAddress: true,
+			step: 2,
+			ajax: 'true',
+			controller: 'order',
+			'multi-shipping': $('#id_address_delivery:hidden').length,
+			id_address_delivery: idAddress_delivery,
+			id_address_invoice: idAddress_invoice,
+			token: static_token
+		},
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
