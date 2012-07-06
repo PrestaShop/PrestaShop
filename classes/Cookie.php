@@ -95,7 +95,7 @@ class CookieCore
 		{
 			foreach ($shared_urls as $shared_url)
 			{
-				if ($shared_url == $out[4])
+				if ($shared_url != $out[4])
 					continue;
 				if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,3})?\..{2,3})$/Ui', $shared_url, $res))
 				{
