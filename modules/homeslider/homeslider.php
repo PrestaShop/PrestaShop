@@ -315,7 +315,7 @@ class HomeSlider extends Module
 		$this->_html .= '<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
 
 		/* Form */
-		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="POST" enctype="multipart/form-data">';
+		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">';
 
 		/* Fieldset Upload */
 		$this->_html .= '

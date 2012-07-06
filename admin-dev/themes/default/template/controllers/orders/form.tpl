@@ -991,12 +991,12 @@
 	<div>
 		<table cellspacing="0" cellpadding="0" class="table width5" id="customer_cart">
 				<colgroup>
-					<col width="50px"></col>
-					<col width=""></col>
-					<col width="90px"></col>
-					<col width="100px"></col>
-					<col width="50px"></col>
-					<col width="50px"></col>
+					<col width="50px">
+					<col width="">
+					<col width="90px">
+					<col width="100px">
+					<col width="50px">
+					<col width="50px">
 				</colgroup>
 			<thead>
 				<tr>
@@ -1043,10 +1043,10 @@
 				<h3>{l s='Carts:'}</h3>
 				<table cellspacing="0" cellpadding="0" class="table  width5">
 					<colgroup>
-						<col width="10px"></col>
-						<col width=""></col>
-						<col width="70px"></col>
-						<col width="50px"></col>
+						<col width="10px">
+						<col width="">
+						<col width="70px">
+						<col width="50px">
 					</colgroup>
 				<thead>
 					<tr>
@@ -1064,13 +1064,13 @@
 				<h3>{l s='Orders:'}</h3>
 				<table cellspacing="0" cellpadding="0" class="table  width5">
 					<colgroup>
-						<col width="10px"></col>
-						<col width="50px"></col>
-						<col width=""></col>
-						<col width="90px"></col>
-						<col width="100px"></col>
-						<col width="250px"></col>
-						<col width="50px"></col>
+						<col width="10px">
+						<col width="50px">
+						<col width="">
+						<col width="90px">
+						<col width="100px">
+						<col width="250px">
+						<col width="50px">
 					</colgroup>
 					<thead>
 						<tr>

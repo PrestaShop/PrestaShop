@@ -75,8 +75,8 @@ class GraphXmlSwfCharts extends ModuleGraphEngine
 	
 	public static function hookGraphEngine($params, $drawer)
 	{
-		return '<script language="javascript">AC_FL_RunContent = 0;</script>
-			<script language="javascript"> DetectFlashVer = 0; </script>
+		return '<script language="javascript" type="text/javascript">AC_FL_RunContent = 0;</script>
+			<script language="javascript" type="text/javascript"> DetectFlashVer = 0; </script>
 			<script src="../modules/graphxmlswfcharts/xml_swf_charts/AC_RunActiveContent.js" language="javascript"></script>
 			<script language="JavaScript" type="text/javascript">
 			<!--

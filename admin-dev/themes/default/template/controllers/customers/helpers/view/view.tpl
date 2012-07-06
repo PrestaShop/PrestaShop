@@ -92,7 +92,7 @@
 			<div>
 				{l s='This customer is registered as'} <b>{l s='guest'}</b>
 				{if !$customer_exists}
-					<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
+					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
 						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer account'}" /></p>
 						{l s='This feature generates a random password and sends an e-mail to the customer'}
@@ -161,9 +161,9 @@
 	{if $groups AND count($groups)}
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 			<colgroup>
-				<col width="10px"></col>
-				<col width=""></col>
-				<col width="70px"></col>
+				<col width="10px">
+				<col width="">
+				<col width="70px">
 			</colgroup>
 			<tr>
 				<th height="39px" class="right">{l s='ID'}</th>
@@ -192,13 +192,13 @@
 				</h3>
 				<table cellspacing="0" cellpadding="0" class="table" style="width:100%; text-align:left;">
 					<colgroup>
-						<col width="10px"></col>
-						<col width="100px"></col>
-						<col width="100px"></col>
-						<col width=""></col>
-						<col width="50px"></col>
-						<col width="80px"></col>
-						<col width="70px"></col>
+						<col width="10px">
+						<col width="100px">
+						<col width="100px">
+						<col width="">
+						<col width="50px">
+						<col width="80px">
+						<col width="70px">
 					</colgroup>
 					<tr>
 						<th height="39px" class="center">{l s='ID'}</th>
@@ -229,13 +229,13 @@
 				<h3 style="color:red;font-weight:normal;">{l s='Invalid orders:'} {$count_ko}</h3>
 				<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 					<colgroup>
-						<col width="10px"></col>
-						<col width="100px"></col>
-						<col width=""></col>
-						<col width=""></col>
-						<col width="100px"></col>
-						<col width="100px"></col>
-						<col width="52px"></col>
+						<col width="10px">
+						<col width="100px">
+						<col width="">
+						<col width="">
+						<col width="100px">
+						<col width="100px">
+						<col width="52px">
 					</colgroup>
 					<tr>
 						<th height="39px" class="center">{l s='ID'}</th>
@@ -270,10 +270,10 @@
 		<h2>{l s='Products'} ({count($products)})</h2>
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 					<colgroup>
-						<col width="50px"></col>
-						<col width=""></col>
-						<col width="60px"></col>
-						<col width="70px"></col>
+						<col width="50px">
+						<col width="">
+						<col width="60px">
+						<col width="70px">
 					</colgroup>
 			<tr>
 				<th height="39px" class="center">{l s='Date'}</th>
@@ -297,12 +297,12 @@
 	{if count($addresses)}
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 					<colgroup>
-						<col width="120px"></col>
-						<col width="120px"></col>	
-						<col width=""></col>
-						<col width="100px"></col>
-						<col width="170px"></col>
-						<col width="70px"></col>
+						<col width="120px">
+						<col width="120px">
+						<col width="">
+						<col width="100px">
+						<col width="170px">
+						<col width="70px">
 					</colgroup>
 			<tr>
 				<th height="39px">{l s='Company'}</th>
@@ -371,11 +371,11 @@
 		{if $carts AND count($carts)}
 			<table cellspacing="0" cellpadding="0" class="table" style="width:100%">
 				<colgroup>
-					<col width="50px"></col>
-					<col width="150px"></col>
-					<col width=""></col>
-					<col width="70px"></col>
-					<col width="50px"></col>
+					<col width="50px">
+					<col width="150px">
+					<col width="">
+					<col width="70px">
+					<col width="50px">
 				</colgroup>
 				<tr>
 					<th height="39px" class="center">{l s='ID'}</th>
@@ -404,9 +404,9 @@
 		<h2>{l s='Products'} ({count($interested)})</h2>
 			<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 				<colgroup>
-					<col width="10px"></col>
-					<col width=""></col>
-					<col width="50px"></col>
+					<col width="10px">
+					<col width="">
+					<col width="50px">
 				</colgroup>
 				{foreach $interested as $key => $p}
 					<tr {if $key %2}class="alt_row"{/if} style="cursor: pointer" onclick="document.location = '{$p['url']}'">
@@ -426,11 +426,11 @@
 		<h2>{l s='Last connections'}</h2>
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 				<colgroup>
-					<col width="150px"></col>
-					<col width="100px"></col>
-					<col width="100px"></col>
-					<col width=""></col>
-					<col width="150px"></col>
+					<col width="150px">
+					<col width="100px">
+					<col width="100px">
+					<col width="">
+					<col width="150px">
 				</colgroup>
 			<tr>
 				<th height="39px;">{l s='Date'}</th>

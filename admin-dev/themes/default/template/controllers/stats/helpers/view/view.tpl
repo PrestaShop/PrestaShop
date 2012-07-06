@@ -27,7 +27,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<script language="javascript">
+	<script language="javascript" type="text/javascript">
 		$(function() {
 			var btn_save_calendar = $('span[class~="process-icon-save-calendar"]').parent();
 			var btn_submit_calendar = $('#submitDatePicker');
