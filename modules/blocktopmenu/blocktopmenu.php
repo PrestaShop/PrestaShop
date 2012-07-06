@@ -209,13 +209,6 @@ class Blocktopmenu extends Module
 				<table style="margin-left: 130px;">
 					<tbody>
 						<tr>
-							<td>
-								<select multiple="multiple" id="items" style="width: 300px; height: 160px;">';
-		$this->makeMenuOption();
-		$this->_html .= '</select><br/>
-								<br/>
-								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Remove').' &gt;&gt;</a>
-							</td>
 							<td style="padding-left: 20px;">
 								<select multiple="multiple" id="availableItems" style="width: 300px; height: 160px;">';
 
@@ -279,7 +272,14 @@ class Blocktopmenu extends Module
 
 		$this->_html .= '</select><br />
 								<br />
-								<a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Add').'</a>
+								<a href="#" id="addItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">'.$this->l('Add').' &gt;&gt;</a>
+							</td>
+							<td>
+								<select multiple="multiple" id="items" style="width: 300px; height: 160px;">';
+		$this->makeMenuOption();
+		$this->_html .= '</select><br/>
+								<br/>
+								<a href="#" id="removeItem" style="border: 1px solid rgb(170, 170, 170); margin: 2px; padding: 2px; text-align: center; display: block; text-decoration: none; background-color: rgb(250, 250, 250); color: rgb(18, 52, 86);">&lt;&lt; '.$this->l('Remove').'</a>
 							</td>
 						</tr>
 					</tbody>
