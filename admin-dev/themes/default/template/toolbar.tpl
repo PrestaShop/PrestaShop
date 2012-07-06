@@ -38,7 +38,7 @@
 				{/foreach}
 			</ul>
 
-			<script language="javascript">
+			<script language="javascript" type="text/javascript">
 				$(function() {
 					//get reference on save link
 					btn_save = $('span[class~="process-icon-save"]').parent();

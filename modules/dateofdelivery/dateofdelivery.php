@@ -341,7 +341,7 @@ class DateOfDelivery extends Module
 		$this->_html .= '
 		</fieldset>
 		<br />
-		<form method="POST" action="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">
+		<form method="post" action="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">
 			<fieldset style="width:500px;">
 				<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time.png" alt="" /> '.$this->l('More options').'</legend>
 				
@@ -380,7 +380,7 @@ class DateOfDelivery extends Module
 			$carrier_rule = $this->_getCarrierRule(Tools::getValue('id_carrier_rule'));
 		
 		$this->_html .= '
-		<form method="POST" action="'.$_SERVER['REQUEST_URI'].'">
+		<form method="post" action="'.$_SERVER['REQUEST_URI'].'">
 		';
 		
 		if (isset($carrier_rule) AND $carrier_rule['id_carrier_rule'])

@@ -117,8 +117,8 @@
 					<td valign="top" style="text-align:left;vertical-align:top;">
 						<table class="table" cellpadding="0" cellspacing="0" style="width:100%;">
 								<colgroup>
-									<col width="50"></col>
-									<col></col>
+									<col width="50">
+									<col>
 								</colgroup>
 							<thead>
 								<tr>
