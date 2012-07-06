@@ -18,7 +18,7 @@
     <image_type id="thickbox" name="thickbox" width="600" height="600" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
     <image_type id="category" name="category" width="500" height="150" products="0" categories="1" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
     <image_type id="home" name="home" width="124" height="124" products="1" categories="0" manufacturers="0" suppliers="0" scenes="0" stores="0"/>
-    <image_type id="large_scene" name="large_scene" width="556" height="200" products="0" categories="0" manufacturers="0" suppliers="0" scenes="1" stores="0"/>
+    <image_type id="large_scene" name="large_scene" width="520" height="189" products="0" categories="0" manufacturers="0" suppliers="0" scenes="1" stores="0"/>
     <image_type id="thumb_scene" name="thumb_scene" width="161" height="58" products="0" categories="0" manufacturers="0" suppliers="0" scenes="1" stores="0"/>
   </entities>
 </entity_image_type>
