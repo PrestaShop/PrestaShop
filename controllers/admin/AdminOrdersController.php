@@ -715,6 +715,8 @@ class AdminOrdersControllerCore extends AdminController
 								$total += $order->total_shipping;
 
 							$cartrule->reduction_amount = $total;
+							$cartrule->minimum_amount_currency = $order->id_currency;
+							$cartrule->reduction_currency = $order->id_currency;
 
 							if (!$cartrule->add())
 								$this->errors[] = Tools::displayError('Cannot generate voucher');
@@ -722,8 +724,8 @@ class AdminOrdersControllerCore extends AdminController
 							{
 								// Update the voucher code and name
 								foreach ($languages as $language)
-									$cartrule->name[$language['id_lang']] = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
-								$cartrule->code = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
+									$cartrule->name[$language['id_lang']] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
+								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								if (!$cartrule->update())
 									$this->errors[] = Tools::displayError('Cannot generate voucher');
 								else
