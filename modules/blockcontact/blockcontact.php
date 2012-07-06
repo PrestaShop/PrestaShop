@@ -48,6 +48,7 @@ class Blockcontact extends Module
 			&& Configuration::updateValue('blockcontact_telnumber', '')
 			&& Configuration::updateValue('blockcontact_email', '')
 			&& $this->registerHook('displayRightColumn')
+			&& $this->registerHook('displayLeftColumn')
 			&& $this->registerHook('displayHeader');
 	}
 	
@@ -101,6 +102,11 @@ class Blockcontact extends Module
 			'email' => Configuration::get('blockcontact_email')
 		));
 		return $this->display(__FILE__, 'blockcontact.tpl');
+	}
+	
+	public function hookDisplayRightColumn()
+	{
+		return $this->hookDisplayRightColumn();
 	}
 }
 ?>
