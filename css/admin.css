@@ -1368,6 +1368,7 @@ html[xmlns] .clearfix {
 	font-size:16px;
 	text-align: right;
 	padding-right: 10px;
+	white-space: nowrap;
 }
 
 #table_info_large{
