@@ -470,10 +470,11 @@ class CartCore extends ObjectModel
 		if (Customization::isFeatureActive())
 		{
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
-			$sql->leftJoin('customization', 'cu', 'p.`id_product` = cu.`id_product`');
+			$sql->leftJoin('customization', 'cu',
+				'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.id_product_attribute');
 		}
 		else
-			$sql->select('0 AS customization_quantity');
+			$sql->select('0 AS customization_quantity, 0 AS id_customization');
 
 		if (Combination::isFeatureActive())
 		{
@@ -498,7 +499,6 @@ class CartCore extends ObjectModel
 				'p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`,
 				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity'
 			);
-
 		$result = Db::getInstance()->executeS($sql);
 
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
