@@ -199,6 +199,12 @@ background: -moz-linear-gradient(center top , #F9F9F9, #ECECEC) repeat-x scroll 
 	color: #7F7F7F;
 	font-size: 0.85em;
 }
+.margin-form .normal-text {
+	display: block;
+	padding-top: 0.2em;
+	font-size: 1.2em;
+	color: black;
+}
 
 fieldset.width1 .margin-form {
 	margin: 0 0 1em 130px;
