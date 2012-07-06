@@ -572,7 +572,7 @@ function updateCartSummary(json)
 
 		nbrProducts += parseInt(json.products[i].cart_quantity);
 
-		if(json.products[i].id_customization == null)
+		if(json.products[i].id_customization == null || json.products[i].id_customization == 0)
 		{
 			$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_0_'+json.products[i].id_address_delivery+']').val(json.products[i].cart_quantity);
 			$('input[name=quantity_'+json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_0_'+json.products[i].id_address_delivery+'_hidden]').val(json.products[i].cart_quantity);
