@@ -305,7 +305,7 @@ class DispatcherCore
 				}
 				else
 				{
-					$controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
+					$controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
 					if (!isset($controllers[$this->controller]))
 						$this->controller = $this->controller_not_found;
 					$controller_class = $controllers[$this->controller];
