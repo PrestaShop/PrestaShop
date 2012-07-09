@@ -2,7 +2,6 @@
 return array(
 	'informations' => array(
 		'phone' => '+33 (0)1.40.18.30.04',
-		'documentation' => 'http://doc.prestashop.com',
 		'support' => 'http://support.prestashop.com/fr/',
 	),
 	'translations' => array(
