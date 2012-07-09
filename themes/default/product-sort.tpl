@@ -44,7 +44,7 @@
 //<![CDATA[
 $(document).ready(function()
 {
-	$('#selectPrductSort').change(function()
+	$('.selectProductSort').change(function()
 	{
 		var requestSortProducts = '{$request}';
 		var splitData = $(this).val().split(':');
@@ -57,7 +57,7 @@ $(document).ready(function()
 <form id="productsSortForm" action="{$request|escape:'htmlall':'UTF-8'}">
 	<p class="select">
 		<label for="selectPrductSort">{l s='Sort by'}</label>
-		<select id="selectPrductSort">
+		<select id="selectPrductSort" class="selectProductSort">
 			<option value="{$orderbydefault|escape:'htmlall':'UTF-8'}:{$orderwaydefault|escape:'htmlall':'UTF-8'}" {if $orderby eq $orderbydefault}selected="selected"{/if}>{l s='--'}</option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc" {if $orderby eq 'price' AND $orderway eq 'asc'}selected="selected"{/if}>{l s='Price: lowest first'}</option>
