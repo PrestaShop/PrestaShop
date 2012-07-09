@@ -245,7 +245,7 @@ class DispatcherCore
 		{
 			// Dispatch front office controller
 			case self::FC_FRONT :
-				$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
+				$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/front/');
 
 				$controllers['index'] = 'IndexController';
 				if (isset($controllers['auth']))

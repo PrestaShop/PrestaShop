@@ -2368,7 +2368,7 @@ INDEX (`id_specific_price_rule_condition_group`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_risk` (
-  `id_risk` int(11) NOT NULL AUTO_INCREMENT,
+  `id_risk` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `percent` tinyint(3) NOT NULL,
   `color` varchar(32) NULL,
   PRIMARY KEY (`id_risk`)
