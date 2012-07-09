@@ -2715,7 +2715,8 @@ class AdminProductsControllerCore extends AdminController
 			'product' => $product,
 			'languages' => $this->_languages,
 			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
-			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
+			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
+			'curent_shop_url' => $this->context->shop->getBaseURL()
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();

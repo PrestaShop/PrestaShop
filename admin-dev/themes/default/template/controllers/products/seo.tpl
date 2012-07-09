@@ -87,7 +87,7 @@
 			onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;
 			{l s='Friendly URL from product name.'}<br /><br />
 			{l s='Product link will look like this:'}
-			{if $ps_ssl_enabled}https://{else}http://{/if}{$smarty.server.SERVER_NAME}{$smarty.const.__PS_BASE_URI__}{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
+			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
 		</td>
 	</tr>
 </table>
