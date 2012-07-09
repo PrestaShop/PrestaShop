@@ -225,9 +225,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			);
 
 		return $taxes_breakdown;
-
-
-		return array();
 	}
 }
 
