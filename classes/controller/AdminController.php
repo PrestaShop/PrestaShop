@@ -269,7 +269,10 @@ class AdminControllerCore extends Controller
 			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
-		$this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template');
+		$this->context->smarty->setTemplateDir(array(
+			_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
+			_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
+		));
 
 		$this->id = Tab::getIdFromClassName($this->controller_name);
 		$this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
@@ -1099,14 +1102,14 @@ class AdminControllerCore extends Controller
 
 		// Check if action template has been override
 
-		// new smarty : template_dir is an array.
-		// @todo : add override path to the smarty config, and checking all array item
-		if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$tpl_action) && $this->display != 'view' && $this->display != 'options')
-		{
-			if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
-				$this->{$this->display.Tools::toCamelCase($this->className)}();
-			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
-		}
+		foreach ($this->context->smarty->getTemplateDir() as $template_dir)
+			if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options')
+			{
+				if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
+					$this->{$this->display.Tools::toCamelCase($this->className)}();
+				$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
+				break;
+			}
 
 		if (!$this->ajax)
 		{
@@ -1448,7 +1451,8 @@ class AdminControllerCore extends Controller
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_view_vars;
-		!is_null($this->base_tpl_view) ? $helper->base_tpl = $this->base_tpl_view : '';
+		if (!is_null($this->base_tpl_view))
+			$helper->base_tpl = $this->base_tpl_view;
 		$view = $helper->generateView();
 
 		return $view;
@@ -2630,10 +2634,13 @@ class AdminControllerCore extends Controller
 	{
 		// Use override tpl if it exists
 		// If view access is denied, we want to use the default template that will be used to display an error
-		if ($this->viewAccess()
-			&& $this->override_folder
-			&& file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
-			return $this->context->smarty->createTemplate('controllers/'.$this->override_folder.$tpl_name, $this->context->smarty);
+		if ($this->viewAccess() && $this->override_folder)
+		{
+			if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
+				return $this->context->smarty->createTemplate('controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name, $this->context->smarty);
+			if (file_exists($this->context->smarty->getTemplateDir(1).DIRECTORY_SEPARATOR.$this->override_folder.$tpl_name))
+				return $this->context->smarty->createTemplate($this->override_folder.$tpl_name, $this->context->smarty);
+		}
 
 		return $this->context->smarty->createTemplate($this->context->smarty->getTemplateDir(0).$tpl_name, $this->context->smarty);
 	}
