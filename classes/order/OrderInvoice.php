@@ -321,7 +321,8 @@ class OrderInvoiceCore extends ObjectModel
 		if ($shipping_tax_amount > 0)
 			$taxes_breakdown[] = array(
 				'rate' => $order->carrier_tax_rate,
-				'total_amount' => $shipping_tax_amount
+				'total_amount' => $shipping_tax_amount,
+				'total_tax_excl' => $this->total_shipping_tax_excl
 			);
 
 		return $taxes_breakdown;
