@@ -35,17 +35,15 @@ class RiskCore extends ObjectModel
 	public $color;
 	public $percent;
 
-	protected $fieldsRequired = array('percent');
-	protected $fieldsSize = array();
-	protected $fieldsValidate = array();
-	protected $fieldsRequiredLang = array('name');
-	protected $fieldsSizeLang = array('name' => 20);
-	protected $fieldsValidateLang = array('name' => 'isString');
-
 	public static $definition = array(
 		'table' => 'risk',
 		'primary' => 'id_risk',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
+			'color' =>  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+			'percent' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt')
+		),
 	);
 
 	public function getFields()
@@ -65,9 +63,7 @@ class RiskCore extends ObjectModel
 	public function getTranslationsFieldsChild()
 	{
 		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'name',
-		));
+		return $this->getTranslationsFields(array('name'));
 	}
 
 	public static function getRisks($id_lang = null)
