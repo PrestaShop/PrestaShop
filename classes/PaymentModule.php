@@ -531,7 +531,7 @@ abstract class PaymentModuleCore extends Module
 					// So you migth have two order states
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
-					$new_history->changeIdOrderState((int)$id_order_state, (int)$order->id);
+					$new_history->changeIdOrderState((int)$id_order_state, (int)$order->id, true);
 					$new_history->addWithemail(true, $extra_vars);
 
 					unset($order_detail);

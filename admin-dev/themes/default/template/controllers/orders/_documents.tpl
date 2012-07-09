@@ -82,12 +82,12 @@
 				--
 			{else}
 				{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
-				{if $document->getGlobalRestPaid()}
+				{if $document->getTotalPaid()}
 					<span style="color:red;font-weight:bold;">
-					{if $document->getGlobalRestPaid() >= 0}
-						({displayPrice price=$document->getGlobalRestPaid() currency=$currency->id} {l s='not paid'})
-					{else}
-						({displayPrice price=-$document->getGlobalRestPaid() currency=$currency->id} {l s='overpaid'})
+					{if $document->getRestPaid() > 0}
+						({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
+					{else if $document->getRestPaid() < 0}
+						({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
 					{/if}
 					</span>
 				{/if}
