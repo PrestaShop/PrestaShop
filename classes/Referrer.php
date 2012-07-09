@@ -64,7 +64,7 @@ class ReferrerCore extends ObjectModel
 			'http_referer_like_not' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
 			'request_uri_like_not' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
 			'base_fee' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-			'percent_fee' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'percent_fee' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPercentage'),
 			'click_fee' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),

@@ -42,7 +42,7 @@ class RiskCore extends ObjectModel
 		'fields' => array(
 			'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
 			'color' =>  array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-			'percent' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt')
+			'percent' => array('type' => self::TYPE_INT, 'validate' => 'isPercentage')
 		),
 	);
 
