@@ -481,10 +481,16 @@ class OrderDetailCore extends ObjectModel
 			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
 			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-		$this->product_quantity_discount = (float)($quantityDiscount ?
-			((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ?
-				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->tax_calculator->addTaxes($quantityDiscount['price'])) :
-				0.00);
+		$this->product_quantity_discount = 0.00;
+		if ($quantityDiscount)
+		{
+			$this->product_quantity_discount = $unitPrice;
+			if (Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC)
+				$this->product_quantity_discount = Tools::ps_round($unitPrice, 2);
+
+			if (isset($this->tax_calculator))
+				$this->product_quantity_discount -= $this->tax_calculator->addTaxes($quantityDiscount['price']);
+		}
 
 		$this->discount_quantity_applied = (($this->specificPrice && $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
 	}
