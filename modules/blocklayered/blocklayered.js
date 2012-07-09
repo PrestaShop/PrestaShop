@@ -130,13 +130,19 @@ $(document).ready(function()
 		// Unbind event change on #selectPrductSort
 		$('#selectPrductSort').unbind('change');
 		$('#selectPrductSort').attr('onchange', '');
-		$('#selectPrductSort').addClass('selectPrductSort');
+		$('#selectPrductSort').addClass('selectProductSort');
 		$('#selectPrductSort').attr('id', 'selectPrductSort'+id);
 		$('label[for=selectPrductSort]').attr('for', 'selectPrductSort'+id);
 		id++;
 	}
-	$('.selectPrductSort').live('change', function(event) {
-		$('.selectPrductSort').val($(this).val());
+	
+	// Since 1.5, event is add to .selectProductSort and not to #selectPrductSort
+	setTimeout(function() {
+		$('.selectProductSort').unbind('change');
+	}, 100);
+	
+	$('.selectProductSort').live('change', function(event) {
+		$('.selectProductSort').val($(this).val());
 		reloadContent();
 	});
 	
@@ -353,20 +359,20 @@ function reloadContent(params_plus)
 		}
 	});
 	
-	if ($('.selectPrductSort').length && $('.selectPrductSort').val())
+	if ($('.selectProductSort').length && $('.selectProductSort').val())
 	{
-		if ($('.selectPrductSort').val().search(/orderby=/) > 0)
+		if ($('.selectProductSort').val().search(/orderby=/) > 0)
 		{
 			// Old ordering working
 			var splitData = [
-				$('.selectPrductSort').val().match(/orderby=(\w*)/)[1],
-				$('.selectPrductSort').val().match(/orderway=(\w*)/)[1]
+				$('.selectProductSort').val().match(/orderby=(\w*)/)[1],
+				$('.selectProductSort').val().match(/orderway=(\w*)/)[1]
 			];
 		}
 		else
 		{
 			// New working for default theme 1.4 and theme 1.5
-			var splitData = $('.selectPrductSort').val().split(':');
+			var splitData = $('.selectProductSort').val().split(':');
 		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}

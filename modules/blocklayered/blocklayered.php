@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.7';
+		$this->version = '1.8.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -1338,7 +1338,13 @@ class BlockLayered extends Module
 
 	public function hookFooter($params)
 	{
-		if (basename($_SERVER['PHP_SELF']) == 'category.php')
+		// No filters => module disable
+		if ($filter_block = $this->getFilterBlock($this->getSelectedFilters()))
+			if ($filter_block['nbr_filterBlocks'] == 0)
+				return false;
+		
+		if (basename($_SERVER['PHP_SELF']) == 'category.php' && version_compare(_PS_VERSION_, '1.5', '<')
+			|| version_compare(_PS_VERSION_, '1.5', '>') && Dispatcher::getInstance()->getController() == 'category')
 			return '
 			<script type="text/javascript">
 				//<![CDATA[
