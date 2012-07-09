@@ -97,7 +97,7 @@ class CartRuleCore extends ObjectModel
 			'product_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'shop_restriction' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'free_shipping' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'reduction_percent' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'reduction_percent' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPercentage'),
 			'reduction_amount' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'reduction_tax' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'reduction_currency' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
