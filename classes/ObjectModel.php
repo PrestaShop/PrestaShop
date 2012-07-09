@@ -200,7 +200,7 @@ abstract class ObjectModelCore
 				}
 
 				// Get shop informations
-				if (!empty($this->def['multishop']))
+				if (!empty($this->def['multishop_specific']))
 					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
 
 				Cache::store($cache_id, Db::getInstance()->getRow($sql));
@@ -258,7 +258,7 @@ abstract class ObjectModelCore
 		$fields = $this->formatFields(self::FORMAT_COMMON);
 
 		// For retro compatibility
-		if (!empty($this->def['multishop']))
+		if (!empty($this->def['multishop_specific']))
 			$fields = array_merge($fields, $this->getFieldsShop());
 
 		// Ensure that we get something to insert
@@ -446,7 +446,7 @@ abstract class ObjectModelCore
 		$this->id = Db::getInstance()->Insert_ID();
 
 		// Database insertion for multishop fields related to the object
-		if (!empty($this->def['multishop']))
+		if (!empty($this->def['multishop_specific']))
 		{
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
@@ -527,7 +527,7 @@ abstract class ObjectModelCore
 			return false;
 
 		// Database insertion for multishop fields related to the object
-		if (!empty($this->def['multishop']))
+		if (!empty($this->def['multishop_specific']))
 		{
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
@@ -630,7 +630,7 @@ abstract class ObjectModelCore
 		$result = true;
 
 		// Remove association to multishop table
-		if (!empty($this->def['multishop']))
+		if (!empty($this->def['multishop_specific']))
 		{
 			$id_shop_list = Shop::getContextListShopID();
 			if (count($this->id_shop_list))
@@ -642,7 +642,7 @@ abstract class ObjectModelCore
 			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		// Database deletion
-		$has_multishop_entries = !empty($this->def['multishop']) ? $this->hasMultishopEntries() : false;
+		$has_multishop_entries = !empty($this->def['multishop_specific']) ? $this->hasMultishopEntries() : false;
 		if ($result && !$has_multishop_entries)
 			$result &= Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
@@ -1155,7 +1155,7 @@ abstract class ObjectModelCore
 	 */
 	public function hasMultishopEntries()
 	{
-		if (empty($this->def['multishop']))
+		if (empty($this->def['multishop_specific']))
 			return false;
 
 		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
@@ -1163,7 +1163,7 @@ abstract class ObjectModelCore
 
 	public function isMultishop()
 	{
-		return !empty($this->def['multishop']) || !empty($this->def['multilang_shop']);
+		return !empty($this->def['multishop_specific']) || !empty($this->def['multilang_shop']);
 	}
 
 	public function isLangMultishop()
