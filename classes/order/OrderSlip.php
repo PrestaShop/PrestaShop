@@ -78,14 +78,21 @@ class OrderSlipCore extends ObjectModel
 
 	public function addSlipDetail($orderDetailList, $productQtyList)
 	{
-		foreach ($orderDetailList as $key => $orderDetail)
+		foreach ($orderDetailList as $key => $id_order_detail)
 		{
 			if ($qty = (int)($productQtyList[$key]))
-				Db::getInstance()->insert('order_slip_detail', array(
-					'id_order_slip' => (int)$this->id,
-					'id_order_detail' => (int)$orderDetail,
-					'product_quantity' => $qty,
-				));
+			{
+				$order_detail = new OrderDetail((int)$id_order_detail);
+
+				if (Validate::isLoadedObject($order_detail))
+					Db::getInstance()->insert('order_slip_detail', array(
+						'id_order_slip' => (int)$this->id,
+						'id_order_detail' => (int)$id_order_detail,
+						'product_quantity' => $qty,
+						'amount_tax_excl' => $order_detail->unit_price_tax_excl * $qty,
+						'amount_tax_incl' => $order_detail->unit_price_tax_incl * $qty
+					));
+			}
 		}
 	}
 
@@ -281,6 +288,5 @@ class OrderSlipCore extends ObjectModel
 			Db::getInstance()->insert('order_slip_detail', $insertOrderSlip);
 		}
 	}
-
 }
 
