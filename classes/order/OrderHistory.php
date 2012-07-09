@@ -72,8 +72,9 @@ class OrderHistoryCore extends ObjectModel
 	 *
 	 * @param int $new_order_state
 	 * @param int $id_order
+	 * @param bool $use_existing_payment
 	 */
-	public function changeIdOrderState($new_order_state, $id_order)
+	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
 	{
 		if (!$new_order_state || !$id_order)
 			return;
@@ -216,7 +217,7 @@ class OrderHistoryCore extends ObjectModel
 		$order->update();
 
 		if ($new_os->invoice && !$order->invoice_number)
-			$order->setInvoice();
+			$order->setInvoice($use_existing_payment);
 
 		// set orders as paid
 		if ($new_os->paid == 1)
