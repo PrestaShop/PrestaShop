@@ -673,11 +673,8 @@ function updateCartSummary(json)
 	$('#total_price_without_tax').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
 	$('#total_tax').html(formatCurrency(json.total_tax, currencyFormat, currencySign, currencyBlank));
 
-	if (json.total_shipping <= 0)
-		$('.cart_total_delivery').fadeOut();
-	else
+	if (json.total_shipping > 0)
 	{
-		$('.cart_total_delivery').fadeIn();
 		if (priceDisplayMethod != 0)
 		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
