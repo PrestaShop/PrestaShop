@@ -622,7 +622,7 @@ class ValidateCore
 	/**
 	 * Check for an integer validity
 	 *
-	 * @param integer $id Integer to validate
+	 * @param integer $value Integer to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isInt($value)
@@ -633,12 +633,23 @@ class ValidateCore
 	/**
 	 * Check for an integer validity (unsigned)
 	 *
-	 * @param integer $id Integer to validate
+	 * @param integer $value Integer to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isUnsignedInt($value)
 	{
 		return (preg_match('#^[0-9]+$#', (string)$value) && $value < 4294967296 && $value >= 0);
+	}
+	
+	/**
+	 * Check for an percentage validity (between 0 and 100)
+	 *
+	 * @param float $value Float to validate
+	 * @return boolean Validity is ok or not
+	 */
+	public static function isPercentage($value)
+	{
+		return (Validate::isFloat($value) && $value >= 0 && $value <= 100);
 	}
 
 	/**
