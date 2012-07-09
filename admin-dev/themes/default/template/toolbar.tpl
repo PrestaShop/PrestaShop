@@ -39,6 +39,7 @@
 			</ul>
 
 			<script language="javascript" type="text/javascript">
+				var submited = false
 				$(function() {
 					//get reference on save link
 					btn_save = $('span[class~="process-icon-save"]').parent();
@@ -82,6 +83,11 @@
 						//submit the form
 						{block name=formSubmit}
 							btn_save.click(function() {
+								// Avoid double click
+								if (submited)
+									return false;
+								submited = true;
+								
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 
