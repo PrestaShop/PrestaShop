@@ -2310,7 +2310,7 @@ class CartCore extends ObjectModel
 	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
 	{
 		if (is_null($delivery_option))
-			$delivery_option = $this->getDeliveryOption($default_country);
+			$delivery_option = $this->getDeliveryOption($default_country, false, false);
 
 		$total_shipping = 0;
 		$delivery_option_list = $this->getDeliveryOptionList();
