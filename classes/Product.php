@@ -981,15 +981,18 @@ class ProductCore extends ObjectModel
 		return count($result) > 0;
 	}
 
-	public function productAttributeExists($attributes_list, $current_product_attribute = false)
+	public function productAttributeExists($attributes_list, $current_product_attribute = false, Context $context = null)
 	{
 		if (!Combination::isFeatureActive())
 			return false;
+		if ($context === null)
+			$context = Context::getContext();
 		$result = Db::getInstance()->executeS(
 			'SELECT pac.`id_attribute`, pac.`id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute` pa
+			JOIN `'._DB_PREFIX_.'product_attribute_shop` pas ON (pas.id_product_attribute = pa.id_product_attribute)
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-			WHERE pa.`id_product` = '.(int)$this->id
+			WHERE pas.id_shop ='.(int)$context->shop->id.' AND pa.`id_product` = '.(int)$this->id
 		);
 
 		/* If something's wrong */
