@@ -41,6 +41,7 @@
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax' pdf='true'}</td>
 				</tr>
 
+				{if isset($product_tax_breakdown)}
 				{foreach $product_tax_breakdown as $rate => $product_tax_infos}
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 				 <td style="width: 30%">{l s='Products' pdf='true'}</td>
@@ -53,16 +54,20 @@
 				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
+				{/if}
 
+				{if isset($shipping_tax_breakdown)}
 				{foreach $shipping_tax_breakdown as $shipping_tax_infos}
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 				 <td style="width: 30%">{l s='Shipping' pdf='true'}</td>
 				 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
-				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}</td>
+				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
 				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
+				{/if}
 
+				{if isset($ecotax_tax_breakdown)}
 				{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
 					{if $ecotax_tax_infos.ecotax_tax_excl > 0}
 					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
@@ -73,6 +78,7 @@
 					</tr>
 					{/if}
 				{/foreach}
+				{/if}
 			</table>
 			{/if}
 		</td>

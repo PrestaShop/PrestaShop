@@ -82,6 +82,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 					SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
 					WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
 					AND `id_order_detail` = '.(int)$product['id_order_detail']);
+
 				$product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
 				$product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
 			}
@@ -107,7 +108,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod((int)$customer->id_default_group),
-			'tax_tab' => '',
+			'tax_tab' => $this->getTaxTabContent(),
 		));
 
 		return $this->smarty->fetch($this->getTemplate('order-slip'));
@@ -130,5 +131,104 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 	{
 		return 'order-slip-'.sprintf('%06d', $this->order_slip->id).'.pdf';
 	}
+
+	/**
+	 * Returns the tax tab content
+	 */
+	public function getTaxTabContent()
+	{
+		$invoice_address = new Address((int)$this->order->id_address_invoice);
+		$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
+			&& !empty($invoice_address->vat_number)
+			&& $invoice_address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+
+		$this->smarty->assign(array(
+			'tax_exempt' => $tax_exempt,
+			'use_one_after_another_method' => $this->order->useOneAfterAnotherTaxComputationMethod(),
+			'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
+			'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
+			'order' => $this->order,
+		));
+
+		return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
+	}
+
+
+	public function getProductTaxesBreakdown()
+	{
+		$tmp_tax_infos = array();
+		foreach ($this->order_slip->getOrdersSlipDetail((int)$this->order_slip->id) as $order_slip_details)
+		{
+			$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$order_slip_details['id_order_detail']);
+			$tax_amount = $tax_calculator->getTaxesAmount($order_slip_details['amount_tax_excl']);
+
+			if ($this->order->useOneAfterAnotherTaxComputationMethod())
+			{
+				foreach ($tax_amount as $tax_id => $amount)
+				{
+					$tax = new Tax((int)$tax_id);
+
+					if (!isset($total_tax_amount[$tax->rate]))
+					{
+						$tmp_tax_infos[$tax->rate]['name'] = $tax->name;
+						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] = $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[$tax->rate]['total_amount'] = $amount;
+					}
+					else
+					{
+
+						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
+					}
+				}
+			} else {
+				$infos = array(
+					'total_price_tax_excl' => 0,
+					'total_amount' => 0
+				);
+
+				$tax_rate = 0;
+
+				foreach ($tax_amount as $tax_id => $amount)
+				{
+					$tax = new Tax((int)$tax_id);
+
+					$tax_rate += $tax->rate;
+					$infos['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
+					$infos['total_amount'] += $amount;
+				}
+
+				$tmp_tax_infos[$tax_rate] = $infos;
+			}
+
+		}
+
+		return $tmp_tax_infos;
+	}
+
+	public function getShippingTaxesBreakdown()
+	{
+		$taxes_breakdown = array();
+		$tax = new Tax();
+		$tax->rate = $this->order->carrier_tax_rate;
+
+		$tax_calculator = new TaxCalculator(array($tax));
+
+		$total_tax_excl = $tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount);
+		$shipping_tax_amount = $this->order_slip->shipping_cost_amount - $total_tax_excl;
+
+		if ($shipping_tax_amount > 0)
+			$taxes_breakdown[] = array(
+				'rate' =>  $this->order->carrier_tax_rate,
+				'total_amount' => $shipping_tax_amount,
+				'total_tax_excl' => $total_tax_excl,
+			);
+
+		return $taxes_breakdown;
+
+
+		return array();
+	}
 }
+
 
