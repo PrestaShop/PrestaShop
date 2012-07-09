@@ -1070,8 +1070,8 @@ class OrderCore extends ObjectModel
 		return false;
 	}
 
-    public static function getLastInvoiceNumber()
-    {
+	public static function getLastInvoiceNumber()
+	{
 		return Db::getInstance()->getValue('
 			SELECT MAX(`number`)
 			FROM `'._DB_PREFIX_.'order_invoice`
@@ -1081,7 +1081,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * This method allows to generate first invoice of the current order
 	 */
-	public function setInvoice()
+	public function setInvoice($use_existing_payment = false)
 	{
 		if (!$this->hasInvoice())
 		{
@@ -1129,19 +1129,22 @@ class OrderCore extends ObjectModel
 				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
 			// Update order payment
-			$id_order_payment = Db::getInstance()->getValue('
-				SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
-				INNER JOIN `'._DB_PREFIX_.'orders` o
-				ON o.reference = op.order_reference
-				WHERE id_order = '.(int)$order_invoice->id_order);
-			
-			if ($id_order_payment)
-				Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
-					SET
-						`id_order_invoice` = '.(int)$order_invoice->id.',
-						`id_order_payment` = '.(int)$id_order_payment.',
-						`id_order` = '.(int)$order_invoice->id_order);
+			if ($use_existing_payment)
+			{
+				$id_order_payment = Db::getInstance()->getValue('
+					SELECT MAX(id_order_payment) FROM `'._DB_PREFIX_.'order_payment` op
+					INNER JOIN `'._DB_PREFIX_.'orders` o
+					ON o.reference = op.order_reference
+					WHERE id_order = '.(int)$order_invoice->id_order);
+				
+				if ($id_order_payment)
+					Db::getInstance()->execute('
+						INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+						SET
+							`id_order_invoice` = '.(int)$order_invoice->id.',
+							`id_order_payment` = '.(int)$id_order_payment.',
+							`id_order` = '.(int)$order_invoice->id_order);
+			}
 
 			// Update order cart rule
 			Db::getInstance()->execute('
