@@ -1036,15 +1036,19 @@ class ShopCore extends ObjectModel
 	 * @param int $id_shop
 	 * @return array|bool
 	 */
-	public static function getEntityIds($entity, $id_shop)
+	public static function getEntityIds($entity, $id_shop, $active = false, $delete = false)
 	{
 		if (!Shop::isTableAssociated($entity))
 			return false;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_'.pSQL($entity).'`
-			FROM `'._DB_PREFIX_.pSQL($entity).'_shop`
-			WHERE `id_shop` = '.(int)$id_shop
+			SELECT entity.`id_'.pSQL($entity).'`
+			FROM `'._DB_PREFIX_.pSQL($entity).'_shop`es
+			LEFT JOIN '._DB_PREFIX_.pSQL($entity).' entity
+				ON (entity.`id_'.pSQL($entity).'` = es.`id_'.pSQL($entity).'`)
+			WHERE es.`id_shop` = '.(int)$id_shop.
+			($active ? ' AND entity.`active` = 1' : '').
+			($delete ? ' AND entity.deleted = 0' : '')
 		);
 	}
 }

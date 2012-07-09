@@ -317,7 +317,7 @@ class AdminControllerCore extends Controller
 
 		$this->initShopContext();
 
-		$currency = Shop::getEntityIds('currency', $this->context->shop->id);
+		$currency = Shop::getEntityIds('currency', $this->context->shop->id, true, true);
 		$this->context->currency = new Currency($currency[0]['id_currency']);
 	}
 
