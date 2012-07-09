@@ -838,6 +838,11 @@ class AdminTranslationsControllerCore extends AdminController
 						)
 					)
 				);
+
+				// For translate the template which are overridden
+				if (file_exists(_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'))
+					$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'));
+
 				break;
 
 			case 'errors':
