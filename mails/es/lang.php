@@ -18,7 +18,6 @@ $_LANGMAIL['New message regarding your order'] = '';
 $_LANGMAIL['Your order return state has changed'] = 'El estado de retorno de su orden ha cambiado';
 $_LANGMAIL['Your new admin password'] = 'Su nueva clave de administrador';
 $_LANGMAIL['Password query confirmation'] = 'Confirmación de password';
-$_LANGMAIL['New voucher regarding your order '] = 'Nuevo bono con respecto a su orden';
 $_LANGMAIL['An answer to your message is available #ct%1$s #tc%2$s'] = '';
 $_LANGMAIL['New voucher regarding your order %s'] = 'Nuevo bono con respecto a su orden %s';
 $_LANGMAIL['Newsletter confirmation'] = '';
