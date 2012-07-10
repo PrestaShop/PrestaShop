@@ -27,10 +27,10 @@
 #product_comments_block_extra .comments_advices {clear:both;}
 
 /* pop-in add grade/advice ********************************************************************* */
-#fancybox-wrap { width:585px !important }
+#fancybox-wrap { width:585px }
 #fancybox-content {
-	width:585px !important;
-	border-width:0 !important
+	width:585px;
+	border-width:0
 }
 
 #new_comment_form {
