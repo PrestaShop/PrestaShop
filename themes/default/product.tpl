@@ -467,9 +467,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
             </tr>
         </thead>
 		<tbody>
-            <tr id="noQuantityDiscount">
-                <td colspan='3'>{l s='There is not any quantity discount for this product.'}</td>
-            </tr>
             {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
             <tr id="quantityDiscount_{$quantity_discount.id_product_attribute}">
                 <td>
@@ -481,7 +478,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
                 </td>
                 <td>{$quantity_discount.quantity|intval}</td>
                 <td>
-                    {if $quantity_discount.price != 0 OR $quantity_discount.reduction_type == 'amount'}
+                    {if $quantity_discount.price >= 0 OR $quantity_discount.reduction_type == 'amount'}
                        -{convertPrice price=$quantity_discount.real_value|floatval}
                    {else}
                        -{$quantity_discount.real_value|floatval}%
