@@ -57,7 +57,7 @@
 	</script>
 {/if}
 
-{if !$virtual_cart && $giftAllowed && $cart->gift == 1}
+{if isset($virtual_cart) && !$virtual_cart && $giftAllowed && $cart->gift == 1}
 <script type="text/javascript">
 {literal}
 // <![CDATA[
@@ -91,7 +91,7 @@
 
 <div class="order_carrier_content">
 
-{if $virtual_cart}
+{if isset($virtual_cart) && $virtual_cart}
 	<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
 {else}
 	<h3 class="carrier_title">{l s='Choose your delivery method'}</h3>
@@ -271,7 +271,7 @@
 		{else}
 				<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 		{/if}
-		{if $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
+		{if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
 			<input type="submit" name="processCarrier" value="{l s='Next'} &raquo;" class="exclusive" />
 		{/if}
 	</p>
