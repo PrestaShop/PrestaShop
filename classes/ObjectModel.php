@@ -467,16 +467,15 @@ abstract class ObjectModelCore
 		if (!$result)
 			return false;
 
-		$assos = Shop::getAssoTables();
 
 		// Database insertion for multilingual fields related to the object
 		if (!empty($this->def['multilang']))
 		{
 			$fields = $this->getFieldsLang();
-
-			// @todo : try to do something better than this
-			$shops = Shop::getCompleteListOfShopsID();
 			if ($fields && is_array($fields))
+			{
+				$shops = Shop::getCompleteListOfShopsID();
+				$asso = Shop::getAssoTable($this->def['table'].'_lang');
 				foreach ($fields as $field)
 				{
 					foreach (array_keys($field) as $key)
@@ -484,7 +483,7 @@ abstract class ObjectModelCore
 							throw new PrestaShopException('key '.$key.' is not table or identifier, ');
 					$field[$this->def['primary']] = (int)$this->id;
 
-					if (isset($assos[$this->def['table'].'_lang']) && $assos[$this->def['table'].'_lang']['type'] == 'fk_shop')
+					if ($asso !== false && $asso['type'] == 'fk_shop')
 					{
 						foreach ($shops as $id_shop)
 						{
@@ -495,6 +494,7 @@ abstract class ObjectModelCore
 					else
 						$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 				}
+			}
 		}
 
 		// @hook actionObject*AddAfter
@@ -1004,11 +1004,10 @@ abstract class ObjectModelCore
 
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
-		$assoc = Shop::getAssoTables();
-
-		if (array_key_exists($this->def['table'], $assoc))
+		$assoc = Shop::getAssoTable($this->def['table']);
+		if ($assoc !== false)
 		{
-			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc[$this->def['table']]['type']).'`
+			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc['type']).'`
 									AS multi_shop_'.bqSQL($this->def['table']).'
 									ON (main.'.bqSQL($this->def['primary']).' = multi_shop_'.bqSQL($this->def['table']).'.'.bqSQL($this->def['primary']).')';
 			$class_name = WebserviceRequest::$ws_current_classname;
