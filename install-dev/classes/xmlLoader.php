@@ -468,8 +468,8 @@ class InstallXmlLoader
 				}
 
 				// Store INSERT queries for _shop associations
-				$asso_shop = Shop::getAssoTables();
-				if (isset($asso_shop[$entity]) && $asso_shop[$entity]['type'] == 'shop')
+				$entity_asso = Shop::getAssoTable($entity);
+				if ($entity_asso !== false && $entity_asso['type'] == 'shop')
 					$this->delayed_inserts[$entity.'_shop'][] = array(
 						'id_shop' => 1,
 						'id_'.$entity => $entity_id,

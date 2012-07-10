@@ -85,44 +85,8 @@ class ShopCore extends ObjectModel
 	/** @var array List of shops cached */
 	protected static $shops;
 
-	public static $asso_tables = array(
-		'carrier' => array('type' => 'shop'),
-		'carrier_lang' => array('type' => 'fk_shop'),
-		'category' => array('type' => 'shop'),
-		'category_lang' => array('type' => 'fk_shop'),
-		'cms' => array('type' => 'shop'),
-		'contact' => array('type' => 'shop'),
-		'country' => array('type' => 'shop'),
-		'currency' => array('type' => 'shop'),
-		'employee' => array('type' => 'shop'),
-		'hook_module' => array('type' => 'fk_shop'),
-		'hook_module_exceptions' =>	array('type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'),
-		'image' => array('type' => 'shop'),
-		'lang' => array('type' => 'shop'),
-		'meta_lang' => array('type' => 'fk_shop'),
-		'module' => array('type' => 'shop'),
-		'module_currency' => array('type' => 'fk_shop'),
-		'module_country' => array('type' => 'fk_shop'),
-		'module_group' => array('type' => 'fk_shop'),
-		'product' => array('type' => 'shop'),
-		'product_attribute' => array('type' => 'shop'),
-		'product_lang' => array('type' => 'fk_shop'),
-		'referrer' => array('type' => 'shop'),
-		'scene' => array('type' => 'shop'),
-		'store' => array('type' => 'shop'),
-		'webservice_account' => array('type' => 'shop'),
-		'warehouse' => array('type' => 'shop'),
-		'stock_available' => array('type' => 'fk_shop'),
-		'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
-		'attribute' => array('type' => 'shop'),
-		'feature' => array('type' => 'shop'),
-		'group' => array('type' => 'shop'),
-		'attribute_group' => array('type' => 'shop'),
-		'tax_rules_group' => array('type' => 'shop'),
-		'zone' => array('type' => 'shop'),
-		'manufacturer' => array('type' => 'shop'),
-		'supplier' => array('type' => 'shop'),
-	);
+	protected static $asso_tables = array();
+	protected static $initialized = false;
 
 	protected $webserviceParameters = array(
 		'fields' => array(
@@ -166,6 +130,53 @@ class ShopCore extends ObjectModel
 		parent::__construct($id, $id_lang, $id_shop);
 		if ($this->id)
 			$this->setUrl();
+	}
+	
+	/**
+	 * Initialize an array with all the multistore associations in the database
+	 * You can override this method in order to add a new association
+	 */
+	protected static function init()
+	{
+		Shop::$asso_tables = array(
+			'carrier' => array('type' => 'shop'),
+			'carrier_lang' => array('type' => 'fk_shop'),
+			'category' => array('type' => 'shop'),
+			'category_lang' => array('type' => 'fk_shop'),
+			'cms' => array('type' => 'shop'),
+			'contact' => array('type' => 'shop'),
+			'country' => array('type' => 'shop'),
+			'currency' => array('type' => 'shop'),
+			'employee' => array('type' => 'shop'),
+			'hook_module' => array('type' => 'fk_shop'),
+			'hook_module_exceptions' =>	array('type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'),
+			'image' => array('type' => 'shop'),
+			'lang' => array('type' => 'shop'),
+			'meta_lang' => array('type' => 'fk_shop'),
+			'module' => array('type' => 'shop'),
+			'module_currency' => array('type' => 'fk_shop'),
+			'module_country' => array('type' => 'fk_shop'),
+			'module_group' => array('type' => 'fk_shop'),
+			'product' => array('type' => 'shop'),
+			'product_attribute' => array('type' => 'shop'),
+			'product_lang' => array('type' => 'fk_shop'),
+			'referrer' => array('type' => 'shop'),
+			'scene' => array('type' => 'shop'),
+			'store' => array('type' => 'shop'),
+			'webservice_account' => array('type' => 'shop'),
+			'warehouse' => array('type' => 'shop'),
+			'stock_available' => array('type' => 'fk_shop'),
+			'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
+			'attribute' => array('type' => 'shop'),
+			'feature' => array('type' => 'shop'),
+			'group' => array('type' => 'shop'),
+			'attribute_group' => array('type' => 'shop'),
+			'tax_rules_group' => array('type' => 'shop'),
+			'zone' => array('type' => 'shop'),
+			'manufacturer' => array('type' => 'shop'),
+			'supplier' => array('type' => 'shop'),
+		);
+		Shop::$initialized = true;
 	}
 
 	public function setUrl()
@@ -481,12 +492,26 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
+	 * Get the associated table if available
+	 *
+	 * @return array
+	 */
+	public static function getAssoTable($table)
+	{
+		if (!Shop::$initialized)
+			Shop::init();
+		return (isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false);
+	}
+
+	/**
 	 * Get list of associated tables to shop
 	 *
 	 * @return array
 	 */
 	public static function getAssoTables()
 	{
+		if (!Shop::$initialized)
+			Shop::init();
 		return Shop::$asso_tables;
 	}
 
@@ -498,6 +523,8 @@ class ShopCore extends ObjectModel
 	 */
 	public static function isTableAssociated($table)
 	{
+		if (!Shop::$initialized)
+			Shop::init();
 		return isset(Shop::$asso_tables[$table]) && Shop::$asso_tables[$table]['type'] == 'shop';
 	}
 
@@ -854,8 +881,8 @@ class ShopCore extends ObjectModel
 		if (strpos($table, '.') !== false)
 			list($table_alias, $table) = explode('.', $table);
 
-		$asso_tables = Shop::getAssoTables();
-		if (!isset($asso_tables[$table]) || $asso_tables[$table]['type'] != 'shop')
+		$asso_table = Shop::getAssoTable($table);
+		if ($asso_table === false || $asso_table['type'] != 'shop')
 			return;
 
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
