@@ -730,6 +730,7 @@
 			</div>
 			<div style="float: right; width: 160px; display:none;" class="partial_refund_fields">
 				<div style="text-align:center; margin-top:5px;">
+					<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
 					<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="button" style="margin-top:8px;" />
 				</div>
 			</div>
