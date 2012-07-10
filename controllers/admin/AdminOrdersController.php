@@ -733,7 +733,7 @@ class AdminOrdersControllerCore extends AdminController
 									$currency = $this->context->currency;
 									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order', (int)$order->id_lang),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
 									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 									null, _PS_MAIL_DIR_, true);
 								}
