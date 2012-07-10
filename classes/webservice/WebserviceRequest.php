@@ -1213,11 +1213,11 @@ class WebserviceRequestCore
 			$this->fieldsToDisplay = 'full';
 
 		// Check if Object is accessible for this/those id_shop
-		$assoc = Shop::getAssoTables();
-		if (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
+		$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+		if ($assoc !== false)
 		{
 			$sql = 'SELECT 1
-					FROM '.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type']).' ';
+					FROM '.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).' ';
 			foreach (self::$shopIDs as $id_shop)
 				$OR[] = ' id_shop = '.(int)$id_shop.' ';
 			$check = ' WHERE ('.implode('OR', $OR).') AND '.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).' = '.(int)$this->urlSegment[1];
@@ -1513,11 +1513,11 @@ class WebserviceRequestCore
 									return false;
 								}
 							}
-						$assoc = Shop::getAssoTables();
-						if (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
+						$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+						if ($assoc !== false)
 						{
 							// PUT nor POST is destructive, no deletion
-							$sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
+							$sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
 							foreach (self::$shopIDs as $id)
 							{
 								$sql .= '('.(int)$id.','.(int)$object->id.')';

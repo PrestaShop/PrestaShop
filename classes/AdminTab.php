@@ -1305,10 +1305,10 @@ abstract class AdminTabCore
 			$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
-		$assos = Shop::getAssoTables();
-		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+		$asso = Shop::getAssoTable($this->table);
+		if ($asso !== false && $assos['type'] == 'shop')
 		{
-			$filterKey = $assos[$this->table]['type'];
+			$filterKey = $asso['type'];
 			$idenfierShop = Shop::getContextListShopID();
 		}
 
