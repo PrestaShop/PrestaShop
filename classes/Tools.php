@@ -399,20 +399,8 @@ class ToolsCore
 				$context->language = $language;
 
 			$params = $_GET;
-			unset($params['id_lang']);
-
-			if (!Configuration::get('PS_REWRITING_SETTINGS'))
-			{
-				if (empty($params['controller']))
-					unset($params['controller']);
-				elseif (!empty(Context::getContext()->controller->php_self))
-					$params['controller'] = Context::getContext()->controller->php_self;
-					
-				if (empty($params))
-					Tools::redirect('index.php');
-				else
-					Tools::redirect('index.php?'.http_build_query($params));
-			}
+			if (Configuration::get('PS_REWRITING_SETTINGS') || !Language::isMultiLanguageActivated())
+				unset($params['id_lang']);
 		}
 	}
 
