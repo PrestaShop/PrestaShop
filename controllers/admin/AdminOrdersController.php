@@ -459,24 +459,76 @@ class AdminOrdersControllerCore extends AdminController
 					foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
 					{
 						$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
-						
+
 						if (empty($amount_detail))
 						{
-							$orderDetail = new OrderDetail($id_order_detail);
-							$order_detail_list[$id_order_detail]['amount'] = $orderDetail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
+							$order_detail = new OrderDetail((int)$id_order_detail);
+							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
 							$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
+
 						$amount += $order_detail_list[$id_order_detail]['amount'];
 					}
+
 					$shipping_cost_amount = (float)Tools::getValue('partialRefundShippingCost');
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
-					
+
 					if ($amount > 0)
 					{
 						if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
 							$this->errors[] = Tools::displayError('Cannot generate partial credit slip');
+
+						// Generate voucher
+						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
+						{
+							$cart_rule = new CartRule();
+							$cart_rule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$languages = Language::getLanguages(false);
+							foreach ($languages as $language)
+								// Define a temporary name
+								$cart_rule->name[$language['id_lang']] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
+
+							// Define a temporary code
+							$cart_rule->code = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
+							$cart_rule->quantity = 1;
+							$cart_rule->quantity_per_user = 1;
+
+							// Specific to the customer
+							$cart_rule->id_customer = $order->id_customer;
+							$now = time();
+							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
+							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->active = 1;
+
+							$cart_rule->reduction_amount = $amount;
+							$cart_rule->minimum_amount_currency = $order->id_currency;
+							$cart_rule->reduction_currency = $order->id_currency;
+
+							if (!$cart_rule->add())
+								$this->errors[] = Tools::displayError('Cannot generate voucher');
+							else
+							{
+								// Update the voucher code and name
+								foreach ($languages as $language)
+									$cart_rule->name[$language['id_lang']] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
+								$cart_rule->code = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
+
+								if (!$cart_rule->update())
+									$this->errors[] = Tools::displayError('Cannot generate voucher');
+								else
+								{
+									$currency = $this->context->currency;
+									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
+									$params['{voucher_num}'] = $cart_rule->code;
+									$customer = new Customer((int)$order->id_customer);
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
+										null, _PS_MAIL_DIR_, true);
+								}
+							}
+						}
 					}
 					else
 						$this->errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
