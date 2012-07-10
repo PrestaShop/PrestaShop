@@ -79,7 +79,9 @@
 									{if $module->id && isset($module->version_addons) && $module->version_addons}
 										<li><a href="{$module->options.update_url}" class="button updated"><span>{l s='Update it!'}</span></a></li>
 									{/if}
-					      			<li><a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed"><span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span></a></li>
+					      			<li>
+									      <a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed"><span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span></a>
+								      </li>
 								</ul>
 							</td>
 						</tr>
