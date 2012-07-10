@@ -735,7 +735,7 @@ class AdminOrdersControllerCore extends AdminController
 							$languages = Language::getLanguages($order);
 							foreach ($languages as $language)
 							{
-								$cartrule->description[$language['id_lang']] = $this->l('Credit Slip for order #').(int)($order->id);
+								$cartrule->description[$language['id_lang']] = sprintf($this->l('Credit Slip for order #%d'), $order->id);
 								// Define a temporary name
 								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 							}
