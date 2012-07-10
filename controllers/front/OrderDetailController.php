@@ -161,6 +161,8 @@ class OrderDetailControllerCore extends FrontController
 				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
 				Product::addCustomizationPrice($products, $customizedDatas);
 
+				OrderReturn::addReturnedQuantity($products, $order->id);
+
 				$customer = new Customer($order->id_customer);
 
 				$this->context->smarty->assign(array(
