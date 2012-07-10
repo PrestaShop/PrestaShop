@@ -143,7 +143,9 @@ class DispatcherCore
 	 * @var bool If true, use routes to build URL (mod rewrite must be activated)
 	 */
 	protected $use_routes = false;
-
+	
+	protected $multilang_activated = false;
+	
 	/**
 	 * @var array List of loaded routes
 	 */
@@ -224,6 +226,9 @@ class DispatcherCore
 		// Switch language if needed (only on front)
 		if ($this->front_controller == self::FC_FRONT)
 			Tools::switchLanguage();
+
+		if (Language::isMultiLanguageActivated())
+			$this->multilang_activated = true;
 
 		$this->loadRoutes();
 	}
@@ -616,7 +621,11 @@ class DispatcherCore
 
 			if (!empty($route['controller']))
 				$query_params['controller'] = $route['controller'];
-			$url = 'index.php?'.http_build_query(array_merge($add_params, $query_params), '', '&');
+			$query = http_build_query(array_merge($add_params, $query_params), '', '&');
+			if ($this->multilang_activated)
+				$query .= (!empty($query) ? '&' : '').'id_lang='.(int)$id_lang;
+			$url = 'index.php?'.$query;
+			
 		}
 
 		return $url.$anchor;
