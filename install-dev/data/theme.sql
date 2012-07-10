@@ -68,110 +68,271 @@ UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPDB_FIL
 UPDATE `PREFIX_configuration` SET value = '' WHERE name = 'UPGRADER_BACKUPFILES_FILENAME';
 UPDATE `PREFIX_configuration` SET value = '5' WHERE name = 'blockreinsurance_nbblocks';
 
+UPDATE `PREFIX_hook_module` SET position = 1
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'cheque')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'cheque')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionAuthentication') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionShopDataDuplication') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocklanguages')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCustomerAccountAdd') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayCustomerAccount') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsvisits')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphvisifire')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGridEngine') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'gridhtml')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumnProduct') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksharefb')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionSearch') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssearch')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryAdd') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryUpdate') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryDelete') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionAdminMetaSave') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayMyAccountBlock') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockreinsurance');
 
-TRUNCATE `PREFIX_hook_module`;
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'cheque'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'bankwire'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'moneybookers'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'cheque'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'bankwire'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'moneybookers'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewproducts'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockspecials'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockstore'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktags'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockviewed'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksupplier'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmanufacturer'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockadvertising'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo'), 8);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter'), 9);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homefeatured'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpermanentlinks'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockviewed'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksocial'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 9);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockspecials'), 10);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcurrencies'), 11);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewproducts'), 12);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo'), 13);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocklanguages'), 14);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmanufacturer'), 15);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 16);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockadvertising'), 17);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktags'), 18);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockstore'), 19);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksearch'), 20);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos'), 21);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopmenu'), 22);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts'), 22);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homefeatured'), 23);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter'), 24);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact'), 24);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksupplier'), 25);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'feeder'), 26);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionAuthentication'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionShopDataDuplication'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocklanguages'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcurrencies'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpermanentlinks'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksearch'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopmenu'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'sekeywords'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'pagesnotfound'), 8);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminOrder'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsorigin'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockreinsurance'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksocial'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksharefb'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCustomerAccountAdd'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayCustomerAccount'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsvisits'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssales'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsregistrations'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statspersonalinfos'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statslive'), 5);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsequipment'), 6);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscatalog'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestcustomers'), 8);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsorigin'), 9);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'pagesnotfound'), 10);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'sekeywords'), 11);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsproduct'), 12);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestproducts'), 13);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestvouchers'), 14);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestcategories'), 15);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestsuppliers'), 16);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscarrier'), 17);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsnewsletter'), 18);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssearch'), 19);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscheckup'), 20);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsstock'), 21);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsforecast'), 22);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphvisifire'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphxmlswfcharts'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphgooglechart'), 3);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphartichow'), 4);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGridEngine'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'gridhtml'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumnProduct'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksharefb'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumnProduct'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts'), 2);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionSearch'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssearch'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryAdd'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryUpdate'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionCategoryDelete'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'actionAdminMetaSave'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 1);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayMyAccountBlock'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts'), 1);
+UPDATE `PREFIX_hook_module` SET position = 2
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcurrencies')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssales')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphxmlswfcharts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumnProduct') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'bankwire')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'bankwire')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewproducts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktags')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homefeatured')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminOrder') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsorigin');
+
+UPDATE `PREFIX_hook_module` SET position = 3
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPayment') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'moneybookers')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayPaymentReturn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'moneybookers')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpermanentlinks')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpermanentlinks')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphgooglechart')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsregistrations');
+
+UPDATE `PREFIX_hook_module` SET position = 4
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockspecials')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockviewed')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockviewed')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksearch')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statspersonalinfos')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsGraphEngine') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'graphartichow');
+
+UPDATE `PREFIX_hook_module` SET position = 5
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksupplier')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmanufacturer')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksocial')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statslive')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksocial');
+
+UPDATE `PREFIX_hook_module` SET position = 6
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockstore')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopmenu')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsequipment')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos');
+
+UPDATE `PREFIX_hook_module` SET position = 7
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockadvertising')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcart')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'sekeywords')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksharefb')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayFooter') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsdata')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscatalog')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = '') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = '');
+
+UPDATE `PREFIX_hook_module` SET position = 8
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayTop') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'pagesnotfound')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestcustomers');
+
+UPDATE `PREFIX_hook_module` SET position = 9
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsorigin');
+
+UPDATE `PREFIX_hook_module` SET position = 10
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockspecials')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'pagesnotfound');
+
+UPDATE `PREFIX_hook_module` SET position = 11
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcurrencies')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'sekeywords');
+
+UPDATE `PREFIX_hook_module` SET position = 12
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewproducts')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsproduct');
+
+UPDATE `PREFIX_hook_module` SET position = 13
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockuserinfo')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestproducts');
+
+UPDATE `PREFIX_hook_module` SET position = 14
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocklanguages')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'displayAdminStatsModules');
+
+UPDATE `PREFIX_hook_module` SET position = 15
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmanufacturer')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestcategories');
+
+UPDATE `PREFIX_hook_module` SET position = 16
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsbestsuppliers');
+
+UPDATE `PREFIX_hook_module` SET position = 17
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockadvertising')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscarrier');
+
+UPDATE `PREFIX_hook_module` SET position = 18
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktags')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsnewsletter');
+
+UPDATE `PREFIX_hook_module` SET position = 19
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockstore')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statssearch');
+
+UPDATE `PREFIX_hook_module` SET position = 20
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksearch')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statscheckup');
+
+UPDATE `PREFIX_hook_module` SET position = 21
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontactinfos')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsstock');
+
+UPDATE `PREFIX_hook_module` SET position = 22
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopmenu')
+	OR
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayAdminStatsModules') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'statsforecast');
+
+UPDATE `PREFIX_hook_module` SET position = 23
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'favoriteproducts');
+
+UPDATE `PREFIX_hook_module` SET position = 24
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'homefeatured');
+
+UPDATE `PREFIX_hook_module` SET position = 25
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter');
+
+UPDATE `PREFIX_hook_module` SET position = 26
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact');
+
+UPDATE `PREFIX_hook_module` SET position = 27
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocksupplier');
+
+UPDATE `PREFIX_hook_module` SET position = 28
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'feeder');
+
