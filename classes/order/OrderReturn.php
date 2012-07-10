@@ -216,5 +216,31 @@ class OrderReturnCore extends ObjectModel
 			ON orsl.id_order_return_state = o.state AND orsl.id_lang = '.(int)Context::getContext()->language->id.'
 			WHERE ord.`id_order_detail` = '.(int)$id_order_detail);
 	}
+
+	/**
+	 * 
+	 * Add returned quantity to products list
+	 * @param array $products
+	 * @param int $id_order
+	 */
+	public static function addReturnedQuantity(&$products, $id_order)
+	{
+		$details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT od.id_order_detail, IFNULL(GREATEST(od.product_quantity_return, ord.product_quantity),0) as qty_returned
+			FROM ps_order_detail od
+			LEFT JOIN ps_order_return_detail ord
+			ON ord.id_order_detail = od.id_order_detail
+			WHERE od.id_order = 1'
+		);
+		if (!$details)
+			return;
+		
+		$detail_list = array();
+		foreach ($details as $detail)
+			$detail_list[$detail['id_order_detail']] = $detail;
+		
+		foreach ($products as &$product)
+			$product['qty_returned'] = $detail_list[$product['id_order_detail']]['qty_returned'];
+	}
 }
 

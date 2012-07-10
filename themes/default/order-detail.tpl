@@ -123,6 +123,9 @@
 				<th class="{if $return_allowed}item{else}first_item{/if}">{l s='Reference'}</th>
 				<th class="item">{l s='Product'}</th>
 				<th class="item">{l s='Quantity'}</th>
+				{if $order->hasProductReturned()}
+					<th class="item">{l s='Returned'}</th>
+				{/if}
 				<th class="item">{l s='Unit price'}</th>
 				<th class="last_item">{l s='Total price'}</th>
 			</tr>
@@ -130,37 +133,37 @@
 		<tfoot>
 			{if $priceDisplay && $use_tax}
 				<tr class="item">
-					<td colspan="{if $return_allowed}6{else}5{/if}">
+					<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 						{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
 					</td>
 				</tr>
 			{/if}
 			<tr class="item">
-				<td colspan="{if $return_allowed}6{else}5{/if}">
+				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 					{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
 				</td>
 			</tr>
 			{if $order->total_discounts > 0}
 			<tr class="item">
-				<td colspan="{if $return_allowed}6{else}5{/if}">
+				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 					{l s='Total vouchers:'} <span class="price-discount">{displayWtPriceWithCurrency price=$order->total_discounts currency=$currency convert=1}</span>
 				</td>
 			</tr>
 			{/if}
 			{if $order->total_wrapping > 0}
 			<tr class="item">
-				<td colspan="{if $return_allowed}6{else}5{/if}">
+				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 					{l s='Total gift-wrapping:'} <span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency}</span>
 				</td>
 			</tr>
 			{/if}
 			<tr class="item">
-				<td colspan="{if $return_allowed}6{else}5{/if}">
+				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 					{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
 				</td>
 			</tr>
 			<tr class="totalprice item">
-				<td colspan="{if $return_allowed}6{else}5{/if}">
+				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
 					{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
 				</td>
 			</tr>
@@ -184,6 +187,11 @@
 							<label for="cb_{$product.id_order_detail|intval}">{$product.product_name|escape:'htmlall':'UTF-8'}</label>
 						</td>
 						<td><input class="order_qte_input"  name="order_qte_input[{$smarty.foreach.products.index}]" type="text" size="2" value="{$product.customizationQuantityTotal|intval}" /><label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$product.customizationQuantityTotal|intval}</span></label></td>
+						{if $order->hasProductReturned()}
+							<td>
+								{$product['qty_returned']}
+							</td>
+						{/if}
 						<td>
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if $group_use_tax}
@@ -267,6 +275,11 @@
 							</label>
 						</td>
 						<td><input class="order_qte_input" name="order_qte_input[{$product.id_order_detail|intval}]" type="text" size="2" value="{$productQuantity|intval}" /><label for="cb_{$product.id_order_detail|intval}"><span class="order_qte_span editable">{$productQuantity|intval}</span></label></td>
+						{if $order->hasProductReturned()}
+							<td>
+								{$product['qty_returned']}
+							</td>
+						{/if}
 						<td>
 							<label for="cb_{$product.id_order_detail|intval}">
 							{if $group_use_tax}

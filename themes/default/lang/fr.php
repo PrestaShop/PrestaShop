@@ -397,6 +397,7 @@ $_LANG['order-detail_ec53a8c4f07baed5d8825072c89799be'] = 'État';
 $_LANG['order-detail_f4e8b53a114e5a17d051ab84d326cae5'] = 'Total frais de port';
 $_LANG['order-detail_f8617a92ba0a0a4eabee724eab7c9f48'] = 'Transporteur :';
 $_LANG['order-detail_f8f5730f2ee46b88120ff192190fb7cd'] = 'Bons de réduction :';
+$_LANG['order-detail_fdfac28b5ad628f25649d9c2eb4fc62e'] = 'Retourné';
 $_LANG['order-follow_01abfc750a0c942167651c40d088531d'] = 'n°';
 $_LANG['order-follow_0d3cfc2fe56119651ee7848f3e32d84d'] = 'Etiquette de retour';
 $_LANG['order-follow_229ca46a5d762e19a428f59449c916ad'] = 'Veuillez spécifier un motif de retour !';
