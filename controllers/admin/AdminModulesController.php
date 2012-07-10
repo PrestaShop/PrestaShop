@@ -1110,6 +1110,10 @@ class AdminModulesControllerCore extends AdminController
 				unset($modules[$km]);
 			else
 			{
+				$obj = null;
+				if ($module->onclick_option)
+					$obj = new $module->name();
+
 				// Fill module data
 				$modules[$km]->logo = '../../img/questionmark.png';
 				if (file_exists('../modules/'.$module->name.'/logo.gif'))
@@ -1121,11 +1125,19 @@ class AdminModulesControllerCore extends AdminController
 				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['update_url'] = self::$currentIndex.'&update='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
+
+				$modules[$km]->options['uninstall_onclick'] = ((!$module->onclick_option) ?
+					((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
+					$obj->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
+
 				if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0)
 					$modules[$km]->message = $this->_conf[(int)Tools::getValue('conf')];
+
+				if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0)
+
 				if (isset($modules_preferences[$modules[$km]->name]))
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
+				unset($obj);
 			}
 			unset($object);
 		}
