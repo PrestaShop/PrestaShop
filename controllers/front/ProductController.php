@@ -543,7 +543,7 @@ class ProductControllerCore extends FrontController
 		foreach ($specific_prices as $key => &$row)
 		{
 			$row['quantity'] = &$row['from_quantity'];
-			if ($row['price'] != 0) // The price may be directly set
+			if ($row['price'] >= 0) // The price may be directly set
 			{
 				$cur_price = (Product::$_taxCalculationMethod == PS_TAX_EXC ? $row['price'] : $row['price'] * (1 + $tax_rate / 100));
 
