@@ -987,6 +987,7 @@ abstract class ModuleCore
 						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
+					$item->onclick_option = false;
 					
 					$module_list[] = $item;
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
@@ -1037,6 +1038,9 @@ abstract class ModuleCore
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
+
+					// Method pointer to get dynamically the onclick content
+					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 
 					$module_list[] = $item;
 					if (!$xml_exist || $needNewConfigFile)
@@ -1107,6 +1111,7 @@ abstract class ModuleCore
 							$item->author = strip_tags((string)$modaddons->author);
 							$item->limited_countries = array();
 							$item->parent_class = '';
+							$item->onclick_option = false;
 							$item->is_configurable = 0;
 							$item->need_instance = 0;
 							$item->not_on_disk = 1;
