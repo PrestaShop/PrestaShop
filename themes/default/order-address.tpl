@@ -148,7 +148,10 @@
 		var vals = new Array();
 
 		for (var field_item in items)
+		{
+			items[field_item] = items[field_item].replace(",", "");
 			vals.push(values[items[field_item]]);
+		}
 		return vals.join(" ");
 	}
 
