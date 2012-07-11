@@ -110,7 +110,7 @@
     <country id="GL" id_zone="Europe_out_E_U" iso_code="GL" call_prefix="299" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="GI" id_zone="Europe_out_E_U" iso_code="GI" call_prefix="350" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="GP" id_zone="Central_America_Antilla" iso_code="GP" call_prefix="590" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
-    <country id="GU" id_zone="Central_America_Antilla" iso_code="GU" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
+    <country id="GU" id_zone="Oceania" iso_code="GU" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="GT" id_zone="Central_America_Antilla" iso_code="GT" call_prefix="502" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="GG" id_zone="Europe_out_E_U" iso_code="GG" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="LLN NLL" display_tax_label="1"/>
     <country id="GN" id_zone="Africa" iso_code="GN" call_prefix="224" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
