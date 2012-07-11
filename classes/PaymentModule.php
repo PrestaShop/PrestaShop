@@ -204,13 +204,13 @@ abstract class PaymentModuleCore extends Module
 					if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
 					{
 						$address = new Address($id_address);
-						$this->context->country = new Country($address->id_country, $this->context->id_lang);
+						$this->context->country = new Country($address->id_country, $this->context->cart->id_lang);
 					}
 					
 					$carrier = null;
 					if (!$this->context->cart->isVirtualCart() && isset($package['id_carrier']))
 					{
-						$carrier = new Carrier($package['id_carrier'], $this->context->language->id);
+						$carrier = new Carrier($package['id_carrier'], $this->context->cart->id_lang);
 						$order->id_carrier = (int)$carrier->id;
 						$id_carrier = (int)$carrier->id;
 					}
@@ -224,7 +224,7 @@ abstract class PaymentModuleCore extends Module
 					$order->id_address_invoice = (int)$this->context->cart->id_address_invoice;
 					$order->id_address_delivery = (int)$id_address;
 					$order->id_currency = $this->context->currency->id;
-					$order->id_lang = (int)$this->context->language->id;
+					$order->id_lang = (int)$this->context->cart->id_lang;
 					$order->id_cart = (int)$this->context->cart->id;
 					$order->reference = $reference;
 					$order->id_shop = (int)$this->context->shop->id;
