@@ -89,7 +89,7 @@ function clearLocations(n)
 function searchLocationsNear(center)
 {
 	var radius = document.getElementById('radiusSelect').value;
-	var searchUrl = baseDir+'stores.php?ajax=1&latitude=' + center.lat() + '&longitude=' + center.lng() + '&radius=' + radius;
+	var searchUrl = baseUri+'?controller=stores&ajax=1&latitude=' + center.lat() + '&longitude=' + center.lng() + '&radius=' + radius;
 	downloadUrl(searchUrl, function(data) {
 		var xml = parseXml(data);
 		var markerNodes = xml.documentElement.getElementsByTagName('marker');

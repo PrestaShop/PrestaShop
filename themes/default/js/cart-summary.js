@@ -87,7 +87,7 @@ function changeAddressDelivery(obj)
 	{
 		$.ajax({
 			type: 'GET',
-			url: baseDir,
+			url: baseUri,
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -159,7 +159,7 @@ function changeAddressDelivery(obj)
 		
 		$.ajax({
 			type: 'GET',
-			url: baseDir,
+			url: baseUri,
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -269,7 +269,7 @@ function deleteProductFromSummary(id)
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
 		type: 'GET',
-		url: baseDir,
+		url: baseUri,
 		async: true,
 		cache: false,
 		dataType: 'json',
@@ -392,7 +392,7 @@ function upQuantity(id, qty)
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
 		type: 'GET',
-		url: baseDir,
+		url: baseUri,
 		async: true,
 		cache: false,
 		dataType: 'json',
@@ -470,7 +470,7 @@ function downQuantity(id, qty)
 	{
 		$.ajax({
 			type: 'GET',
-			url: baseDir,
+			url: baseUri,
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -757,7 +757,7 @@ $(document).ready(function() {
 	$('#allow_seperated_package').live('click', function() {
 		$.ajax({
 			type: 'GET',
-			url: baseDir,
+			url: baseUri,
 			async: true,
 			cache: false,
 			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='

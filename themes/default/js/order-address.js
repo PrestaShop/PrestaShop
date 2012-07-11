@@ -103,7 +103,7 @@ function updateAddresses()
 	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : $('#id_address_invoice').val();
 	$.ajax({
 		type: 'POST',
-		url: baseDir,
+		url: baseUri,
 		async: true,
 		cache: false,
 		dataType : "json",

@@ -96,7 +96,7 @@ $(function(){ldelim}
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
-			url: baseDir + 'index.php',
+			url: baseUri,
 			async: true,
 			cache: false,
 			dataType : "json",
