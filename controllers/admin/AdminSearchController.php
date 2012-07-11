@@ -207,15 +207,15 @@ class AdminSearchControllerCore extends AdminController
 	protected function initProductList()
 	{
 		$this->show_toolbar = false;
-		$this->fields_list['products'] = (array(
+		$this->fields_list['products'] = array(
 			'id_product' => array('title' => $this->l('ID'), 'width' => 25),
 			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 			'price_tax_excl' => array('title' => $this->l('Price (tax excl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
 			'price_tax_incl' => array('title' => $this->l('Price (tax incl.)'), 'align' => 'right', 'type' => 'price', 'width' => 60),
-			'status' => array('title' => $this->l('Status'), 'align' => 'center', 'width' => 25),
-		));
+			'active' => array('title' => $this->l('Active'), 'width' => 70, 'active' => 'status', 'align' => 'center', 'type' => 'bool')
+		);
 	}
 
 	public function setMedia()
