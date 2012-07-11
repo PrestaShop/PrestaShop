@@ -30,7 +30,7 @@
 		</div>
 		<div style="width: 800px; height: 250px; background-color: #EEEEEE; margin: 0 auto; font-family: arial;">
 			<div style="float:left; margin: 25px 0 0 50px;">
-				<form action="{$smarty.server.REQUEST_URI}" method="post">
+				<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post">
 					<input type="submit" name="submitDateToday" class="button" value="{l s='Today' mod='trackingfront'}">
 					<input type="submit" name="submitDateMonth" class="button" value="{l s='Month' mod='trackingfront'}">
 					<input type="submit" name="submitDateYear" class="button" value="{l s='Year' mod='trackingfront'}">
