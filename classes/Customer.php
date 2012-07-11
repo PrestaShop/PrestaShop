@@ -730,7 +730,8 @@ class CustomerCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('SUM(op.amount)');
 		$query->from('order_payment', 'op');
-		$query->leftJoin('orders', 'o', 'op.id_order = o.id_order');
+		$query->leftJoin('order_invoice_payment', 'oip', 'op.id_order_payment = oip.id_order_payment');
+		$query->leftJoin('orders', 'o', 'oip.id_order = o.id_order');
 		$query->groupBy('o.id_customer');
 		$query->where('o.id_customer = '.(int)$this->id);
 		$total_rest = (float)Db::getInstance()->getValue($query->build());
