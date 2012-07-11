@@ -265,7 +265,7 @@ abstract class ModuleGraphCore extends Module
 			return Tools::displayError('No graph engine selected');
 		if (!Validate::isModuleName($render))
 			die(Tools::displayError());
-		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
+		if (!file_exists(dirname(__FILE__).'/../../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Graph engine selected is unavailable.');
 
 		$id_employee = (int)$context->employee->id;
@@ -287,7 +287,7 @@ abstract class ModuleGraphCore extends Module
 		$url_params['id_lang'] = $id_lang;
 		$drawer = 'drawer.php?'.http_build_query(array_map('Tools::safeOutput', $url_params), '', '&');
 
-		require_once(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php');
+		require_once(dirname(__FILE__).'/../../modules/'.$render.'/'.$render.'.php');
 		return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
 	}
 
