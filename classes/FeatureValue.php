@@ -138,7 +138,7 @@ class FeatureValueCore extends ObjectModel
 				ON (fvl.`id_feature_value` = fv.`id_feature_value`)
 			WHERE `value` = \''.pSQL($name).'\'
 				AND fv.`id_feature` = '.(int)$id_feature.'
-				AND fv.`custom` = 0
+				AND fv.`custom` = 1
 			GROUP BY fv.`id_feature_value` LIMIT 1
 		');
 
