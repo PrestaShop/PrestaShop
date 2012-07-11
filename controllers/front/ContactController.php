@@ -47,7 +47,7 @@ class ContactControllerCore extends FrontController
 				$fileAttachment['name'] = $_FILES['fileUpload']['name'];
 				$fileAttachment['mime'] = $_FILES['fileUpload']['type'];
 			}
-			$message = Tools::htmlentitiesUTF8(Tools::getValue('message'));
+			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid e-mail address');
 			else if (!$message)
@@ -109,7 +109,7 @@ class ContactControllerCore extends FrontController
 					LEFT JOIN '._DB_PREFIX_.'customer_thread cc on (cm.id_customer_thread = cc.id_customer_thread)
 					WHERE cc.id_customer_thread = '.(int)($id_customer_thread).' AND cc.id_shop = '.(int)$this->context->shop->id.'
 					ORDER BY cm.date_add DESC');
-				if ($old_message == htmlentities($message, ENT_COMPAT, 'UTF-8'))
+				if ($old_message == $message)
 				{
 					$this->context->smarty->assign('alreadySent', 1);
 					$contact->email = '';
@@ -172,7 +172,8 @@ class ContactControllerCore extends FrontController
 					{
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
-						$cm->message = htmlentities($message, ENT_COMPAT, 'UTF-8');
+						elog($message);
+						$cm->message = Tools::htmlentitiesUTF8($message);
 						if (isset($filename) && rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
 							$cm->file_name = $filename;
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
