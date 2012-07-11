@@ -321,6 +321,7 @@ $_ERRORS['774eec2772b5f57b2e13d11e1b093a4f'] = 'Aucune image trouvée pour la d�
 $_ERRORS['77ae44aa6c998166fcf1a87496278ad5'] = '(impossible de charger l\'objet)';
 $_ERRORS['77cfbabd503d856f294f28a6a0e8b8f2'] = 'La quantité n\'est pas valable.';
 $_ERRORS['780e67070a71f981346201c4810dc9d4'] = 'Vous devez saisir un montant si vous voulez créer un remboursement partiel';
+$_ERRORS['786b48fe124c77a1a1557feb4a51f384'] = 'Compte employé ne gérant plus de boutique (la boutique a été supprimé ou les permissions ont été supprimées).';
 $_ERRORS['78c46e5c6e68799668e5b0af361e8e5d'] = 'Il n\'y a pas de transporteur qui livre à certaines adresses sélectionnées.';
 $_ERRORS['78fd3fe8e01d0707107ced7ade92d23d'] = 'Une erreur est survenue lors du lien de l\'objet.';
 $_ERRORS['790198fa9161355e1d60a6c42104e430'] = 'Un compte est déjà enregistré avec cet e-mail, veuillez renseigner le mot de passe ou en demander un nouveau.';

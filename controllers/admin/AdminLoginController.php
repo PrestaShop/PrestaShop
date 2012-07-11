@@ -141,9 +141,16 @@ class AdminLoginControllerCore extends AdminController
 		{
 		 	// Find employee
 			$this->context->employee = new Employee();
-			if (!$this->context->employee->getByemail($email, $passwd))
+			$is_employee_loaded = $this->context->employee->getByemail($email, $passwd);
+			$employee_associated_shop = $this->context->employee->getAssociatedShops();
+			if (!$is_employee_loaded)
 			{
 				$this->errors[] = Tools::displayError('Employee does not exist or password is incorrect.');
+				$this->context->employee->logout();
+			}
+			elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin())
+			{
+				$this->errors[] = Tools::displayError('Employee does not manage any shop anymore (shop has been deleted or permissions have been removed).');
 				$this->context->employee->logout();
 			}
 			else
@@ -203,7 +210,7 @@ class AdminLoginControllerCore extends AdminController
 			$pwd = Tools::passwdGen();
 			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
-			
+
 			$params = array(
 				'{email}' => $employee->email,
 				'{lastname}' => $employee->lastname,
