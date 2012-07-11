@@ -1504,6 +1504,3 @@ class shopimporter extends ImportModule
 		}
 	}
 }
-
-?>
-
