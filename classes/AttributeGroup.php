@@ -157,6 +157,7 @@ class AttributeGroupCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'attribute` a
+			'.Shop::addSqlAssociation('attribute', 'a').'
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			WHERE a.`id_attribute_group` = '.(int)$id_attribute_group.'
@@ -178,6 +179,7 @@ class AttributeGroupCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'attribute_group` ag
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
 				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND `id_lang` = '.(int)$id_lang.')
 			ORDER BY `name` ASC
