@@ -98,7 +98,7 @@ class LinkCore
 			if (is_array($product) && isset($product['id_product']))
 					$product = new Product($product['id_product'], false, $id_lang);
 			else if (is_numeric($product) || !$product)
-					$product = new Product($product, false, $id_lang);
+				$product = new Product($product, false, $id_lang);
 			else
 				throw new PrestaShopException('Invalid product vars');
 		}

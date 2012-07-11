@@ -44,21 +44,21 @@
 			<p class="radio">
 				<span>{l s='Title'}</span>
 				{foreach from=$genders key=k item=gender}
-					<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id}checked="checked"{/if} />
+					<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id|intval}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id}checked="checked"{/if} />
 					<label for="id_gender{$gender->id}" class="top">{$gender->name}</label>
 				{/foreach}
 			</p>
 			<p class="required text">
 				<label for="firstname">{l s='First name'} <sup>*</sup></label>
-				<input type="text" id="firstname" name="firstname" value="{$smarty.post.firstname}" />
+				<input type="text" id="firstname" name="firstname" value="{$smarty.post.firstname|escape:'htmlall':'UTF-8'}" />
 			</p>
 			<p class="required text">
 				<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
+				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname|escape:'htmlall':'UTF-8'}" />
 			</p>
 			<p class="required text">
 				<label for="email">{l s='E-mail'} <sup>*</sup></label>
-				<input type="text" name="email" id="email" value="{$smarty.post.email}" />
+				<input type="text" name="email" id="email" value="{$smarty.post.email|escape:'htmlall':'UTF-8'}" />
 			</p>
 			<p class="required text">
 				<label for="old_passwd">{l s='Current Password'} <sup>*</sup></label>
