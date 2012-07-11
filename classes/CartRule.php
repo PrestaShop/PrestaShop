@@ -607,7 +607,7 @@ class CartRuleCore extends ObjectModel
 							break;
 						case 'categories':
 							$cartCategories = Db::getInstance()->executeS('
-							SELECT cp.quantity, cp.`id_product`, catp.`id_category`
+							SELECT cp.quantity, cp.`id_product`, cp.`id_product_attribute`, catp.`id_category`
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
@@ -617,13 +617,16 @@ class CartRuleCore extends ObjectModel
 							foreach ($cartCategories as $cartCategory)
 								if (in_array($cartCategory['id_category'], $productRule['values'])
 									// We also check that the product is not already in the matching product list, because there are doubles in the query results (when the product is in multiple categories)
-									&& !in_array($cartCategory['id_product'].'-0', $matchingProductsList))
+									&& !in_array($cartCategory['id_product'].'-'.$cartCategory['id_product_attribute'], $matchingProductsList))
 								{
 									$countMatchingProducts += $cartCategory['quantity'];
-									$matchingProductsList[] = $cartCategory['id_product'].'-0';
+									$matchingProductsList[] = $cartCategory['id_product'].'-'.$cartCategory['id_product_attribute'];
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
+							// Attribute id is not important for this filter in the global list, so the ids are replaced by 0
+							foreach ($matchingProductsList as &$matchingProduct)
+								$matchingProduct = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matchingProduct);
 							$eligibleProductsList = CartRule::array_uintersect($eligibleProductsList, $matchingProductsList);
 							break;
 						case 'manufacturers':
