@@ -309,8 +309,6 @@ class WarehouseCore extends ObjectModel
 	 */
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
-		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->id;
 
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
 		if (Pack::isPack($id_product))
@@ -321,11 +319,30 @@ class WarehouseCore extends ObjectModel
 				$res[]['id_warehouse'] = $warehouse;
 			return $res;
 		}
+		$share_stock = false;
+		if ($id_shop === null)
+		{
+			if (Shop::getContext() == Shop::CONTEXT_GROUP)
+				$shop_group = Shop::getContextShopGroup();
+			else
+				$shop_group = Context::getContext()->shop->getGroup();
+			$share_stock = $shop_group->share_stock;
+		}
+		else
+		{
+			$shop_group = Shop::getGroupFromShop($id_shop);
+			$share_stock = $shop_group['share_stock'];
+		}
+
+		if ($share_stock)
+			$ids_shop = Shop::getShops(true, (int)$shop_group->id, true);
+		else
+			$ids_shop = array((int)Context::getContext()->shop->id);
 
 		$query = new DbQuery();
 		$query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse_product_location', 'wpl');
-		$query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop = '.(int)$id_shop);
+		$query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop IN ('.implode(',', array_map('intval', $ids_shop)).')');
 		$query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);

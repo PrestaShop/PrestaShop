@@ -117,6 +117,7 @@ class ShopCore extends ObjectModel
 	 */
 	const SHARE_CUSTOMER = 'share_customer';
 	const SHARE_ORDER = 'share_order';
+	const SHARE_STOCK = 'share_stock';
 
 	/**
 	 * On shop instance, get its theme and URL data too
@@ -574,6 +575,7 @@ class ShopCore extends ObjectModel
 						'name' => 			$row['group_name'],
 						'share_customer' =>	$row['share_customer'],
 						'share_order' =>	$row['share_order'],
+						'share_stock' => $row['share_stock'],
 						'shops' => 			array(),
 					);
 

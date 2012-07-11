@@ -6,7 +6,7 @@
 	{/if}
 {/if}
 
-<form method="post" action="{$smarty.server.REQUEST_URI}">
+<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
 	<fieldset>
 		<legend>{l s='Global Configuration'}</legend>
 		
