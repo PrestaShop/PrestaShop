@@ -1120,13 +1120,13 @@ class AdminImportControllerCore extends AdminController
 					}
 					else if (is_string($value) && !empty($value))
 					{
-						$category = Category::searchByName($default_language_id, $value, true);
+						$category = Category::searchByName($default_language_id, trim($value), true);
 						if ($category['id_category'])
 							$product->id_category[] = (int)$category['id_category'];
 						else
 						{
 							$category_to_create = new Category();
-							$category_to_create->name = AdminImportController::createMultiLangField($value);
+							$category_to_create->name = AdminImportController::createMultiLangField(trim($value));
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
@@ -1151,7 +1151,7 @@ class AdminImportControllerCore extends AdminController
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
 
-			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? $product->link_rewrite[$default_language_id] : '';
+			$link_rewrite = (is_array($product->link_rewrite) && count($product->link_rewrite)) ? trim($product->link_rewrite[$default_language_id]) : '';
 
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
