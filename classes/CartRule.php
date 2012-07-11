@@ -401,27 +401,6 @@ class CartRuleCore extends ObjectModel
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
 		}
 
-		$otherCartRules = $context->cart->getCartRules();
-		if (count($otherCartRules))
-			foreach ($otherCartRules as $otherCartRule)
-			{
-				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
-					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
-				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
-				{
-					$combinable = Db::getInstance()->getValue('
-					SELECT id_cart_rule_1
-					FROM '._DB_PREFIX_.'cart_rule_combination
-					WHERE (id_cart_rule_1 = '.(int)$this->id.' AND id_cart_rule_2 = '.(int)$otherCartRule['id_cart_rule'].')
-					OR (id_cart_rule_2 = '.(int)$this->id.' AND id_cart_rule_1 = '.(int)$otherCartRule['id_cart_rule'].')');
-					if (!$combinable)
-					{
-						$cart_rule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
-						return (!$display_error) ? false : Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
-					}
-				}
-			}
-
 		// Get an intersection of the customer groups and the cart rule groups (if the customer is not logged in, the default group is 1)
 		if ($this->group_restriction)
 		{
@@ -534,6 +513,35 @@ class CartRuleCore extends ObjectModel
 			if ($cartTotal < $minimum_amount)
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
+		
+		// Check if the voucher is already in the cart of if a non compatible voucher is in the cart
+		// Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
+		$otherCartRules = $context->cart->getCartRules();
+		if (count($otherCartRules))
+			foreach ($otherCartRules as $otherCartRule)
+			{
+				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
+					return (!$display_error) ? false : Tools::displayError('This voucher is already in your cart');
+				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'] && $otherCartRule['id_cart_rule'] != $this->id)
+				{
+					$combinable = Db::getInstance()->getValue('
+					SELECT id_cart_rule_1
+					FROM '._DB_PREFIX_.'cart_rule_combination
+					WHERE (id_cart_rule_1 = '.(int)$this->id.' AND id_cart_rule_2 = '.(int)$otherCartRule['id_cart_rule'].')
+					OR (id_cart_rule_2 = '.(int)$this->id.' AND id_cart_rule_1 = '.(int)$otherCartRule['id_cart_rule'].')');
+					if (!$combinable)
+					{
+						$cart_rule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
+						// The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
+						if ($cart_rule->priority <= $this->priority)
+							return (!$display_error) ? false : Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
+						// But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
+						else
+							$context->cart->removeCartRule($cart_rule->id);
+					}
+				}
+			}
+		
 		if (!$display_error)
 			return true;
 	}
@@ -607,7 +615,9 @@ class CartRuleCore extends ObjectModel
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartCategories as $cartCategory)
-								if (in_array($cartCategory['id_category'], $productRule['values']))
+								if (in_array($cartCategory['id_category'], $productRule['values'])
+									// We also check that the product is not already in the matching product list, because there are doubles in the query results (when the product is in multiple categories)
+									&& !in_array($cartCategory['id_product'].'-0', $matchingProductsList))
 								{
 									$countMatchingProducts += $cartCategory['quantity'];
 									$matchingProductsList[] = $cartCategory['id_product'].'-0';
@@ -1060,6 +1070,7 @@ class CartRuleCore extends ObjectModel
 		ORDER BY priority');
 
 		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
+		
 		foreach ($cartRules as $cartRule)
 			if ($cartRule->checkValidity($context, false, false))
 				$context->cart->addCartRule($cartRule->id);
