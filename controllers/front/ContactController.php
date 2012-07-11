@@ -172,7 +172,6 @@ class ContactControllerCore extends FrontController
 					{
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
-						elog($message);
 						$cm->message = Tools::htmlentitiesUTF8($message);
 						if (isset($filename) && rename($_FILES['fileUpload']['tmp_name'], _PS_MODULE_DIR_.'../upload/'.$filename))
 							$cm->file_name = $filename;
