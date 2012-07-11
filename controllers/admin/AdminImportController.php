@@ -1373,8 +1373,8 @@ class AdminImportControllerCore extends AdminController
 					foreach (explode(',', $features['features']) as $single_feature)
 					{
 						$tab_feature = explode(':', $single_feature);
-						$feature_name = $tab_feature[0];
-						$feature_value = $tab_feature[1];
+						$feature_name = trim($tab_feature[0]);
+						$feature_value = trim($tab_feature[1]);
 						$position = isset($tab_feature[2]) ? $tab_feature[1]: false;
 						$id_feature = Feature::addFeatureImport($feature_name, $position);
 						$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
