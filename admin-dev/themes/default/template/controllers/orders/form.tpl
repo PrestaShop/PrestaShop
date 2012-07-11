@@ -675,7 +675,8 @@
 
 	function displaySummary(jsonSummary)
 	{
-		updateCartProducts(jsonSummary.summary.products);
+		if (jsonSummary.summary.products.length)
+			updateCartProducts(jsonSummary.summary.products);
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
 

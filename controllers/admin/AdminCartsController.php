@@ -639,7 +639,7 @@ class AdminCartsControllerCore extends AdminController
 
 	public function ajaxReturnVars()
 	{
-		$id_cart = (int)$this->context->cart->id;	
+		$id_cart = (int)$this->context->cart->id;
 		$message_content = '';
 		if ($message = Message::getMessageByCartId((int)$this->context->cart->id))
 			$message_content = $message['message'];
