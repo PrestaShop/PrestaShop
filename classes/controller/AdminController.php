@@ -1216,7 +1216,7 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if ($tab['name'] == 'Stock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+			if ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 			{
 				unset($tabs[$index]);
 				continue;
