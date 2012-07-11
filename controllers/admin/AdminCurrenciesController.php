@@ -155,6 +155,7 @@ class AdminCurrenciesControllerCore extends AdminController
 							array('key' => 2, 'name' => '0 000,00X ('.$this->l('as with Euros').')'),
 							array('key' => 3, 'name' => 'X0.000,00'),
 							array('key' => 4, 'name' => '0,000.00X'),
+							array('key' => 5, 'name' => '0 000.00X') // Added for the switzerland currency
 						),
 						'name' => 'name',
 						'id' => 'key'
@@ -286,7 +287,7 @@ class AdminCurrenciesControllerCore extends AdminController
 	 */
 	public function processExchangeRates()
 	{
-		if (!$this->errors[] = Currency::refreshCurrencies())
+		if (!$this->errors = Currency::refreshCurrencies())
 			Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$this->token);
 	}
 
