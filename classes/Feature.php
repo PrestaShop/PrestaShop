@@ -84,6 +84,7 @@ class FeatureCore extends ObjectModel
 		return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'feature` f
+			'.Shop::addSqlAssociation('feature', 'f').'
 			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
 				ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')
 			ORDER BY f.`position` ASC
