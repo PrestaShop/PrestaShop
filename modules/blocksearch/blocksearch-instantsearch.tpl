@@ -56,7 +56,6 @@
 	// ]]>
 	</script>
 {/if}
-{$blocksearch_type|elog}
 {if $ajaxsearch}
 	<script type="text/javascript">
 	// <![CDATA[
