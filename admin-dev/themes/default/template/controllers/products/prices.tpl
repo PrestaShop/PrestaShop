@@ -210,7 +210,7 @@ $(document).ready(function () {
 					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 				</span>
 			{/if}
-			<p>{l s='e.g.  per lb'}</p>
+			<p>{l s='e.g. per lb'}</p>
 		</td>
 	</tr>
 	<tr>

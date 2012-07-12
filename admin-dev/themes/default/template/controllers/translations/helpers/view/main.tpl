@@ -198,7 +198,7 @@
 			<div style="float:left;">
 				<input type="submit" value="{l s='   Copy   '}" name="submitCopyLang" class="button" style="margin:25px 0px 0px 25px;" />
 			</div>
-			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files (as indicated at Tools > Languages > Edition) must be complete to allow copying of translations'}</p>
+			<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> {l s='Language files must be complete to allow copying of translations'}</p>
 		</fieldset>
 	</form>
 {/block}

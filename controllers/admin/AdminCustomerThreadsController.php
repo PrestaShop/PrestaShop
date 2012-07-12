@@ -178,7 +178,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'desc' => $this->l('Delete message after sync. If you do not active this option, the sync will be longer'),
+						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will be longer'),
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					),
@@ -215,7 +215,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					'PS_SAV_IMAP_OPT_NOTLS' => array(
 						'title' => $this->l('IMAP options').' (/notls)',
 						'type' => 'bool',
-						'desc' => $this->l('do not use start-TLS to encrypt the session, even with servers that support it'),
+						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it'),
 						'visibility' => Shop::CONTEXT_ALL,
 					),
 				),

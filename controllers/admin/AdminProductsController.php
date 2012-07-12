@@ -345,7 +345,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
 					$this->errors[] = sprintf(
-						$this->l('File too large, maximum size allowed: %1$d kB. File size you\'re trying to upload is:  %2$d kB.'),
+						$this->l('File too large, maximum size allowed: %1$d kB. File size you\'re trying to upload is: %2$d kB.'),
 						(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
 						number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
 					);
@@ -1189,7 +1189,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$json = array(
 				'status' => 'error',
-				'message'=> $this->l('You do not have permission to delete here.')
+				'message'=> $this->l('You do not have permission to delete this.')
 			);
 
 		die(Tools::jsonEncode($json));

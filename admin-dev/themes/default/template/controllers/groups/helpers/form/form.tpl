@@ -30,7 +30,7 @@
 	{if $input['type'] == 'modules'}
 		<div style="{if !$form_id}display:none{/if}">
 			<div class="separation"></div>
-			<label>{l s='Modules restrictions:'}</label>
+			<label>{l s='Module restrictions:'}</label>
 		</div>
 	{elseif $input['type'] == 'group_discount_category'}
 		<div style="{if !$form_id}display:none{/if}">

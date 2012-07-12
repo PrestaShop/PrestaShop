@@ -1393,7 +1393,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$language_code = Tools::htmlentitiesUTF8(Language::getLanguageCodeByIso(Tools::getValue('lang')));
 		return array('language_code' => $language_code,
 					 'not_available' => addslashes(html_entity_decode($this->l('this language is not available in Google Translate\'s API'), ENT_QUOTES, 'utf-8')),
-					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests :'), ENT_QUOTES, 'utf-8'))
+					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests:'), ENT_QUOTES, 'utf-8'))
 					);
 	}
 

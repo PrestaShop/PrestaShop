@@ -59,7 +59,7 @@
 		{/if}
 
 		{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
-			<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check / uncheck all'}</b> {l s='(check boxes if you want to set a custom value for this shop or group shop context)'}
+			<input type="checkbox" style="vertical-align: text-top" onclick="checkAllMultishopDefaultValue(this)" /> <b>{l s='Check/uncheck all'}</b> {l s='(check boxes if you want to set a custom value for this shop or group shop context)'}
 			<div class="separation"></div>
 		{/if}
 

@@ -335,7 +335,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->l('Also, changing the currency or the supplier will reset the order.')
 				.'<br />'
 				.'<br />'.
-				$this->l('Finaly, please note that you can only order from one supplier at once.')
+				$this->l('Finaly, please note that you can only order from one supplier at a time.')
 			);
 			return parent::renderForm();
 		}
@@ -508,7 +508,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
 
 		// re-defines toolbar & buttons
-		$this->toolbar_title = $this->l('Stock: Supply orders templates');
+		$this->toolbar_title = $this->l('Stock: Supply order templates');
 		$this->initToolbar();
 		unset($this->toolbar_btn['new']);
 		$this->toolbar_btn['new'] = array(

@@ -29,7 +29,7 @@
 {/if}
 
 <div class="multishop-left">
-	<div class="multishop-title">{l s='Multishop tree'}</div>
+	<div class="multishop-title">{l s='Multistore tree'}</div>
 	{include file="controllers/shop/tree.tpl" selected_tree_id=$selected_tree_id}
 </div>
 <div class="multishop-right">{$content}</div>

@@ -145,7 +145,7 @@ class AdminWarehousesControllerCore extends AdminController
 		// sets the fields of the form
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Warehouse informations'),
+				'title' => $this->l('Warehouse information'),
 				'image' => '../img/admin/edit.gif'
 			),
 			'input' => array(
@@ -198,7 +198,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode / Zip Code:'),
+					'label' => $this->l('Postcode/Zip Code:'),
 					'name' => 'postcode',
 					'size' => 10,
 					'maxlength' => 12,

@@ -181,7 +181,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postcode / Zip Code'),
+					'label' => $this->l('Postal Code/Zip Code'),
 					'name' => 'postcode',
 					'size' => 6,
 					'required' => true
@@ -224,7 +224,7 @@ class AdminStoresControllerCore extends AdminController
 					'required' => true,
 					'size' => 11,
 					'maxlength' => 12,
-					'desc' => $this->l('Store coordinates (e.g. 45.265469 / -47.226478)')
+					'desc' => $this->l('Store coordinates (e.g. 45.265469/-47.226478)')
 				),
 				array(
 					'type' => 'text',
@@ -468,7 +468,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_CODE' => array(
-				'title' => $this->l('Postcode / Zip code'),
+				'title' => $this->l('Postal Code/Zip code'),
 				'validation' => 'isGenericName',
 				'size' => 6,
 				'type' => 'text'

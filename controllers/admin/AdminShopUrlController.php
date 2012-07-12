@@ -112,7 +112,7 @@ class AdminShopUrlControllerCore extends AdminController
 			);
 		else
 			$desc_virtual_uri = array(
-				$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
+				$this->l('You can use this option if you want to create a store with a URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
 				'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
 			);
 		$this->fields_form = array(
@@ -226,7 +226,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'name' => 'virtual_uri',
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: the URL rewriting (E.g. mod_rewrite for Apache) seems to be disabled. If your URL don\'t work, please check with your host provider how to activate URL rewriting.') : '',
+							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL don\'t work, please check with your host provider how to activate URL rewriting.') : '',
 						),
 						array(
 							'type' => 'text',
@@ -281,7 +281,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->show_toolbar = false;
 		if (isset($this->toolbar_btn['new']))
 			$this->toolbar_btn['new'] = array(
-				'desc' => $this->l('Add new url'),
+				'desc' => $this->l('Add new URL'),
 				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='.$this->id_shop,
 			);
 
