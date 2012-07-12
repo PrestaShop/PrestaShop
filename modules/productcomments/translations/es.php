@@ -70,6 +70,8 @@ $_MODULE['<{productcomments}prestashop>productcomments_39630ad6ee79b8653ea89194c
 $_MODULE['<{productcomments}prestashop>productcomments_a6105c0a611b41b08f1209506350279e'] = 'sí';
 $_MODULE['<{productcomments}prestashop>productcomments_7fa3b767c460b54a2be4d49030b349c7'] = 'no';
 $_MODULE['<{productcomments}prestashop>productcomments_28b3b1e564a00f572c5d4e21da986d49'] = 'Reportar Abuso';
+$_MODULE['<{productcomments}prestashop>productcomments_fbe2625bf3673be380d043a4bf873f28'] = 'Sé el primero en escribir tu opinión';
+$_MODULE['<{productcomments}prestashop>productcomments_08621d00a3a801b9159a11b8bbd69f89'] = 'No hay comentarios de clientes por ahora.';
 $_MODULE['<{productcomments}prestashop>productcomments_7966126831926ad29c528b239d69f855'] = 'Escribe tu opinión';
 $_MODULE['<{productcomments}prestashop>productcomments_b78a3223503896721cca1303f776159b'] = 'Título';
 $_MODULE['<{productcomments}prestashop>productcomments_221e705c06e231636fdbccfdd14f4d5c'] = 'Su nombre:';
@@ -77,8 +79,6 @@ $_MODULE['<{productcomments}prestashop>productcomments_70397c4b252a5168c5ec00393
 $_MODULE['<{productcomments}prestashop>productcomments_94966d90747b97d1f0f206c98a8b1ac3'] = 'Enviar';
 $_MODULE['<{productcomments}prestashop>productcomments_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'total';
 $_MODULE['<{productcomments}prestashop>productcomments_ea4788705e6873b424c65e91c2846b19'] = 'Anular';
-$_MODULE['<{productcomments}prestashop>productcomments_fbe2625bf3673be380d043a4bf873f28'] = 'Sé el primero en escribir tu opinión';
-$_MODULE['<{productcomments}prestashop>productcomments_08621d00a3a801b9159a11b8bbd69f89'] = 'No hay comentarios de clientes por ahora.';
 $_MODULE['<{productcomments}prestashop>products-comparison_8413c683b4b27cc3f4dbd4c90329d8ba'] = 'Comentarios';
 $_MODULE['<{productcomments}prestashop>products-comparison_b1897515d548a960afe49ecf66a29021'] = 'Media';
 $_MODULE['<{productcomments}prestashop>products-comparison_bc976f6c3405523cde61f63a7cbe224b'] = 'Ver las opiniones';
