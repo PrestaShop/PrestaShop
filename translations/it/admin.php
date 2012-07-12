@@ -2105,7 +2105,6 @@ $_LANGADM['AdminOrders8b3e7bc0ed634c2bc8ac54a4cc2e781f'] = 'Imposta modulo di pa
 $_LANGADM['AdminOrders8c489d0946f66d17d73f26366a4bf620'] = 'Peso';
 $_LANGADM['AdminOrders8d4ac0e8c6f5900930ddfccd45d10abf'] = 'sovra pagato';
 $_LANGADM['AdminOrders8dbeff84ff37f5b38d4d36428fb7d193'] = 'Se non selezioni la “spedizione gratuita” verrà applicato il costo normale di spedizione';
-$_LANGADM['AdminOrders8dc37fa41770bf7b2f26078b94a035c2'] = 'Nota di credito riguardante l\'ordine n.%d';
 $_LANGADM['AdminOrders8ed07686e8486f87c4e0d491b0949904'] = 'Combinazione';
 $_LANGADM['AdminOrders90bf4568676d012fc21b3556fbd0303b'] = 'Duplica quest\'ordine';
 $_LANGADM['AdminOrders914419aa32f04011357d3b604a86d7eb'] = 'Corriere';
