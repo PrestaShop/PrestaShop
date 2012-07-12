@@ -113,7 +113,7 @@
 					</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 10%">{l s='Discount' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
-					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">
+					<td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: {if !$tax_excluded_display}15%{else}25%{/if}">
 						{l s='Total' pdf='true'}
 						{if $tax_excluded_display}
 							{l s='(Tax Excl.)' pdf='true'}
@@ -150,7 +150,7 @@
 					{/if}
 					</td>
 					<td style="text-align: center; width: 10%">{$order_detail.product_quantity}</td>
-					<td style="width: 15%; text-align: right;  width: 15%">
+					<td style="width: 15%; text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}">
 					{if $tax_excluded_display}
 						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
 					{else}

@@ -989,9 +989,21 @@ class CarrierCore extends ObjectModel
 	 */
 	public function getTaxesRate(Address $address)
 	{
-		$tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
-		$tax_calculator = $tax_manager->getTaxCalculator();
+		$tax_calculator = $this->getTaxCalculator($address);
 		return $tax_calculator->getTotalRate();
+	}
+
+	/**
+	 * Returns the taxes calculator associated to the carrier
+	 *
+	 * @since 1.5
+	 * @param Address $address
+	 * @return
+	 */
+	public function getTaxCalculator(Address $address)
+	{
+		$tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
+		return $tax_manager->getTaxCalculator();
 	}
 
 	/**

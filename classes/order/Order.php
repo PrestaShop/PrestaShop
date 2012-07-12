@@ -1104,9 +1104,13 @@ class OrderCore extends ObjectModel
 			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER');
 			// If invoice start number has been set, you clean the value of this configuration
 			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
+				Configuration::updateValue('PS_INVOICE_START_NUMBER', false	);
 			else
 				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
+
+			$invoice_address = new Address((int)$this->id_address_invoice);
+			$carrier = new Carrier((int)$this->id_carrier);
+			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
 
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
@@ -1116,11 +1120,14 @@ class OrderCore extends ObjectModel
 			$order_invoice->total_products_wt = $this->total_products_wt;
 			$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
 			$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+			$order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
 			$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
 			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
 			// Save Order invoice
 			$order_invoice->add();
+
+			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
 			// Update order_carrier
 			$id_order_carrier = Db::getInstance()->getValue('
