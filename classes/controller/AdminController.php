@@ -2105,9 +2105,9 @@ class AdminControllerCore extends Controller
 						{
 							if ($obj->id)
 							{
-									$result = Shop::getShopById((int)$obj->id, $this->identifier, $this->table);
+								$result = Shop::getShopById((int)$obj->id, $this->identifier, $this->table);
 								foreach ($result as $row)
-									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row[$this->identifier];
+									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row['id_shop'];
 							}
 						}
 						elseif (isset($input['lang']) && $input['lang'])
@@ -2363,10 +2363,8 @@ class AdminControllerCore extends Controller
 
 		$assos = array();
 		if (Tools::isSubmit('checkBoxShopAsso_'.$table))
-		{
 			foreach (Tools::getValue('checkBoxShopAsso_'.$table) as $id_shop => $value)
 				$assos[] = (int)$id_shop;
-		}
 		else if (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
 			$assos[] = (int)Shop::getContextShopID();
 		return $assos;
