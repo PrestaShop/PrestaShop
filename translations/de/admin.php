@@ -3013,7 +3013,6 @@ $_LANGADM['AdminSearchce0597223b8d14a32c3fef3f4150c6f1'] = 'Zu Ihrer Suche passe
 $_LANGADM['AdminSearchd1457b72c3fb323a2671125aef3eab5d'] = '?';
 $_LANGADM['AdminSearche192956d901dff59c35fd2c477ed28d6'] = 'Preis (exkl. MwSt.)';
 $_LANGADM['AdminSearcheb6b06cab0dd72e04c4da68d511facf2'] = 'Suchergebnisse';
-$_LANGADM['AdminSearchec53a8c4f07baed5d8825072c89799be'] = 'Status';
 $_LANGADM['AdminSearchee0ac58cd02ccd3dddd46202c4d8257f'] = 'Kategorien treffen auf Ihre Anfrage zu';
 $_LANGADM['AdminShipping006300efaf063e1705dd614ea0ae9e8b'] = 'Kosten';
 $_LANGADM['AdminShipping01b6e20344b68835c5ed1ddedf20d531'] = 'Empfänger';

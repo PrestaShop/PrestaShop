@@ -70,5 +70,5 @@ $_MODULE['<{productcomments}prestashop>products-comparison_b1897515d548a960afe49
 $_MODULE['<{productcomments}prestashop>products-comparison_bc976f6c3405523cde61f63a7cbe224b'] = 'Kommentare ansehen';
 $_MODULE['<{productcomments}prestashop>tab_8413c683b4b27cc3f4dbd4c90329d8ba'] = 'Kommentare';
 $_MODULE['<{productcomments}prestashop>default_dfbe69c6d9568ecb0e65e7b32ed92a3a'] = 'Produkt nicht gefunden';
-$_MODULE['<{productcomments}prestashop>default_6d28f2900adb9e500868166f6d04da92'] = 'Sie sollten';
+$_MODULE['<{productcomments}prestashop>default_6d28f2900adb9e500868166f6d04da92'] = 'Sie sollten ';
 $_MODULE['<{productcomments}prestashop>default_ba8d7ae5dcadfba739f28a777378f208'] = 'Sekunden warten, bevor Sie einen neuen Kommentar posten';
