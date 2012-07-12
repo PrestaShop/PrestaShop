@@ -240,7 +240,8 @@ class OrderReturnCore extends ObjectModel
 			$detail_list[$detail['id_order_detail']] = $detail;
 		
 		foreach ($products as &$product)
-			$product['qty_returned'] = $detail_list[$product['id_order_detail']]['qty_returned'];
+			if (isset($detail_list[$product['id_order_detail']]['qty_returned']))
+				$product['qty_returned'] = $detail_list[$product['id_order_detail']]['qty_returned'];
 	}
 }
 
