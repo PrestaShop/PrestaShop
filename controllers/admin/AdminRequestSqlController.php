@@ -452,7 +452,7 @@ class AdminRequestSqlControllerCore extends AdminController
 								$e[$key]['attribut'][1]
 							);
 						else
-							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must be referenced to a table.');
+							$this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer to a table.');
 				break;
 
 				case 'testedRequired':
@@ -460,7 +460,7 @@ class AdminRequestSqlControllerCore extends AdminController
 					break;
 
 				case 'testedUnauthorized':
-						$this->errors[] = sprintf(Tools::displayError('is a unauthorized keyword.'), $e[$key]);
+						$this->errors[] = sprintf(Tools::displayError('is an unauthorized keyword.'), $e[$key]);
 				break;
 			}
 		}

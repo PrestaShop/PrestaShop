@@ -421,7 +421,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 								if (!$country->checkZipCode($zip_code))
 								{
 									$this->errors[] = sprintf(
-										Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
 										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
 									);
 								}
