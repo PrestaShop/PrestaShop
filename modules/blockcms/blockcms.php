@@ -687,6 +687,7 @@ class BlockCms extends Module
 		$this->smarty->assign(
 			array(
 				'block' => 0,
+				'contact_url' => 'contact',
 				'cmslinks' => $cms_titles,
 				'display_stores_footer' => $display_footer,
 				'display_poweredby' => ((int)$display_poweredby === 1 || $display_poweredby === false),
