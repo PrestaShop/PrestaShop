@@ -1617,6 +1617,10 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
+				$invoice_address = new Address((int)$order->id_address_invoice);
+				$carrier = new Carrier((int)$order->id_carrier);
+				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
+
 				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
 				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -1626,6 +1630,7 @@ class AdminOrdersControllerCore extends AdminController
 
 				$order_invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+				$order_invoice->shipping_tax_computation_method = (int)$tax_calculator->computation_method;
 
 				// Update current order field, only shipping because other field is updated later
 				$order->total_shipping += $order_invoice->total_shipping_tax_incl;
@@ -1636,6 +1641,8 @@ class AdminOrdersControllerCore extends AdminController
 				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->add();
+
+				$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
 				$order_carrier = new OrderCarrier();
 				$order_carrier->id_order = (int)$order->id;

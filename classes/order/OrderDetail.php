@@ -132,6 +132,9 @@ class OrderDetailCore extends ObjectModel
 	/** @var float $tax_rate **/
 	public $tax_rate;
 
+	/** @var float $tax_computation_method **/
+	public $tax_computation_method;
+
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
@@ -176,6 +179,7 @@ class OrderDetailCore extends ObjectModel
 			'product_weight' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'tax_name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'tax_rate' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'tax_computation_method' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'ecotax' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'ecotax_tax_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'discount_quantity_applied' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -403,13 +407,14 @@ class OrderDetailCore extends ObjectModel
 
 			$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
 			$this->tax_calculator = $tax_manager->getTaxCalculator();
+			$this->tax_computation_method = (int)$this->tax_calculator->computation_method;
 		}
 
 		$this->ecotax_tax_rate = 0;
 		if (!empty($product['ecotax']))
 			$this->ecotax_tax_rate = Tax::getProductEcotaxRate($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-		$this->tax_computation_method = (int)$this->tax_calculator->computation_method;
+
 	}
 
 	/**
