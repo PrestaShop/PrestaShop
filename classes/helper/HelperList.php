@@ -341,7 +341,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_duplicate.tpl');
 		if (!array_key_exists('Bad SQL query', self::$cache_lang))
-			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
+			self::$cache_lang['Duplicate'] = $this->l('Bad SQL query', 'Helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
 			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'Helper');

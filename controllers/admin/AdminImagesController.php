@@ -189,7 +189,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for product images'),
+					'desc' => $this->l('This type will be used for Product images'),
 					'values' => array(
 						array(
 							'id' => 'products_on',
@@ -273,7 +273,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for scene images'),
+					'desc' => $this->l('This type will be used for Scene images'),
 					'values' => array(
 						array(
 							'id' => 'scenes_on',
@@ -324,7 +324,7 @@ class AdminImagesControllerCore extends AdminController
 		// When moving images, if duplicate images were found they are moved to a folder named duplicates/
 		if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
 		{
-			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. It is likely caused by unused demonstration images. Please make sure that the folder ').
+			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder ').
 				_PS_PROD_IMG_DIR_.'duplicates/'.
 				$this->l('only contains demonstration images, and then delete this folder.');
 		}

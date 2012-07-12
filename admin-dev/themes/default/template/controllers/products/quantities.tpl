@@ -34,7 +34,7 @@
 		<p>{l s='You can manually specify the quantities for the product/each product combination, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 		<br/>
-		<p>{l s='For packs, if it has products that use the advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
+		<p>{l s='For packs, if it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
 		<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
 	</div>
 	<br />
@@ -83,7 +83,7 @@
 						<label style="float:none;font-weight:normal" for="depends_on_stock_1">
 							{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} 
 							{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack}
-							&nbsp;-&nbsp;<b>{l s='This requires you to enable the advanced stock management globally or for this product.'}</b>
+							&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management globally or for this product.'}</b>
 							{else if $product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
 							{/if}

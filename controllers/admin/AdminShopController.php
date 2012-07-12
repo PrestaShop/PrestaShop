@@ -340,9 +340,9 @@ class AdminShopControllerCore extends AdminController
 			}
 
 			if ($this->display == 'add')
-				$group_desc = $this->l('Warning: you won\'t be able to change the group of this shop if this shop belong to a group with one of these options "share customers" or "share quantities" or "share orders" activated.');
+				$group_desc = $this->l('Warning: you won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders');
 			else
-				$group_desc = $this->l('You can only move your shop to a shop group with all "share" options disabled or to a shop group with no customers / orders.');
+				$group_desc = $this->l('You can only move your shop to a shop group with all "share" options disabled or to a shop group with no customers/orders.');
 
 			$this->fields_form['input'][] = array(
 				'type' => 'select',

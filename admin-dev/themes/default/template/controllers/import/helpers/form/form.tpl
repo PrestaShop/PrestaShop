@@ -211,7 +211,7 @@
 	</div>
 
 	<div class="clear">
-		<br /><br />{l s='* Required field'}
+		<br /><br />{l s='*Required field'}
 	</div>
 
 </fieldset>

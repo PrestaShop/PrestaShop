@@ -77,7 +77,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_B2B_ENABLE' => array(
 						'title' => $this->l('Enable B2B mode'),
-						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled some B2B features are available.'),
+						'desc' => $this->l('Activate or deactivate B2B mode. When this option is enabled, some B2B features are available.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

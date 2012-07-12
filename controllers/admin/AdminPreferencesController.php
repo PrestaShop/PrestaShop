@@ -81,14 +81,14 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Display suppliers and manufacturers list even if corresponding blocks are disabled'),
+					'desc' => $this->l('Display suppliers and manufacturers lists even if corresponding blocks are disabled'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'
 				),
 				'PS_MULTISHOP_FEATURE_ACTIVE' => array(
-					'title' => $this->l('Enable multishop'),
-					'desc' => $this->l('Multishop feature allows you to manage several shops with one back-office. If this feature is enabled, a tab "multishop" will be available in "advanced parameters" menu.'),
+					'title' => $this->l('Enable Multistore'),
+					'desc' => $this->l('Multistore feature allows you to manage several shops with one back-office. If this feature is enabled, a "Multistore" tab will be available in the "Advanced Parameters" menu.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',

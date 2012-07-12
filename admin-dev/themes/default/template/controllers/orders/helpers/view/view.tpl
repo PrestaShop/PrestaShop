@@ -211,7 +211,7 @@
 						<thead>
 							<tr>
 								<th width="10%">
-									{l s='Order n°'}
+									{l s='Order no.'}
 								</th>
 								<th>
 									{l s='Status'}
