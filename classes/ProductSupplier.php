@@ -221,6 +221,7 @@ class ProductSupplierCore extends ObjectModel
 		$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute);
 		$query->where('id_supplier = '.(int)$id_supplier);
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+		return $row['price_te'];
 	}
 }
