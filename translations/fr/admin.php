@@ -4276,6 +4276,7 @@ $_LANGADM['Helperdd8921b41e0279a02c6a26a509241700'] = 'résultat(s)';
 $_LANGADM['Helpere12167aa0a7698e6ebc92b4ce3909b53'] = 'À';
 $_LANGADM['Helpere54b38290c8bdd95e8bc10412c9cc096'] = 'Champs requis';
 $_LANGADM['Helpereca60ae8611369fe28a02e2ab8c5d12e'] = 'Octobre';
+$_LANGADM['Helpered75712b0eb1913c28a3872731ffd48d'] = 'Copier';
 $_LANGADM['Helperee77ea46b0c548ed60eadf31bdd68613'] = 'Mauvaise requête SQL';
 $_LANGADM['Helperee9b2f3cf31c23c944b15fb0b33d6a77'] = 'Nom du champ';
 $_LANGADM['Helperef7de3f485174ff47f061ad27d83d0ee'] = 'sélectionné';
