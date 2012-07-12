@@ -483,14 +483,14 @@ class AuthControllerCore extends FrontController
 				{
 					if (!$country->checkZipCode($postcode))
 						$this->errors[] = sprintf(
-							Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+							Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
 							str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
 						);
 				}
 				elseif ($country->zip_code_format)
-					$this->errors[] = Tools::displayError('Zip / Postal code is required.');
+					$this->errors[] = Tools::displayError('Zip/Postal code is required.');
 				elseif ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Zip / Postal code is invalid.');
+					$this->errors[] = Tools::displayError('Zip/Postal code is invalid.');
 			}
 
 			if ($country->need_identification_number && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))

@@ -350,14 +350,14 @@ class AdminAddressesControllerCore extends AdminController
 				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.').'<br />'.
+					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.
 									   Tools::displayError('Must be typed as follows:').' '.
 									   str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
 			}
 			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Postcode / Zip code required.');
+				$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = Tools::displayError('Your Postcode / Zip code code is incorrect.');
+				$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
 		}
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)

@@ -64,7 +64,7 @@ class GuestTrackingControllerCore extends FrontController
 			else if (Customer::customerExists($email, false, true))
 			{
 				$this->errors[] = Tools::displayError('Your guest account has already been transformed into a customer account.').' '.
-					Tools::displayError('Please log-in to your customer account to view this order, this section is reserved for guest accounts');
+					Tools::displayError('Please login to your customer account to view this order, this section is reserved for guest accounts');
 				$this->context->smarty->assign('show_login_link', true);
 			}
 			else if (!Validate::isLoadedObject($order))
