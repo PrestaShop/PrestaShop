@@ -149,7 +149,7 @@ class AdminMetaControllerCore extends AdminController
 			}
 		}
 		else
-			$shop_url_options['description'] = $this->l('Multishop option is enabled, if you want to change the url of your shop you have to go in "Advanced parameters" -> "multishop" tab.');
+			$shop_url_options['description'] = $this->l('Multistore option is enabled, if you want to change the URL of your shop you have to go to "Advanced Parameters" -> "Multistore" tab.');
 
 		// List of options
 		$this->fields_options = array(

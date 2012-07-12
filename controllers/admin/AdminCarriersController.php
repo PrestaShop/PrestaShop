@@ -172,7 +172,7 @@ class AdminCarriersControllerCore extends AdminController
 				<li>'.$this->l('Click "Add new."').'</li>
 				<li>'.
 					$this->l('Select the name of the carrier and define the price range or the weight range.').' '.
-					$this->l('For example, the carrier can be made available for a weight range between 0 and 5lbs. Another carrier will have a range between 5 and 10lbs.').'
+					$this->l('For example, the carrier can be made available for a weight range between 0 and 5lbs. Another carrier can have a range between 5 and 10lbs.').'
 				</li>
 				<li>'.$this->l('When you are done, click "Save."').'</li>
 				<li>'.$this->l('Click on the "Shipping" tab.').'</li>

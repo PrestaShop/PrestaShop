@@ -75,7 +75,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_GUEST_CHECKOUT_ENABLED' => array(
 						'title' => $this->l('Enable guest checkout'),
-						'desc' => $this->l('Guest can place an order without registering'),
+						'desc' => $this->l('Guests can place an order without registering'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

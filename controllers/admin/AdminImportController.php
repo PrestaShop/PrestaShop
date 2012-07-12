@@ -139,7 +139,7 @@ class AdminImportControllerCore extends AdminController
 					),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
 					)
 				);
 
@@ -178,7 +178,7 @@ class AdminImportControllerCore extends AdminController
 					'image' => array('label' => $this->l('Image URL')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
 					),
 				);
 
@@ -240,7 +240,7 @@ class AdminImportControllerCore extends AdminController
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
 					)
 				);
 
@@ -279,7 +279,7 @@ class AdminImportControllerCore extends AdminController
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
 					),
 				);
 
@@ -352,7 +352,7 @@ class AdminImportControllerCore extends AdminController
 					'meta_description' => array('label' => $this->l('Meta-description')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of group shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the multishop tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
 					),
 				);
 
@@ -410,7 +410,7 @@ class AdminImportControllerCore extends AdminController
 						'supply_order_reference' => array('label' => $this->l('Supply Order Reference *')),
 						'id_product' => array('label' => $this->l('Product ID *')),
 						'id_product_attribute' => array('label' => $this->l('Product Attribute ID')),
-						'unit_price_te' => array('label' => $this->l('Unit Price (tax excl.) *')),
+						'unit_price_te' => array('label' => $this->l('Unit Price (tax excl.)*')),
 						'quantity_expected' => array('label' => $this->l('Quantity Expected *')),
 						'discount_rate' => array('label' => $this->l('Discount Rate')),
 						'tax_rate' => array('label' => $this->l('Tax Rate')),
