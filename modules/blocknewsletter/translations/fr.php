@@ -11,7 +11,7 @@ $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f4f70727dc34561dfde1a3c52
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a3399c10bd24eba0b78fbd595c51f81a'] = 'Afficher la configuration dans une nouvelle page ?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a6105c0a611b41b08f1209506350279e'] = 'Oui';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_7fa3b767c460b54a2be4d49030b349c7'] = 'Non';
-$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b3312ef4387a841f89a86a49774cc17f'] = 'Envoyer un e-mail de vérification après inscription ?';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_4437dee7020b48ab33333611ab16a7d9'] = 'Envoyer un e-mail de vérification après inscription ?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b68ae6efae2fca059754c27ff94494cd'] = 'Envoyer un e-mail de confirmation après inscription ?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_506e58042922bff5bd753dc612e84f5b'] = 'Code de réduction offert';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_de3bd7faad12c79178b1b22bf6119e35'] = 'Laissez vide pour désactiver';

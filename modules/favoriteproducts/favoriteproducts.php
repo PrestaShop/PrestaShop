@@ -41,7 +41,7 @@ class FavoriteProducts extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Favorite Products');
-		$this->description = $this->l('Display a page with the favorite products of the customer');
+		$this->description = $this->l('Display a page with the customer\'s favorite products');
 	}
 
 	public function install()

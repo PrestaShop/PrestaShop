@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_ac50afdeca5a62e1c47c3f216ec7638a'] = 'Blocco rassicurativo';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_0b65f7c6060801bc4ef8ac49eecf44d2'] = 'Blocco rassicurativo';
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_0cdd94b6a03ddcd4014822a822b675eb'] = 'Aggiungi un blocco per visualizzaare maggiori informazioni per rassicurare I tuoi clienti.';
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_31c78485b2a9d9151e0cde196934aad8'] = 'Errore durante il salvataggio';
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configurazione aggiornata';

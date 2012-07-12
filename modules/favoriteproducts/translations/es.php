@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{favoriteproducts}prestashop>favoriteproducts_c249aeb21294d5e97598462b550e73eb'] = 'Productos favoritos';
-$_MODULE['<{favoriteproducts}prestashop>favoriteproducts_0db149d6f1284b51aa48c72dd1b0e7c6'] = 'Mostrar una página con los productos favoritos de los clientes';
+$_MODULE['<{favoriteproducts}prestashop>favoriteproducts_ca4857eef17c282ca5633f90accc8de6'] = 'Mostrar una página con los productos favoritos de los clientes';
 $_MODULE['<{favoriteproducts}prestashop>favoriteproducts-account_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mi cuenta';
 $_MODULE['<{favoriteproducts}prestashop>favoriteproducts-account_a34e0796b9c15d09300f67d972379722'] = 'Mis productos favoritos';
 $_MODULE['<{favoriteproducts}prestashop>favoriteproducts-account_e2233f8a7cec20324ed48bc32ec98a5d'] = 'No hay producto favorito.';
