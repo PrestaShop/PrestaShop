@@ -141,6 +141,9 @@ class OrderDetailCore extends ObjectModel
     /** @var float additional shipping price tax incl */
     public $total_shipping_price_tax_incl;
 
+	/** @var float */
+	public $purchase_supplier_price;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -183,6 +186,7 @@ class OrderDetailCore extends ObjectModel
 			'unit_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'purchase_supplier_price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 		),
 	);
 
