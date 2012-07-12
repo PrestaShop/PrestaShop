@@ -45,7 +45,7 @@
 	{else}
 		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box">
-				<p class="bold">{l s='Transform your guest account to a customer account and enjoy:'}</p>
+				<p class="bold">{l s='Transform your guest account into a customer account and enjoy:'}</p>
 				<ul class="bullet">
 					<li>{l s='Personalized and secure access'}</li>
 					<li>{l s='Fast and easy check out'}</li>
