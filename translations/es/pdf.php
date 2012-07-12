@@ -43,7 +43,6 @@ $_LANGPDF['PDF716be2c7de31f063369ca297a9928403'] = 'Impuestos';
 $_LANGPDF['PDF7521172dd37ba56442ea866ac18eb49d'] = 'Antes de descuento';
 $_LANGPDF['PDF752ab8bad7c2e2d894ffa7f2b4f59919'] = 'Número de retorno';
 $_LANGPDF['PDF77c48b105700c87484e3008ca52a8e57'] = '(Descuento incluido)';
-$_LANGPDF['PDF77fd2b4393b379bedd30efcd5df02090'] = 'Reintegro parcial';
 $_LANGPDF['PDF7926243ab60a08b15932021bf108c578'] = 'Producto Total (Sin IVA).';
 $_LANGPDF['PDF88be9ea838e21273267409d76af3b284'] = 'Hemos aceptado su solicitud de devolución.';
 $_LANGPDF['PDF8a5a12ba783d8cbb761974430d0a4d6a'] = 'Fecha de pedido';
