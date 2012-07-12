@@ -12,6 +12,7 @@ $_LANGMAIL['Fwd: Customer message'] = 'TR: Message d\'un client';
 $_LANGMAIL['Your guest account has been transformed to customer account'] = 'Votre compte invité a été transformé en compte client';
 $_LANGMAIL['Package in transit'] = 'Livraison en cours';
 $_LANGMAIL['Log: You have a new alert from your shop'] = 'Log : Vous avez un nouveau message d\'alerte dans votre boutique';
+$_LANGMAIL['Your order has been changed'] = 'Votre commande a été modifiée';
 $_LANGMAIL['Order confirmation'] = 'Confirmation de commande';
 $_LANGMAIL['Message from a customer'] = 'Message d\'un client';
 $_LANGMAIL['New message regarding your order'] = 'Nouveau message concernant votre commande';

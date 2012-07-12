@@ -975,6 +975,20 @@ class OrderCore extends ObjectModel
 		}
 		return $return;
 	}
+	
+	/**
+	 * Get order customer
+	 * 
+	 * @return Customer $customer
+	 */
+	public function getCustomer()
+	{
+		static $customer = null;
+		if (is_null($customer))
+			$customer = new Customer((int)$this->id_customer);
+		
+		return $customer;
+	}
 
 	/**
 	 * Get customer orders number
