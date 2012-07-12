@@ -71,4 +71,5 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_cc5d90569e1c8313c2b1c2aab14
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_eca60ae8611369fe28a02e2ab8c5d12e'] = 'Ottobre';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7e823b37564da492ca1629b4732289a8'] = 'Novembre';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_82331503174acbae012b2004f6431fa5'] = 'Dicembre';
+$_MODULE['<{dateofdelivery}prestashop>orderdetail_32dfb655a7b12a2c5662516e82f5d79b'] = 'La data di consegna è compresa tra %1$s e %2$s';
 $_MODULE['<{dateofdelivery}prestashop>orderdetail_c9ed8c0b07828727ca6653924b0498d3'] = 'con i metodi di pagamento diretto (es.: carta di credito)';

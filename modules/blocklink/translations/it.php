@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blocklink}prestashop>blocklink_fc738410141e4ec0c0319a81255a1431'] = 'Blocco link ';
+$_MODULE['<{blocklink}prestashop>blocklink_fc738410141e4ec0c0319a81255a1431'] = 'Blocco link';
 $_MODULE['<{blocklink}prestashop>blocklink_baa2ae9622a47c3217d725d1537e5187'] = 'Aggiunge un blocco con ulteriori link';
 $_MODULE['<{blocklink}prestashop>blocklink_d98d5daaf408b77b05a2eeb6ae88d6df'] = 'Sei sicuro di voler eliminare tutti i link?';
 $_MODULE['<{blocklink}prestashop>blocklink_fe3f38c46c80813d94b6775299e59f13'] = 'Devi compilare tutti i campi';

@@ -753,6 +753,7 @@ $_FIELDS['SupplyOrderState_30be61a711b92146f960c758c1c87b05'] = 'Bolla di conseg
 $_FIELDS['SupplyOrderState_70dda5dfb8053dc6d1c492574bce9bfd'] = 'colore';
 $_FIELDS['SupplyOrderState_96a0b060692f1f1777bc751fa218b1b9'] = 'in attesa del ricevimento';
 $_FIELDS['SupplyOrderState_b068931cc450442b63f5b3d276ea4297'] = 'cognome';
+$_FIELDS['SupplyOrderState_b5ff27191bbc46ce08b2ae0723b50ba4'] = 'stato ricevuta';
 $_FIELDS['SupplyOrderState_c08f3b51b2949ac06328b3d6126a1d2b'] = 'Chiuso';
 $_FIELDS['SupplyOrderState_eb80977a0fce4f1284d341ca1331e700'] = 'Modificabile.';
 $_FIELDS['SupplyOrder_2241013f64d89954e85e6285f0c6b85b'] = 'ID della lingua';
