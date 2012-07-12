@@ -1266,7 +1266,7 @@ class AdminImportControllerCore extends AdminController
 					$specific_price->id_currency = 0;
 					$specific_price->id_country = 0;
 					$specific_price->id_group = 0;
-					$specific_price->price = 0.00;
+					$specific_price->price = -1;
 					$specific_price->id_customer = 0;
 					$specific_price->from_quantity = 1;
 					$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
