@@ -37,7 +37,9 @@
 				<tr style="line-height:5px;">
 					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 30%">{l s='Tax Detail' pdf='true'}</td>
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Tax Rate' pdf='true'}</td>
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax Excl' pdf='true'}</td>
+					{if !$use_one_after_another_method}
+						<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax Excl' pdf='true'}</td>
+					{/if}
 					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax' pdf='true'}</td>
 				</tr>
 
@@ -46,11 +48,11 @@
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 				 <td style="width: 30%">{l s='Products' pdf='true'}</td>
 				 <td style="width: 20%; text-align: right;">{$rate} %</td>
-				 <td style="width: 20%; text-align: right;">
 				{if !$use_one_after_another_method}
+				 <td style="width: 20%; text-align: right;">
 					 {displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
-				{/if}
 				 </td>
+				{/if}
 				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
@@ -61,7 +63,9 @@
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 				 <td style="width: 30%">{l s='Shipping' pdf='true'}</td>
 				 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
-				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
+ 				{if !$use_one_after_another_method}
+					 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
+				{/if}
 				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
@@ -73,7 +77,9 @@
 					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 						<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
 						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
-						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+						{if !$use_one_after_another_method}
+							<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+						{/if}
 						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
 					</tr>
 					{/if}
