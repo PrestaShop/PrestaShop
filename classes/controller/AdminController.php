@@ -1572,7 +1572,7 @@ class AdminControllerCore extends Controller
 	public function setMedia()
 	{
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
-		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.str_ireplace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
