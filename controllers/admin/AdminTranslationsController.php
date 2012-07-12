@@ -307,7 +307,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->redirect();
 		}
 		else
-			throw new PrestaShopException(sprintf(Tools::displayError('Cannot write this file : "%s"'), $file_path));
+			throw new PrestaShopException(sprintf(Tools::displayError('Cannot write this file: "%s"'), $file_path));
 	}
 
 	public function submitCopyLang()

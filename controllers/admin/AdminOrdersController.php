@@ -385,7 +385,7 @@ class AdminOrdersControllerCore extends AdminController
 								$this->errors[] = sprintf(Tools::displayError('field %s is required.'), $field);
 					foreach ($rules['size'] as $field => $maxLength)
 						if (Tools::getValue($field) && Tools::strlen(Tools::getValue($field)) > $maxLength)
-							$this->errors[] = sprintf(Tools::displayError('field %1$s is too long. (%2$d chars max)'), $field, $maxLength);
+							$this->errors[] = sprintf(Tools::displayError('field %1$s is too long (%2$d chars max).'), $field, $maxLength);
 					foreach ($rules['validate'] as $field => $function)
 						if (Tools::getValue($field))
 							if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8')))

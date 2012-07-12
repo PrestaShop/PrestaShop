@@ -151,15 +151,15 @@ class AddressControllerCore extends FrontController
 			{
 				if (!$country->checkZipCode($postcode))
 					$this->errors[] = sprintf(
-						Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+						Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
 						str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
 					);
 			}
 			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Zip / Postal code is required.');
+				$this->errors[] = Tools::displayError('Zip/Postal code is required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
 				$this->errors[] = sprintf(
-					Tools::displayError('Zip / Postal code is invalid. Must be typed as follows: %s'),
+					Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
 					str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
 				);
 		}
