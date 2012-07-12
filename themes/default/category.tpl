@@ -109,8 +109,6 @@
 				</div>
 				{include file="./pagination.tpl"}
 			</div>
-		{elseif !isset($subcategories)}
-			<p class="warning">{l s='There are no products in this category.'}</p>
 		{/if}
 	{elseif $category->id}
 		<p class="warning">{l s='This category is currently unavailable.'}</p>
