@@ -177,7 +177,7 @@ class AttributeGroupCore extends ObjectModel
 			return array();
 
 		return Db::getInstance()->executeS('
-			SELECT *
+			SELECT DISTINCT agl.`name`, ag.*, agl.*
 			FROM `'._DB_PREFIX_.'attribute_group` ag
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
