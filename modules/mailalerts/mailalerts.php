@@ -236,7 +236,7 @@ class MailAlerts extends Module
 				<label>'.$this->l('Coverage:').'</label>
 				<div class="margin-form">
 					<input type="text" name="MA_PRODUCT_COVERAGE" value="'.(Tools::getValue('MA_PRODUCT_COVERAGE') != null ? (int)Tools::getValue('MA_PRODUCT_COVERAGE') : Configuration::getGlobalValue('MA_PRODUCT_COVERAGE')).'" size="3" />
-					<p>'.$this->l('Stock cover, in days. Also, the stock cover of a given product will be calculated based on this number').'</p>
+					<p>'.$this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number').'</p>
 				</div>
 				<div style="clear:both;">&nbsp;</div>
 				<div style="clear:both;">&nbsp;</div>

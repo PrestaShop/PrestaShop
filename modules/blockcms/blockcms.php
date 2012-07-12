@@ -175,7 +175,7 @@ class BlockCms extends Module
 			'input' => array(
 				array(
 					'type' => 'cms_blocks',
-					'label' => $this->l('CMS Blocks :'),
+					'label' => $this->l('CMS Blocks:'),
 					'name' => 'cms_blocks',
 					'values' => array(
 						0 => BlockCMSModel::getCMSBlocksByLocation(BlockCMSModel::LEFT_COLUMN, Shop::getContextShopID()),
@@ -193,14 +193,14 @@ class BlockCms extends Module
 			'input' => array(
 				array(
 					'type' => 'cms_pages',
-					'label' => $this->l('Footer links :'),
+					'label' => $this->l('Footer links:'),
 					'name' => 'footerBox[]',
 					'values' => BlockCMSModel::getAllCMSStructure(),
 					'desc' => $this->l('Mark all pages you want to display in the footer CMS block')
 				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Footer informations :'),
+					'label' => $this->l('Footer informations:'),
 					'name' => 'footer_text',
 					'rows' => 5,
 					'cols' => 60,
@@ -346,7 +346,7 @@ class BlockCms extends Module
 				),
 				array(
 					'type' => 'cms_pages',
-					'label' => $this->l('CMS content :'),
+					'label' => $this->l('CMS content:'),
 					'name' => 'cmsBox[]',
 					'values' => BlockCMSModel::getAllCMSStructure(),
 					'desc' => $this->l('Mark all pages you want to display in this block')
@@ -565,7 +565,7 @@ class BlockCms extends Module
 						BlockCMSModel::insertCMSBlockShop($id_cms_block, $shop);
 				}
 
-				$this->_errors[] = $this->l('New block cannot be created !');
+				$this->_errors[] = $this->l('New block cannot be created!');
 			}
 			elseif (Tools::isSubmit('editBlockCMS'))
 			{
@@ -627,7 +627,7 @@ class BlockCms extends Module
 			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by);
 			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation);
 
-			$this->_html .= $this->displayConfirmation($this->l('Footer\'s informations updated'));
+			$this->_html .= $this->displayConfirmation($this->l('Footer\'s information updated'));
 		}
 		elseif (Tools::isSubmit('addBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Block CMS added'));

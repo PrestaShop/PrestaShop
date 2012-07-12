@@ -447,7 +447,7 @@ class ProductComments extends Module
 					</form>';
 				}
 				else
-					$this->_html .= $this->l('No reported comment at this time.');
+					$this->_html .= $this->l('No reported comments at this time.');
 		$this->_html .= '</fieldset><br />';
 	}
 

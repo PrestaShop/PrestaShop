@@ -43,7 +43,7 @@ class Blockreinsurance extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Bloc reinsurance');
+		$this->displayName = $this->l('Block reinsurance');
 		$this->description = $this->l('Add a block to display more infos to reassure your customers');
 	}
 
