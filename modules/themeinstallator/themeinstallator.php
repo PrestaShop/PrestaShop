@@ -550,7 +550,7 @@ class ThemeInstallator extends Module
 						if (Validate::isLoadedObject($obj))
 						{
 							if ($flag++ == 0)
-								$msg .= '<b>'.$this->l('The following modules have been unhook:').'</b><br />';
+								$msg .= '<b>'.$this->l('The following modules have been unhooked:').'</b><br />';
 
 							// Delete all native module which are in the front office feature category and in selected shops
 							$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;

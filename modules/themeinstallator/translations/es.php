@@ -18,7 +18,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f19
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Puede consultar la documentación';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_7348fd57bfb5c837fc57e54fcfeeed9e'] = 'Haga clic derecho en el nombre y elija \"guardar el enlace bajo\"';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b679b6e84d8c'] = 'Se han instalado los siguientes módulos';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_b797829dd4811078fb2b91d95fe49589'] = 'Los siguientes módulos han sido desanclados: ';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_e6178f22c62901662347cfb2f7972d1f'] = 'Los siguientes módulos han sido desanclados: ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Se han activado los siguientes módulos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Se han actualizado las imágenes en la base de datos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Advertencia: Copiar / Pegar sus errores si desea configurar manualmente el tipo de imagen (en la ficha Preferencias> Imágenes):';

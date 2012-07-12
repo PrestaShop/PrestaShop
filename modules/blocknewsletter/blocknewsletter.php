@@ -126,7 +126,7 @@ class Blocknewsletter extends Module
 					<input type="radio" name="new_page" value="0" '.(!Configuration::get('NW_CONFIRMATION_NEW_PAGE') ? 'checked="checked" ' : '').'/>'.$this->l('no').'
 				</div>
 				<div class="clear"></div>
-				<label>'.$this->l('Send verfication e-mail after subscription?').'</label>
+				<label>'.$this->l('Send verification e-mail after subscription?').'</label>
 				<div class="margin-form">
 					<input type="radio" name="verif_email" value="1" '.(Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('yes').'
 					<input type="radio" name="verif_email" value="0" '.(!Configuration::get('NW_VERIFICATION_EMAIL') ? 'checked="checked" ' : '').'/>'.$this->l('no').'

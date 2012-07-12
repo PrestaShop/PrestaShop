@@ -25,7 +25,7 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_62109400d1297f6b6c900eb7f6ba0aaa'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_3d7b12c4623906965db0a3f8e7390652'] = 'Avviso copertura:';
 $_MODULE['<{mailalerts}prestashop>mailalerts_929396618e54384e9a22493055028533'] = 'Ricevere una notifica se la disponibilità di magazzino di un prodotto è sotto la seguente quantità';
 $_MODULE['<{mailalerts}prestashop>mailalerts_cadcfa2749b0cfb51d88837d4a934ad1'] = 'Copertura';
-$_MODULE['<{mailalerts}prestashop>mailalerts_dccbd7d58f294df927f4d0baafb6c375'] = 'Copertura magazzino in giorni. La copertura magazzino di un prodotto viene calcolata su questo numero.';
+$_MODULE['<{mailalerts}prestashop>mailalerts_a27c67cad62fc03d13c2f67e5f749691'] = 'Copertura magazzino in giorni. La copertura magazzino di un prodotto viene calcolata su questo numero.';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7bcb7394f6b2ff226c423fea1a153754'] = 'Indirizzi e-mail:';
 $_MODULE['<{mailalerts}prestashop>mailalerts_4395d1c88a7f0796edc652d2b57bc664'] = 'Un indirizzo e-mail per riga (es. bob@example.com)';
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'Nessun messaggio';

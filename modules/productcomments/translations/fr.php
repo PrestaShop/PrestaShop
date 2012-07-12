@@ -39,7 +39,7 @@ $_MODULE['<{productcomments}prestashop>productcomments_f2a6c498fb90ee345d997f888
 $_MODULE['<{productcomments}prestashop>productcomments_8bf0c707232d63bf83b4b2467d2df41a'] = 'Sélection :';
 $_MODULE['<{productcomments}prestashop>productcomments_d00b7f656273a495f555bead0248d6f5'] = 'Aucun commentaire à valider.';
 $_MODULE['<{productcomments}prestashop>productcomments_82bd3dd5eb07bcc37a9649cbb1a5fd33'] = 'Commentaires signalés';
-$_MODULE['<{productcomments}prestashop>productcomments_66c4dd257983350f8cc2f8b71ade47ba'] = 'Aucun commentaire signalé.';
+$_MODULE['<{productcomments}prestashop>productcomments_5e04c941e38f97252e3ed00af80447a2'] = 'Aucun commentaire signalé.';
 $_MODULE['<{productcomments}prestashop>productcomments_7799b301b44c329fc9ec6a3a9c1905e0'] = 'Ajouter un nouveau critère';
 $_MODULE['<{productcomments}prestashop>productcomments_7753ab38f8e113e8af65ab1241331625'] = 'Vous pouvez définir plusieurs critères afin de guider vos clients dans leur commentaire. Par exemple : performance, design, etc.';
 $_MODULE['<{productcomments}prestashop>productcomments_bc58d00e1e42de31a8e58f8dc7d9bdc7'] = 'Vous pouvez ajouter un nouveau critère ci-dessous :';
