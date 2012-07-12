@@ -132,7 +132,7 @@
 						</a>
 					</td>
 					<td align="center">{displayWtPriceWithCurrency price=$product.product_price currency=$currency}</td>
-					<td align="center" class="productQuantity">{math equation='x - y' x=$product.cart_quantity y=$product.customization_quantity}</td>
+					<td align="center" class="productQuantity">{math equation='x - y' x=$product.cart_quantity y=$product.customization_quantity|intval}</td>
 					<td align="center" class="productQuantity">{$product.qty_in_stock}</td>
 					<td align="right">{displayWtPriceWithCurrency price=$product.product_total currency=$currency}</td>
 				</tr>
