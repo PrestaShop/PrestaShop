@@ -1182,7 +1182,7 @@ class AdminImportControllerCore extends AdminController
 					$product->quantity = 0;
 
 				// If match ref is specified && ref product && ref product already in base, trying to update
-				if (Tools::getValue('match_ref') == 1 && $product->reference && Product::existsRefInDatabase($product->reference))
+				if (Tools::getValue('match_ref') == 1 && $product->reference && $product->existsRefInDatabase($product->reference))
 				{
 					$datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`, p.`id_product`
