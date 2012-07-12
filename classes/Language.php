@@ -295,7 +295,8 @@ class LanguageCore extends ObjectModel
 			'shipped.html', 'shipped.txt',
 			'test.html', 'test.txt',
 			'voucher.html', 'voucher.txt',
-			'voucher_new.html', 'voucher_new.txt'
+			'voucher_new.html', 'voucher_new.txt',
+			'order_changed.html', 'order_changed.txt'
 		);
 
 		$number = -1;

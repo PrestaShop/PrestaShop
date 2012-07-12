@@ -1715,6 +1715,8 @@ class AdminOrdersControllerCore extends AdminController
 			'link' => Context::getContext()->link,
 			'current_index' => self::$currentIndex
 		));
+		
+		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
@@ -1726,6 +1728,27 @@ class AdminOrdersControllerCore extends AdminController
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
 			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
 		)));
+	}
+	
+	public function sendChangedNotification(Order $order = null)
+	{
+		if (is_null($order))
+			$order = new Order(Tools::getValue('id_order'));
+		
+		$data = array(
+			'{lastname}' => $order->getCustomer()->lastname,
+			'{firstname}' => $order->getCustomer()->firstname,
+			'{id_order}' => (int)$order->id,
+			'{order_name}' => $order->getUniqReference()
+		);
+		
+		Mail::Send(
+			(int)$order->id_lang,
+			'order_changed',
+			Mail::l('Your order has been changed', $order->id_lang),
+			$data,
+			$order->getCustomer()->email,
+			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname);
 	}
 
 	public function ajaxProcessLoadProductInformation()
@@ -1902,6 +1925,8 @@ class AdminOrdersControllerCore extends AdminController
 			$view = $this->createTemplate('_customized_data.tpl')->fetch();
 		else
 			$view = $this->createTemplate('_product_line.tpl')->fetch();
+			
+		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
 			'result' => $res,
@@ -1973,6 +1998,8 @@ class AdminOrdersControllerCore extends AdminController
 			'link' => Context::getContext()->link,
 			'current_index' => self::$currentIndex
 		));
+		
+		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
 			'result' => $res,
