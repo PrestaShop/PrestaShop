@@ -101,7 +101,10 @@ class CombinationCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-
+			
+		// Removes the product from StockAvailable, for the current shop
+		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
+		
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 		return true;
