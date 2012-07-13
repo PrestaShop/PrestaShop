@@ -230,7 +230,7 @@ class SpecificPriceCore extends ObjectModel
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
 				AND id_cart IN (0, '.(int)$id_cart.')
-				ORDER BY `id_specific_price_rule` ASC, `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC');
+				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];
 	}
@@ -291,7 +291,7 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC
+					ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC
 		');
 
 		$targeted_prices = array();
