@@ -401,7 +401,7 @@ class ShopCore extends ObjectModel
 		{
 			$address = new Address();
 			$address->company = Configuration::get('PS_SHOP_NAME');
-			$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
+			$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID') ? Configuration::get('PS_SHOP_COUNTRY_ID') : Configuration::get('PS_COUNTRY_DEFAULT');
 			$address->id_state = Configuration::get('PS_SHOP_STATE_ID');
 			$address->address1 = Configuration::get('PS_SHOP_ADDR1');
 			$address->address2 = Configuration::get('PS_SHOP_ADDR2');
