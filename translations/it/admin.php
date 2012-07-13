@@ -1337,7 +1337,7 @@ $_LANGADM['AdminImport622d67c7a2ea6386a4480e02b12fadd8'] = 'Impatto sul prezzo:'
 $_LANGADM['AdminImport6311ae17c1ee52b36e68aaf4ad066387'] = 'Altro';
 $_LANGADM['AdminImport63d5049791d9d79d86e9a108b0a999ca'] = 'Riferimento';
 $_LANGADM['AdminImport664d4132fc8dc3a158be4692b4246528'] = 'Lista tags non valida';
-$_LANGADM['AdminImport66a73af45237b82a6a3e2e4217ebe69f'] = 'Disponibile solo online';
+$_LANGADM['AdminImport446e04d1ed3b8fca04274d7c726a3fd5'] = 'Disponibile solo online (0 = no, 1 = sì)';
 $_LANGADM['AdminImport6703aa9936582b4381418f7d523370b4'] = 'Aliquota sconto';
 $_LANGADM['AdminImport6928b30c9f87670d7621fe8f1fef7054'] = 'Riferimento';
 $_LANGADM['AdminImport694e8d1f2ee056f98ee488bdc4982d73'] = 'Quantità';
@@ -1347,7 +1347,7 @@ $_LANGADM['AdminImport6d5030fd40c1e08767b4b70d3786b0fb'] = 'ID fornitore (%d) no
 $_LANGADM['AdminImport70e7a6fcceb39a1e3ea3925182b85d18'] = 'AAAA-MM-GG';
 $_LANGADM['AdminImport72d6d7a1885885bb55a565fd1070581a'] = 'Importa';
 $_LANGADM['AdminImport72ef2b9b6965d078e3c7f95487a82d1c'] = 'Salta';
-$_LANGADM['AdminImport7a1920d61156abc05a60135aefe8bc67'] = 'Default';
+$_LANGADM['AdminImport5db5f3f0c5f233fbc13f08c052e98281'] = 'Default (0 = no, 1 = sì)';
 $_LANGADM['AdminImport7abccc0f7eefd61743e408d28aac7cff'] = 'si è verificato un errore durante il caricamento e nella copia del file';
 $_LANGADM['AdminImport7cb32e708d6b961d476baced73d362bb'] = 'Numero di IVA';
 $_LANGADM['AdminImport81b08ee619a14697b41957b33b94eb49'] = 'La data (%s) non è valida (alla riga %d). Formato :%s';
@@ -1423,7 +1423,7 @@ $_LANGADM['AdminImportdf917adff915d5518c45ae6dc521783b'] = 'Il tuo file CSV (%d 
 $_LANGADM['AdminImportdfa8db9b8d08689d8a23067e93ef4ef9'] = 'ID Valuta*';
 $_LANGADM['AdminImporte08caeac3f80ffa7889cdf1c8f30111f'] = 'Separatore valori multipli:';
 $_LANGADM['AdminImporte11d1e5d17a3f9ce34faccbb5cc61394'] = 'Riferimento ordine fornitura*';
-$_LANGADM['AdminImporte1a5e653bc356ed6745d6814d50213eb'] = 'Mostra prezzo';
+$_LANGADM['AdminImport76aeea9f48196068e6b47d46d41e7618'] = 'Mostra prezzo (0 = no, 1 = sì)';
 $_LANGADM['AdminImporte1b8b0be45098d71aba659e1149ea395'] = 'Valore(Valore:Posizione)';
 $_LANGADM['AdminImporte4cdcd51e6cf787d4ecc7d813f0c23cb'] = 'La localizzazione deve essere installata';
 $_LANGADM['AdminImporte6d0e1c8fc6a4fcf47869df87e04cd88'] = 'Clienti';
@@ -1441,7 +1441,7 @@ $_LANGADM['AdminImportecc2c839377d44e39486e231322de623'] = 'ID regole tasse';
 $_LANGADM['AdminImportecde3e896afb64e9a48781b8363b9a03'] = 'Caratteristica (Nome: Valore: Position)';
 $_LANGADM['AdminImportf0a8011e2482cf9351b7bf565c7950ad'] = 'Prezzo tasse incl.';
 $_LANGADM['AdminImportf19dbf2edb3a0bd74b0524d960ff21eb'] = 'Carica';
-$_LANGADM['AdminImportf2149c422ab7577f063b69a2884d17f0'] = 'Disponibile per l\'ordine';
+$_LANGADM['AdminImportcf7a1f189bbd1f48db0ece1da9cc0802'] = 'Disponibile per l\'ordine (0 = no, 1 = sì)';
 $_LANGADM['AdminImportf21ee1cc0e2e0a47deb2fc8726f406fa'] = 'Formato: fra 0 e 100';
 $_LANGADM['AdminImportf2a6c498fb90ee345d997f888fce3b18'] = 'Cancella';
 $_LANGADM['AdminImportf41a10a672cbcdecaad1d2f73f30b1f8'] = 'Quantità prevista*';
