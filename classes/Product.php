@@ -2466,6 +2466,9 @@ class ProductCore extends ObjectModel
 			}
 		}
 
+		if (!isset(self::$_pricesLevel2[$cache_id_2][(int)$id_product_attribute]))
+			return;
+
 		$result = self::$_pricesLevel2[$cache_id_2][(int)$id_product_attribute];
 
 		if (!$specific_price || $specific_price['price'] < 0)
