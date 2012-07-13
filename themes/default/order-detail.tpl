@@ -24,12 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-// <![CDATA[
-		
-//]]>
-</script>
-
 <form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<div>
 		<input type="hidden" value="{$order->id}" name="id_order"/>
