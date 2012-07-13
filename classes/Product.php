@@ -2841,7 +2841,6 @@ class ProductCore extends ObjectModel
 				WHERE pa.`id_product` = '.(int)$this->id.'
 					AND al.`id_lang` = '.(int)$id_lang.'
 					AND agl.`id_lang` = '.(int)$id_lang.'
-				GROUP BY a.id_attribute
 				ORDER BY ag.`position` ASC, a.`position` ASC';
 		return Db::getInstance()->executeS($sql);
 	}
