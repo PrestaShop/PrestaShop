@@ -367,8 +367,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$tabs = Tab::getTabs($this->lang_selected->id);
 
 		// Get name of the default tabs
-		$id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, (int)$this->context->shop->id_shop_group, (int)$this->context->shop->id);
-		$tabs_default_lang = Tab::getTabs($id_lang_default);
+		$tabs_default_lang = Tab::getTabs(1);
 
 		$tabs_default = array();
 		foreach ($tabs_default_lang as $tab)
