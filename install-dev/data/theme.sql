@@ -326,7 +326,7 @@ WHERE
 
 UPDATE `PREFIX_hook_module` SET position = 26
 WHERE
-	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact');
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact');
 
 UPDATE `PREFIX_hook_module` SET position = 27
 WHERE
