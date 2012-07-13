@@ -272,7 +272,7 @@
 					</select>
 					<input type="submit" class="button" name="submitChangeCurrency" value="{l s='Change'}" />
 				</form>
-				<hr />
+				<hr class="clear"/>
 				{/if}
 				
 				{if count($order->getOrderPayments()) > 0}
