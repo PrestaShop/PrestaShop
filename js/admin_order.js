@@ -414,7 +414,7 @@ function init()
 		if (quantity > stock_available)
 			$('#add_product_product_stock').css('font-weight', 'bold').css('color', 'red').css('font-size', '1.2em');
 		else
-			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');;
+			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');
 	});
 
 	$('#submitAddProduct').unbind('click');
