@@ -417,7 +417,7 @@ function reloadContent(params_plus)
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
 				$('#product_list').css('filter', '');
 
-			if (result.pagination.search(/[^\s]/) > 0) {
+			if (result.pagination.search(/[^\s]/) >= 0) {
 				if ($(result.pagination).find('ul.pagination').length)
 				{
 					$('div#pagination').show();
