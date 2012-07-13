@@ -2481,7 +2481,7 @@ class ProductCore extends ObjectModel
 		if (is_array($result) && (!$specific_price || !$specific_price['id_product_attribute']))
 		{
 			$attribute_price = Tools::convertPrice($result['attribute_price'] !== null ? (float)$result['attribute_price'] : 0, $id_currency);
-			if ($id_product_attribute !== false) // If you want the default combination, please use NULL value instead
+			if ($id_product_attribute !== false && !is_null($id_product_attribute)) // If you want the default combination, please use NULL value instead
 				$price += $attribute_price;
 		}
 
@@ -2847,6 +2847,7 @@ class ProductCore extends ObjectModel
 				WHERE pa.`id_product` = '.(int)$this->id.'
 					AND al.`id_lang` = '.(int)$id_lang.'
 					AND agl.`id_lang` = '.(int)$id_lang.'
+				GROUP BY a.id_attribute
 				ORDER BY ag.`position` ASC, a.`position` ASC';
 		return Db::getInstance()->executeS($sql);
 	}
