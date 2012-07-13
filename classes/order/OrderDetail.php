@@ -452,14 +452,16 @@ class OrderDetailCore extends ObjectModel
 	{
 		$customer = new Customer((int)$order->id_customer);
 		$customer_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-
 		$this->specificPrice = SpecificPrice::getSpecificPrice(
 			(int)$product['id_product'],
 			(int)$order->id_shop,
 			(int)$order->id_currency,
 			(int)$customer_address->id_country,
 			(int)$customer->id_default_group,
-			(int)$product['cart_quantity']
+			(int)$product['cart_quantity'],
+			(int)$product['id_product_attribute'],
+			(int)$customer->id,
+			(int)$order->id_cart
 		);
 
 		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], null, null, false, false, 1, false);

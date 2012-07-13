@@ -2291,26 +2291,15 @@ class ProductCore extends ObjectModel
 		{
 			$condition = '';
 			$cache_name = (int)$id_cart.'_'.(int)$id_product;
-
-			if (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'))
-			{
-				$cache_name = (int)$id_cart.'_'.(int)$id_product.'_'.(int)$id_product_attribute;
-				$condition = ' AND `id_product_attribute` = '.(int)$id_product_attribute;
-			}
-
 			if (!isset(self::$_cart_quantity[$cache_name]) || self::$_cart_quantity[$cache_name] != (int)$quantity)
-			{
 				self::$_cart_quantity[$cache_name] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT SUM(`quantity`)
 				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)$id_product.'
-				AND `id_cart` = '.(int)$id_cart.' '.$condition
-				);
-
-				$cart_quantity = self::$_cart_quantity[$cache_name];
-			}
+				AND `id_cart` = '.(int)$id_cart);
+			$cart_quantity = self::$_cart_quantity[$cache_name];
 		}
-		$quantity = ($id_cart && $cart_quantity) ? $cart_quantity : $quantity;
+
 		$id_currency = (int)Validate::isLoadedObject($context->currency) ? $context->currency->id : Configuration::get('PS_CURRENCY_DEFAULT');
 
 		// retrieve address informations
@@ -2360,7 +2349,7 @@ class ProductCore extends ObjectModel
 			$zipcode,
 			$id_currency,
 			$id_group,
-			$quantity,
+			$cart_quantity,
 			$usetax,
 			$decimals,
 			$only_reduc,
@@ -2370,7 +2359,8 @@ class ProductCore extends ObjectModel
 			$use_group_reduction,
 			$id_customer,
 			$use_customer_price,
-			$id_cart
+			$id_cart, 
+			$quantity
 		);
 	}
 
@@ -2396,7 +2386,7 @@ class ProductCore extends ObjectModel
 	**/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-		$id_customer = 0, $use_customer_price = true, $id_cart = 0)
+		$id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity)
 	{
 		static $address = null;
 
@@ -2420,7 +2410,8 @@ class ProductCore extends ObjectModel
 			$quantity,
 			$id_product_attribute,
 			$id_customer,
-			$id_cart
+			$id_cart,
+			$real_quantity
 		);
 
 		if (isset(self::$_prices[$cache_id]))
