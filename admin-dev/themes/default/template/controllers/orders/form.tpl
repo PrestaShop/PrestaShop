@@ -72,7 +72,7 @@
 		$('#id_lang').change(function(){
 			updateLang();
 		});
-		$('#delivery_option,#carrier_recycled_package,#order_gift,#gift_message,#id_address_delivery').change(function() {
+		$('#delivery_option,#carrier_recycled_package,#order_gift,#gift_message').change(function() {
 			updateDeliveryOption();
 		});
 		$('#shipping_price').change(function() {
@@ -234,10 +234,6 @@
 				}
 			});
 		});
-		/*$('.fancybox').live('click', function(e) {
-			$(this).fancybox().trigger('click');
-			return false;
-		});*/
 		resetBind();
 	});
 
@@ -600,7 +596,7 @@
 					$('#products_found #customization_list').contents().find('body').html(customization_html);
 					display_product_attributes();
 					display_product_customizations();
-					$('#id_product').change();
+					$('#id_product').click();
 				}
 				else
 				{
@@ -934,6 +930,7 @@
 			success : function(res)
 			{
 				displaySummary(res);
+				updateDeliveryOption();
 			}
 		});
 	}
