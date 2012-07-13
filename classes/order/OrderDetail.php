@@ -64,6 +64,9 @@ class OrderDetailCore extends ObjectModel
 	public $product_price;
 
 	/** @var float */
+	public $original_product_price;
+
+	/** @var float */
 	public $unit_price_tax_incl;
 
 	/** @var float */
@@ -190,7 +193,8 @@ class OrderDetailCore extends ObjectModel
 			'unit_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'purchase_supplier_price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'purchase_supplier_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'original_product_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice')
 		),
 	);
 
@@ -341,12 +345,7 @@ class OrderDetailCore extends ObjectModel
 	 */
 	public static function getList($id_order)
 	{
-		$sql = '
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_detail`
-			WHERE `id_order` = '.(int)$id_order;
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order);
 	}
 
 	/*
@@ -463,6 +462,7 @@ class OrderDetailCore extends ObjectModel
 			(int)$product['cart_quantity']
 		);
 
+		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], null, null, false, false, 1, false);
 		$this->product_price = (float)$product['price'];
 		$this->unit_price_tax_incl = (float)$product['price_wt'];
 		$this->unit_price_tax_excl = (float)$product['price'];
