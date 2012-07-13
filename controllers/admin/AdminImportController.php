@@ -129,7 +129,7 @@ class AdminImportControllerCore extends AdminController
 					'quantity' => array('label' => $this->l('Quantity')),
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'weight' => array('label' => $this->l('Impact on weight')),
-					'default_on' => array('label' => $this->l('Default')),
+					'default_on' => array('label' => $this->l('Default (0 = No, 1 = Yes)')),
 					'image_position' => array(
 						'label' => $this->l('Image position')
 					),
@@ -228,15 +228,15 @@ class AdminImportControllerCore extends AdminController
 					'link_rewrite' => array('label' => $this->l('URL rewritten')),
 					'available_now' => array('label' => $this->l('Text when in stock')),
 					'available_later' => array('label' => $this->l('Text when backorder allowed')),
-					'available_for_order' => array('label' => $this->l('Available for order')),
+					'available_for_order' => array('label' => $this->l('Available for order (0 = No, 1 = Yes)')),
 					'date_add' => array('label' => $this->l('Product creation date')),
-					'show_price' => array('label' => $this->l('Show price')),
+					'show_price' => array('label' => $this->l('Show price (0 = No, 1 = Yes)')),
 					'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
 					'features' => array('label' => $this->l('Feature(Name:Value:Position)')),
-					'online_only' => array('label' => $this->l('Available online only')),
+					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
