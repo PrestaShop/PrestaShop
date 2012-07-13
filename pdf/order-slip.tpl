@@ -89,8 +89,8 @@
 					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 60%">{l s='Product / Reference' pdf='true'}</td>
                     <!-- unit price tax excluded is mandatory -->
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 10%">{l s='Qty' pdf='true'}</td>
-				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">{l s='Price' pdf='true'}<br />{l s='(Tax Excl.)' pdf='true'}</td>
-				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold;; width: 15%">{l s='Price' pdf='true'}<br />{l s='(Tax Incl.)' pdf='true'}</td>
+				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 15%">{l s='Price' pdf='true'}<br />{l s='(Tax Excl.)' pdf='true'}</td>
+				    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 15%">{l s='Price' pdf='true'}<br />{l s='(Tax Incl.)' pdf='true'}</td>
 				</tr>
 				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
