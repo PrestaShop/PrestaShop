@@ -55,7 +55,7 @@ function check_impact()
 {
 	if ($('#attribute_price_impact').get(0).selectedIndex == 0)
 	{
-		$('#attribute_price').val('0.00');
+		$('#attribute_price, #attribute_priceTEReal, #attribute_priceTI').val('0.00');
 		$('#span_impact').hide();
 	}
 	else
