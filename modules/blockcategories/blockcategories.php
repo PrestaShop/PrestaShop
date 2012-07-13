@@ -46,7 +46,7 @@ class BlockCategories extends Module
 	public function install()
 	{
 		if (!parent::install() ||
-			!$this->registerHook('rightColumn') ||
+			!$this->registerHook('leftColumn') ||
 			!$this->registerHook('header') ||
 			// Temporary hooks. Do NOT hook any module on it. Some CRUD hook will replace them as soon as possible.
 			!$this->registerHook('categoryAddition') ||
