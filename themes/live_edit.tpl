@@ -39,7 +39,7 @@
 	var loadFail = '{l s='Failed to load module list'}';
 </script>
 
-<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:30px; padding:5px 10px;; position:fixed;top:0;left:0;z-index:9999;">
+<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:30px; padding:5px 10px; position:fixed;top:0;left:0;z-index:9999;">
 <form id="liveEdit-action-form" action="./{$ad}/index.php" method="post">
 	<input type="hidden" name="ajax" value="1" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
