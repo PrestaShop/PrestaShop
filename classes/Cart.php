@@ -1312,8 +1312,12 @@ class CartCore extends ObjectModel
 		if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
 			$type = Cart::ONLY_PRODUCTS;
 
+		$param_product = true;
 		if (is_null($products))
+		{
+			$param_product = false;
 			$products = $this->getProducts();
+		}
 	
 		if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING)
 		{
@@ -1444,7 +1448,7 @@ class CartCore extends ObjectModel
 			{
 				// If the cart rule offers free shipping, add the shipping cost
 				if ($with_shipping && $cart_rule['obj']->free_shipping)
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING), 2);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null)), 2);
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
 				if ((int)$cart_rule['obj']->gift_product)
