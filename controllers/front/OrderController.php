@@ -265,7 +265,7 @@ class OrderControllerCore extends ParentOrderController
 				$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 
 			if (!$this->context->cart->isMultiAddressDelivery())
-				$this->context->cart->setNoMultishipping(); // As the cart is no multishipping, set each delivery address lines with the main delivery address
+				$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
 
 			if (Tools::isSubmit('message'))
 				$this->_updateMessage(Tools::getValue('message'));
