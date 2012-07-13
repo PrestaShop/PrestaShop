@@ -312,7 +312,8 @@ function updateDisplay()
 				$('#reduction_amount').hide();
 				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
 				$('#reduction_percent').show();
-			} else if (selectedCombination['specific_price'].reduction_type == 'amount') {		
+			} else if (selectedCombination['specific_price'].reduction_type == 'amount' && selectedCombination['specific_price'].reduction_price != 0) {
+				$('#reduction_amount_display').html('-' + formatCurrency(selectedCombination['specific_price'].reduction_price, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_percent').hide();
 				$('#reduction_amount').show();
 			} else {

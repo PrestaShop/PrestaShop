@@ -395,11 +395,8 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
 				{/if}
 			</div>
-			{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}
-				<p id="reduction_percent"><span id="reduction_percent_display">-{$product->specificPrice.reduction*100}%</span></p>
-			{elseif $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}
-				<p id="reduction_amount"><span id="reduction_amount_display">-{convertPrice price=$product->specificPrice.reduction|floatval}</span></p>
-			{/if}
+			<p id="reduction_percent"><span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
+			<p id="reduction_amount"><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p>
 
 			{if $product->specificPrice AND $product->specificPrice.reduction}
 				<p id="old_price"><span class="bold">
