@@ -450,19 +450,8 @@ class OrderDetailCore extends ObjectModel
 	 */
 	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
-		$customer = new Customer((int)$order->id_customer);
-		$customer_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-		$this->specificPrice = SpecificPrice::getSpecificPrice(
-			(int)$product['id_product'],
-			(int)$order->id_shop,
-			(int)$order->id_currency,
-			(int)$customer_address->id_country,
-			(int)$customer->id_default_group,
-			(int)$product['cart_quantity'],
-			(int)$product['id_product_attribute'],
-			(int)$customer->id,
-			(int)$order->id_cart
-		);
+		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price);
+		$this->specificPrice = $specific_price;
 
 		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], null, null, false, false, 1, false);
 		$this->product_price = (float)$product['price'];
