@@ -199,7 +199,7 @@ class SpecificPriceCore extends ObjectModel
 	    return preg_split('/;/', $priority);
     }
 
-	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0)
+	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0, $real_quantity = 0)
 	{
 		if (!SpecificPrice::isFeatureActive())
 			return array();
@@ -208,7 +208,7 @@ class SpecificPriceCore extends ObjectModel
 		** The price must not change between the top and the bottom of the page
 		*/
 
-		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart);
+		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$real_quantity);
 		if (!array_key_exists($key, self::$_specificPriceCache))
 		{
 			$now = date('Y-m-d H:i:s');
@@ -222,14 +222,14 @@ class SpecificPriceCore extends ObjectModel
 				AND `id_country` IN (0, '.(int)$id_country.')
 				AND `id_group` IN (0, '.(int)$id_group.')
 				AND `id_customer` IN (0, '.(int)$id_customer.')
-				AND `from_quantity` <= '.(int)$quantity.'
 				AND
 				(
 					(`from` = \'0000-00-00 00:00:00\' OR \''.$now.'\' >= `from`)
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				AND id_cart IN (0, '.(int)$id_cart.')
+				AND id_cart IN (0, '.(int)$id_cart.')'.
+				(($real_quantity != 0 && !Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION')) ? ' AND `from_quantity` <= IF(id_product_attribute=0,'.(int)$quantity.' ,'.(int)$real_quantity.')' : 'AND `from_quantity` <= '.(int)$real_quantity).'
 				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];

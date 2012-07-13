@@ -109,7 +109,7 @@ function check_all_shop() {
 						{assign var=checked value=false}
 					{/if}
 					<tr>
-						<td>
+						<td {if $groupData['disable_shops']}style="font-style:italic;background-color:#CFC4FF"{/if}>
 							<img style="vertical-align:middle;" alt="" src="../img/admin/lv3_{if $j < count($groupData['shops']) - 1}b{else}f{/if}.png" />
 							<label class="child">
 								<input class="input_shop"
@@ -118,7 +118,9 @@ function check_all_shop() {
 									shop_id="{$shopID}"
 									name="checkBoxShopAsso_{$table}[{$shopID}]"
 									id="checkedBox_{$shopID}"
-									{if $checked} checked="checked"{/if} />
+									{if $checked} checked="checked"{/if} 
+									{if $groupData['disable_shops']} readonly="readonly"{/if}
+									/>
 								{$shopData['name']}
 							</label>
 						</td>
