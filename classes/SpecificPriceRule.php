@@ -119,15 +119,18 @@ class SpecificPriceRuleCore extends ObjectModel
 
 	public function apply($products = false)
 	{
-		$this->resetApplication();
+		$this->resetApplication($products);
 		$products = $this->getAffectedProducts($products);
 		foreach ($products as $product)
 			SpecificPriceRule::applyRuleToProduct((int)$this->id, (int)$product['id_product'], (int)$product['id_product_attribute']);
 	}
 
-	public function resetApplication()
+	public function resetApplication($products = false)
 	{
-		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id);
+		$where = '';
+		if ($products && count($products))
+			$where .= ' AND id_product IN ('.implode(', ', array_map('intval', $products)).')';
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id.$where);
 	}
 
 	public static function applyAllRules($products = false)
@@ -178,6 +181,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$attributes = false;
 		$categories = false;
 		$features = false;
+		$suppliers = false;
 		$where = false;
 
 		if ($conditions_group)
@@ -195,7 +199,7 @@ class SpecificPriceRuleCore extends ObjectModel
 						'values' => array(),
 					),
 					'supplier' => array(
-						'name' => 'p.id_supplier',
+						'name' => 'pss.id_supplier',
 						'values' => array()
 					),
 					'feature' => array(
@@ -216,6 +220,8 @@ class SpecificPriceRuleCore extends ObjectModel
 						$features = true;
 					elseif ($condition['type'] == 'attribute')
 						$attributes = true;
+					elseif ($condition['type'] == 'supplier')
+						$suppliers = true;
 						
 					$fields[$condition['type']]['values'][] = $condition['value'];
 				}
@@ -249,9 +255,13 @@ class SpecificPriceRuleCore extends ObjectModel
 			$query->select('NULL as id_product_attribute');
 
 		if ($features)
-			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');
+			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');			
 		if ($categories)
 			$query->leftJoin('category_product', 'cp', 'p.id_product = cp.id_product');
+
+		if ($suppliers)
+			$query->leftJoin('product_supplier', 'pss', 'p.id_product = pss.id_product');
+
 		if ($where)
 			$query->where($where);
 
