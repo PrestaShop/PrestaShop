@@ -295,16 +295,16 @@ class SpecificPriceCore extends ObjectModel
 		');
 
 		$targeted_prices = array();
-		$last_quantity = null;
+		$last_quantity = array();
 
 		foreach ($res as $specific_price)
 		{
-			if (!isset($last_quantity))
-				 $last_quantity = $specific_price['from_quantity'];
-			else if ($last_quantity == $specific_price['from_quantity'])
+			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
+				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
+			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
 		        break;
 
-			$last_quantity = $specific_price['from_quantity'];
+			$last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
             if ($specific_price['from_quantity'] > 1)
     		    $targeted_prices[] = $specific_price;
 		}
