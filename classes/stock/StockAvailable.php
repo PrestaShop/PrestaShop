@@ -201,11 +201,7 @@ class StockAvailableCore extends ObjectModel
 
 		// In case there are no warehouses, removes product from StockAvailable
 		if (count($ids_warehouse) == 0)
-		{
-			StockAvailable::removeProductFromStockAvailable($id_product);
-			foreach ($ids_product_attribute as $id_product_attribute)
-				StockAvailable::removeProductFromStockAvailable($id_product, $id_product_attribute);
-		}
+			Db::getInstance()->update('stock_available', array('quantity' => 0 ), 'id_product = '.(int)$id_product);
 	}
 
 	/**
