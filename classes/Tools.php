@@ -2178,6 +2178,19 @@ FileETag INode MTime Size
 
 		return false;
 	}
+	
+	/**
+	 * Reproduce array_unique working before php version 5.2.9 
+	 * @param array $array
+	 * @return array
+	 */
+	public static function arrayUnique($array)
+	{
+		if (version_compare(phpversion(), '5.2.9', '<'))
+			return array_unique($array);
+		else
+			return array_unique($array, SORT_REGULAR);
+	}
 }
 
 /**
