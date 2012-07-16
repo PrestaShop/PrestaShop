@@ -1687,6 +1687,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function customerImport()
 	{
+		$customer_exist = false;
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
@@ -1771,13 +1772,15 @@ class AdminImportControllerCore extends AdminController
 							{
 								unset($customer->id);
 								$res &= $customer->add();
-								$customer->addGroups($customer_groups);
-								foreach ($addresses as $address)
-								{
-									$address['id_customer'] = $customer->id;
-									unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
-									Db::getInstance()->insert('address', $address);
-								}
+								if (isset($customer_groups))
+									$customer->addGroups($customer_groups);
+								if (isset($addresses))
+									foreach ($addresses as $address)
+									{
+										$address['id_customer'] = $customer->id;
+										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
+										Db::getInstance()->insert('address', $address);
+									}
 							}
 						}
 					}
@@ -1794,13 +1797,15 @@ class AdminImportControllerCore extends AdminController
 						{
 							unset($customer->id);
 							$res &= $customer->add();
-							$customer->addGroups($customer_groups);
-							foreach ($addresses as $address)
-							{
-								$address['id_customer'] = $customer->id;
-								unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
-								Db::getInstance()->insert('address', $address);
-							}
+							if (isset($customer_groups))
+									$customer->addGroups($customer_groups);
+							if (isset($addresses))
+								foreach ($addresses as $address)
+								{
+									$address['id_customer'] = $customer->id;
+									unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
+									Db::getInstance()->insert('address', $address);
+								}
 						}
 							
 					}
