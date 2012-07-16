@@ -3567,7 +3567,7 @@ class AdminProductsControllerCore extends AdminController
 					if ($ws)
 						$warehouses[] = $ws;
 				}
-				$warehouses = array_unique($warehouses);
+				$warehouses = Tools::arrayUnique($warehouses);
 
 				if (empty($warehouses))
 					$advanced_stock_management_warning = true;
