@@ -283,7 +283,7 @@ class AdminControllerCore extends Controller
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
 			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
 			5 => $this->l('Status update successful'), 6 => $this->l('Settings update successful'),
-			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfullyc'),
+			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfully'),
 			9 => $this->l('Thumbnails successfully regenerated'), 10 => $this->l('Message sent to the customer'),
 			11 => $this->l('Comment added'), 12 => $this->l('Module(s) installed successfully'),
 			13 => $this->l('Module(s) uninstalled successfully'), 14 => $this->l('Language successfully copied'),
