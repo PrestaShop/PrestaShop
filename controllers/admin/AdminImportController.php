@@ -1699,37 +1699,115 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setDefaultValues($info);
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
+			{
 				$customer = new Customer((int)$info['id']);
+				$current_id_customer = $customer->id;
+				$current_id_shop = $customer->id_shop;
+				$current_id_shop_group = $customer->id_shop_group;
+				$customer_exist = true;
+				$customer_groups = $customer->getGroups();
+				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
+				foreach ($customer_groups as $key => $group)
+					if ($group == $customer->id_default_group)
+						unset($customer_groups[$key]);
+			}
 			else
 				$customer = new Customer();
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
 			if ($customer->passwd)
-				$customer->passwd = md5(_COOKIE_KEY_.$customer->passwd);
-
-			// Associate product to shop
-			if (Shop::isFeatureActive() && $customer->id_shop)
+				$customer->passwd = Tools::encrypt($customer->passwd);
+			
+			$id_shop_list = explode(',', $customer->id_shop);
+			$customers_shop = array();
+			$customers_shop['shared'] = array();
+			$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+			if (Shop::isFeatureActive() && $id_shop_list)
 			{
-				if (!is_numeric($customer->id_shop))
-					$customer->id_shop = Shop::getIdByName($customer->id_shop);
+				foreach ($id_shop_list as $id_shop)
+				{
+					$shop = new Shop((int)$id_shop);
+					$group_shop = $shop->getGroup();
+					if ($group_shop->share_customer)
+					{
+						if (!in_array($group_shop->id, $customers_shop['shared']))
+							$customers_shop['shared'][(int)$id_shop] = $group_shop->id;
+					}
+					else
+						$customers_shop[(int)$id_shop] = $group_shop->id;
+				}
 			}
 			else
-				$customer->id_shop = Configuration::get('PS_SHOP_DEFAULT');
+			{
+				$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+				$default_shop->getGroup();
+				$customer_shop[$default_shop->id] = $default_shop->getGroup()->id;
+			}
 
-			$res = false;
+			//set temporally for validate field
+			$customer->id_shop = $default_shop->id;
+			$customer->id_shop_group = $default_shop->getGroup()->id;
+
+			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
-				$customer->id_shop_group = Shop::getGroupFromShop($customer->id_shop);
-
-				if (($customer->id && $customer->customerIdExists($customer->id)) || $customer->customerExists($customer->email))
-					$res = $customer->update();
-				if (!$res)
-					$res = $customer->add();
-				if ($res)
-					$customer->addGroups(array(1));
+				foreach ($customers_shop as $id_shop => $id_group)
+				{
+					if ($id_shop == 'shared')
+					{
+						foreach ($id_group as $key => $id)
+						{
+							$customer->id_shop = (int)$key;
+							$customer->id_shop_group = (int)$id;
+							if ($customer_exist && ($current_id_shop_group == $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
+							{
+								$customer->id = $current_id_customer;
+								$res &= $customer->update();
+							}
+								
+							else
+							{
+								unset($customer->id);
+								$res &= $customer->add();
+								$customer->addGroups($customer_groups);
+								foreach ($addresses as $address)
+								{
+									$address['id_customer'] = $customer->id;
+									unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
+									Db::getInstance()->insert('address', $address);
+								}
+							}
+						}
+					}
+					else
+					{
+						$customer->id_shop = $id_shop;
+						$customer->id_shop_group = $id_group;
+						if ($customer_exist && $id_shop == $current_id_shop)
+						{
+							$customer->id = $current_id_customer;
+							$res &= $customer->update();
+						}
+						else
+						{
+							unset($customer->id);
+							$res &= $customer->add();
+							$customer->addGroups($customer_groups);
+							foreach ($addresses as $address)
+							{
+								$address['id_customer'] = $customer->id;
+								unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
+								Db::getInstance()->insert('address', $address);
+							}
+						}
+							
+					}
+					
+				}
 			}
+			$customer_exist = false;
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
