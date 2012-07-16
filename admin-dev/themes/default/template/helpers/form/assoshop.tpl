@@ -119,7 +119,7 @@ function check_all_shop() {
 									name="checkBoxShopAsso_{$table}[{$shopID}]"
 									id="checkedBox_{$shopID}"
 									{if $checked} checked="checked"{/if} 
-									{if $groupData['disable_shops']} readonly="readonly"{/if}
+									{if $groupData['disable_shops']} readonly="readonly" onclick="return false"{/if}
 									/>
 								{$shopData['name']}
 							</label>
