@@ -729,7 +729,7 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_from,
 					$usable_to
 				);
-
+				StockAvailable::synchronize($id_product);
 				if ($is_transfer)
 					Tools::redirectAdmin($redirect.'&conf=3');
 				else
