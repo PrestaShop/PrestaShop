@@ -424,6 +424,8 @@ class OrderDetailCore extends ObjectModel
 	{
 		$this->reduction_amount = 0.00;
 		$this->reduction_percent = 0.00;
+		$this->reduction_amount_tax_incl = 0.00;
+		$this->reduction_amount_tax_excl = 0.00;
 
 		if ($this->specificPrice)
 			switch ($this->specificPrice['reduction_type'])
@@ -435,9 +437,9 @@ class OrderDetailCore extends ObjectModel
 				case 'amount':
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
 					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
-						$price : $this->specificPrice['reduction']);
-                    $this->reduction_amount_tax_incl = $this->reduction_amount;
-                    $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
+					$price : $this->specificPrice['reduction']);
+					$this->reduction_amount_tax_incl = $this->reduction_amount;
+					$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
 				break;
 			}
 	}
