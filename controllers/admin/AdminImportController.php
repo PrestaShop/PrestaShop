@@ -1742,7 +1742,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
 				$default_shop->getGroup();
-				$customer_shop[$default_shop->id] = $default_shop->getGroup()->id;
+				$customers_shop[$default_shop->id] = $default_shop->getGroup()->id;
 			}
 
 			//set temporally for validate field
