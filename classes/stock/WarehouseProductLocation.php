@@ -132,4 +132,9 @@ class WarehouseProductLocationCore extends ObjectModel
 		$collection->where('id_product', '=', (int)$id_product);
 		return $collection;
 	}
+	
+	public static function getProducts($id_warehouse)
+	{
+		return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int)$id_warehouse);		
+	}
 }

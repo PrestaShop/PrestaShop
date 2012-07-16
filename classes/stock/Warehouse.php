@@ -128,27 +128,6 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Sets the shops associated to the current warehouse
-	 *
-	 * @param array $ids_shop Ids to set
-	 */
-	public function setShops($ids_shop)
-	{
-		if (!is_array($ids_shop))
-			$ids_shop = array();
-
-		$row_to_insert = array();
-		foreach ($ids_shop as $id_shop)
-			$row_to_insert[] = array($this->def['primary'] => $this->id, 'id_shop' => (int)$id_shop);
-
-		Db::getInstance()->execute('
-			DELETE FROM '._DB_PREFIX_.'warehouse_shop
-			WHERE '.$this->def['primary'].' = '.(int)$this->id);
-
-		Db::getInstance()->insert('warehouse_shop', $row_to_insert);
-	}
-
-	/**
 	 * Gets the carriers associated to the current warehouse
 	 *
 	 * @return array Ids of the associated carriers
@@ -550,6 +529,13 @@ class WarehouseCore extends ObjectModel
 		if (count($list) > 1)
 			$res = call_user_func_array('array_intersect', $list);
 		return $res;
+	}
+	
+	public function resetStockAvailable()
+	{
+		$products = WarehouseProductLocation::getProducts((int)$this->id);
+		foreach ($products as $product)
+			StockAvailable::synchronize((int)$product['id_product']);
 	}
 
 	/*********************************\

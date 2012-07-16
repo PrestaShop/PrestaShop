@@ -432,6 +432,8 @@ class StockManagerCore implements StockManagerInterface
 
 			// casts for security reason
 			$ids_warehouse = array_map('intval', $ids_warehouse);
+			if (!count($ids_warehouse))
+				return 0;
 		}
 		else
 			$ids_warehouse = array();
