@@ -137,54 +137,69 @@ class StockAvailableCore extends ObjectModel
 
 				// if it's a simple product
 				if (empty($ids_product_attribute))
-					$product_quantity = $manager->getProductRealQuantities($id_product, null, $warehouses, true);
-
-				// else this product has attributes, hence loops on $ids_product_attribute
-				foreach ($ids_product_attribute as $id_product_attribute)
 				{
-					$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
-					
-					$query = new DbQuery();
-					$query->select('COUNT(*)');
-					$query->from('stock_available');
-					$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
-						StockAvailable::addSqlShopRestriction(null, $id_shop));
-					
-					if ((int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query))
+					$allowed_warehouse_for_product = WareHouse::getProductWarehouseList((int)$id_product, 0, (int)$id_shop);
+					$allowed_warehouse_for_product_clean = array();
+					foreach ($allowed_warehouse_for_product as $warehouse)
+						$allowed_warehouse_for_product_clean[] = (int)$warehouse['id_warehouse'];
+					$allowed_warehouse_for_product_clean = array_intersect($allowed_warehouse_for_product_clean, $warehouses);
+					$product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
+				}
+				// else this product has attributes, hence loops on $ids_product_attribute
+				else
+				{
+					foreach ($ids_product_attribute as $id_product_attribute)
 					{
-						$query = array(
-							'table' => 'stock_available',
-							'data' => array('quantity' => $quantity),
-							'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
-							StockAvailable::addSqlShopRestriction(null, $id_shop)
-						);
-						Db::getInstance()->update($query['table'], $query['data'], $query['where']);
-					}
-					else
-					{
-						$query = array(
-							'table' => 'stock_available',
-							'data' => array(
-								'quantity' => $quantity,
-								'depends_on_stock' => 1,
-								'out_of_stock' => $out_of_stock,
-								'id_product' => (int)$id_product,
-								'id_product_attribute' => (int)$id_product_attribute,
-							)
-						);
-						StockAvailable::addSqlShopParams($query['data']);
-						Db::getInstance()->insert($query['table'], $query['data']);
-					}
 
-					$product_quantity += $quantity;
-
-					Hook::exec('actionUpdateQuantity',
-								array(
-									'id_product' => $id_product,
-									'id_product_attribute' => $id_product_attribute,
-									'quantity' => $quantity
+						$allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
+						$allowed_warehouse_for_combination_clean = array();
+						foreach ($allowed_warehouse_for_combination as $warehouse)
+							$allowed_warehouse_for_combination_clean[] = (int)$warehouse['id_warehouse'];
+						$allowed_warehouse_for_combination_clean = array_intersect($allowed_warehouse_for_combination_clean, $warehouses);
+						$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $allowed_warehouse_for_combination_clean, true);
+					
+						$query = new DbQuery();
+						$query->select('COUNT(*)');
+						$query->from('stock_available');
+						$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
+							StockAvailable::addSqlShopRestriction(null, $id_shop));
+					
+						if ((int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query))
+						{
+							$query = array(
+								'table' => 'stock_available',
+								'data' => array('quantity' => $quantity),
+								'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
+								StockAvailable::addSqlShopRestriction(null, $id_shop)
+							);
+							Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+						}
+						else
+						{
+							$query = array(
+								'table' => 'stock_available',
+								'data' => array(
+									'quantity' => $quantity,
+									'depends_on_stock' => 1,
+									'out_of_stock' => $out_of_stock,
+									'id_product' => (int)$id_product,
+									'id_product_attribute' => (int)$id_product_attribute,
 								)
-					);
+							);
+							StockAvailable::addSqlShopParams($query['data']);
+							Db::getInstance()->insert($query['table'], $query['data']);
+						}
+
+						$product_quantity += $quantity;
+
+						Hook::exec('actionUpdateQuantity',
+									array(
+										'id_product' => $id_product,
+										'id_product_attribute' => $id_product_attribute,
+										'quantity' => $quantity
+									)
+						);
+					}
 				}
 
 				// updates

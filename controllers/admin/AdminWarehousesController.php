@@ -436,10 +436,6 @@ class AdminWarehousesControllerCore extends AdminController
 			$address->save();
 		}
 
-		// handles shops associations
-		if (Tools::isSubmit('ids_shops'))
-			$object->setShops(Tools::getValue('ids_shops'));
-
 		// handles carriers associations
 		if (Tools::isSubmit('ids_carriers'))
 			$object->setCarriers(Tools::getValue('ids_carriers'));
@@ -569,7 +565,6 @@ class AdminWarehousesControllerCore extends AdminController
 
 				// removes associations with carriers/shops/products location
 				$obj->setCarriers(array());
-				$obj->setShops(array());
 				$obj->resetProductsLocations();
 
 				return parent::processDelete();
@@ -586,16 +581,19 @@ class AdminWarehousesControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		// handles shops associations
-		if (Tools::isSubmit('ids_shops'))
-			$obj->setShops(Tools::getValue('ids_shops'));
-
 		// handles carriers associations
 		$obj->setCarriers(Tools::getValue('ids_carriers'), array());
 
 		return parent::processUpdate();
 	}
 
+	protected function updateAssoShop($id_object)
+	{
+		parent::updateAssoShop($id_object);
+		if (!($obj = $this->loadObject(true)))
+			return;
+		$obj->resetStockAvailable();
+	}
 	/**
 	 * @see AdminController::initProcess()
 	 */

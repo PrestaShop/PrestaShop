@@ -2402,7 +2402,7 @@ class AdminControllerCore extends Controller
 				$this->identifier => $id_object,
 				'id_shop' => (int)$id_shop,
 			);
-		Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
+		return Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
 	}
 
 	protected function validateField($value, $field)
