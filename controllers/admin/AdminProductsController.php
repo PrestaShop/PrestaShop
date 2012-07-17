@@ -2218,7 +2218,10 @@ class AdminProductsControllerCore extends AdminController
 		$product = $this->object;
 
 		if ($this->display == 'edit' && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
+		{
 			$this->displayWarning($this->l('Warning: this product does not exist in this shop. If you submit the form, this product will be available for this shop too.'));
+			return;
+		}
 
 		// Product for multishop
 		$this->context->smarty->assign('bullet_common_field', '');
