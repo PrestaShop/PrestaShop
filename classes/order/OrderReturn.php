@@ -230,7 +230,7 @@ class OrderReturnCore extends ObjectModel
 			FROM ps_order_detail od
 			LEFT JOIN ps_order_return_detail ord
 			ON ord.id_order_detail = od.id_order_detail
-			WHERE od.id_order = 1'
+			WHERE od.id_order = '.(int)$id_order
 		);
 		if (!$details)
 			return;
