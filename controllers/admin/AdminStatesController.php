@@ -223,7 +223,7 @@ class AdminStatesControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('This state is currently in use');
+						$this->errors[] = Tools::displayError('This state was used in at least one address, it cannot be removed');
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
