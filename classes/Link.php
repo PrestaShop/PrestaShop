@@ -503,7 +503,7 @@ class LinkCore
 						$vars[urlencode($k)] = $value;
 					else
 					{
-						foreach (explode('&', http_build_query(array($k => $value)), '', '&') as $key => $val)
+						foreach (explode('&', http_build_query(array($k => $value), '', '&')) as $key => $val)
 						{
 							$data = explode('=', $val);
 							$vars[urldecode($data[0])] = $data[1];
