@@ -41,7 +41,6 @@ class OrderFollowControllerCore extends FrontController
 		if (Tools::isSubmit('submitReturnMerchandise'))
 		{
 			$customizationQtyInput = Tools::getValue('customization_qty_input');
-
 			if (!$id_order = (int)(Tools::getValue('id_order')))
 				Tools::redirect('index.php?controller=history');
 			if (!$order_qte_input = Tools::getValue('order_qte_input'))
@@ -60,7 +59,12 @@ class OrderFollowControllerCore extends FrontController
 			$orderReturn->id_order = $id_order;
 			$orderReturn->question = strval(Tools::getValue('returnText'));
 			if (empty($orderReturn->question))
-				Tools::redirect('index.php?controller=order-follow&errorMsg');
+				Tools::redirect('index.php?controller=order-follow&errorMsg&'.
+					http_build_query(array(
+						'ids_order_detail' => $ids_order_detail,
+						'order_qte_input' => $order_qte_input,
+						'id_order' => Tools::getValue('id_order'),
+					)));
 
 			if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput))
 				Tools::redirect('index.php?controller=order-follow&errorQuantity');
@@ -85,7 +89,14 @@ class OrderFollowControllerCore extends FrontController
 		if (Tools::isSubmit('errorQuantity'))
 			$this->context->smarty->assign('errorQuantity', true);
 		elseif (Tools::isSubmit('errorMsg'))
-			$this->context->smarty->assign('errorMsg', true);
+			$this->context->smarty->assign(
+				array(
+					'errorMsg' => true,
+					'ids_order_detail' => Tools::getValue('ids_order_detail', array()),
+					'order_qte_input' => Tools::getValue('order_qte_input', array()),
+					'id_order' => Tools::getValue('id_order'),
+				)
+			);
 		elseif (Tools::isSubmit('errorDetail1'))
 			$this->context->smarty->assign('errorDetail1', true);
 		elseif (Tools::isSubmit('errorDetail2'))

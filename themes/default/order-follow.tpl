@@ -29,7 +29,27 @@
 
 <h1>{l s='Return Merchandise Authorization (RMA)'}</h1>
 {if isset($errorQuantity) && $errorQuantity}<p class="error">{l s='You do not have enough products to request another merchandise return.'}</p>{/if}
-{if isset($errorMsg) && $errorMsg}<p class="error">{l s='Please provide an explanation for your RMA.'}</p>{/if}
+{if isset($errorMsg) && $errorMsg}
+	<p class="error">
+		{l s='Please provide an explanation for your RMA.'}
+	</p>
+	<p>
+		<h2>{l s='Please specify an explanation for your RMA:'}</h2>
+		<form method="POST"  id="returnOrderMessage"/>
+			<p class="textarea">
+				<textarea name="returnText"></textarea>
+			</p>
+			{foreach $ids_order_detail as $id_order_detail}
+				<input type="hidden" name="ids_order_detail[{$id_order_detail}]" value="{$id_order_detail}"/>
+			{/foreach}
+			{foreach $order_qte_input as $key => $value}
+				<input type="hidden" name="order_qte_input[{$key}]" value="{$value}"/>
+			{/foreach}
+			<input type="hidden" name="id_order" value="{$id_order}"/>
+			<input class="button_large" type="submit" name="submitReturnMerchandise" value="{l s='Make an RMA slip'}"/>
+		</form>
+	</p>
+{/if}
 {if isset($errorDetail1) && $errorDetail1}<p class="error">{l s='Please check at least one product you would like to return.'}</p>{/if}
 {if isset($errorDetail2) && $errorDetail2}<p class="error">{l s='Please provide a quantity for the product you checked.'}</p>{/if}
 {if isset($errorNotReturnable) && $errorNotReturnable}<p class="error">{l s='This order cannot be returned.'}</p>{/if}
