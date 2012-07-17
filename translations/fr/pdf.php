@@ -2,7 +2,7 @@
 
 global $_LANGPDF;
 $_LANGPDF = array();
-$_LANGPDF['PDF01a2436b8e3782c1f99e6b26adf901b2'] = 'Taux de taxe';
+$_LANGPDF['PDF01a2436b8e3782c1f99e6b26adf901b2'] = 'Total taxe';
 $_LANGPDF['PDF023f66b09075fa1cc29e74bed9f5ac40'] = 'Détail des taxes';
 $_LANGPDF['PDF03ab340b3f99e03cff9e84314ead38c0'] = 'Qté';
 $_LANGPDF['PDF065ab3a28ca4f16f55f103adc7d0226f'] = 'Livraison';
