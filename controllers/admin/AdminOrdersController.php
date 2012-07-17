@@ -734,14 +734,15 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cartrule = new CartRule();
 							$languages = Language::getLanguages($order);
+							$cartrule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
 							foreach ($languages as $language)
 							{
-								$cartrule->description[$language['id_lang']] = sprintf($this->l('Credit Slip for order #%d'), $order->id);
 								// Define a temporary name
 								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 							}
 							// Define a temporary code
 							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+
 							$cartrule->quantity = 1;
 							$cartrule->quantity_per_user = 1;
 							// Specific to the customer
@@ -751,23 +752,17 @@ class AdminOrdersControllerCore extends AdminController
 							$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
 							$cartrule->active = 1;
 
-							// Calculate the amount of the discount
 							$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
-							// Totals are stored in the order currency (or at least should be)
-							$total = $order->getTotalProductsWithTaxes($products);
-							$discounts = $order->getCartRules();
-							$total_tmp = $total;
-							foreach ($discounts as $discount)
-							{
-								if ($discount['id_discount_type'] == Discount::PERCENT)
-									$total -= $total_tmp * ($discount['value'] / 100);
-								elseif ($discount['id_discount_type'] == Discount::AMOUNT)
-									$total -= ($discount['value'] * ($total_tmp / $order->total_products_wt));
-							}
+
+							$total = 0;
+							foreach ($products as $product)
+								$total += $product['unit_price_tax_incl'] * $product['product_quantity'];
+
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
 
 							$cartrule->reduction_amount = $total;
+							$cartrule->reduction_tax = true;
 							$cartrule->minimum_amount_currency = $order->id_currency;
 							$cartrule->reduction_currency = $order->id_currency;
 
