@@ -6,7 +6,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered-no-products_5c9838becf9bbce28ba
 $_MODULE['<{blocklayered}prestashop>blocklayered_84241e458cdd5162745500a59a3680f3'] = 'Bloque navegación por facetas';
 $_MODULE['<{blocklayered}prestashop>blocklayered_2d08fa8e157fe3f1875402cbd98aee1b'] = 'Muestra un bloque con los filtros de la navegación por facetas';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3b3d06023f6353f8fd05f859b298573e'] = 'URL:';
-$_MODULE['<{blocklayered}prestashop>blocklayered_6252c0f2c2ed83b7b06dfca86d4650bb'] = 'Caracteres no válidos:n';
+$_MODULE['<{blocklayered}prestashop>blocklayered_6252c0f2c2ed83b7b06dfca86d4650bb'] = 'Caracteres no válidos:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f39f64ad2722b269d9b6cb2ec97ba4ad'] = 'Formato de dirección URL específica en la generación de bloque de capas';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7b250cb374c12c42a75227ba75df7779'] = 'Meta  título:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a4020753b3e63fd8a1d0c0b2b33fc999'] = 'Formato específico para el título de meta';

@@ -10,7 +10,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_6252c0f2c2ed83b7b06dfca86d4650b
 $_MODULE['<{blocklayered}prestashop>blocklayered_f39f64ad2722b269d9b6cb2ec97ba4ad'] = 'Bestimmten Format in url Block geschichtet Generation';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7b250cb374c12c42a75227ba75df7779'] = 'Meta Titel:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a4020753b3e63fd8a1d0c0b2b33fc999'] = 'Spezifische Format für Meta-Titel';
-$_MODULE['<{blocklayered}prestashop>blocklayered_b3786b970611c1a3809dd51b630812a7'] = '\\\"% S\\\" ist keine gültige URL';
+$_MODULE['<{blocklayered}prestashop>blocklayered_b3786b970611c1a3809dd51b630812a7'] = '\"%s\" ist keine gültige URL';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c3ef60194d18cf4026d22051b3a19428'] = 'Wendeschneidplatten:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a075d40d1a15460220cbf564b7b9b591'] = 'Verwenden Sie dieses Attribut in url durch die Modul-Block Layered Navigation generiert';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ccc12c5568381293a27db0232877937b'] = 'Filter Template-Namen erforderlich (darf nicht leer sein)';
@@ -37,7 +37,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_8bf466a25752f2552df8dc8b04fc10b
 $_MODULE['<{blocklayered}prestashop>blocklayered_b5ca9d41e254963a90417fe12bafba5a'] = 'URL Indexierung fehlgeschlagen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_399e951fec4faaeab09333f40bf6d80c'] = 'Attribut-Indexierung fehlgeschlagen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_e2dd8f544131eaf47a4f722ace7f876b'] = 'Preis Indexierung fertig';
-$_MODULE['<{blocklayered}prestashop>blocklayered_7cf7d150dd287df0a8e17eeb4cf2161d'] = '(In progress,% s Produkte Preis-Index)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_7cf7d150dd287df0a8e17eeb4cf2161d'] = '(In progress,%s Produkte Preis-Index)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ceda32b8540dee4f1222cd482a513db8'] = 'Preis Indexierung fehlgeschlagen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_a2654ab6d514d63a3be2a4d6ea6b39df'] = 'Bestehende Filter-Vorlagen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d4041fbb1580b68012b82fee850014a2'] = 'Filter-Vorlagen konfiguriert sind:';
