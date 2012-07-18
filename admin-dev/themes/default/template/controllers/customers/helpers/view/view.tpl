@@ -59,7 +59,7 @@
 
 	<div class="info-customer-left">
 			<div style="float: right">
-			<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
+			<a href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
 				<img src="../img/admin/edit.gif" />
 			</a>
 		</div>
