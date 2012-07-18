@@ -2386,7 +2386,7 @@ class ProductCore extends ObjectModel
 	**/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-		$id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity)
+		$id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0)
 	{
 		static $address = null;
 
