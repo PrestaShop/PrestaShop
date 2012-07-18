@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8.8';
+		$this->version = '1.8.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -71,6 +71,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_QTY', 0);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', 0);
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', 0);
+			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', 0);
 			
 			$this->rebuildLayeredStructure();
 			
@@ -112,6 +113,7 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_QTY');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_CDT');
 		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_MNF');
+		Configuration::deleteByName('PS_LAYERED_FILTER_INDEX_CAT');
 		
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
@@ -1287,6 +1289,8 @@ class BlockLayered extends Module
 			$blacklist[] = 'quantity';
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'))
 			$blacklist[] = 'manufacturer';
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT'))
+			$blacklist[] = 'category';
 
 		foreach ($filters as $type => $val)
 		{
@@ -1508,6 +1512,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_QTY', (int)Tools::getValue('ps_layered_filter_index_availability'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CDT', (int)Tools::getValue('ps_layered_filter_index_condition'));
 			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_MNF', (int)Tools::getValue('ps_layered_filter_index_manufacturer'));
+			Configuration::updateValue('PS_LAYERED_FILTER_INDEX_CAT', (int)Tools::getValue('ps_layered_filter_index_category'));
 
 			$html .= '
 			<div class="conf">'.
@@ -2196,6 +2201,15 @@ class BlockLayered extends Module
 							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
 							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
 							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_manufacturer" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF') ? 'checked="checked"' : '').' />
+						</td>
+					</tr>
+					<tr style="text-align: center;">
+						<td style="text-align: right;">'.$this->l('Allow indexing robots (google, yahoo, bing, ...) to use category filter').'</td>
+						<td>
+							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
+							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_index_category" value="1" '.(Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
+							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
+							'.$this->l('No').' <input type="radio" name="ps_layered_filter_index_category" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT') ? 'checked="checked"' : '').' />
 						</td>
 					</tr>
 				</table>
@@ -3211,6 +3225,8 @@ class BlockLayered extends Module
 			$blacklist[] = 'quantity';
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_MNF'))
 			$blacklist[] = 'manufacturer';
+		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT'))
+			$blacklist[] = 'category';
 		
 		$nofollow = false; // true is in the blacklist
 		foreach ($filter_blocks as &$type_filter)
