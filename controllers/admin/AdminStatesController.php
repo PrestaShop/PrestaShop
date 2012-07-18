@@ -29,9 +29,9 @@ class AdminStatesControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'state';
+		$this->table = 'state';
 		$this->className = 'State';
-	 	$this->lang = false;
+		$this->lang = false;
 		$this->requiredDatabase = true;
 
 		$this->addRowAction('edit');
@@ -86,10 +86,10 @@ class AdminStatesControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
 				$this->tpl_list_vars['zones'] = Zone::getZones();
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()
