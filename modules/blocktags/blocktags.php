@@ -36,7 +36,7 @@ class BlockTags extends Module
 	{
 		$this->name = 'blocktags';
 		$this->tab = 'front_office_features';
-		$this->version = 1.0;
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -96,16 +96,32 @@ class BlockTags extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*
-	* @todo Links on tags (dedicated page or search ?)
 	*/
 	function hookLeftColumn($params)
 	{
-
 		$tags = Tag::getMainTags((int)($params['cookie']->id_lang), (int)(Configuration::get('BLOCKTAGS_NBR')));
+		
+		$max = -1;
+		$min = -1;
+		foreach ($tags as $tag)
+		{
+			if ($tag['times'] > $max)
+				$max = $tag['times'];
+			if ($tag['times'] < $min || $min == -1)
+				$min = $tag['times'];
+		}
+		
+		if ($min == $max)
+			$coef = $max;
+		else
+		{
+			$coef = (BLOCKTAGS_MAX_LEVEL - 1) / ($max - $min);
+		}
+		
 		if (!sizeof($tags))
 			return false;
 		foreach ($tags AS &$tag)
-			$tag['class'] = 'tag_level'.($tag['times'] > BLOCKTAGS_MAX_LEVEL ? BLOCKTAGS_MAX_LEVEL : $tag['times']);
+			$tag['class'] = 'tag_level'.(int)(($tag['times'] - $min) * $coef + 1);
 		$this->smarty->assign('tags', $tags);
 
 		return $this->display(__FILE__, 'blocktags.tpl');
