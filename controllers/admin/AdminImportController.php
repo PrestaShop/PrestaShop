@@ -1504,18 +1504,18 @@ class AdminImportControllerCore extends AdminController
 			foreach (explode($fsep, $info['group']) as $key => $group)
 			{
 				$tab_group = explode(':', $group);
-				$group = $tab_group[0];
+				$group = trim($tab_group[0]);
 				if (!isset($tab_group[1]))
 					$type = 'select';
 				else
-				$type = $tab_group[1];
+				$type = trim($tab_group[1]);
 
 				// sets group
 				$groups_attributes[$key]['group'] = $group;
 
 				// if position is filled
 				if (isset($tab_group[2]))
-					$position = $tab_group[2];
+					$position = trim($tab_group[2]);
 				else
 					$position = false;
 
@@ -1558,10 +1558,10 @@ class AdminImportControllerCore extends AdminController
 			foreach (explode($fsep, $info['attribute']) as $key => $attribute)
 			{
 				$tab_attribute = explode(':', $attribute);
-				$attribute = $tab_attribute[0];
+				$attribute = trim($tab_attribute[0]);
 				// if position is filled
 				if (isset($tab_attribute[1]))
-					$position = $tab_attribute[1];
+					$position = trim($tab_attribute[1]);
 				else
 					$position = false;
 
@@ -2531,7 +2531,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 			else if (!file_exists($_FILES['file']['tmp_name']) ||
-				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.$_FILES['file']['name'].'.'.date('Ymdhis')))
+				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.date('Ymdhis').'-'.$_FILES['file']['name']))
 				$this->errors[] = $this->l('an error occurred while uploading and copying file');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');

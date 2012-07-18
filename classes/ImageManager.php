@@ -87,7 +87,7 @@ class ImageManagerCore
 	 */
 	public static function checkImageMemoryLimit($image)
 	{
-		$infos = getimagesize($image);
+		$infos = @getimagesize($image);
 
 		$memory_limit = Tools::getMemoryLimit();
 		// memory_limit == -1 => unlimited memory
