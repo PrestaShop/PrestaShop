@@ -68,7 +68,7 @@ class AdminCustomersControllerCore extends AdminController
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'width' => 20
- 			),
+			),
 			'id_gender' => array(
 				'title' => $this->l('Gender'),
 				'width' => 70,
@@ -78,7 +78,7 @@ class AdminCustomersControllerCore extends AdminController
 				'type' => 'select',
 				'list' => $genders,
 				'filter_key' => 'a!id_gender',
- 			),
+			),
 			'lastname' => array(
 				'title' => $this->l('Last Name'),
 				'width' => 'auto'
