@@ -1443,11 +1443,6 @@ class AdminImportControllerCore extends AdminController
 				$product->deleteImages();
 				$this->cache_image_deleted[(int)$product->id] = true;
 			}
-			else if (array_key_exists('image_url', $info) && !isset($this->cache_image_deleted[(int)$product->id]))
-			{
-				$product->deleteImages();
-				$this->cache_image_deleted[(int)$product->id] = true;
-			}
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{
@@ -1466,7 +1461,10 @@ class AdminImportControllerCore extends AdminController
 				{
 					$image->associateTo($id_shop_list);
 					if (!AdminImportController::copyImg($product->id, $image->id, $url))
-						$this->warnings[] = Tools::displayError('Error copying image:').$url;
+					{
+						$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
+						$image->delete();
+					}
 					else
 						$id_image = array($image->id);
 				}
