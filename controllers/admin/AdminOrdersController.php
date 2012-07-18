@@ -536,7 +536,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Redirect if no errors
 					if (!count($this->errors))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=30&token='.$this->token);
 				}
 				else
 					$this->errors[] = Tools::displayError('Partial refund data is incorrect');
@@ -793,7 +793,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					// Redirect if no errors
 					if (!count($this->errors))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=31&token='.$this->token);
 				}
 			}
 			else
