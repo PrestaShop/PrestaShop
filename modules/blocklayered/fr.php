@@ -94,6 +94,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_3e652bd299bb3ee3d458c0dcc7fd706
 $_MODULE['<{blocklayered}prestashop>blocklayered_cc787af9edec8ce947ada8ab5bbff6e5'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre d\'état';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ab28e5086d1dcb1474a4bd4951b148b9'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre de disponibilité';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1218da2abb1e88e7fe8855995def9fef'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre fabriquant';
+$_MODULE['<{blocklayered}prestashop>blocklayered_c41e97692bc79531a51dfca4b7f6bee0'] = 'Autoriser les robots d\'indexation (Google, Yahoo, Bing, ...) à utiliser le filtre catégorie';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cf565402d32b79d33f626252949a6941'] = 'Enregistrer la configuration';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3601146c4e948c32b6424d2c0a7f0118'] = 'Prix';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8c489d0946f66d17d73f26366a4bf620'] = 'Poids';
