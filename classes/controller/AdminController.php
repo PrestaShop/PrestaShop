@@ -296,7 +296,9 @@ class AdminControllerCore extends Controller
 			26 => $this->l('Cover selection saved'),
 			27 => $this->l('Image shop association modified'),
 			28 => $this->l('Zone assigned to the selection successfully'),
-			29 => $this->l('Upgrade successful')
+			29 => $this->l('Upgrade successful'),
+			30 => $this->l('Partial refund successfully created'),
+			31 => $this->l('The discount successfully generated')
 		);
 
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
