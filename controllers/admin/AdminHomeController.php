@@ -551,11 +551,19 @@ class AdminHomeControllerCore extends AdminController
 					foreach ($partner->labels->label as $label)
 						if (empty($label_final) || (string)$label->attributes()->iso == $isoUser)
 							$label_final = (string)$label;
+
+					$optional_final = '';
+					if (isset($partner->optionals))
+						foreach ($partner->optionals->optional as $optional)
+							if (empty($optional_final) && (string)$optional->attributes()->iso == $isoUser)
+								$optional_final = (string)$optional;
+
 					$link = 'index.php?controller=adminmodules&install='.htmlentities((string)$partner->module).'&token='.Tools::getAdminTokenLite('AdminModules').'&module_name='.htmlentities((string)$partner->module).'&redirect=config';
-					$return .= '<div style="width:46.5%;height:90px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
+					$return .= '<div style="width:46.5%;min-height:85px;border:1px solid #cccccc;background-color:white;padding-left:5px;padding-right:5px;'.(empty($return) ? 'float:left' : 'float:right').'">
 						<p align="center">
 							<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
 							<b><a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
+							'.(($optional_final != '') ? '<img src="'.htmlentities((string)$optional_final).'" />' : '').'
 						</p>
 					</div>';
 					$count++;
