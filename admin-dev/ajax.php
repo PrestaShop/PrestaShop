@@ -66,11 +66,6 @@ if (Tools::isSubmit('installBoughtModule'))
 	die(displayJavascriptAlert('Module copied to disk'));
 }
 
-function displayJavascriptAlert($s)
-{
-	echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';
-}
-
 if (Tools::isSubmit('ajaxReferrers'))
 {
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
@@ -334,4 +329,9 @@ if (Tools::isSubmit('getZones'))
 	$html .= '</select>';
 	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
 	die(Tools::jsonEncode($html));
+}
+
+function displayJavascriptAlert($s)
+{
+	echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';
 }
