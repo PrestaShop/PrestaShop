@@ -26,7 +26,7 @@
 {if $product.customizedDatas}
 	<tr class="customized customized-{$product.id_order_detail}">
 		<input type="hidden" class="edit_product_id_order_detail" value="{$product.id_order_detail}" />
-		<td align="center">{if ($product.image->id)}{$product.image_tag}{else}'--'{/if}</td>
+		<td align="center">{if isset($product.image) && $product.image->id}{$product.image_tag}{else}'--'{/if}</td>
 		<td>
 			<a href="index.php?controller=adminproducts&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']} - {l s='customized'}</span><br />
