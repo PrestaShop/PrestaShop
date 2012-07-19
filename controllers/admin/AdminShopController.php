@@ -35,7 +35,7 @@ class AdminShopControllerCore extends AdminController
 		$this->className = 'Shop';
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->id_shop_group = Tools::getValue('id_shop_group');
-
+		$this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
 		$this->fields_list = array(
 			'id_shop' => array(
 				'title' => $this->l('ID'),
