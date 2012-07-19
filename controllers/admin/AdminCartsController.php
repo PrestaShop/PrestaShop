@@ -561,6 +561,13 @@ class AdminCartsControllerCore extends AdminController
 			$currency->sign, '',
 			Tools::displayPrice(Tools::convertPrice($summary['total_price'], $currency), $currency)
 		);
+		if (isset($summary['gift_products']) && count($summary['gift_products']))
+			foreach ($summary['gift_products'] as &$product)
+			{
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				if (!isset($product['attributes_small']))
+					$product['attributes_small'] = '';
+			}
 
 		return $summary;
 	}
