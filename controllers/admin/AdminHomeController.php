@@ -563,7 +563,7 @@ class AdminHomeControllerCore extends AdminController
 						<p align="center">
 							<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png" alt="'.htmlentities((string)$partner->name).'" border="0" /></a><br />
 							<b><a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'">'.htmlentities(utf8_decode((string)$label_final)).'</a></b>
-							'.(($optional_final != '') ? '<img src="'.htmlentities((string)$optional_final).'" />' : '').'
+							'.(($optional_final != '') ? '<a href="'.$link.'" class="preactivationLink" rel="'.htmlentities((string)$partner->module).'"><img src="'.htmlentities((string)$optional_final).'" /></a>' : '').'
 						</p>
 					</div>';
 					$count++;
