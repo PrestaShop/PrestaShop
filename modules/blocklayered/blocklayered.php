@@ -1325,11 +1325,14 @@ class BlockLayered extends Module
 				default:
 					if (in_array($type, $blacklist))
 					{
-						$smarty->assign('nobots', true);
-						$smarty->assign('nofollow', true);
-						return;
+						if (count($val))
+						{
+							$smarty->assign('nobots', true);
+							$smarty->assign('nofollow', true);
+							return;
+						}
 					}
-					if (count($val) > 1)
+					elseif (count($val) > 1)
 					{
 						$smarty->assign('nobots', true);
 						$smarty->assign('nofollow', true);
@@ -1557,7 +1560,7 @@ class BlockLayered extends Module
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Indexes and caches').'</legend>
 			<span id="indexing-warning" style="display: none; color:red; font-weight: bold">'.$this->l('Indexing is in progress. Please do not leave this page').'<br/><br/></span>';
 
-		if (version_compare(_PS_VERSION_, '1.5', '<') &&!Configuration::get('PS_LAYERED_INDEXED')
+		if (version_compare(_PS_VERSION_, '1.5', '<') && !Configuration::get('PS_LAYERED_INDEXED')
 			|| version_compare(_PS_VERSION_, '1.5', '>') && !Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			$html .= '
 			<script type="text/javascript">
@@ -3228,7 +3231,8 @@ class BlockLayered extends Module
 		if (!Configuration::get('PS_LAYERED_FILTER_INDEX_CAT'))
 			$blacklist[] = 'category';
 		
-		$nofollow = false; // true is in the blacklist
+		$global_nofollow = false;
+		
 		foreach ($filter_blocks as &$type_filter)
 		{
 			$filter_name = (!empty($type_filter['url_name']) ? $type_filter['url_name'] : $type_filter['name']);
@@ -3237,7 +3241,9 @@ class BlockLayered extends Module
 			{
 				foreach ($type_filter['values'] as $key => $values)
 				{
-					$nofollow = in_array($type_filter['type'], $blacklist);
+					$nofollow = false;
+					if (!empty($values['checked']) && in_array($type_filter['type'], $blacklist))
+						$global_nofollow = true;
 					$option_checked_clone_array = $option_checked_array;
 					
 					// If not filters checked, add parameter
@@ -3310,7 +3316,7 @@ class BlockLayered extends Module
 			'meta_values' => $meta_values,
 			'current_friendly_url' => $param_selected,
 			'param_product_url' => $param_product_url,
-			'no_follow' => (!empty($param_selected) || $nofollow)
+			'no_follow' => (!empty($param_selected) || $global_nofollow)
 		);
 		
 		return $cache;
