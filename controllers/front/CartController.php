@@ -308,7 +308,15 @@ class CartControllerCore extends FrontController
 			// Display reduced price (or not) without quantity discount
 			if (Tools::getIsset('getproductprice'))
 				foreach ($result['summary']['products'] as $key => &$product)
-					$product['price_without_quantity_discount'] = Product::getPriceStatic($product['id_product'], !Product::getTaxCalculationMethod(), $product['id_product_attribute']);
+					$product['price_without_quantity_discount'] = Product::getPriceStatic(
+						$product['id_product'],
+						!Product::getTaxCalculationMethod(),
+						$product['id_product_attribute'],
+						6,
+						null,
+						false,
+						false
+					);
 			die(Tools::jsonEncode($result));
 		}
 		// @todo create a hook
