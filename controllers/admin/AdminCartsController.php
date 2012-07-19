@@ -233,8 +233,7 @@ class AdminCartsControllerCore extends AdminController
 				$errors[] = Tools::displayError('Invalid combination');
 			if (count($errors))
 				die(Tools::jsonEncode($errors));
-
-			if ($this->context->cart->deleteProduct($id_product, $id_product_attribute))
+			if ($this->context->cart->deleteProduct($id_product, $id_product_attribute, (int)Tools::getValue('id_customization')))
 				echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
 	}
@@ -254,7 +253,7 @@ class AdminCartsControllerCore extends AdminController
 				$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
 				if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
 				{
-					if (!isset($_POST[$field_id]))
+					if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
 					{
 						if ($customization_field['required'])
 							$errors[] = Tools::displayError('Please fill in all required fields');
