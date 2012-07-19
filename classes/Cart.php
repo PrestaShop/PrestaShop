@@ -471,7 +471,7 @@ class CartCore extends ObjectModel
 		{
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
 			$sql->leftJoin('customization', 'cu',
-				'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.id_product_attribute');
+				'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.id_product_attribute AND cu.id_cart='.(int)$this->id);
 		}
 		else
 			$sql->select('0 AS customization_quantity, 0 AS id_customization');
