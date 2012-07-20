@@ -446,15 +446,17 @@ class FrontControllerCore extends Controller
 				$this->js_files = Media::cccJs($this->js_files);
 		}
 
-		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
-
-		$this->context->smarty->assign(array(
+		// Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
+        $this->context->smarty->assign(array(
 			'HOOK_HEADER' => $hook_header,
 			'HOOK_TOP' => Hook::exec('displayTop'),
 			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
 			'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
+			'HOOK_FOOTER' => Hook::exec('displayFooter')
 		));
+
+		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 
 		$this->display_header = $display;
 		$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
@@ -468,10 +470,6 @@ class FrontControllerCore extends Controller
 	{
 		// This method will be removed in 1.6
 		Tools::displayAsDeprecated();
-		$this->context->smarty->assign(array(
-			'HOOK_RIGHT_COLUMN' => Hook::exec('displayRightColumn', array('cart' => $this->context->cart)),
-			'HOOK_FOOTER' => Hook::exec('displayFooter'),
-		));
 		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 	}
 
