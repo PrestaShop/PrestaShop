@@ -73,8 +73,6 @@ $(function(){ldelim}
 </script>
 
 <h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create your account'}{/if}</h1>
-{assign var='current_step' value='login'}
-{include file="$tpl_dir./order-steps.tpl"}
 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
