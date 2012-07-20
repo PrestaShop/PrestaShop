@@ -900,7 +900,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			$res = false;
 			if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && empty($this->errors))
 			{
 				$category_already_created = Category::searchByNameAndParentCategoryId(
 					$default_language_id,
@@ -931,7 +931,7 @@ class AdminImportControllerCore extends AdminController
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
 				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories')))
-					$this->warnings[] = $category->image.' '.Tools::displayError('Cannot be copied');
+					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied');
 			// If both failed, mysql error
 			if (!$res)
 			{
