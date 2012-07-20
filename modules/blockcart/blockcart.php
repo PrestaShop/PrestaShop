@@ -91,7 +91,7 @@ class BlockCart extends Module
 				$cart_rule['value_real'] -= Tools::convertPrice($params['cart']->getOrderTotal(true, Cart::ONLY_SHIPPING), $currency);
 				$cart_rule['value_tax_exc'] = Tools::convertPrice($params['cart']->getOrderTotal(false, Cart::ONLY_SHIPPING), $currency);
 			}
-			elseif ($cart_rule['gift_product'])
+			if ($cart_rule['gift_product'])
 			{
 				foreach ($products as &$product)
 					if ($product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
