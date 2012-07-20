@@ -65,6 +65,8 @@ if ($context->customer->isLogged())
 				$wishlist = new WishList();
 				$wishlist->name = $name;
 				$wishlist->id_customer = (int)$context->customer->id;
+                $wishlist->id_shop = $context->shop->id;
+                $wishlist->id_shop_group = $context->shop->id_shop_group;
 				list($us, $s) = explode(' ', microtime());
 				srand($s * $us);
 				$wishlist->token = strtoupper(substr(sha1(uniqid(rand(), true)._COOKIE_KEY_.$context->customer->id), 0, 16));
