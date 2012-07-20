@@ -2018,6 +2018,7 @@ $_LANGADM['AdminOrders21e12a8fe83def19b503a5fe335cff50'] = 'Marque de la carte :
 $_LANGADM['AdminOrders24dd7d199595f022b6c9dbfd17bafb55'] = 'Aucun paiement disponible';
 $_LANGADM['AdminOrders255e1f372eaf387a5625518b67f2ef92'] = 'Rechercher un client en tapant les premières lettres de son nom';
 $_LANGADM['AdminOrders257630448a4acd9cfc1ce6c7a5ce05f3'] = 'Ajouter un nouveau client';
+$_LANGADM['AdminOrders25b6c75101b12ff55ef0c079381ad85a'] = 'Cadeau';
 $_LANGADM['AdminOrders2633d6725607d13e80f5e30514b91fbe'] = 'Total bons d\'achat :';
 $_LANGADM['AdminOrders284b47b0bb63ae2df3b29f0e691d6fcf'] = 'Adresses';
 $_LANGADM['AdminOrders290612199861c31d1036b185b4e69b75'] = 'Récapitulatif';
