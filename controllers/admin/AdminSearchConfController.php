@@ -73,7 +73,16 @@ class AdminSearchConfControllerCore extends AdminController
 							$this->l('Add missing products to index.').'</a><br />
 						-&gt; <a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="bold">'.
 							$this->l('Re-build entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'">'.$cron_url.'</a>'
+						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'">'.$cron_url.'</a>',
+				'fields' =>	array(
+					'PS_SEARCH_INDEXATION' => array(
+						'title' => $this->l('Indexation'),
+						'validation' => 'isBool',
+						'type' => 'bool',
+						'cast' => 'intval',
+						'desc' => $this->l('Enable automatic indexation of the products. If you enable this feature, the products will be indexed in the search automatically when they are saved, but if the feature is disabled, you will have to index the products manually by using the links provided in this fieldset.')
+					)
+				)
 			),
 			'search' => array(
 				'title' =>	$this->l('Search'),
