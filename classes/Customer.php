@@ -285,6 +285,24 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
+	 * Retrieve customers by email address
+	 *
+	 * @static
+	 * @param $email
+	 * @return array
+	 */
+	public static function getCustomersByEmail($email)
+	{
+		$sql = 'SELECT *
+				FROM `'._DB_PREFIX_.'customer`
+				WHERE `email` = \''.pSQL($email).'\'
+					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+
+		return Db::getInstance()->ExecuteS($sql);
+	}
+
+
+	/**
 	 * Check id the customer is active or not
 	 *
 	 * @return boolean customer validity
