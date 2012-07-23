@@ -323,7 +323,11 @@ class ManufacturerCore extends ObjectModel
 		$alias = '';
 		if ($order_by == 'price')
 			$alias = 'product_shop.';
-		elseif ($order_by == 'id_product')
+		elseif ($order_by == 'name')
+			$alias = 'pl.';
+		elseif ($order_by == 'quantity')
+			$alias = 'stock.';
+		else
 			$alias = 'p.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
