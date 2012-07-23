@@ -1909,10 +1909,10 @@ class AdminImportControllerCore extends AdminController
 			{
 				if (Validate::isEmail($address->customer_email))
 				{
-					$customer = Customer::customerExists($address->customer_email, true);
-					if ($customer)
-						$address->id_customer = (int)$customer;
-					else
+					// a customer could exists in different shop
+					$customer_list = Customer::getCustomersByEmail($address->customer_email);
+
+					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
 							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
 							Db::getInstance()->getMsgError(),
@@ -1970,10 +1970,35 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
-				if ($address->id && $address->addressExists($address->id))
-					$res = $address->update();
-				if (!$res)
-					$res = $address->add();
+				if (count($customer_list) > 0)
+				{
+					$filter_list = array();
+					foreach ($customer_list as $customer)
+					{
+						if (in_array($customer['id_customer'], $filter_list))
+							continue;
+
+						$filter_list[] = $customer['id_customer'];
+
+						unset($address->id);
+						$address->id_customer = $customer['id_customer'];
+						$res = $address->add();
+
+						if (!$res)
+							$this->errors[] = sprintf(
+								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+								$info['alias'],
+								(isset($info['id']) ? $info['id'] : 'null')
+							);
+					}
+				}
+				else
+				{
+					if ($address->id && $address->addressExists($address->id))
+						$res = $address->update();
+					if (!$res)
+						$res = $address->add();
+				}
 			}
 			if (!$res)
 			{
