@@ -1318,8 +1318,6 @@ class AdminImportControllerCore extends AdminController
 							}
 						}
 					}
-					// we have to index new tags to be able to search new created tags
-					Search::indexation(false);
 				}
 				//delete existing images if "delete_existing_images" is set to 1
 				if (isset($product->delete_existing_images))
@@ -1398,6 +1396,9 @@ class AdminImportControllerCore extends AdminController
 				StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
 
 		}
+
+		Search::indexation(true);
+
 		$this->closeCsvFile($handle);
 	}
 
