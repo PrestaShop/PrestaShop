@@ -198,7 +198,10 @@ class CustomerCore extends ObjectModel
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
-
+		
+		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
+			$this->newsletter_date_add = date('Y-m-d H:i:s');
+			
 		if ($this->id_default_group == _PS_DEFAULT_CUSTOMER_GROUP_)
 			if ($this->is_guest)
 				$this->id_default_group = Configuration::get('PS_GUEST_GROUP');
@@ -216,7 +219,8 @@ class CustomerCore extends ObjectModel
 	public function update($nullValues = false)
 	{
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
-		if ($this->newsletter && !$this->newsletter_date_add)
+
+		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 		$this->updateGroup($this->groupBox);
 	 	return parent::update(true);
