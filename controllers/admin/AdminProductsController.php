@@ -455,7 +455,7 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					Hook::exec('actionProductAdd', array('product' => $product));
-					if (in_array($product->visibility, array('both', 'search')))
+					if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 						Search::indexation(false, $product->id);
 					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
 				}
@@ -1483,7 +1483,7 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					Hook::exec('actionProductAdd', array('product' => $this->object));
-					if (in_array($this->object->visibility, array('both', 'search')))
+					if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 						Search::indexation(false, $this->object->id);
 				}
 
@@ -1610,7 +1610,7 @@ class AdminProductsControllerCore extends AdminController
 					{
 						Hook::exec('actionProductUpdate', array('product' => $object));
 
-						if (in_array($object->visibility, array('both', 'search')))
+						if (in_array($object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 							Search::indexation(false, $object->id);
 
 						// Save and preview

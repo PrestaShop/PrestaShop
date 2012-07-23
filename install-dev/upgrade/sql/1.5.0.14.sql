@@ -23,3 +23,5 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_invoice_tax` (
 
 ALTER TABLE  `PREFIX_order_invoice`
 ADD  `shipping_tax_computation_method` INT NOT NULL AFTER `total_shipping_tax_incl`;
+
+INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_SEARCH_INDEXATION', '1', NOW(), NOW());

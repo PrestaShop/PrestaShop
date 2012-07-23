@@ -200,7 +200,8 @@ class TagCore extends ObjectModel
 			if ($result)
 			{
 				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids));
-				$result &= Search::indexation(false);
+				if (Configuration::get('PS_SEARCH_INDEXATION'))
+					$result &= Search::indexation(false);
 			}
 		}
 		return $result;
