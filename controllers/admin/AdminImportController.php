@@ -76,6 +76,9 @@ class AdminImportControllerCore extends AdminController
 		'online_only' => array('AdminImportController', 'getBoolean')
 	);
 
+	public $separator;
+	public $multiple_value_separator;
+
 	public function __construct()
 	{
 		$this->entities = array(
@@ -423,6 +426,13 @@ class AdminImportControllerCore extends AdminController
 				}
 		}
 
+		$this->separator = strval(trim(Tools::getValue('separator', ';')));
+
+		if (is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '')
+			$this->multiple_value_separator = ',';
+		else
+			$this->multiple_value_separator = Tools::getValue('multiple_value_separator');
+
 		parent::__construct();
 	}
 
@@ -474,9 +484,8 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->addJS(_PS_JS_DIR_.'adminImport.js');
 
-		$glue = Tools::getValue('separator', ';');
 		$handle = $this->openCsvFile();
-		$nb_column = $this->getNbrColumn($handle, $glue);
+		$nb_column = $this->getNbrColumn($handle, $this->separator);
 		$nb_table = ceil($nb_column / MAX_COLUMNS);
 
 		$res = array();
@@ -485,7 +494,7 @@ class AdminImportControllerCore extends AdminController
 
 		$data = array();
 		for ($i = 0; $i < $nb_table; $i++)
-			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $glue);
+			$data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
 
 		$this->tpl_view_vars = array(
 			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
@@ -496,8 +505,8 @@ class AdminImportControllerCore extends AdminController
 				'iso_lang' => Tools::getValue('iso_lang'),
 				'truncate' => Tools::getValue('truncate'),
 				'match_ref' => Tools::getValue('match_ref'),
-				'separator' => strval(trim(Tools::getValue('separator'))),
-				'multiple_value_separator' => strval(trim(Tools::getValue('multiple_value_separator')))
+				'separator' => $this->separator,
+				'multiple_value_separator' => $this->multiple_value_separator
 			),
 			'nb_table' => $nb_table,
 			'nb_column' => $nb_column,
@@ -515,7 +524,6 @@ class AdminImportControllerCore extends AdminController
 	{
 		switch ($this->display)
 		{
-			// @todo defining default buttons
 			case 'import':
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -719,7 +727,7 @@ class AdminImportControllerCore extends AdminController
 		$res = array();
 		foreach (self::$column_mask as $type => $nb)
 			$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
-		
+
 		if (Tools::getValue('truncate')) //if you choose to truncate table before import the column id is remove from the CSV file.
 			unset($res['id']);
 
@@ -828,7 +836,7 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -957,7 +965,7 @@ class AdminImportControllerCore extends AdminController
 						DELETE FROM '._DB_PREFIX_.'category_shop
 						WHERE id_category = '.(int)$category->id
 					);
-					$info['shop'] = explode(',', $info['shop']);
+					$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
 					foreach ($info['shop'] as $shop)
 						if (!is_numeric($shop))
 							$category->addShop(Shop::getIdByName($shop));
@@ -979,7 +987,7 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -1001,7 +1009,7 @@ class AdminImportControllerCore extends AdminController
 			if (!Shop::isFeatureActive() || !isset($product->shop) || empty($product->shop))
 				$product->shop = 1;
 			// link product to shops
-			$product->id_shop_list = explode(',', $product->shop);
+			$product->id_shop_list = explode($this->multiple_value_separator, $product->shop);
 
 			if ((int)$product->id_tax_rules_group != 0)
 			{
@@ -1176,6 +1184,12 @@ class AdminImportControllerCore extends AdminController
 
 			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
+			// replace the value of separator by coma
+			if ($this->multiple_value_separator != ',')
+				foreach ($product->meta_keywords as &$meta_keyword)
+					if (!empty($meta_keyword))
+						$meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
+
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
 			$lang_field_error = $product->validateFieldsLang(UNFRIENDLY_ERROR, true);
@@ -1219,7 +1233,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$shops = array();
-			$product_shop = explode(',', $product->shop);
+			$product_shop = explode($this->multiple_value_separator, $product->shop);
 			foreach ($product_shop as $shop)
 			{
 				$shop = trim($shop);
@@ -1286,20 +1300,18 @@ class AdminImportControllerCore extends AdminController
 					// Delete tags for this id product, for no duplicating error
 					Tag::deleteTagsForProduct($product->id);
 
-					$tag = new Tag();
 					if (!is_array($product->tags))
 					{
 						$product->tags = AdminImportController::createMultiLangField($product->tags);
 						foreach ($product->tags as $key => $tags)
 						{
-							$is_tag_added = $tag->addTags($key, $product->id, $tags);
+							$is_tag_added = Tag::addTags($key, $product->id, $tags, $this->multiple_value_separator);
 							if (!$is_tag_added)
 							{
 								$this->addProductWarning($info['name'], $product->id, $this->l('Tags list is invalid'));
 								break;
 							}
 						}
-
 					}
 					else
 					{
@@ -1307,10 +1319,10 @@ class AdminImportControllerCore extends AdminController
 						{
 							$str = '';
 							foreach ($tags as $one_tag)
-								$str .= $one_tag.',';
-							$str = rtrim($str, ',');
+								$str .= $one_tag.$this->multiple_value_separator;
+							$str = rtrim($str, $this->multiple_value_separator);
 
-							$is_tag_added = $tag->addTags($key, $product->id, $str);
+							$is_tag_added = Tag::addTags($key, $product->id, $str, $this->multiple_value_separator);
 							if (!$is_tag_added)
 							{
 								$this->addProductWarning($info['name'], $product->id, 'Invalid tag(s) ('.$str.')');
@@ -1360,9 +1372,7 @@ class AdminImportControllerCore extends AdminController
 							$error = true;
 
 						if ($error)
-						{
 							$this->warnings[] = sprintf(Tools::displayError('Product n°%1$d: the picture cannot be saved: %2$s'), $image->id_product, $url);
-						}
 					}
 				}
 				if (isset($product->id_category))
@@ -1372,7 +1382,7 @@ class AdminImportControllerCore extends AdminController
 				$features = get_object_vars($product);
 
 				if (isset($features['features']) && !empty($features['features']))
-					foreach (explode(',', $features['features']) as $single_feature)
+					foreach (explode($this->multiple_value_separator, $features['features']) as $single_feature)
 					{
 						$tab_feature = explode(':', $single_feature);
 						$feature_name = trim($tab_feature[0]);
@@ -1417,9 +1427,8 @@ class AdminImportControllerCore extends AdminController
 
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		$fsep = ((is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '' ) ? ',' : Tools::getValue('multiple_value_separator'));
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (count($line) == 1 && empty($line[0]))
 				continue;
@@ -1432,7 +1441,7 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setDefaultValues($info);
 
 			// Get shops for each attributes
-			$info['shop'] = explode(',', $info['shop']);
+			$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
 			$id_shop_list = array();
 			foreach ($info['shop'] as $shop)
 				if (!is_numeric($shop))
@@ -1505,7 +1514,7 @@ class AdminImportControllerCore extends AdminController
 			$id_attribute_group = 0;
 			// groups
 			$groups_attributes = array();
-			foreach (explode($fsep, $info['group']) as $key => $group)
+			foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 			{
 				$tab_group = explode(':', $group);
 				$group = trim($tab_group[0]);
@@ -1559,7 +1568,7 @@ class AdminImportControllerCore extends AdminController
 			$attributes_to_add = array();
 
 			// for each attribute
-			foreach (explode($fsep, $info['attribute']) as $key => $attribute)
+			foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
 			{
 				$tab_attribute = explode(':', $attribute);
 				$attribute = trim($tab_attribute[0]);
@@ -1695,7 +1704,7 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -1723,8 +1732,8 @@ class AdminImportControllerCore extends AdminController
 
 			if ($customer->passwd)
 				$customer->passwd = Tools::encrypt($customer->passwd);
-			
-			$id_shop_list = explode(',', $customer->id_shop);
+
+			$id_shop_list = explode($this->multiple_value_separator, $customer->id_shop);
 			$customers_shop = array();
 			$customers_shop['shared'] = array();
 			$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
@@ -1771,7 +1780,7 @@ class AdminImportControllerCore extends AdminController
 								$customer->id = $current_id_customer;
 								$res &= $customer->update();
 							}
-								
+
 							else
 							{
 								unset($customer->id);
@@ -1811,9 +1820,7 @@ class AdminImportControllerCore extends AdminController
 									Db::getInstance()->insert('address', $address);
 								}
 						}
-							
 					}
-					
 				}
 			}
 			$customer_exist = false;
@@ -1837,7 +1844,7 @@ class AdminImportControllerCore extends AdminController
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -2021,7 +2028,7 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -2053,7 +2060,7 @@ class AdminImportControllerCore extends AdminController
 							DELETE FROM '._DB_PREFIX_.'manufacturer_shop
 							WHERE id_manufacturer = '.(int)$manufacturer->id
 						);
-						$manufacturer->shop = explode(',', $manufacturer->shop);
+						$manufacturer->shop = explode($this->multiple_value_separator, $manufacturer->shop);
 						$shops = array();
 						foreach ($manufacturer->shop as $shop)
 						{
@@ -2086,7 +2093,7 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
@@ -2124,7 +2131,7 @@ class AdminImportControllerCore extends AdminController
 							DELETE FROM '._DB_PREFIX_.'supplier_shop
 							WHERE id_supplier = '.(int)$supplier->id
 						);
-						$supplier->shop = explode(',', $supplier->shop);
+						$supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
 						$shops = array();
 						foreach ($supplier->shop as $shop)
 						{
@@ -2157,7 +2164,7 @@ class AdminImportControllerCore extends AdminController
 		AdminImportController::setLocale();
 
 		// main loop, for each supply orders to import
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); ++$current_line)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); ++$current_line)
 		{
 			// if convert requested
 			if (Tools::getValue('convert'))
@@ -2255,7 +2262,7 @@ class AdminImportControllerCore extends AdminController
 		$products = array();
 		$reset = true;
 		// main loop, for each supply orders details to import
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); ++$current_line)
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); ++$current_line)
 		{
 			// if convert requested
 			if (Tools::getValue('convert'))
@@ -2401,7 +2408,7 @@ class AdminImportControllerCore extends AdminController
 		AdminImportController::rewindBomAware($handle);
 
 		for ($i = 0; $i < (int)Tools::getValue('skip'); ++$i)
-			$line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator', ';'));
+			$line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator);
 		return $handle;
 	}
 
