@@ -92,13 +92,13 @@ class TagCore extends ObjectModel
 	* @param string|array $tag_list List of tags, as array or as a string with comas
 	* @return boolean Operation success
 	*/
-	public static function addTags($id_lang, $id_product, $tag_list)
+	public static function addTags($id_lang, $id_product, $tag_list, $separator = ',')
 	{
 	 	if (!Validate::isUnsignedId($id_lang))
 			return false;
 
 		if (!is_array($tag_list))
-	 		$tag_list = array_unique(array_map('trim', preg_split('/,/', $tag_list, null, PREG_SPLIT_NO_EMPTY)));
+	 		$tag_list = array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY)));
 
 	 	$list = array();
 		foreach ($tag_list as $tag)
