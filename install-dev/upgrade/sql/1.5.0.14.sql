@@ -4,6 +4,9 @@ SET NAMES 'utf8';
 
 /* PHP:p15014_add_missing_columns(); */;
 
+/* PHP:p15014_upgrade_sekeywords(); */;
+
+
 UPDATE `PREFIX_orders` SET `reference` = LPAD(reference, 9 , '0');
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayMyAccountBlock', 'myAccountBlock');
