@@ -719,6 +719,10 @@ class AdminImportControllerCore extends AdminController
 		$res = array();
 		foreach (self::$column_mask as $type => $nb)
 			$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
+		
+		if (Tools::getValue('truncate')) //if you choose to truncate table before import the column id is remove from the CSV file.
+			unset($res['id']);
+
 		return $res;
 	}
 
