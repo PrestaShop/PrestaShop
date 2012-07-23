@@ -4712,7 +4712,7 @@ class ProductCore extends ObjectModel
 	public function addWs($autodate = true, $null_values = false)
 	{
 		$success = parent::add($autodate, $null_values);
-		if ($success)
+		if ($success && Configuration::get('PS_SEARCH_INDEXATION'))
 			Search::indexation(false, $this->id);
 		return $success;
 	}
@@ -4720,7 +4720,7 @@ class ProductCore extends ObjectModel
 	public function updateWs($null_values = false)
 	{
 		$success = parent::update($null_values);
-		if ($success)
+		if ($success && Configuration::get('PS_SEARCH_INDEXATION'))
 			Search::indexation(false, $this->id);
 		return $success;
 	}
