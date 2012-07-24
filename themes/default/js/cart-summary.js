@@ -509,7 +509,7 @@ function downQuantity(id, qty)
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 					
 					if (newVal == 0)
-						$('#product_'+id').hide();
+						$('#product_'+id).hide();
 					
 					if (typeof(getCarrierListAndUpdate) != 'undefined')
 						getCarrierListAndUpdate();
