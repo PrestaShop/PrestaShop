@@ -235,7 +235,6 @@ class ProductCore extends ObjectModel
 		'primary' => 'id_product',
 		'multilang' => true,
 		'multilang_shop' => true,
-		'multishop_specific' => true,
 		'fields' => array(
 			// Classic fields
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),

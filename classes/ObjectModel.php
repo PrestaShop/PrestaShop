@@ -200,7 +200,7 @@ abstract class ObjectModelCore
 				}
 
 				// Get shop informations
-				if (!empty($this->def['multishop_specific']))
+				if (Shop::isTableAssociated($this->def['table']))
 					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
 
 				Cache::store($cache_id, Db::getInstance()->getRow($sql));
@@ -258,7 +258,7 @@ abstract class ObjectModelCore
 		$fields = $this->formatFields(self::FORMAT_COMMON);
 
 		// For retro compatibility
-		if (!empty($this->def['multishop_specific']))
+		if (Shop::isTableAssociated($this->def['table']))
 			$fields = array_merge($fields, $this->getFieldsShop());
 
 		// Ensure that we get something to insert
@@ -446,14 +446,14 @@ abstract class ObjectModelCore
 		$this->id = Db::getInstance()->Insert_ID();
 
 		// Database insertion for multishop fields related to the object
-		if (!empty($this->def['multishop_specific']))
+		if (Shop::isTableAssociated($this->def['table']))
 		{
-			$fields = $this->getFieldsShop();
-			$fields[$this->def['primary']] = (int)$this->id;
-
 			$id_shop_list = Shop::getContextListShopID();
 			if (count($this->id_shop_list) > 0)
-				$id_shop_list = $this->id_shop_list;
+				$id_shop_list = $this->id_shop_list;	
+				
+			$fields = $this->getFieldsShop();
+			$fields[$this->def['primary']] = (int)$this->id;
 
 			foreach ($id_shop_list as $id_shop)
 			{
@@ -461,12 +461,9 @@ abstract class ObjectModelCore
 				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
 			}
 		}
-		else if (!Shop::isFeatureActive() && Shop::isTableAssociated($this->def['table']))
-			$result &= $this->associateTo(Context::getContext()->shop->id);
 
 		if (!$result)
 			return false;
-
 
 		// Database insertion for multilingual fields related to the object
 		if (!empty($this->def['multilang']))
@@ -527,7 +524,7 @@ abstract class ObjectModelCore
 			return false;
 
 		// Database insertion for multishop fields related to the object
-		if (!empty($this->def['multishop_specific']))
+		if (Shop::isTableAssociated($this->def['table']))
 		{
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
@@ -628,9 +625,8 @@ abstract class ObjectModelCore
 
 		$this->clearCache();
 		$result = true;
-
 		// Remove association to multishop table
-		if (!empty($this->def['multishop_specific']))
+		if (Shop::isTableAssociated($this->def['table']))
 		{
 			$id_shop_list = Shop::getContextListShopID();
 			if (count($this->id_shop_list))
@@ -638,11 +634,9 @@ abstract class ObjectModelCore
 
 			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
 		}
-		else if (Shop::isTableAssociated($this->def['table']))
-			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		// Database deletion
-		$has_multishop_entries = !empty($this->def['multishop_specific']) ? $this->hasMultishopEntries() : false;
+		$has_multishop_entries = $this->hasMultishopEntries();
 		if ($result && !$has_multishop_entries)
 			$result &= Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
@@ -1154,7 +1148,7 @@ abstract class ObjectModelCore
 	 */
 	public function hasMultishopEntries()
 	{
-		if (empty($this->def['multishop_specific']))
+		if (!Shop::isTableAssociated($this->def['table']))
 			return false;
 
 		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
@@ -1162,7 +1156,7 @@ abstract class ObjectModelCore
 
 	public function isMultishop()
 	{
-		return !empty($this->def['multishop_specific']) || !empty($this->def['multilang_shop']);
+		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
 	}
 
 	public function isLangMultishop()
@@ -1214,26 +1208,29 @@ abstract class ObjectModelCore
 	{
 		if (!$this->id)
 			return false;
-
-		/* Deleting object images and thumbnails (cache) */
-		if ($this->image_dir)
+		
+		if (!$this->hasMultishopEntries())
 		{
-			if (file_exists($this->image_dir.$this->id.'.'.$this->image_format)
-				&& !unlink($this->image_dir.$this->id.'.'.$this->image_format))
+			/* Deleting object images and thumbnails (cache) */
+			if ($this->image_dir)
+			{
+				if (file_exists($this->image_dir.$this->id.'.'.$this->image_format)
+					&& !unlink($this->image_dir.$this->id.'.'.$this->image_format))
+					return false;
+			}
+			if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format)
+				&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format))
 				return false;
+			if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)
+				&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format))
+				return false;
+	
+			$types = ImageType::getImagesTypes();
+			foreach ($types as $image_type)
+				if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)
+				&& !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format))
+					return false;
 		}
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format)
-			&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format))
-			return false;
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)
-			&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format))
-			return false;
-
-		$types = ImageType::getImagesTypes();
-		foreach ($types as $image_type)
-			if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)
-			&& !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format))
-				return false;
 		return true;
 	}
 
