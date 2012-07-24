@@ -68,22 +68,24 @@ class MailCore
 			'PS_MAIL_TYPE'
 		));
 
-		if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION'])) $configuration['PS_MAIL_SMTP_ENCRYPTION'] = 'off';
-		if (!isset($configuration['PS_MAIL_SMTP_PORT'])) $configuration['PS_MAIL_SMTP_PORT'] = 'default';
+		if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']))
+			$configuration['PS_MAIL_SMTP_ENCRYPTION'] = 'off';
+		if (!isset($configuration['PS_MAIL_SMTP_PORT']))
+			$configuration['PS_MAIL_SMTP_PORT'] = 'default';
 
-		if (!isset($from)) $from = $configuration['PS_SHOP_EMAIL'];
-		if (!isset($fromName)) $fromName = $configuration['PS_SHOP_NAME'];
-
-		if (!empty($from) && !Validate::isEmail($from))
-		{
-			Tools::dieOrLog(Tools::displayError('Error: parameter "from" is corrupted'), $die);
-			return false;
-		}
-		if (!empty($fromName) && !Validate::isMailName($fromName))
-		{
-			Tools::dieOrLog(Tools::displayError('Error: parameter "fromName" is corrupted'), $die);
-			return false;
-		}
+		// Sending an e-mail can be of vital importance for the merchant, when his password is lost for example, so we must not die but do our best to send the e-mail
+		if (!isset($from) || !Validate::isEmail($from))
+			$from = $configuration['PS_SHOP_EMAIL'];
+		if (!Validate::isEmail($from))
+			$from = null;
+		
+		// $fromName is not that important, no need to die if it is not valid
+		if (!isset($fromName) || !Validate::isMailName($fromName))
+			$fromName = $configuration['PS_SHOP_NAME'];
+		if (!Validate::isMailName($fromName))
+			$fromName = null;
+		
+		// It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
 			Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
@@ -91,17 +93,11 @@ class MailCore
 		}
 			
 		if (!is_array($templateVars))
-		{
-			Tools::dieOrLog(Tools::displayError('Error: parameter "templateVars" is not an array'), $die);
-			return false;
-		}
+			$templateVars = array();
 		
 		// Do not crash for this error, that may be a complicated customer name
-		if (is_string($toName))
-		{
-			if (!empty($toName) && !Validate::isMailName($toName))
-				$toName = null;
-		}
+		if (is_string($toName) && !empty($toName) && !Validate::isMailName($toName))
+			$toName = null;
 			
 		if (!Validate::isTplName($template))
 		{
