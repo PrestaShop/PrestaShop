@@ -572,7 +572,6 @@ $_LANGADM['AdminController5196611ad1bf27e9cef5375b038c04db'] = '¡Salir de aquí
 $_LANGADM['AdminController529a53abbdf42a64cb2d149c0aeced04'] = 'Los últimos pedidos';
 $_LANGADM['AdminController53cd939ae14e33855274e17a3c411fdd'] = 'Por razones de seguridad, también debe:';
 $_LANGADM['AdminController56deca22a707214865f7ea3ae6391d67'] = 'facturas';
-$_LANGADM['AdminController5b24b7eb082a90dbea88d12c746b6c54'] = 'Descarga de módulo con éxito';
 $_LANGADM['AdminController5bdc90e9608e48cc15f38ff360cd234a'] = 'Mensaje que aparece en el botón de envío (obligatorio)';
 $_LANGADM['AdminController6175b106e638d4dd873cb3ff96724392'] = 'Miniaturas generadas con éxito';
 $_LANGADM['AdminController630f6dc397fe74e52d5189e2c80f282b'] = 'Volver a la lista';
@@ -1320,6 +1319,7 @@ $_LANGADM['AdminImport406eba9770c82a84cae2d6ee3e846a56'] = 'Tasa de impuestos (%
 $_LANGADM['AdminImport41b00531a619d5e0f965854e352529f1'] = 'ID de Atributo de Producto';
 $_LANGADM['AdminImport427b6d816d7fdd86cabe48d8180a3cc9'] = 'imagen URL';
 $_LANGADM['AdminImport42c79d65619a9c13d81045f2fe5998aa'] = 'Dirección 1 *';
+$_LANGADM['AdminImport446e04d1ed3b8fca04274d7c726a3fd5'] = 'Exclusividad Internet (0 = no, 1 = si)';
 $_LANGADM['AdminImport4677fede78bdecf929959272066d3e9e'] = 'No haga caso de este campo si no se utiliza la herramienta MultiShop. Si deja este campo vacío, una tienda por defecto será usada';
 $_LANGADM['AdminImport46a2a41cc6e552044816a2d04634545d'] = 'Estados';
 $_LANGADM['AdminImport48d6c0804dd92fb5463bba154a8a747f'] = 'Descuento hasta (aaaa-mm-dd)';
@@ -1333,11 +1333,11 @@ $_LANGADM['AdminImport52b68aaa602d202c340d9e4e9157f276'] = 'Categoría madre';
 $_LANGADM['AdminImport52eb5928a34db3e3da7ba52b0644273b'] = 'EAN13';
 $_LANGADM['AdminImport5482749e99fa2d325e607075c3fd1c7a'] = 'Meta-palabras clave';
 $_LANGADM['AdminImport5d01d5588119abec82fd8004995de275'] = 'Porcentaje del descuento';
+$_LANGADM['AdminImport5db5f3f0c5f233fbc13f08c052e98281'] = 'Defecto (0 = no, 1 = si)';
 $_LANGADM['AdminImport622d67c7a2ea6386a4480e02b12fadd8'] = 'impacto en el precio:';
 $_LANGADM['AdminImport6311ae17c1ee52b36e68aaf4ad066387'] = 'Otros';
 $_LANGADM['AdminImport63d5049791d9d79d86e9a108b0a999ca'] = 'Referencia';
 $_LANGADM['AdminImport664d4132fc8dc3a158be4692b4246528'] = 'La lista de etiquetas no es válida';
-$_LANGADM['AdminImport446e04d1ed3b8fca04274d7c726a3fd5'] = 'Exclusividad Internet (0 = no, 1 = si)';
 $_LANGADM['AdminImport6703aa9936582b4381418f7d523370b4'] = 'Grado de descuento';
 $_LANGADM['AdminImport6928b30c9f87670d7621fe8f1fef7054'] = 'Referencia nº';
 $_LANGADM['AdminImport694e8d1f2ee056f98ee488bdc4982d73'] = 'Cantidad';
@@ -1347,7 +1347,7 @@ $_LANGADM['AdminImport6d5030fd40c1e08767b4b70d3786b0fb'] = 'Identificación del 
 $_LANGADM['AdminImport70e7a6fcceb39a1e3ea3925182b85d18'] = 'AAAA-MM-DD';
 $_LANGADM['AdminImport72d6d7a1885885bb55a565fd1070581a'] = 'Importar';
 $_LANGADM['AdminImport72ef2b9b6965d078e3c7f95487a82d1c'] = 'Saltar';
-$_LANGADM['AdminImport5db5f3f0c5f233fbc13f08c052e98281'] = 'Defecto (0 = no, 1 = si)';
+$_LANGADM['AdminImport76aeea9f48196068e6b47d46d41e7618'] = 'Mostrar precios (0 = no, 1 = si)';
 $_LANGADM['AdminImport7abccc0f7eefd61743e408d28aac7cff'] = 'se ha producido un error al descargar y copiar el archivo';
 $_LANGADM['AdminImport7cb32e708d6b961d476baced73d362bb'] = 'Número IVA';
 $_LANGADM['AdminImport81b08ee619a14697b41957b33b94eb49'] = 'Fecha (%s) no es válido (en la línea %d). Formato:%s.';
@@ -1412,6 +1412,7 @@ $_LANGADM['AdminImportc8d9173d79c5d4c90be6f9daaec5f617'] = 'Fecha (%s) no puede 
 $_LANGADM['AdminImportc9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_LANGADM['AdminImportca676c9ec4e1ae9fe9df3ac28910e6ef'] = 'Precio unitario (TE) (%d) no es válido (en la línea %d).';
 $_LANGADM['AdminImportcbfb910715c99134a5987630fff104da'] = 'Archivo de ejemplo por categorías';
+$_LANGADM['AdminImportcf7a1f189bbd1f48db0ece1da9cc0802'] = 'Disponible para pedidos (0 = no, 1 = si)';
 $_LANGADM['AdminImportd1457b72c3fb323a2671125aef3eab5d'] = '¿?';
 $_LANGADM['AdminImportd66424c2034991e541dee7face1851fc'] = '¿codificación iso-8859-1 de archivo?';
 $_LANGADM['AdminImportd7a158f13040edafc30b622d16c8b12d'] = '* Campos obligatorios';
@@ -1423,7 +1424,6 @@ $_LANGADM['AdminImportdf917adff915d5518c45ae6dc521783b'] = 'Su archivo CVS (%d a
 $_LANGADM['AdminImportdfa8db9b8d08689d8a23067e93ef4ef9'] = 'ID Moneda';
 $_LANGADM['AdminImporte08caeac3f80ffa7889cdf1c8f30111f'] = 'Separador de valor múltiple:';
 $_LANGADM['AdminImporte11d1e5d17a3f9ce34faccbb5cc61394'] = 'Orden de suministro de referencia *';
-$_LANGADM['AdminImport76aeea9f48196068e6b47d46d41e7618'] = 'Mostrar precios (0 = no, 1 = si)';
 $_LANGADM['AdminImporte1b8b0be45098d71aba659e1149ea395'] = 'Valor (Valor:Posición)';
 $_LANGADM['AdminImporte4cdcd51e6cf787d4ecc7d813f0c23cb'] = 'El local debe estar instalado';
 $_LANGADM['AdminImporte6d0e1c8fc6a4fcf47869df87e04cd88'] = 'Clientes';
@@ -1441,7 +1441,6 @@ $_LANGADM['AdminImportecc2c839377d44e39486e231322de623'] = 'id regla de impuesto
 $_LANGADM['AdminImportecde3e896afb64e9a48781b8363b9a03'] = 'Característica (Nombre:Valor:Posición)';
 $_LANGADM['AdminImportf0a8011e2482cf9351b7bf565c7950ad'] = 'Precio IVA incluído';
 $_LANGADM['AdminImportf19dbf2edb3a0bd74b0524d960ff21eb'] = 'Cargar';
-$_LANGADM['AdminImportcf7a1f189bbd1f48db0ece1da9cc0802'] = 'Disponible para pedidos (0 = no, 1 = si)';
 $_LANGADM['AdminImportf21ee1cc0e2e0a47deb2fc8726f406fa'] = 'Formato: entre 0 y 100';
 $_LANGADM['AdminImportf2a6c498fb90ee345d997f888fce3b18'] = 'Eliminar';
 $_LANGADM['AdminImportf41a10a672cbcdecaad1d2f73f30b1f8'] = 'Cantidad esperada';
@@ -2463,7 +2462,7 @@ $_LANGADM['AdminProducts2aa2ef9d99efe99c01d0c1fb2a3838e5'] = 'Precio mayorista s
 $_LANGADM['AdminProducts2ad05de2ced7109415b7aae16965fa31'] = 'Enlace al archivo:';
 $_LANGADM['AdminProducts2af0ee55589c8a4d5ac14271f63926c6'] = 'No se puede agregar a un paquete de combinaciones. ';
 $_LANGADM['AdminProducts2b05e1a0e6c62dbf0018af09ed38f4e0'] = 'Formato: dd-mm-aaaa';
-$_LANGADM['AdminProducts2b89fa14a6da62e13fd505ca5dec4d9f'] = 'Advertencia: este producto no existe en esta tienda. Si usted envía el formulario, este producto estará disponible para la tienda también.rn';
+$_LANGADM['AdminProducts39277d4a2a6236c2a570bbb78617951a'] = 'Advertencia: este producto no existe en esta tienda.';
 $_LANGADM['AdminProducts2ba18b8df558ceaabcc89f3a16772a9b'] = 'Buscar sólo';
 $_LANGADM['AdminProducts2bb8274755d1ebd33d759a3005bfbcd3'] = 'Precio unitario tasa excluida';
 $_LANGADM['AdminProducts2f972dbb48435d9b8087d7e3c22daa09'] = 'Máximo MB.';
