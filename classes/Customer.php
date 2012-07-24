@@ -667,7 +667,14 @@ class CustomerCore extends ObjectModel
 				Mail::l('Your guest account has been transformed to customer account', (int)$id_lang),
 				$vars,
 				$this->email,
-				$this->firstname.' '.$this->lastname
+				$this->firstname.' '.$this->lastname,
+				null,
+				null,
+				null,
+				null,
+				_PS_THEME_DIR_,
+				false,
+				(int)$this->id_shop
 			);
 			return true;
 		}
