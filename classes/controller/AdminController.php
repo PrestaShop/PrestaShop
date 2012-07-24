@@ -2000,7 +2000,7 @@ class AdminControllerCore extends Controller
 		if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className))
 		{
 			$def = ObjectModel::getDefinition($this->className);
-			if (Shop::getContext() != Shop::CONTEXT_ALL || !empty($def['multishop_specific']) || !$this->context->employee->isSuperAdmin())
+			if (Shop::getContext() != Shop::CONTEXT_ALL || Shop::isTableAssociated($this->table) || !$this->context->employee->isSuperAdmin())
 			{
 				$idenfier_shop = Shop::getContextListShopID();
 				if (!$this->_group)
