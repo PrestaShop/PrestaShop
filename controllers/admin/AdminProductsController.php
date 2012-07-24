@@ -431,6 +431,16 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$id_product_old = $product->id;
+			if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP)
+			{
+				$shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+				foreach ($shops as $shop)
+					if ($product->isAssociatedToShop($shop['id_shop']))
+					{
+						$product_price = new Product($id_product_old, false, null, $shop['id_shop']);
+						$product->price = $product_price->price;
+					}
+			}
 			unset($product->id);
 			unset($product->id_product);
 			$product->indexed = 0;
