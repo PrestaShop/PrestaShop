@@ -1461,7 +1461,13 @@ class AdminProductsControllerCore extends AdminController
 			Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		}
 	}
-
+	
+	protected function updateAssoShop($id_object)
+	{
+		//override AdminController::updateAssoShop() specifically for products because shop association is set with the context in ObjectModel
+		return;
+	}
+	
 	public function processAdd()
 	{
 		$this->checkProduct();

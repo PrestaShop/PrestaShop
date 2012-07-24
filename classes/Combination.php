@@ -63,7 +63,6 @@ class CombinationCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'product_attribute',
 		'primary' => 'id_product_attribute',
-		'multishop_specific' => true,
 		'fields' => array(
 			'id_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'location' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
