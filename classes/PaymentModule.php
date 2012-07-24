@@ -460,7 +460,8 @@ abstract class PaymentModuleCore extends Module
 									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
 									$params,
 									$this->context->customer->email,
-									$this->context->customer->firstname.' '.$this->context->customer->lastname
+									$this->context->customer->firstname.' '.$this->context->customer->lastname,
+									null, null, null, null, _PS_THEME_DIR_, false, (int)$order->id_shop
 								);
 							}
 						}
@@ -626,7 +627,8 @@ abstract class PaymentModuleCore extends Module
 								$this->context->customer->firstname.' '.$this->context->customer->lastname,
 								null,
 								null,
-								$file_attachement
+								$file_attachement,
+								null, _PS_THEME_DIR_, false, (int)$order->id_shop
 							);
 					}
 

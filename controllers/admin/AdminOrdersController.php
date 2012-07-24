@@ -290,7 +290,7 @@ class AdminOrdersControllerCore extends AdminController
 						);
 						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
-							_PS_MAIL_DIR_, true))
+							_PS_MAIL_DIR_, true, (int)$order->id_shop))
 						{
 							Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order));
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
@@ -436,7 +436,7 @@ class AdminOrdersControllerCore extends AdminController
 							);
 							if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
 								Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
-								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true))
+								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop))
 								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						}
 						$this->errors[] = Tools::displayError('An error occurred while sending e-mail to the customer.');
@@ -526,7 +526,7 @@ class AdminOrdersControllerCore extends AdminController
 									$customer = new Customer((int)$order->id_customer);
 									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-										null, _PS_MAIL_DIR_, true);
+										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
 							}
 						}
@@ -724,7 +724,8 @@ class AdminOrdersControllerCore extends AdminController
 									null,
 									null,
 									_PS_MAIL_DIR_,
-									true
+									true,
+									(int)$order->id_shop
 								);
 							}
 						}
@@ -783,7 +784,7 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{voucher_num}'] = $cartrule->code;
 									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
 									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-									null, _PS_MAIL_DIR_, true);
+									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
 							}
 						}
@@ -1459,7 +1460,8 @@ class AdminOrdersControllerCore extends AdminController
 						'{firstname}' => $customer->firstname,
 						'{lastname}' => $customer->lastname
 					);
-					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true))
+					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
+							$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop))
 						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
 				}
 			}
@@ -1751,7 +1753,8 @@ class AdminOrdersControllerCore extends AdminController
 			Mail::l('Your order has been changed', $order->id_lang),
 			$data,
 			$order->getCustomer()->email,
-			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname);
+			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,
+			null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 	}
 
 	public function ajaxProcessLoadProductInformation()
