@@ -376,7 +376,7 @@ class HookCore extends ObjectModel
 			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
 			if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
 				continue;
-			if (isset($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
+			if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
 				continue;
 
 			// Check which / if method is callable
