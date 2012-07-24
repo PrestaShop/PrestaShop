@@ -215,11 +215,13 @@ class AdminSuppliersControllerCore extends AdminController
 
 		// loads current address for this supplier - if possible
 		$address = null;
+		if (isset($obj->id))
+		{
+			$id_address = Address::getAddressIdBySupplierId($obj->id);
 
-		$id_address = Address::getAddressIdBySupplierId($obj->id);
-
-		if ($id_address > 0)
-			$address = new Address((int)$id_address);
+			if ($id_address > 0)
+				$address = new Address((int)$id_address);
+		}
 
 		// force specific fields values (address)
 		if ($address != null)
