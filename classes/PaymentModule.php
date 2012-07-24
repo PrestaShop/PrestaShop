@@ -195,6 +195,9 @@ abstract class PaymentModuleCore extends Module
 					foreach ($data['package_list'] as $id_package)
 						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
 
+			// Make sure CarRule caches are empty
+			CartRule::cleanCache();
+			
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
 				{

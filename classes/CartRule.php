@@ -913,6 +913,15 @@ class CartRuleCore extends ObjectModel
 
 		return $reduction_value;
 	}
+	
+	/**
+	 * Make sure caches are empty
+	 * Must be called before calling multiple time getContextualValue()
+	 */
+	public static function cleanCache()
+	{
+		self::$only_one_gift = array();
+	}
 
 	protected function getCartRuleCombinations()
 	{
