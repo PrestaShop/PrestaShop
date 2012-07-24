@@ -70,11 +70,14 @@ var productShowPrice = '{if !$PS_CATALOG_MODE}{$product->show_price}{else}0{/if}
 var productUnitPriceRatio = '{$product->unit_price_ratio}';
 var idDefaultImage = {if isset($cover.id_image_only)}{$cover.id_image_only}{else}0{/if};
 
+{if !isset($priceDisplayPrecision)}
+	{assign var='priceDisplayPrecision' value=2}
+{/if}
 {if !$priceDisplay || $priceDisplay == 2}
-	{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 2)}
+	{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
 	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 {elseif $priceDisplay == 1}
-	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 2)}
+	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 {/if}
 
@@ -368,10 +371,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 			<div class="price">
 				{if !$priceDisplay || $priceDisplay == 2}
-					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL)}
+					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
 					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 				{elseif $priceDisplay == 1}
-					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL)}
+					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 				{/if}
 
