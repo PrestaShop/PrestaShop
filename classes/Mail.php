@@ -42,19 +42,31 @@ class MailCore
 	 * @param int $id_lang Language of the email (to translate the template)
 	 * @param string $template Template: the name of template not be a var but a string !
 	 * @param string $subject
-	 * @param string $templateVars
+	 * @param string $template_vars
 	 * @param string $to
-	 * @param string $toName
+	 * @param string $to_name
 	 * @param string $from
-	 * @param string $fromName
-	 * @param array $fileAttachment Array with three parameters (content, mime and name). You can use an array of array to attach multiple files
+	 * @param string $from_name
+	 * @param array $file_attachment Array with three parameters (content, mime and name). You can use an array of array to attach multiple files
 	 * @param bool $modeSMTP
-	 * @param string $templatePath
+	 * @param string $template_path
 	 * @param bool $die
 	 */
-	public static function Send($id_lang, $template, $subject, $templateVars, $to,
-		$toName = null, $from = null, $fromName = null, $fileAttachment = null, $modeSMTP = null, $templatePath = _PS_MAIL_DIR_, $die = false)
+	public static function Send($id_lang, $template, $subject, $template_vars, $to,
+		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null, $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null)
 	{
+		$theme_path = _PS_THEME_DIR_;
+
+		// Get the path of theme by id_shop if exist
+		if (is_numeric($id_shop) && $id_shop)
+		{
+			$shop = new Shop((int)$id_shop);
+			$theme_name = $shop->getTheme();
+
+			if (_THEME_NAME_ != $theme_name)
+				$theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
+		}
+
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHOP_EMAIL',
 			'PS_MAIL_METHOD',
@@ -78,33 +90,33 @@ class MailCore
 			$from = $configuration['PS_SHOP_EMAIL'];
 		if (!Validate::isEmail($from))
 			$from = null;
-		
-		// $fromName is not that important, no need to die if it is not valid
-		if (!isset($fromName) || !Validate::isMailName($fromName))
-			$fromName = $configuration['PS_SHOP_NAME'];
-		if (!Validate::isMailName($fromName))
-			$fromName = null;
-		
+
+		// $from_name is not that important, no need to die if it is not valid
+		if (!isset($from_name) || !Validate::isMailName($from_name))
+			$from_name = $configuration['PS_SHOP_NAME'];
+		if (!Validate::isMailName($from_name))
+			$from_name = null;
+
 		// It would be difficult to send an e-mail if the e-mail is not valid, so this time we can die if there is a problem
 		if (!is_array($to) && !Validate::isEmail($to))
 		{
 			Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
 			return false;
 		}
-			
-		if (!is_array($templateVars))
-			$templateVars = array();
-		
+
+		if (!is_array($template_vars))
+			$template_vars = array();
+
 		// Do not crash for this error, that may be a complicated customer name
-		if (is_string($toName) && !empty($toName) && !Validate::isMailName($toName))
-			$toName = null;
-			
+		if (is_string($to_name) && !empty($to_name) && !Validate::isMailName($to_name))
+			$to_name = null;
+
 		if (!Validate::isTplName($template))
 		{
 			Tools::dieOrLog(Tools::displayError('Error: invalid e-mail template'), $die);
 			return false;
 		}
-			
+
 		if (!Validate::isMailSubject($subject))
 		{
 			Tools::dieOrLog(Tools::displayError('Error: invalid e-mail subject'), $die);
@@ -124,10 +136,10 @@ class MailCore
 					Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
 					return false;
 				}
-				if (is_array($toName))
+				if (is_array($to_name))
 				{
-					if ($toName && is_array($toName) && Validate::isGenericName($toName[$key]))
-						$to_name = $toName[$key];
+					if ($to_name && is_array($to_name) && Validate::isGenericName($to_name[$key]))
+						$to_name = $to_name[$key];
 				}
 				if ($to_name == null)
 					$to_name = $addr;
@@ -139,9 +151,9 @@ class MailCore
 		} else {
 			/* Simple recipient, one address */
 			$to_plugin = $to;
-			if ($toName == null)
-				$toName = $to;
-			$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($toName).'?=');
+			if ($to_name == null)
+				$to_name = $to;
+			$to = new Swift_Address($to, '=?UTF-8?B?'.base64_encode($to_name).'?=');
 		}
 		try {
 			/* Connect with the appropriate configuration */
@@ -170,7 +182,7 @@ class MailCore
 				return false;
 			$swift = new Swift($connection, Configuration::get('PS_MAIL_DOMAIN'));
 			/* Get templates content */
-			$iso = Language::getIsoById((int)($id_lang));
+			$iso = Language::getIsoById((int)$id_lang);
 			if (!$iso)
 			{
 				Tools::dieOrLog(Tools::displayError('Error - No ISO code for email'), $die);
@@ -178,60 +190,67 @@ class MailCore
 			}
 			$template = $iso.'/'.$template;
 
-			$moduleName = false;
-			$overrideMail = false;
+			$module_name = false;
+			$override_mail = false;
 
 			// get templatePath
-			if (preg_match('#'.__PS_BASE_URI__.'modules/#', $templatePath) && preg_match('#modules/([a-z0-9_-]+)/#ui', $templatePath, $res))
-				$moduleName = $res[1];
+			if (preg_match('#'.__PS_BASE_URI__.'modules/#', $template_path) && preg_match('#modules/([a-z0-9_-]+)/#ui', $template_path, $res))
+				$module_name = $res[1];
 
-			if ($moduleName !== false && (file_exists(_PS_THEME_DIR_.'modules/'.$moduleName.'/mails/'.$template.'.txt') ||
-				file_exists(_PS_THEME_DIR_.'modules/'.$moduleName.'/mails/'.$template.'.html')))
-				$templatePath = _PS_THEME_DIR_.'modules/'.$moduleName.'/mails/';
-			else if (file_exists(_PS_THEME_DIR_.'mails/'.$template.'.txt') || file_exists(_PS_THEME_DIR_.'mails/'.$template.'.html'))
+			if ($module_name !== false && (file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.txt') ||
+				file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.html')))
+				$template_path = $theme_path.'modules/'.$module_name.'/mails/';
+			else if (file_exists($theme_path.'mails/'.$template.'.txt') || file_exists($theme_path.'mails/'.$template.'.html'))
 			{
-				$templatePath = _PS_THEME_DIR_.'mails/';
-				$overrideMail  = true;
+				$template_path = $theme_path.'mails/';
+				$override_mail  = true;
 			}
-			else if (!file_exists($templatePath.$template.'.txt') || !file_exists($templatePath.$template.'.html'))
+			else if (!file_exists($template_path.$template.'.txt') || !file_exists($template_path.$template.'.html'))
 			{
-				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$templatePath.$template.'.txt', $die);
+				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$template.'.txt', $die);
 				return false;
 			}
-			$templateHtml = file_get_contents($templatePath.$template.'.html');
-			$templateTxt = strip_tags(html_entity_decode(file_get_contents($templatePath.$template.'.txt'), null, 'utf-8'));
+			$template_html = file_get_contents($template_path.$template.'.html');
+			$template_txt = strip_tags(html_entity_decode(file_get_contents($template_path.$template.'.txt'), null, 'utf-8'));
 
-			if ($overrideMail && file_exists($templatePath.$iso.'/lang.php'))
-					include_once($templatePath.$iso.'/lang.php');
-			else if ($moduleName && file_exists($templatePath.$iso.'/lang.php'))
-				include_once(_PS_THEME_DIR_.'mails/'.$iso.'/lang.php');
+			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
+					include_once($template_path.$iso.'/lang.php');
+			else if ($module_name && file_exists($template_path.$iso.'/lang.php'))
+				include_once($theme_path.'mails/'.$iso.'/lang.php');
 			else
 				include_once(dirname(__FILE__).'/../mails/'.$iso.'/lang.php');
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
 			$message->headers->setEncoding('Q');
-			$templateVars['{shop_logo}'] = (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))) : 
-					((file_exists(_PS_IMG_DIR_.'logo.jpg')) ? $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))) : '');
-			$templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
-			$templateVars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
-			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $templateVars)), 'decorator');
+
+			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
+				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))))
+			else
+				if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
+					$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO'))));
+				else
+					$template_vars['{shop_logo}'] = '';
+
+			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
+			$template_vars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
+			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $template_vars)), 'decorator');
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
-				$message->attach(new Swift_Message_Part($templateTxt, 'text/plain', '8bit', 'utf-8'));
+				$message->attach(new Swift_Message_Part($template_txt, 'text/plain', '8bit', 'utf-8'));
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML)
-				$message->attach(new Swift_Message_Part($templateHtml, 'text/html', '8bit', 'utf-8'));
-			if ($fileAttachment && !empty($fileAttachment))
+				$message->attach(new Swift_Message_Part($template_html, 'text/html', '8bit', 'utf-8'));
+			if ($file_attachment && !empty($file_attachment))
 			{
 				// Multiple attachments?
-				if (!is_array(current($fileAttachment)))
-					$fileAttachment = array($fileAttachment);
-					
-				foreach ($fileAttachment as $attachment)
+				if (!is_array(current($file_attachment)))
+					$file_attachment = array($file_attachment);
+
+				foreach ($file_attachment as $attachment)
 					if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime']))
 						$message->attach(new Swift_Message_Attachment($attachment['content'], $attachment['name'], $attachment['mime']));
 			}
 			/* Send mail */
-			$send = $swift->send($message, $to, new Swift_Address($from, $fromName));
+			$send = $swift->send($message, $to, new Swift_Address($from, $from_name));
 			$swift->disconnect();
 			return $send;
 		}
@@ -308,7 +327,7 @@ class MailCore
 
 		if (!is_array($_LANGMAIL))
 			return (str_replace('"', '&quot;', $string));
-		if (key_exists($key, $_LANGMAIL))
+		if (array_key_exists($key, $_LANGMAIL))
 			$str = $_LANGMAIL[$key];
 		else
 			$str = $string;
