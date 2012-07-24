@@ -474,14 +474,18 @@ class AdminShopControllerCore extends AdminController
 			'tax_rules_group' => $this->l('Tax rules groups'),
 			'supplier' => $this->l('Suppliers'),
 			'referrer' => $this->l('Referrers'),
+			'zone' => $this->l('Zones'),
+			'cart_rule' => $this->l('Cart rules'),
 		);
-
+		
 		// Hook for duplication of shop data
 		$modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
 		if (is_array($modules_list) && count($modules_list) > 0)
 			foreach ($modules_list as $m)
 				$import_data['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
 
+		asort($import_data);
+				
 		if (!$this->object->id)
 			$this->fields_import_form = array(
 				'radio' => array(

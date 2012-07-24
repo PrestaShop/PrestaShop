@@ -73,33 +73,19 @@ class AttributeCore extends ObjectModel
 
 	public function delete()
 	{
-		$result = Db::getInstance()->executeS('
-			SELECT `id_product_attribute`
-			FROM `'._DB_PREFIX_.'product_attribute_combination`
-			WHERE `'.$this->def['primary'].'` = '.(int)$this->id
-		);
-
-		if ($result === false)
-			return false;
-
-		$combination_ids = array();
-		if (Db::getInstance()->numRows())
+		if (!$this->hasMultishopEntries())
 		{
-			foreach ($result as $row)
-				$combination_ids[] = (int)$row['id_product_attribute'];
-
 			$combinations = new Collection('Combination');
-			$combinations->where('id_product', '=', $this->id);
+			$combinations->where($this->def['primary'], '=', $this->id);
 			foreach ($combinations as $combination)
 				$combination->delete();
-		}
 		
 		// Delete associated restrictions on cart rules
 		CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
-		/* Reinitializing position */
-		$this->cleanPositions((int)$this->id_attribute_group);
-
+			/* Reinitializing position */
+			$this->cleanPositions((int)$this->id_attribute_group);
+		}
 		$return = parent::delete();
 		if ($return)
 			Hook::exec('actionAttributeDelete', array('id_attribute' => $this->id));

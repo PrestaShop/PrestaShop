@@ -2382,10 +2382,6 @@ class AdminControllerCore extends Controller
 		if (!Shop::isFeatureActive())
 			return;
 
-		$def = ObjectModel::getDefinition($this->className);
-		if (!empty($def['multishop_specific']))
-			return;
-
 		if (!Shop::isTableAssociated($this->table))
 			return;
 

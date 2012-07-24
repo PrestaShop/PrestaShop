@@ -465,64 +465,70 @@ class LanguageCore extends ObjectModel
 
 	public function delete()
 	{
-		if (empty($this->iso_code))
-			$this->iso_code = Language::getIsoById($this->id);
-
-		// Database translations deletion
-		$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
-		foreach ($result as $row)
-			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]))
-				if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
-					return false;
-
-		// Delete tags
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
-
-		// Delete search words
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)$this->id);
-
-		// Files deletion
-		foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
-			if (file_exists($key))
-			unlink($key);
-		$modList = scandir(_PS_MODULE_DIR_);
-		foreach ($modList as $mod)
+		if (!$this->hasMultishopEntries())
 		{
-			Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
-			$files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
-			if (count($files) <= 2)
-				Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
-
-			if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
+			if (empty($this->iso_code))
+				$this->iso_code = Language::getIsoById($this->id);
+	
+			// Database translations deletion
+			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
+			foreach ($result as $row)
+				if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]))
+					if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
+						return false;
+	
+	
+			// Delete tags
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
+	
+			// Delete search words
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)$this->id);
+	
+			// Files deletion
+			foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
+				if (file_exists($key))
+				unlink($key);
+			$modList = scandir(_PS_MODULE_DIR_);
+			foreach ($modList as $mod)
 			{
-				unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
-				$files = @scandir(_PS_MODULE_DIR_.$mod);
+				Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
+				$files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
 				if (count($files) <= 2)
-					Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
+					Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
+	
+				if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
+				{
+					unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
+					$files = @scandir(_PS_MODULE_DIR_.$mod);
+					if (count($files) <= 2)
+						Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
+				}
 			}
+	
+			if (file_exists(_PS_MAIL_DIR_.$this->iso_code))
+				Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
+			if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
+				Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
 		}
-
-		if (file_exists(_PS_MAIL_DIR_.$this->iso_code))
-			Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
-		if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
-			Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
+		
 		if (!parent::delete())
 			return false;
-
-		// delete images
-		$files_copy = array('/en.jpg', '/en-default-thickbox.jpg', '/en-default-home.jpg', '/en-default-large.jpg', '/en-default-medium.jpg', '/en-default-small.jpg', '/en-default-large_scene.jpg');
-		$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-		foreach ($tos as $to)
-			foreach ($files_copy as $file)
-			{
-				$name = str_replace('/en', ''.$this->iso_code, $file);
-
-				if (file_exists($to.$name))
-					unlink($to.$name);
-				if (file_exists(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg'))
-					unlink(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg');
-			}
-
+		if (!$this->hasMultishopEntries())
+		{
+			// delete images
+			$files_copy = array('/en.jpg', '/en-default-thickbox.jpg', '/en-default-home.jpg', '/en-default-large.jpg', '/en-default-medium.jpg', '/en-default-small.jpg', '/en-default-large_scene.jpg');
+			$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
+			foreach ($tos as $to)
+				foreach ($files_copy as $file)
+				{
+					$name = str_replace('/en', ''.$this->iso_code, $file);
+	
+					if (file_exists($to.$name))
+						unlink($to.$name);
+					if (file_exists(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg'))
+						unlink(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg');
+				}
+		}
 		return Tools::generateHtaccess();
 	}
 
