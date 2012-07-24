@@ -323,6 +323,9 @@ class CategoryCore extends ObjectModel
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.$list.')');
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` IN ('.$list.')');
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE `id_category` IN ('.$list.')');
+		
+		// Delete associated restrictions on cart rules
+		CartRule::cleanProductRuleIntegrity('categories', $to_delete);
 
 		Category::cleanPositions($this->id_parent);
 

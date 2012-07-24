@@ -117,7 +117,10 @@ class ManufacturerCore extends ObjectModel
 			return false;
 
 		if (parent::delete())
+		{
+			CartRule::cleanProductRuleIntegrity('manufacturers', $this->id);
 			return $this->deleteImage();
+		}
 	}
 
 	/**

@@ -355,7 +355,10 @@ class SupplierCore extends ObjectModel
 	public function delete()
 	{
 		if (parent::delete())
+		{
+			CartRule::cleanProductRuleIntegrity('suppliers', $this->id);
 			return $this->deleteImage();
+		}
 	}
 
 	/**
