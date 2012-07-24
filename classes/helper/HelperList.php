@@ -505,7 +505,8 @@ class HelperListCore extends Helper
 
 		$total_pages = ceil($this->listTotal / Tools::getValue('pagination', ($default_pagination)));
 
-		if (!$total_pages) $total_pages = 1;
+		if (!$total_pages) 
+			$total_pages = 1;
 
 		$identifier = Tools::getIsset($this->identifier) ? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier) : '';
 		$order = '';
