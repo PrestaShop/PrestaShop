@@ -672,7 +672,8 @@ class ProductCore extends ObjectModel
 			!$this->deleteAccessories() ||
 			!$this->deleteFromAccessories() ||
 			!$this->deleteFromSupplier() ||
-			!$this->deleteDownload())
+			!$this->deleteDownload() ||
+			!$this->deleteFromCartRules())
 		return false;
 
 		return true;
@@ -690,6 +691,12 @@ class ProductCore extends ObjectModel
 		return $return;
 	}
 
+	public function deleteFromCartRules()
+	{
+		CartRule::cleanProductRuleIntegrity('products', $this->id);
+		return true;
+	}
+	
 	public function deleteFromSupplier()
 	{
 		return Db::getInstance()->delete('product_supplier', 'id_product = '.(int)$this->id);

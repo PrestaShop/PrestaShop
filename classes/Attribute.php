@@ -93,6 +93,9 @@ class AttributeCore extends ObjectModel
 			foreach ($combinations as $combination)
 				$combination->delete();
 		}
+		
+		// Delete associated restrictions on cart rules
+		CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
 		/* Reinitializing position */
 		$this->cleanPositions((int)$this->id_attribute_group);

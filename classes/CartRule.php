@@ -1096,6 +1096,46 @@ class CartRuleCore extends ObjectModel
 	{
 		return (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
 	}
+	
+	/* When an entity associated to a product rule (product, category, attribute, supplier, manufacturer...) is deleted, the product rules must be updated */
+	public static function cleanProductRuleIntegrity($type, $list)
+	{
+		// Type must be available in the 'type' enum of the table cart_rule_product_rule
+		if (!in_array($type, array('products', 'categories', 'attributes', 'manufacturers', 'suppliers')))
+			return false;
+		
+		// This check must not be removed because this var is used a few lines below
+		$list = (is_array($list) ? implode(',', array_map('intval', $list)) : (int)$list);
+		if (!preg_match('/^[0-9,]+$/', $list))
+			return false;
+			
+		// Delete associated restrictions on cart rules
+		Db::getInstance()->execute('
+		DELETE crprv
+		FROM `'._DB_PREFIX_.'cart_rule_product_rule` crpr
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_value` crprv ON crpr.`id_product_rule` = crprv.`id_product_rule`
+		WHERE crpr.`type` = "'.pSQL($type).'"
+		AND crprv.`id_item` IN ('.$list.')'); // $list is checked a few lines above
+			
+		// Delete the product rules that does not have any values
+		if (Db::getInstance()->Affected_Rows() > 0)
+			Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule`
+			WHERE `id_product_rule` NOT IN (SELECT id_product_rule FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`)');
+		// If the product rules were the only conditions of a product rule group, delete the product rule group
+		if (Db::getInstance()->Affected_Rows() > 0)
+			Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
+			WHERE `id_product_rule_group` NOT IN (SELECT id_product_rule_group FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+		// If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache
+		if (Db::getInstance()->Affected_Rows() > 0)
+			Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'cart_rule` cr
+			LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_group` crprg ON cr.id_cart_rule = crprg.id_cart_rule
+			SET product_restriction = IF(crprg.id_product_rule_group IS NULL, 0, 1)');
+
+		return true;
+	}
 
 	/**
 	 * @static
