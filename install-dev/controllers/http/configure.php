@@ -153,16 +153,16 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 					$thumb = imagecreatetruecolor($newwidth, $newheight);
 					switch ($type)
 					{
-						case 1:
+						case IMAGETYPE_GIF:
 							$source = imagecreatefromgif($file['tmp_name']);
 						break;
 
-						case 2:
-							$source = imagecreatefromjpeg($file['tmp_name']);
+						case IMAGETYPE_PNG:
+							$source = imagecreatefrompng($file['tmp_name']);
 						break;
 
-						case 3:
-							$source = imagecreatefrompng($file['tmp_name']);
+						case IMAGETYPE_JPEG:
+							$source = imagecreatefromjpeg($file['tmp_name']);
 						break;
 
 						default:
@@ -172,7 +172,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 					if (!$error)
 					{
 						imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-						if (!is_writable(_PS_ROOT_DIR_.'/img/logo.jpg'))
+						if (!is_writable(_PS_ROOT_DIR_.'/img/'))
 							$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
 						else if (!imagejpeg($thumb, _PS_ROOT_DIR_.'/img/logo.jpg', 90))
 							$error = $this->l('Cannot upload the file');
