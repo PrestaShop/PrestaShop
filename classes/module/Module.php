@@ -34,7 +34,7 @@ abstract class ModuleCore
 	public $version;
 
 	/**
-	 * @since 1.5.1
+	 * @since 1.5.0.1
 	 * @var string Registered Version in database
 	 */
 	public $registered_version;
@@ -81,7 +81,7 @@ abstract class ModuleCore
 	/** @var string Module web path (eg. '/shop/modules/modulename/')  */
 	protected $_path = null;
 	/**
-	 * @since 1.5.1
+	 * @since 1.5.0.1
 	 * @var string Module local path (eg. '/home/prestashop/modules/modulename/')
 	 */
 	protected $local_path = null;
