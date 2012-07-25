@@ -311,52 +311,47 @@ class CategoryCore extends ObjectModel
 
 		$this->clearCache();
 
-		/* Get childs categories */
-		$to_delete = array((int)$this->id);
-		$this->recursiveDelete($to_delete, (int)$this->id);
-		$to_delete = array_unique($to_delete);
-
-		/* Delete category and its child from database */
-		$list = count($to_delete) > 1 ? implode(',', array_map('intval', $to_delete)) : (int)$this->id;
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` IN ('.$list.')');
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE `id_category` IN ('.$list.')');
-		
-		// Delete associated restrictions on cart rules
-		CartRule::cleanProductRuleIntegrity('categories', $to_delete);
-
-		Category::cleanPositions($this->id_parent);
-
-		/* Delete category images and its children images */
-		$tmp_category = new Category();
-		foreach ($to_delete as $id_category)
+		$all_cat = $this->getAllChildren();
+		$all_cat[] = $this;
+		foreach ($all_cat as $cat)
 		{
-			$tmp_category->id = (int)$id_category;
-			$tmp_category->deleteImage();
+			parent::delete();
+			if (!$this->hasMultishopEntries())
+			{
+				$cat->deleteImage();
+				$cat->cleanGroups();
+				$cat->cleanAssoProducts();
+				// Delete associated restrictions on cart rules
+				CartRule::cleanProductRuleIntegrity('categories', array($cat->id));
+				Category::cleanPositions($cat->id_parent);
+				/* Delete Categories in GroupReduction */
+				if (GroupReduction::getGroupReductionByCategoryId((int)$cat->id))
+					GroupReduction::deleteCategory($cat->id);
+			}
 		}
-
+				
+		$all_product_asso = array();
+		$tmp = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`');
+		foreach ($tmp as $val)
+			$all_product_asso[] = $val;
+		
 		/* Delete or link products which were not in others categories */
-		$result = Db::getInstance()->executeS('
-			SELECT `id_product`
-			FROM `'._DB_PREFIX_.'product`
-			WHERE `id_product` NOT IN (SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`)
-		');
-		foreach ($result as $p)
+		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
+		$fatherless_products->where('id_product', 'notin', $all_product_asso);
+		
+		foreach ($fatherless_products as $poor_product)
 		{
-			$product = new Product((int)$p['id_product']);
-			if (Validate::isLoadedObject($product))
+			if (Validate::isLoadedObject($poor_product))
 			{
 				if ($this->remove_products || $this->id_parent == 0)
-					$product->delete();
+					$poor_product->delete();
 				else
 				{
 					if ($this->disable_products)
-						$product->active = 0;
+						$poor_product->active = 0;
 
-					$product->addToCategories($this->id_parent);
-					$product->save();
+					$poor_product->addToCategories($this->id_parent);
+					$poor_product->save();
 				}
 			}
 		}
@@ -368,18 +363,13 @@ class CategoryCore extends ObjectModel
 			WHERE `id_category_default`
 			NOT IN (SELECT `id_category` FROM `'._DB_PREFIX_.'category`)
 		');
-
+		
 		/* Rebuild the nested tree */
-		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
+		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 			Category::regenerateEntireNtree();
 
 		Hook::exec('actionCategoryDelete', array('category' => $this));
-
-		/* Delete Categories in GroupReduction */
-		foreach ($to_delete as $category)
-			if (GroupReduction::getGroupReductionByCategoryId((int)$category))
-				GroupReduction::deleteCategory($category);
-
+			
 		return true;
 	}
 
@@ -1040,6 +1030,11 @@ class CategoryCore extends ObjectModel
 	public function cleanGroups()
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
+	}
+	
+	public function cleanAssoProducts()
+	{
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$this->id);
 	}
 
 	public function addGroups($groups)
