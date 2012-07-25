@@ -53,8 +53,16 @@ class GuestTrackingControllerCore extends FrontController
 			// These lines are here for retrocompatibility with old theme
 			$id_order = (int)Tools::getValue('id_order');
 			$order_collection = array();
-			if (Tools::getValue('id_order', false))
-				$order_collection[] = $id_order;
+			if ($id_order)
+			{
+				if (is_numeric($id_order))
+					$order = new Order((int)$id_order);
+				else
+					$order = Order::getByReference($id_order);
+				
+				if (Validate::isLoadedObject($order))
+					$order_collection[] = $order;
+			}
 
 			// Get order reference, ignore package reference (after the #, on the order reference)
 			$order_reference = current(explode('#', Tools::getValue('order_reference')));
