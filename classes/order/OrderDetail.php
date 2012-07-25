@@ -438,7 +438,12 @@ class OrderDetailCore extends ObjectModel
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
 					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
 					$price : $this->specificPrice['reduction']);
-					$this->reduction_amount_tax_incl = $this->reduction_amount;
+
+					$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$this->specificPrice['id_product']);
+					$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
+					$this->tax_calculator = $tax_manager->getTaxCalculator();
+
+                    $this->reduction_amount_tax_incl = $this->reduction_amount;
 					$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
 				break;
 			}
