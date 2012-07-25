@@ -1218,6 +1218,21 @@ class OrderCore extends ObjectModel
 		return new Order((int)($res['id_order']));
 	}
 
+	/**
+	 * Get a collection of orders using reference
+	 * 
+	 * @since 1.5.0.14
+	 * 
+	 * @param string $reference
+	 * @return Collection of Order
+	 */
+	public static function getByReference($reference)
+	{
+		$orders = new Collection('Order');
+		$orders->where('reference', '=', $reference);
+		return $orders;
+	}
+
 	public function getTotalWeight()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
