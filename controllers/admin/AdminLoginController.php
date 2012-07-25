@@ -139,7 +139,7 @@ class AdminLoginControllerCore extends AdminController
 			
 		if (!count($this->errors))
 		{
-		 	// Find employee
+			// Find employee
 			$this->context->employee = new Employee();
 			$is_employee_loaded = $this->context->employee->getByemail($email, $passwd);
 			$employee_associated_shop = $this->context->employee->getAssociatedShops();
@@ -156,7 +156,7 @@ class AdminLoginControllerCore extends AdminController
 			else
 			{
 				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
-			 	// Update cookie
+				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
 				$cookie->email = $this->context->employee->email;
