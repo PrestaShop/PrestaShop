@@ -1541,7 +1541,10 @@ ul#manufacturers_list li .right_side {float:right;}
 	color: #0088CC;
 	padding: 0 10px;
 }
-
+.description_box ul {
+	padding-left: 30px;
+	padding-bottom: 10px;
+}
 
 /* ************************************************************************************************
 		PAGE SUPPLIER

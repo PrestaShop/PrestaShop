@@ -29,6 +29,7 @@ class GuestTrackingControllerCore extends FrontController
 {
 	public $ssl = true;
 	public $php_self = 'guest-tracking';
+	public $display_column_left = false;
 
 	/**
 	 * Initialize guest tracking controller
@@ -49,12 +50,22 @@ class GuestTrackingControllerCore extends FrontController
 	{
 		if (Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer'))
 		{
+			// These lines are here for retrocompatibility with old theme
 			$id_order = (int)Tools::getValue('id_order');
-			$email = Tools::getValue('email');
-			$order = new Order((int)$id_order);
+			$order_collection = array();
+			if (Tools::getValue('id_order', false))
+				$order_collection[] = $id_order;
 
-			if (empty($id_order))
-				$this->errors[] = Tools::displayError('Please provide your Order ID');
+			// Get order reference, ignore package reference (after the #, on the order reference)
+			$order_reference = current(explode('#', Tools::getValue('order_reference')));
+			// Ignore $result_number
+			if (!empty($order_reference))
+				$order_collection = Order::getByReference($order_reference);
+			
+			$email = Tools::getValue('email');
+
+			if (empty($order_reference) && empty($order_id))
+				$this->errors[] = Tools::displayError('Please provide your Order Reference');
 			else if (empty($email))
 				$this->errors[] = Tools::displayError('Please provide your e-mail address');
 			else if (!Validate::isEmail($email))
@@ -67,13 +78,13 @@ class GuestTrackingControllerCore extends FrontController
 					Tools::displayError('Please login to your customer account to view this order, this section is reserved for guest accounts');
 				$this->context->smarty->assign('show_login_link', true);
 			}
-			else if (!Validate::isLoadedObject($order))
-				$this->errors[] = Tools::displayError('Invalid Order ID');
-			else if (!$order->isAssociatedAtGuest($email))
-				$this->errors[] = Tools::displayError('Invalid order ID');
+			else if (!count($order_collection))
+				$this->errors[] = Tools::displayError('Invalid Order Reference');
+			else if (!$order_collection->getFirst()->isAssociatedAtGuest($email))
+				$this->errors[] = Tools::displayError('Invalid Order Reference');
 			else
 			{
-				$this->assignOrderTracking($order);
+				$this->assignOrderTracking($order_collection);
 				if (Tools::isSubmit('submitTransformGuestToCustomer'))
 				{
 					$customer = new Customer((int)$order->id_customer);
@@ -113,54 +124,55 @@ class GuestTrackingControllerCore extends FrontController
 	/**
 	 * Assign template vars related to order tracking informations
 	 */
-	protected function assignOrderTracking($order)
+	protected function assignOrderTracking($order_collection)
 	{
-		$customer = new Customer((int)$order->id_customer);
-		$id_order_state = (int)($order->getCurrentState());
-		$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-		$addressInvoice = new Address((int)($order->id_address_invoice));
-		$addressDelivery = new Address((int)($order->id_address_delivery));
-		$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
-		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
+		$customer = new Customer((int)($order_collection->getFirst()->id_customer));
+		
+		$order_collection = ($order_collection->getAll());
+		
+		$order_list = array();
+		foreach ($order_collection as $order)
+			$order_list[] = $order;
+		
+		foreach ($order_list as &$order)
+		{
+			$order->id_order_state = (int)($order->getCurrentState());
+			$order->invoice = (OrderState::invoiceAvailable((int)($order->id_order_state)) && $order->invoice_number);
+			$order->order_history = $order->getHistory((int)$this->context->language->id, false, true);
+			$order->carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
+			$order->address_invoice = new Address((int)($order->id_address_invoice));
+			$order->address_delivery = new Address((int)($order->id_address_delivery));
+			$order->inv_adr_fields = AddressFormat::getOrderedAddressFields($order->address_invoice->id_country);
+			$order->dlv_adr_fields = AddressFormat::getOrderedAddressFields($order->address_delivery->id_country);
+			$order->invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_invoice, $order->inv_adr_fields);
+			$order->deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_delivery, $order->dlv_adr_fields);
+			$order->currency = new Currency($order->id_currency);
+			$order->discounts = $order->getCartRules();
+			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)($order->addressInvoice->id_state)) : false;
+			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)($order->addressDelivery->id_state)) : false;
+			$order->products = $order->getProducts();
+			$order->customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
+			Product::addCustomizationPrice($order->products, $order->customizedDatas);
+			$order->total_old = ($order->total_discounts > 0) ? (float)($order->total_paid - $order->total_discounts) : false;
+			
+			if ($order->carrier->url && $order->shipping_number)
+				$order->followup = str_replace('@', $order->shipping_number, $order->carrier->url);
+			$order->hook_orderdetaildisplayed = Hook::exec('displayOrderDetail', array('order' => $order));
+			
+			Hook::exec('actionOrderDetail', array('carrier' => $order->carrier, 'order' => $order));
+		}
 
-		$invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
-		$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
-
-		if ($order->total_discounts > 0)
-			$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
-		$products = $order->getProducts();
-		$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
-		Product::addCustomizationPrice($products, $customizedDatas);
-
-		$this->processAddressFormat($addressDelivery, $addressInvoice);
 		$this->context->smarty->assign(array(
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
-			'order' => $order,
+			'order_collection' => $order_list,
 			'return_allowed' => false,
-			'currency' => new Currency($order->id_currency),
-			'order_state' => (int)($id_order_state),
 			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-			'invoice' => (OrderState::invoiceAvailable((int)($id_order_state)) && $order->invoice_number),
-			'order_history' => $order->getHistory((int)$this->context->language->id, false, true),
-			'products' => $products,
-			'discounts' => $order->getCartRules(),
-			'carrier' => $carrier,
-			'address_invoice' => $addressInvoice,
-			'invoiceState' => (Validate::isLoadedObject($addressInvoice) && $addressInvoice->id_state) ? new State((int)($addressInvoice->id_state)) : false,
-			'address_delivery' => $addressDelivery,
-			'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State((int)($addressDelivery->id_state)) : false,
 			'is_guest' => true,
 			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
 			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
 			'use_tax' => Configuration::get('PS_TAX'),
-			'customizedDatas' => $customizedDatas,
-			'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
-			'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues));
-		if ($carrier->url && $order->shipping_number)
-			$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-		$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Hook::exec('displayOrderDetail', array('order' => $order)));
-		Hook::exec('actionOrderDetail', array('carrier' => $carrier, 'order' => $order));
+			));
 	}
 
 	public function setMedia()
