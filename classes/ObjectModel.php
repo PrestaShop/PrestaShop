@@ -310,9 +310,9 @@ abstract class ObjectModelCore
 		else
 		{
 			$fields = array($this->id_lang => $this->formatFields(self::FORMAT_LANG, $this->id_lang));
-			$fields['id_lang'] = $this->id_lang;
+			$fields[$this->id_lang]['id_lang'] = $this->id_lang;
 			if ($this->id_shop && $is_lang_multishop)
-				$fields['id_shop'] = (int)$this->id_shop;
+				$fields[$this->id_lang]['id_shop'] = (int)$this->id_shop;
 		}
 
 		return $fields;
@@ -577,13 +577,12 @@ abstract class ObjectModelCore
 						$id_shop_list = Shop::getContextListShopID();
 						if (count($this->id_shop_list) > 0)
 							$id_shop_list = $this->id_shop_list;
-
 						foreach ($id_shop_list as $id_shop)
 						{
 							$field['id_shop'] = (int)$id_shop;
 							$where = pSQL($this->def['primary']).' = '.(int)$this->id
 										.' AND id_lang = '.(int)$field['id_lang']
-										.' AND id_shop = '.$field['id_shop'];
+										.' AND id_shop = '.(int)$id_shop;
 
 							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
 								$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
