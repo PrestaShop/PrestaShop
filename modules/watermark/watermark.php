@@ -44,7 +44,7 @@ class Watermark extends Module
 	{
 		$this->name = 'watermark';
 		$this->tab = 'administration';
-		$this->version = '0.2';
+		$this->version = '0.3';
 		$this->author = 'PrestaShop';
 		
 		parent::__construct();
@@ -213,7 +213,7 @@ class Watermark extends Module
 	{
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
 
-		if (!empty($_POST))
+		if (Tools::isSubmit('btnSubmit'))
 		{
 			$this->_postValidation();
 			if (!count($this->_postErrors))
@@ -230,14 +230,19 @@ class Watermark extends Module
 		return $this->_html;
 	}
 
-	/* we assume here only jpg files */
+	// Retrocompatibility
 	public function hookwatermark($params)
+	{
+		$this->hookActionWatermark($params);
+	}
+
+	public function hookActionWatermark($params)
 	{
 		$image = new Image($params['id_image']);
 		$image->id_product = $params['id_product'];
 		$file = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-watermark.jpg';
 
-	   $str_shop = '-'.(int)$this->context->shop->id;
+		$str_shop = '-'.(int)$this->context->shop->id;
 		if (Shop::getContext() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 			$str_shop = '';
 
@@ -247,9 +252,9 @@ class Watermark extends Module
 		//go through file formats defined for watermark and resize them
 		foreach ($this->imageTypes as $imageType)
 		{
-		    $newFile = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg';
-		    if (!ImageManager::resize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
-				$return = false;    
+			$newFile = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg';
+			if (!ImageManager::resize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
+				$return = false;
 		}
 		return $return;
 	}
