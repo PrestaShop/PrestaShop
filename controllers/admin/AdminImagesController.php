@@ -524,7 +524,7 @@ class AdminImagesControllerCore extends AdminController
 		SELECT m.`name` FROM `'._DB_PREFIX_.'module` m
 		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-		WHERE h.`name` = \'watermark\' AND m.`active` = 1');
+		WHERE h.`name` = \'actionWatermark\' AND m.`active` = 1');
 
 		if ($result && count($result))
 		{
@@ -535,8 +535,10 @@ class AdminImagesControllerCore extends AdminController
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
 					foreach ($result as $module)
 					{
-						if ($moduleInstance = Module::getInstanceByName($module['name']) && is_callable(array($moduleInstance, 'hookwatermark')))
-							call_user_func(array($moduleInstance, 'hookwatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
+						$moduleInstance = Module::getInstanceByName($module['name']);
+						if ($moduleInstance && is_callable(array($moduleInstance, 'hookActionWatermark')))
+							call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
+
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
 					}
