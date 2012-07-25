@@ -140,7 +140,7 @@ class CombinationCore extends ObjectModel
 		$ids_attributes = array();
 		foreach ($values as $value)
 			$ids_attributes[] = $value['id'];
-		return $this->setAttributes($values);
+		return $this->setAttributes($ids_attributes);
 	}
 
 	public function getWsProductOptionValues()
