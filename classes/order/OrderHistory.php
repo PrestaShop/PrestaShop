@@ -364,12 +364,12 @@ class OrderHistoryCore extends ObjectModel
 				// If there's at least one downloadable file
 				if (!empty($assign))
 					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-						null, null, null, null, _PS_THEME_DIR_, false, (int)$order->id_shop);
+						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
 			}
 
 			if (Validate::isLoadedObject($order))
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-					null, null, null, null, _PS_THEME_DIR_, false, (int)$order->id_shop);
+					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
 		}
 
 		// Update id_order_state attribute in Order

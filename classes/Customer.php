@@ -672,7 +672,7 @@ class CustomerCore extends ObjectModel
 				null,
 				null,
 				null,
-				_PS_THEME_DIR_,
+				_PS_MAIL_DIR_,
 				false,
 				(int)$this->id_shop
 			);
