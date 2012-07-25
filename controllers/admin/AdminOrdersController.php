@@ -471,7 +471,7 @@ class AdminOrdersControllerCore extends AdminController
 						$amount += $order_detail_list[$id_order_detail]['amount'];
 					}
 
-					$shipping_cost_amount = (float)Tools::getValue('partialRefundShippingCost');
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
