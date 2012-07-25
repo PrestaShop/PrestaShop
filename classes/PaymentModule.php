@@ -461,7 +461,7 @@ abstract class PaymentModuleCore extends Module
 									$params,
 									$this->context->customer->email,
 									$this->context->customer->firstname.' '.$this->context->customer->lastname,
-									null, null, null, null, _PS_THEME_DIR_, false, (int)$order->id_shop
+									null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
 								);
 							}
 						}
@@ -628,7 +628,7 @@ abstract class PaymentModuleCore extends Module
 								null,
 								null,
 								$file_attachement,
-								null, _PS_THEME_DIR_, false, (int)$order->id_shop
+								null, _PS_MAIL_DIR_, false, (int)$order->id_shop
 							);
 					}
 
