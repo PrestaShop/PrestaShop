@@ -125,7 +125,7 @@ class AdminTrackingControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name')),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
-
+		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
 			FROM `'._DB_PREFIX_.'product` p
@@ -166,7 +166,7 @@ class AdminTrackingControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name')),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
-
+		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
 			FROM `'._DB_PREFIX_.'product` p
@@ -206,7 +206,7 @@ class AdminTrackingControllerCore extends AdminController
 			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name'))
 		);
-
+		$this->_join = Shop::addSqlAssociation('product', 'a');
 		return parent::renderList();
 	}
 
