@@ -475,9 +475,11 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE cl.`id_lang` = '.(int)$id_lang.'
+		AND c.`id_category` != '.Configuration::get('PS_ROOT_CATEGORY').'svn update
 		GROUP BY c.id_category
-		ORDER BY c.`position`');
+		ORDER BY c.`id_category`, category_shop.`position`');
 	}
 
 	public function getShopID()
