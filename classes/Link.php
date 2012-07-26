@@ -83,15 +83,16 @@ class LinkCore
 	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false)
 	{
 		$dispatcher = Dispatcher::getInstance();
-		$url = _PS_BASE_URL_.__PS_BASE_URI__;
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		// @todo use specific method ?
-		if ($id_shop && ($shop = Shop::getShop($id_shop)))
-			$url = 'http://'.$shop['domain'].$shop['uri'];
-		$url .= $this->getLangLink($id_lang);
+		if (!$id_shop)
+			$shop = Context::getContext()->shop;
+		else
+			$shop = new Shop($id_shop);
+		
+		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang);
 
 		if (!is_object($product))
 		{
