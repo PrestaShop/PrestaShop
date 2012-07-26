@@ -1132,8 +1132,10 @@ class CategoryCore extends ObjectModel
 	 * @param mixed $id_category_parent
 	 * @return boolean true if succeed
 	 */
-	public static function cleanPositions($id_category_parent)
+	public static function cleanPositions($id_category_parent = null)
 	{
+		if ($id_category_parent === null)
+			return;
 		$return = true;
 
 		$id = Context::getContext()->shop->id;
