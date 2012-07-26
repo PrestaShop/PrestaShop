@@ -714,7 +714,7 @@ function checkUrl()
 						$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
 					}
 			// find combination
-			if (count > 0)
+			if (count >= 0)
 			{
 				findCombination(false);
 				original_url = window.location+'';
