@@ -696,6 +696,10 @@ function updateCartSummary(json)
 			$('#total_shipping').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
 		}
 	}
+	else
+	{
+		$('#total_shipping').html(freeShippingTranslation);
+	}
 
 	if (json.free_ship > 0 && !json.is_virtual_cart)
 	{
