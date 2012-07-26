@@ -485,6 +485,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$delivery_option = $this->context->cart->getDeliveryOption(null, true, false);
+		$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
+		$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
+		$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
 		$vars = array(
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
