@@ -212,7 +212,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 
 		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
-
+		
 	}
 	protected function _cleanMetaKeywords($keywords)
 	{
@@ -2234,10 +2234,7 @@ class AdminProductsControllerCore extends AdminController
 		$product = $this->object;
 
 		if ($this->display == 'edit' && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
-		{
 			$this->displayWarning($this->l('Warning: this product does not exist in this shop.'));
-			return;
-		}
 
 		// Product for multishop
 		$this->context->smarty->assign('bullet_common_field', '');
@@ -3245,7 +3242,6 @@ class AdminProductsControllerCore extends AdminController
 		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
-		$category_box = Tools::getValue('categoryBox', array());
 		$data->assign('check_product_association_ajax', $check_product_association_ajax);
 		$data->assign('id_lang', $this->context->language->id);
 		$data->assign('product', $product);
