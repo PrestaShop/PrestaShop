@@ -495,6 +495,8 @@ class OrderOpcControllerCore extends ParentOrderController
 			'link_conditions' => $link_conditions,
 			'recyclable' => (int)($this->context->cart->recyclable),
 			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
+			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
+			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency),
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 			'carriers' => $carriers,
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
