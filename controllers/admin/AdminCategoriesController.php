@@ -530,7 +530,8 @@ class AdminCategoriesControllerCore extends AdminController
 		foreach (Tools::getValue($this->table.'Box') as $id_category)
 		{
 			$category = new Category((int)$id_category);
-			$cats_ids[$category->id] = $category->id_parent;
+			if (!$category->isRootCategoryForAShop())
+				$cats_ids[$category->id] = $category->id_parent;
 		}
 		
 		if (parent::processBulkDelete())
@@ -546,13 +547,13 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	public function processDelete()
 	{
+		$category = $this->loadObject();
 		if ($this->tabAccess['delete'] === '1')
 		{
-			if ($this->isRootCategoryForAShop())
+			if ($category->isRootCategoryForAShop())
 				$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
 			else if (parent::processDelete())
 			{
-				$category = $this->loadObject();
 				$this->setDeleteMode();
 				$this->processFatherlessProducts((int)$category->id_parent);
 				return true;
@@ -574,7 +575,6 @@ class AdminCategoriesControllerCore extends AdminController
 		/* Delete or link products which were not in others categories */
 		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
 		$fatherless_products->where('id_product', 'notin', $all_product_asso);
-		
 		foreach ($fatherless_products as $poor_product)
 		{
 			if (Validate::isLoadedObject($poor_product))
@@ -585,19 +585,12 @@ class AdminCategoriesControllerCore extends AdminController
 				{
 					if ($this->disable_products)
 						$poor_product->active = 0;
-					$poor_product->addToCategories($id_parent);
+					$poor_product->id_category_default = (int)$id_parent;
+					$poor_product->addToCategories((int)$id_parent);
 					$poor_product->save();
 				}
 			}
 		}
-
-		/* Set category default to Home category where categorie no more exists */
-		Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'product_shop`
-			SET `id_category_default` = '.(int)Configuration::get('PS_HOME_CATEGORY').'
-			WHERE `id_category_default`
-			NOT IN (SELECT `id_category` FROM `'._DB_PREFIX_.'category`)
-		');
 	}
 
 	public function processPosition()
