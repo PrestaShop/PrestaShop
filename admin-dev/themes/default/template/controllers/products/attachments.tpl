@@ -37,13 +37,13 @@
 				</div>
 			{/foreach}
 			<sup>&nbsp;*</sup>
-			<p class="preference_description">{l s='Maximum 32 characters.'}</p>
 		</div>
+		<p class="margin-form preference_description">{l s='Maximum 32 characters.'}</p>
 		<div class="clear">&nbsp;</div>
 		<label>{l s='Description:'} </label>
 		<div class="margin-form translatable">
 			{foreach $languages as $language}
-				<div id="attachment_description_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
+				<div class="lang_{$language.id_lang}" style="display: {if $language.id_lang == $default_form_language}block{else}none{/if}; float: left;">
 					<textarea name="attachment_description_{$language.id_lang}">{$attachment_description[$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 				</div>
 			{/foreach}
@@ -90,4 +90,10 @@
 	</table>
 	<div class="clear">&nbsp;</div>
 	<input type="hidden" name="arrayAttachments" id="arrayAttachments" value="{foreach $attach1 as $attach}{$attach.id_attachment},{/foreach}" />
+
+	<script type="text/javascript">
+		var iso = '{$iso_tiny_mce}';
+		var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
+		var ad = '{$ad}';
+	</script>
 {/if}

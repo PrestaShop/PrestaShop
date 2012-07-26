@@ -3153,9 +3153,14 @@ class AdminProductsControllerCore extends AdminController
 				$attachment_description[$language['id_lang']] = '';
 			}
 
+			$iso_tiny_mce = $this->context->language->iso_code;
+			$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
+
 			$data->assign(array(
 				'obj' => $obj,
 				'table' => $this->table,
+				'ad' => dirname($_SERVER['PHP_SELF']),
+				'iso_tiny_mce' => $iso_tiny_mce,
 				'languages' => $this->_languages,
 				'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
 				'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
