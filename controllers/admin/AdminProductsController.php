@@ -3475,7 +3475,7 @@ class AdminProductsControllerCore extends AdminController
 					asort($product_attribute['attributes']);
 
 					foreach ($product_attribute['attributes'] as $attribute)
-						$list .= htmlspecialchars($attribute[0]).' - '.htmlspecialchars($attribute[1]).', ';
+						$list .= $attribute[0].' - '.$attribute[1].', ';
 
 					$list = rtrim($list, ', ');
 					$comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
