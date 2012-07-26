@@ -79,12 +79,6 @@ class CategoryCore extends ObjectModel
 
 	public $groupBox;
 
-	/** @var boolean does the product have to be removed during the delete process */
-	public $remove_products = true;
-
-	/** @var boolean does the product have to be disable during the delete process */
-	public $disable_products = false;
-
 	protected static $_links = array();
 
 	/**
@@ -329,40 +323,6 @@ class CategoryCore extends ObjectModel
 					GroupReduction::deleteCategory($cat->id);
 			}
 		}
-				
-		$all_product_asso = array();
-		$tmp = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`');
-		foreach ($tmp as $val)
-			$all_product_asso[] = $val;
-		
-		/* Delete or link products which were not in others categories */
-		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
-		$fatherless_products->where('id_product', 'notin', $all_product_asso);
-		
-		foreach ($fatherless_products as $poor_product)
-		{
-			if (Validate::isLoadedObject($poor_product))
-			{
-				if ($this->remove_products || $this->id_parent == 0)
-					$poor_product->delete();
-				else
-				{
-					if ($this->disable_products)
-						$poor_product->active = 0;
-
-					$poor_product->addToCategories($this->id_parent);
-					$poor_product->save();
-				}
-			}
-		}
-
-		/* Set category default to Home category where categorie no more exists */
-		$result = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'product_shop`
-			SET `id_category_default` = '.(int)Configuration::get('PS_HOME_CATEGORY').'
-			WHERE `id_category_default`
-			NOT IN (SELECT `id_category` FROM `'._DB_PREFIX_.'category`)
-		');
 		
 		/* Rebuild the nested tree */
 		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))

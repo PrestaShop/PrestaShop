@@ -32,6 +32,12 @@ class AdminCategoriesControllerCore extends AdminController
 	 */
 	protected $_category = null;
 	protected $position_identifier = 'id_category_to_move';
+	
+	/** @var boolean does the product have to be removed during the delete process */
+	public $remove_products = true;
+
+	/** @var boolean does the product have to be disable during the delete process */
+	public $disable_products = false;
 
 	public function __construct()
 	{
@@ -504,75 +510,94 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 		parent::processAdd();
 	}
-
+	
+	protected function setDeleteMode()
+	{
+		if ($this->delete_mode == 'link' || $this->delete_mode == 'linkanddisable')
+		{
+			$this->remove_products = false;
+			if ($this->delete_mode == 'linkanddisable')
+				$this->disable_products = true;
+		}
+		else if ($this->delete_mode != 'delete')
+			$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+		
+	}
+	
+	protected function processBulkDelete()
+	{
+		$cats_ids = array();
+		foreach (Tools::getValue($this->table.'Box') as $id_category)
+		{
+			$category = new Category((int)$id_category);
+			$cats_ids[$category->id] = $category->id_parent;
+		}
+		
+		if (parent::processBulkDelete())
+		{
+				$this->setDeleteMode();
+				foreach ($cats_ids as $id => $id_parent)
+					$this->processFatherlessProducts((int)$id_parent);
+				return true;
+		}
+		else
+			return false;
+	}
+	
 	public function processDelete()
 	{
 		if ($this->tabAccess['delete'] === '1')
 		{
-			if ($this->delete_mode == 'link' || $this->delete_mode == 'linkanddisable')
+			if ($this->isRootCategoryForAShop())
+				$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+			else if (parent::processDelete())
 			{
-				if (Validate::isLoadedObject($object = $this->loadObject()))
-				{
-					$object->remove_products = false;
-					if ($this->delete_mode == 'linkanddisable')
-						$object->disable_products = true;
-				}
-			}
-			else if ($this->delete_mode != 'delete')
-			{
-				$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
-				return;
-			}
-		
-			if (Tools::isSubmit($this->table.'Box'))
-			{
-				if (isset($_POST[$this->table.'Box']))
-				{
-					$category = new Category();
-					$result = true;
-					$result = $category->deleteSelection(Tools::getValue($this->table.'Box'));
-					if ($result)
-					{
-						$category->cleanPositions((int)Tools::getValue('id_category'));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCategories').'&id_category='.(int)Tools::getValue('id_category'));
-					}
-					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
-				}
-				else
-					$this->errors[] = Tools::displayError('You must select at least one element to delete.');
+				$category = $this->loadObject();
+				$this->setDeleteMode();
+				$this->processFatherlessProducts((int)$category->id_parent);
+				return true;
 			}
 			else
-			{
-				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
-				{
-					if ($object->isRootCategoryForAShop())
-						$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
-					// check if request at least one object with noZeroObject
-					elseif (isset($object->noZeroObject) &&
-						count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.
-							$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
-					else
-					{
-						if ($this->deleted)
-						{
-							$object->deleteImage();
-							$object->deleted = 1;
-							if ($object->update())
-								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)$object->id_parent);
-						}
-						else if ($object->delete())
-							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)$object->id_parent);
-						$this->errors[] = Tools::displayError('An error occurred during deletion.');
-					}
-				}
-				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.
-						$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			}
+				return false;
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+	}
+	
+	public function processFatherlessProducts($id_parent)
+	{
+		$all_product_asso = array();
+		$tmp = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`');
+		foreach ($tmp as $val)
+			$all_product_asso[] = $val;
+		
+		/* Delete or link products which were not in others categories */
+		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
+		$fatherless_products->where('id_product', 'notin', $all_product_asso);
+		
+		foreach ($fatherless_products as $poor_product)
+		{
+			if (Validate::isLoadedObject($poor_product))
+			{
+				if ($this->remove_products || $id_parent == 0)
+					$poor_product->delete();
+				else
+				{
+					if ($this->disable_products)
+						$poor_product->active = 0;
+					$poor_product->addToCategories($id_parent);
+					$poor_product->save();
+				}
+			}
+		}
+
+		/* Set category default to Home category where categorie no more exists */
+		Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'product_shop`
+			SET `id_category_default` = '.(int)Configuration::get('PS_HOME_CATEGORY').'
+			WHERE `id_category_default`
+			NOT IN (SELECT `id_category` FROM `'._DB_PREFIX_.'category`)
+		');
 	}
 
 	public function processPosition()
