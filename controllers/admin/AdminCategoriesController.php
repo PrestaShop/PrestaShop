@@ -568,9 +568,9 @@ class AdminCategoriesControllerCore extends AdminController
 	public function processFatherlessProducts($id_parent)
 	{
 		$all_product_asso = array();
-		$tmp = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'category_product`');
+		$tmp = Db::getInstance()->executeS('SELECT DISTINCT(`id_product`) FROM `'._DB_PREFIX_.'category_product`');
 		foreach ($tmp as $val)
-			$all_product_asso[] = $val;
+			$all_product_asso[] = $val['id_product'];
 		
 		/* Delete or link products which were not in others categories */
 		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
