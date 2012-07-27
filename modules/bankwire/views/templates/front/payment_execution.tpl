@@ -33,7 +33,7 @@
 {include file="$tpl_dir./order-steps.tpl"}
 
 {if $nbProducts <= 0}
-	<p class="warning">{l s='Your shopping cart is empty.'}</p>
+	<p class="warning">{l s='Your shopping cart is empty.' mod='bankwire'}</p>
 {else}
 
 <h3>{l s='Bank wire payment' mod='bankwire'}</h3>
