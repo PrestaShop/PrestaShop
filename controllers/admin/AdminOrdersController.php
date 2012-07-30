@@ -150,6 +150,11 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP)
+		{
+			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
+			return false;
+		}
 		parent::renderForm();
 		unset($this->toolbar_btn['save']);
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
@@ -212,7 +217,10 @@ class AdminOrdersControllerCore extends AdminController
 					'class' => 'process-icon-partialRefund'
 				);
 		}
-		return parent::initToolbar();
+		$res = parent::initToolbar();
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new']))
+			unset($this->toolbar_btn['new']);
+		return $res;
 	}
 
 	public function setMedia()
