@@ -63,7 +63,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 			'enableSelection' => array('text' => $this->l('Enable selection')),
 			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
+		);
 
 		parent::__construct();
 	}
@@ -287,8 +287,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						$this->l('Define the behavior if an address matches multiple rules:').'<br />
 						<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax').'<br />
 						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% => 15%)').'<br />
-						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)'
-					)
+						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)')
 				),
 				array(
 					'type' => 'select',
