@@ -222,7 +222,8 @@ class CustomerCore extends ObjectModel
 
 		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
-		$this->updateGroup($this->groupBox);
+		if (Context::getContext()->controller->controller_type == 'admin')
+			$this->updateGroup($this->groupBox);
 	 	return parent::update(true);
 	}
 
