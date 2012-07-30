@@ -45,6 +45,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'title' => $this->l('Reference'),
 				'align' => 'center',
 				'width' => 200,
+				'havingFilter' => true
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
