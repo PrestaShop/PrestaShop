@@ -875,6 +875,7 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$payment_module = Module::getInstanceByName($module_name);
 				$cart = new Cart((int)$id_cart);
+				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
 				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
 				$payment_module->validateOrder(
