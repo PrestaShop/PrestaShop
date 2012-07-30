@@ -104,6 +104,10 @@ class AdminCartRulesControllerCore extends AdminController
 				if (!Tools::getValue($type.'_restriction'))
 					$_POST[$type.'_restriction'] = 0;
 			
+			// Remove the gift if the radio button is set to "no"
+			if (!(int)Tools::getValue('free_gift'))
+				$_POST['gift_product'] = 0;
+
 			// Retrieve the product attribute id of the gift (if available)
 			if ($id_product = (int)Tools::getValue('gift_product'))
 				$_POST['gift_product_attribute'] = (int)Tools::getValue('ipa_'.$id_product);
