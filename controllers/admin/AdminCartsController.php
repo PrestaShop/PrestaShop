@@ -400,6 +400,7 @@ class AdminCartsControllerCore extends AdminController
 			if (Validate::isLoadedObject($currency) && !$currency->deleted && $currency->active)
 			{
 				$this->context->cart->id_currency = (int)$currency->id;
+				$this->context->currency = $currency;
 				$this->context->cart->save();
 			}
 			echo Tools::jsonEncode($this->ajaxReturnVars());
@@ -523,13 +524,13 @@ class AdminCartsControllerCore extends AdminController
 
 	protected function getCartSummary()
 	{
-		$summary = $this->context->cart->getSummaryDetails();
-		$currency = new Currency((int)$this->context->cart->id_currency);
+		$summary = $this->context->cart->getSummaryDetails(null, true);
+		$currency = Context::getContext()->currency;
 		if (count($summary['products']))
 			foreach ($summary['products'] as &$product)
 			{
-				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($product['price'], $currency), $currency));
-				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($product['total'], $currency), $currency));
+				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
+				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
 				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
@@ -539,27 +540,27 @@ class AdminCartsControllerCore extends AdminController
 				$voucher['value_real'] = Tools::displayPrice($voucher['value_real'], $currency);
 		$summary['total_products'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_products'], $currency), $currency)
+			Tools::displayPrice($summary['total_products'], $currency)
 		);
 		$summary['total_discounts_tax_exc'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_discounts_tax_exc'], $currency), $currency)
+			Tools::displayPrice($summary['total_discounts_tax_exc'], $currency)
 		);
 		$summary['total_shipping_tax_exc'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_shipping_tax_exc'], $currency), $currency)
+			Tools::displayPrice($summary['total_shipping_tax_exc'], $currency)
 		);
 		$summary['total_tax'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_tax'], $currency), $currency)
+			Tools::displayPrice($summary['total_tax'], $currency)
 		);
 		$summary['total_price_without_tax'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_price_without_tax'], $currency), $currency)
+			Tools::displayPrice($summary['total_price_without_tax'], $currency)
 		);
 		$summary['total_price'] = str_replace(
 			$currency->sign, '',
-			Tools::displayPrice(Tools::convertPrice($summary['total_price'], $currency), $currency)
+			Tools::displayPrice($summary['total_price'], $currency)
 		);
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
@@ -627,11 +628,11 @@ class AdminCartsControllerCore extends AdminController
 				if (!Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists())
 					unset($carts[$key]);
 				$currency = new Currency((int)$cart['id_currency']);
-				$cart['total_price'] = Tools::displayPrice(Tools::convertPrice($cart_obj->getOrderTotal(), $currency), $currency);
+				$cart['total_price'] = Tools::displayPrice($cart_obj->getOrderTotal(), $currency);
 			}
 		if (count($orders))
 			foreach ($orders as &$order)
-				$order['total_paid_real'] = Tools::displayPrice(Tools::convertPrice($order['total_paid_real'], $currency), $currency);
+				$order['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], $currency);
 		if ($orders || $carts)
 			$to_return = array_merge($this->ajaxReturnVars(),
 											array('carts' => $carts,
