@@ -337,17 +337,6 @@ class AdminOrdersControllerCore extends AdminController
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-						elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
-							$templateVars = array(
-								'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
-								'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : '')
-							);
-						elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
-							$templateVars = array(
-								'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
-								'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
-								'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : '')
-							);
 						// Save all changes
 						if ($history->addWithemail(true, $templateVars))
 						{
@@ -1969,8 +1958,8 @@ class AdminOrdersControllerCore extends AdminController
 		if ($order_detail->id_order_invoice != 0)
 		{
 			$order_invoice = new OrderInvoice($order_detail->id_order_invoice);
-			$order_invoice->total_paid_tax_excl -= $order_detail->total_price_tax_incl;
-			$order_invoice->total_paid_tax_incl -= $order_detail->total_price_tax_excl;
+			$order_invoice->total_paid_tax_excl -= $order_detail->total_price_tax_excl;
+			$order_invoice->total_paid_tax_incl -= $order_detail->total_price_tax_incl;
 			$order_invoice->total_products -= $order_detail->total_price_tax_excl;
 			$order_invoice->total_products_wt -= $order_detail->total_price_tax_incl;
 			$res &= $order_invoice->update();
