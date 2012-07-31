@@ -51,7 +51,7 @@
 		$('#product').typeWatch({
 			captureLength: 1,
 			highlight: true,
-			wait: 100,
+			wait: 750,
 			callback: function(){ searchProducts(); }
 		});
 		$('#payment_module_name').change(function() {
