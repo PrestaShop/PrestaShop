@@ -615,9 +615,9 @@ function updateCartSummary(json)
 
 		// Show / hide quantity button if minimal quantity
 		if (parseInt(product_list[i].minimal_quantity) == parseInt(product_list[i].quantity) && product_list[i].minimal_quantity != 1)
-			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',0.3);
+			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',0.3);
 		else
-			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',1);
+			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',1);
 	}
 
 	// Update discounts
