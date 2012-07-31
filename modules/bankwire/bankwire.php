@@ -36,7 +36,7 @@ class BankWire extends PaymentModule
 	public $details;
 	public $owner;
 	public $address;
-
+	public $extra_mail_vars;
 	public function __construct()
 	{
 		$this->name = 'bankwire';
@@ -64,6 +64,12 @@ class BankWire extends PaymentModule
 			$this->warning = $this->l('Account owner and details must be configured in order to use this module correctly.');
 		if (!count(Currency::checkPaymentCurrencies($this->id)))
 			$this->warning = $this->l('No currency set for this module');
+
+		$this->extra_mail_vars = array(
+										'{bankwire_owner}' => Configuration::get('BANK_WIRE_OWNER'),
+										'{bankwire_details}' => nl2br(Configuration::get('BANK_WIRE_DETAILS')),
+										'{bankwire_address}' => nl2br(Configuration::get('BANK_WIRE_ADDRESS'))
+										);
 	}
 
 	public function install()
