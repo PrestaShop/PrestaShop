@@ -126,15 +126,11 @@ class TranslateCore
 		static $translations_merged = array();
 
 		if ($module instanceof Module)
-		{
 			$name = $module->name;
-			$local_path = $module->getLocalPath();
-		}
 		else
-		{
 			$name = $module;
-			$local_path = _PS_MODULE_DIR_.$module.'/';
-		}
+
+		$local_path = _PS_MODULE_DIR_.$name.'/';
 
 		if (!isset($name) || !isset($translations_merged[$name]))
 		{
