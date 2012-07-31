@@ -69,6 +69,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 		if (isset($this->tax_calculator))
 			return $this->tax_calculator;
 
+		$taxes = array();
+		if (!Configuration::get('PS_TAX'))
+			return new TaxCalculator($taxes);
+
 		$postcode = 0;
 		if (!empty($this->address->postcode))
 			$postcode = $this->address->postcode;
@@ -86,7 +90,6 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
 			$behavior = 0;
 			$first_row = true;
-			$taxes = array();
 
 			foreach ($rows as $row)
 			{
