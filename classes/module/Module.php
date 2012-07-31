@@ -118,7 +118,16 @@ abstract class ModuleCore
 
 	/** @var Smarty_Data */
 	protected $smarty;
-
+	
+	
+	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
+	
+	const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
+	
+	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
+	
+	const CACHE_FILE_TOP_RANKING_MODULES_LIST = '/config/xml/top_ranking_modules_list.xml';
+	
 	/**
 	 * Constructor
 	 *
@@ -1077,8 +1086,9 @@ abstract class ModuleCore
 
 		// Get Default Country Modules and customer module
 		$files_list = array(
-			array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml', 'loggedOnAddons' => 0),
-			array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.'/config/xml/customer_modules_list.xml', 'loggedOnAddons' => 1),
+			array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
+			array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
+			array('type' => 'addonsTopRanking', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_TOP_RANKING_MODULES_LIST, 'loggedOnAddons' => 0),
 		);
 		foreach ($files_list as $f)
 			if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $loggedOnAddons))
@@ -1124,6 +1134,20 @@ abstract class ModuleCore
 										@copy('../img/404.gif', '../img/tmp/'.md5($modaddons->name).'.jpg');
 								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+							}
+							if ($item->type == 'addonsTopRanking')
+							{
+								$item->addons_buy_url = strip_tags((string)$modaddons->url);
+								$prices = (array)$modaddons->price;
+								$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+								foreach ($prices as $currency => $price)
+									if ($id_currency = Currency::getIdByIsoCode($currency))
+										if ($id_default_currency == $id_currency)
+										{
+											$item->price = (float)$price;
+											$item->id_currency = (int)$id_currency;
+										}
+										
 							}
 							$module_list[] = $item;
 						}
@@ -1193,7 +1217,7 @@ abstract class ModuleCore
 	{
 		$db = Db::getInstance();
 
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
 		$native_modules = simplexml_load_file($module_list_xml);
 		$native_modules = $native_modules->modules;
 		foreach ($native_modules as $native_modules_type)

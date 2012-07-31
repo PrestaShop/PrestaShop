@@ -48,7 +48,16 @@
 							<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-									<h3>{$module->displayName}{if isset($module->id) && $module->id gt 0}<span class="setup{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>{else}<span class="setup non-install">{l s='Not installed'}</span>{/if}</h3>
+									<h3>{$module->displayName}
+										{if isset($module->id) && $module->id gt 0}
+											<span class="setup{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
+										{else}
+											<span class="setup non-install">{l s='Not installed'}</span>
+										{/if}
+										{if isset($module->type) && $module->type == 'addonsTopRanking'}
+											<span class="setup top-ranking">{l s='Top Ranking'}</span>
+										{/if}
+									</h3>
 									<div class="metadata">
 										{if isset($module->author) && !empty($module->author)}
 										<dl class="">
@@ -76,12 +85,20 @@
 							</td>
 							<td>
 								<ul id="list-action-button">
-									{if $module->id && isset($module->version_addons) && $module->version_addons}
-										<li><a href="{$module->options.update_url}" class="button updated"><span>{l s='Update it!'}</span></a></li>
-									{/if}
-					      			<li>
-									      <a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed"><span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span></a>
-								      </li>
+									{if isset($module->type) && $module->type == 'addonsTopRanking'}
+										<li>
+											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span>{l s='Buy it'} - {displayPrice price=$module->price currency=$module->id_currency}</span></a>
+										</li>
+									{else}
+										{if $module->id && isset($module->version_addons) && $module->version_addons}
+											<li><a href="{$module->options.update_url}" class="button updated"><span>{l s='Update it!'}</span></a></li>
+										{/if}
+							      			<li>
+							      				<a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed">
+							      					<span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span>
+							      				</a>
+							      			</li>
+								     {/if}
 								</ul>
 							</td>
 						</tr>

@@ -57,9 +57,6 @@ class AdminModulesControllerCore extends AdminController
  	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list_15.xml';
 	protected $addons_url = 'api.addons.prestashop.com';
 	protected $logged_on_addons = false;
-	protected $cache_file_modules_list = '/config/xml/modules_list.xml';
-	protected $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
-	protected $cache_file_customer_modules_list = '/config/xml/customer_modules_list.xml';
 
 	/**
 	 * Admin Modules Controller Constructor
@@ -114,8 +111,8 @@ class AdminModulesControllerCore extends AdminController
 
 		// Load cache file modules list (natives and partners modules)
 		$xmlModules = false;
-		if (file_exists(_PS_ROOT_DIR_.$this->cache_file_modules_list))
-			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.$this->cache_file_modules_list);
+		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST))
+			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
 		if ($xmlModules)
 			foreach ($xmlModules->children() as $xmlModule)
 				foreach ($xmlModule->children() as $module)
@@ -169,6 +166,12 @@ class AdminModulesControllerCore extends AdminController
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
 			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+		}
+		if ($request == 'top_ranking')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443, 'http://' => 80);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=top_ranking&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'customer')
 		{
@@ -224,11 +227,11 @@ class AdminModulesControllerCore extends AdminController
 	public function ajaxProcessRefreshModuleList()
 	{
 		// Refresh modules_list.xml every week
-		if (!$this->isFresh($this->cache_file_modules_list, 604800))
+		if (!$this->isFresh(Module::CACHE_FILE_MODULES_LIST, 604800))
 		{
-			if ($this->refresh($this->cache_file_modules_list, 'https://'.$this->xml_modules_list))
+			if ($this->refresh(Module::CACHE_FILE_MODULES_LIST, 'https://'.$this->xml_modules_list))
 				$this->status = 'refresh';
-			else if ($this->refresh($this->cache_file_modules_list, 'http://'.$this->xml_modules_list))
+			else if ($this->refresh(Module::CACHE_FILE_MODULES_LIST, 'http://'.$this->xml_modules_list))
 				$this->status = 'refresh';
 			else
 				$this->status = 'error';
@@ -240,9 +243,19 @@ class AdminModulesControllerCore extends AdminController
 		// If logged to Addons Webservices, refresh default country native modules list every day
 		if ($this->status != 'error')
 		{
-			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
+			if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.$this->cache_file_default_country_modules_list, $this->addonsRequest('native')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, $this->addonsRequest('native')))
+					$this->status = 'refresh';
+				else
+					$this->status = 'error';
+			}
+			else
+				$this->status = 'cache';
+			
+			if (!$this->isFresh(Module::CACHE_FILE_TOP_RANKING_MODULES_LIST, 86400))
+			{
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_TOP_RANKING_MODULES_LIST, $this->addonsRequest('top_ranking')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -254,9 +267,9 @@ class AdminModulesControllerCore extends AdminController
 		// If logged to Addons Webservices, refresh customer modules list every day
 		if ($this->logged_on_addons && $this->status != 'error')
 		{
-			if (!$this->isFresh($this->cache_file_customer_modules_list, 60))
+			if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 60))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.$this->cache_file_customer_modules_list, $this->addonsRequest('customer')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_CUSTOMER_MODULES_LIST, $this->addonsRequest('customer')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -642,8 +655,8 @@ class AdminModulesControllerCore extends AdminController
 					if (!is_dir('../modules/'.$name.'/'))
 					{
 						$filesList = array(
-							array('type' => 'addonsNative', 'file' => $this->cache_file_default_country_modules_list, 'loggedOnAddons' => 0),
-							array('type' => 'addonsBought', 'file' => $this->cache_file_customer_modules_list, 'loggedOnAddons' => 1),
+							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
+							array('type' => 'addonsBought', 'file' => Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
 						);
 						foreach ($filesList as $f)
 							if (file_exists(_PS_ROOT_DIR_.$f['file']))
@@ -1050,7 +1063,6 @@ class AdminModulesControllerCore extends AdminController
 		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
 		$this->initModulesList($modules);
 		$this->nb_modules_total = count($modules);
-
 		$module_errors = array();
 		$module_success = array();
 
