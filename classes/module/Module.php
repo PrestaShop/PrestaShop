@@ -1602,7 +1602,7 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 
-		return $context->smarty->isCached($this->_getApplicableTemplateDir($template).$template, $cacheId, $compileId);
+		return $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
 	}
 
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
