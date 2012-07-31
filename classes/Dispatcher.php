@@ -413,12 +413,6 @@ class DispatcherCore
 				{
 					if ($row['url_rewrite'])
 						$this->addRoute($row['page'], $row['url_rewrite'], $row['page'], $row['id_lang']);
-					else
-						$this->empty_route = array(
-							'routeID' =>	$row['page'],
-							'rule' =>		'',
-							'controller' =>	$row['page'],
-						);
 				}
 
 			// Set default empty route if no empty route (that's weird I know)
