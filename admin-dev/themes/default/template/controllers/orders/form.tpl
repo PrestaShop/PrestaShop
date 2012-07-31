@@ -639,7 +639,7 @@
 	{
 		var cart_content = '';
 		$.each(products, function() {
-			cart_quantity[this.id_product+'_'+this.id_product_attribute] = this.cart_quantity;
+			cart_quantity[this.id_product+'_'+this.id_product_attribute+'_'+this.id_customization] = this.cart_quantity;
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
 			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>';
 			cart_content += '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />';
