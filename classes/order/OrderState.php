@@ -36,6 +36,8 @@ class OrderStateCore extends ObjectModel
 	/** @var boolean Send an e-mail to customer ? */
 	public $send_email;
 
+	public $module_name;
+
 	/** @var boolean Allow customer to view and download invoice when order is at this state */
 	public $invoice;
 
@@ -71,6 +73,7 @@ class OrderStateCore extends ObjectModel
 		'multilang' => true,
 		'fields' => array(
 			'send_email' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'module_name' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName'),
 			'invoice' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'color' => 		array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'logable' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

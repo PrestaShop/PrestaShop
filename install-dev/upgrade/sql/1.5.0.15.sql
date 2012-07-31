@@ -2,4 +2,9 @@ SET NAMES 'utf8';
 
 /* PHP:p15015_blockadvertising_extension(); */;
 
+ALTER TABLE `PREFIX_order_state` ADD `module_name` VARCHAR(255) NULL DEFAULT NULL AFTER `send_email`;
+
+UPDATE `PREFIX_order_state` SET `module_name`='cheque' WHERE `id_order_state`=(SELECT `value` FROM `PREFIX_configuration` WHERE `name`='PS_OS_CHEQUE' LIMIT 1);
+
+UPDATE `PREFIX_order_state` SET `module_name`='bankwire' WHERE `id_order_state`=(SELECT `value` FROM `PREFIX_configuration` WHERE `name`='PS_OS_BANKWIRE' LIMIT 1);
 
