@@ -150,7 +150,7 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function renderForm()
 	{
-		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP)
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive())
 		{
 			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
 			return false;
@@ -218,7 +218,7 @@ class AdminOrdersControllerCore extends AdminController
 				);
 		}
 		$res = parent::initToolbar();
-		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new']))
+		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && isset($this->toolbar_btn['new']) && Shop::isFeatureActive())
 			unset($this->toolbar_btn['new']);
 		return $res;
 	}
