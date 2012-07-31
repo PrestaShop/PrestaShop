@@ -134,6 +134,11 @@ abstract class ObjectModelCore
 	 * @var array List of specific fields to update (all fields if null)
 	 */
 	protected $update_fields = null;
+	
+	/**
+	 * @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of time
+	 */
+	protected static $db = false;
 
 	/**
 	 * Returns object validation rules (fields validity)
@@ -163,6 +168,9 @@ abstract class ObjectModelCore
 	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
+		if (!ObjectModel::$db)
+			ObjectModel::$db = Db::getInstance();
+	
 		$this->def = self::getDefinition($this);
 		$this->setDefinitionRetrocompatibility();
 
@@ -203,7 +211,7 @@ abstract class ObjectModelCore
 				if (Shop::isTableAssociated($this->def['table']))
 					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
 
-				Cache::store($cache_id, Db::getInstance()->getRow($sql));
+				Cache::store($cache_id, ObjectModel::$db->getRow($sql));
 			}
 
 			$result = Cache::retrieve($cache_id);
@@ -219,7 +227,7 @@ abstract class ObjectModelCore
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
 							WHERE `'.$this->def['primary'].'` = '.(int)$id
 							.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
-					$result = Db::getInstance()->executeS($sql);
+					$result = ObjectModel::$db->executeS($sql);
 					if ($result)
 						foreach ($result as $row)
 							foreach ($row as $key => $value)
@@ -428,6 +436,9 @@ abstract class ObjectModelCore
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
+		if (!ObjectModel::$db)
+			ObjectModel::$db = Db::getInstance();
+
 		// @hook actionObject*AddBefore
 		Hook::exec('actionObjectAddBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
@@ -439,11 +450,11 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database insertion
-		if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values))
+		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
 			return false;
 
 		// Get object id in database
-		$this->id = Db::getInstance()->Insert_ID();
+		$this->id = ObjectModel::$db->Insert_ID();
 
 		// Database insertion for multishop fields related to the object
 		if (Shop::isTableAssociated($this->def['table']))
@@ -458,7 +469,7 @@ abstract class ObjectModelCore
 			foreach ($id_shop_list as $id_shop)
 			{
 				$fields['id_shop'] = (int)$id_shop;
-				$result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
+				$result &= ObjectModel::$db->insert($this->def['table'].'_shop', $fields, $null_values);
 			}
 		}
 
@@ -485,11 +496,11 @@ abstract class ObjectModelCore
 						foreach ($shops as $id_shop)
 						{
 							$field['id_shop'] = (int)$id_shop;
-							$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
+							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
 						}
 					}
 					else
-						$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
+						$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
 				}
 			}
 		}
@@ -509,6 +520,9 @@ abstract class ObjectModelCore
 	 */
 	public function update($null_values = false)
 	{
+		if (!ObjectModel::$db)
+			ObjectModel::$db = Db::getInstance();
+
 		// @hook actionObject*UpdateBefore
 		Hook::exec('actionObjectUpdateBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'UpdateBefore', array('object' => $this));
@@ -520,7 +534,7 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database update
-		if (!$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
+		if (!$result = ObjectModel::$db->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
 			return false;
 
 		// Database insertion for multishop fields related to the object
@@ -551,11 +565,11 @@ abstract class ObjectModelCore
 
 				// A little explanation of what we do here : we want to create multishop entry when update is called, but
 				// only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
-				$shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
+				$shop_exists = ObjectModel::$db->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
 				if ($shop_exists)
-					$result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
+					$result &= ObjectModel::$db->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
 				else if (Shop::getContext() == Shop::CONTEXT_SHOP)
-					$result &= Db::getInstance()->insert($this->def['table'].'_shop', $all_fields, $null_values);
+					$result &= ObjectModel::$db->insert($this->def['table'].'_shop', $all_fields, $null_values);
 			}
 		}
 
@@ -584,10 +598,10 @@ abstract class ObjectModelCore
 										.' AND id_lang = '.(int)$field['id_lang']
 										.' AND id_shop = '.(int)$id_shop;
 
-							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
-								$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
+							if (ObjectModel::$db->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
+								$result &= ObjectModel::$db->update($this->def['table'].'_lang', $field, $where);
 							else
-								$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
+								$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
 						}
 					}
 					// If this table is not linked to multishop system ...
@@ -596,9 +610,9 @@ abstract class ObjectModelCore
 						$where = pSQL($this->def['primary']).' = '.(int)$this->id
 									.' AND id_lang = '.(int)$field['id_lang'];
 						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
-							$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
+							$result &= ObjectModel::$db->update($this->def['table'].'_lang', $field, $where);
 						else
-							$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field, 'INSERT');
+							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field, 'INSERT');
 					}
 				}
 			}
@@ -618,6 +632,9 @@ abstract class ObjectModelCore
 	 */
 	public function delete()
 	{
+		if (!ObjectModel::$db)
+			ObjectModel::$db = Db::getInstance();
+
 		// @hook actionObject*DeleteBefore
 		Hook::exec('actionObjectDeleteBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
@@ -631,20 +648,20 @@ abstract class ObjectModelCore
 			if (count($this->id_shop_list))
 				$id_shop_list = $this->id_shop_list;
 
-			$result &= Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
+			$result &= ObjectModel::$db->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id.' AND id_shop IN ('.implode(', ', $id_shop_list).')');
 		}
 
 		// Database deletion
 		$has_multishop_entries = $this->hasMultishopEntries();
 		if ($result && !$has_multishop_entries)
-			$result &= Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		if (!$result)
 			return false;
 
 		// Database deletion for multilingual fields related to the object
 		if (!empty($this->def['multilang']) && !$has_multishop_entries)
-			$result &= Db::getInstance()->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
