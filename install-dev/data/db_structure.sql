@@ -1264,7 +1264,8 @@ CREATE TABLE `PREFIX_order_slip_detail` (
 CREATE TABLE `PREFIX_order_state` (
   `id_order_state` int(10) UNSIGNED NOT NULL auto_increment,
   `invoice` tinyint(1) UNSIGNED default '0',
-  `send_email` tinyint(1) UNSIGNED NOT NULL default '0',
+	`send_email` tinyint(1) UNSIGNED NOT NULL default '0',
+	`module_name` VARCHAR(255) NULL DEFAULT NULL,
   `color` varchar(32) default NULL,
   `unremovable` tinyint(1) UNSIGNED NOT NULL,
   `hidden` tinyint(1) UNSIGNED NOT NULL default '0',
@@ -1273,7 +1274,8 @@ CREATE TABLE `PREFIX_order_state` (
   `shipped` tinyint(1) UNSIGNED NOT NULL default '0',
   `paid` tinyint(1) UNSIGNED NOT NULL default '0',
   `deleted` tinyint(1) UNSIGNED NOT NULL default '0',
-  PRIMARY KEY  (`id_order_state`)
+  PRIMARY KEY  (`id_order_state`),
+  KEY `module_name` (`module_name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_state_lang` (

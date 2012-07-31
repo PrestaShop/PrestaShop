@@ -310,7 +310,7 @@ class OrderHistoryCore extends ObjectModel
 			return false;
 
 		$result = Db::getInstance()->getRow('
-			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`
+			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`
 			FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
@@ -328,6 +328,14 @@ class OrderHistoryCore extends ObjectModel
 			);
 			if ($template_vars)
 				$data = array_merge($data, $template_vars);
+
+			if ($result['module_name'])
+			{
+				$module = Module::getInstanceByName($result['module_name']);
+				if (Validate::isLoadedObject($module) && isset($module->extra_mail_vars) && is_array($module->extra_mail_vars))
+					$data = array_merge($data, $module->extra_mail_vars);
+			}
+			
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = $order->getUniqReference();
 
