@@ -310,7 +310,8 @@ class AdminMetaControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitAddmeta'))
 		{
-			$langs = Language::getLanguages(true);
+			$langs = Language::getLanguages(false);
+
 			$default_language = Configuration::get('PS_LANG_DEFAULT');
 			if (Tools::getValue('page') != 'index')
 			{
@@ -339,6 +340,7 @@ class AdminMetaControllerCore extends AdminController
 					else
 						$_POST['url_rewrite_'.$lang['id_lang']] = Tools::getValue('url_rewrite_1');
 			}
+
 			Hook::exec('actionAdminMetaSave');
 		}
 		else if (Tools::isSubmit('submitRobots'))
