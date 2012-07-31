@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// Retrocompatibility with 1.4
+if (typeof baseUri === "undefined")
+	baseUri = baseDir;
 
 //JS Object : update the cart by ajax actions
 var ajaxCart = {
