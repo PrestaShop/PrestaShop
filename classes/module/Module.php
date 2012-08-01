@@ -126,7 +126,7 @@ abstract class ModuleCore
 	
 	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';
 	
-	const CACHE_FILE_TOP_RANKING_MODULES_LIST = '/config/xml/top_ranking_modules_list.xml';
+	const CACHE_FILE_MUST_HAVE_MODULES_LIST = '/config/xml/must_have_modules_list.xml';
 	
 	/**
 	 * Constructor
@@ -1088,7 +1088,7 @@ abstract class ModuleCore
 		$files_list = array(
 			array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
 			array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
-			array('type' => 'addonsTopRanking', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_TOP_RANKING_MODULES_LIST, 'loggedOnAddons' => 0),
+			array('type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0),
 		);
 		foreach ($files_list as $f)
 			if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $loggedOnAddons))
@@ -1135,7 +1135,7 @@ abstract class ModuleCore
 								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
 							}
-							if ($item->type == 'addonsTopRanking')
+							if ($item->type == 'addonsMustHave')
 							{
 								$item->addons_buy_url = strip_tags((string)$modaddons->url);
 								$prices = (array)$modaddons->price;

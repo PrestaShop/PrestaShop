@@ -49,13 +49,14 @@
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
 									<h3>{$module->displayName}
-										{if isset($module->id) && $module->id gt 0}
-											<span class="setup{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
+										{if isset($module->type) && $module->type == 'addonsMustHave'}
+											<span class="setup must-have">{l s='Must Have'}</span>
 										{else}
-											<span class="setup non-install">{l s='Not installed'}</span>
-										{/if}
-										{if isset($module->type) && $module->type == 'addonsTopRanking'}
-											<span class="setup top-ranking">{l s='Top Ranking'}</span>
+											{if isset($module->id) && $module->id gt 0}
+												<span class="setup{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>
+											{else}
+												<span class="setup non-install">{l s='Not installed'}</span>
+											{/if}
 										{/if}
 									</h3>
 									<div class="metadata">
@@ -85,9 +86,9 @@
 							</td>
 							<td>
 								<ul id="list-action-button">
-									{if isset($module->type) && $module->type == 'addonsTopRanking'}
+									{if isset($module->type) && $module->type == 'addonsMustHave'}
 										<li>
-											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span>{l s='Buy it'} - {displayPrice price=$module->price currency=$module->id_currency}</span></a>
+											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.gif"> {displayPrice price=$module->price currency=$module->id_currency}</span></a>
 										</li>
 									{else}
 										{if $module->id && isset($module->version_addons) && $module->version_addons}
