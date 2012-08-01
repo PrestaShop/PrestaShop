@@ -167,11 +167,11 @@ class AdminModulesControllerCore extends AdminController
 			$protocolsList = array('https://' => 443, 'http://' => 80);
 			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
-		if ($request == 'top_ranking')
+		if ($request == 'must-have')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=top_ranking&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'customer')
 		{
@@ -253,9 +253,9 @@ class AdminModulesControllerCore extends AdminController
 			else
 				$this->status = 'cache';
 			
-			if (!$this->isFresh(Module::CACHE_FILE_TOP_RANKING_MODULES_LIST, 86400))
+			if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_TOP_RANKING_MODULES_LIST, $this->addonsRequest('top_ranking')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, $this->addonsRequest('must-have')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -985,6 +985,8 @@ class AdminModulesControllerCore extends AdminController
 		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
 			return true;
 		else if ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought'))
+			return true;
+		else if ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave'))
 			return true;
 		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
 			return true;
