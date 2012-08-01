@@ -378,7 +378,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root:'),
-			'desc' => $this->l('This is the root category of the store that you create. To define a new root category for your store').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminShop').'&addcategoryroot">'.$this->l('Click here').'</a>',
+			'desc' => $this->l('This is the root category of the store that you create. To define a new root category for your store').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot">'.$this->l('Click here').'</a>',
 			'name' => 'id_category',
 			'options' => array(
 				'query' => $categories,
