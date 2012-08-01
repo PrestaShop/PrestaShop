@@ -105,13 +105,12 @@
 								<label class="t" for="{$key}_{$k}"> {$v}</label><br />
 							{/foreach}
 							<br />
-						{*{elseif $field['type'] == 'checkbox'}
+						{elseif $field['type'] == 'checkbox'}
 							{foreach $field['choices'] AS $k => $v}
 								<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 								<label class="t" for="{$key}{$k}_on"> {$v}</label><br />
 							{/foreach}
 							<br />
-						*}
 						{elseif $field['type'] == 'text'}
 							<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 							{if isset($field['suffix'])}&nbsp;{$field['suffix']|strval}{/if}
