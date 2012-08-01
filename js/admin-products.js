@@ -27,6 +27,12 @@
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
 
+product_tabs['Customization'] = new function(){
+	this.onReady = function(){
+		if (display_multishop_checkboxes)
+		ProductMultishop.checkAllCustomization();
+	}
+}
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
@@ -1541,6 +1547,12 @@ var ProductMultishop = new function()
 	{
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'id_category_default');
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'categories-treeview', 'category_box');
+	};
+
+	this.checkAllCustomization = function()
+	{
+		ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files');
+		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields');
 	};
 
 	this.checkAllCombinations = function()
