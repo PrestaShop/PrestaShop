@@ -320,7 +320,7 @@ class CartControllerCore extends FrontController
 			die(Tools::jsonEncode($result));
 		}
 		// @todo create a hook
-		else if (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))
+		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))
 			require_once(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php');
 	}
 }
