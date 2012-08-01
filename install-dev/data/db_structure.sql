@@ -1401,6 +1401,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `unit_price_ratio` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `additional_shipping_cost` decimal(20,2) NOT NULL DEFAULT '0.00',
   `customizable` tinyint(2) NOT NULL DEFAULT '0',
+  `uploadable_files` tinyint(4) NOT NULL default '0',
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
