@@ -378,6 +378,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root:'),
+			'desc' => $this->l('This is the root category of the store that you create. To define a new root category for your store').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminShop').'&addcategoryroot">'.$this->l('Click here').'</a>',
 			'name' => 'id_category',
 			'options' => array(
 				'query' => $categories,
@@ -397,7 +398,8 @@ class AdminShopControllerCore extends AdminController
 			'type' => 'categories_select',
 			'name' => 'categoryBox',
 			'label' => $this->l('Associated categories:'),
-			'category_tree' => $this->initCategoriesAssociation($parent)
+			'category_tree' => $this->initCategoriesAssociation($parent),
+			'desc' => $this->l('By selecting categories associated, you choose to share the categories between different shops. Once associated between the shops, any alteration of an associated category will impact all the shops for which those categories will be associated.')
 		);
 		/*$this->fields_form['input'][] = array(
 			'type' => 'radio',
