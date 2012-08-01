@@ -8,3 +8,4 @@ UPDATE `PREFIX_order_state` SET `module_name`='cheque' WHERE `id_order_state`=(S
 
 UPDATE `PREFIX_order_state` SET `module_name`='bankwire' WHERE `id_order_state`=(SELECT `value` FROM `PREFIX_configuration` WHERE `name`='PS_OS_BANKWIRE' LIMIT 1);
 
+ALTER TABLE `PREFIX_product_shop` ADD `uploadable_files` TINYINT NOT NULL DEFAULT 0 AFTER `customizable`;
