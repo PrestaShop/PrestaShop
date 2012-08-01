@@ -336,3 +336,7 @@ UPDATE `PREFIX_hook_module` SET position = 28
 WHERE
 	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'feeder');
 
+DELETE FROM `PREFIX_hook_module` 
+WHERE
+	id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn') AND id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockmyaccount')
+
