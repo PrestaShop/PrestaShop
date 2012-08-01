@@ -1574,11 +1574,8 @@ class BlockLayered extends Module
 		foreach (Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`') as $category)
 			if ($category['id_category'] != 1)
 				$category_ist[] = $category['id_category'];
-
-		if (Tools::usingSecureMode())
-			$domain = Tools::getShopDomainSsl(true);
-		else
-			$domain = Tools::getShopDomain(true);
+		
+		$domain = Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'];
 
 		$html .= '
 			<a class="bold ajaxcall-recurcive"
