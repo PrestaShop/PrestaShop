@@ -838,12 +838,15 @@ class CategoryCore extends ObjectModel
 			return self::$_links[$id_category.'-'.$id_lang];
 
 		$result = Db::getInstance()->getRow('
-		SELECT cl.`link_rewrite`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
-		WHERE `id_lang` = '.(int)$id_lang.'
-		AND c.`id_category` = '.(int)$id_category);
+			SELECT cl.`link_rewrite`
+			FROM `'._DB_PREFIX_.'category_lang` cl
+			WHERE `id_lang` = '.(int)$id_lang.'
+			'.Shop::addSqlRestrictionOnLang('cl').'
+			AND cl.`id_category` = '.(int)$id_category
+		);
+
 		self::$_links[$id_category.'-'.$id_lang] = $result['link_rewrite'];
+
 		return $result['link_rewrite'];
 	}
 
