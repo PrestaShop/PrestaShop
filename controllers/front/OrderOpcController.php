@@ -192,6 +192,10 @@ class OrderOpcControllerCore extends ParentOrderController
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 									
+									// Address has changed, so we check if the cart rules still apply
+									CartRule::autoRemoveFromCart($this->context);
+									CartRule::autoAddToCart($this->context);
+		
 									if (!$this->context->cart->isMultiAddressDelivery())
 										$this->context->cart->setNoMultishipping(); // As the cart is no multishipping, set each delivery address lines with the main delivery address
 
