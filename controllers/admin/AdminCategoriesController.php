@@ -216,7 +216,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (empty($this->display))
 		{
-			if (Shop::isFeatureActive())
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
 				$this->toolbar_btn['new-url'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
 					'desc' => $this->l('Add new root category')
