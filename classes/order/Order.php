@@ -623,7 +623,7 @@ class OrderCore extends ObjectModel
 			&& (int)$product['id_warehouse'] > 0)
 			$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], (int)$product['id_warehouse'], true);
 		else
-			$product['current_stock'] = '--';
+			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int)$this->id_shop);
 	}
 
 	/**

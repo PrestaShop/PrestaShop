@@ -1885,6 +1885,9 @@ class AdminOrdersControllerCore extends AdminController
 		if (isset($order_invoice))
 			 $res &= $order_invoice->update();
 
+		// Update product available quantity
+		StockAvailable::updateQuantity($order_detail->product_id, $order_detail->product_attribute_id, ($old_quantity - $order_detail->product_quantity), $order->id_shop);
+
 		$products = $this->getProducts($order);
 		// Get the last product
 		$product = $products[$order_detail->id];
@@ -1892,9 +1895,6 @@ class AdminOrdersControllerCore extends AdminController
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
-
-		// Update product available quantity
-		StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], ($old_quantity - $product['product_quantity']), $order->id_shop);
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
