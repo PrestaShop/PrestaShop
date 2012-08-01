@@ -40,7 +40,7 @@
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<legend>
-						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}}" />{/if}
+						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall':'UTF-8'}" />{/if}
 						{$field.title}
 					</legend>
 				{elseif $key == 'description' && $field}
