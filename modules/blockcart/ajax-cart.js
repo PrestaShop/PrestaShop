@@ -25,7 +25,7 @@
 */
 
 // Retrocompatibility with 1.4
-if (typeof baseUri === "undefined")
+if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
 	baseUri = baseDir;
 
 //JS Object : update the cart by ajax actions
