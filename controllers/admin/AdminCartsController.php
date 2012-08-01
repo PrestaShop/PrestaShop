@@ -215,7 +215,7 @@ class AdminCartsControllerCore extends AdminController
 				$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
 			elseif ($id_address_delivery)
 				$this->context->cart->id_address_delivery = (int)$id_address_delivery;
-
+			$this->context->cart->setNoMultishipping();
 			$this->context->cart->save();
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$this->context->currency = $currency;
@@ -577,7 +577,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$delivery_option_list_formated = array();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
-		
+
 		if (!count($delivery_option_list))
 			return array();
 
