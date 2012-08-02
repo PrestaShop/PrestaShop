@@ -2501,6 +2501,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Manufacturers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop');
 				foreach (scandir(_PS_MANU_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
@@ -2508,6 +2509,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Suppliers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
+				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop');
 				foreach (scandir(_PS_SUPP_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_SUPP_IMG_DIR_.$d);
