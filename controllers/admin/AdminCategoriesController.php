@@ -103,11 +103,10 @@ class AdminCategoriesControllerCore extends AdminController
 		else
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
-			else if (count(Category::getCategoriesWithoutParent()) > 1)
+			else if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();
 			else
 				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
-
 		// if we are not in a shop context, we remove the position column
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
@@ -146,8 +145,9 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('view');
 
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
-		$is_multishop = Shop::isFeatureActive();
+		$is_multishop = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 		$top_category = Category::getTopCategory();
+
 		if (Tools::isSubmit('id_category'))
 			$id_parent = $this->_category->id;
 		else if (!$is_multishop && $count_categories_without_parent > 1)
@@ -155,7 +155,10 @@ class AdminCategoriesControllerCore extends AdminController
 		else if ($is_multishop && $count_categories_without_parent == 1)
 			$id_parent = Configuration::get('PS_HOME_CATEGORY');
 		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
-			$id_parent = $top_category->id;
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
+				$id_parent = $this->context->shop->id_category;
+			else
+				$id_parent = $top_category->id;
 		else
 			$id_parent = $this->context->shop->id_category;
 
@@ -509,6 +512,9 @@ class AdminCategoriesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of itself.'));
 		}
 		parent::processAdd();
+		//if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
+		if (Tools::isSubmit('is_root_category'))
+			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
 	}
 	
 	protected function setDeleteMode()
@@ -567,16 +573,15 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	public function processFatherlessProducts($id_parent)
 	{
-		$all_product_asso = array();
-		$tmp = Db::getInstance()->executeS('SELECT DISTINCT(`id_product`) FROM `'._DB_PREFIX_.'category_product`');
-		foreach ($tmp as $val)
-			$all_product_asso[] = $val['id_product'];
-		
 		/* Delete or link products which were not in others categories */
-		$fatherless_products = new Collection('Product', Context::getContext()->language->id);
-		$fatherless_products->where('id_product', 'notin', $all_product_asso);
-		foreach ($fatherless_products as $poor_product)
+		$fatherless_products = Db::getInstance()->executeS('
+			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE p.`id_product` NOT IN (SELECT DISTINCT(cp.`id_product`) FROM `'._DB_PREFIX_.'category_product` cp)');
+			
+		foreach ($fatherless_products as $id_poor_product)
 		{
+			$poor_product = new Product((int)$id_poor_product);
 			if (Validate::isLoadedObject($poor_product))
 			{
 				if ($this->remove_products || $id_parent == 0)
