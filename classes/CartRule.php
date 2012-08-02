@@ -487,13 +487,17 @@ class CartRuleCore extends ObjectModel
 			// If a product is given for free in this rule and already in the cart, the price is subtracted
 			if ($this->gift_product && $alreadyInCart)
 			{
-				$in_cart = (bool)Db::getInstance()->getValue('
-				SELECT id_product
-				FROM '._DB_PREFIX_.'cart_product
-				WHERE id_product = '.(int)$this->gift_product.'
-				AND id_product_attribute = '.(int)$this->gift_product_attribute.'
-				AND id_cart = '.(int)$context->cart->id);
-				if ($in_cart)
+				$query = new DbQuery();
+				
+				$query->select('id_product')
+				$query->from('cart_product')
+				$query->where('id_product = '.(int)$this->gift_product)
+				$query->where('id_cart = '.(int)$context->cart->id);
+				
+				if ((int)$this->gift_product_attribute)
+					$query->where('id_product_attribute = '.(int)$this->gift_product_attribute);
+				
+				if (Db::getInstance()->getValue($query))
 				{
 					$ref = false;
 					$product_price = Product::getPriceStatic(
@@ -712,9 +716,10 @@ class CartRuleCore extends ObjectModel
 	 *
 	 * @param bool $use_tax
 	 * @param Context $context
+	 * @param boolean $use_cache Allow using cache to avoid multiple free gift using multishipping
 	 * @return float|int|string
 	 */
-	public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null)
+	public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null, $use_cache = true)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -895,16 +900,17 @@ class CartRuleCore extends ObjectModel
 		{
 			$id_address = (is_null($package) ? 0 : $package['id_address']);
 			foreach ($package_products as $product)
-				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
+				if ($product['id_product'] == $this->gift_product && ($product['id_product_attribute'] == $this->gift_product_attribute || !(int)$this->gift_product_attribute))
 				{
 					// The free gift coupon must be applied to one product only (needed for multi-shipping which manage multiple product lists)
 					if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product])
 						|| CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == $id_address
 						|| CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0
-						|| $id_address == 0)
+						|| $id_address == 0
+						|| !$use_cache)
 					{
 						$reduction_value += ($use_tax ? $product['price_wt'] : $product['price']);
-						if (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0)
+						if ($use_cache && (!isset(CartRule::$only_one_gift[$this->id.'-'.$this->gift_product]) || CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] == 0))
 							CartRule::$only_one_gift[$this->id.'-'.$this->gift_product] = $id_address;
 						break;
 					}
