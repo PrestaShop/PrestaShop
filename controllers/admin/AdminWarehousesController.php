@@ -36,6 +36,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 	$this->className = 'Warehouse';
 		$this->deleted = true;
 		$this->lang = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fields_list = array(
 			'reference'	=> array(
