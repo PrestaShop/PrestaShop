@@ -90,6 +90,7 @@ class AdminTrackingControllerCore extends AdminController
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		));
 
+		$this->_join = Shop::addSqlAssociation('category', 'a');
 		$this->_filter = ' AND a.`id_category` NOT IN (
 			SELECT DISTINCT(cp.id_category)
 			FROM `'._DB_PREFIX_.'category_product` cp
