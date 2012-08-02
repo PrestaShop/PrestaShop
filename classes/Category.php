@@ -935,7 +935,7 @@ class CategoryCore extends ObjectModel
 
 		$categories = null;
 		$id_current = $this->id;
-		if (count(Category::getCategoriesWithoutParent()) > 1)
+		if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 			$context->shop->id_category = Category::getTopCategory()->id;
 		elseif (!$context->shop->id)
 			$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
