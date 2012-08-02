@@ -489,9 +489,9 @@ class CartRuleCore extends ObjectModel
 			{
 				$query = new DbQuery();
 				
-				$query->select('id_product')
-				$query->from('cart_product')
-				$query->where('id_product = '.(int)$this->gift_product)
+				$query->select('id_product');
+				$query->from('cart_product');
+				$query->where('id_product = '.(int)$this->gift_product);
 				$query->where('id_cart = '.(int)$context->cart->id);
 				
 				if ((int)$this->gift_product_attribute)
