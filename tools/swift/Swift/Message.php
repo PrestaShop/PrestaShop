@@ -620,7 +620,8 @@ class Swift_Message extends Swift_Message_Mime
         case "mixed": $this->getReference("mixed", $tag)->addChild($ref, $id, $sign);
           break;
       }
-      $this->getReference("parent", $old_branch)->removeChild($id);
+      if ($this->getReference("parent", $old_branch)->hasChild($id))
+        $this->getReference("parent", $old_branch)->removeChild($id);
     }
     $this->setReference("parent", $old_branch, $new); //parentRefs[$old_branch] = $new;
   }
