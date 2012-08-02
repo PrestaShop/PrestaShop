@@ -231,7 +231,7 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 #moduleContainer .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
 #moduleContainer .moduleDesc p.desc { color:#666; font-size:12px; display:block; clear:both;}
 #moduleContainer .setup  {background-color:#6db300; font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
-#moduleContainer .setup.non-install { border: solid 1px #ec7000; background-color: #FFCC99; color: #ec7000}
+#moduleContainer .setup.non-install { border: solid 1px #ec7000; background-color: #ffedb1; color: #ec7000}
 #moduleContainer .setup.must-have { background-color: #ec7000;}
 #moduleContainer .setup.off{ background-color:#ccc;}
 #moduleContainer .row-actions-module span { padding-right:5px;}
