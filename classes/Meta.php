@@ -56,7 +56,7 @@ class MetaCore extends ObjectModel
 	public static function getPages($exclude_filled = false, $add_page = false)
 	{
 		$selected_pages = array();
-		if (!$files = scandir(_PS_ROOT_DIR_.'/controllers/front/'))
+		if (!$files = Tools::scandir(_PS_ROOT_DIR_.'/controllers/front/', 'php', '', true))
 			die(Tools::displayError('Cannot scan root directory'));
 
 		// Exclude pages forbidden
@@ -68,6 +68,8 @@ class MetaCore extends ObjectModel
 		foreach ($files as $file)
 			if ($file != 'index.php' && preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
 				$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
+			else if ($file != 'index.php' && preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
+				$selected_pages[strtolower(sprintf(Tools::displayError('%1$s (in %2$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
 
 		// Add modules controllers to list (this function is cool !)
 		foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
