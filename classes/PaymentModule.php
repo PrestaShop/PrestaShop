@@ -321,6 +321,10 @@ abstract class PaymentModuleCore extends Module
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
 			$cart_rules = $this->context->cart->getCartRules();
+			
+			// Make sure CarRule caches are empty
+			CartRule::cleanCache();
+			
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
