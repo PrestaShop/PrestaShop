@@ -88,7 +88,7 @@
 								<ul id="list-action-button">
 									{if isset($module->type) && $module->type == 'addonsMustHave'}
 										<li>
-											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.gif"> {displayPrice price=$module->price currency=$module->id_currency}</span></a>
+											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
 										</li>
 									{else}
 										{if $module->id && isset($module->version_addons) && $module->version_addons}
