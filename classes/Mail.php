@@ -254,9 +254,7 @@ class MailCore
 			$swift->disconnect();
 			return $send;
 		}
-
-		catch (Swift_ConnectionException $e)
-		{
+		catch (Swift_Exception $e) {
 			return false;
 		}
 	}
