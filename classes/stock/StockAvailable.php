@@ -214,7 +214,6 @@ class StockAvailableCore extends ObjectModel
 						);
 					}
 				}
-
 				// updates
 				// if $id_product has attributes, it also updates the sum for all attributes
 				$query = array(
@@ -625,15 +624,6 @@ class StockAvailableCore extends ObjectModel
 				$sql .= ' AND '.pSQL($alias).'id_shop = 0 ';
 			}
 		}
-		// else if we are in group context
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
-		{
-			if (is_object($sql))
-				$sql->where(pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $shop_group->id, true)).')');
-			else
-				$sql = ' AND '.pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $shop_group->id, true)).') ';
-		}
-		// if no group specific restriction, set simple shop restriction
 		else
 		{
 			if (is_object($sql))
