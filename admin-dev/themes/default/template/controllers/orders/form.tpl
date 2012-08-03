@@ -351,7 +351,7 @@
 		$.ajax({
 			type:"POST",
 			url: "{$link->getAdminLink('AdminCarts')}",
-			async: true,
+			async: false,
 			dataType: "json",
 			data : {
 				ajax: "1",
@@ -467,7 +467,7 @@
 		$.ajax({
 			type:"POST",
 			url : "{$link->getAdminLink('AdminCarts')}",
-			async: true,
+			async: false,
 			dataType: "json",
 			data : {
 				ajax: "1",
