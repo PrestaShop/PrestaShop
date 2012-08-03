@@ -30,8 +30,6 @@
 	background-repeat: no-repeat;
 	cursor: pointer
 }
-#cart_block h4 span#block_cart_collapse {background-image: url(img/icon/sort_asc_white.png) }
-#cart_block h4 span#block_cart_expand {background-image: url(img/icon/sort_desc_white.png) }
 
 #cart_block  .block_content {padding:8px 8px 16px 8px;}
 
