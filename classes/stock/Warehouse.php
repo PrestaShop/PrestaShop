@@ -304,7 +304,10 @@ class WarehouseCore extends ObjectModel
 			if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				$shop_group = Shop::getContextShopGroup();
 			else
+			{
 				$shop_group = Context::getContext()->shop->getGroup();
+				$id_shop = (int)Context::getContext()->shop->id;
+			}	
 			$share_stock = $shop_group->share_stock;
 		}
 		else
@@ -316,7 +319,7 @@ class WarehouseCore extends ObjectModel
 		if ($share_stock)
 			$ids_shop = Shop::getShops(true, (int)$shop_group->id, true);
 		else
-			$ids_shop = array((int)Context::getContext()->shop->id);
+			$ids_shop = array((int)$id_shop);
 
 		$query = new DbQuery();
 		$query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
