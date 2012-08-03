@@ -415,6 +415,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
+		
+		if (count($this->errors))
+			$this->setTypeAttribute();
 	}
 
 	/**
