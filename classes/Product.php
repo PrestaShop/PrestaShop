@@ -1164,12 +1164,16 @@ class ProductCore extends ObjectModel
 	 */
 	public function addSupplierReference($id_supplier, $id_product_attribute, $supplier_reference = null, $price = null, $id_currency = null)
 	{
+		//in some case we need to add price without supplier reference
+		if ($supplier_reference === null)
+			$supplier_reference = '';
+		
 		//Try to set the default supplier reference
-		if ($id_supplier > 0 && $supplier_reference != null)
+		if ($id_supplier > 0)
 		{
-			$id_product_supplier = ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
+			$id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $id_supplier);
 
-			if (empty($id_product_supplier))
+			if (!$id_product_supplier)
 			{
 				//create new record
 				$product_supplier_entity = new ProductSupplier();
