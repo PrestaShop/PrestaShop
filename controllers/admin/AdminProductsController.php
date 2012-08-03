@@ -205,8 +205,7 @@ class AdminProductsControllerCore extends AdminController
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
-				AND sav.`id_shop` = '.(int)$this->context->shop->id.')';
-
+				AND sav.`id_shop` in  ('.implode(', ', array_map('intval', Shop::getContextListShopID())).'))';
 		// if no category selected, display all products
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
@@ -2460,9 +2459,9 @@ class AdminProductsControllerCore extends AdminController
 							$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
 						// Save product-supplier data
-						$existing_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
-
-						if ($existing_id <= 0)
+						$product_supplier_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
+						
+						if (!$product_supplier_id)
 						{
 							$product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)Tools::convertPrice($price, $id_currency), (int)$id_currency);
 							if ($product->id_supplier == $supplier->id_supplier)
@@ -2488,7 +2487,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 						else
 						{
-							$product_supplier = new ProductSupplier($existing_id);
+							$product_supplier = new ProductSupplier($product_supplier_id);
 							$product_supplier->id_currency = (int)$id_currency;
 							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
 							$product_supplier->product_supplier_reference = pSQL($reference);
