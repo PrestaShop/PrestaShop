@@ -469,7 +469,7 @@ class LinkCore
 			if (method_exists($this, $method_name) && isset($_GET['id_'.Dispatcher::getInstance()->getController()]))
 			{
 				$type = Dispatcher::getInstance()->getController();
-				$id_object = $_GET['id_'.Dispatcher::getInstance()->getController()];
+				$id_object = $_GET['id_'.$type];
 			}
 		}
 
@@ -518,11 +518,11 @@ class LinkCore
 			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
 		$vars['requestUrl'] = $url;
 
-		if (!$this->allow == 1)
-			$vars['controller'] = Dispatcher::getInstance()->getController();
-
 		if ($type && $id_object)
 			$vars['id_'.$type] = (is_object($id_object) ? (int)$id_object->id : (int)$id_object);
+			
+		if (!$this->allow == 1)
+			$vars['controller'] = Dispatcher::getInstance()->getController();
 		return $vars;
 	}
 
