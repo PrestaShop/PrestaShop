@@ -202,11 +202,11 @@
 			{foreach $tabs AS $t}
 				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
 			<span class="title">
-				<img src="{$t.img}" alt="" />{$t.name}
+				<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
 			</span>
 					<ul class="submenu">
 						{foreach from=$t.sub_tabs item=t2}
-							<li><a href="{$t2.href}">{$t2.name}</a></li>
+							<li><a href="{$t2.href}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name}{/if}</a></li>
 						{/foreach}
 					</ul>
 				</li>
