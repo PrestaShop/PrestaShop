@@ -111,11 +111,11 @@ class OrderHistoryCore extends ObjectModel
 					// @since 1.5.0 - Stock Management
 					if (!Pack::isPack($product['product_id']) &&
 						($old_os->id == Configuration::get('PS_OS_ERROR') || $old_os->id == Configuration::get('PS_OS_CANCELED')) &&
-						!StockAvailable::dependsOnStock($product['id_product']))
+						!StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop))
 						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 				}
 				// if becoming unlogable => removes sale
-				else if (!$new_os->logable && $old_os->logable)
+				elseif (!$new_os->logable && $old_os->logable)
 				{
 					ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
@@ -126,7 +126,7 @@ class OrderHistoryCore extends ObjectModel
 						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 				}
 				// if waiting for payment => payment error/canceled
-				else if (!$new_os->logable && !$old_os->logable &&
+				elseif (!$new_os->logable && !$old_os->logable &&
 						 ($new_os->id == Configuration::get('PS_OS_ERROR') || $new_os->id == Configuration::get('PS_OS_CANCELED')) &&
 						 !StockAvailable::dependsOnStock($product['id_product']))
 						 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
@@ -153,7 +153,7 @@ class OrderHistoryCore extends ObjectModel
 					);
 				}
 				// @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
-				else if ($new_os->shipped == 0 && $old_os->shipped == 1 &&
+				elseif ($new_os->shipped == 0 && $old_os->shipped == 1 &&
 						 Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
 						 Warehouse::exists($product['id_warehouse']) &&
 						 $manager != null &&
