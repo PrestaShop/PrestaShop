@@ -646,7 +646,7 @@ abstract class PaymentModuleCore extends Module
 							if (StockAvailable::dependsOnStock($product['product_id']))
 							{
 								// synchronizes
-								StockAvailable::synchronize($product['product_id']);
+								StockAvailable::synchronize($product['product_id'], $order->id_shop);
 							}
 						}
 					}

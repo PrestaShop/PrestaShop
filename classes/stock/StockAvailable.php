@@ -112,11 +112,18 @@ class StockAvailableCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 */
-	public static function synchronize($id_product)
+	public static function synchronize($id_product, $order_id_shop = null)
 	{
 		// gets warehouse ids grouped by shops
 		$ids_warehouse = Warehouse::getWarehousesGroupedByShops();
-
+		if ($order_id_shop !== null)
+		{
+			$order_warehouses = array();
+			$wh = Warehouse::getWarehouses(false, (int)$order_id_shop);
+			foreach ($wh as $warehouse)
+				$order_warehouses[] = $warehouse['id_warehouse'];
+		}
+		
 		// gets all product attributes ids
 		$ids_product_attribute = array();
 		foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute)
@@ -143,6 +150,9 @@ class StockAvailableCore extends ObjectModel
 					foreach ($allowed_warehouse_for_product as $warehouse)
 						$allowed_warehouse_for_product_clean[] = (int)$warehouse['id_warehouse'];
 					$allowed_warehouse_for_product_clean = array_intersect($allowed_warehouse_for_product_clean, $warehouses);
+					if ($order_id_shop != null && !count(array_intersect($allowed_warehouse_for_product_clean, $order_warehouses)))
+						continue;
+
 					$product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
 				}
 				// else this product has attributes, hence loops on $ids_product_attribute
@@ -156,6 +166,9 @@ class StockAvailableCore extends ObjectModel
 						foreach ($allowed_warehouse_for_combination as $warehouse)
 							$allowed_warehouse_for_combination_clean[] = (int)$warehouse['id_warehouse'];
 						$allowed_warehouse_for_combination_clean = array_intersect($allowed_warehouse_for_combination_clean, $warehouses);
+						if ($order_id_shop != null && !count(array_intersect($allowed_warehouse_for_combination_clean, $order_warehouses)))
+							continue;
+
 						$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $allowed_warehouse_for_combination_clean, true);
 					
 						$query = new DbQuery();
