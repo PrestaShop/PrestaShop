@@ -49,7 +49,12 @@ class Blockcustomerprivacy extends Module
 	
 	public function install()
 	{	
-		return parent::install() && $this->registerHook('createAccountForm') && Configuration::updateValue('CUSTPRIV_MESSAGE', array());
+		$return = (parent::install() && $this->registerHook('createAccountForm'));
+		Configuration::updateValue('CUSTPRIV_MESSAGE', array($this->context->language->id => 
+			$this->l('The personal data you provide is used to answer to your queries, process your orders or allow you to access specific information.').' '.
+			$this->l('You have a right to modify and delete all the personal information which we hold concerning yourself in the "my account" page.')
+		));
+		return $return;
 	}
 	
 	public function getContent()
