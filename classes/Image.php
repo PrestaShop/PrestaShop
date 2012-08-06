@@ -385,7 +385,7 @@ class ImageCore extends ObjectModel
 	 * Delete the product image from disk and remove the containing folder if empty
 	 * Handles both legacy and new image filesystems
 	 */
-	public function deleteImage()
+	public function deleteImage($force_delete = false)
 	{
 		if (!$this->id)
 			return false;
