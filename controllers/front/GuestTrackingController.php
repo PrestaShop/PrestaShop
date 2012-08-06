@@ -123,7 +123,7 @@ class GuestTrackingControllerCore extends FrontController
 			sleep(1);
 
 		$this->context->smarty->assign(array(
-			'action' => $this->context->link->getPageLink('guest-tracking.php'),
+			'action' => $this->context->link->getPageLink('guest-tracking.php', true),
 			'errors' => $this->errors,
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'guest-tracking.tpl');
