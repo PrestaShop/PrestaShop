@@ -624,7 +624,7 @@ class AdminShopControllerCore extends AdminController
 			$root_category = new Category($shop->id_category);
 		else
 			$root_category = new Category($id_root);
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
+		$root_category = array('id_category' => $root_category->id, 'name' => $root_category->name[$this->context->language->id]);
 
 		$helper = new Helper();
 		return $helper->renderCategoryTree($root_category, $selected_cat, 'categoryBox', false, true);
