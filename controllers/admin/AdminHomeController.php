@@ -658,6 +658,9 @@ class AdminHomeControllerCore extends AdminController
 			if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
 				$tpl_vars['refresh_check_version'] = 1;
 		}
+		
+		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, $this->addonsRequest('native'));
 
 		$tpl_vars['upgrade'] = $upgrade;
 
