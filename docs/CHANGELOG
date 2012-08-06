@@ -24,6 +24,349 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.15 - 16730 (2012-08-06)  #
+####################################
+
+	Improved/changed features:
+
+	[*] FO : better management in the priority between the cart rules #PSCFV-2804
+
+	[*] BO : #PSCFV-2671 : Added  a new currency format for Switzerland
+	[*] BO : #PSCFV-3007 : Now you can create a voucher when you create a partial refund on the BO
+	[*] BO : Added  translation for the template which are overridden on the BO
+	[*] BO : Added an override capability for the admin templates
+	[*] BO : Update Deutsch translations
+	[*] BO : Update Italian translations
+	[*] BO : Update Spanish translations (#PSCFV-3024)
+	[*] BO : added a new Validate method "isPercentage"
+	[*] BO : export name tabs by ISO code : check name of tab
+	[*] BO : export name tabs by ISO code when export translations
+	[*] BO : from 300 to 40 queries in Modules tab, does not really speed up the page, but eases my mind
+	[*] BO : sending a mail is a little less strict with wrong parameters - it tries to send the e-mail, not to die!
+	[*] BO : updated the "risk" class to the new 1.5 system (+several improvments)
+	[*] BO : you can now disable automatic indexation of the products #PSCFV-3258
+
+	[*] MO : missing logo added #PSCFV-3010
+
+	[*] TR : Update English translation : step 1
+	[*] TR : update Deutsch translations
+	[*] TR : update English translations key for Back Office
+	[*] TR : update English translations key for Errors
+	[*] TR : update English translations key for Front Office
+	[*] TR : update English translations key for Modules
+	[*] TR : update Italian translations
+	[*] TR : update Spanish translations
+	[*] TR : update french translations
+
+	Added Features:
+
+	[+] BO : added new cool feature
+
+	[+] CORE : Add version_compare tools to align version sent with alignVersionNumber method.
+
+	Fixed bugs:
+
+	[-] PROJECT : Fix on PS module compliancy check - #PSCFV-2783
+	[-] Project : #PSCFV-2790 - Fix bug with stock synchronization
+
+	[-] INSTALLER : Add hook alias - #PSCFV-2742
+	[-] INSTALLER : Fix demo product installed (Search class) - #PSCFV-2880
+	[-] INSTALLER : fixed bug #PSCFV-2751 - Prestashop 1.5 needs more than 32MB for PHP memory_limit but it is not tested at setup
+	[-] Installer : #PSCFV-3042 - Fix bug with installer and hook_module position
+	[-] Installer : The boolean for the cart rule activation wasn't assigned correctly when updating from 1.4 to 1.5 #PSCFV-2847
+	[-] Installer : changed Guam zone #PSCFV-3134
+	[-] Installer : crash with mysql strict mode fixed (datetime has a range of 1000-9999)
+	[-] Installer : fixed Norway zone
+	[-] Installer : theme name deprecated #PSCFV-2937
+	[-] installer : missing italian translations #PSCFV-3289
+
+	[-] FO : #PSCFI-5795 : fixed a bug where the opc freeze when an Order is to 0
+	[-] FO : #PSCFV-2623 - Fix address redirection
+	[-] FO : #PSCFV-2746 - Improve product return errors
+	[-] FO : #PSCFV-2840 - Fix bug with typewatch on the opc (qty change) and multishipping
+	[-] FO : #PSCFV-2920 - Hidding order number, use order reference instead
+	[-] FO : #PSCFV-2951 - Fix bug with dispatcher and route rule with multilanguage
+	[-] FO : #PSCFV-2981 - Fix bug with url rewrite and subdomain "www"
+	[-] FO : #PSCFV-2993 #PSCFV-2811 - Default carriers and carrier sorting where ignored
+	[-] FO : #PSCFV-3014 - On account creation, address delivery of all cart products must be set with the user address
+	[-] FO : #PSCFV-3016 - Fix bug on removing quantity of a product with a customisation
+	[-] FO : #PSCFV-3034 - Add return quantity to order detail
+	[-] FO : #PSCFV-3055 - Part 2 : Hidding shipping price if a cart rule make shipping free
+	[-] FO : #PSCFV-3079 - Change scene image size
+	[-] FO : #PSCFV-3083 - Fix bug on up/down quantity on the cart
+	[-] FO : #PSCFV-3083 - Fix bug with quantity update on cart
+	[-] FO : #PSCFV-3099 - Fix bug with multishipping on changing billing address
+	[-] FO : #PSCFV-3100 - With OPC shpping cost are not refreshed correctly
+	[-] FO : #PSCFV-3121 - New JS vars baseUri. This vars must be used instead of baseDir for ajax queries.
+	[-] FO : #PSCFV-3242 - Add PS version in cookie hach name
+	[-] FO : #PSCFV-3267 - Summary ajax return do not contain the correct price without discount
+	[-] FO : #PSCFV-3268 - Fix bug with cache and cart rule discount calculation
+	[-] FO : #PSCFV-3268 - Fix bug with cache cartrule badly fill
+	[-] FO : #PSCFV-3318 - Guest Tracking must use order reference and not order id
+	[-] FO : #PSCFV-3318 - Guest Tracking retrocompatibility with old theme
+	[-] FO : #PSCFV-3356 - Update delivery price on selecting a free shipping option
+	[-] FO : #PSCFV-3362 - Order detail ajax call must use SSL
+	[-] FO : #PSCFV-3365 - Add missing vars assigned to the tpl on refreshing carrier durring account creation on the OPC
+	[-] FO : #PSCFV-3388 - Fix bug with js product combination id
+	[-] FO : #PSCFV-3392 - Bad CSS syntax
+	[-] FO : #PSCFV-PSCFV-2598 - Fix bug with features not ordering by position
+	[-] FO : Added a simple space in order to be more readable
+	[-] FO : Bug Fixed #PSCFV-3407 - Only index page allows an empty url_rewrite
+	[-] FO : Bug Fixed #PSCFV-3417 - Wrong total order price calculation with tax disabled
+	[-] FO : BugFix : #PSCFV-2837 : City not displaying in address selection of checkout process
+	[-] FO : BugFix : #PSCFV-2896 : Every contacts from contact page are displayed, without shop restriction
+	[-] FO : BugFix : #PSCFV-2970 : Order history displays an error
+	[-] FO : BugFix : #PSCFV-3182 : In 5 steps order process, when login, the 5 steps are displaying but they should not.
+	[-] FO : BugFix : #PSCFV-3283 : Customer group deleted when updating personnal informations
+	[-] FO : BugFix : #PSCFV-3332 : Error for multiple store products
+	[-] FO : double escape removed #PSCFV-3530 (already done in the controller)
+	[-] FO : fix PSCFV-2948 display of specific prices on the product for combinations
+	[-] FO : fix bug #PSCFV-2901 - Minor authentication.css validate issue
+	[-] FO : fix bug #PSCFV-2902 - Minor category.css validation issue
+	[-] FO : fixed bug #PSCFV-2760 - live edit close confirm
+	[-] FO : fixed bug #PSCFV-3189
+	[-] FO : fixed price display precision in the product sheet template #PSCFI-6111
+	[-] FO : fixed warning when a discount wasn't associated to any reduction type (shipping, currency, percentage)
+	[-] FO : potential divide by zero removed #PSCFV-2787
+
+	[-] BO : #/PSCFV-3246 - Change french translation
+	[-] BO : #PSCFV-2596 - Hide custom features values from customization detail list
+	[-] BO : #PSCFV-2638 - Fix bug combination mess up in product/quantities
+	[-] BO : #PSCFV-2736 : import product : fix bug when the image isn't uploaded
+	[-] BO : #PSCFV-2739 - Hide button merchandise return if disable
+	[-] BO : #PSCFV-2758 : fix error when use Tools::displayErrors()
+	[-] BO : #PSCFV-2790 - Fix bug with Stock Advanced
+	[-] BO : #PSCFV-2835 : fix bugs in webservices translations
+	[-] BO : #PSCFV-2851 : fix bug when export a theme
+	[-] BO : #PSCFV-2925 - CMS tab, display notice "Array to string conversion" with php 5.4
+	[-] BO : #PSCFV-2947 - isArrowKey doesn't always return a valaue
+	[-] BO : #PSCFV-2956 - Fix bug on creating carriers
+	[-] BO : #PSCFV-2964 : Display error when PDF translation doesn't exist
+	[-] BO : #PSCFV-2972 : fix unnecessary message
+	[-] BO : #PSCFV-3000 - Send an email on changing an order from the BO
+	[-] BO : #PSCFV-3006 - Change presentation of group selects
+	[-] BO : #PSCFV-3011 - Add details of refund and returned products on the BO order page.
+	[-] BO : #PSCFV-3036 : fix bug and fix notice and fix deprecated function
+	[-] BO : #PSCFV-3039 : Add customer thread when i have a order message
+	[-] BO : #PSCFV-3055 - Part 1 : If there is a rules with free shipping, shipping prices are not displayed
+	[-] BO : #PSCFV-3055 - Part 1 : Improving displaying of resume cart (payment step)
+	[-] BO : #PSCFV-3064 - Fix bug on creating order using a cart
+	[-] BO : #PSCFV-3066 - Fix bug on selecting delivery option
+	[-] BO : #PSCFV-3086 - Improve visibility of some elements on return details
+	[-] BO : #PSCFV-3111 - Avoid double click on saving button
+	[-] BO : #PSCFV-3112 - Fix bug with payment by cheque and multishipping
+	[-] BO : #PSCFV-3126 - Change mail object. Mail object must be unique for a specific template
+	[-] BO : #PSCFV-3146 - Customer Thread, fix encoding chars bugs
+	[-] BO : #PSCFV-3175 : fix price excluded when import product width specific price
+	[-] BO : #PSCFV-3192 - Product::getAttributeGroups return duplicated attributes
+	[-] BO : #PSCFV-3206 - Add description for the field "Shop name" on the shop configuration.
+	[-] BO : #PSCFV-3213 - Fix bug with FO product url on the BO
+	[-] BO : #PSCFV-3222 - Fix array unique strange working
+	[-] BO : #PSCFV-3234 - Change error message
+	[-] BO : #PSCFV-3247 - Fix link to edit customer profile
+	[-] BO : #PSCFV-3366 - Not possible to create customizable fields on multishop context
+	[-] BO : #PSCFV-3474 - Force ajax request to be synchron
+	[-] BO : #PSTP-73 : fix bug translations in AdminStatsTabController
+	[-] BO : AdminProductController::updateTags has no return value
+	[-] BO : Bug Fixed ##PSCFV-3128 - part 2
+	[-] BO : Bug Fixed #PSCFI-5506 - Incorrect product price in BO
+	[-] BO : Bug Fixed #PSCFV-2116 - Import combinations images
+	[-] BO : Bug Fixed #PSCFV-3090 - Outstanding exception in the outstanding tab
+	[-] BO : Bug Fixed #PSCFV-3093 - typo in JS
+	[-] BO : Bug Fixed #PSCFV-3122 - Cart rules applied 2 times on shipping fees if the order is splitted
+	[-] BO : Bug Fixed #PSCFV-3125 - Fields already filled when creating a new supplier
+	[-] BO : Bug Fixed #PSCFV-3128 - Incorrect voucher value via product return
+	[-] BO : Bug Fixed #PSCFV-3270 - CSV Import addresses + multishop
+	[-] BO : Bug fixed related to #PSCFV-2954 - order slip do not include VAT on carriers
+	[-] BO : BugFix : #PSCFV-2205 : Combination attributes are displayed as many time as they are associated to a shop.
+	[-] BO : BugFix : #PSCFV-2761 : Change a default language by shop is not possible
+	[-] BO : BugFix : #PSCFV-2798 : Multistore : BUG on the "modify products page" with another shop device
+	[-] BO : BugFix : #PSCFV-2823 : Product::priceCalculation() returns null specific_price after two calls
+	[-] BO : BugFix : #PSCFV-2844 : Problem in image associated to shop (AdminImportController)
+	[-] BO : BugFix : #PSCFV-2958 : Tags do not work after import
+	[-] BO : BugFix : #PSCFV-2960 : Exception thrown when updating customer email
+	[-] BO : BugFix : #PSCFV-2965 : Localization : updating default currency does not change currency on BO
+	[-] BO : BugFix : #PSCFV-2973 : Product Return : unable to create a product return
+	[-] BO : BugFix : #PSCFV-3031 : Unable to edit categories from the list
+	[-] BO : BugFix : #PSCFV-3033 : attributes and values in multishop
+	[-] BO : BugFix : #PSCFV-3033 : features in multishop
+	[-] BO : BugFix : #PSCFV-3069 : OrderDetail->purchase_supplier_price is not saved in DB
+	[-] BO : BugFix : #PSCFV-3120 : Multishop : employees without shop
+	[-] BO : BugFix : #PSCFV-3142 : Admin Tracking displaying categories from other shops
+	[-] BO : BugFix : #PSCFV-3178 : Attributes are duplicated in the attribute value creation form dropdown list
+	[-] BO : BugFix : #PSCFV-3235 : Multistore : unable to duplicate a product
+	[-] BO : BugFix : #PSCFV-3334 : Price Rules : Catalog Price Rules - In condition group when you want to make a condition with categories, in the list appears every categories from every stores
+	[-] BO : BugFix : #PSCFV-3537 : Product Indexing lost when editing a product
+	[-] BO : FIx issue failling the multilang field length validation on products
+	[-] BO : Fix W3C errors
+	[-] BO : Fix the graph engine path
+	[-] BO : Fixed #PSCFV-2759
+	[-] BO : Fixed SQL crash with an empty shop list #PSCFV-2946
+	[-] BO : Fixing modules permissions system
+	[-] BO : Product : add missing properties
+	[-] BO : Undefined tax calculator
+	[-] BO : advanced stock management should not appear when the advanced stock management is deactivated #PSCFV-3141
+	[-] BO : cart rules are now cleaned when a component of a product rule (like a product, a category, a supplier...) is deleted
+	[-] BO : fix #PSCFV-2883
+	[-] BO : fix #PSCFV-2889
+	[-] BO : fix #PSCFV-2941
+	[-] BO : fix #PSCFV-2953
+	[-] BO : fix #PSCFV-2955
+	[-] BO : fix #PSCFV-2961
+	[-] BO : fix #PSCFV-2962
+	[-] BO : fix #PSCFV-2983 : add iso_code in URI's for robots.txt
+	[-] BO : fix #PSCFV-3022
+	[-] BO : fix #PSCFV-3027
+	[-] BO : fix #PSCFV-3032
+	[-] BO : fix #PSCFV-3041
+	[-] BO : fix #PSCFV-3046
+	[-] BO : fix #PSCFV-3070
+	[-] BO : fix #PSCFV-3076
+	[-] BO : fix #PSCFV-3087
+	[-] BO : fix #PSCFV-3101
+	[-] BO : fix #PSCFV-3102
+	[-] BO : fix #PSCFV-3106 : Patchouli mistake
+	[-] BO : fix #PSCFV-3116
+	[-] BO : fix #PSCFV-3117
+	[-] BO : fix #PSCFV-3127
+	[-] BO : fix #PSCFV-3131
+	[-] BO : fix #PSCFV-3143
+	[-] BO : fix #PSCFV-3145
+	[-] BO : fix #PSCFV-3190
+	[-] BO : fix #PSCFV-3194
+	[-] BO : fix #PSCFV-3198
+	[-] BO : fix #PSCFV-3200
+	[-] BO : fix #PSCFV-3207 && normalize
+	[-] BO : fix #PSCFV-3243
+	[-] BO : fix #PSCFV-3244
+	[-] BO : fix #PSCFV-3276
+	[-] BO : fix #PSCFV-3277
+	[-] BO : fix #PSCFV-3278 : add a parameter id_shop in a method Mail::send() && normalize
+	[-] BO : fix #PSCFV-3280
+	[-] BO : fix #PSCFV-3284
+	[-] BO : fix bug #PSCFV-2897 - JS error on combination page
+	[-] BO : fix strict standard #PSCFV-3173
+	[-] BO : fix translation #PSCFV-2998
+	[-] BO : fixed #PSCFV-3005 - problems to create a shop for contact with multishop
+	[-] BO : fixed #PSCFV-3043 - can't active language in BO
+	[-] BO : fixed #PSCFV-3058 SAV multi fix
+	[-] BO : fixed #PSCFV-3058 SAV multi fix part 2
+	[-] BO : fixed access rights in employee permissions #PSCFV-3157
+	[-] BO : fixed alt text for duplication #PSCFV-3180
+	[-] BO : fixed bug #PSCFV-2604
+	[-] BO : fixed bug #PSCFV-2731
+	[-] BO : fixed bug #PSCFV-2756 - error in installation 1.5 RC Warning on copy()
+	[-] BO : fixed bug #PSCFV-2779 - live edit not working + friendly URL
+	[-] BO : fixed bug #PSCFV-2826
+	[-] BO : fixed bug #PSCFV-2827 - AdminProducts : Customer autocomplete on specific price not available
+	[-] BO : fixed bug #PSCFV-2828 - Changing the default attribute : no refresh
+	[-] BO : fixed bug #PSCFV-2843 - Can't create first level admin tab
+	[-] BO : fixed bug #PSCFV-2859 - In my preferences, user can change his her profile
+	[-] BO : fixed bug #PSCFV-2859 - part 2
+	[-] BO : fixed bug #PSCFV-2878 - Displaying wrong link in the SEO tab of a product using multistore
+	[-] BO : fixed bug #PSCFV-3088 - customer import with multistore
+	[-] BO : fixed bug #PSCFV-3142
+	[-] BO : fixed bug #PSCFV-3202
+	[-] BO : fixed bug #PSCFV-3261
+	[-] BO : fixed bug #PSCFV-3336
+	[-] BO : fixed bug #PSCFV-3338
+	[-] BO : fixed bug #PSCFV-3342
+	[-] BO : fixed bug #PSCFV-3352
+	[-] BO : fixed bug #PSCFV-3376 - BO - Dashboard - Information message wich is sending to a forbidden access page
+	[-] BO : fixed bug #PSCFV-3383
+	[-] BO : fixed bug #PSCFV-3437
+	[-] BO : fixed bug #PSCFV-3439
+	[-] BO : fixed bug #PSCFV-3439 part2
+	[-] BO : fixed bug #PSCFV-3457
+	[-] BO : fixed bug #PSCFV-3457 - part2
+	[-] BO : fixed bug #PSCFV-3466
+	[-] BO : fixed bug on customer edit when context is in "all shop" or "group shop"
+	[-] BO : fixed problem with case sensitive path #PSCFV-3179
+	[-] BO : inappropriate condition fixed for module access #PSCFV-3312
+	[-] BO : moved some code from AdminModulesController to AdminController because is is used on AdminHomeController
+	[-] BO : original product price was not set in the order detail table #PSCFV-3159
+	[-] BO : patch to grid engines fixed #PSCFV-3153
+	[-] BO : product state did not show in the back office search #PSCFV-3150
+	[-] BO : you could not remove a gift once it had been set #PSCFV-3420
+	[-] BO : you do not need to add the admin controller in the core, the override directory is enough
+	[-] Bo : #PSCFV-2680 : fix bug
+	[-] Bo : replace constant _PS_THEME_DIR_ by _PS_MAIL_DIR_ when send a email
+
+	[-] CLASSES : fixed bug #PSCFV-2769 - Accolade missing in AdminTab.php
+	[-] CLASSES : fixed bug #PSCFV-2786 - Error in getOrderInvoice function
+	[-] CLASSES : fixed bug #PSCFV-2836 - Warning on Category::recurseLiteCategTree()
+	[-] Classes : fixed bug #PSCFV-3260 - Bug when add product to existing order
+
+	[-] CORE : Fixed bug #PSCFV-2862. onclick evet properly calle.
+	[-] Core : Delete stock_available for combinations in the import
+	[-] Core : Fix PSCFV-2898 delete stock_available after combination deletion
+	[-] Core : Swift exception(s) handled #PSCFI-6121
+
+	[-] MO : #PNM-286 : Block top menu bug fix (Shop ID)
+	[-] MO : #PNM-293 : Block CMS bug fix (contact url)
+	[-] MO : #PSCFI-5815 - Fix bug on chrome with Chrome
+	[-] MO : #PSCFI-5957 - Blocklayered - Fix bug with price ordering
+	[-] MO : #PSCFV-2858 - Fix bugs with non latin chars. Htmlentities was not usefull
+	[-] MO : #PSCFV-2868 - Fix addslashes
+	[-] MO : #PSCFV-2922 - Blocklayered, make sure url ordering parameters is each time the same
+	[-] MO : #PSCFV-2924 - Cannot comment a product if there already comments validated
+	[-] MO : #PSCFV-3049 - Fix Bug with module block search
+	[-] MO : #PSCFV-3057 - Block cart: If no products, block cart is never displayed
+	[-] MO : #PSCFV-3059 - Block menu top invert add/remove item
+	[-] MO : #PSCFV-3193 Blocktopmenu - Fix css bug
+	[-] MO : #PSCFV-3223 - Fix bug with blocktags module
+	[-] MO : #PSCFV-3274 - Blockcart, fix bug with gift products
+	[-] MO : #PSCFV-3274 - No links to remove discounts without code in module blockcart
+	[-] MO : Blockspecials - Bug Fixed #PSCFV-3360 - Price displayed even in catalog mode
+	[-] MO : BugFix : #PSCFV-2821 : ProductComment module does not save grade with only one criterion
+	[-] MO : BugFix : #PSCFV-2822 : ProductComment module : submitNewMessage url problem
+	[-] MO : BugFix : #PSCFV-2830 : Product Comments module does not publish guest comment, returns exception.
+	[-] MO : BugFix : #PSCFV-2831 : ProductComments module : css override #fancybox-wrap and #fancybox-content
+	[-] MO : Fix hook name on differents modules - #PSCFV-2784
+	[-] MO : Fix on BlocTopMenu hook name - #PSCFV-2784
+	[-] MO : Fixed bug #PNM-284. Use correctly the new controller for the validation process
+	[-] MO : Fixed #PSCFV-2864 column name statssearch.id_group_shop is now id_shop_group, thanks to Fabien :)
+	[-] MO : Watermark - Bug Fixed #PSCFV-2770 - Watermark is not working
+	[-] MO : blockadvertising update did not update the image extension #PSCFV-3355
+	[-] MO : blockcart retrocompatibility
+	[-] MO : blocklayered : #PSCFV-2796 : add charset UTF-8 in SQL tables
+	[-] MO : cashondelivery - translations files are now into translations dir
+	[-] MO : fixed #PSCFV-2978 - Block reinsurance shows incorrect when its text is changed to work with other language than English
+	[-] MO : fixed bug #PSCFV-2853 - bug in the blocklink : you can not update the title block or edit links.
+	[-] MO : fixed bug #PSCFV-2874 - blocklink_shop.id_shop is varchar, It must be integer.
+	[-] MO : fixed bug #PSCFV-3010
+	[-] MO : fixed deprecated link in blocktopmenu (search form)
+	[-] MO : multishop update for sekeywords #PSCFV-3271
+	[-] MO : productcomments : fix #PSCFV-2890
+
+	[-] WS : #PSCFV-2888 : Fix bug
+	[-] WS : Fix id_shop to not being mandatory
+	[-] WS : creation of new product combination returned an error #PSCFV-3333
+
+	[-] PDF : #PSCFV-2795 : Add font : freeserif and fix bug in tcpdf.php
+	[-] PDF : Bug Fixed #PSCFV-2516 - Unable to print invoice when the physical url has been removed
+	[-] PDF : Bug Fixed #PSCFV-2735 - Missing tax details in order slip
+	[-] PDF : Bug Fixed #PSCFV-2773 - Front office, error on generating RMA form
+	[-] PDF : Bug Fixed #PSCFV-2788 - Incorrect discount value if free shipping
+	[-] PDF : Bug Fixed #PSCFV-2912 - .htaccess & index.php in the PDF folder
+	[-] PDF : Bug Fixed #PSCFV-2945 - Basic Authentication + TCPDF : Beware if  you need to modify the getLogo think to symlinks, vhosts etc ...
+	[-] PDF : Bug Fixed #PSCFV-3044 - Images incorrectly displayed
+	[-] PDF : Bug Fixed #PSCFV-3225 - Translations
+	[-] PDF : Canadian taxes
+
+	[-] TR : BugFix : #PSCFV-3470 : french mispelling
+	[-] TR : fix #PSCFV-3200
+	[-] TR : fix #PSCFV-3229
+	[-] TR : fix #PSCFV-3253
+	[-] TR : fix #PSCFV-3269 : remove call to PSQL() which is unnecessary
+	[-] TR : fix #PSCFV-3358
+	[-] TR : fix #PSCFV-3374
+	[-] TR : fix #PSCFV-3403 : check if is an object before loading stock data
+	[-] TR : fix #PSCFV-3425
+	[-] TR : fix #PSCFV-3436
+
+
+####################################
 #   v1.5.0.13 - 15948 (2012-06-07)  #
 ####################################
 
