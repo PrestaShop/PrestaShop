@@ -1147,7 +1147,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `discount_quantity_applied` TINYINT(1) NOT NULL DEFAULT 0,
   `download_hash` varchar(255) default NULL,
   `download_nb` int(10) unsigned default '0',
-  `download_deadline` datetime default '0000-00-00 00:00:00',
+  `download_deadline` datetime default NULL,
   `total_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
   `total_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
   `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
