@@ -205,7 +205,7 @@ class AdminProductsControllerCore extends AdminController
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
-				AND sav.`id_shop` in  ('.implode(', ', array_map('intval', Shop::getContextListShopID())).'))';
+			'.StockAvailable::addSqlShopRestriction(null, null, 'sav').')';
 		// if no category selected, display all products
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
