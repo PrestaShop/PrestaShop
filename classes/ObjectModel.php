@@ -1157,17 +1157,17 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Check if there is entries in associated shop table for current entity
+	 * Check if there is more than one entries in associated shop table for current entity
 	 *
 	 * @since 1.5.0
 	 * @return bool
 	 */
 	public function hasMultishopEntries()
 	{
-		if (!Shop::isTableAssociated($this->def['table']))
+		if (!Shop::isTableAssociated($this->def['table']) || !Shop::isFeatureActive())
 			return false;
-
-		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
+		//check if there is more than one entries in associated shop table 
+		return (bool)(Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id) > 1);
 	}
 
 	public function isMultishop()
