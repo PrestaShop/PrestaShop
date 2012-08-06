@@ -717,6 +717,7 @@ class Blocktopmenu extends Module
 		$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
 		$this->page_name = Dispatcher::getInstance()->getController();
 		$smarty_cache_id = 'blocktopmenu-'.$this->page_name.'-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
+		$this->context->smarty->cache_lifetime = 31536000;
 		Tools::enableCache();
 		if (!$this->isCached('blocktopmenu.tpl', $smarty_cache_id))
 		{
@@ -730,7 +731,6 @@ class Blocktopmenu extends Module
 		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
 		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 
-		$this->context->smarty->cache_lifetime = 31536000;
 		$html = $this->display(__FILE__, 'blocktopmenu.tpl', $smarty_cache_id);
 		Tools::restoreCacheSettings();
 		return $html;
