@@ -114,6 +114,10 @@
 {/block}
 
 {block name="script"}
+	var ids_category = new Array();
+	{foreach $ids_category as $key => $id_category}
+		ids_category[{$key}] = {$id_category};
+	{/foreach}
 	$(document).ready(function() {
 		$('input[name=useImportData]').click(function()	{
 		if ($(this).attr('id') == 'useImportData_on')
@@ -121,5 +125,21 @@
 		else
 			$('#shop_list, #data_list').slideUp('slow');
 		});
+		$('#id_category, #importFromShop').change(function(){
+			shop_id = $('#importFromShop').val();
+			category_id = $('#id_category').val();
+			if (ids_category[shop_id] != category_id)
+				disableProductsDuplication();
+			else
+				enableProductsDuplication();
+		});
 	});
+	function disableProductsDuplication()
+	{
+		$('input[name="importData[product_attribute]"], input[name="importData[image]"], input[name="importData[product]"], input[name="importData[stock_available]"], input[name="importData[discount]"]').removeAttr('checked').attr('disabled', 'disabled');
+	}
+	function enableProductsDuplication()
+	{
+		$('input[name="importData[product_attribute]"], input[name="importData[image]"], input[name="importData[product]"], input[name="importData[stock_available]"], input[name="importData[discount]"]').removeAttr('disabled').attr('checked', 'checked');
+	}
 {/block}
