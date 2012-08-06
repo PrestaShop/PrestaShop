@@ -3061,7 +3061,9 @@ class ProductCore extends ObjectModel
 		FROM '._DB_PREFIX_.'feature_product pf
 		LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
-		WHERE `id_product` IN ('.implode($product_implode, ',').')');
+		LEFT JOIN '._DB_PREFIX_.'feature f ON (f.id_feature = pf.id_feature)
+		WHERE `id_product` IN ('.implode($product_implode, ',').')
+		ORDER BY f.position ASC');
 
 		foreach ($result as $row)
 		{
