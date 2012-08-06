@@ -4748,9 +4748,6 @@ class ProductCore extends ObjectModel
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && is_null($manager))
 			$manager = StockManagerFactory::getManager();
 
-		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->id;
-
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&
 			StockAvailable::dependsOnStock($id_product, $id_shop))
 			return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
