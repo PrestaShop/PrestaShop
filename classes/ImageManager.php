@@ -226,6 +226,30 @@ class ImageManagerCore
 	}
 
 	/**
+	 * Check if image file extension is correct
+	 *
+	 * @static
+	 * @param $filename real filename
+	 * @return bool true if it's correct
+	 */
+	public static function isCorrectImageFileExt($filename)
+	{
+		// Filter on file extension
+		$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
+		$name_explode = explode('.', $filename);
+		if (count($name_explode))
+		{
+			$current_extension = strtolower($name_explode[count($name_explode) - 1]);
+			if (!in_array($current_extension, $authorized_extensions))
+				return false;
+		}
+		else
+			return false;
+
+		return true;
+	}
+
+	/**
 	 * Validate image upload (check image type and weight)
 	 *
 	 * @param array $file Upload $_FILE value
@@ -240,7 +264,7 @@ class ImageManagerCore
 				$file['size'] / 1000,
 				$max_file_size / 1000
 			);
-		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']))
+		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
 			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
