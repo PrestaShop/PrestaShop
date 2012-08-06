@@ -2033,11 +2033,11 @@ class AdminControllerCore extends Controller
 		$having_clause = '';
 		if (isset($this->_filterHaving) || isset($this->_having))
 		{
-			 $having_clause = ' HAVING ';
-			 if (isset($this->_filterHaving))
-			 	$having_clause .= ltrim($this->_filterHaving, ' AND ');
-			 if (isset($this->_having))
-			 	$having_clause .= $this->_having.' ';
+			$having_clause = ' HAVING ';
+			if (isset($this->_filterHaving))
+				$having_clause .= ltrim($this->_filterHaving, ' AND ');
+			if (isset($this->_having))
+				$having_clause .= $this->_having.' ';
 		}
 
 		if (strpos($order_by, '.') > 0)

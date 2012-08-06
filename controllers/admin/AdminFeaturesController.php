@@ -451,6 +451,9 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		if ($this->table == 'feature_value')
+			$this->_where .= ' AND a.custom = 0';
+		
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		if ($this->table == 'feature')
