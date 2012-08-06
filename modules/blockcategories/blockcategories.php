@@ -166,7 +166,7 @@ class BlockCategories extends Module
 		$id_category = (int)Tools::getValue('id_category', 0);
 		$id_lang = (int)$params['cookie']->id_lang;
 		$smartyCacheId = 'blockcategories|'.$id_current_shop.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
-
+		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		Tools::enableCache();
 		if (!$this->isCached('blockcategories.tpl', $smartyCacheId))
 		{
@@ -223,7 +223,6 @@ class BlockCategories extends Module
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
 		}
-		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
@@ -240,7 +239,7 @@ class BlockCategories extends Module
 		$id_category = (int)(Tools::getValue('id_category', 0));
 		$id_lang = (int)($params['cookie']->id_lang);
 		$smartyCacheId = 'blockcategories|'.$id_current_shop.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
-
+		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		Tools::enableCache();
 		if (!$this->isCached('blockcategories_footer.tpl', $smartyCacheId))
 		{
@@ -302,7 +301,6 @@ class BlockCategories extends Module
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
 		}
-		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);
 		Tools::restoreCacheSettings();
 		return $display;
