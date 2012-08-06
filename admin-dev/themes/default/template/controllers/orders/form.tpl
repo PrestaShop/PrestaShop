@@ -588,7 +588,7 @@
 							stock[id_product][this.id_product_attribute] = this.qty_in_stock;
 						});
 
-						stock[this.id_product][0] = this.stock;
+						stock[this.id_product][0] = this.stock[0];
 						attributes_html += '</select>';
 					});
 					products_found += '</select>';
@@ -597,7 +597,7 @@
 					$('#products_found #customization_list').contents().find('body').html(customization_html);
 					display_product_attributes();
 					display_product_customizations();
-					$('#id_product').click();
+					$('#id_product').change();
 				}
 				else
 				{
