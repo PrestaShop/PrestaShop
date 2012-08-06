@@ -1958,6 +1958,8 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!$tag_success)
 			$this->errors[] = Tools::displayError('An error occurred while adding tags.');
+
+		return $tag_success;
 	}
 
 	public function initContent($token = null)
@@ -3931,6 +3933,8 @@ class AdminProductsControllerCore extends AdminController
  		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
 	}
+
+
 
 
 
