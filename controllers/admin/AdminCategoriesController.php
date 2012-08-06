@@ -453,6 +453,9 @@ class AdminCategoriesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+		
+		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
+		
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
@@ -493,7 +496,25 @@ class AdminCategoriesControllerCore extends AdminController
 
 		return parent::renderForm();
 	}
-
+	
+	public function postProcess()
+	{
+		if (Tools::isSubmit('forcedeleteImage'))
+		{
+			$this->processForceDeleteImage();
+			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
+		}
+		
+		return parent::postProcess();
+	}
+	
+	public function processForceDeleteImage()
+	{
+		$category = $this->loadObject();
+		if (Validate::isLoadedObject($category))
+			$category->deleteImage(true);
+	}
+	
 	public function processAdd()
 	{
 		$id_category = (int)Tools::getValue('id_category');
