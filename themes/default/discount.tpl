@@ -52,8 +52,10 @@
 					{$discountDetail.value|escape:'htmlall':'UTF-8'}%
 				{elseif $discountDetail.id_discount_type == 2}
 					{convertPrice price=$discountDetail.value}
-				{else}
+				{elseif $discountDetail.id_discount_type == 3}
 					{l s='Free shipping'}
+				{else}
+					-
 				{/if}
 			</td>
 			<td class="discount_minimum">
