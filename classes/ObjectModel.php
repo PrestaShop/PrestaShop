@@ -1220,12 +1220,12 @@ abstract class ObjectModelCore
 	 *
 	 * @return bool success
 	 */
-	public function deleteImage()
+	public function deleteImage($force_delete = false)
 	{
 		if (!$this->id)
 			return false;
 		
-		if (!$this->hasMultishopEntries())
+		if ($force_delete || !$this->hasMultishopEntries())
 		{
 			/* Deleting object images and thumbnails (cache) */
 			if ($this->image_dir)
