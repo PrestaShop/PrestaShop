@@ -1774,38 +1774,38 @@ FileETag INode MTime Size
 		if (function_exists('property_exists'))
 			return property_exists($class, $property);
 
-        if (is_object($class))
-            $vars = get_object_vars($class);
-        else
-            $vars = get_class_vars($class);
+		if (is_object($class))
+			$vars = get_object_vars($class);
+		else
+			$vars = get_class_vars($class);
 
-        return array_key_exists($property, $vars);
+		return array_key_exists($property, $vars);
 	}
 
 	/**
-     * @desc identify the version of php
-     * @return string
-     */
-    public static function checkPhpVersion()
-    {
-    	$version = null;
+	 * @desc identify the version of php
+	 * @return string
+	 */
+	public static function checkPhpVersion()
+	{
+		$version = null;
 
-    	if (defined('PHP_VERSION'))
-    		$version = PHP_VERSION;
-    	else
-    		$version  = phpversion('');
+		if (defined('PHP_VERSION'))
+			$version = PHP_VERSION;
+		else
+			$version  = phpversion('');
 
 		//Case management system of ubuntu, php version return 5.2.4-2ubuntu5.2
-    	if (strpos($version, '-') !== false)
+		if (strpos($version, '-') !== false)
 			$version  = substr($version, 0, strpos($version, '-'));
 
-        return $version;
+		return $version;
 	}
 
-    /**
-     * @desc try to open a zip file in order to check if it's valid
-     * @return bool success
-     */
+	/**
+	 * @desc try to open a zip file in order to check if it's valid
+	 * @return bool success
+	 */
 	public static function ZipTest($from_file)
 	{
 		if (class_exists('ZipArchive', false))
@@ -2194,12 +2194,12 @@ FileETag INode MTime Size
 }
 
 /**
-* Compare 2 prices to sort products
-*
-* @param float $a
-* @param float $b
-* @return integer
-*/
+ * Compare 2 prices to sort products
+ *
+ * @param float $a
+ * @param float $b
+ * @return integer
+ */
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
