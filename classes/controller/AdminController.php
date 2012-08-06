@@ -34,6 +34,8 @@ class AdminControllerCore extends Controller
 	public $informations = array();
 	public $confirmations = array();
 	public $shopShareDatas = false;
+	
+	protected $addons_url = 'api.addons.prestashop.com';
 
 	public $_languages = array();
 	public $default_form_language;
@@ -2664,6 +2666,92 @@ class AdminControllerCore extends Controller
 		$this->errors[] = $message;
 		if ($this->status === '')
 			$this->status = 'error';
+	}
+
+	public function isFresh($file, $timeout = 604800000)
+	{
+		if (file_exists(_PS_ROOT_DIR_.$file))
+		{
+			if (filesize(_PS_ROOT_DIR_.$file) < 1)
+				return false;
+			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
+		}
+		else
+			return false;
+	}
+
+	public function refresh($file_to_refresh, $external_file)
+	{
+		$content = Tools::file_get_contents($external_file);
+		if ($content)
+			return file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
+		return false;
+	}
+
+	public function addonsRequest($request, $params = array())
+	{
+		// Config for each request
+		if ($request == 'native')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443, 'http://' => 80);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+		}
+		if ($request == 'must-have')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443, 'http://' => 80);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+		}
+		if ($request == 'customer')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons)).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+		}
+		if ($request == 'check_customer')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443);
+			$postData = 'version='._PS_VERSION_.'&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+		}
+		if ($request == 'module')
+		{
+			// Define protocol accepted and post data values for this request
+			if (isset($params['username_addons']) && isset($params['password_addons']))
+			{
+				$protocolsList = array('https://' => 443);
+				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+			}
+			else
+			{
+				$protocolsList = array('https://' => 443, 'http://' => 80);
+				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']);
+			}
+		}
+
+
+		// Make the request
+		$opts = array(
+			'http'=>array(
+				'method'=> 'POST',
+				'content' => $postData,
+				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'timeout' => 5,
+			)
+		);
+		$context = stream_context_create($opts);
+		foreach ($protocolsList as $protocol => $port)
+		{
+			$content = file_get_contents($protocol.$this->addons_url, false, $context);
+
+			// If content returned, we cache it
+			if ($content)
+				return $content;
+		}
+
+		// No content, return false
+		return false;
 	}
 }
 
