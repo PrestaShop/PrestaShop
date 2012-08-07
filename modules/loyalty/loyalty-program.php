@@ -57,8 +57,8 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 	/* Voucher creation and affectation to the customer */
 	$cartRule = new CartRule();
 	$cartRule->code = $voucherCode;
-	$cartRule->id_customer = (int)$cookie->id_customer;
-	$cartRule->id_currency = (int)$cookie->id_currency;
+	$cartRule->id_customer = (int)$context->customer->id;
+	$cartRule->id_currency = (int)$context->currency->id;
 	$cartRule->reduction_amount = LoyaltyModule::getVoucherValue((int)$customerPoints);
 	$cartRule->quantity = 1;
 	$cartRule->quantity_per_user = 1;
@@ -114,7 +114,7 @@ $smarty->assign(array(
 	'displayorders' => $displayorders,
 	'pagination_link' => __PS_BASE_URI__.'modules/loyalty/loyalty-program.php',
 	'totalPoints' => (int)$customerPoints,
-	'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)($cookie->id_currency)),
+	'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)$context->currency->id),
 	'validation_id' => LoyaltyStateModule::getValidationId(),
 	'transformation_allowed' => $customerPoints > 0,
 	'page' => ((int)(Tools::getValue('p')) > 0 ? (int)(Tools::getValue('p')) : 1),
