@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -20,35 +19,17 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
+*}
 
-require_once(dirname(__FILE__).'/../../config/config.inc.php');
-require_once(dirname(__FILE__).'/../../init.php');
-
-include_once(dirname(__FILE__).'/referralprogram.php');
-
-if (!Tools::getValue('width') AND !Tools::getValue('height'))
-	require_once(dirname(__FILE__).'/../../header.php');
-
-$xmlFile = _PS_MODULE_DIR_.'referralprogram/referralprogram.xml';
-
-if (file_exists($xmlFile))
-{
-	if ($xml = @simplexml_load_file($xmlFile))
-	{
-		$smarty->assign(array(
-			'xml' => $xml,
-			'paragraph' => 'paragraph_'.$cookie->id_lang
-		));
-	}
-}
-
-$referralprogram = new ReferralProgram();
-echo $referralprogram->display(dirname(__FILE__).'/referralprogram', 'referralprogram-rules.tpl');
-
-if (!Tools::getValue('width') AND !Tools::getValue('height'))
-	require_once(dirname(__FILE__).'/../../footer.php');
-
+<!-- MODULE ReferralProgram -->
+<p id="referralprogram">
+	<img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" />
+	{l s='You have earned a voucher worth %s thanks to your sponsor!' sprintf=$discount_display mod='referralprogram'}
+	{l s='Enter voucher name %s to receive the reduction on this order.' sprintf=$discount->name mod='referralprogram'}
+	<a href="{$link->getModuleLink('referralprogram', 'program', [], true)}" title="{l s='Referral program' mod='referralprogram'}">{l s='View your referral program.' mod='referralprogram'}</a>
+</p>
+<br />
+<!-- END : MODULE ReferralProgram -->
