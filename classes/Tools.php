@@ -1456,7 +1456,7 @@ class ToolsCore
 
 		// Default values for parameters
 		if (is_null($path))
-			$path = _PS_ROOT_DIR_.'/.htaccess';	
+			$path = _PS_ROOT_DIR_.'/.htaccess';
 		if (is_null($cache_control))
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
@@ -1514,7 +1514,7 @@ class ToolsCore
 
 		fwrite($write_fd, "RewriteEngine on\n\n");
 		foreach ($domains as $domain => $list_uri)
-		{			
+		{
 			foreach ($list_uri as $uri)
 			{
 				$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
@@ -1535,7 +1535,7 @@ class ToolsCore
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
 				}
-		
+
 				if ($rewrite_settings)
 				{
 					// Compatibility with the old image filesystem
@@ -1580,7 +1580,7 @@ class ToolsCore
 				}
 			}
 		}
-		
+
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 		fwrite($write_fd, "</IfModule>\n\n");
