@@ -161,10 +161,16 @@ class DbMySQLiCore extends Db
 	/**
 	 * @see Db::checkConnection()
 	 */
-	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
+	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
 	{
-		$link = @new mysqli($server, $user, $pwd, $db);
-		if (mysqli_connect_error())
+		$link = mysqli_init();
+		if (!$link)
+			return -1;
+
+		if (!$link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout))
+			return 1;
+
+		if (!$link->real_connect($server, $user, $pwd, $db);
 			return (mysqli_connect_errno() == 1049) ? 2 : 1;
 
 		if (strtolower($engine) == 'innodb')

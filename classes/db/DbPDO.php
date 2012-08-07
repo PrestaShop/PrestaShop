@@ -179,11 +179,11 @@ class DbPDOCore extends Db
 	/**
 	 * @see Db::checkConnection()
 	 */
-	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
+	 public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
 	{
 		try
 		{
-			$link = @new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd);
+			$link = @new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd, array(PDO::ATTR_TIMEOUT => $timeout));
 		}
 		catch (PDOException $e)
 		{
