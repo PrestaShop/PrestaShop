@@ -1456,9 +1456,7 @@ class ToolsCore
 
 		// Default values for parameters
 		if (is_null($path))
-			$path = _PS_ROOT_DIR_.'/.htaccess';
-		if (is_null($rewrite_settings))
-			$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
+			$path = _PS_ROOT_DIR_.'/.htaccess';	
 		if (is_null($cache_control))
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
@@ -1498,6 +1496,7 @@ class ToolsCore
 			$domains[$shop_url->domain][] = array(
 				'physical' =>	$shop_url->physical_uri,
 				'virtual' =>	$shop_url->virtual_uri,
+				'id_shop' =>	$shop_url->id_shop
 			);
 		}
 
@@ -1515,64 +1514,75 @@ class ToolsCore
 
 		fwrite($write_fd, "RewriteEngine on\n\n");
 		foreach ($domains as $domain => $list_uri)
+		{			
 			foreach ($list_uri as $uri)
+			{
+				$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
+				$domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n";
 				// Rewrite virtual multishop uri
 				if ($uri['virtual'])
 				{
 					if (!$rewrite_settings)
 					{
-						fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
 					}
 					else
 					{
-						fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
 					}
-					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
 				}
+		
+				if ($rewrite_settings)
+				{
+					// Compatibility with the old image filesystem
+					fwrite($write_fd, "# Images\n");
+					if (Configuration::get('PS_LEGACY_IMAGES'))
+					{
+						fwrite($write_fd, $domain_rewrite_cond);
+						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
+						fwrite($write_fd, $domain_rewrite_cond);
+						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+					}
 
+					// Rewrite product images < 100 millions
+					for ($i = 1; $i <= 8; $i++)
+					{
+						$img_path = $img_name = '';
+						for ($j = 1; $j <= $i; $j++)
+						{
+							$img_path .= '$'.$j.'/';
+							$img_name .= '$'.$j;
+						}
+						$img_name .= '$'.$j;
+						fwrite($write_fd, $domain_rewrite_cond);
+						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
+					}
+					fwrite($write_fd, $domain_rewrite_cond);
+					fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-\.*]*)(-[0-9]+)?/.+\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
+					fwrite($write_fd, $domain_rewrite_cond);
+					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
+				}
+				// Redirections to dispatcher
+				if ($rewrite_settings)
+				{
+					fwrite($write_fd, "\n# Dispatcher\n");
+					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
+					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
+					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
+					fwrite($write_fd, $domain_rewrite_cond);
+					fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
+					fwrite($write_fd, $domain_rewrite_cond);
+					fwrite($write_fd, "RewriteRule ^.*\$ index.php [NC,L]\n");
+				}
+			}
+		}
+		
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
-
-		if ($rewrite_settings)
-		{
-			// Compatibility with the old image filesystem
-			fwrite($write_fd, "# Images\n");
-			if (Configuration::get('PS_LEGACY_IMAGES'))
-			{
-				fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
-				fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
-			}
-
-			// Rewrite product images < 100 millions
-			for ($i = 1; $i <= 8; $i++)
-			{
-				$img_path = $img_name = '';
-				for ($j = 1; $j <= $i; $j++)
-				{
-					$img_path .= '$'.$j.'/';
-					$img_name .= '$'.$j;
-				}
-				$img_name .= '$'.$j;
-				fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
-			}
-			fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-\.*]*)(-[0-9]+)?/.+\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
-			fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
-		}
-
-		// Redirections to dispatcher
-		if ($rewrite_settings)
-		{
-			fwrite($write_fd, "\n# Dispatcher\n");
-			fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
-			fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
-			fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
-			fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
-			fwrite($write_fd, "RewriteRule ^.*\$ index.php [NC,L]\n");
-		}
-
 		fwrite($write_fd, "</IfModule>\n\n");
 
 		// Cache control
