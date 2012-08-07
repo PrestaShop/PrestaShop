@@ -552,4 +552,24 @@ class AdminStockConfigurationControllerCore extends AdminController
 				}
 			}
 	}
+	
+	public function initContent()
+	{
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
+		}
+		parent::initContent();
+	}
+	
+	public function initProcess()
+	{
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
+		}
+		parent::initProcess();	
+	}
 }
