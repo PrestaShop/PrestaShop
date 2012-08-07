@@ -166,14 +166,14 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 	 */
 	public function assignSummaryExecution()
 	{
-		$customerPoints = (int)(LoyaltyModule::getPointsByCustomer((int)($this->context->customer->id)));
-		$orders = LoyaltyModule::getAllByIdCustomer((int)($this->context->cookie->id_customer), (int)($this->context->cookie->id_lang));
-		$displayorders = LoyaltyModule::getAllByIdCustomer((int)($this->context->cookie->id_customer), (int)($this->context->cookie->id_lang), false, true, ((int)(Tools::getValue('n')) > 0 ? (int)(Tools::getValue('n')) : 10), ((int)(Tools::getValue('p')) > 0 ? (int)(Tools::getValue('p')) : 1));
+		$customerPoints = (int)(LoyaltyModule::getPointsByCustomer((int)$this->context->customer->id));
+		$orders = LoyaltyModule::getAllByIdCustomer((int)$this->context->customer->id, (int)$this->context->lang->id);
+		$displayorders = LoyaltyModule::getAllByIdCustomer((int)$this->context->customer->id, (int)$this->context->lang->id, false, true, ((int)(Tools::getValue('n')) > 0 ? (int)(Tools::getValue('n')) : 10), ((int)(Tools::getValue('p')) > 0 ? (int)(Tools::getValue('p')) : 1));
 		$this->context->smarty->assign(array(
 			'orders' => $orders,
 			'displayorders' => $displayorders,
 			'totalPoints' => (int)$customerPoints,
-			'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)($this->context->cookie->id_currency)),
+			'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)$this->context->currency->id),
 			'validation_id' => LoyaltyStateModule::getValidationId(),
 			'transformation_allowed' => $customerPoints > 0,
 			'page' => ((int)(Tools::getValue('p')) > 0 ? (int)(Tools::getValue('p')) : 1),
@@ -185,7 +185,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 		/* Discounts */
 		$nbDiscounts = 0;
 		$discounts = array();
-		if ($ids_discount = LoyaltyModule::getDiscountByIdCustomer((int)$this->context->cookie->id_customer))
+		if ($ids_discount = LoyaltyModule::getDiscountByIdCustomer((int)$this->context->customer->id))
 		{
 			$nbDiscounts = count($ids_discount);
 			foreach ($ids_discount as $key => $discount)
