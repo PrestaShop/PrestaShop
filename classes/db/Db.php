@@ -637,9 +637,9 @@ abstract class DbCore
 	 * @param bool $engine
 	 * @return int
 	 */
-	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null)
+	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
-		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine));
+		return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine, $timeout));
 	}
 
 	/**
