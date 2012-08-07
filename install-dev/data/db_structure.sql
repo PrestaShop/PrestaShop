@@ -1119,6 +1119,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `id_order` int(10) unsigned NOT NULL,
   `id_order_invoice` int(11) default NULL,
   `id_warehouse` int(10) unsigned DEFAULT 0,
+  `id_shop` int(11) unsigned NOT NULL,
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned default NULL,
   `product_name` varchar(255) NOT NULL,
