@@ -951,6 +951,12 @@ class AdminStockManagementControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
+		}
+		
 		// Manage the add stock form
 		if ($this->display == 'addstock' || $this->display == 'removestock' || $this->display == 'transferstock')
 		{
@@ -1138,4 +1144,14 @@ class AdminStockManagementControllerCore extends AdminController
 
         return $this->context->smarty->fetch('helpers/list/list_action_transferstock.tpl');
     }
+	
+	public function initProcess()
+	{
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
+		}
+		parent::initProcess();	
+	}    
 }
