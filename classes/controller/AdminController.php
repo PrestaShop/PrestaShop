@@ -1356,6 +1356,12 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		if (!$this->viewAccess())
+		{
+			$this->errors[] = Tools::displayError('You do not have permission to view here.');
+			return;
+		}
+		
 		$this->getLanguages();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
