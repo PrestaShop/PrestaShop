@@ -181,53 +181,64 @@ class AdminHomeControllerCore extends AdminController
 
 	protected function getQuickLinks()
 	{
-		$quick_links['first'] = array(
-			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
-			'title' => $this->l('Products sold recently'),
-			'description' => $this->l('Create a new category and organize your catalog.'),
-		);
-
-		$quick_links['second'] = array(
-			'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;addorder',
-			'title' => $this->l('New order'),
-			'description' => $this->l('Fill your catalog with new products.'),
-		);
-
-		$quick_links['third'] = array(
-			'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
-			'title' => $this->l('New Price Rule for catalog'),
-			'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
-		);
-
-		$quick_links['fourth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
-			'title' => $this->l('New Product'),
-			'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
-		);
+		$quick_links = array();
 		
-		$quick_links['fifth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminModules').'&amp;addcategory',
-			'title' => $this->l('New module'),
-			'description' => $this->l('Create a new category and organize your catalog.'),
-		);
+		$profile_access = Profile::getProfileAccesses($this->context->employee->id_profile);
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminStats')]['view'])
+			$quick_links['first'] = array(
+				'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
+				'title' => $this->l('Products sold recently'),
+				'description' => $this->l('Create a new category and organize your catalog.'),
+			);
+		
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminOrders')]['add'])
+			$quick_links['second'] = array(
+				'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;addorder',
+				'title' => $this->l('New order'),
+				'description' => $this->l('Fill your catalog with new products.'),
+			);
+		
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminSpecificPriceRule')]['add'])
+			$quick_links['third'] = array(
+				'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
+				'title' => $this->l('New Price Rule for catalog'),
+				'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
+			);
+		
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminProducts')]['add'])
+			$quick_links['fourth'] = array(
+				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
+				'title' => $this->l('New Product'),
+				'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
+			);
 
-		$quick_links['sixth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-			'title' => $this->l('New Price Rule for cart'),
-			'description' => $this->l('Fill your catalog with new products.'),
-		);
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminModules')]['view'])
+			$quick_links['fifth'] = array(
+				'href' => $this->context->link->getAdminLink('AdminModules'),
+				'title' => $this->l('New module'),
+				'description' => $this->l('Configure your modules.'),
+			);
+			
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminCartRules')]['add'])
+			$quick_links['sixth'] = array(
+				'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
+				'title' => $this->l('New Price Rule for cart'),
+				'description' => $this->l('Add new cart rule.'),
+			);
+			
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminCmsContent')]['add'])
+			$quick_links['seventh'] = array(
+				'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
+				'title' => $this->l('New Page CMS'),
+				'description' => $this->l('Add a new CMS page.'),
+			);
 
-		$quick_links['seventh'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
-			'title' => $this->l('New Page CMS'),
-			'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
-		);
-
-		$quick_links['eighth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
-			'title' => $this->l('Abandoned Carts'),
-			'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
-		);
+		if ($profile_access[(int)Tab::getIdFromClassName('AdminCarts')]['view'])
+			$quick_links['eighth'] = array(
+				'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
+				'title' => $this->l('Abandoned Carts'),
+				'description' => $this->l('View your customer carts.'),
+			);
 		return $quick_links;
 	}
 
