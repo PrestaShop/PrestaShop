@@ -40,6 +40,9 @@ class OrderDetailCore extends ObjectModel
 	public $product_id;
 
 	/** @var integer */
+	public $id_shop;
+
+	/** @var integer */
 	public $product_attribute_id;
 
 	/** @var string */
@@ -160,6 +163,7 @@ class OrderDetailCore extends ObjectModel
 			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_order_invoice' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_warehouse' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'product_id' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'product_attribute_id' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'product_name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
@@ -546,7 +550,10 @@ class OrderDetailCore extends ObjectModel
 
 		// Set order invoice id
 		$this->id_order_invoice = (int)$id_order_invoice;
-
+		
+		// Set shop id
+		$this->id_shop = (int)$product['id_shop'];
+		
 		// Add new entry to the table
 		$this->save();
 
