@@ -81,10 +81,6 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
-		// Checks access
-		if (!($this->tabAccess['add'] === '1'))
-			unset($this->toolbar_btn['new']);
-
 		// removes links on rows
 		$this->list_no_link = true;
 
@@ -474,17 +470,25 @@ class AdminWarehousesControllerCore extends AdminController
 			}
 		}
 	}
-
-	/**
-	 * Checks access of the employee
-	 */
-	public function processCheckAccess()
+	
+	public function initContent()
 	{
-		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
-			return parent::postProcess();
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
 		}
+		parent::initContent();
+	}
+	
+	public function initProcess()
+	{
+		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			return false;
+		}
+		parent::initProcess();	
 	}
 
 	/**
@@ -594,16 +598,6 @@ class AdminWarehousesControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 		$obj->resetStockAvailable();
-	}
-	/**
-	 * @see AdminController::initProcess()
-	 */
-	public function initProcess()
-	{
-		// checks access
-		$this->processCheckAccess();
-
-		return parent::initprocess();
 	}
 
 }
