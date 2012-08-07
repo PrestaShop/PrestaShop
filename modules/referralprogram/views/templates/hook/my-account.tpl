@@ -25,11 +25,10 @@
 *}
 
 <!-- MODULE ReferralProgram -->
-<p id="referralprogram">
-	<img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" />
-	{l s='You have earned a voucher worth %s thanks to your sponsor!' sprintf=$discount_display mod='referralprogram'}
-	{l s='Enter voucher name %s to receive the reduction on this order.' sprintf=$discount->name mod='referralprogram'}
-	<a href="{$module_template_dir}referralprogram-program.php" title="{l s='Referral program' mod='referralprogram'}">{l s='View your referral program.' mod='referralprogram'}</a>
-</p>
-<br />
+<li class="referralprogram">
+	<a href="{$link->getModuleLink('referralprogram', 'program', [], true)}" title="{l s='Referral program' mod='referralprogram'}">
+		<img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" /> 
+			{l s='Referral program' mod='referralprogram'}
+	</a>
+</li>
 <!-- END : MODULE ReferralProgram -->
