@@ -96,7 +96,7 @@
 				{/if},
 				{l s='he or she will receive a %1$d voucher and you will receive your own voucher worth %2$d.' sprintf=[$discount,$discount] mod='referralprogram'}
 			</p>
-			<form method="post" action="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" class="std">
+			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)}" class="std">
 				<table class="std">
 				<thead>
 					<tr>
@@ -123,10 +123,12 @@
 				<p class="checkbox">
 					<input type="checkbox" name="conditionsValided" id="conditionsValided" value="1" {if isset($smarty.post.conditionsValided) AND $smarty.post.conditionsValided eq 1}checked="checked"{/if} />
 					<label for="conditionsValided">{l s='I agree to the terms of service and adhere to them unconditionally.' mod='referralprogram'}</label>
-					<a href="{$base_dir_ssl}modules/referralprogram/referralprogram-rules.php?height=500&amp;width=400" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}">{l s='Read conditions.' mod='referralprogram'}</a>
+					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}">{l s='Read conditions.' mod='referralprogram'}</a>
 				</p>
 				<p class="see_email">
-					{l s='Preview' mod='referralprogram'} <a href="{$base_dir_ssl}modules/referralprogram/preview-email.php?height=500&amp;width=600&amp;mail={$lang_iso}/referralprogram-invitation.html" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
+					{l s='Preview' mod='referralprogram'} 
+					{assign var="file" value="{$lang_iso}/referralprogram-invitation.html"}
+					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
 				</p>
 				<p class="submit">
 					<input type="submit" id="submitSponsorFriends" name="submitSponsorFriends" class="button_large" value="{l s='Validate' mod='referralprogram'}" />
@@ -144,7 +146,7 @@
 		<p>
 			{l s='These friends have not yet placed an order on this Website since you sponsored them, but you can try again! To do so, mark the checkboxes of the friend(s) you want to remind, then click on the button "Remind my friend(s)"' mod='referralprogram'}
 		</p>
-		<form method="post" action="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" class="std">
+		<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)}" class="std">
 			<table class="std">
 			<thead>
 				<tr>
