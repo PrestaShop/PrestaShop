@@ -378,7 +378,7 @@ $(function(){ldelim}
 		</p>
 		<p class="required text">
 			<label for="customer_firstname">{l s='First name'} <sup>*</sup></label>
-			<input onkeyup="$('#firstname').val(this.value);" type="text" class="text" id="customer_firstname" name="customer_firstname" value="aaaaaaaaa{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
+			<input onkeyup="$('#firstname').val(this.value);" type="text" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
 		</p>
 		<p class="required text">
 			<label for="customer_lastname">{l s='Last name'} <sup>*</sup></label>
