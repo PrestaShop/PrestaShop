@@ -59,9 +59,9 @@ class Cheque extends PaymentModule
 		$this->description = $this->l('Module for accepting payments by check.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 
-		if (!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address))
+		if ($this->active && (!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address)))
 			$this->warning = $this->l('\'To the order of\' and address must be configured in order to use this module correctly.');
-		if (!count(Currency::checkPaymentCurrencies($this->id)))
+		if ($this->active && !count(Currency::checkPaymentCurrencies($this->id)))
 			$this->warning = $this->l('No currency set for this module');
 	
 		$this->extra_mail_vars = array(
