@@ -1818,8 +1818,6 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif ($submitted_action = Tools::getValue('submitAction'.$this->table))
-				$this->action = $submitted_action;
 		elseif (Tools::getValue('submitAdd'.$this->table)
 				 || Tools::getValue('submitAdd'.$this->table.'AndStay')
 				 || Tools::getValue('submitAdd'.$this->table.'AndPreview'))
