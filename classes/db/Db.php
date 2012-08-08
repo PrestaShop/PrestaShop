@@ -322,7 +322,7 @@ abstract class DbCore
 	 */
 	public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true)
 	{
-		if (!$data)
+		if (!$data && !$null_values)
 			return true;
 
 		if ($add_prefix)
