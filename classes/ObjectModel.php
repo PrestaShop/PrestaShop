@@ -270,7 +270,7 @@ abstract class ObjectModelCore
 			$fields = array_merge($fields, $this->getFieldsShop());
 
 		// Ensure that we get something to insert
-		if (!$fields)
+		if (!$fields && $this->id)
 			$fields[$this->def['primary']] = $this->id;
 		return $fields;
 	}
@@ -286,7 +286,7 @@ abstract class ObjectModelCore
 	public function getFieldsShop()
 	{
 		$fields = $this->formatFields(self::FORMAT_SHOP);
-		if (!$fields)
+		if (!$fields && $this->id)
 			$fields[$this->def['primary']] = $this->id;
 		return $fields;
 	}
