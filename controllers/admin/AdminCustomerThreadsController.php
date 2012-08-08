@@ -381,7 +381,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->message = Tools::htmlentitiesutf8(Tools::nl2br(Tools::getValue('reply_message')));
+				$cm->message = Tools::nl2br(Tools::htmlentitiesutf8(Tools::getValue('reply_message')));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
 					$this->errors[] = Tools::displayError('An error occurred with the file upload.');
