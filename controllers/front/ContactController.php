@@ -224,12 +224,18 @@ class ContactControllerCore extends FrontController
 		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread') && $token = Tools::getValue('token'))
 		{
 			$customerThread = Db::getInstance()->getRow('
-			SELECT cm.* FROM '._DB_PREFIX_.'customer_thread cm
-			WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->context->shop->id.' AND token = \''.pSQL($token).'\'');
+				SELECT cm.* 
+				FROM '._DB_PREFIX_.'customer_thread cm
+				WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' 
+				AND cm.id_shop = '.(int)$this->context->shop->id.' 
+				AND token = \''.pSQL($token).'\'
+			');
 			$this->context->smarty->assign('customerThread', $customerThread);
 		}
-		$this->context->smarty->assign(array('contacts' => Contact::getContacts($this->context->language->id),
-		'message' => html_entity_decode(Tools::getValue('message'))
+		
+		$this->context->smarty->assign(array(
+			'contacts' => Contact::getContacts($this->context->language->id),
+			'message' => html_entity_decode(Tools::getValue('message'))
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'contact-form.tpl');
