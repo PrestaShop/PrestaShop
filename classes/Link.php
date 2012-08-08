@@ -318,7 +318,7 @@ class LinkCore
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang))
-			return $this->getPageLink('module-'.$module.'-'.$controller, $params);
+			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
 		else
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow);
 	}
