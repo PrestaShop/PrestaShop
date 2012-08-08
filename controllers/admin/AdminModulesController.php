@@ -1088,7 +1088,6 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
 
-		$tpl_vars['addonsUrl'] = 'index.php?tab=AdminAddonsMyAccount&token='.Tools::getAdminTokenLite('AdminAddonsMyAccount');
 		$tpl_vars['categoryFiltered'] = $categoryFiltered;
 
 		$tpl_vars['modules'] = $modules;
