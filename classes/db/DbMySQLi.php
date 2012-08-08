@@ -170,7 +170,7 @@ class DbMySQLiCore extends Db
 		if (!$link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout))
 			return 1;
 
-		if (!$link->real_connect($server, $user, $pwd, $db);
+		if (!$link->real_connect($server, $user, $pwd, $db))
 			return (mysqli_connect_errno() == 1049) ? 2 : 1;
 
 		if (strtolower($engine) == 'innodb')
