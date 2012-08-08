@@ -31,6 +31,8 @@ function p15015_blockadvertising_extension()
 	if (file_exists(_PS_MODULE_DIR_.'blockadvertising'))
 		foreach (scandir(_PS_MODULE_DIR_.'blockadvertising') as $file)
 			if (in_array($file, array('advertising.jpg', 'advertising.gif', 'advertising.png')))
-				Configuration::updateGlobalValue('BLOCKADVERT_IMG_EXT', substr($file, strrpos($file, '.') + 1));
+				Db::getInstance()->execute('
+				REPLACE INTO `'._DB_PREFIX_.'configuration` (name, value)
+				VALUES ("BLOCKADVERT_IMG_EXT", "'.pSQL(substr($file, strrpos($file, '.') + 1)).'"');
 	return true;
 }
