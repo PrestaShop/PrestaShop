@@ -303,6 +303,8 @@ class AdminCurrenciesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num')))
+				$this->errors[] = Tools::displayError('This currency already exist.');
 		parent::initProcess();
 	}
 }
