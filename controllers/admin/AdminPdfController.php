@@ -35,6 +35,16 @@ class AdminPdfControllerCore extends AdminController
 		exit;
 	}
 
+	public function initProcess()
+	{
+		parent::initProcess();	
+		$access = Profile::getProfileAccess($this->context->employee->id_profile, (int)Tab::getIdFromClassName('AdminOrders'));
+		if ($access['view'] === '1' && ($action = Tools::getValue('submitAction')))
+			$this->action = $action;
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to view here.');
+	}
+
 	public function processGenerateInvoicePdf()
 	{
 		if (Tools::isSubmit('id_order'))
