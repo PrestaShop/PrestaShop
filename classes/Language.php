@@ -104,12 +104,12 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	 * Generate traslations files
+	 * Generate translations files
 	 *
 	 */
 	protected function _generateFiles($newIso = null)
 	{
-		$iso_code = $newIso?$newIso:$this->iso_code;
+		$iso_code = $newIso ? $newIso : $this->iso_code;
 
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$iso_code))
 			mkdir(_PS_TRANSLATIONS_DIR_.$iso_code);
@@ -130,7 +130,6 @@ class LanguageCore extends ObjectModel
 
 			@chmod($path_file, 0777);
 		}
-
 	}
 
 	/**
