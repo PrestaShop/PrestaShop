@@ -108,77 +108,32 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	public function processUploadLogo()
 	{
 		$error = '';
-		if (isset($_FILES['fileToUpload']))
+		if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name'])
 		{
 			$file = $_FILES['fileToUpload'];
-
-			// If error code is not 0, an error occured during upload
-			if ($file['error'] != 0)
+			$error = ImageManager::validateUpload($file, 300000);
+			if (!strlen($error))
 			{
-				$upload_errors = array(
-					1 => $this->l('The uploaded file exceeds the upload_max_filesize directive in php.ini'),
-					2 => $this->l('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form'),
-					3 => $this->l('The uploaded file was only partially uploaded'),
-					4 => $this->l('No file was uploaded'),
-					6 => $this->l('Missing a temporary folder'),
-					7 => $this->l('Failed to write file to disk'),
-					8 => $this->l('File upload stopped by extension'),
-				);
-
-				if (isset($upload_errors[$file['error']]))
-					$error = $upload_errors[$file['error']];
-				else
-					$error = $this->l('No error code available');
-			}
-			// Check if no error during creation of tmp file
-			else if (!$file['tmp_name'] || $file['tmp_name'] == 'none')
-			{
-				$error = $this->l('Missing a temporary folder');
-			}
-			// No error, let's update the file
-			else
-			{
+				$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+				if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))
+					return false;
+				
 				list($width, $height, $type) = getimagesize($file['tmp_name']);
+				
+				$newheight = ($height > 500) ? 500 : $height;
+				$percent = $newheight / $height;
+				$newwidth = $width * $percent;
+				$newheight = $height * $percent;
+				
+				if (!$error)
+					if (!is_writable(_PS_ROOT_DIR_.'/img/'))
+						$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
+					else if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo.jpg', $newwidth, $newheight))
+						$error = $this->l('An error occurred during logo copy.');
 
-				// Check if this is really an image
-				if ($height == 0)
-					$error = $this->l('This is not a valid image file');
-				// Resize image
-				else
-				{
-					$newheight = ($height > 500) ? 500 : $height;
-					$percent = $newheight / $height;
-					$newwidth = $width * $percent;
-					$newheight = $height * $percent;
-					$thumb = imagecreatetruecolor($newwidth, $newheight);
-					switch ($type)
-					{
-						case IMAGETYPE_GIF:
-							$source = imagecreatefromgif($file['tmp_name']);
-						break;
-
-						case IMAGETYPE_PNG:
-							$source = imagecreatefrompng($file['tmp_name']);
-						break;
-
-						case IMAGETYPE_JPEG:
-							$source = imagecreatefromjpeg($file['tmp_name']);
-						break;
-
-						default:
-							$error = $this->l('Image type is not supported');
-					}
-
-					if (!$error)
-					{
-						imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-						if (!is_writable(_PS_ROOT_DIR_.'/img/'))
-							$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
-						else if (!imagejpeg($thumb, _PS_ROOT_DIR_.'/img/logo.jpg', 90))
-							$error = $this->l('Cannot upload the file');
-					}
-				}
 			}
+			else
+				$error = $this->l('An error occurred during logo upload.');
 		}
 
 		$this->ajaxJsonAnswer(($error) ? false : true, $error);
