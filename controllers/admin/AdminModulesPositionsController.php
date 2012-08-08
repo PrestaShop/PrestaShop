@@ -288,7 +288,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
 			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-			'url_live_edit' => $this->context->link->getPageLink('index.php', true, null, $live_edit_params),
+			'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
 			'display_key' => $this->display_key,
 			'hooks' => $hooks,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
@@ -297,7 +297,15 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $this->createTemplate('list_modules.tpl')->fetch();
 	}
-
+	
+	public function getLiveEditUrl($live_edit_params)
+	{
+		$url = $this->context->shop->getBaseURL().Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+		if (Configuration::get('PS_REWRITING_SETTINGS'))
+			$url = str_replace('index.php', '', $url);
+		return $url;
+	}
+	
 	public function renderForm()
 	{
 		// Init toolbar
