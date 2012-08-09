@@ -227,8 +227,8 @@ class OrderReturnCore extends ObjectModel
 	{
 		$details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT od.id_order_detail, IFNULL(GREATEST(od.product_quantity_return, ord.product_quantity),0) as qty_returned
-			FROM ps_order_detail od
-			LEFT JOIN ps_order_return_detail ord
+			FROM '._DB_PREFIX_.'order_detail od
+			LEFT JOIN '._DB_PREFIX_.'order_return_detail ord
 			ON ord.id_order_detail = od.id_order_detail
 			WHERE od.id_order = '.(int)$id_order
 		);
