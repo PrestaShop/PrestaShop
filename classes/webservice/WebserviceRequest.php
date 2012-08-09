@@ -269,7 +269,7 @@ class WebserviceRequestCore
 			'stock_movement_reasons' => array('description' => 'Stock movement reason', 'class' => 'StockMvtReason'),
 			'warehouses' => array('description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => array('DELETE')),
 			'stocks' => array('description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
-			'available_quantities' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'stock_availables' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'warehouse_product_locations' => array('description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_orders' => array('description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_details' => array('description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
@@ -1217,13 +1217,19 @@ class WebserviceRequestCore
 		if ($assoc !== false)
 		{
 			$sql = 'SELECT 1
-					FROM '.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).' ';
+ 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+			if ($assoc['type'] != 'fk_shop')
+				$sql .= '_'.$assoc['type'];
+			$sql .= '`';
+
 			foreach (self::$shopIDs as $id_shop)
 				$OR[] = ' id_shop = '.(int)$id_shop.' ';
-			$check = ' WHERE ('.implode('OR', $OR).') AND '.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).' = '.(int)$this->urlSegment[1];
+
+			$check = ' WHERE ('.implode('OR', $OR).') AND `'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.(int)$this->urlSegment[1];
 			if (!Db::getInstance()->getValue($sql.$check))
 				$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
 		}
+
 		//get entity details
 		$object = new $this->resourceConfiguration['retrieveData']['className']((int)$this->urlSegment[1]);
 		if ($object->id)
@@ -1325,7 +1331,6 @@ class WebserviceRequestCore
 		}
 		else
 		{
-			$assoc = Shop::getAssoTables();
 			foreach ($objects as $object)
 			{
 				if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete']))
@@ -1335,12 +1340,6 @@ class WebserviceRequestCore
 
 				if (!$result)
 					$arr_avoid_id[] = $object->id;
-				elseif (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
-				{
-					$sql = 'DELETE FROM `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'`
-							WHERE '.$this->resourceConfiguration['fields']['id']['sqlId'].' = '.$object->id;
-					Db::getInstance()->execute($sql);
-				}
 			}
 			if (!empty($arr_avoid_id))
 			{
