@@ -362,22 +362,22 @@ if (empty($fail_result))
 		}
 
 // Settings updated, compile and cache directories must be emptied
+$tools_dir = rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'tools'.DIRECTORY_SEPARATOR;
 $arrayToClean = array(
-	_PS_INSTALL_PATH_.'/../tools/smarty/cache/',
-	_PS_INSTALL_PATH_.'/../tools/smarty/compile/',
-	_PS_INSTALL_PATH_.'/../tools/smarty_v2/cache/',
-	_PS_INSTALL_PATH_.'/../tools/smarty_v2/compile/');
+	$tools_dir.'smarty'.DIRECTORY_SEPARATOR.'cache',
+	$tools_dir.'smarty'.DIRECTORY_SEPARATOR.'compile',
+	$tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'cache',
+	$tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'compile'
+);
 foreach ($arrayToClean as $dir)
-	if (!file_exists($dir))
-		$logger->logError('directory '.$dir." doesn't exist and can't be emptied.\r\n");
-	else
+	if (file_exists($dir))
 		foreach (scandir($dir) as $file)
 			if ($file[0] != '.' AND $file != 'index.php' AND $file != '.htaccess')
-				unlink($dir.$file);
+				unlink($dir.DIRECTORY_SEPARATOR.$file);
 
 // delete cache filesystem if activated
 $depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
-if((defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_ ) && $depth)
+if (defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_  && $depth)
 {
 	CacheFs::deleteCacheDirectory();
 	CacheFs::createCacheDirectories((int)$depth);
