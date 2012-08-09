@@ -7,4 +7,5 @@ UPDATE `PREFIX_order_detail` od SET `id_shop`=(SELECT `id_shop` FROM `PREFIX_ord
 DELETE FROM `PREFIX_tab` WHERE `class_name` = 'AdminAddonsMyAccount';
 DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` NOT IN (SELECT `id_tab` FROM `PREFIX_tab`);
 DELETE FROM `PREFIX_access` WHERE `id_tab` NOT IN (SELECT `id_tab` FROM `PREFIX_tab`);
- 
+
+UPDATE `PREFIX_employee` SET bo_theme = 'default';
