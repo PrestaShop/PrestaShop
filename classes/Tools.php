@@ -1513,6 +1513,8 @@ class ToolsCore
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
 		fwrite($write_fd, "RewriteEngine on\n\n");
+		// Webservice
+		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 		foreach ($domains as $domain => $list_uri)
 		{
 			foreach ($list_uri as $uri)
@@ -1581,8 +1583,6 @@ class ToolsCore
 			}
 		}
 
-		// Webservice
-		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 		fwrite($write_fd, "</IfModule>\n\n");
 
 		// Cache control
