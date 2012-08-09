@@ -1017,22 +1017,25 @@ abstract class ObjectModelCore
 		$assoc = Shop::getAssoTable($this->def['table']);
 		$class_name = WebserviceRequest::$ws_current_classname;
 		$vars = get_class_vars($class_name);
-		if ($assoc !== false && $assoc['type'] !== 'fk_shop')
+		if ($assoc !== false)
 		{
-			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc['type']).'`
-									AS `multi_shop_'.bqSQL($this->def['table']).'`
-									ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
-			foreach ($vars['shopIDs'] as $id_shop)
-				$or[] = ' `multi_shop_'.bqSQL($this->def['table']).'`.id_shop = '.(int)$id_shop.' ';
-			$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
-			$sql_join = $multi_shop_join.' '.$sql_join;
-		}
-		else
-		{
-			$vars = get_class_vars($class_name);
-			foreach ($vars['shopIDs'] as $id_shop)
-				$or[] = ' main.id_shop = '.(int)$id_shop.' ';
-			$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
+			if ($assoc['type'] !== 'fk_shop')
+			{
+				$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc['type']).'`
+										AS `multi_shop_'.bqSQL($this->def['table']).'`
+										ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
+				foreach ($vars['shopIDs'] as $id_shop)
+					$or[] = ' `multi_shop_'.bqSQL($this->def['table']).'`.id_shop = '.(int)$id_shop.' ';
+				$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
+				$sql_join = $multi_shop_join.' '.$sql_join;
+			}
+			else
+			{
+				$vars = get_class_vars($class_name);
+				foreach ($vars['shopIDs'] as $id_shop)
+					$or[] = ' main.id_shop = '.(int)$id_shop.' ';
+				$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
+			}
 		}
 		$query = '
 		SELECT DISTINCT main.`'.bqSQL($this->def['primary']).'` FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'` AS main
