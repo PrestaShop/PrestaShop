@@ -63,9 +63,8 @@ class OrderControllerCore extends ParentOrderController
 				Tools::displayPrice($minimal_purchase, $currency)
 			);
 		}
-
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
-			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step.'&multi-shipping='.(int)Tools::getValue('multi-shipping')).'&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, 'back='.$this->context->link->getPageLink('order', true, (int)$this->context->language->id, 'step='.$this->step.'&multi-shipping='.(int)Tools::getValue('multi-shipping')).'&multi-shipping='.(int)Tools::getValue('multi-shipping')));
 
 		if (Tools::getValue('multi-shipping') == 1)
 			$this->context->smarty->assign('multi_shipping', true);
