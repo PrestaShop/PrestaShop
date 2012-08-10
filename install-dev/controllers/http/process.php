@@ -304,7 +304,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	public function display()
 	{
-		$low_memory = Tools::getMemoryLimit() < Tools::getOctets('32M');
+		// The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
+		$low_memory = Tools::getMemoryLimit() < Tools::getOctets('42M');
 
 		// We fill the process step used for Ajax queries
 		$this->process_steps = array();
