@@ -60,7 +60,7 @@
 			{block name="td_content"}
 				{if isset($params.prefix)}{$params.prefix}{/if}
 				{if isset($params.color) && isset($tr[$params.color])}
-					<span class="color_field" style="background-color: {$tr.color}">
+					<span class="color_field" style="background-color:{$tr.color};color:{if Tools::getBrightness($tr.color) < 128}white{else}#383838{/if}">
 				{/if}
 
 				{if isset($params.active)}
