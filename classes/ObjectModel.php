@@ -612,7 +612,7 @@ abstract class ObjectModelCore
 						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
 							$result &= ObjectModel::$db->update($this->def['table'].'_lang', $field, $where);
 						else
-							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field, 'INSERT');
+							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field, $null_values);
 					}
 				}
 			}
