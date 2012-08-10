@@ -34,7 +34,7 @@
 {if isset($confirmation) && $confirmation}
 	<p class="success">
 		{l s='Your personal information has been successfully updated.'}
-		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your e-mail:'} {$email|escape:'htmlall':'UTF-8'}{/if}
+		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your e-mail:'} {$email}{/if}
 	</p>
 {else}
 	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
@@ -50,15 +50,15 @@
 			</p>
 			<p class="required text">
 				<label for="firstname">{l s='First name'} <sup>*</sup></label>
-				<input type="text" id="firstname" name="firstname" value="{$smarty.post.firstname|escape:'htmlall':'UTF-8'}" />
+				<input type="text" id="firstname" name="firstname" value="{$smarty.post.firstname}" />
 			</p>
 			<p class="required text">
 				<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname|escape:'htmlall':'UTF-8'}" />
+				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
 			</p>
 			<p class="required text">
 				<label for="email">{l s='E-mail'} <sup>*</sup></label>
-				<input type="text" name="email" id="email" value="{$smarty.post.email|escape:'htmlall':'UTF-8'}" />
+				<input type="text" name="email" id="email" value="{$smarty.post.email}" />
 			</p>
 			<p class="required text">
 				<label for="old_passwd">{l s='Current Password'} <sup>*</sup></label>
@@ -77,7 +77,7 @@
 				<select name="days" id="days">
 					<option value="">-</option>
 					{foreach from=$days item=v}
-						<option value="{$v|escape:'htmlall':'UTF-8'}" {if ($sl_day == $v)}selected="selected"{/if}>{$v|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+						<option value="{$v}" {if ($sl_day == $v)}selected="selected"{/if}>{$v}&nbsp;&nbsp;</option>
 					{/foreach}
 				</select>
 				{*
@@ -97,13 +97,13 @@
 				<select id="months" name="months">
 					<option value="">-</option>
 					{foreach from=$months key=k item=v}
-						<option value="{$k|escape:'htmlall':'UTF-8'}" {if ($sl_month == $k)}selected="selected"{/if}>{l s=$v}&nbsp;</option>
+						<option value="{$k}" {if ($sl_month == $k)}selected="selected"{/if}>{l s=$v}&nbsp;</option>
 					{/foreach}
 				</select>
 				<select id="years" name="years">
 					<option value="">-</option>
 					{foreach from=$years item=v}
-						<option value="{$v|escape:'htmlall':'UTF-8'}" {if ($sl_year == $v)}selected="selected"{/if}>{$v|escape:'htmlall':'UTF-8'}&nbsp;&nbsp;</option>
+						<option value="{$v}" {if ($sl_year == $v)}selected="selected"{/if}>{$v}&nbsp;&nbsp;</option>
 					{/foreach}
 				</select>
 			</p>
