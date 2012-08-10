@@ -237,7 +237,7 @@ class ImageManagerCore
 		// Filter on file extension
 		$authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
 		$name_explode = explode('.', $filename);
-		if (count($name_explode))
+		if (count($name_explode) >= 2)
 		{
 			$current_extension = strtolower($name_explode[count($name_explode) - 1]);
 			if (!in_array($current_extension, $authorized_extensions))
