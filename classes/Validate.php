@@ -761,7 +761,7 @@ class ValidateCore
 	 */
 	public static function isFileName($name)
 	{
-		return preg_match('/^[a-zA-Z0-9_.-]*$/', $name);
+		return preg_match('/^[a-zA-Z0-9_.-]+$/', $name);
 	}
 
 	/**
