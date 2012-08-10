@@ -203,7 +203,7 @@ class AdminLoginControllerCore extends AdminController
 				);
 		}
 		if (_PS_MODE_DEMO_)
-			$errors[] = Tools::displayError('This functionality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 
 		if (!count($this->errors))
 		{	
