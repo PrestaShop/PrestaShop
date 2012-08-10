@@ -3461,6 +3461,8 @@ class ProductCore extends ObjectModel
 		$usetax = Tax::excludeTaxeOption();
 
 		$cache_key = $row['id_product'].'-'.$row['id_product_attribute'].'-'.$id_lang.'-'.(int)$usetax;
+		if (isset($row['id_product_pack']))
+			$cache_key .= '-pack'.$row['id_product_pack'];
 		if (isset(self::$producPropertiesCache[$cache_key]))
 			return self::$producPropertiesCache[$cache_key];
 
