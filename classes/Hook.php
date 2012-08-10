@@ -258,6 +258,9 @@ class HookCore extends ObjectModel
 			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
 			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
 			$sql->where('(SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $shop_list).')) = '.count($shop_list));
+			// For payment modules, we check that they are available in the contextual country
+			if (Validate::isLoadedObject($context->country))
+				$sql->where('(h.name != "displayPayment" OR (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
 			$sql->where('hm.id_shop IN('.implode(', ', $shop_list).')');
 
 			if (isset($context->customer) && $context->customer->isLogged())
