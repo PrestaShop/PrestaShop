@@ -34,6 +34,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->lang = true;
 		$this->deleted = false;
 		$this->colorOnBackground = false;
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->context = Context::getContext();
 		parent::__construct();
 	}
