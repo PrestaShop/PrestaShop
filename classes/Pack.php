@@ -126,7 +126,7 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return array();
 
-		$sql = 'SELECT p.*, product_shop.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`
+		$sql = 'SELECT p.*, product_shop.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl

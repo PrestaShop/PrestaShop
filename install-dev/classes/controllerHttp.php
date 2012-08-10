@@ -370,6 +370,7 @@ abstract class InstallControllerHttp
 		die(Tools::jsonEncode(array(
 			'success' => (bool)$success,
 			'message' => $message,
+			// 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
 		)));
 	}
 
