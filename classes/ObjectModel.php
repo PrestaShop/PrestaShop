@@ -1284,8 +1284,11 @@ abstract class ObjectModelCore
 	 * @param bool $has_active_column true if the table has an active column
 	 * @return bool
 	 */
-	public static function isCurrentlyUsed($table, $has_active_column = false)
+	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
+		if ($table === null)
+			$table = self::$definition['table'];
+
 		$query = new DbQuery();
 		$query->select('`id_'.pSQL($table).'`');
 		$query->from($table);
