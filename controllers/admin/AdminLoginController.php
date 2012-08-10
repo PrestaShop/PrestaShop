@@ -65,7 +65,7 @@ class AdminLoginControllerCore extends AdminController
 			else
 			{
 				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following url to log in in secure mode (https).');
-				$warningSslMessage .= '<a href="https://'.Tools::getServerName().Tools::safeOutput($_SERVER['REQUEST_URI']).'">https://'.Tools::getServerName().Tools::safeOutput($_SERVER['REQUEST_URI']).'</a>';
+				$warningSslMessage .= '<a href="https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'">https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'</a>';
 				$this->context->smarty->assign(array('warningSslMessage' => $warningSslMessage));
 			}
 		}
