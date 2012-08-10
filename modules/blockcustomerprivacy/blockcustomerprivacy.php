@@ -157,9 +157,12 @@ class Blockcustomerprivacy extends Module
 	{
 		if (!$this->active)
 			return;
+		$message = Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id);
+		if (empty($message))
+			return;
 		
 		$this->smarty->assign(array(
-			'privacy_message' => Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id),
+			'privacy_message' => $message,
 			'error_message' => $this->l('Please agree with the customer data privacy by ticking the checkbox below.')
 		));
 		return $this->display(__FILE__, 'blockcustomerprivacy.tpl');
