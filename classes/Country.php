@@ -131,7 +131,7 @@ class CountryCore extends ObjectModel
 			$countries[$country['id_country']] = $country;
 
 		if ($list_states)
-			foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'state` ORDER BY s.`name` ASC') as $state)
+			foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'state` ORDER BY `name` ASC') as $state)
 				if (isset($countries[$state['id_country']])) /* Does not keep the state if its country has been disabled and not selected */
 					$countries[$state['id_country']]['states'][] = $state;
 
