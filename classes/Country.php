@@ -110,51 +110,42 @@ class CountryCore extends ObjectModel
 	}
 
 	/**
-	 * Return available countries
+	 * @brief Return available countries
 	 *
 	 * @param integer $id_lang Language ID
 	 * @param boolean $active return only active coutries
-	 * @return array Countries and corresponding zones
+	 * @param boolean $contain_states return only country with states
+	 * @param boolean $list_states Include the states list with the returned list
+	 *
+	 * @return Array Countries and corresponding zones
 	 */
-	public static function getCountries($id_lang, $active = false, $contain_states = null)
+	public static function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
 	{
-		if (!Validate::isBool($active))
-			die(Tools::displayError());
-
-		$states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT s.*
-		FROM `'._DB_PREFIX_.'state` s
-		ORDER BY s.`name` ASC');
-
-		$sql = 'SELECT cl.*,c.*, cl.`name` AS country, z.`name` AS zone
-				FROM `'._DB_PREFIX_.'country` c
-				'.Shop::addSqlAssociation('country', 'c').'
-				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.`id_zone` = c.`id_zone`
-				WHERE 1'
-					.($active ? ' AND c.active = 1' : '')
-					.(!is_null($contain_states) ? ' AND c.`contains_states` = '.(int)$contain_states : '').'
-		ORDER BY cl.name ASC';
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$countries = array();
-		foreach ($result as &$country)
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT cl.*,c.*, cl.`name` country, z.`name` zone
+				FROM `'._DB_PREFIX_.'country` c '.Shop::addSqlAssociation('country', 'c').'
+				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = c.`id_zone`)
+				WHERE 1'.($active ? ' AND c.active = 1' : '').($contain_states ? ' AND c.`contains_states` = '.(int)$contain_states : '').'
+				ORDER BY cl.name ASC') as $country)
 			$countries[$country['id_country']] = $country;
-		foreach ($states as &$state)
-			if (isset($countries[$state['id_country']])) /* Does not keep the state if its country has been disabled and not selected */
-				$countries[$state['id_country']]['states'][] = $state;
+
+		if ($list_states)
+			foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'state` ORDER BY s.`name` ASC') as $state)
+				if (isset($countries[$state['id_country']])) /* Does not keep the state if its country has been disabled and not selected */
+					$countries[$state['id_country']]['states'][] = $state;
 
 		return $countries;
 	}
 
 	public static function getCountriesByIdShop($id_shop, $id_lang)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'country` c
-				LEFT JOIN `'._DB_PREFIX_.'country_shop` cs ON (cs.`id_country`= c.`id_country`)
-				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
-				WHERE `id_shop` = '.(int)$id_shop;
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'country` c
+		LEFT JOIN `'._DB_PREFIX_.'country_shop` cs ON (cs.`id_country`= c.`id_country`)
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+		WHERE `id_shop` = '.(int)$id_shop);
 	}
 
 	/**
