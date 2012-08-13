@@ -465,7 +465,7 @@ class OrderDetailCore extends ObjectModel
 		$this->specificPrice = $specific_price;
 
 		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], null, null, false, false, 1, false);
-		$this->product_price = (float)$product['price'];
+		$this->product_price = $this->original_product_price;
 		$this->unit_price_tax_incl = (float)$product['price_wt'];
 		$this->unit_price_tax_excl = (float)$product['price'];
 		$this->total_price_tax_incl = (float)$product['total_wt'];
