@@ -77,22 +77,23 @@
 	<br />
 	<fieldset>
 		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration'}</legend>
-		<h3>{l s='Server information'}</h3>
-		<p>
-			<b>{l s='Prestashop version'}:</b> {$version.ps|escape:'htmlall':'UTF-8'}
-		</p>
-	
+		<h3>{l s='Server information'}</h3>	
 		{if count($uname)}
 		<p>
 			<b>{l s='Server information'}:</b> {$uname|escape:'htmlall':'UTF-8'}
 		</p>
 		{/if}
-	
 		<p>
 			<b>{l s='Server software version'}:</b> {$version.server|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
 			<b>{l s='PHP version'}:</b> {$version.php|escape:'htmlall':'UTF-8'}
+		</p>
+		<p>
+			<b>{l s='Memory limit'}:</b> {$version.memory_limit|escape:'htmlall':'UTF-8'}
+		</p>
+		<p>
+			<b>{l s='Max execution time'}:</b> {$version.max_execution_time|escape:'htmlall':'UTF-8'}
 		</p>
 		{if $apache_instaweb}
 		<p style="color:red;font-weight:700">{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
@@ -112,6 +113,9 @@
 	
 		<hr />
 		<h3>{l s='Store information'}</h3>
+		<p>
+			<b>{l s='Prestashop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
+		</p>
 		<p>
 			<b>{l s='Shop URL'}:</b> {$shop.url|escape:'htmlall':'UTF-8'}
 		</p>
