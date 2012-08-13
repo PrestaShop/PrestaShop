@@ -253,7 +253,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Active:'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -270,7 +270,7 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display this country')
+					'desc' => $this->l('Display this country to your customer (the country will always be displayed in the back office)')
 				),
 				array(
 					'type' => 'radio',
