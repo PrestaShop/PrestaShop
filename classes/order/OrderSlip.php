@@ -115,38 +115,36 @@ class OrderSlipCore extends ObjectModel
 		.($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
 	}
 
-	// TODO clean getProducts($resTab) => now getProducts method don't use his parameters
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$cart_rules = $order->getCartRules(true);
 		$productsRet = OrderSlip::getOrdersSlipDetail($orderSlipId);
-		$products = $order->getProductsDetail();
+		$order_details = $order->getProductsDetail();
 
-		$tmp = array();
+		$slip_quantity = array();
 		foreach ($productsRet as $slip_detail)
-			$tmp[$slip_detail['id_order_detail']] = $slip_detail['product_quantity'];
-		$resTab = array();
-		foreach ($products as $key => $product)
-			if (isset($tmp[$product['id_order_detail']]))
+			$slip_quantity[$slip_detail['id_order_detail']] = $slip_detail['product_quantity'];
+		$products = array();
+		foreach ($order_details as $key => $product)
+			if (isset($slip_quantity[$product['id_order_detail']]))
 			{
-				$resTab[$key] = $product;
-				$resTab[$key]['product_quantity'] = $tmp[$product['id_order_detail']];
+				$products[$key] = $product;
+				$products[$key]['product_quantity'] = $slip_quantity[$product['id_order_detail']];
 				if (count($cart_rules))
 				{
 					$order->setProductPrices($product);
-					$realProductPrice = $resTab[$key]['product_price'];
+					$realProductPrice = $products[$key]['product_price'];
 					// Todo : must be updated to use the cart rules
 					foreach ($cart_rules as $cart_rule)
 					{
 						if ($cart_rule['reduction_percent'])
-							$resTab[$key]['product_price'] -= $realProductPrice * ($cart_rule['reduction_percent'] / 100);
+							$products[$key]['product_price'] -= $realProductPrice * ($cart_rule['reduction_percent'] / 100);
 						elseif ($cart_rule['reduction_amount'])
-							$resTab[$key]['product_price'] -= (($cart_rule['reduction_amount'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
+							$products[$key]['product_price'] -= (($cart_rule['reduction_amount'] * ($product['product_price_wt'] / $order->total_products_wt)) / (1.00 + ($product['tax_rate'] / 100)));
 					}
-
 				}
 			}
-		return $order->getProducts($resTab);
+		return $order->getProducts($products);
 	}
 
 	/**
