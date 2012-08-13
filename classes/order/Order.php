@@ -945,22 +945,9 @@ class OrderCore extends ObjectModel
 			$products = $this->getProductsDetail();
 
 		$return = 0;
-
 		foreach ($products as $row)
-		{
-			if (!isset($row['tax_rate']))
-				$row['tax_rate'] = 0;
+			$return += $row['total_price_tax_incl'];
 
-			$price = Tools::ps_round($row['product_price'] * (1 + $row['tax_rate'] / 100), 2);
-			if ($row['reduction_percent'])
-				$price -= $price * ($row['reduction_percent'] * 0.01);
-			if ($row['reduction_amount'])
-				$price -= $row['reduction_amount'] * (1 + ($row['tax_rate'] * 0.01));
-			if ($row['group_reduction'])
-				$price -= $price * ($row['group_reduction'] * 0.01);
-			$price += $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100);
-			$return += Tools::ps_round($price, 2) * $row['product_quantity'];
-		}
 		if (!$products)
 		{
 			$this->total_products_wt = $return;

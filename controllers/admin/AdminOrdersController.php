@@ -914,14 +914,26 @@ class AdminOrdersControllerCore extends AdminController
 					foreach ($order->getOrderDetailList() as $row)
 					{
 						$order_detail = new OrderDetail($row['id_order_detail']);
-						$order_detail->product_price = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
-						$order_detail->reduction_amount = Tools::convertPriceFull($order_detail->reduction_amount, $old_currency, $currency);
-						$order_detail->unit_price_tax_incl = Tools::convertPriceFull($order_detail->unit_price_tax_incl, $old_currency, $currency);
-						$order_detail->unit_price_tax_excl = Tools::convertPriceFull($order_detail->unit_price_tax_excl, $old_currency, $currency);
-						$order_detail->total_price_tax_incl = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
-						$order_detail->total_price_tax_excl = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
-						$order_detail->group_reduction = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
-						$order_detail->product_quantity_discount = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+						$fields = array(
+							'ecotax',
+							'product_price',
+							'reduction_amount',
+							'total_shipping',
+							'total_shipping_tax_excl',
+							'total_shipping_tax_incl',
+							'total_products',
+							'total_products_wt',
+							'total_paid',
+							'total_paid_tax_incl',
+							'total_paid_tax_excl',
+							'total_paid_real',
+							'product_quantity_discount',
+							'purchase_supplier_price',
+							'reduction_amount_tax_incl',
+							'reduction_amount_tax_excl'
+						);
+						foreach ($fields as $field)
+							$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
 
 						$order_detail->update();
 					}
@@ -939,21 +951,25 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					// Update order amount
-					$order->total_discounts = Tools::convertPriceFull($order->total_discounts, $old_currency, $currency);
-					$order->total_discounts_tax_incl = Tools::convertPriceFull($order->total_discounts_tax_incl, $old_currency, $currency);
-					$order->total_discounts_tax_excl = Tools::convertPriceFull($order->total_discounts_tax_excl, $old_currency, $currency);
-					$order->total_paid = Tools::convertPriceFull($order->total_paid, $old_currency, $currency);
-					$order->total_paid_tax_incl = Tools::convertPriceFull($order->total_paid_tax_incl, $old_currency, $currency);
-					$order->total_paid_tax_excl = Tools::convertPriceFull($order->total_discounts_tax_excl, $old_currency, $currency);
-					$order->total_paid_real = Tools::convertPriceFull($order->total_paid_real, $old_currency, $currency);
-					$order->total_products = Tools::convertPriceFull($order->total_products, $old_currency, $currency);
-					$order->total_products_wt = Tools::convertPriceFull($order->total_products_wt, $old_currency, $currency);
-					$order->total_shipping = Tools::convertPriceFull($order->total_shipping, $old_currency, $currency);
-					$order->total_shipping_tax_incl = Tools::convertPriceFull($order->total_shipping_tax_incl, $old_currency, $currency);
-					$order->total_shipping_tax_excl = Tools::convertPriceFull($order->total_shipping_tax_excl, $old_currency, $currency);
-					$order->total_wrapping = Tools::convertPriceFull($order->total_wrapping, $old_currency, $currency);
-					$order->total_wrapping_tax_incl = Tools::convertPriceFull($order->total_wrapping_tax_incl, $old_currency, $currency);
-					$order->total_wrapping_tax_excl = Tools::convertPriceFull($order->total_wrapping_tax_excl, $old_currency, $currency);
+					$fields = array(
+						'total_discounts',
+						'total_discounts_tax_incl',
+						'total_discounts_tax_excl',
+						'total_paid',
+						'total_paid_tax_incl',
+						'total_paid_tax_excl',
+						'total_paid_real',
+						'total_products',
+						'total_products_wt',
+						'total_shipping',
+						'total_shipping_tax_incl',
+						'total_shipping_tax_excl',
+						'total_wrapping',
+						'total_wrapping_tax_incl',
+						'total_wrapping_tax_excl',
+					);
+					foreach ($fields as $field)
+						$order->{$field} = Tools::convertPriceFull($order->{$field}, $old_currency, $currency);
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
