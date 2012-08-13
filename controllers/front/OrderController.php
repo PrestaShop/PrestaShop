@@ -244,32 +244,38 @@ class OrderControllerCore extends ParentOrderController
 	{
 		if (!Tools::getValue('multi-shipping'))
 			$this->context->cart->setNoMultishipping();
-
-		// Add checking for all addresses
-		$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
-		if (count($address_without_carriers))
-		{
-			if (count($address_without_carriers) > 1)
-				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.'));
-			elseif ($this->context->cart->isMultiAddressDelivery())
-				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.'));
-			else
-				$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.'));
-		}
+			
+		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
+			|| (Tools::isSubmit('same') && !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
+			$this->errors[] = Tools::displayError('Invalid address');
 		else
 		{
-			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
-			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
-			if (!$this->context->cart->update())
-				$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
+			// Add checking for all addresses
+			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
+			if (count($address_without_carriers))
+			{
+				if (count($address_without_carriers) > 1)
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.'));
+				elseif ($this->context->cart->isMultiAddressDelivery())
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.'));
+				else
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.'));
+			}
+			else
+			{
+				$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+				$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+				if (!$this->context->cart->update())
+					$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 
-			if (!$this->context->cart->isMultiAddressDelivery())
-				$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
+				if (!$this->context->cart->isMultiAddressDelivery())
+					$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
 
-			if (Tools::isSubmit('message'))
-				$this->_updateMessage(Tools::getValue('message'));
+				if (Tools::isSubmit('message'))
+					$this->_updateMessage(Tools::getValue('message'));
+			}
 		}
-
+		
 		if ($this->errors)
 		{
 			if (Tools::getValue('ajax'))
