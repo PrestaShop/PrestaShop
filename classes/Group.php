@@ -251,26 +251,22 @@ class GroupCore extends ObjectModel
 	 * @param $modules
 	 * @param array $shops
 	 * @return bool
-	 * @internal param \id_group $integer
-	 * @internal param \modules $array
-	 * @internal param \authorized $integer
 	 */
 	public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
 	{
-		if (!is_array($modules) && !empty($modules))
+		if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops))
 			return false;
-		else
-		{
-			//delete all record for this group
-			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
-			$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
-			foreach ($modules as $mod)
-				foreach ($shops as $s)
-					$sql .= '("'.(int)$mod.'", "'.(int)$s.'", "'.(int)$id_group.'"),';
-			// removing last comma to avoid SQL error
-			$sql = substr($sql, 0, strlen($sql) - 1);
-			return (bool)Db::getInstance()->execute($sql);
-		}
+
+		// Delete all record for this group
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
+		
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
+		foreach ($modules as $module)
+			foreach ($shops as $shop)
+				$sql .= '("'.(int)$module.'", "'.(int)$shop.'", "'.(int)$id_group.'"),';
+		$sql = rtrim($sql, ',');
+		
+		return (bool)Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -281,14 +277,15 @@ class GroupCore extends ObjectModel
 	 */
 	public static function addRestrictionsForModule($id_module, $shops = array(1))
 	{
-		$groups = Group::getGroups(Context::getContext()->language->id);
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
-		foreach ($groups as $g)
-			foreach ($shops as $s)
-				$sql .= '("'.(int)$id_module.'", "'.(int)$s.'", "'.(int)$g['id_group'].'"),';
-		// removing last comma to avoid SQL error
-		$sql = substr($sql, 0, strlen($sql) - 1);
-		Db::getInstance()->execute($sql);
+		if (!is_array($shops) || !count($shops))
+			return false;
+		
+		$res = true;
+		foreach ($shops as $shop)
+			$res &= Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`)
+			(SELECT '.(int)$id_module.', '.(int)$shop.', id_group FROM `'._DB_PREFIX_.'group`)');
+		return $res;
 	}
 
 	/**
