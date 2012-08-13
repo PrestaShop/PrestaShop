@@ -300,7 +300,7 @@ class OrderCore extends ObjectModel
 			$orderDetail->product_quantity_refunded += (int)($quantity);
 			return $orderDetail->update();
 		}
-		return $this->_deleteProduct($orderDetail, (int)($quantity));
+		return $this->_deleteProduct($orderDetail, (int)$quantity);
 	}
 
 	/**
@@ -335,64 +335,51 @@ class OrderCore extends ObjectModel
 	/* DOES delete the product */
 	protected function _deleteProduct($orderDetail, $quantity)
 	{
-		$tax_calculator = $orderDetail->getTaxCalculator();
-
-		$price = $tax_calculator->addTaxes($orderDetail->product_price);
-		if ($orderDetail->reduction_percent != 0.00)
-			$reduction_amount = $price * $orderDetail->reduction_percent / 100;
-		elseif ($orderDetail->reduction_amount != '0.000000')
-			$reduction_amount = Tools::ps_round($orderDetail->reduction_amount, 2);
-		if (isset($reduction_amount) && $reduction_amount)
-			$price = Tools::ps_round($price - $reduction_amount, 2);
-		$productPriceWithoutTax = number_format($tax_calculator->removeTaxes($price), 2, '.', '');
-		$price += Tools::ps_round($orderDetail->ecotax * (1 + $orderDetail->ecotax_tax_rate / 100), 2);
-		$productPrice = number_format($quantity * $price, 2, '.', '');
+		$product_price_tax_excl = $orderDetail->unit_price_tax_excl * $quantity;
+		$product_price_tax_incl = $orderDetail->unit_price_tax_incl * $quantity;
+		
 		/* Update cart */
 		$cart = new Cart($this->id_cart);
 		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
 		$cart->update();
 
 		/* Update order */
-		$shippingDiff = $this->total_shipping - $cart->getPackageShippingCost($this->id_carrier, true, null, $this->getCartProducts());
-		$this->total_products -= $productPriceWithoutTax;
+		$shipping_diff_tax_incl = $this->total_shipping_tax_incl - $cart->getPackageShippingCost($this->id_carrier, true, null, $this->getCartProducts());
+		$shipping_diff_tax_excl = $this->total_shipping_tax_excl - $cart->getPackageShippingCost($this->id_carrier, false, null, $this->getCartProducts());
+		$this->total_shipping -= $shipping_diff_tax_incl;
+		$this->total_shipping_tax_excl -= $shipping_diff_tax_excl;
+		$this->total_shipping_tax_incl -= $shipping_diff_tax_incl;
+		$this->total_products -= $product_price_tax_excl;
+		$this->total_products_wt -= $product_price_tax_incl;
+		$this->total_paid -= $product_price_tax_incl + $shipping_diff_tax_incl;
+		$this->total_paid_tax_incl -= $product_price_tax_incl + $shipping_diff_tax_incl;
+		$this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
+		$this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-		// After upgrading from old version
-		// total_products_wt is null
-		// removing a product made order total negative
-		// and don't recalculating totals (on getTotalProductsWithTaxes)
-		if ($this->total_products_wt != 0)
-		$this->total_products_wt -= $productPrice;
-
-		$this->total_shipping = $cart->getTotalShippingCost();
-
-		/* It's temporary fix for 1.3 version... */
-		if ($orderDetail->product_quantity_discount != '0.000000')
-			$this->total_paid -= ($productPrice + $shippingDiff);
-		else
-			$this->total_paid = $cart->getOrderTotal();
-
-		$this->total_paid_real -= ($productPrice + $shippingDiff);
-
+		$fields = array(
+			'total_shipping',
+			'total_shipping_tax_excl',
+			'total_shipping_tax_incl',
+			'total_products',
+			'total_products_wt',
+			'total_paid',
+			'total_paid_tax_incl',
+			'total_paid_tax_excl',
+			'total_paid_real'
+		);
+		
 		/* Prevent from floating precision issues (total_products has only 2 decimals) */
-		if ($this->total_products < 0)
-			$this->total_products = 0;
-
-		if ($this->total_paid < 0)
-			$this->total_paid = 0;
-
-		if ($this->total_paid_real < 0)
-			$this->total_paid_real = 0;
+		foreach ($fields as $field)
+			if ($this->{$field} < 0)
+				$this->{$field} = 0;
 
 		/* Prevent from floating precision issues */
-		$this->total_paid = number_format($this->total_paid, 2, '.', '');
-		$this->total_paid_real = number_format($this->total_paid_real, 2, '.', '');
-		$this->total_products = number_format($this->total_products, 2, '.', '');
-		$this->total_products_wt = number_format($this->total_products_wt, 2, '.', '');
+		foreach ($fields as $field)
+			$this->{$field} = number_format($this->{$field}, 2, '.', '');
 
 		/* Update order detail */
-		$orderDetail->product_quantity -= (int)($quantity);
-
-		if (!$orderDetail->product_quantity)
+		$orderDetail->product_quantity -= (int)$quantity;
+		if ($orderDetail->product_quantity == 0)
 		{
 			if (!$orderDetail->delete())
 				return false;
@@ -405,6 +392,13 @@ class OrderCore extends ObjectModel
 					return false;
 			}
 			return $this->update();
+		}
+		else
+		{
+			$orderDetail->total_price_tax_incl -= $product_price_tax_incl;
+			$orderDetail->total_price_tax_excl -= $product_price_tax_excl;
+			$orderDetail->total_shipping_price_tax_incl -= $shipping_diff_tax_incl;
+			$orderDetail->total_shipping_price_tax_excl -= $shipping_diff_tax_excl;
 		}
 		return $orderDetail->update() && $this->update();
 	}
@@ -422,7 +416,7 @@ class OrderCore extends ObjectModel
 			return false;
 		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `quantity` = 0'))
 			return false;
-		return $this->_deleteProduct($orderDetail, (int)($quantity));
+		return $this->_deleteProduct($orderDetail, (int)$quantity);
 	}
 
 	/**
