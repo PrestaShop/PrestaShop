@@ -89,7 +89,7 @@ class AdminZonesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Active:'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
