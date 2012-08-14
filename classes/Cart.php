@@ -2991,14 +2991,14 @@ class CartCore extends ObjectModel
 		return $result;
 	}
 
-	public static function getCustomerCarts($id_customer)
+	public static function getCustomerCarts($id_customer, $with_order = true)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
-			FROM '._DB_PREFIX_.'cart c
-			WHERE c.`id_customer` = '.(int)$id_customer.'
-			ORDER BY c.`date_add` DESC');
-		return $result;
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT *
+		FROM '._DB_PREFIX_.'cart c
+		WHERE c.`id_customer` = '.(int)$id_customer.'
+		'.(!$with_order ? 'AND id_cart NOT IN (SELECT id_cart FROM '._DB_PREFIX_.'orders o WHERE o.`id_customer` = '.(int)$id_customer.')' : '').'
+		ORDER BY c.`date_add` DESC');
 	}
 
 	public static function replaceZeroByShopName($echo, $tr)

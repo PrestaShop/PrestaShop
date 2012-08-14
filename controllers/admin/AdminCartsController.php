@@ -188,7 +188,7 @@ class AdminCartsControllerCore extends AdminController
 			$this->context->customer = $customer;
 			$id_cart = (int)Tools::getValue('id_cart');
 			if (!$id_cart)
-				$id_cart = $customer->getLastCart();
+				$id_cart = $customer->getLastCart(false);
 			$this->context->cart = new Cart((int)$id_cart);
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
