@@ -118,7 +118,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))
 					return false;
 				
-				list($width, $height, $type) = getimagesize($file['tmp_name']);
+				list($width, $height, $type) = getimagesize($tmp_name);
 				
 				$newheight = ($height > 500) ? 500 : $height;
 				$percent = $newheight / $height;
