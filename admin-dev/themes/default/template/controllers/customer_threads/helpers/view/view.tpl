@@ -45,7 +45,7 @@
 				<select name="id_employee_forward" style="vertical-align: middle;">
 					<option value="-1">{l s='-- Choose --'}</option>
 					{foreach $employees as $employee}
-						<option value="{$employee.id_employee}"> {$employee.firstname|substr:0:1}. {$employee.lastname}</option>
+						<option value="{$employee.id_employee}"> {Tools::substr($employee.firstname, 0, 1)}. {$employee.lastname}</option>
 					{/foreach}
 					<option value="0">{l s='Someone else'}</option>
 				</select>
