@@ -1874,9 +1874,8 @@ class ProductCore extends ObjectModel
 		if (Combination::isFeatureActive())
 		{
 			$sql->select('pa.id_product_attribute');
-			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
+			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product` AND pa.default_on = 1');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$sql->where('(product_attribute_shop.default_on = 1 OR product_attribute_shop.default_on IS NULL)');
 		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
