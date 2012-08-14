@@ -183,9 +183,8 @@ class HookCore extends ObjectModel
 			$sql = 'SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
 					FROM `'._DB_PREFIX_.'hook` h
 					INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook)
-					INNER JOIN `'._DB_PREFIX_.'module` as m    ON (m.id_module = hm.id_module)
+					INNER JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
 					WHERE hm.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
-					GROUP BY hm.id_hook, hm.id_module
 					ORDER BY hm.position';
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			$list = array();
