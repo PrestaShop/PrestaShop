@@ -2711,10 +2711,10 @@ class ProductCore extends ObjectModel
 		{
 			if (!Combination::isFeatureActive())
 				$sql .= ' AND stock.id_product_attribute = 0';
-			else if (is_numeric($product_attribute))
+			elseif (is_numeric($product_attribute))
 				$sql .= ' AND stock.id_product_attribute = '.$product_attribute;
-			else if (is_string($product_attribute))
-				$sql .= ' AND stock.id_product_attribute = IFNULL('.pSQL($product_attribute).'.id_product_attribute, 0)';
+			elseif (is_string($product_attribute))
+				$sql .= ' AND stock.id_product_attribute = IFNULL(`'.bqSQL($product_attribute).'`.id_product_attribute, 0)';
 		}
 
 		$sql .= StockAvailable::addSqlShopRestriction(null, $id_shop, 'stock').' )';
