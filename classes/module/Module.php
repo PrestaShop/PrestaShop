@@ -167,8 +167,8 @@ abstract class ModuleCore
 			// We load configuration from the cache
 			if (isset(self::$modules_cache[$this->name]))
 			{
-				$this->active = self::$modules_cache[$this->name]['active'];
-				$this->id = self::$modules_cache[$this->name]['id_module'];
+				if (isset(self::$modules_cache[$this->name]['id_module']))
+					$this->id = self::$modules_cache[$this->name]['id_module'];
 				foreach (self::$modules_cache[$this->name] as $key => $value)
 					if (key_exists($key, $this))
 						$this->{$key} = $value;
