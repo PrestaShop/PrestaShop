@@ -737,9 +737,9 @@ class CustomerCore extends ObjectModel
 		$this->logged = 0;
 	}
 
-	public function getLastCart()
+	public function getLastCart($with_order = true)
 	{
-		$carts = Cart::getCustomerCarts((int)$this->id);
+		$carts = Cart::getCustomerCarts((int)$this->id, $with_order);
 		if (!count($carts))
 			return false;
 		$cart = array_shift($carts);
