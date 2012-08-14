@@ -110,17 +110,25 @@ class ProfileCore extends ObjectModel
 		return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
 	}
 
-	public static function getProfileAccesses($id_profile)
+	public static function getProfileAccesses($id_profile, $type = 'id_tab')
 	{
+		if (!in_array($type, array('id_tab', 'class_name')))
+			return false;
+
 		if (!isset(self::$_cache_accesses[$id_profile]))
+			self::$_cache_accesses[$id_profile] = array();
+			
+		if (!isset(self::$_cache_accesses[$id_profile][$type]))
 		{
+			self::$_cache_accesses[$id_profile][$type] = array();
 			// Super admin profile has full auth
 			if ($id_profile == _PS_ADMIN_PROFILE_)
 			{
 				foreach (Tab::getTabs(Context::getContext()->language->id) as $tab)
-					self::$_cache_accesses[$id_profile][$tab['id_tab']] = array(
+					self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array(
 						'id_profile' => _PS_ADMIN_PROFILE_,
 						'id_tab' => $tab['id_tab'],
+						'class_name' => $tab['class_name'],
 						'view' => '1',
 						'add' => '1',
 						'edit' => '1',
@@ -131,19 +139,16 @@ class ProfileCore extends ObjectModel
 			{
 				$result = Db::getInstance()->executeS('
 				SELECT *
-				FROM `'._DB_PREFIX_.'access`
+				FROM `'._DB_PREFIX_.'access` a
+				LEFT JOIN `'._DB_PREFIX_.'tab` t ON t.id_tab = a.id_tab
 				WHERE `id_profile` = '.(int)$id_profile);
 
-				self::$_cache_accesses[$id_profile] = array();
 				foreach ($result as $row)
-				{
-					if (!isset(self::$_cache_accesses[$id_profile][$row['id_tab']]))
-						self::$_cache_accesses[$id_profile][$row['id_tab']] = array();
-					self::$_cache_accesses[$id_profile][$row['id_tab']] = $row;
-				}
+					self::$_cache_accesses[$id_profile][$type][$row[$type]] = $row;
 			}
 		}
-		return self::$_cache_accesses[$id_profile];
+
+		return self::$_cache_accesses[$id_profile][$type];
 	}
 }
 
