@@ -1869,7 +1869,7 @@ CREATE TABLE `PREFIX_tax_rule` (
   `description` VARCHAR( 100 ) NOT NULL,
   PRIMARY KEY (`id_tax_rule`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`),
-  KEY `id_tax` (`id_tax`)
+  KEY `id_tax` (`id_tax`),
   KEY `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -2214,7 +2214,8 @@ CREATE TABLE `PREFIX_stock_available` (
   KEY `id_shop` (`id_shop`),
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
-  KEY `id_product_attribute` (`id_product_attribute`)
+  KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `product_sqlstock` ( `id_product` , `id_product_attribute` , `id_shop` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supply_order` (
