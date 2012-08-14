@@ -1270,9 +1270,39 @@ class AdminControllerCore extends Controller
 			if (empty($sub_tabs))
 				unset($tabs[$index]);
 		}
+		
+		if (Validate::isLoadedObject($this->context->employee))
+		{
+			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
 
-		/* Hooks are volontary out the initialize array (need those variables already assigned) */
-		$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
+			/* Hooks are volontary out the initialize array (need those variables already assigned) */
+			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
+			$this->context->smarty->assign(array(
+				'autorefresh_notifications' => Configuration::get('PS_ADMIN_REFRESH_NOTIFICATION'),
+				'help_box' => Configuration::get('PS_HELPBOX'),
+				'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
+				'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
+				'bo_width' => (int)$this->context->employee->bo_width,
+				'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
+				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && $accesses['AdminOrders']['view'],
+				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && $accesses['AdminCustomers']['view'],
+				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && $accesses['AdminCustomerThreads']['view'],
+				'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
+				'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
+				'employee' => $this->context->employee,
+				'search_type' => Tools::getValue('bo_search_type'),
+				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
+				'quick_access' => $quick_access,
+				'multi_shop' => Shop::isFeatureActive(),
+				'shop_list' => Helper::renderShopList(),
+				'shop' => $this->context->shop,
+				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
+				'current_parent_id' => (int)Tab::getCurrentParentId(),
+				'tabs' => $tabs,
+				'is_multishop' => $is_multishop,
+				'multishop_context' => $this->multishop_context,
+			));
+		}
 		$this->context->smarty->assign(array(
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,
@@ -1280,35 +1310,14 @@ class AdminControllerCore extends Controller
 			'iso_user' => $this->context->language->iso_code,
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
-			'autorefresh_notifications' => Configuration::get('PS_ADMIN_REFRESH_NOTIFICATION'),
-			'help_box' => Configuration::get('PS_HELPBOX'),
-			'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
-			'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
 			'lang_iso' => $this->context->language->iso_code,
 			'link' => $this->context->link,
-			'bo_width' => (int)$this->context->employee->bo_width,
-			'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
-			'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
-			'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
-			'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
-			'first_name' => Tools::substr($this->context->employee->firstname, 0, 1),
-			'last_name' => htmlentities($this->context->employee->lastname, ENT_COMPAT, 'UTF-8'),
 			'base_url' => $this->context->shop->getBaseURL(),
-			'employee' => $this->context->employee,
-			'search_type' => Tools::getValue('bo_search_type'),
-			'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
-			'quick_access' => $quick_access,
-			'multi_shop' => Shop::isFeatureActive(),
-			'shop_list' => Helper::renderShopList(),
-			'shop' => $this->context->shop,
-			'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
 			'tab' => $tab,
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
-			'is_multishop' => $is_multishop,
-			'multishop_context' => $this->multishop_context,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex
