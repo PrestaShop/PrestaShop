@@ -103,8 +103,6 @@ class ManufacturerCore extends ObjectModel
 	{
 		parent::__construct($id, $id_lang);
 
-		/* Get the manufacturer's id_address */
-		$this->id_address = $this->getManufacturerAddress();
 		$this->link_rewrite = $this->getLink();
 		$this->image_dir = _PS_MANU_IMG_DIR_;
 	}
@@ -149,16 +147,7 @@ class ManufacturerCore extends ObjectModel
 		if (!(int)$this->id)
 			return false;
 
-		$result = Db::GetInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_address`
-			FROM '._DB_PREFIX_.'address
-			WHERE `id_manufacturer` = '.(int)$this->id
-		);
-
-		if (!$result)
-			return false;
-
-		return $result['id_address'];
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address WHERE `id_manufacturer` = '.(int)$this->id);
 	}
 
 	/**
