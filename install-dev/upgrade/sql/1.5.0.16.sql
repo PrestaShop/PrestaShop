@@ -12,4 +12,5 @@ DELETE FROM `PREFIX_access` WHERE `id_tab` NOT IN (SELECT `id_tab` FROM `PREFIX_
 
 UPDATE `PREFIX_employee` SET bo_theme = 'default';
 
-ALTER TABLE `PREFIX_tax_rule` ADD INDEX `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
+ALTER TABLE `PREFIX_tax_rule` ADD INDEX `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` );
+ALTER TABLE `PREFIX_stock_available` ADD INDEX `product_sqlstock` ( `id_product` , `id_product_attribute` , `id_shop` );
