@@ -50,7 +50,7 @@ class AttributeCore extends ObjectModel
 
 			// Lang fields
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-		),
+		)
 	);
 
 
@@ -75,13 +75,15 @@ class AttributeCore extends ObjectModel
 	{
 		if (!$this->hasMultishopEntries())
 		{
-			$combinations = new Collection('Combination');
-			$combinations->where($this->def['primary'], '=', $this->id);
-			foreach ($combinations as $combination)
+			$result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute_combination WHERE id_attribute = '.(int)$this->id);
+			foreach ($result as $row)
+			{
+				$combination = new Combination($row['id_product_attribute']);
 				$combination->delete();
+			}
 		
-		// Delete associated restrictions on cart rules
-		CartRule::cleanProductRuleIntegrity('attributes', $this->id);
+			// Delete associated restrictions on cart rules
+			CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
 			/* Reinitializing position */
 			$this->cleanPositions((int)$this->id_attribute_group);
