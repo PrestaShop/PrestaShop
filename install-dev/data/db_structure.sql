@@ -1870,6 +1870,7 @@ CREATE TABLE `PREFIX_tax_rule` (
   PRIMARY KEY (`id_tax_rule`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `id_tax` (`id_tax`)
+  KEY `category_getproducts` ( `id_tax_rules_group` , `id_country` , `id_state` , `zipcode_from` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_tax_rules_group` (
