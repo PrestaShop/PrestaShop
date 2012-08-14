@@ -132,7 +132,7 @@ class AdminHomeControllerCore extends AdminController
 
 			$opti_list[] = array(
 				'title' => $this->l('Shop enabled'),
-				'href' => $link->getAdminLink('AdminPreferences'),
+				'href' => $link->getAdminLink('AdminMaintenance'),
 				'color' => $lights[$shopEnabled]['color'],
 				'image' => $lights[$shopEnabled]['image'],
 			);
