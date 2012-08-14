@@ -605,7 +605,7 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-				ON (p.`id_product` = pa.`id_product`)
+				ON (p.`id_product` = pa.`id_product` AND pa.`default_on` = 1)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'pa', false, $context->shop).'
@@ -640,7 +640,6 @@ class CategoryCore extends ObjectModel
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
-		$sql .= ' GROUP BY p.`id_product`';
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
