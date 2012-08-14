@@ -487,15 +487,13 @@ class Loyalty extends Module
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
 		
 		$totalPrice = 0;
-		$details = OrderReturn::getOrdersReturnDetail((int)($params['orderReturn']->id));
+		$details = OrderReturn::getOrdersReturnDetail((int)$params['orderReturn']->id);
 		foreach ($details AS $detail)
 		{
-			$price_wt = Db::getInstance()->getValue('
-			SELECT product_price * (1 + (tax_rate / 100)) price
+			$totalPrice += Db::getInstance()->getValue('
+			SELECT ROUND(total_price_tax_incl, 2)
 			FROM '._DB_PREFIX_.'order_detail od
-			WHERE id_order_detail = '.(int)($detail['id_order_detail']));
-
-			$totalPrice += number_format($price_wt, 2, '.', '') * $detail['product_quantity'];
+			WHERE id_order_detail = '.(int)$detail['id_order_detail']);
 		}
 		
 		$loyaltyNew = new LoyaltyModule();
@@ -643,7 +641,7 @@ class Loyalty extends Module
 			return false;
 		
 		$loyaltyNew = new LoyaltyModule();
-		$loyaltyNew->points = -1 * LoyaltyModule::getNbPointsByPrice(number_format($orderDetail->product_price * (1 + $orderDetail->tax_rate / 100), 2, '.', '')) * $orderDetail->product_quantity;
+		$loyaltyNew->points = -1 * LoyaltyModule::getNbPointsByPrice(number_format($orderDetail->total_price_tax_incl, 2, '.', ''));
 		$loyaltyNew->id_loyalty_state = (int)LoyaltyStateModule::getCancelId();
 		$loyaltyNew->id_order = (int)$params['order']->id;
 		$loyaltyNew->id_customer = (int)$loyalty->id_customer;
