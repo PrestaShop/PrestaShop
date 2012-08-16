@@ -320,7 +320,6 @@ class BlockCategories extends Module
 	private function _clearBlockcategoriesCache()
 	{
 		$this->_clearCache('blockcategories.tpl');
-		Tools::restoreCacheSettings();
 	}
 
 	public function hookCategoryAddition($params)
