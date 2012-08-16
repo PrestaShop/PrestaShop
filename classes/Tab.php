@@ -117,27 +117,20 @@ class TabCore extends ObjectModel
 			$context = Context::getContext();
 	 	if (!$context->employee || !$context->employee->id_profile)
 	 		return false;
+
 	 	/* Profile selection */
-	 	$profiles = Db::getInstance()->executeS('
-	 		SELECT `id_profile`
-	 		FROM '._DB_PREFIX_.'profile
-	 		WHERE `id_profile` != 1
-	 	');
+	 	$profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile WHERE `id_profile` != 1');
 	 	if (!$profiles || empty($profiles))
-	 		return false;
+	 		return true;
 
 	 	/* Query definition */
-		// note : insert ignore should be avoided
-	 	$query = 'INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
-		// default admin
+	 	$query = 'REPLACE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
 		$query .= '(1, '.(int)$id_tab.', 1, 1, 1, 1),';
 
 	 	foreach ($profiles as $profile)
 	 	{
-			// no cast needed for profile[id_profile], which cames from db
-			// And we disable all profile but current one
 	 	 	$rights = $profile['id_profile'] == $context->employee->id_profile ? 1 : 0;
-			$query .= '('.$profile['id_profile'].', '.(int)$id_tab.', '.$rights.', '.$rights.', '.$rights.', '.$rights.'),';
+			$query .= '('.(int)$profile['id_profile'].', '.(int)$id_tab.', '.(int)$rights.', '.(int)$rights.', '.(int)$rights.', '.(int)$rights.'),';
 	 	}
 		$query = trim($query, ', ');
 	 	return Db::getInstance()->execute($query);
