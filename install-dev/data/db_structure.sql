@@ -1085,7 +1085,7 @@ CREATE TABLE `PREFIX_order_detail_tax` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_invoice` (
-  `id_order_invoice` int(11) NOT NULL AUTO_INCREMENT,
+  `id_order_invoice` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_order` int(11) NOT NULL,
   `number` int(11) NOT NULL,
   `delivery_number` int(11) NOT NULL,
