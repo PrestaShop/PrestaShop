@@ -483,18 +483,27 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 			else
 			{
-				$id_category = (int)Tools::getValue('id_category');
-				$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-
-				if ($this->deleted)
+				/*
+				 * @since 1.5.0
+				 * It is NOT possible to delete a product if there are currently:
+				 * - physical stock for this product
+				 * - supply order(s) for this product
+				 */
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $object->advanced_stock_management)
 				{
-					$object->deleteImages();
-					$object->deleted = 1;
-					if ($object->update())
-						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+					$stock_manager = StockManagerFactory::getManager();
+					$physical_quantity = $stock_manager->getProductPhysicalQuantities($object->id, 0);
+					$real_quantity = $stock_manager->getProductRealQuantities($object->id, 0);
+					if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
+						$this->errors[] = Tools::displayError('You cannot delete the product because there is physical stock left or supply orders in progress.');
 				}
-				elseif ($object->delete())
+
+				if ($object->delete())
+				{
+					$id_category = (int)Tools::getValue('id_category');
+					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+				}
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}
@@ -557,24 +566,44 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 			else
 			{
-				$result = true;
-				if ($this->deleted)
+				$success = 1;
+				$products = Tools::getValue($this->table.'Box');
+				if (is_array($products) && ($count = count($products)))
 				{
-					foreach (Tools::getValue($this->table.'Box') as $id)
+					// Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
+					if (intval(ini_get('max_execution_time')) < round($count * 1.5))
+						ini_set('max_execution_time', round($count * 1.5));
+					
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+						$stock_manager = StockManagerFactory::getManager();
+
+					foreach ($products as $id_product)
 					{
-						$toDelete = new $this->className((int)$id);
-						$toDelete->deleted = 1;
-						$result = $result && $toDelete->update();
+						$product = new Product((int)$id_product);
+						/*
+						 * @since 1.5.0
+						 * It is NOT possible to delete a product if there are currently:
+						 * - physical stock for this product
+						 * - supply order(s) for this product
+						 */
+						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management)
+						{
+							$physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
+							$real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
+							if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
+								$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left or supply orders in progress.'), $product->id);
+							else
+								$success &= $product->delete();
+						}
+						else
+							$success &= $product->delete();
 					}
 				}
-				else
-					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
-				if ($result)
+				
+				if ($success)
 				{
 					$id_category = (int)Tools::getValue('id_category');
 					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
 				}
 				else
