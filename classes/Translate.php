@@ -132,7 +132,7 @@ class TranslateCore
 
 		$local_path = _PS_MODULE_DIR_.$name.'/';
 
-		if (!isset($name) || !isset($translations_merged[$name]))
+		if (!isset($translations_merged[$name]))
 		{
 			// Check if translations exists in a current theme
 			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php'))
