@@ -323,7 +323,7 @@ ADD `total_wrapping_tax_excl` decimal(17,2) NOT NULL AFTER  `total_wrapping`,
 ADD `total_wrapping_tax_incl` decimal(17,2) NOT NULL AFTER  `total_wrapping_tax_excl`;
 
 ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl` DECIMAL(17, 2) NOT NULL DEFAULT '0.00';
-ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
+ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
 
 ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL AFTER `id_shop`;
 
@@ -346,7 +346,7 @@ INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_ex
 ALTER TABLE `PREFIX_tab` ADD `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1';
 
 UPDATE `PREFIX_order_detail` od
-SET od.`id_order_invoice` =  (
+SET od.`id_order_invoice` = (
 	SELECT oi.`id_order_invoice`
 	FROM `PREFIX_order_invoice` oi
 	WHERE oi.`id_order` = od.`id_order`
