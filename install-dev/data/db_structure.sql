@@ -731,6 +731,7 @@ CREATE TABLE `PREFIX_feature_product` (
   `id_feature_value` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id_feature`,`id_product`),
   KEY `id_feature_value` (`id_feature_value`)
+  KEY `id_feature_value` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_feature_value` (
