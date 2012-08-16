@@ -65,7 +65,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$this->setError($this->language->l('%s file is not writable (check permissions)', self::SETTINGS_FILE));
 			return false;
 		}
-		else if (!file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.dirname(self::SETTINGS_FILE)))
+		elseif (!file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE) && !is_writable(_PS_ROOT_DIR_.'/'.dirname(self::SETTINGS_FILE)))
 		{
 			$this->setError($this->language->l('%s folder is not writable (check permissions)', dirname(self::SETTINGS_FILE)));
 			return false;
@@ -100,7 +100,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$settings_content = "<?php\n";
 		foreach ($settings_constants as $constant => $value)
 			$settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
-		if (!@file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content))
+		if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content))
 		{
 			$this->setError($this->language->l('Cannot write settings file'));
 			return false;
