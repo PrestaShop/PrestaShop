@@ -681,12 +681,18 @@ class ProductCore extends ObjectModel
 	public function deleteSelection($products)
 	{
 		$return = 1;
-		if (is_array($products) && count($products))
+		if (is_array($products) && ($count = count($products)))
+		{
+			// Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
+			if (intval(ini_get('max_execution_time')) < round($count * 1.5))
+				ini_set('max_execution_time', round($count * 1.5));
+			
 			foreach ($products as $id_product)
 			{
 				$product = new Product((int)$id_product);
 				$return &= $product->delete();
 			}
+		}
 		return $return;
 	}
 
