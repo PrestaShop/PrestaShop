@@ -731,11 +731,12 @@ class AdminCustomersControllerCore extends AdminController
 		{
 			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 			$this->display = 'edit';
+			return $customer;
 		}
 		elseif ($customer = parent::processAdd())
 		{
 			$this->context->smarty->assign('new_customer', $customer);
-			return true;
+			return $customer;
 		}
 		return false;
 	}

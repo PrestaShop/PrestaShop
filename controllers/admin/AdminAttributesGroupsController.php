@@ -386,7 +386,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processAdd()
 	{
-		parent::processAdd();
+		$object = parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
@@ -398,6 +398,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		
 		if (count($this->errors))
 			$this->setTypeAttribute();
+		
+		return $object;
 	}
 
 	/**
@@ -406,7 +408,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processUpdate()
 	{
-		parent::processUpdate();
+		$object = parent::processUpdate();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
@@ -418,6 +420,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		
 		if (count($this->errors))
 			$this->setTypeAttribute();
+			
+		return $object;
 	}
 
 	/**
