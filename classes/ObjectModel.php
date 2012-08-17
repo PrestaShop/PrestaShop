@@ -450,7 +450,8 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database insertion
-		unset($this->id);
+		if (isset($this->id))
+			unset($this->id);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
 			return false;
 
