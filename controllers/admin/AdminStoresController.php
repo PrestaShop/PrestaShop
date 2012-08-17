@@ -515,28 +515,30 @@ class AdminStoresControllerCore extends AdminController
 
 	protected function _buildOrderedFieldsShop($formFields)
 	{
-		$associatedOrderKey = array(
-			'PS_SHOP_NAME' => 'company',
-			'PS_SHOP_ADDR1' => 'address1',
-			'PS_SHOP_ADDR2' => 'address2',
-			'PS_SHOP_CITY' => 'city',
-			'PS_SHOP_STATE_ID' => 'State:name',
-			'PS_SHOP_CODE' => 'postcode',
-			'PS_SHOP_COUNTRY_ID' => 'Country:name',
-			'PS_SHOP_PHONE' => 'phone');
+		// You cannot do that, because the fields must be sorted for the country you've selected.
+		// Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
+		
+		// $associatedOrderKey = array(
+			// 'PS_SHOP_NAME' => 'company',
+			// 'PS_SHOP_ADDR1' => 'address1',
+			// 'PS_SHOP_ADDR2' => 'address2',
+			// 'PS_SHOP_CITY' => 'city',
+			// 'PS_SHOP_STATE_ID' => 'State:name',
+			// 'PS_SHOP_CODE' => 'postcode',
+			// 'PS_SHOP_COUNTRY_ID' => 'Country:name',
+			// 'PS_SHOP_PHONE' => 'phone');
+		// $fields = array();
+		// $orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
+		// foreach ($orderedFields as $lineFields)
+			// if (($patterns = explode(' ', $lineFields)))
+				// foreach ($patterns as $pattern)
+					// if (($key = array_search($pattern, $associatedOrderKey)))
+						// $fields[$key] = $formFields[$key];
+		// foreach ($formFields as $key => $value)
+			// if (!isset($fields[$key]))
+				// $fields[$key] = $formFields[$key];
 
-		$fields = array();
-		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
-
-		foreach ($orderedFields as $lineFields)
-			if (($patterns = explode(' ', $lineFields)))
-				foreach ($patterns as $pattern)
-					if (($key = array_search($pattern, $associatedOrderKey)))
-						$fields[$key] = $formFields[$key];
-		foreach ($formFields as $key => $value)
-			if (!isset($fields[$key]))
-				$fields[$key] = $formFields[$key];
-
+		$fields = $formFields;
 		$this->fields_options['contact'] = array(
 			'title' =>	$this->l('Contact details'),
 			'icon' =>	'tab-contact',
