@@ -111,6 +111,15 @@ abstract class Controller extends ControllerCore
 		return '<span style="color:green">'.$n.' quer'.($n == 1 ? 'y' : 'ies').'</span>';
 	}
 
+	private function displayRowsBrowsed($n)
+	{
+		if ($n > 200)
+			return '<span style="color:red">'.$n.' rows browsed</span>';
+		if ($n > 50)
+			return '<span style="color:orange">'.$n.'  rows browsed</span>';
+		return '<span style="color:green">'.$n.' row'.($n == 1 ? '' : 's').' browsed</span>';
+	}
+
 	private function displayLoadTimeColor($n, $kikoo = false)
 	{
 		if ($n > 1)
@@ -378,7 +387,16 @@ abstract class Controller extends ControllerCore
 		$queries = Db::getInstance()->queries;
 		uasort($queries, 'prestashop_querytime_sort');
 		foreach ($queries as $data)
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'].'<br />in '.$data['file'].':'.$data['line'];
+		{
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'].'<br />in '.$data['file'].':'.$data['line'].'<br />';
+			$explain = Db::getInstance()->executeS('explain '.$data['query']);
+			if (stristr($explain[0]['Extra'], 'filesort'))
+				echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
+			$browsed_rows = 1;
+			foreach ($explain as $row)
+				$browsed_rows *= $row['rows'];
+			echo $this->displayRowsBrowsed($browsed_rows);
+		}
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
 		<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.count(Db::getInstance()->uniqQueries).')</a></h3>';
