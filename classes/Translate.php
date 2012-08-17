@@ -125,38 +125,27 @@ class TranslateCore
 		// $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
 		static $translations_merged = array();
 
-		if ($module instanceof Module)
-			$name = $module->name;
-		else
-			$name = $module;
-
-		$local_path = _PS_MODULE_DIR_.$name.'/';
-
+		$name = $module instanceof Module ? $module->name : $module;
 		if (!isset($translations_merged[$name]))
 		{
-			// Check if translations exists in a current theme
-			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php'))
-				$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php';
-			elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php'))
-				$file_theme = _PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php';
-			else
-				$file_theme = false;
+			$filesByPriority = array(
+				// Translations in theme
+				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php', 
+				// PrestaShop 1.5 translations
+				_PS_MODULE_DIR_.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
+				// PrestaShop 1.4 translations
+				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
+			);
 
-			if ($file_theme && !isset($translations_merged[$name]) && Tools::file_exists_cache($file_theme) && include_once($file_theme))
-				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-			else
-			{
-				// @retrocompatibility with translations files in module root
-				// @since 1.5 modules have a translations/ folder
-				if (Tools::file_exists_cache($local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
-					$file = $local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
-				else
-					$file = $local_path.'/'.Context::getContext()->language->iso_code.'.php';
-				// Load translations file if it has not been already done
-				if (Tools::file_exists_cache($file) && include_once($file))
+			foreach ($filesByPriority as $file)
+				if (Tools::file_exists_cache($file))
+				{
+					include_once($file);
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-			}
-			$translations_merged[$name] = true;
+					$translations_merged[$name] = true;
+					break;
+				}
 		}
 
 		$key = md5(str_replace('\'', '\\\'', $string));
