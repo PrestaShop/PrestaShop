@@ -120,9 +120,8 @@ var ajaxCart = {
 
 		}
 	},
-	// cart to fix display when using back and previous browsers buttons
+	// Fix display when using back and previous browsers buttons
 	refresh : function(){
-		//send the ajax request to the server
 		$.ajax({
 			type: 'GET',
 			url: baseUri,
@@ -133,9 +132,6 @@ var ajaxCart = {
 			success: function(jsonData)
 			{
 				ajaxCart.updateCart(jsonData);
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				//alert("TECHNICAL ERROR: unable to refresh the cart.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
 	},
@@ -241,7 +237,7 @@ var ajaxCart = {
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
 			{
-				alert("TECHNICAL ERROR: unable to add the product.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+				alert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 				//reactive the button when adding has finished
 				if (addedFromProductPage)
 					$('body#product p#add_to_cart input').removeAttr('disabled').addClass('exclusive').removeClass('exclusive_disabled');
