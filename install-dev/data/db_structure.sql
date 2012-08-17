@@ -851,7 +851,8 @@ CREATE TABLE `PREFIX_hook_module` (
   `position` tinyint(2) unsigned NOT NULL,
   PRIMARY KEY  (`id_module`,`id_hook`,`id_shop`),
   KEY `id_hook` (`id_hook`),
-  KEY `id_module` (`id_module`)
+  KEY `id_module` (`id_module`),
+  KEY `position` (`id_shop`, `position`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_hook_module_exceptions` (
