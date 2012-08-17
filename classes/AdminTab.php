@@ -474,11 +474,9 @@ abstract class AdminTabCore
 		/* Checking for maximum multilingual fields size */
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
-			{
 				if (Tools::getValue($fieldLang.'_'.$language['id_lang']) !== false && Tools::strlen(Tools::getValue($fieldLang.'_'.$language['id_lang'])) > $maxLength)
 					$this->_errors[] = sprintf(Tools::displayError('field %1$s is too long. (%2$d chars max, html chars including)'), call_user_func(array($className, 'displayFieldName'), $fieldLang, $className), $maxLength);
-					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max, html chars including').')';
-			}
+
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
