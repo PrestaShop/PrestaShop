@@ -400,10 +400,12 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function processAdd()
 	{
-		parent::processAdd();
+		$object = parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
+			
+		return $object;
 	}
 
 	/**
@@ -412,10 +414,12 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function processUpdate()
 	{
-		parent::processUpdate();
+		$object = parent::processUpdate();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
+		
+		return $object;
 	}
 
 	/**
@@ -442,7 +446,7 @@ class AdminFeaturesControllerCore extends AdminController
 				if (preg_match('/^name_/Ui', $key))
 					$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 		}
-		parent::processSave();
+		return parent::processSave();
 	}
 
 	/**

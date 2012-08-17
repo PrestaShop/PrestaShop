@@ -370,7 +370,7 @@ class AdminShopUrlControllerCore extends AdminController
 		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
 			$this->errors[] = Tools::displayError('You can\'t disable a Main URL');
 
-		parent::processAdd();
+		return parent::processAdd();
 	}
 
 	public function processUpdate()

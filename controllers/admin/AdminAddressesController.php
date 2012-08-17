@@ -370,7 +370,7 @@ class AdminAddressesControllerCore extends AdminController
 		}
 
 		if (empty($this->errors))
-			parent::processSave();
+			return parent::processSave();
 		else
 			// if we have errors, we stay on the form instead of going back to the list
 			$this->display = 'edit';

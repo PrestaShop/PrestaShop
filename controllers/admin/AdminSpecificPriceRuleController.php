@@ -319,6 +319,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				}
 			}
 			$object->apply();
+			return $object;
 		}
 	}
 }

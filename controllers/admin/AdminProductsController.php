@@ -1579,6 +1579,8 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+			
+		return $this->object;
 	}
 
 	protected function isTabSubmitted($tab_name)
@@ -1707,6 +1709,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Tools::displayError('Cannot load object').')';
+			return $object;
 		}
 	}
 
