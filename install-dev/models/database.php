@@ -39,7 +39,7 @@ class InstallModelDatabase extends InstallAbstractModel
 	 * @param bool $clear
 	 * @return array List of errors
 	 */
-	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear)
+	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear = false)
 	{
 		$errors = array();
 
@@ -61,12 +61,13 @@ class InstallModelDatabase extends InstallAbstractModel
 
 		if (!$errors)
 		{
+			$dbtype = ' ('.Db::getClass()')';
 			// Try to connect to database
 			switch (Db::checkConnection($server, $login, $password, $database, true, $engine))
 			{
 				case 0:
 					if (!Db::checkEncoding($server, $login, $password))
-						$errors[] = $this->language->l('Cannot convert database data to utf-8');
+						$errors[] = $this->language->l('Cannot convert database data to utf-8').$dbtype;
 
 					// Check if a table with same prefix already exists
 					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
@@ -74,15 +75,15 @@ class InstallModelDatabase extends InstallAbstractModel
 				break;
 
 				case 1:
-					$errors[] = $this->language->l('Database Server is not found. Please verify the login, password and server fields');
+					$errors[] = $this->language->l('Database Server is not found. Please verify the login, password and server fields').$dbtype;
 				break;
 
 				case 2:
-					$errors[] = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database);
+					$errors[] = $this->language->l('Connection to MySQL server succeeded, but database "%s" not found', $database).$dbtype;
 				break;
 
 				case 4:
-					$errors[] = $this->language->l('Engine innoDB is not supported by your MySQL server, please use MyISAM');
+					$errors[] = $this->language->l('Engine innoDB is not supported by your MySQL server, please use MyISAM').$dbtype;
 				break;
 			}
 		}
