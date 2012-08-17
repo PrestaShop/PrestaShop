@@ -625,7 +625,7 @@ class AdminCartsControllerCore extends AdminController
 			foreach ($carts as $key => &$cart)
 			{
 				$cart_obj = new Cart((int)$cart['id_cart']);
-				if (!Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists())
+				if ($cart['id_cart'] == $this->context->cart->id || !Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists())
 					unset($carts[$key]);
 				$currency = new Currency((int)$cart['id_currency']);
 				$cart['total_price'] = Tools::displayPrice($cart_obj->getOrderTotal(), $currency);
