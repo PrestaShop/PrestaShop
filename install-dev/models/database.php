@@ -61,7 +61,7 @@ class InstallModelDatabase extends InstallAbstractModel
 
 		if (!$errors)
 		{
-			$dbtype = ' ('.Db::getClass()')';
+			$dbtype = ' ('.Db::getClass().')';
 			// Try to connect to database
 			switch (Db::checkConnection($server, $login, $password, $database, true, $engine))
 			{
