@@ -36,16 +36,21 @@ class AdminStatusesControllerCore extends AdminController
 		$this->colorOnBackground = false;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->context = Context::getContext();
+		$this->imageType = 'gif';
+		$this->fieldImageSettings = array(
+			'name' => 'icon',
+			'dir' => 'os'
+		);
 		parent::__construct();
 	}
-	
+
 	public function init()
 	{
 		if (Tools::isSubmit('addorder_return_state'))
 			$this->display = 'add';
 		if (Tools::isSubmit('updateorder_return_state'))
 			$this->display = 'edit';
-		
+
 		parent::init();
 	}
 	
@@ -54,11 +59,6 @@ class AdminStatusesControllerCore extends AdminController
 	 */
 	protected function initOrderStatutsList()
 	{
-		$this->imageType = 'gif';
-		$this->fieldImageSettings = array(
-			'name' => 'icon',
-			'dir' => 'os'
-		);
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		
