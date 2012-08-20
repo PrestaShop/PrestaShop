@@ -72,7 +72,7 @@
 		{else}
 			<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 				<span>{l s='N/A'} -
-				<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
+				<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
 				 class="confirm_leave button"><img src="../img/admin/add.gif" alt="values_first" title="{l s='Add pre-defined values first'}" />&nbsp;{l s='Add pre-defined values first'}</a>
 			</span>
 		{/if}
@@ -94,7 +94,7 @@
 	</table>
 	<div class="separation"></div>
 	<div>
-		<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature" class="confirm_leave button">
+		<a href="{$link->getAdminLink('AdminFeatures')|escape:'htmlall':'UTF-8'}&amp;addfeature" class="confirm_leave button">
 			<img src="../img/admin/add.gif" alt="new_features" title="{l s='Add a new feature'}" />&nbsp;{l s='Add a new feature'}
 		</a>
 	</div>

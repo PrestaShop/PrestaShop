@@ -36,7 +36,7 @@
 		<p>{l s='When using the advanced stock management (see Preferences/Products), the values you fill here (prices, references) will be used in the supply orders.'}</p>
 	</div>
 	<p>{l s='Please choose the suppliers associated with this product, and the default one.'}</p>
-	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier">
+	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')|escape:'htmlall':'UTF-8'}&addsupplier">
 		<img src="../img/admin/add.gif" alt="{l s='Create new supplier'}" title="{l s='Create new supplier'}" /><span>{l s='Create new supplier'}</span>
 	</a>
 	<table cellpadding="5" style="width:100%">
