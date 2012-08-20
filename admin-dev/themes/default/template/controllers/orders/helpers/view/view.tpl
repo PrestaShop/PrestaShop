@@ -64,7 +64,7 @@
 <div class="bloc-command">
 	<div class="button-command">
 			{if (count($invoices_collection))}
-				<a class="button" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
+				<a class="button" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 					<img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}
 				</a>
 			{else}
@@ -72,7 +72,7 @@
 			{/if}
 			 |
 			{if (($currentState && $currentState->delivery) || $order->delivery_number)}
-				<a class="button"  href="{$link->getAdminLink('AdminPdf')}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+				<a class="button"  href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
 					<img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}
 				</a>
 			{else}
@@ -198,8 +198,8 @@
 		<div style="width: 49%; float:right;">
 			<div class="button-command-prev-next">
 				<b>{l s='Orders'}</b> :
-				{if $previousOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$previousOrder}">{l s='< Prev'}</a>{/if}
-				{if $nextOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$nextOrder}">{l s='Next >'}</a>{/if}
+				{if $previousOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$previousOrder}">{l s='< Prev'}</a>{/if}
+				{if $nextOrder}<a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$nextOrder}">{l s='Next >'}</a>{/if}
 			</div>
 			<div class="clear"></div>
 			
@@ -473,7 +473,7 @@
 								<td>
 									<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
 									{if $line.can_edit}
-									<form style="display: inline;" method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+									<form style="display: inline;" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
 										<span class="shipping_number_edit" style="display:none;">
 											<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
 											<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
@@ -510,7 +510,7 @@
 					<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
 					{if $can_edit}
-					<form method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
+					<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
 						<div style="margin-bottom:5px;">
 							<p>
 								<select name="id_address">
@@ -540,7 +540,7 @@
 				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
 
 				{if $can_edit}
-				<form method="post" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$order->id}">
+				<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&vieworder&id_order={$order->id}">
 					<div style="margin-bottom:5px;">
 						<p>
 							<select name="id_address">
@@ -745,7 +745,7 @@
 			<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}; overflow: auto; width: 400px;">
 				<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><b>{l s='Click here'}</b> {l s='to add a comment or send a message to the customer'}</a>
 			</div>
-			<a href="{$link->getAdminLink('AdminCustomerThreads')}"><b>{l s='Click here'}</b> {l s='to see all messages'}</a><br>
+			<a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}"><b>{l s='Click here'}</b> {l s='to see all messages'}</a><br>
 			<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
 						<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
 							<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>

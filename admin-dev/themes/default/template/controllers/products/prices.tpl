@@ -166,12 +166,12 @@ $(document).ready(function () {
 						</option>
 					{/foreach}
 				</select>
-				<a class="button" href="{$link->getAdminLink('AdminTaxRulesGroup')}&addtax_rules_group&id_product={$product->id}" class="confirm_leave">
+				<a class="button" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'htmlall':'UTF-8'}&addtax_rules_group&id_product={$product->id}" class="confirm_leave">
 				<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> {l s='Create'}
 				</a>
 			</span>
 			{if $tax_exclude_taxe_option}
-				<span style="margin-left:10px; color:red;">{l s='Taxes are currently disabled'}</span> (<b><a href="{$link->getAdminLink('AdminTaxes')}">{l s='Tax options'}</a></b>)
+				<span style="margin-left:10px; color:red;">{l s='Taxes are currently disabled'}</span> (<b><a href="{$link->getAdminLink('AdminTaxes')|escape:'htmlall':'UTF-8'}">{l s='Tax options'}</a></b>)
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			{/if}
 		</td>
