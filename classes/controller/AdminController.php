@@ -2756,7 +2756,7 @@ class AdminControllerCore extends Controller
 		$context = stream_context_create($opts);
 		foreach ($protocolsList as $protocol => $port)
 		{
-			$content = file_get_contents($protocol.$this->addons_url, false, $context);
+			$content = Tools::file_get_contents($protocol.$this->addons_url, false, $context);
 
 			// If content returned, we cache it
 			if ($content)
