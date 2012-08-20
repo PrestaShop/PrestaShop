@@ -245,7 +245,7 @@ CREATE TABLE `PREFIX_order_invoice` (
   KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-ALTER TABLE `PREFIX_order_detail` ADD `id_order_invoice` int(11) NULL AFTER `id_order`;
+ALTER TABLE `PREFIX_order_detail` ADD `id_order_invoice` int(11) NOT NULL DEFAULT 0 AFTER `id_order`;
 
 ALTER TABLE `PREFIX_payment_cc` CHANGE `id_payment_cc` `id_order_payment` INT NOT NULL auto_increment;
 ALTER TABLE `PREFIX_payment_cc` ADD `id_order_invoice` varchar(255) NOT NULL AFTER `id_order_payment`;

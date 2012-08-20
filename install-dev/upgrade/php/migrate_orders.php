@@ -37,10 +37,10 @@ function migrate_orders()
 
 	// init insert order detail query
 	$values_order_detail = array();
-	$col_order_detail = Db::getInstance()->executeS('SHOW FIELDS 
-		FROM `'._DB_PREFIX_.'order_detail`');
+	$col_order_detail = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
 	foreach ($col_order_detail as $k => $field)
-		$col_order_detail[$k] = $field['Field'];
+		if ($field['Field'] != 'id_order_invoice')
+			$col_order_detail[$k] = $field['Field'];
 
 	if (!$col_order_detail)
 		return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table');
@@ -85,11 +85,10 @@ function migrate_orders()
 		$default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
 		$price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
 		$order_details_list = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_detail` od
-			LEFT JOIN `'._DB_PREFIX_.'product` p
-			ON p.id_product = od.product_id
-			WHERE od.`id_order` = '.(int)($order['id_order']));
+		SELECT *
+		FROM `'._DB_PREFIX_.'order_detail` od
+		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
+		WHERE od.`id_order` = '.(int)$order['id_order']);
 
 		foreach ($order_details_list as $order_details)
 		{
@@ -102,12 +101,12 @@ function migrate_orders()
 			$sum_total_products += $products['total_wt'];
 			$sum_tax_amount += $products['total_wt'] - $products['total_price'];
 
-			$order_details['reduction_amount_tax_incl']= $reduction_amount_tax_incl;
-			$order_details['reduction_amount_tax_excl']= (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
-			$order_details['total_price_tax_incl']= (float)$products['total_wt'];
-			$order_details['total_price_tax_excl']= (float)$products['total_price'];
-			$order_details['unit_price_tax_incl']= (float)$products['product_price_wt'];
-			$order_details['unit_price_tax_excl']= (float)$products['product_price'];
+			$order_details['reduction_amount_tax_incl'] = $reduction_amount_tax_incl;
+			$order_details['reduction_amount_tax_excl'] = (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
+			$order_details['total_price_tax_incl'] = (float)$products['total_wt'];
+			$order_details['total_price_tax_excl'] = (float)$products['total_price'];
+			$order_details['unit_price_tax_incl'] = (float)$products['product_price_wt'];
+			$order_details['unit_price_tax_excl'] = (float)$products['product_price'];
 			foreach (array_keys($order_details) as $k)
 				if (!in_array($k, $col_order_detail))
 					unset($order_details[$k]);
@@ -154,12 +153,12 @@ function migrate_orders()
 			if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 			{
 				$res = false;
-				$array_errors[] = '[insert order detail] - '.Db::getInstance()->getMsgError();
+				$array_errors[] = '[insert order detail 1] - '.Db::getInstance()->getMsgError();
 			}
 			if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
 			{
 				$res = false;
-				$array_errors[] = '[insert order] - '.Db::getInstance()->getMsgError();
+				$array_errors[] = '[insert order 1] - '.Db::getInstance()->getMsgError();
 			}
 			$values_order = array();
 			$values_order_detail = array();
@@ -172,12 +171,12 @@ function migrate_orders()
 		if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
 		{
 			$res = false;
-			$array_errors[] = Db::getInstance()->getMsgError();
+				$array_errors[] = '[insert order detail 2] - '.Db::getInstance()->getMsgError();
 		}
 		if (!Db::getInstance()->execute($insert_order. implode(',', $values_order)))
 		{
 			$res = false;
-			$array_errors[] = Db::getInstance()->getMsgError();
+				$array_errors[] = '[insert order 2] - '.Db::getInstance()->getMsgError();
 		}
 	}
 
