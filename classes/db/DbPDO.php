@@ -32,26 +32,29 @@
  */
 class DbPDOCore extends Db
 {
+	protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
+	{
+		$dsn = 'mysql:';
+		if ($dbname)
+			$dsn .= 'dbname='.$dbname.';';
+		if (preg_match('/^(.*):([0-9]+)$/', $host, $matches))
+			$dsn .= 'host='.$matches[1].';port='.$matches[2];
+		elseif (preg_match('#^.*:(/.*)$#', $host, $matches))
+			$dsn .= 'unix_socket='.$matches[1];
+		else
+			$dsn .= 'host='.$host;
+
+		return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout));
+	}
+	
 	/**
 	 * @see DbCore::connect()
 	 */
 	public function	connect()
 	{
-		try
-		{
-			$dsn = 'mysql:dbname='.$this->database;
-			if (strpos($this->server, ':') !== false)
-			{
-				list($server, $port) = explode(':', $this->server);
-				$dsn .= ';host='.$server.';port='.$port;
-			}
-			else
-				$dsn .= ';host='.$this->server;
-
-			$this->link = new PDO($dsn, $this->user, $this->password);
-		}
-		catch (PDOException $e)
-		{
+		try {
+			$this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
+		} catch (PDOException $e) {
 			throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), $e->getMessage()));
 		}
 
@@ -143,8 +146,8 @@ class DbPDOCore extends Db
 	 */
 	public function _escape($str)
 	{
-		$search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
-		$replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
+		$search = array('\\', '\0', '\n', '\r', '\x1a', ''', ''');
+		$replace = array('\\\\', '\\0', '\\n', '\\r', '\Z', '\'', '\'');
 
 		return str_replace($search, $replace, $str);
 	}
@@ -162,12 +165,9 @@ class DbPDOCore extends Db
 	 */
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
-		try
-		{
-			$link = @new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd);
-		}
-		catch (PDOException $e)
-		{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
+		} catch (PDOException $e) {
 			return false;
 		}
 
@@ -179,14 +179,11 @@ class DbPDOCore extends Db
 	/**
 	 * @see Db::checkConnection()
 	 */
-	 public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
 	{
-		try
-		{
-			$link = @new PDO('mysql:dbname='.$db.';host='.$server, $user, $pwd, array(PDO::ATTR_TIMEOUT => $timeout));
-		}
-		catch (PDOException $e)
-		{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);
+		} catch (PDOException $e) {
 			return ($e->getCode() == 1049) ? 2 : 1;
 		}
 
@@ -207,14 +204,11 @@ class DbPDOCore extends Db
 	/**
 	 * @see Db::checkEncoding()
 	 */
-	static public function tryUTF8($server, $user, $pwd)
+	public static function tryUTF8($server, $user, $pwd)
 	{
-		try
-		{
-			$link = new PDO('mysql:host='.$server, $user, $pwd);
-		}
-		catch (PDOException $e)
-		{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, false, 5);
+		} catch (PDOException $e) {
 			return false;
 		}
 		$result = $link->exec('SET NAMES \'utf8\'');
