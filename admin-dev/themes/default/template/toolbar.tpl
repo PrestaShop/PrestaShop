@@ -38,7 +38,7 @@
 				{/foreach}
 			</ul>
 
-			<script language="javascript" type="text/javascript">
+			<script language="javascript" type="text/javascript"><![CDATA[
 				var submited = false
 				$(function() {
 					//get reference on save link
@@ -108,7 +108,7 @@
 						{/block}
 					}
 				});
-			</script>
+			]]></script>
 		{/block}
 		<div class="pageTitle">
 			<h3>{block name=pageTitle}
@@ -118,7 +118,7 @@
 							{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
 							<span class="breadcrumb item-{$key} ">{$item|strip_tags}
 								{if !$smarty.foreach.title.last}
-									<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrum.png">
+									<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
 								{/if}
 							</span>
 						{/foreach}

@@ -35,7 +35,7 @@
 	</div>
 	<p>{l s='Please choose the warehouses associated with this product, and the default one.'}</p>
 
-	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse">
+	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">
 		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
 	</a>
 

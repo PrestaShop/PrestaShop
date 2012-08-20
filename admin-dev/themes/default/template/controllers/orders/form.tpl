@@ -950,14 +950,14 @@
 	<div class="margin-form">
 		<input type="text" id="customer" value="" />
 		<p>{l s='Search a customer by tapping the first letters of his name'}</p>
-		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
 		</a>
 	</div>
 	<div id="customers">
 	</div>
 </fieldset><br />
-<form action="{$link->getAdminLink('AdminOrders')}&submitAdd{$table}=1" method="post" autocomplete="off">
+<form action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 <fieldset id="products_part" style="display:none;"><legend><img src="../img/t/AdminCatalog.gif" />{l s='Cart'}</legend>
 	<div>
 		<label>{l s='Search a product:'} </label>
@@ -1099,7 +1099,7 @@
 	<p>
 		<label>{l s='Search a voucher:'} </label>
 		<input type="text" id="voucher" value="" />
-		<a class="fancybox button" href="{$link->getAdminLink('AdminCartRules')}&addcart_rule&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
+		<a class="fancybox button" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
 	</p>
 	<div class="margin-form">
 		<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
@@ -1135,7 +1135,7 @@
 		<div id="address_invoice_detail">
 		</div>
 	</div>
-<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a>
+<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a>
 </fieldset>
 <br />
 <fieldset id="carriers_part" style="display:none;">

@@ -60,12 +60,12 @@
 		<td class="document_number">
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
 			   	{else}
-					<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+					<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
 			   {/if}
 			{elseif get_class($document) eq 'OrderSlip'}
-				<a target="_blank" href="{$link->getAdminLink('AdminPdf')}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+				<a target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'htmlall':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
 			{/if}
 			{if get_class($document) eq 'OrderInvoice'}
 				{if isset($document->is_delivery)}
