@@ -86,14 +86,14 @@ INSERT INTO `PREFIX_stock` (id_product, id_product_attribute, id_shop, quantity)
 ) FROM PREFIX_product p);
 
 ALTER TABLE PREFIX_stock_mvt ADD id_stock INT UNSIGNED NOT NULL AFTER id_stock_mvt;
-UPDATE PREFIX_stock_mvt sm SET sm.id_stock = (
+UPDATE PREFIX_stock_mvt sm SET sm.id_stock = IFNULL((
 	SELECT IFNULL(s.id_stock, 0)
 	FROM PREFIX_stock s
 	WHERE s.id_product = sm.id_product
 	AND s.id_product_attribute = sm.id_product_attribute
 	ORDER BY s.id_shop
 	LIMIT 1
-);
+), 0);
 DELETE FROM PREFIX_stock_mvt WHERE id_stock = 0;
 ALTER TABLE PREFIX_stock_mvt DROP id_product, DROP id_product_attribute;
 

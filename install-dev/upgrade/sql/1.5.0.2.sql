@@ -286,8 +286,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_stock_mvt` (
 ALTER TABLE `PREFIX_orders` DROP COLUMN `id_warehouse`;
 ALTER TABLE `PREFIX_supplier` ADD COLUMN `id_address` int(10) unsigned NOT NULL default '0' AFTER `id_supplier`;
 ALTER TABLE `PREFIX_address` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL DEFAULT 0 AFTER `id_supplier`;
-ALTER TABLE `PREFIX_order_detail`
-ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL default '0' AFTER `id_order_invoice`;
+ALTER TABLE `PREFIX_order_detail` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL default '0' AFTER `id_order_invoice`;
 
 
 ALTER TABLE `PREFIX_stock_mvt_reason` ADD COLUMN `deleted` tinyint(1) unsigned NOT NULL default '0' AFTER `date_upd`;
