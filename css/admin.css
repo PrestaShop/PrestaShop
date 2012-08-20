@@ -351,6 +351,7 @@ select optgroup option {
 
 #content {
 	padding: 1.25em;
+	padding-bottom: 0.5em;
 }
 
 #news {
@@ -1156,6 +1157,8 @@ html[xmlns] .clearfix {
 	padding-left: 25px;
 	margin-top: 5px;
 }
+
+#footer {padding-top:5px}
 
 #footer_iframe_home{
 	position:absolute;
