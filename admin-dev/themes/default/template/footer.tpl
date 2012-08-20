@@ -24,7 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+					<div style="clear:both;height:0;line-height:0">&nbsp;</div>
 					</div>
+					<div style="clear:both;height:0;line-height:0">&nbsp;</div>
 				</div>
 		{if $display_footer}
 				{hook h="displayBackOfficeFooter"}

@@ -245,5 +245,5 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 #moduleContainer .moduleFavDesc { font-family:Georgia; font-style:italic; color:#666;}
 
 /*FOOTER*/
-#footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
+#footer {height:40px;padding-top:5px;font-size:12px;clear:both;font-size:0.9em;color:#666666}
 #footer .footer_link, #footer .footer_link:hover {color:#D41958;}
