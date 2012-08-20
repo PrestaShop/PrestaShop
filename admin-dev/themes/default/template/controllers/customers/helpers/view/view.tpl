@@ -30,7 +30,7 @@
 	<script type="text/javascript">
 		function saveCustomerNote()
 		{
-			$('#note_feedback').html('<img src="../img/loader.gif" />').show();
+			$('#note_feedback').html('<img src="../img/loader.gif" alt="" />').show();
 			var noteContent = $('#noteContent').val();
 	
 			$.ajax({

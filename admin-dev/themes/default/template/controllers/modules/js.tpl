@@ -130,7 +130,7 @@
 						},
  						beforeSend: function(xhr)
 						{
-							$('#moduleContainer').html('<img src="../img/loader.gif" border="0">');
+							$('#moduleContainer').html('<img src="../img/loader.gif" alt="" border="0" />');
 						},
 						success : function(data)
 						{
@@ -195,7 +195,7 @@
 						},
  						beforeSend: function(xhr)
 						{
-							$('#addons_loading').html('<img src="../img/loader.gif" border="0">');
+							$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
 						},
 						success : function(data)
 						{
@@ -236,7 +236,7 @@
 						},
  						beforeSend: function(xhr)
 						{
-							$('#addons_loading').html('<img src="../img/loader.gif" border="0">');
+							$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
 						},
 						success : function(data)
 						{

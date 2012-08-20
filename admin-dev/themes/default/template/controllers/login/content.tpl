@@ -65,7 +65,7 @@
 				<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button fl margin-right-5" />
 
 				<p class="fl no-margin hide ajax-loader">
-					<img src="../img/loader.gif">
+					<img src="../img/loader.gif" alt="" />
 				</p>
 
 				<p class="fr no-margin">
@@ -89,7 +89,7 @@
 				<input type="submit" name="submit" value="{l s='Send'}" class="button fl margin-right-5" />
 
 				<p class="fl no-margin hide ajax-loader">
-					<img src="../img/loader.gif">
+					<img src="../img/loader.gif" alt=""  />
 				</p>
 
 				<p class="fr no-margin">
