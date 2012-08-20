@@ -537,11 +537,10 @@ class AdminHomeControllerCore extends AdminController
 			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
 
+		$count = 0;
+		libxml_use_internal_errors(true);
 		// If preactivation xml file exists, we load it
-		if (file_exists('../config/xml/preactivation.xml'))
-		{
-			$count = 0;
-			$preactivation = @simplexml_load_file('../config/xml/preactivation.xml');
+		if (file_exists('../config/xml/preactivation.xml') && $preactivation = simplexml_load_file('../config/xml/preactivation.xml'))
 			foreach ($preactivation->partner as $partner)
 			{
 				// Cache the logo
@@ -580,7 +579,8 @@ class AdminHomeControllerCore extends AdminController
 					$count++;
 				}
 			}
-		}
+		libxml_clear_errors();
+
 		if (!empty($return))
 			$return .= '<br clear="left" />
 			<script>
