@@ -38,7 +38,8 @@
 				{/foreach}
 			</ul>
 
-			<script language="javascript" type="text/javascript"><![CDATA[
+			<script language="javascript" type="text/javascript">
+			//<![CDATA[
 				var submited = false
 				$(function() {
 					//get reference on save link
@@ -108,7 +109,8 @@
 						{/block}
 					}
 				});
-			]]></script>
+			//]]>
+			</script>
 		{/block}
 		<div class="pageTitle">
 			<h3>{block name=pageTitle}
