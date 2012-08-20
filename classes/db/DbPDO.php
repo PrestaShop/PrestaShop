@@ -146,8 +146,8 @@ class DbPDOCore extends Db
 	 */
 	public function _escape($str)
 	{
-		$search = array('\\', '\0', '\n', '\r', '\x1a', ''', ''');
-		$replace = array('\\\\', '\\0', '\\n', '\\r', '\Z', '\'', '\'');
+		$search = array('\\', '\0', '\n', '\r', '\x1a', '"', '\'');
+		$replace = array('\\\\', '\\0', '\\n', '\\r', '\Z', '\\"', '\\\'');
 
 		return str_replace($search, $replace, $str);
 	}
