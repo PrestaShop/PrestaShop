@@ -29,11 +29,6 @@ class AdminHomeControllerCore extends AdminController
 {
 	const TIPS_TIMEOUT = 5;
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	protected function _displayOptimizationTips()
 	{
 		$link = $this->context->link;
@@ -532,7 +527,7 @@ class AdminHomeControllerCore extends AdminController
 		if (is_writable('../config/xml/') && (!file_exists('../config/xml/preactivation.xml') || (time() - filemtime('../config/xml/preactivation.xml')) > 86400))
 		{
 			$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => AdminHomeController::TIPS_TIMEOUT)));
-			$content = @file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?protocol='.$protocol.'&iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
+			$content = Tools::file_get_contents('http://api.prestashop.com/partner/premium/get_partners.php?protocol='.$protocol.'&iso_country='.Tools::strtoupper($isoCountry).'&iso_lang='.Tools::strtolower($isoUser).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&host='.urlencode($_SERVER['HTTP_HOST']).'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')), false, $stream_context);
 			@unlink('../config/xml/preactivation.xml');
 			file_put_contents('../config/xml/preactivation.xml', $content);
 		}
@@ -540,7 +535,7 @@ class AdminHomeControllerCore extends AdminController
 		$count = 0;
 		libxml_use_internal_errors(true);
 		// If preactivation xml file exists, we load it
-		if (file_exists('../config/xml/preactivation.xml') && $preactivation = simplexml_load_file('../config/xml/preactivation.xml'))
+		if (file_exists('../config/xml/preactivation.xml') && filesize('../config/xml/preactivation.xml') > 0 && $preactivation = simplexml_load_file('../config/xml/preactivation.xml'))
 			foreach ($preactivation->partner as $partner)
 			{
 				// Cache the logo
