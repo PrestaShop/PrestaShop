@@ -365,36 +365,41 @@ class AdminMetaControllerCore extends AdminController
 			fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
 			fwrite($write_fd, "# http://www.robotstxt.org/wc/robots.html\n");
 
-			//GoogleBot specific
-			fwrite($write_fd, "# GoogleBot specific\n");
-			fwrite($write_fd, "User-agent: Googlebot\n");
-			foreach ($this->rb_data['GB'] as $gb)
-				fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$gb."\n");
-
 			// User-Agent
-			fwrite($write_fd, "# All bots\n");
 			fwrite($write_fd, "User-agent: *\n");
-
+			
+			// Private pages
+			if (count($this->rb_data['GB']))
+			{
+				fwrite($write_fd, "# Private pages\n");
+				foreach ($this->rb_data['GB'] as $gb)
+					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$gb."\n");
+			}
+			
 			// Directories
-			fwrite($write_fd, "# Directories\n");
-			foreach ($this->rb_data['Directories'] as $dir)
-				fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$dir."\n");
-
+			if (count($this->rb_data['Directories']))
+			{
+				fwrite($write_fd, "# Directories\n");
+				foreach ($this->rb_data['Directories'] as $dir)
+					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$dir."\n");
+			}
+			
 			// Files
-			fwrite($write_fd, "# Files\n");
-			foreach ($this->rb_data['Files'] as $iso_code => $files)
-				foreach ($files as $file)
-					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$iso_code.'/'.$file."\n");
-
+			if (count($this->rb_data['Files']))
+			{
+				fwrite($write_fd, "# Files\n");
+				foreach ($this->rb_data['Files'] as $iso_code => $files)
+					foreach ($files as $file)
+						fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$iso_code.'/'.$file."\n");
+			}
+			
 			// Sitemap
-			fwrite($write_fd, "# Sitemap\n");
-			if (file_exists($this->sm_file))
-				if (filesize($this->sm_file))
-					fwrite(
-						$write_fd,
-						'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.'sitemap.xml'."\n"
-					);
-			fwrite($write_fd, "\n");
+			if (file_exists($this->sm_file) && filesize($this->sm_file))
+			{
+				fwrite($write_fd, "# Sitemap\n");
+				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.'sitemap.xml'."\n");
+			}
+
 			fclose($write_fd);
 
 			$this->redirect_after = self::$currentIndex.'&conf=4&token='.$this->token;
