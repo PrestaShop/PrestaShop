@@ -1321,19 +1321,6 @@ class AdminControllerCore extends Controller
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex
 		));
-
-		// Shop context
-		if ($is_multishop)
-		{
-			if (Shop::getContext() == Shop::CONTEXT_SHOP)
-				$shop_name = $this->context->shop->name;
-			else
-				$shop_name = 'PrestaShop';
-
-			$this->context->smarty->assign(array(
-				'shop_name' => $shop_name,
-			));
-		}
 	}
 
 	/**

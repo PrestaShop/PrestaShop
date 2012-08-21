@@ -122,9 +122,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	 */
 	public function getHeader()
 	{
-		$shop_name = '';
-		if (Validate::isLoadedObject($this->shop))
-			$shop_name = $this->shop->name;
+		$shop_name = Configuration::get('PS_SHOP_NAME');
 
 		$this->smarty->assign(array(
 			'logo_path' => $this->getLogo(),
