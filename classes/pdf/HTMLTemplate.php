@@ -43,10 +43,7 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		$shop_name = '';
-		if (Validate::isLoadedObject($this->shop))
-			$shop_name = $this->shop->name;
-
+		$shop_name = Configuration::get('PS_SHOP_NAME');
 		$path_logo = $this->getLogo();
 
 		$width = 0;
