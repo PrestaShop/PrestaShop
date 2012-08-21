@@ -1909,6 +1909,9 @@ abstract class ModuleCore
 	{
 		$path = Autoload::getInstance()->getClassPath($classname.'Core');
 
+		if (!Autoload::getInstance()->getClassPath($classname))
+			return true;
+		
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
 		if (!is_writable($override_path))
