@@ -484,6 +484,10 @@ function init()
 						}
 						else
 							jAlert(data.error);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown)
+					{
+						jAlert("Impossible to add the product to the cart.\n\ntextStatus: '" + textStatus + "'\nerrorThrown: '" + errorThrown + "'\nresponseText:\n" + XMLHttpRequest.responseText);
 					}
 				});
 				ajaxQueries.push(ajax_query);
