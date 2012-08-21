@@ -164,15 +164,17 @@
 								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
 
 										<blockquote>
-											{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
-												{$customization_infos.name}: {$customization_infos.value}
-												{if !$smarty.foreach.custo_foreach.last}<br />
-												{else}
-												<div style="line-height:0.4pt">&nbsp;</div>
-												{/if}
-											{/foreach}
+											{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
+												{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+													{$customization_infos.name}: {$customization_infos.value}
+													{if !$smarty.foreach.custo_foreach.last}<br />
+													{else}
+													<div style="line-height:0.4pt">&nbsp;</div>
+													{/if}
+												{/foreach}
+											{/if}
 
-											{if count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
+											{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
 												{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])} {l s='image(s)' pdf='true'}
 											{/if}
 										</blockquote>
