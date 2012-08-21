@@ -215,8 +215,13 @@ abstract class ModuleCore
 		}
 
 		// Install overrides
-		if (!$this->installOverrides())
+		try {
+			$this->installOverrides();
+		} catch (Exception $e) {
+			$this->_errors[] = Tools::displayError('Unable to install override:').' '.$e->getMessage();
+			$this->uninstallOverrides();
 			return false;
+		}
 
 		// Install module and retrieve the installation id
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
@@ -1850,24 +1855,40 @@ abstract class ModuleCore
 	{
 		$path = Autoload::getInstance()->getClassPath($classname.'Core');
 
+		// Check if there is already an override file, if not, we just need to copy the file
+		if (!($classpath = Autoload::getInstance()->getClassPath($classname)))
+		{
+			$override_src = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
+			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
+			if (!is_writable(dirname($override_dest)))
+				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
+			copy($override_src, $override_dest);
+			return true;
+		}
+		
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
 		if (!is_writable($override_path))
-			return false;
-
+			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
+			
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
 		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array('', 'class '.$classname.'OverrideOriginal'), implode('', $override_file)));
 		$override_class = new ReflectionClass($classname.'OverrideOriginal');
 
-		$module_file = file($this->getLocalPath().'override/'.$path);
+		$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
 		eval(preg_replace(array('#^\s*<\?php#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array('', 'class '.$classname.'Override'), implode('', $module_file)));
 		$module_class = new ReflectionClass($classname.'Override');
 
 		// Check if none of the methods already exists in the override class
 		foreach ($module_class->getMethods() as $method)
-			if ($override_class->hasMethod($method->name))
-				return false;
+			if ($override_class->hasMethod($method->getName()))
+				throw new Exception(sprintf(Tools::displayError('the method %s in the class %s is already overriden'), $method->getName(), $classname));
+
+		// Check if none of the properties already exists in the override class
+		foreach ($module_class->getProperties() as $property)
+			if ($override_class->hasProperty($property->getName()))
+				throw new Exception(sprintf(Tools::displayError('the property %s in the class %s is already defined'), $property->getName(), $classname));
 
 		// Insert the methods from module override in override
 		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
@@ -1906,12 +1927,27 @@ abstract class ModuleCore
 		$override_file = file($override_path);
 		foreach ($module_class->getMethods() as $method)
 		{
-			if (!$override_class->hasMethod($method->name))
+			if (!$override_class->hasMethod($method->getName()))
 				continue;
 
-			$method = $override_class->getMethod($method->name);
+			$method = $override_class->getMethod($method->getName());
 			$length = $method->getEndLine() - $method->getStartLine() + 1;
 			array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'));
+		}
+
+		// Remove properties from override file
+		foreach ($module_class->getProperties() as $property)
+		{
+			if (!$override_class->hasProperty($property->getName()))
+				continue;
+
+			// Remplacer la ligne de déclaration par "remove"
+			foreach ($override_file as $line_number => &$line_content)
+				if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
+				{
+					$line_content = '#--remove--#';
+					break;
+				}
 		}
 
 		// Rewrite nice code
