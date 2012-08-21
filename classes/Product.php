@@ -4270,7 +4270,7 @@ class ProductCore extends ObjectModel
 				$ids_orig[] = $id['id'];
 
 		$all_ids = array();
-		$all = Db::getInstance()->executeS('SELECT pa.`id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` '.Shop::addSqlAssociation('product_attribute', 'pa'));
+		$all = Db::getInstance()->executeS('SELECT pa.`id_product_attribute` as id FROM `'._DB_PREFIX_.'product_attribute` pa '.Shop::addSqlAssociation('product_attribute', 'pa'));
 		if (is_array($all))
 			foreach ($all as $id)
 				$all_ids[] = $id['id'];
