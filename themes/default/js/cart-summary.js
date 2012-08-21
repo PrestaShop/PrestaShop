@@ -110,8 +110,8 @@ function changeAddressDelivery(obj)
 					// The product exist
 					if ($('#product_'+id_product+'_'+id_product_attribute+'_0_'+new_id_address_delivery).length)
 					{
-						updateCustomizedDatas(jsonData.customizedDatas);
 						updateCartSummary(jsonData.summary);
+						updateCustomizedDatas(jsonData.customizedDatas);
 						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 						if (typeof(getCarrierListAndUpdate) != 'undefined')
@@ -336,9 +336,9 @@ function deleteProductFromSummary(id)
 						});
 				}
 				updateCartSummary(jsonData.summary);
+				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-				updateCustomizedDatas(jsonData.customizedDatas);
 				if (typeof(getCarrierListAndUpdate) != 'undefined')
 					getCarrierListAndUpdate();
 			}
@@ -424,8 +424,8 @@ function upQuantity(id, qty)
 			{
 				if (jsonData.refresh)
 					location.reload();
-				updateCustomizedDatas(jsonData.customizedDatas);
 				updateCartSummary(jsonData.summary);
+				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) != 'undefined')
@@ -503,8 +503,8 @@ function downQuantity(id, qty)
 				{
 					if (jsonData.refresh)
 						location.reload();
-					updateCustomizedDatas(jsonData.customizedDatas);
 					updateCartSummary(jsonData.summary);
+					updateCustomizedDatas(jsonData.customizedDatas);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 					
@@ -730,9 +730,11 @@ function updateCustomizedDatas(json)
 			for(k in json[i][j])
 				for(l in json[i][j][k])
 				{
-					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+'_hidden]').val(json[i][j][k][l]['quantity']);
-					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+']').val(json[i][j][k][l]['quantity']);
+					var quantity = json[i][j][k][l]['quantity'];
+					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+'_hidden]').val(quantity);
+					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+']').val(quantity);
 				}
+
 }
 
 function updateHookShoppingCart(html)
