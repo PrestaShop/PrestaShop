@@ -224,9 +224,22 @@ class AdminShopControllerCore extends AdminController
 			else if (Shop::getTotalShops() == 1)
 				$this->errors[] = Tools::displayError('You cannot disable the last shop.');
 		}*/
+		
+		if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop'))
+		{
+			$same_name = Db::getInstance()->getValue('
+			SELECT id_shop
+			FROM '._DB_PREFIX_.'shop
+			WHERE name = "'.pSQL(Tools::getValue('name')).'"
+			AND id_shop_group = '.(int)Tools::getValue('id_shop_group').'
+			'.(Tools::getValue('id_shop') ? 'AND id_shop != '.(int)Tools::getValue('id_shop') : ''));
+			if ($same_name)
+				$this->errors[] = Tools::displayError('You cannot have 2 shops with the same name in the same group');
+		}
 
-		if ($this->errors)
+		if (count($this->errors))
 			return false;
+
 		$result = parent::postProcess();
 
 		if ($this->redirect_after)
