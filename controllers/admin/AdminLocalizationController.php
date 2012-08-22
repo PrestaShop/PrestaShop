@@ -299,6 +299,12 @@ class AdminLocalizationControllerCore extends AdminController
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
 	}
+	
+	public function display()
+	{
+		$this->initContent();
+		parent::display();
+	}
 
 	public function beforeUpdateOptions()
 	{
