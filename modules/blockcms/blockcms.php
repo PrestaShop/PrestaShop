@@ -741,10 +741,9 @@ class BlockCms extends Module
 	public function hookActionShopDataDuplication($params)
 	{
 		Db::getInstance()->execute('
-			INSERT INTO '._DB_PREFIX_.'cms_block_shop (id_cms_block, id_shop)
-			SELECT id_cms_block, '.(int)$params['new_id_shop'].'
-			FROM '._DB_PREFIX_.'cms_block_shop
-			WHERE id_shop = '.(int)$params['old_id_shop'].'
-		');
+		INSERT IGNORE INTO '._DB_PREFIX_.'cms_block_shop (id_cms_block, id_shop)
+		SELECT id_cms_block, '.(int)$params['new_id_shop'].'
+		FROM '._DB_PREFIX_.'cms_block_shop
+		WHERE id_shop = '.(int)$params['old_id_shop']);
 	}
 }
