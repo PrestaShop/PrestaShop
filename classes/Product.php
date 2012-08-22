@@ -2441,13 +2441,15 @@ class ProductCore extends ObjectModel
 			if (Combination::isFeatureActive())
 			{
 				$default_on = true;
-				$sql->select('pa.id_product_attribute, product_attribute_shop.`price` AS attribute_price, 	(SELECT product_attribute_shop.price
-																												FROM `'._DB_PREFIX_.'product_attribute` pa
-																												'.Shop::addSqlAssociation('product_attribute', 'pa').'
-																												WHERE pa.id_product = '.(int)$id_product.'
-																												AND product_attribute_shop.default_on = 1
-																												GROUP BY pa.id_product_attribute
-																												LIMIT 1) as default_on');
+				$sql->select('pa.id_product_attribute, product_attribute_shop.`price` AS attribute_price, (
+					SELECT product_attribute_shop.price
+					FROM `'._DB_PREFIX_.'product_attribute` pa
+					'.Shop::addSqlAssociation('product_attribute', 'pa').'
+					WHERE pa.id_product = '.(int)$id_product.'
+					AND product_attribute_shop.default_on = 1
+					GROUP BY pa.id_product_attribute
+					LIMIT 1
+				) as default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = '.(int)$id_product);
 				$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
 			}

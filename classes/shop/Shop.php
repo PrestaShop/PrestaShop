@@ -888,9 +888,9 @@ class ShopCore extends ObjectModel
 			return;
 
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
-					ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-					AND '.$table_alias.'.id_shop IN('.implode(', ', Shop::getContextListShopID()).') '
-					.(($on) ? ' AND '.$on : '');
+		ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
+		AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
+		'.(($on) ? ' AND '.$on : '');
 		return $sql;
 	}
 

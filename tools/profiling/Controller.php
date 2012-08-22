@@ -396,6 +396,8 @@ abstract class Controller extends ControllerCore
 			foreach ($explain as $row)
 				$browsed_rows *= $row['rows'];
 			echo $this->displayRowsBrowsed($browsed_rows);
+			if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+				echo '<br /><b>Useless GROUP BY need to be removed</b>';
 		}
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
