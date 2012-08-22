@@ -557,11 +557,12 @@ class AdminShopControllerCore extends AdminController
 	 */
 	public function processAdd()
 	{
-		if (!Tools::getValue('categoryBox'))
+		if (!Tools::getValue('categoryBox') || !in_array(Tools::getValue('id_category'), Tools::getValue('categoryBox')))
 			$this->errors[] = $this->l('You need to select at least the root category.');
-			
+
 		if (Tools::isSubmit('id_category_default'))
 			$_POST['id_category'] = (int)Tools::getValue('id_category_default');
+	
 		/* Checking fields validity */
 		$this->validateRules();
 
