@@ -180,13 +180,12 @@ class HookCore extends ObjectModel
 		$cache_id = 'hook_module_list';
 		if (!Cache::isStored($cache_id))
 		{
-			$sql = 'SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
-					FROM `'._DB_PREFIX_.'hook` h
-					INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook)
-					INNER JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
-					WHERE hm.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
-					ORDER BY hm.position';
-			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
+			FROM `'._DB_PREFIX_.'hook` h
+			INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+			INNER JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
+			ORDER BY hm.position');
 			$list = array();
 			foreach ($results as $result)
 			{
@@ -245,22 +244,32 @@ class HookCore extends ObjectModel
 		$cache_id = 'hook_module_exec_list'.((isset($context->customer)) ? '_'.$context->customer->id : '');
 		if (!Cache::isStored($cache_id))
 		{
-			// Get shops and groups list
-			$shop_list = Shop::getContextListShopID();
-			if (isset($context->customer) && $context->customer->isLogged())
-				$groups = $context->customer->getGroups();
-
+			$frontend = true;
+			$groups = array();
+			if (isset($context->employee))
+			{
+				$shop_list = array((int)$context->shop->id);
+				$frontend = false;
+			}
+			else
+			{
+				// Get shops and groups list
+				$shop_list = Shop::getContextListShopID();
+				if (isset($context->customer) && $context->customer->isLogged())
+					$groups = $context->customer->getGroups();
+			}
+			
 			// SQL Request
 			$sql = new DbQuery();
 			$sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
 			$sql->from('module', 'm');
 			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
 			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
-			$sql->where('(SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $shop_list).')) = '.count($shop_list));
+			$sql->where('(SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN ('.implode(', ', $shop_list).')) = '.count($shop_list));
 			// For payment modules, we check that they are available in the contextual country
-			if (Validate::isLoadedObject($context->country))
+			if ($frontend && Validate::isLoadedObject($context->country))
 				$sql->where('(h.name != "displayPayment" OR (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
-			$sql->where('hm.id_shop IN ('.implode(', ', $shop_list).')');
+			$sql->where('hm.id_shop = '.(int)$context->shop->id);
 
 			if (isset($context->customer) && $context->customer->isLogged())
 			{
