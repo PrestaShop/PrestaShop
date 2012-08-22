@@ -557,6 +557,9 @@ class AdminShopControllerCore extends AdminController
 	 */
 	public function processAdd()
 	{
+		if (!Tools::getValue('categoryBox'))
+			$this->errors[] = $this->l('You need to select at least the root category.');
+			
 		if (Tools::isSubmit('id_category_default'))
 			$_POST['id_category'] = (int)Tools::getValue('id_category_default');
 		/* Checking fields validity */
@@ -597,9 +600,6 @@ class AdminShopControllerCore extends AdminController
 			return;
 		}
 
-		// datas to import
-		$import_data = Tools::getValue('importData');
-
 		// specific import for stock
 		if (isset($import_data['stock_available']) && isset($import_data['product']) && Tools::isSubmit('useImportData'))
 		{
@@ -608,9 +608,7 @@ class AdminShopControllerCore extends AdminController
 				StockAvailable::copyStockAvailableFromShopToShop($id_src_shop, $object->id);
 		}
 
-		// if we import datas from another shop, we do not update the shop categories
-		if (!isset($import_data['category']))
-			Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
+		Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
 
 		return $object;
 	}
