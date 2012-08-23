@@ -303,7 +303,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$id_shop = Context::getContext()->shop->id;
-		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', Category::getRootCategory()->id));
+		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
