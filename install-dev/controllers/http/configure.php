@@ -125,12 +125,24 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				$newwidth = $width * $percent;
 				$newheight = $height * $percent;
 				
+				if (!is_writable(_PS_ROOT_DIR_.'/img/'))
+					$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
 				if (!$error)
-					if (!is_writable(_PS_ROOT_DIR_.'/img/'))
-						$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
-					else if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo.jpg', $newwidth, $newheight))
+				{
+					list($src_width, $src_height, $type) = getimagesize($tmp_name);
+					$src_image = ImageManager::create($type, $tmp_name);
+					$dest_image = imagecreatetruecolor($src_width, $src_height);
+					$white = imagecolorallocate($dest_image, 255, 255, 255);
+					imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
+					imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
+					if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95))
 						$error = $this->l('An error occurred during logo copy.');
-
+					else
+					{
+						imagedestroy($dest_image);
+						@chmod($filename, 0664);
+					}
+				}
 			}
 			else
 				$error = $this->l('An error occurred during logo upload.');
