@@ -204,16 +204,20 @@
 			</div>
 		{/if}
 		{foreach $tabs AS $t}
-			<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-		<span class="title">
-			<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
-		</span>
-				<ul class="submenu">
-					{foreach from=$t.sub_tabs item=t2}
-						<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
-					{/foreach}
-				</ul>
-			</li>
+			{if $t.active}
+				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+					<span class="title">
+						<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
+					</span>
+					<ul class="submenu">
+						{foreach from=$t.sub_tabs item=t2}
+							{if $t2.active}
+								<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
+							{/if}
+						{/foreach}
+					</ul>
+				</li>
+			{/if}
 		{/foreach}
 	</ul>
 {/if}
