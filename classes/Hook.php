@@ -269,7 +269,8 @@ class HookCore extends ObjectModel
 			// For payment modules, we check that they are available in the contextual country
 			if ($frontend && Validate::isLoadedObject($context->country))
 				$sql->where('(h.name != "displayPayment" OR (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
-			$sql->where('hm.id_shop = '.(int)$context->shop->id);
+			if (Validate::isLoadedObject($context->shop))
+				$sql->where('hm.id_shop = '.(int)$context->shop->id);
 
 			if (isset($context->customer) && $context->customer->isLogged())
 			{
