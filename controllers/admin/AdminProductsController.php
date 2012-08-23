@@ -78,6 +78,9 @@ class AdminProductsControllerCore extends AdminController
 		$this->lang = true;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		if (!Tools::getValue('id_product'))
+			$this->multishop_context_group = false;
+
 		parent::__construct();
 
 		$this->imageType = 'jpg';
@@ -85,75 +88,82 @@ class AdminProductsControllerCore extends AdminController
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
-		$this->fields_list = array(
-			'id_product' => array(
-				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 20
-			),
-			'image' => array(
-				'title' => $this->l('Photo'),
-				'align' => 'center',
-				'image' => 'p',
-				'width' => 70,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false
-			),
-			'name' => array(
-				'title' => $this->l('Name'),
-				'filter_key' => 'b!name'
-			),
-			'reference' => array(
-				'title' => $this->l('Reference'),
-				'align' => 'left',
-				'width' => 80
-			),
-			'name_category' => array(
+		$this->fields_list = array();
+		$this->fields_list['id_product'] = array(
+			'title' => $this->l('ID'),
+			'align' => 'center',
+			'width' => 20
+		);
+		$this->fields_list['image'] = array(
+			'title' => $this->l('Photo'),
+			'align' => 'center',
+			'image' => 'p',
+			'width' => 70,
+			'orderby' => false,
+			'filter' => false,
+			'search' => false
+		);
+		$this->fields_list['name'] = array(
+			'title' => $this->l('Name'),
+			'filter_key' => 'b!name'
+		);
+		$this->fields_list['reference'] = array(
+			'title' => $this->l('Reference'),
+			'align' => 'left',
+			'width' => 80
+		);
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+			$this->fields_list['shopname'] = array(
+				'title' => $this->l('Default Shop'),
+				'width' => 230,
+				'filter_key' => 'shop!name',
+			);
+		else
+			$this->fields_list['name_category'] = array(
 				'title' => $this->l('Category'),
 				'width' => 230,
 				'filter_key' => 'cl!name',
-			),
-			'price' => array(
-				'title' => $this->l('Base price'),
-				'width' => 90,
-				'type' => 'price',
-				'align' => 'right',
-				'filter_key' => 'a!price'
-			),
-			'price_final' => array(
-				'title' => $this->l('Final price'),
-				'width' => 90,
-				'type' => 'price',
-				'align' => 'right',
-				'havingFilter' => true,
-				'orderby' => false
-			),
-			'sav_quantity' => array(
-				'title' => $this->l('Quantity'),
-				'width' => 90,
-				'align' => 'right',
-				'filter_key' => 'sav!quantity',
-				'orderby' => true,
-				'hint' => $this->l('This is the quantity available in the current shop/group'),
-			),
-			'active' => array(
-				'title' => $this->l('Displayed'),
-				'width' => 70,
-				'active' => 'status',
-				'filter_key' => 'a!active',
-				'align' => 'center',
-				'type' => 'bool',
-				'orderby' => false
-			),
-			'position' => array(
-				'title' => $this->l('Position'),
-				'width' => 70,
-				'filter_key' => 'cp!position',
-				'align' => 'center',
-				'position' => 'position'
-			)
+			);
+		$this->fields_list['price'] = array(
+			'title' => $this->l('Base price'),
+			'width' => 90,
+			'type' => 'price',
+			'align' => 'right',
+			'filter_key' => 'a!price'
 		);
+		$this->fields_list['price_final'] = array(
+			'title' => $this->l('Final price'),
+			'width' => 90,
+			'type' => 'price',
+			'align' => 'right',
+			'havingFilter' => true,
+			'orderby' => false
+		);
+		$this->fields_list['sav_quantity'] = array(
+			'title' => $this->l('Quantity'),
+			'width' => 90,
+			'align' => 'right',
+			'filter_key' => 'sav!quantity',
+			'orderby' => true,
+			'hint' => $this->l('This is the quantity available in the current shop/group'),
+		);
+		$this->fields_list['active'] = array(
+			'title' => $this->l('Displayed'),
+			'width' => 70,
+			'active' => 'status',
+			'filter_key' => 'a!active',
+			'align' => 'center',
+			'type' => 'bool',
+			'orderby' => false
+		);
+		$this->fields_list['position'] = array(
+			'title' => $this->l('Position'),
+			'width' => 70,
+			'filter_key' => 'cp!position',
+			'align' => 'center',
+			'position' => 'position'
+		);
+
 
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array (
@@ -195,22 +205,39 @@ class AdminProductsControllerCore extends AdminController
 			$this->_category = new Category((int)$id_category);
 		else
 			$this->_category = new Category();
-
-		$alias = Shop::isFeatureActive() ? 'sa' : 'a';
-		$this->_join =
-			'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
-			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON ('.$alias.'.`id_tax_rules_group` = tr.`id_tax_rules_group`
-				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
-			'.StockAvailable::addSqlShopRestriction(null, null, 'sav').')';
-		// if no category selected, display all products
+			
+		$join_category = false;
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
-			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
+			$join_category = true;
 
-		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
+		if (Shop::isFeatureActive())
+		{
+			$alias = 'sa';
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.(int)$this->context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') ';
+			else
+				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = a.id_shop_default)
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
+				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) ';
+			$this->_select .= 'shop.name as shopname, ';
+		}
+		else
+		{
+			$alias = 'a';
+			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
+		}
+
+		$this->_join .= '
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
+		'.($join_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
+		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON ('.$alias.'.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
+		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
+		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
+
+		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', i.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
 		
 	}
 	protected function _cleanMetaKeywords($keywords)

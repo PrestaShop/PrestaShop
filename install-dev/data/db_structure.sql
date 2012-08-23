@@ -310,6 +310,7 @@ CREATE TABLE `PREFIX_cart_product` (
 CREATE TABLE `PREFIX_category` (
   `id_category` int(10) unsigned NOT NULL auto_increment,
   `id_parent` int(10) unsigned NOT NULL,
+  `id_shop_default` int(10) unsigned NOT NULL default 1,
   `level_depth` tinyint(3) unsigned NOT NULL default '0',
   `nleft` int(10) unsigned NOT NULL default '0',
   `nright` int(10) unsigned NOT NULL default '0',
@@ -1343,6 +1344,7 @@ CREATE TABLE `PREFIX_product` (
   `id_supplier` int(10) unsigned default NULL,
   `id_manufacturer` int(10) unsigned default NULL,
   `id_category_default` int(10) unsigned default NULL,
+  `id_shop_default` int(10) unsigned NOT NULL default 1,
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL default '0',
   `online_only` tinyint(1) unsigned NOT NULL default '0',
@@ -2403,7 +2405,6 @@ CREATE TABLE `PREFIX_category_shop` (
   `id_shop` int(11) NOT NULL,
   `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`id_category`, `id_shop`),
-  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_module_preference` (

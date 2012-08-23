@@ -361,9 +361,10 @@ class HelperCore
 		$context = Context::getContext();
 
 		// Get default value
-		if (Shop::getContext() == Shop::CONTEXT_ALL)
+		$shop_context = Shop::getContext();
+		if ($shop_context == Shop::CONTEXT_ALL || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP))
 			$value = '';
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		else if ($shop_context == Shop::CONTEXT_GROUP)
 			$value = 'g-'.Shop::getContextShopGroupID();
 		else
 			$value = 's-'.Shop::getContextShopID();
@@ -376,9 +377,9 @@ class HelperCore
 		foreach ($tree as $gID => $group_data)
 		{
 			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
-				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.($context->controller->multishop_context_group == false ? 'disabled="disabled"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
-				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'">';
+				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'" '.($context->controller->multishop_context_group == false ? 'disabled="disabled"' : '').'>';
 
 			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP)
 				foreach ($group_data['shops'] as $sID => $shopData)

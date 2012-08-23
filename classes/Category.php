@@ -47,6 +47,9 @@ class CategoryCore extends ObjectModel
 	/** @var integer Parent category ID */
 	public $id_parent;
 
+	/** @var integer default Category id */
+	public $id_category_default;
+
 	/** @var integer Parents number */
 	public $level_depth;
 
@@ -95,6 +98,7 @@ class CategoryCore extends ObjectModel
 			'level_depth' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'id_parent' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_shop_default' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'is_root_category' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'position' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
