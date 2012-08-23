@@ -4201,7 +4201,8 @@ class ProductCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 			'SELECT cp.`id_category` AS id
 			FROM `'._DB_PREFIX_.'category_product` cp
-			'.Shop::addSqlAssociation('category', 'cp').'
+			LEFT JOIN `'._DB_PREFIX_.'category` c ON (c.id_category = cp.id_category)
+			'.Shop::addSqlAssociation('category', 'c').'
 			WHERE cp.`id_product` = '.(int)$this->id
 		);
 		return $result;
