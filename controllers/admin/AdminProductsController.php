@@ -156,13 +156,14 @@ class AdminProductsControllerCore extends AdminController
 			'type' => 'bool',
 			'orderby' => false
 		);
-		$this->fields_list['position'] = array(
-			'title' => $this->l('Position'),
-			'width' => 70,
-			'filter_key' => 'cp!position',
-			'align' => 'center',
-			'position' => 'position'
-		);
+		if ((int)Tools::getValue('id_category'))
+			$this->fields_list['position'] = array(
+				'title' => $this->l('Position'),
+				'width' => 70,
+				'filter_key' => 'cp!position',
+				'align' => 'center',
+				'position' => 'position'
+			);
 
 
 		// @since 1.5 : translations for tabs
@@ -2116,10 +2117,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('duplicate');
 		$this->addRowAction('delete');
-
-		if (!Tools::getValue('id_category'))
-			unset($this->fields_list['position']);
-
 		return parent::renderList();
 	}
 
