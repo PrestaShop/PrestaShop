@@ -1327,7 +1327,7 @@ class AdminOrdersControllerCore extends AdminController
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
-			'cart' => new Cart($order->id),
+			'cart' => new Cart($order->id_cart),
 			'customer' => $customer,
 			'customer_addresses' => $customer->getAddresses($this->context->language->id),
 			'addresses' => array(
