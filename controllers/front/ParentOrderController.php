@@ -420,7 +420,7 @@ class ParentOrderControllerCore extends FrontController
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
-				'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
+				'delivery_option' => $this->context->cart->getDeliveryOption(null, false)
 			))
 		);
 		
