@@ -384,7 +384,7 @@ class HelperCore
 			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP)
 				foreach ($group_data['shops'] as $sID => $shopData)
 					if ($shopData['active'])
-						$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
+						$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>&raquo; '.($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']).' - ' : '').$shopData['name'].'</option>';
 
 			if (!(!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
 				$html .= '</optgroup>';
