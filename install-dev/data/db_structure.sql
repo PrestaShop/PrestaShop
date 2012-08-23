@@ -2404,7 +2404,7 @@ CREATE TABLE `PREFIX_category_shop` (
   `id_category` int(11) NOT NULL,
   `id_shop` int(11) NOT NULL,
   `position` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY (`id_category`, `id_shop`),
+  PRIMARY KEY (`id_category`, `id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_module_preference` (
