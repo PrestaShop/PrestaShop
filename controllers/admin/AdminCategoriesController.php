@@ -201,7 +201,10 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, 'sa.position', $order_way, $start, $limit, Context::getContext()->shop->id);
+		$alias = 'a';
+		if (Shop::isFeatureActive())
+			$alias = 'sa';
+		parent::getList($id_lang, $alias.'.position', $order_way, $start, $limit, Context::getContext()->shop->id);
 		// Check each row to see if there are combinations and get the correct action in consequence
 
 		$nb_items = count($this->_list);
