@@ -163,12 +163,17 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-		$this->_select = 'category_shop.`position` ';
-		$this->_join = Shop::addSqlAssociation('category', 'a');
-		$this->_group = 'GROUP BY a.id_category';
+		if (Shop::isFeatureActive())
+		{
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+			else
+				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+		}
+
 		// we add restriction for shop
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
-			$this->_where = ' AND category_shop.`id_shop` = '.(int)Context::getContext()->shop->id;
+			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
 
 		$categories_tree = $this->_category->getParentsCategories();
 		if (empty($categories_tree)
@@ -196,7 +201,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, 'category_shop.position', $order_way, $start, $limit, Context::getContext()->shop->id);
+		parent::getList($id_lang, 'sa.position', $order_way, $start, $limit, Context::getContext()->shop->id);
 		// Check each row to see if there are combinations and get the correct action in consequence
 
 		$nb_items = count($this->_list);
@@ -499,6 +504,9 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	public function postProcess()
 	{
+		if (!in_array($this->display, array('edit', 'add')))
+			$this->multishop_context_group = false;
+
 		if (Tools::isSubmit('forcedeleteImage'))
 		{
 			$this->processForceDeleteImage();

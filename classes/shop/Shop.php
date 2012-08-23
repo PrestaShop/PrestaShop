@@ -86,6 +86,7 @@ class ShopCore extends ObjectModel
 	protected static $shops;
 
 	protected static $asso_tables = array();
+	protected static $id_shop_default_tables = array();
 	protected static $initialized = false;
 
 	protected $webserviceParameters = array(
@@ -139,6 +140,7 @@ class ShopCore extends ObjectModel
 	 */
 	protected static function init()
 	{
+		Shop::$id_shop_default_tables = array('product', 'category');
 		Shop::$asso_tables = array(
 			'carrier' => array('type' => 'shop'),
 			'carrier_lang' => array('type' => 'fk_shop'),
@@ -502,6 +504,18 @@ class ShopCore extends ObjectModel
 		if (!Shop::$initialized)
 			Shop::init();
 		return (isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false);
+	}
+	
+	/**
+	 * check if the table has an id_shop_default
+	 *
+	 * @return boolean
+	 */
+	public static function checkIdShopDefault($table)
+	{
+		if (!Shop::$initialized)
+			Shop::init();
+		return in_array($table, self::$id_shop_default_tables);
 	}
 
 	/**
@@ -888,9 +902,12 @@ class ShopCore extends ObjectModel
 			return;
 
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
-		ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
-		AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
-		'.(($on) ? ' AND '.$on : '');
+		ON ('.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table;
+		if ((int)self::$context_id_shop)
+			$sql .= ' AND '.$table_alias.'.id_shop = '.(int)self::$context_id_shop;
+		elseif (Shop::checkIdShopDefault($table))
+			$sql .= ' AND '.$table_alias.'.id_shop = '.$alias.'.id_shop_default';
+		$sql .= (($on) ? ' AND '.$on : '').')';
 		return $sql;
 	}
 
