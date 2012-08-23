@@ -51,6 +51,9 @@ class ProductCore extends ObjectModel
 	/** @var integer default Category id */
 	public $id_category_default;
 
+	/** @var integer default Shop id */
+	public $id_shop_default;
+
 	/** @var string Manufacturer name */
 	public $manufacturer_name;
 
@@ -237,6 +240,7 @@ class ProductCore extends ObjectModel
 		'multilang_shop' => true,
 		'fields' => array(
 			// Classic fields
+			'id_shop_default' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'reference' => 					array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
@@ -2451,7 +2455,7 @@ class ProductCore extends ObjectModel
 					LIMIT 1
 				) as default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = '.(int)$id_product);
-				$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
+				$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.id_shop = p.id_shop_default'));
 			}
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			

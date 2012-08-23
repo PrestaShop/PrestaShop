@@ -449,9 +449,19 @@ abstract class ObjectModelCore
 		if ($autodate && property_exists($this, 'date_upd'))
 			$this->date_upd = date('Y-m-d H:i:s');
 
+			
+		if (Shop::isTableAssociated($this->def['table']))
+		{
+			$id_shop_list = Shop::getContextListShopID();
+			if (count($this->id_shop_list) > 0)
+				$id_shop_list = $this->id_shop_list;
+		}
+		
 		// Database insertion
 		if (isset($this->id))
 			unset($this->id);
+		if (Shop::checkIdShopDefault($this->def['table']))
+			$this->id_shop_default = min($id_shop_list);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
 			return false;
 
@@ -461,10 +471,6 @@ abstract class ObjectModelCore
 		// Database insertion for multishop fields related to the object
 		if (Shop::isTableAssociated($this->def['table']))
 		{
-			$id_shop_list = Shop::getContextListShopID();
-			if (count($this->id_shop_list) > 0)
-				$id_shop_list = $this->id_shop_list;	
-				
 			$fields = $this->getFieldsShop();
 			$fields[$this->def['primary']] = (int)$this->id;
 
@@ -534,7 +540,13 @@ abstract class ObjectModelCore
 		// Automatically fill dates
 		if (array_key_exists('date_upd', $this))
 			$this->date_upd = date('Y-m-d H:i:s');
+			
+		$id_shop_list = Shop::getContextListShopID();
+		if (count($this->id_shop_list) > 0)
+			$id_shop_list = $this->id_shop_list;
 
+		if (Shop::checkIdShopDefault($this->def['table']))
+			$this->id_shop_default = min($id_shop_list);
 		// Database update
 		if (!$result = ObjectModel::$db->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
 			return false;
@@ -555,9 +567,6 @@ abstract class ObjectModelCore
 			else
 				$all_fields = $fields;
 
-			$id_shop_list = Shop::getContextListShopID();
-			if (count($this->id_shop_list) > 0)
-				$id_shop_list = $this->id_shop_list;
 
 			foreach ($id_shop_list as $id_shop)
 			{

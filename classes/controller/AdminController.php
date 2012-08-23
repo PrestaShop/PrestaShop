@@ -109,6 +109,9 @@ class AdminControllerCore extends Controller
 
 	protected $shopLink;
 
+	/** @var string SQL query */
+	protected $_listsql = '';
+
 	/** @var array Cache for query results */
 	protected $_list = array();
 
@@ -248,6 +251,7 @@ class AdminControllerCore extends Controller
 	public $controller_name;
 
 	public $multishop_context = -1;
+	public $multishop_context_group = true;
 
 	/**
 	 * Current breadcrumb position as an array of tab names
@@ -1927,6 +1931,9 @@ class AdminControllerCore extends Controller
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		if (!empty($this->_listsql))
+			return;
+	
 		/* Manage default params values */
 		$use_limit = true;
 		if ($limit === false)
@@ -1997,22 +2004,19 @@ class AdminControllerCore extends Controller
 			$where_shop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
-		$filter_shop = '';
 		if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className))
 		{
 			if (Shop::getContext() != Shop::CONTEXT_ALL || Shop::isTableAssociated($this->table) || !$this->context->employee->isSuperAdmin())
 			{
-				$idenfier_shop = Shop::getContextListShopID();
-				if (!$this->_group)
-					$this->_group = ' GROUP BY a.'.pSQL($this->identifier);
-				elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
-					$this->_group .= ', a.'.pSQL($this->identifier);
-
+				$identifier_shop = Shop::getContextListShopID();
 				$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
 				if (Shop::isFeatureActive() && $test_join)
 				{
-					$filter_shop = ' JOIN `'._DB_PREFIX_.$this->table.'_shop` sa ';
-					$filter_shop .= 'ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', $idenfier_shop).'))';
+					$this->_where .= ' AND a.'.$this->identifier.' IN (
+						SELECT sa.'.$this->identifier.'
+						FROM `'._DB_PREFIX_.$this->table.'_shop` sa
+						WHERE sa.id_shop IN ('.implode(', ', $identifier_shop).')
+					)';
 				}
 			}
 		}
@@ -2021,13 +2025,14 @@ class AdminControllerCore extends Controller
 		$lang_join = '';
 		if ($this->lang)
 		{
-			$lang_join = 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'`';
-			$lang_join .= ' AND b.`id_lang` = '.(int)$id_lang;
+			$lang_join = 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'` AND b.`id_lang` = '.(int)$id_lang;
 			if ($id_lang_shop)
+			{
 				if (Shop::getContext() == Shop::CONTEXT_SHOP)
-					$lang_join .= ' AND b.`id_shop`='.(int)$id_lang_shop;
+					$lang_join .= ' AND b.`id_shop` = '.(int)$id_lang_shop;
 				else
-					$lang_join .= ' AND b.`id_shop` IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')';
+					$lang_join .= ' AND b.`id_shop` = a.id_shop_default';
+			}
 			$lang_join .= ')';
 		}
 
@@ -2047,23 +2052,23 @@ class AdminControllerCore extends Controller
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS
-			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
-			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
-			FROM `'._DB_PREFIX_.$sql_table.'` a
-			'.$filter_shop.'
-			'.$lang_join.'
-			'.(isset($this->_join) ? $this->_join.' ' : '').'
-			'.$join_shop.'
-			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
-			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
-			'.(isset($this->_group) ? $this->_group.' ' : '').'
-			'.$having_clause.'
-			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
-			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
-			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+		$this->_listsql = '
+		SELECT SQL_CALC_FOUND_ROWS
+		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
+		'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
+		FROM `'._DB_PREFIX_.$sql_table.'` a
+		'.$lang_join.'
+		'.(isset($this->_join) ? $this->_join.' ' : '').'
+		'.$join_shop.'
+		WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
+		(isset($this->_filter) ? $this->_filter : '').$where_shop.'
+		'.(isset($this->_group) ? $this->_group.' ' : '').'
+		'.$having_clause.'
+		ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
+		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
+		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-		$this->_list = Db::getInstance()->executeS($sql);
+		$this->_list = Db::getInstance()->executeS($this->_listsql);
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 
