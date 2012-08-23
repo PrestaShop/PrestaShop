@@ -488,7 +488,7 @@ class HomeSlider extends Module
 				$errors[] = $this->l('Legend is not set');
 			if (strlen(Tools::getValue('url_'.$defaultLanguage)) == 0)
 				$errors[] = $this->l('URL is not set');
-			if (Tools::getValue('image_'.$defaultLanguage) == '' && !Validate::isFileName(Tools::getValue('image_'.$defaultLanguage)) && !Tools::getValue('image_old_'.$defaultLanguage))
+			if (!isset($_FILES['image_'.$defaultLanguage]) || empty($_FILES['image_'.$defaultLanguage]['tmp_name']))
 				$errors[] = $this->l('Image is not set');
 			if (Tools::getValue('image_old_'.$defaultLanguage) && !Validate::isFileName(Tools::getValue('image_old_'.$defaultLanguage)))
 				$errors[] = $this->l('Image is not set');
