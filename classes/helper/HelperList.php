@@ -256,15 +256,7 @@ class HelperListCore extends Helper
 				{
 					// item_id is the product id in a product image context, else it is the image id.
 					$item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
-					// If it's a product image
-					if (isset($tr['id_image']))
-					{
-						$image = new Image((int)$tr['id_image']);
-						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$image->getExistingImgPath().'.'.$this->imageType;
-					}
-					else
-						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)$tr['id_image'] : '').'.'.$this->imageType;
-
+					$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)$tr['id_image'] : '').'.'.$this->imageType;
 					$this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
 				}
 				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
