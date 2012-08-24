@@ -219,6 +219,7 @@ class ShopCore extends ObjectModel
 	{
 		$res = parent::add($autodate, $null_values);
 		Shop::cacheShops(true);
+		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'employee_shop (id_employee, id_shop) (SELECT id_employee, '.(int)$this->id.' FROM '._DB_PREFIX_.'employee WHERE id_profile = '.(int)_PS_ADMIN_PROFILE_.')');
 		return $res;
 	}
 

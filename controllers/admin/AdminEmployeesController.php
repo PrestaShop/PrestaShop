@@ -411,6 +411,21 @@ class AdminEmployeesControllerCore extends AdminController
 					$_GET[$key][$row['id_shop']] = 1;
 				}
 			}
+			
+			if ($_POST['id_profile'] == _PS_ADMIN_PROFILE_)
+			{
+				$result = Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop');
+				foreach ($result as $row)
+				{
+					$key = 'checkBoxShopAsso_'.$this->table;
+					if (!isset($_POST[$key]))
+						$_POST[$key] = array();
+					if (!isset($_GET[$key]))
+						$_GET[$key] = array();
+					$_POST[$key][$row['id_shop']] = 1;
+					$_GET[$key][$row['id_shop']] = 1;
+				}
+			}
 
 			if ($employee->isLastAdmin())
 			{
