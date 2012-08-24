@@ -37,27 +37,26 @@ function migrate_orders()
 
 	// init insert order detail query
 	$values_order_detail = array();
-	$col_order_detail = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
-	foreach ($col_order_detail as $k => $field)
+	$col_order_detail = array();
+	$col_order_detail_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
+	foreach ($col_order_detail_old as $k => $field)
 		if ($field['Field'] != 'id_order_invoice')
 			$col_order_detail[$k] = $field['Field'];
 
-	if (!$col_order_detail)
+	if (!$col_order_detail_old)
 		return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table');
 
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
 	// init insert order query
 	$values_order = array();
-	$col_orders = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
+	$col_orders = array();
+	$col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 
-	if (!$col_orders)
-	{
-		$res = false;
+	if (!$col_orders_old)
 		return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
-	}
 
-	foreach ($col_orders as $k => $field)
+	foreach ($col_orders_old as $k => $field)
 		$col_orders[$k] = $field['Field'];
 
 	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
