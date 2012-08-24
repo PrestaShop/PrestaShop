@@ -2028,7 +2028,9 @@ class AdminControllerCore extends Controller
 			$lang_join = 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'` AND b.`id_lang` = '.(int)$id_lang;
 			if ($id_lang_shop)
 			{
-				if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				if (!Shop::isFeatureActive())
+					$lang_join .= ' AND b.`id_shop` = 1';
+				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					$lang_join .= ' AND b.`id_shop` = '.(int)$id_lang_shop;
 				else
 					$lang_join .= ' AND b.`id_shop` = a.id_shop_default';
