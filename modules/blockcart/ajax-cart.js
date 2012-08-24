@@ -351,7 +351,7 @@ var ajaxCart = {
 		var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
 			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
-		if (parseInt(product.price_float) <= 0)
+		if (parseFloat(product.price_float) <= 0)
 			$('#' + domIdProduct + ' span.remove_link').html('');
 	},
 
