@@ -897,6 +897,11 @@ class AdminImportControllerCore extends AdminController
 			else
 				$valid_link = false;
 
+			if (!Shop::isFeatureActive())
+				$category->id_shop_default = 1;
+			else
+				$category->id_shop_default = (int)Context::getContext()->shop->id;
+
 			$bak = $category->link_rewrite[$default_language_id];
 			if ((isset($category->link_rewrite) && empty($category->link_rewrite[$default_language_id])) || !$valid_link)
 			{
@@ -1014,6 +1019,12 @@ class AdminImportControllerCore extends AdminController
 
 			if (!Shop::isFeatureActive() || !isset($product->shop) || empty($product->shop))
 				$product->shop = 1;
+
+			if (!Shop::isFeatureActive())
+				$product->id_shop_default = 1;
+			else
+				$product->id_shop_default = (int)Context::getContext()->shop->id;
+
 			// link product to shops
 			$product->id_shop_list = explode($this->multiple_value_separator, $product->shop);
 
@@ -1105,7 +1116,6 @@ class AdminImportControllerCore extends AdminController
 			if (isset($product->category) && is_array($product->category) && count($product->category))
 			{
 				$product->id_category = array(); // Reset default values array
-
 				foreach ($product->category as $value)
 				{
 					if (is_numeric($value))
@@ -1144,6 +1154,10 @@ class AdminImportControllerCore extends AdminController
 						else
 						{
 							$category_to_create = new Category();
+							if (!Shop::isFeatureActive())
+								$category_to_create->id_shop_default = 1;
+							else
+								$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
 							$category_to_create->name = AdminImportController::createMultiLangField(trim($value));
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
