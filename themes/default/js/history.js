@@ -100,15 +100,16 @@ function updateOrderLineDisplay(domCheckbox)
 }
 
 //send a message in relation to the order with ajax
-function sendOrderMessage ()
+function sendOrderMessage()
 {
 	paramString = "ajax=true";
 	$('form#sendOrderMessage').find('input, textarea').each(function(){
 		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
 	});
+
 	$.ajax({
 		type: "POST",
-		url: baseUri + "index.php?controller=order-detail",
+		url: $('form#sendOrderMessage').attr("action"),
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {
