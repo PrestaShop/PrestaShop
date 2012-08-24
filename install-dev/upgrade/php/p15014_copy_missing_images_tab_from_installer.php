@@ -41,7 +41,7 @@ function p15014_copy_missing_images_tab_from_installer()
 	$img_dir = scandir($install_dir_path);
 	foreach($img_dir as $dir)
 	{
-		if ($dir[0] == '.')
+		if ($dir[0] == '.' || !is_dir($install_dir_path.$DIR_SEP.$dir))
 			continue;
 
 		$img_subdir = scandir($install_dir_path.$DIR_SEP.$dir);
