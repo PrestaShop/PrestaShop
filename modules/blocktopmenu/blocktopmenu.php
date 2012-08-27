@@ -572,7 +572,7 @@ class Blocktopmenu extends Module
 					break;
 
 				case 'SHOP':
-					$selected = ($this->page_name == 'index' && (Tools::getValue('id_shop') == $id)) ? ' class="sfHover"' : '';
+					$selected = ($this->page_name == 'index' && ($this->context->shop->id == $id)) ? ' class="sfHover"' : '';
 					$shop = new Shop((int)$id);
 					if (Validate::isLoadedObject($shop))
 					{
