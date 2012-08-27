@@ -340,7 +340,7 @@ ul.footer_links li .icon {
 	background:url(../img/bg_bt_compare.gif) repeat-x 0 0 #111;
 }
 
-.sortPagiBar #nbrItemPage {margin-left:40px;}
+.sortPagiBar .nbrItemPage {margin-left:40px;}
 
 .sortPagiBar .PrductSort {float:left;}
 

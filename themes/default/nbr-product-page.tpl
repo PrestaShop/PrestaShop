@@ -40,7 +40,7 @@
 	{/if}
 	<!-- nbr product/page -->
 	{if $nb_products > 10}
-		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" id="nbrItemPage" class="pagination">
+		<form action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get" class="nbrItemPage pagination">
 			<p>
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
@@ -52,7 +52,7 @@
 						{/if}
 					{/foreach}
 				{/if}
-				<select name="n" id="nb_item" onchange="document.getElementById('nbrItemPage').submit();">
+				<select name="n" id="nb_item" onchange="this.form.submit();">
 				{assign var="lastnValue" value="0"}
 				{foreach from=$nArray item=nValue}
 					{if $lastnValue <= $nb_products}
