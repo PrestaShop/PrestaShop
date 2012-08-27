@@ -34,6 +34,7 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 	 * @var int
 	 */
 	public $id_product;
+	public $id_product_attribute;
 
 	public function init()
 	{
@@ -41,6 +42,7 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 
 		require_once($this->module->getLocalPath().'MailAlert.php');
 		$this->id_product = (int)Tools::getValue('id_product');
+		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute');
 	}
 
 	public function postProcess()
@@ -63,8 +65,7 @@ class MailalertsActionsModuleFrontController extends ModuleFrontController
 		if (!Validate::isLoadedObject($product))
 			die('0');
 
-		$mailAlert = MailAlert::getMailAlert((int)Context::getContext()->customer->id, (int)$product->id);
-		if ($mailAlert && $mailAlert->delete())
+		if (MailAlert::deleteAlert((int)Context::getContext()->customer->id, (int)Context::getContext()->customer->email, (int)$product->id, (int)$this->id_product_attribute))
 			die('0');
 		die(1);
 	}
