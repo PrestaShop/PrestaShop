@@ -760,13 +760,8 @@ class AdminImportControllerCore extends AdminController
 					$entity->{$key}[$id_lang_tmp] = $value;
 		}
 		else
-		{
-			// If the type is float, we need to cast it in order to avoid problem with "," and ".".
-			$class = get_class($entity);
-			if (isset($class::$definition['fields'][$key]['type']) && $class::$definition['fields'][$key]['type'] == ObjectModel::TYPE_FLOAT)
-				$infos = (float)$infos;
 			$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
-		}
+
 		return true;
 	}
 
