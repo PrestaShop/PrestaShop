@@ -157,7 +157,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 						'id' => 'id_shop',
 						'name' => 'name'
 					),
-					'condition' => Shop::isFeatureActive()
+					'condition' => Shop::isFeatureActive(),
+					'default_value' => Shop::getContextShopID()
 				),
 				array(
 					'type' => 'select',
