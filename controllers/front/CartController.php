@@ -305,9 +305,16 @@ class CartControllerCore extends FrontController
 			$result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);
 			$result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('displayShoppingCart', $result['summary']);
 
-			// Display reduced price (or not) without quantity discount
-			if (Tools::getIsset('getproductprice'))
-				foreach ($result['summary']['products'] as $key => &$product)
+			foreach ($result['summary']['products'] as $key => &$product)
+			{
+				$product['quantity_without_customization'] = $product['quantity'];
+				if ($result['customizedDatas'])
+				{
+					foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses)
+						foreach ($addresses as $customization)
+							$product['quantity_without_customization'] -= (int)$customization['quantity'];
+				}
+				if (Tools::getIsset('getproductprice'))
 					$product['price_without_quantity_discount'] = Product::getPriceStatic(
 						$product['id_product'],
 						!Product::getTaxCalculationMethod(),
@@ -317,6 +324,10 @@ class CartControllerCore extends FrontController
 						false,
 						false
 					);
+			}
+			if ($result['customizedDatas'])
+				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
+
 			die(Tools::jsonEncode($result));
 		}
 		// @todo create a hook
