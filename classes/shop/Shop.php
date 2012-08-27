@@ -295,10 +295,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function initialize()
 	{
-		// Optimization - don't redirect and allow WS and other script to work
-		if (!($id_shop = Tools::getValue('id_shop')))
-			$_GET['id_shop'] = Configuration::get('PS_SHOP_DEFAULT');
-
 		// Find current shop from URL
 		if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_'))
 		{
@@ -330,6 +326,10 @@ class ShopCore extends ObjectModel
 					}
 				}
 			}
+
+			// Optimization - don't redirect and allow WS and other script to work
+			if (!$id_shop)
+				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
 
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($id_shop && !$is_main_uri)
