@@ -242,7 +242,7 @@ class HookCore extends ObjectModel
 	{
 		$context = Context::getContext();
 		$cache_id = 'hook_module_exec_list'.((isset($context->customer)) ? '_'.$context->customer->id : '');
-		if (!Cache::isStored($cache_id))
+		if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment')
 		{
 			$frontend = true;
 			$groups = array();
@@ -266,9 +266,11 @@ class HookCore extends ObjectModel
 			$sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
 			$sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
 			$sql->where('(SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN ('.implode(', ', $shop_list).')) = '.count($shop_list));
+			if ($hook_name != 'displayPayment')
+				$sql->where('h.name != "displayPayment"');
 			// For payment modules, we check that they are available in the contextual country
-			if ($frontend && Validate::isLoadedObject($context->country))
-				$sql->where('(h.name != "displayPayment" OR (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
+			elseif ($frontend && Validate::isLoadedObject($context->country))
+				$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
 			if (Validate::isLoadedObject($context->shop))
 				$sql->where('hm.id_shop = '.(int)$context->shop->id);
 
@@ -309,11 +311,12 @@ class HookCore extends ObjectModel
 						'live_edit' => $row['live_edit'],
 					);
 				}
-
-			Cache::store($cache_id, $list);
-
-			// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
-			self::$_hook_modules_cache_exec = $list;
+			if ($hook_name != 'displayPayment')
+			{
+				Cache::store($cache_id, $list);
+				// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
+				self::$_hook_modules_cache_exec = $list;
+			}
 		}
 		else
 			$list = Cache::retrieve($cache_id);
