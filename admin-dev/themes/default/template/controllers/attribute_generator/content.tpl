@@ -37,11 +37,9 @@
 			if (!isNaN(element_price) && element_price > 0)
 			{
 				if (element_has_tax)
-					other_element_price = parseFloat(element_price / ((product_tax / 100) + 1));
+					other_element_price = parseFloat(element_price / ((product_tax / 100) + 1)).toFixed(6);
 				else
-					other_element_price = ps_round(parseFloat(element_price * ((product_tax / 100) + 1)), 2);
-
-				other_element_price = other_element_price.toFixed(2);
+					other_element_price = ps_round(parseFloat(element_price * ((product_tax / 100) + 1)), 2).toFixed(2);
 			}
 
 			$('#related_to_'+element.attr('name')).val(other_element_price);
