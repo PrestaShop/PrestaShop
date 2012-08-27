@@ -39,24 +39,25 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	protected function addAttribute($arr, $price = 0, $weight = 0)
+	protected function addAttribute($attributes, $price = 0, $weight = 0)
 	{
-		foreach ($arr as $attr)
+		foreach ($attributes as $attribute)
 		{
-			$price += (float)$_POST['price_impact_'.(int)$attr];
-			$weight += (float)$_POST['weight_impact'][(int)$attr];
+			$price += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+			$weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact'.(int)$attribute)));
 		}
 		if ($this->product->id)
 		{
-			return (array(
-					'id_product' => (int)$this->product->id,
-					'price' => (float)$price,
-					'weight' => (float)$weight,
-					'ecotax' => 0,
-					'quantity' => (int)$_POST['quantity'],
-					'reference' => pSQL($_POST['reference']),
-					'default_on' => 0,
-					'available_date' => '0000-00-00'));
+			return array(
+				'id_product' => (int)$this->product->id,
+				'price' => (float)$price,
+				'weight' => (float)$weight,
+				'ecotax' => 0,
+				'quantity' => (int)Tools::getValue('quantity'),
+				'reference' => pSQL($_POST['reference']),
+				'default_on' => 0,
+				'available_date' => '0000-00-00'
+			);
 		}
 		return array();
 	}
@@ -163,13 +164,16 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $attributes = array();
         foreach ($tab as $group)
             foreach ($group as $attribute)
-                $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$_POST['price_impact_'.(int)$attribute].', '.(float)$_POST['weight_impact'][(int)$attribute].')';
+			{
+				$price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+				$weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact'.(int)$attribute)));
+                $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$price.', '.(float)$weight.')';
+			}
 
-		return Db::getInstance()->execute(
-	        'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
-	        VALUES '.implode(',', $attributes).'
-	        ON DUPLICATE KEY UPDATE `price`=VALUES(price), `weight`=VALUES(weight)'
-		);
+		return Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
+		VALUES '.implode(',', $attributes).'
+		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }
 
     protected static function getAttributesImpacts($id_product)
