@@ -114,11 +114,10 @@ abstract class HTMLTemplateCore
 		// we don't use _PS_ROOT_DIR_ and we let TCPDF add the document root.
 		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
-		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists($physical_uri.Configuration::get('PS_LOGO_INVOICE')))
+		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
 			$logo = $physical_uri.Configuration::get('PS_LOGO_INVOICE');
-		else if (Configuration::get('PS_LOGO') != false && file_exists($physical_uri.Configuration::get('PS_LOGO')))
+		elseif (Configuration::get('PS_LOGO') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
 			$logo = $physical_uri.Configuration::get('PS_LOGO');
-
 		return $logo;
 	}
 
