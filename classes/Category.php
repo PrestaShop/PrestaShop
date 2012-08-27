@@ -1233,6 +1233,17 @@ class CategoryCore extends ObjectModel
 			return false;
 		return ($this->nleft >= $interval['nleft'] && $this->nright <= $interval['nright']);
 	}
+	
+	public static function inShopStatic($id_category, Shop $shop = null)
+	{
+		if (!$shop || !is_object($shop))
+			$shop = Context::getContext()->shop;
+
+		if (!$interval = Category::getInterval($shop->getCategory()))
+			return false;
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT nleft, nright FROM `'._DB_PREFIX_.'category` WHERE id_category = '.(int)$id_category);
+		return ($row['nleft'] >= $interval['nleft'] && $row['nright'] <= $interval['nright']);
+	}
 
 	public function getChildrenWs()
 	{
