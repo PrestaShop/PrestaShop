@@ -79,7 +79,7 @@ class InstallModelMail extends InstallAbstractModel
 				$swift = new Swift(new Swift_Connection_NativeMail());
 
 			$message = new Swift_Message($subject, $content, 'text/html');
-			if (@$swift->send($message, $this->email, 'no-reply@'.Tools::getHttpHost()))
+			if (@$swift->send($message, $this->email, 'no-reply@'.Tools::getHttpHost(false, false, true)))
 				$result = false;
 			else
 				$result = 'Could not send message';

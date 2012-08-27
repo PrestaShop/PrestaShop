@@ -69,41 +69,53 @@ abstract class Db extends DbCore
 	 */
 	public function query($sql)
 	{
-		$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $sql);
-		if (!isset($this->uniqQueries[$uniqSql]))
-			$this->uniqQueries[$uniqSql] = 0;
-		$this->uniqQueries[$uniqSql]++;
-
-		// No cache for query
-		if ($this->disableCache)
-			$sql = preg_replace('/^select /i', 'SELECT SQL_NO_CACHE ', trim($sql));
-
-		// Get tables in quer
-		preg_match_all('/(from|join)\s+`?'._DB_PREFIX_.'([a-z0-9_-]+)/ui', $sql, $matches);
-		foreach ($matches[2] as $table)
+		$explain = false;
+		if (preg_match('/^\s*explain\s+/i', $sql))
+			$explain = true;
+			
+		if (!$explain)
 		{
-			if (!isset($this->tables[$table]))
-				$this->tables[$table] = 0;
-			$this->tables[$table]++;
-		}
+			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $sql);
+			if (!isset($this->uniqQueries[$uniqSql]))
+				$this->uniqQueries[$uniqSql] = 0;
+			$this->uniqQueries[$uniqSql]++;
 
-		// Execute query
-		$start = microtime(true);
+			// No cache for query
+			if ($this->disableCache)
+				$sql = preg_replace('/^\s*select\s+/i', 'SELECT SQL_NO_CACHE ', trim($sql));
+
+			// Get tables in quer
+			preg_match_all('/(from|join)\s+`?'._DB_PREFIX_.'([a-z0-9_-]+)/ui', $sql, $matches);
+			foreach ($matches[2] as $table)
+			{
+				if (!isset($this->tables[$table]))
+					$this->tables[$table] = 0;
+				$this->tables[$table]++;
+			}
+
+			// Execute query
+			$start = microtime(true);
+		}
+		
 		$result = parent::query($sql);
-		$end = microtime(true);
 		
-		// Save details
-		$timeSpent = $end - $start;
-		$trace = debug_backtrace(false);
-		while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $trace[0]['file']))
-			array_shift($trace);
-		
-		$this->queries[] = array(
-			'query' => $sql,
-			'time' => $timeSpent,
-			'file' => $trace[0]['file'],
-			'line' => $trace[0]['line'],
-		);
+		if (!$explain)
+		{
+			$end = microtime(true);
+			
+			// Save details
+			$timeSpent = $end - $start;
+			$trace = debug_backtrace(false);
+			while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $trace[0]['file']))
+				array_shift($trace);
+			
+			$this->queries[] = array(
+				'query' => $sql,
+				'time' => $timeSpent,
+				'file' => $trace[0]['file'],
+				'line' => $trace[0]['line'],
+			);
+		}
 		
 		return $result;
 	}

@@ -175,9 +175,11 @@ class ToolsCore
 	 * @param boolean $entities
 	 * @return string host
 	 */
-	public static function getHttpHost($http = false, $entities = false)
+	public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
 	{
 		$host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+		if ($ignore_port && $pos = strpos($host, ':'))
+			$host = substr($host, 0, $pos);
 		if ($entities)
 			$host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
 		if ($http)
