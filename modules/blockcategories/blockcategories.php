@@ -175,16 +175,12 @@ class BlockCategories extends Module
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.Shop::addSqlRestrictionOnLang('cl').')
-				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category`)
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category` AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.')
 				WHERE (c.`active` = 1 OR c.`id_category` = '.(int)Configuration::get('PS_HOME_CATEGORY').')
 				AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY').'
-				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
-				AND cg.`id_group` IN ('.pSQL($groups).')
-				AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-				GROUP BY id_category
+				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)$maxdepth : '').'
+				AND c.id_category IN (SELECT id_category FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` IN ('.pSQL($groups).'))
 				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'cs.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
-
 				return Tools::restoreCacheSettings();
 
 			$resultParents = array();
@@ -211,7 +207,7 @@ class BlockCategories extends Module
 				{
 					$product = new Product($id_product);
 					if (isset($product) && Validate::isLoadedObject($product))
-						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
+						$this->context->cookie->last_visited_category = (int)$product->id_category_default;
 				}
 				$this->smarty->assign('currentCategoryId', (int)$this->context->cookie->last_visited_category);
 			}
