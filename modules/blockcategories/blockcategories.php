@@ -203,7 +203,9 @@ class BlockCategories extends Module
 			}
 			if (Tools::isSubmit('id_product'))
 			{
-				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
+				if (!isset($this->context->cookie->last_visited_category)
+					|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
+					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
 				{
 					$product = new Product($id_product);
 					if (isset($product) && Validate::isLoadedObject($product))

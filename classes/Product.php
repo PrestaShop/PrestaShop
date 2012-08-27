@@ -3978,18 +3978,19 @@ class ProductCore extends ObjectModel
 	{
 		if (!((int)$id_product > 0) || !is_array($categories) || empty($categories))
 			return false;
-		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product`='.(int)$id_product.' AND `id_category` IN(';
+		$sql = 'SELECT id_product FROM `'._DB_PREFIX_.'category_product` WHERE `id_product` = '.(int)$id_product.' AND `id_category` IN (';
 		foreach ($categories as $category)
 			$sql .= (int)$category['id_category'].',';
 		$sql = rtrim($sql, ',').')';
 
-		if (isset(self::$_incat[md5($sql)]))
-			return self::$_incat[md5($sql)];
-
-		if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
-			return false;
-		self::$_incat[md5($sql)] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
-		return self::$_incat[md5($sql)];
+		$hash = md5($sql);
+		if (!isset(self::$_incat[$hash]))
+		{
+			if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql))
+				return false;
+			self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+		}
+		return self::$_incat[$hash];
 	}
 
 	public function getNoPackPrice()
