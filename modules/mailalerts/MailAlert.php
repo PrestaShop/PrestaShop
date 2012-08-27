@@ -212,12 +212,11 @@ class MailAlert extends ObjectModel
 		$sql = '
 			SELECT ma.`id_product`, p.`quantity` AS product_quantity, pl.`name`, ma.`id_product_attribute`
 			FROM `'._DB_PREFIX_.self::$definition['table'].'` ma
-			JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
+			JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = ma.`id_product`)
 			'.Shop::addSqlAssociation('product', 'p').'
-			JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product`
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_shop IN ('.implode(', ', Shop::getContextListShopID(false)).'))
 			WHERE product_shop.`active` = 1
-			AND (ma.`id_customer` = '.(int)$customer->id.'
-			OR ma.`customer_email` = \''.pSQL($customer->email).'\')
+			AND (ma.`id_customer` = '.(int)$customer->id.' OR ma.`customer_email` = \''.pSQL($customer->email).'\')
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestriction(false, 'ma');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
