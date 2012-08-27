@@ -1674,8 +1674,16 @@ class AdminControllerCore extends Controller
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 		));
-
-		$this->context->smarty->assign('submit_form_ajax', (int)Tools::getValue('submitFormAjax'));
+		
+		if ($this->display_header)
+			$this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', array()));
+		
+		$this->context->smarty->assign(
+			array(
+				'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop', array()),
+				'submit_form_ajax' => (int)Tools::getValue('submitFormAjax')
+				)
+			);
 
 		$this->initProcess();
 	}
