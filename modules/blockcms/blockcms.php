@@ -192,6 +192,21 @@ class BlockCms extends Module
 			),
 			'input' => array(
 				array(
+					'type' => 'checkbox',
+					'name' => 'cms_footer',
+					'values' => array(
+						'query' => array(
+							array(
+								'id' => 'on',
+								'name' => $this->l('Display various links and information in the Footer'),
+								'val' => '1'
+							),
+						),
+						'id' => 'id',
+						'name' => 'name'
+					)
+				),
+				array(
 					'type' => 'cms_pages',
 					'label' => $this->l('Footer links:'),
 					'name' => 'footerBox[]',
@@ -214,21 +229,6 @@ class BlockCms extends Module
 							array(
 								'id' => 'on',
 								'name' => $this->l('Display "Powered by Prestashop"'),
-								'val' => '1'
-							),
-						),
-						'id' => 'id',
-						'name' => 'name'
-					)
-				),
-				array(
-					'type' => 'checkbox',
-					'name' => 'cms_footer',
-					'values' => array(
-						'query' => array(
-							array(
-								'id' => 'on',
-								'name' => $this->l('Display the Footer\'s informations'),
 								'val' => '1'
 							),
 						),
