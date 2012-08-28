@@ -310,7 +310,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 			$default_currency = Currency::getCurrency($id_default_currency);
 			if ($default_currency)
-				$currencies = array_merge(array($default_currency, '-'), $currencies);
+				$currencies = array_merge(array($default_currency, array('id_currency' => 0, 'name' => '-')), $currencies);
 
 			// adds input valuation currency
 			$this->fields_form['input'][] = array(
