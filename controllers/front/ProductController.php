@@ -41,13 +41,25 @@ class ProductControllerCore extends FrontController
 	{
 		parent::setMedia();
 
-		$this->addCSS(_THEME_CSS_DIR_.'product.css');
-		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
-		$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
-		$this->addJS(array(
-			_THEME_JS_DIR_.'tools.js',
-			_THEME_JS_DIR_.'product.js'
-		));
+		if ($this->context->getMobileDevice() == false)
+		{
+			$this->addCSS(_THEME_CSS_DIR_.'product.css');
+			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
+			$this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll'));
+			$this->addJS(array(
+				_THEME_JS_DIR_.'tools.js',
+				_THEME_JS_DIR_.'product.js'
+			));
+		}
+		else
+		{
+			$this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
+			$this->addJS(array(
+				_THEME_JS_DIR_.'tools.js',
+				_THEME_MOBILE_JS_DIR_.'product.js',
+				_THEME_MOBILE_JS_DIR_.'jquery.touch-gallery.js'
+			));
+		}
 
 		if (Configuration::get('PS_DISPLAY_JQZOOM') == 1)
 			$this->addJqueryPlugin('jqzoom');
