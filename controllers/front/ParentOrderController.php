@@ -406,6 +406,7 @@ class ParentOrderControllerCore extends FrontController
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+		$this->setDefaultCarrierSelection($this->context->cart->getDeliveryOptionList());
 		
 		$this->context->smarty->assign(array(
 			'address_collection' => $this->context->cart->getAddressCollection(),
@@ -456,7 +457,7 @@ class ParentOrderControllerCore extends FrontController
 			'carriers' => $this->context->cart->simulateCarriersOutput(),
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 			'address_collection' => $this->context->cart->getAddressCollection(),
-			'delivery_option' => $this->context->cart->getDeliveryOption(null, true),
+			'delivery_option' => $this->context->cart->getDeliveryOption(null, false),
 			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
@@ -492,28 +493,8 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function setDefaultCarrierSelection($carriers)
 	{
-		if (count($carriers))
-		{
-			$defaultCarrierIsPresent = false;
-			if ((int)$this->context->cart->id_carrier != 0)
-				foreach ($carriers as $carrier)
-					if ($carrier['id_carrier'] == (int)$this->context->cart->id_carrier)
-						$defaultCarrierIsPresent = true;
-			if (!$defaultCarrierIsPresent)
-				foreach ($carriers as $carrier)
-					if ($carrier['id_carrier'] == (int)Configuration::get('PS_CARRIER_DEFAULT'))
-					{
-						$defaultCarrierIsPresent = true;
-						$this->context->cart->id_carrier = (int)$carrier['id_carrier'];
-					}
-			if (!$defaultCarrierIsPresent)
-				$this->context->cart->id_carrier = (int)$carriers[0]['id_carrier'];
-		}
-		else
-			$this->context->cart->setDeliveryOption(null);
-		if ($this->context->cart->update())
-			return $this->context->cart->id_carrier;
-		return 0;
+		if (!$this->context->cart->getDeliveryOption(null, true))		
+			$this->context->cart->setDeliveryOption($this->context->cart->getDeliveryOption());
 	}
 
 	/**
