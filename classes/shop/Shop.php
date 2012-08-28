@@ -316,7 +316,7 @@ class ShopCore extends ObjectModel
 				foreach ($results as $row)
 				{
 					// An URL matching current shop was found
-					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $request_uri))
+					if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri))
 					{
 						$id_shop = $row['id_shop'];
 						$found_uri = $row['uri'];
