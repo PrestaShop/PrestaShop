@@ -541,7 +541,7 @@ class Blocktopmenu extends Module
 					$category = new CMSCategory((int)$id, (int)$id_lang);
 					if (count($category))
 					{
-						$this->_menu .= '<li><a href="#">'.$category->name.'</a>';
+						$this->_menu .= '<li><a href="'.$category->getLink().'">'.$category->name.'</a>';
 						$this->getCMSMenuItems($category->id);
 						$this->_menu .= '</li>'.PHP_EOL;
 					}
