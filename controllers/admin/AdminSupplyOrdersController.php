@@ -593,7 +593,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-		$helper->title = $this->l('Stock: Change supply order state');
+		$helper->title = sprintf($this->l('Stock: Change supply order status #%s'), $supply_order->reference);
 
 		$helper->override_folder = 'supply_orders_change_state/';
 
