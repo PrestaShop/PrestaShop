@@ -232,7 +232,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->_join .= '
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
-		'.($join_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
+		'.($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON ('.$alias.'.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
