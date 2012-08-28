@@ -410,6 +410,14 @@ class AdminMetaControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->id);
 	}
+	
+	public function renderList()
+	{
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+			$this->displayInformation($this->l('You can only display the page list in a shop context.'));
+		else
+			return parent::renderList();
+	}
 
 	/**
 	 * Validate route syntax and save it in configuration
