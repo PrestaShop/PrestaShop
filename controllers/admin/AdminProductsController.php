@@ -2093,9 +2093,6 @@ class AdminProductsControllerCore extends AdminController
 					unset($this->context->cookie->{$this->table.'Orderway'});
 				}
 			}
-
-			$this->getList($this->context->language->id, null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->id);
-
 			$id_category = (int)Tools::getValue('id_category', 1);
 			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
 
