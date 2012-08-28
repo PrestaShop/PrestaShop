@@ -200,6 +200,7 @@ class ProductControllerCore extends FrontController
 				$return_link = 'javascript: history.back();';
 
 			$this->context->smarty->assign(array(
+				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 				'customizationFields' => ($this->product->customizable) ? $this->product->getCustomizationFields($this->context->language->id) : false,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
