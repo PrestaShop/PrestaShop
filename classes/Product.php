@@ -2638,6 +2638,22 @@ class ProductCore extends ObjectModel
 		return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
 	}
 
+	public function getDefaultIdProductAttribute()
+	{
+		if (!Combination::isFeatureActive())
+			return 0;
+
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT pa.`id_product_attribute`
+			FROM `'._DB_PREFIX_.'product_attribute` pa
+			'.Shop::addSqlAssociation('product_attribute', 'pa').'
+			WHERE pa.`id_product` = '.(int)$this->id.'
+			AND pa.`default_on` = 1'
+		);
+
+		return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
+	}
+
 	public function getPriceWithoutReduct($notax = false, $id_product_attribute = false)
 	{
 		return Product::getPriceStatic((int)$this->id, !$notax, $id_product_attribute, 6, null, false, false);
