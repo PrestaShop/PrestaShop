@@ -81,8 +81,8 @@
 {/if}
 
 	<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
-{if $display_header}
-	{hook h="displayBackOfficeHeader"}
+{if isset($displayBackOfficeHeader)}
+	{$displayBackOfficeHeader}
 {/if}
 	<!--[if IE]>
 	<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
@@ -194,8 +194,9 @@
 			</select>
 		</div>
 		{/if}
-
-		{hook h="displayBackOfficeTop"}
+		{if isset($displayBackOfficeTop)}
+			{$displayBackOfficeTop}
+		{/if}
 	</div> {* end header *}
 
 	<ul id="menu">
