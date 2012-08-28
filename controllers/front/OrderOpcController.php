@@ -191,7 +191,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
-									
+
 									// Address has changed, so we check if the cart rules still apply
 									CartRule::autoRemoveFromCart($this->context);
 									CartRule::autoAddToCart($this->context);
@@ -271,11 +271,16 @@ class OrderOpcControllerCore extends ParentOrderController
 	{
 		parent::setMedia();
 
-		// Adding CSS style sheet
-		$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');
-		// Adding JS files
-		$this->addJS(_THEME_JS_DIR_.'order-opc.js');
-		$this->addJqueryPlugin('scrollTo');
+		if ($this->context->getMobileDevice() == false)
+		{
+			// Adding CSS style sheet
+			$this->addCSS(_THEME_CSS_DIR_.'order-opc.css');
+			// Adding JS files
+			$this->addJS(_THEME_JS_DIR_.'order-opc.js');
+			$this->addJqueryPlugin('scrollTo');
+		}
+		else
+			$this->addJS(_THEME_MOBILE_JS_DIR_.'opc.js');
 		$this->addJS(_THEME_JS_DIR_.'tools/statesManagement.js');
 	}
 
