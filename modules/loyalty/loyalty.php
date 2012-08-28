@@ -432,15 +432,15 @@ class Loyalty extends Module
 	public function hookExtraRight($params)
 	{
 		include_once(dirname(__FILE__).'/LoyaltyModule.php');
-		
+
 		$product = new Product((int)Tools::getValue('id_product'));
 		if (Validate::isLoadedObject($product))
 		{
 			if (Validate::isLoadedObject($params['cart']))
 			{
-				$pointsBefore = (int)(LoyaltyModule::getCartNbPoints($params['cart']));
-				$pointsAfter = (int)(LoyaltyModule::getCartNbPoints($params['cart'], $product));
-				$points = (int)(LoyaltyModule::getNbPointsByPrice($product->getPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true, (int)($product->getIdProductAttributeMostExpensive()))));
+				$pointsBefore = (int)LoyaltyModule::getCartNbPoints($params['cart']);
+				$pointsAfter = (int)LoyaltyModule::getCartNbPoints($params['cart'], $product);
+				$points = (int)($pointsAfter - $pointsBefore);
 			}
 			else
 			{
@@ -450,13 +450,19 @@ class Loyalty extends Module
 					$this->smarty->assign('no_pts_discounted', 1);
 				}
 				else
-					$points = (int)(LoyaltyModule::getNbPointsByPrice($product->getPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true, (int)($product->getIdProductAttributeMostExpensive()))));
+					$points = (int)LoyaltyModule::getNbPointsByPrice(
+						$product->getPrice(
+							Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true,
+							(int)$product->getDefaultIdProductAttribute()
+						)
+					);
+
 				$pointsAfter = $points;
 				$pointsBefore = 0;
 			}
 			$this->smarty->assign(array(
-				'points' => (int)($points),
-				'total_points' => (int)($pointsAfter),
+				'points' => (int)$points,
+				'total_points' => (int)$pointsAfter,
 				'point_rate' => Configuration::get('PS_LOYALTY_POINT_RATE'),
 				'point_value' => Configuration::get('PS_LOYALTY_POINT_VALUE'),
 				'points_in_cart' => (int)$pointsBefore,
