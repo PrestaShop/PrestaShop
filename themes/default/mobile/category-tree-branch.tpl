@@ -19,14 +19,27 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="favoriteproducts">
-	<a href="{$link->getModuleLink('favoriteproducts', 'account')|escape:'htmlall':'UTF-8'}" title="{l s='My favorite products' mod='favoriteproducts'}">
-		{if !$in_footer}<img {if isset($mobile_hook)}src="{$module_template_dir}img/favorites.png" class="ui-li-icon ui-li-thumb"{else}src="{$module_template_dir}img/favorites.png" class="icon"{/if} alt="{l s='My favorite products' mod='favoriteproducts'}"/>{/if}
-		{l s='My favorite products' mod='favoriteproducts'}
-	</a>
+<li {if $node.children|@count > 0}data-icon="more"{/if}>
+	{if $node.children|@count > 0}
+		{$node.name|escape:'htmlall':'UTF-8'}
+		<ul data-inset="true">
+			<li>
+				<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}">
+					{l s="See products"}
+				</a>
+			</li>
+		{foreach from=$node.children item=child name=categoryTreeBranch}
+			{include file="$tpl_dir./category-tree-branch.tpl" node=$child}
+		{/foreach}
+		</ul>
+	{else}
+		<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}">
+			{$node.name|escape:'htmlall':'UTF-8'}
+		</a>
+	{/if}
 </li>

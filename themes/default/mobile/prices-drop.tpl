@@ -19,14 +19,26 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="favoriteproducts">
-	<a href="{$link->getModuleLink('favoriteproducts', 'account')|escape:'htmlall':'UTF-8'}" title="{l s='My favorite products' mod='favoriteproducts'}">
-		{if !$in_footer}<img {if isset($mobile_hook)}src="{$module_template_dir}img/favorites.png" class="ui-li-icon ui-li-thumb"{else}src="{$module_template_dir}img/favorites.png" class="icon"{/if} alt="{l s='My favorite products' mod='favoriteproducts'}"/>{/if}
-		{l s='My favorite products' mod='favoriteproducts'}
-	</a>
-</li>
+{capture assign='page_title'}{l s='Price drop'}{/capture}
+{include file='./page-title.tpl'}
+
+{if $products}
+	<div data-role="content" id="content">
+		<div class="clearfix">
+			{include file="./category-product-sort.tpl" container_class="container-sort"}
+		</div>
+		<hr width="99%" align="center" size="2"/>
+		{include file="./pagination.tpl"}
+		{include file="./category-product-list.tpl" products=$products}
+		{include file="./pagination.tpl"}
+		
+		{include file='./sitemap.tpl'}
+	</div><!-- #content -->
+{else}
+	<p class="warning">{l s='No price drop.'}</p>
+{/if}

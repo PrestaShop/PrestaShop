@@ -160,6 +160,12 @@ class AdminThemesControllerCore extends AdminController
 						'type' => 'text',
 						'size' => 20
 					),
+					'PS_ALLOW_MOBILE_DEVICE' => array(
+						'title' => $this->l('Enable mobile theme'),
+						'desc' => $this->l('Allows visitors browsing on a mobile device, to have a light version of website'),
+						'cast' => 'intval',
+						'type' => 'bool',
+					)
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
 			),
