@@ -29,6 +29,7 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_8a1ac57c0cc4eb3f6b2fe4c2525
 $_MODULE['<{carriercompare}prestashop>carriercompare_653e78154f5596fc293bf9db65110bbd'] = 'Mettre à jour la liste des transporteurs';
 $_MODULE['<{carriercompare}prestashop>configuration_aa4c031e8f3c596aaac3ba13f5f91c75'] = 'Une erreur est survenue lors de la validation du formulaire';
 $_MODULE['<{carriercompare}prestashop>configuration_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration mise à jour';
+$_MODULE['<{carriercompare}prestashop>configuration_963744bc6b0cce93e202d860a4a2f84a'] = 'Ce module est disponible uniquement sur les processus de commande standard, car sur le One Page Checkout la liste des transporteurs est déjà disponible.';
 $_MODULE['<{carriercompare}prestashop>configuration_6408d076fa6417e7bc8ddc3cdf9a0644'] = 'Configuration globale';
 $_MODULE['<{carriercompare}prestashop>configuration_4c1f76824b0d7333652d5f64a3e07ef5'] = 'N\'importe quand';
 $_MODULE['<{carriercompare}prestashop>configuration_d82928a663ff868502586a0c515e602b'] = 'Quand toutes les informations sont complètes';
