@@ -33,7 +33,7 @@
 	{if $stores|@count}
 	<p>{l s='Here are our store locations, please feel free to contact us:'}</p>
 	{foreach $stores as $store}
-		<div class="store-small">
+		<div class="store-small grid_2">
 			{if $store.has_picture}<p><img src="{$img_store_dir}{$store.id_store}-medium.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" /></p>{/if}
 			<p>
 				<b>{$store.name|escape:'htmlall':'UTF-8'}</b><br />
@@ -43,6 +43,7 @@
 				{$store.country|escape:'htmlall':'UTF-8'}<br />
 				{if $store.phone}{l s='Phone:' js=0} {$store.phone}{/if}
 			</p>
+				{if isset($store.working_hours)}{$store.working_hours}{/if}
 		</div>
 	{/foreach}
 	{/if}

@@ -97,15 +97,51 @@ class StoresControllerCore extends FrontController
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
 
 		foreach ($stores as &$store)
+		{
 			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
-
+			if ($working_hours = $this->renderStoreWorkingHours($store))
+				$store['working_hours'] = $working_hours;
+		}
 
 		$this->context->smarty->assign(array(
 			'simplifiedStoresDiplay' => true,
 			'stores' => $stores
 		));
 	}
-
+	
+	public function renderStoreWorkingHours($store)
+	{
+		global $smarty;
+		
+		$days[1] = 'Monday';
+		$days[2] = 'Tuesday';
+		$days[3] = 'Wednesday';
+		$days[4] = 'Thursday';
+		$days[5] = 'Friday';
+		$days[6] = 'Saturday';
+		$days[7] = 'Sunday';
+		
+		$days_datas = array();
+		$hours = array_filter(unserialize($store['hours']));
+		if (!empty($hours))
+		{
+			for ($i = 1; $i < 8; $i++)
+			{
+				if (isset($hours[(int)($i) - 1]))
+				{
+					$hours_datas = array();
+					$hours_datas['hours'] = $hours[(int)($i) - 1];
+					$hours_datas['day'] = $days[$i];
+					$days_datas[] = $hours_datas;
+				}
+			}
+			$smarty->assign('days_datas', $days_datas);
+			$smarty->assign('id_country', $store['id_country']);
+			return self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+		}
+		return false;
+	}
+	
 	public function getStores()
 	{
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
@@ -190,31 +226,13 @@ class StoresControllerCore extends FrontController
 
 		foreach ($stores as $store)
 		{
-			$days_datas = array();
+			$other = '';
 			$node = $dom->createElement('marker');
 			$newnode = $parnode->appendChild($node);
 			$newnode->setAttribute('name', $store['name']);
 			$address = $this->processStoreAddress($store);
 
-			$other = '';
-
-			if (!empty($store['hours']))
-			{
-				$hours = unserialize($store['hours']);
-
-				for ($i = 1; $i < 8; $i++)
-				{
-					$hours_datas = array();
-					$hours_datas['day'] = $days[$i];
-					$hours_datas['hours'] = $hours[(int)($i) - 1];
-					$days_datas[] = $hours_datas;
-				}
-				$this->context->smarty->assign('days_datas', $days_datas);
-				$this->context->smarty->assign('id_country', $store['id_country']);
-
-				$other .= $this->context->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
-			}
-
+			$other .= $this->renderStoreWorkingHours($store);
 			$newnode->setAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
 			$newnode->setAttribute('address', $address);
 			$newnode->setAttribute('other', $other);
@@ -223,7 +241,6 @@ class StoresControllerCore extends FrontController
 			$newnode->setAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
 			$newnode->setAttribute('lat', (float)($store['latitude']));
 			$newnode->setAttribute('lng', (float)($store['longitude']));
-
 			if (isset($store['distance']))
 				$newnode->setAttribute('distance', (int)($store['distance']));
 		}
