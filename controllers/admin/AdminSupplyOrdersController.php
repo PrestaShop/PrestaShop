@@ -593,8 +593,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+		$helper->title = $this->l('Stock: Change supply order state');
 
-		//$this->setHelperDisplay($helper);
 		$helper->override_folder = 'supply_orders_change_state/';
 
 		// assigns our content
@@ -853,15 +853,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// Manage the add stock form
 		if (Tools::isSubmit('changestate'))
 			$this->initChangeStateContent();
-		else if (Tools::isSubmit('update_receipt') && Tools::isSubmit('id_supply_order'))
+		elseif (Tools::isSubmit('update_receipt') && Tools::isSubmit('id_supply_order'))
 			$this->initUpdateReceiptContent();
-		else if (Tools::isSubmit('viewsupply_order') && Tools::isSubmit('id_supply_order'))
+		elseif (Tools::isSubmit('viewsupply_order') && Tools::isSubmit('id_supply_order'))
 		{
 			$this->action = 'view';
 			$this->display = 'view';
 			parent::initContent();
 		}
-		else if (Tools::isSubmit('updatesupply_order'))
+		elseif (Tools::isSubmit('updatesupply_order'))
 			$this->initUpdateSupplyOrderContent();
 		else
 			parent::initContent();
