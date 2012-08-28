@@ -1938,10 +1938,7 @@ class AdminControllerCore extends Controller
 	 * @param integer $limit Row count in LIMIT clause
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if (!empty($this->_listsql))
-			return;
-	
+	{	
 		/* Manage default params values */
 		$use_limit = true;
 		if ($limit === false)
