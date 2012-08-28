@@ -49,7 +49,7 @@ abstract class HTMLTemplateCore
 		$width = 0;
 		$height = 0;
 		if (!empty($path_logo))
-			list($width, $height) = getimagesize(_PS_ROOT_DIR_.'/'.str_replace(Context::getContext()->shop->physical_uri, '', $path_logo));
+			list($width, $height) = getimagesize(_PS_ROOT_DIR_.'/'.$path_logo);
 
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
