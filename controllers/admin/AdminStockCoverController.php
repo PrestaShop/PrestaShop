@@ -191,6 +191,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
 						'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
+		$this->_group = 'GROUP BY a.id_product';
 
 		self::$currentIndex .= '&coverage_period='.(int)$this->getCurrentCoveragePeriod().'&warn_days='.(int)$this->getCurrentWarning();
 		if ($this->getCurrentCoverageWarehouse() != -1)
