@@ -231,7 +231,8 @@ function updateDisplay()
 			$('#availability_value').text(doesntExist).addClass('warning_inline');
 			$('#oosHook').hide();
 		}
-		$('#availability_statut:hidden').show();
+		if(stock_management == 1)
+			$('#availability_statut:hidden').show();
 		
 		//display availability date
 		if (selectedCombination.length)
