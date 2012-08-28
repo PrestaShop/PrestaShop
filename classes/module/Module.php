@@ -218,7 +218,7 @@ abstract class ModuleCore
 		try {
 			$this->installOverrides();
 		} catch (Exception $e) {
-			$this->_errors[] = Tools::displayError('Unable to install override:').' '.$e->getMessage();
+			$this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
 			$this->uninstallOverrides();
 			return false;
 		}
@@ -1880,12 +1880,12 @@ abstract class ModuleCore
 		// Check if none of the methods already exists in the override class
 		foreach ($module_class->getMethods() as $method)
 			if ($override_class->hasMethod($method->getName()))
-				throw new Exception(sprintf(Tools::displayError('the method %s in the class %s is already overriden'), $method->getName(), $classname));
+				throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overriden.'), $method->getName(), $classname));
 
 		// Check if none of the properties already exists in the override class
 		foreach ($module_class->getProperties() as $property)
 			if ($override_class->hasProperty($property->getName()))
-				throw new Exception(sprintf(Tools::displayError('the property %s in the class %s is already defined'), $property->getName(), $classname));
+				throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 
 		// Insert the methods from module override in override
 		$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
