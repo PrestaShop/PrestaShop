@@ -105,7 +105,6 @@ class CurrencyCore extends ObjectModel
 		// price sign before or after the price number
 		$this->prefix =	$this->format % 2 != 0 ? $this->sign.' ' : '';
 		$this->suffix =	$this->format % 2 == 0 ? ' '.$this->sign : '';
-
 	}
 	/**
 	 * Overriding check if currency with the same iso code already exists.
@@ -181,12 +180,15 @@ class CurrencyCore extends ObjectModel
 			'left' => $this->sign.' ',
 			'right' => ' '.$this->sign
 		);
+
 		$formats = array(
 			1 => array('left' => &$formated_strings['left'], 'right' => ''),
 			2 => array('left' => '', 'right' => &$formated_strings['right']),
 			3 => array('left' => &$formated_strings['left'], 'right' => ''),
 			4 => array('left' => '', 'right' => &$formated_strings['right']),
+			5 => array('left' => '', 'right' => &$formated_strings['right'])
 		);
+
 		return ($formats[$this->format][$side]);
 	}
 
