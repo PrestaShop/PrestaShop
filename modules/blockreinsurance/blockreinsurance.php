@@ -330,12 +330,12 @@ class Blockreinsurance extends Module
 	{
 		$return = true;
 		$tab_texts = array(
-			array('text' => 'Money back', 'file_name' => 'reinsurance-1-1.jpg'),
-			array('text' => 'Exchange in-store', 'file_name' => 'reinsurance-2-1.jpg'),
-			array('text' => 'Payment upon shipment', 'file_name' => 'reinsurance-3-1.jpg'),
-			array('text' => 'Free Shipping', 'file_name' => 'reinsurance-4-1.jpg'),
-			array('text' => '100% secured payment', 'file_name' => 'reinsurance-5-1.jpg')
-			);
+			array('text' => $this->l('Money back'), 'file_name' => 'reinsurance-1-1.jpg'),
+			array('text' => $this->l('Exchange in-store'), 'file_name' => 'reinsurance-2-1.jpg'),
+			array('text' => $this->l('Payment upon shipment'), 'file_name' => 'reinsurance-3-1.jpg'),
+			array('text' => $this->l('Free Shipping'), 'file_name' => 'reinsurance-4-1.jpg'),
+			array('text' => $this->l('100% secured payment'), 'file_name' => 'reinsurance-5-1.jpg')
+		);
 		
 		foreach($tab_texts as $tab)
 		{
