@@ -5,7 +5,7 @@
 			<div class="margin-form">
 				<div class="translatable">
 				{foreach from=$languages item=language}
-					<div class="lang_{$language.id_lang|intval}" style="display:{if $language.id_lang == $defaultLanguage}block{else}none{/if};float:left">
+					<div class="lang_{$language.id_lang|intval}" style="display:{if $language.id_lang == $id_lang_default}block{else}none{/if};float:left">
 						<input type="text" id="name_{$language.id_lang|intval}" name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)}" style="width:400px" />
 						<sup>*</sup>
 					</div>

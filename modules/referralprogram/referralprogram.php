@@ -290,15 +290,15 @@ class ReferralProgram extends Module
 		</table>
 			<p>
 				 <div style="float: left"><label class="t" for="discount_description">'.$this->l('Voucher description:').'</label></div>';
-			$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 			$languages = Language::getLanguages(true);
 
 			foreach ($languages AS $language)
 				$this->_html .= '
-				<div id="dd_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left; margin-left: 4px;">
+				<div id="dd_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left; margin-left: 4px;">
 					<input type="text" name="discount_description['.$language['id_lang'].']" id="discount_description['.$language['id_lang'].']" value="'.(isset($_POST['discount_description'][(int)($language['id_lang'])]) ? $_POST['discount_description'][(int)($language['id_lang'])] : $this->_configuration['REFERRAL_DISCOUNT_DESCRIPTION'][(int)($language['id_lang'])]).'" style="width: 200px;" />
 				</div>';
-			$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'dd', true);
+			$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'dd', true);
 			$this->_html .= '
 			</p>
 			<div class="clear center"><input class="button" style="margin-top: 10px" name="submitReferralProgram" id="submitReferralProgram" value="'.$this->l('Update settings').'" type="submit" /></div>
@@ -309,7 +309,6 @@ class ReferralProgram extends Module
 	private function _displayFormRules()
 	{
 		// Languages preliminaries
-		$defaultLanguage = $this->context->language->id;
 		$languages = Language::getLanguages();
 		$iso = $this->context->language->iso_code;
 		$divLangName = 'cpara¤dd';
@@ -331,18 +330,18 @@ class ReferralProgram extends Module
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript" type="text/javascript">id_language = Number('.$defaultLanguage.');</script>
+			<script language="javascript" type="text/javascript">id_language = Number('.$this->context->language->id.');</script>
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" enctype="multipart/form-data">
 			<fieldset>
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->l('Conditions of the referral program').'</legend>';
 		foreach ($languages AS $language)
 		{
 			$this->_html .= '
-			<div id="cpara_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+			<div id="cpara_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').';float: left;">
 				<textarea class="rte" cols="120" rows="25" id="body_paragraph_'.$language['id_lang'].'" name="body_paragraph_'.$language['id_lang'].'">'.($xml ? stripslashes(htmlspecialchars($xml->body->{'paragraph_'.$language['id_lang']})) : '').'</textarea>
 			</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'cpara', true);
+		$this->_html .= $this->displayFlags($languages, $this->context->language->id, $divLangName, 'cpara', true);
 
 		$this->_html .= '
 				<div class="clear center"><input type="submit" name="submitText" value="'.$this->l('Update text').'" class="button" style="margin-top: 10px" /></div>
