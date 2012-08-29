@@ -2296,13 +2296,34 @@ class AdminProductsControllerCore extends AdminController
 			return;
 
 		$product = $this->object;
-
+		$this->product_exists_in_shop = true;
 		if ($this->display == 'edit' && Validate::isLoadedObject($product) && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
 		{
-			$this->displayWarning($this->l('Warning: this product does not exist in this shop.'));
-			return;
+			$this->product_exists_in_shop = false;
+			if ($this->tab_display == 'Informations')
+				$this->displayWarning($this->l('Warning: this product does not exist in this shop.'));
+			
+			$default_product = new Product();
+			$fields_to_copy = array('minimal_quantity',
+											'price',
+											'additional_shipping_cost',
+											'wholesale_price',
+											'on_sale',
+											'online_only',
+											'unity',
+											'unit_price_ratio',
+											'ecotax',
+											'active',
+											'available_for_order',
+											'available_date',
+											'show_price',
+											'indexed',
+											'id_tax_rules_group',
+											'advanced_stock_management');
+			foreach ($fields_to_copy as $field)
+				$product->$field = $default_product->$field;
 		}
-		
+
 		// Product for multishop
 		$this->context->smarty->assign('bullet_common_field', '');
 		if (Shop::isFeatureActive() && $this->display == 'edit')
@@ -3178,22 +3199,27 @@ class AdminProductsControllerCore extends AdminController
 
 		if ((bool)$obj->id)
 		{
-			$labels = $obj->getCustomizationFields();
+			if ($this->product_exists_in_shop)
+			{		
+				$labels = $obj->getCustomizationFields();
 
-			$has_file_labels = (int)$this->getFieldValue($obj, 'uploadable_files');
-			$has_text_labels = (int)$this->getFieldValue($obj, 'text_fields');
+				$has_file_labels = (int)$this->getFieldValue($obj, 'uploadable_files');
+				$has_text_labels = (int)$this->getFieldValue($obj, 'text_fields');
 
-			$data->assign(array(
-				'obj' => $obj,
-				'table' => $this->table,
-				'languages' => $this->_languages,
-				'has_file_labels' => $has_file_labels,
-				'display_file_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_FILE),
-				'has_text_labels' => $has_text_labels,
-				'display_text_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_TEXTFIELD),
-				'uploadable_files' => (int)($this->getFieldValue($obj, 'uploadable_files') ? (int)$this->getFieldValue($obj, 'uploadable_files') : '0'),
-				'text_fields' => (int)($this->getFieldValue($obj, 'text_fields') ? (int)$this->getFieldValue($obj, 'text_fields') : '0'),
-			));
+				$data->assign(array(
+					'obj' => $obj,
+					'table' => $this->table,
+					'languages' => $this->_languages,
+					'has_file_labels' => $has_file_labels,
+					'display_file_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_FILE),
+					'has_text_labels' => $has_text_labels,
+					'display_text_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_TEXTFIELD),
+					'uploadable_files' => (int)($this->getFieldValue($obj, 'uploadable_files') ? (int)$this->getFieldValue($obj, 'uploadable_files') : '0'),
+					'text_fields' => (int)($this->getFieldValue($obj, 'text_fields') ? (int)$this->getFieldValue($obj, 'text_fields') : '0'),
+				));
+			}
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before adding customization.'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding customization.'));
@@ -3207,30 +3233,35 @@ class AdminProductsControllerCore extends AdminController
 
 		if ((bool)$obj->id)
 		{
-			$attachment_name = array();
-			$attachment_description = array();
-			foreach ($this->_languages as $language)
+			if ($this->product_exists_in_shop)
 			{
-				$attachment_name[$language['id_lang']] = '';
-				$attachment_description[$language['id_lang']] = '';
+				$attachment_name = array();
+				$attachment_description = array();
+				foreach ($this->_languages as $language)
+				{
+					$attachment_name[$language['id_lang']] = '';
+					$attachment_description[$language['id_lang']] = '';
+				}
+
+				$iso_tiny_mce = $this->context->language->iso_code;
+				$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
+
+				$data->assign(array(
+					'obj' => $obj,
+					'table' => $this->table,
+					'ad' => dirname($_SERVER['PHP_SELF']),
+					'iso_tiny_mce' => $iso_tiny_mce,
+					'languages' => $this->_languages,
+					'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
+					'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
+					'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
+					'attachment_name' => $attachment_name,
+					'attachment_description' => $attachment_description,
+					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
+				));
 			}
-
-			$iso_tiny_mce = $this->context->language->iso_code;
-			$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
-
-			$data->assign(array(
-				'obj' => $obj,
-				'table' => $this->table,
-				'ad' => dirname($_SERVER['PHP_SELF']),
-				'iso_tiny_mce' => $iso_tiny_mce,
-				'languages' => $this->_languages,
-				'attach1' => Attachment::getAttachments($this->context->language->id, $obj->id, true),
-				'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
-				'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
-				'attachment_name' => $attachment_name,
-				'attachment_description' => $attachment_description,
-				'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
-			));
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before adding attachements.'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding attachements.'));
@@ -3373,35 +3404,40 @@ class AdminProductsControllerCore extends AdminController
 
 		if ((bool)$obj->id)
 		{
-			$data->assign('product', $this->loadObject());
+			if ($this->product_exists_in_shop)
+			{
+				$data->assign('product', $this->loadObject());
 
-			$shops = false;
-			if (Shop::isFeatureActive())
-				$shops = Shop::getShops();
-			$data->assign('shops', $shops);
+				$shops = false;
+				if (Shop::isFeatureActive())
+					$shops = Shop::getShops();
+				$data->assign('shops', $shops);
 
-			$count_images = Db::getInstance()->getValue('
-				SELECT COUNT(id_product)
-				FROM '._DB_PREFIX_.'image
-				WHERE id_product = '.(int)$obj->id
-			);
-			$data->assign('countImages', $count_images);
+				$count_images = Db::getInstance()->getValue('
+					SELECT COUNT(id_product)
+					FROM '._DB_PREFIX_.'image
+					WHERE id_product = '.(int)$obj->id
+				);
+				$data->assign('countImages', $count_images);
 
-			$images = Image::getImages($this->context->language->id, $obj->id);
-			$data->assign('id_product', (int)Tools::getValue('id_product'));
-			$data->assign('id_category_default', (int)$this->_category->id);
+				$images = Image::getImages($this->context->language->id, $obj->id);
+				$data->assign('id_product', (int)Tools::getValue('id_product'));
+				$data->assign('id_category_default', (int)$this->_category->id);
 
-			foreach ($images as $k => $image)
-				$images[$k] = new Image($image['id_image']);
+				foreach ($images as $k => $image)
+					$images[$k] = new Image($image['id_image']);
 
-			$data->assign('images', $images);
+				$data->assign('images', $images);
 
-			$data->assign('token', $this->token);
-			$data->assign('table', $this->table);
-			$data->assign('max_image_size', $this->max_image_size / 1024 / 1024);
+				$data->assign('token', $this->token);
+				$data->assign('table', $this->table);
+				$data->assign('max_image_size', $this->max_image_size / 1024 / 1024);
 
-			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-			$data->assign('currency', $this->context->currency);
+				$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
+				$data->assign('currency', $this->context->currency);
+			}
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before adding images.'));	
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding images.'));
@@ -3422,55 +3458,60 @@ class AdminProductsControllerCore extends AdminController
 				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 		else if (Validate::isLoadedObject($product))
 		{
-			if ($product->is_virtual)
+			if ($this->product_exists_in_shop)
 			{
-				$data->assign('product', $product);
-				$this->displayWarning($this->l('A virtual product cannot have combinations.'));
+				if ($product->is_virtual)
+				{
+					$data->assign('product', $product);
+					$this->displayWarning($this->l('A virtual product cannot have combinations.'));
+				}
+				else
+				{
+					$attribute_js = array();
+					$attributes = Attribute::getAttributes($this->context->language->id, true);
+					foreach ($attributes as $k => $attribute)
+						$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
+					$currency = $this->context->currency;
+					$data->assign('attributeJs', $attribute_js);
+					$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
+
+					$data->assign('currency', $currency);
+
+					$images = Image::getImages($this->context->language->id, $product->id);
+
+					$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
+					$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
+
+					$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+					$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
+
+					$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
+					$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
+					$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
+					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
+
+					$i = 0;
+					$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
+					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
+					foreach ($images as $k => $image)
+					{
+						$images[$k]['obj'] = new Image($image['id_image']);
+						++$i;
+					}
+					$data->assign('images', $images);
+
+					$data->assign($this->tpl_form_vars);
+					$data->assign(array(
+						'list' => $this->renderListAttributes($product, $currency),
+						'product' => $product,
+						'id_category' => $product->getDefaultCategory(),
+						'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
+						'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0)
+					));
+				}
 			}
 			else
-			{
-				$attribute_js = array();
-				$attributes = Attribute::getAttributes($this->context->language->id, true);
-				foreach ($attributes as $k => $attribute)
-					$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-				$currency = $this->context->currency;
-				$data->assign('attributeJs', $attribute_js);
-				$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
-
-				$data->assign('currency', $currency);
-
-				$images = Image::getImages($this->context->language->id, $product->id);
-
-				$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
-				$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
-
-				$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-				$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
-
-				$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
-				$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-				$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
-
-				$i = 0;
-				$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
-				$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
-				foreach ($images as $k => $image)
-				{
-					$images[$k]['obj'] = new Image($image['id_image']);
-					++$i;
-				}
-				$data->assign('images', $images);
-
-				$data->assign($this->tpl_form_vars);
-				$data->assign(array(
-					'list' => $this->renderListAttributes($product, $currency),
-					'product' => $product,
-					'id_category' => $product->getDefaultCategory(),
-					'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
-					'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0)
-				));
-			}
+				$this->displayWarning($this->l('You must save this product in this shop before adding combinations.'));	
 		}
 		else
 		{
@@ -3585,129 +3626,134 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($obj->id)
 		{
-			// Get all id_product_attribute
-			$attributes = $obj->getAttributesResume($this->context->language->id);
-			if (empty($attributes))
-				$attributes[] = array(
-					'id_product_attribute' => 0,
-					'attribute_designation' => ''
-				);
-
-			// Get available quantities
-			$available_quantity = array();
-			$product_designation = array();
-
-			foreach ($attributes as $attribute)
+			if ($this->product_exists_in_shop)
 			{
-				// Get available quantity for the current product attribute in the current shop
-				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
-																														$attribute['id_product_attribute']);
-				// Get all product designation
-				$product_designation[$attribute['id_product_attribute']] = rtrim(
-					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
-					' - '
-				);
-			}
+				// Get all id_product_attribute
+				$attributes = $obj->getAttributesResume($this->context->language->id);
+				if (empty($attributes))
+					$attributes[] = array(
+						'id_product_attribute' => 0,
+						'attribute_designation' => ''
+					);
 
-			$show_quantities = true;
-			$shop_context = Shop::getContext();
-			$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+				// Get available quantities
+				$available_quantity = array();
+				$product_designation = array();
 
-			// if we are in all shops context, it's not possible to manage quantities at this level
-			if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL)
-				$show_quantities = false;
-			// if we are in group shop context
-			elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP)
-			{
-				// if quantities are not shared between shops of the group, it's not possible to manage them at group level
-				if (!$shop_group->share_stock)
-					$show_quantities = false;
-			}
-			// if we are in shop context
-			else
-			{
-				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
-				if ($shop_group->share_stock)
-					$show_quantities = false;
-			}
-
-			$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
-			$data->assign('has_attribute', $obj->hasAttributes());
-			// Check if product has combination, to display the available date only for the product or for each combination
-			if (Combination::isFeatureActive())
-				$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
-
-			// if advanced stock management is active, checks associations
-			$advanced_stock_management_warning = false;
-			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
-			{
-				$p_attributes = Product::getProductAttributesIds($obj->id);
-				$warehouses = array();
-
-				if (!$p_attributes)
-					$warehouses[] = Warehouse::getProductWarehouseList($obj->id, 0);
-
-				foreach ($p_attributes as $p_attribute)
+				foreach ($attributes as $attribute)
 				{
-					$ws = Warehouse::getProductWarehouseList($obj->id, $p_attribute['id_product_attribute']);
-					if ($ws)
-						$warehouses[] = $ws;
+					// Get available quantity for the current product attribute in the current shop
+					$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
+																															$attribute['id_product_attribute']);
+					// Get all product designation
+					$product_designation[$attribute['id_product_attribute']] = rtrim(
+						$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+						' - '
+					);
 				}
-				$warehouses = Tools::arrayUnique($warehouses);
 
-				if (empty($warehouses))
-					$advanced_stock_management_warning = true;
-			}
-			if ($advanced_stock_management_warning)
-			{
-				$this->displayWarning($this->l('If you wish to use the advanced stock management, you have to:'));
-				$this->displayWarning('- '.$this->l('associate your products with warehouses'));
-				$this->displayWarning('- '.$this->l('associate your warehouses with carriers'));
-				$this->displayWarning('- '.$this->l('associate your warehouses with the appropriate shops'));
-			}
+				$show_quantities = true;
+				$shop_context = Shop::getContext();
+				$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 
-			$pack_quantity = null;
-			// if product is a pack
-			if (Pack::isPack($obj->id))
-			{
-				$items = Pack::getItems((int)$obj->id, Configuration::get('PS_LANG_DEFAULT'));
-
-				// gets an array of quantities (quantity for the product / quantity in pack)
-				$pack_quantities = array();
-				foreach ($items as $item)
+				// if we are in all shops context, it's not possible to manage quantities at this level
+				if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL)
+					$show_quantities = false;
+				// if we are in group shop context
+				elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP)
 				{
-					if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
+					// if quantities are not shared between shops of the group, it's not possible to manage them at group level
+					if (!$shop_group->share_stock)
+						$show_quantities = false;
+				}
+				// if we are in shop context
+				else
+				{
+					// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
+					if ($shop_group->share_stock)
+						$show_quantities = false;
+				}
+
+				$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
+				$data->assign('has_attribute', $obj->hasAttributes());
+				// Check if product has combination, to display the available date only for the product or for each combination
+				if (Combination::isFeatureActive())
+					$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
+
+				// if advanced stock management is active, checks associations
+				$advanced_stock_management_warning = false;
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
+				{
+					$p_attributes = Product::getProductAttributesIds($obj->id);
+					$warehouses = array();
+
+					if (!$p_attributes)
+						$warehouses[] = Warehouse::getProductWarehouseList($obj->id, 0);
+
+					foreach ($p_attributes as $p_attribute)
 					{
-						$pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
-						$pack_quantities[] = Product::getQuantity($item->id, $pack_id_product_attribute) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+						$ws = Warehouse::getProductWarehouseList($obj->id, $p_attribute['id_product_attribute']);
+						if ($ws)
+							$warehouses[] = $ws;
 					}
-				}
+					$warehouses = Tools::arrayUnique($warehouses);
 
-				// gets the minimum
-				$pack_quantity = $pack_quantities[0];
-				foreach ($pack_quantities as $value)
+					if (empty($warehouses))
+						$advanced_stock_management_warning = true;
+				}
+				if ($advanced_stock_management_warning)
 				{
-					if ($pack_quantity > $value)
-						$pack_quantity = $value;
+					$this->displayWarning($this->l('If you wish to use the advanced stock management, you have to:'));
+					$this->displayWarning('- '.$this->l('associate your products with warehouses'));
+					$this->displayWarning('- '.$this->l('associate your warehouses with carriers'));
+					$this->displayWarning('- '.$this->l('associate your warehouses with the appropriate shops'));
 				}
 
-				if (!Warehouse::getPackWarehouses((int)$obj->id))
-					$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
-			}
+				$pack_quantity = null;
+				// if product is a pack
+				if (Pack::isPack($obj->id))
+				{
+					$items = Pack::getItems((int)$obj->id, Configuration::get('PS_LANG_DEFAULT'));
 
-			$data->assign(array(
-				'attributes' => $attributes,
-				'available_quantity' => $available_quantity,
-				'pack_quantity' => $pack_quantity,
-				'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
-				'product_designation' => $product_designation,
-				'product' => $obj,
-				'show_quantities' => $show_quantities,
-				'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
-				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
-				'token' => $this->token,
-				'languages' => $this->_languages,
-			));
+					// gets an array of quantities (quantity for the product / quantity in pack)
+					$pack_quantities = array();
+					foreach ($items as $item)
+					{
+						if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
+						{
+							$pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
+							$pack_quantities[] = Product::getQuantity($item->id, $pack_id_product_attribute) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+						}
+					}
+
+					// gets the minimum
+					$pack_quantity = $pack_quantities[0];
+					foreach ($pack_quantities as $value)
+					{
+						if ($pack_quantity > $value)
+							$pack_quantity = $value;
+					}
+
+					if (!Warehouse::getPackWarehouses((int)$obj->id))
+						$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
+				}
+
+				$data->assign(array(
+					'attributes' => $attributes,
+					'available_quantity' => $available_quantity,
+					'pack_quantity' => $pack_quantity,
+					'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+					'product_designation' => $product_designation,
+					'product' => $obj,
+					'show_quantities' => $show_quantities,
+					'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+					'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
+					'token' => $this->token,
+					'languages' => $this->_languages,
+				));
+			}
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before managing quantities.'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before managing quantities.'));
@@ -3721,66 +3767,71 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($obj->id)
 		{
-			// Get all id_product_attribute
-			$attributes = $obj->getAttributesResume($this->context->language->id);
-			if (empty($attributes))
-				$attributes[] = array(
-					'id_product' => $obj->id,
-					'id_product_attribute' => 0,
-					'attribute_designation' => ''
-				);
-
-			$product_designation = array();
-
-			foreach ($attributes as $attribute)
-				$product_designation[$attribute['id_product_attribute']] = rtrim(
-					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
-					' - '
-				);
-
-			// Get all available suppliers
-			$suppliers = Supplier::getSuppliers();
-
-			// Get already associated suppliers
-			$associated_suppliers = ProductSupplier::getSupplierCollection($obj->id);
-
-			// Get already associated suppliers and force to retreive product declinaisons
-			$product_supplier_collection = ProductSupplier::getSupplierCollection($obj->id, false);
-
-			$default_supplier = 0;
-
-			foreach ($suppliers as &$supplier)
+			if ($this->product_exists_in_shop)
 			{
-				$supplier['is_selected'] = false;
-				$supplier['is_default'] = false;
+				// Get all id_product_attribute
+				$attributes = $obj->getAttributesResume($this->context->language->id);
+				if (empty($attributes))
+					$attributes[] = array(
+						'id_product' => $obj->id,
+						'id_product_attribute' => 0,
+						'attribute_designation' => ''
+					);
 
-				foreach ($associated_suppliers as $associated_supplier)
-					if ($associated_supplier->id_supplier == $supplier['id_supplier'])
-					{
-						$associated_supplier->name = $supplier['name'];
-						$supplier['is_selected'] = true;
+				$product_designation = array();
 
-						if ($obj->id_supplier == $supplier['id_supplier'])
+				foreach ($attributes as $attribute)
+					$product_designation[$attribute['id_product_attribute']] = rtrim(
+						$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+						' - '
+					);
+
+				// Get all available suppliers
+				$suppliers = Supplier::getSuppliers();
+
+				// Get already associated suppliers
+				$associated_suppliers = ProductSupplier::getSupplierCollection($obj->id);
+
+				// Get already associated suppliers and force to retreive product declinaisons
+				$product_supplier_collection = ProductSupplier::getSupplierCollection($obj->id, false);
+
+				$default_supplier = 0;
+
+				foreach ($suppliers as &$supplier)
+				{
+					$supplier['is_selected'] = false;
+					$supplier['is_default'] = false;
+
+					foreach ($associated_suppliers as $associated_supplier)
+						if ($associated_supplier->id_supplier == $supplier['id_supplier'])
 						{
-							$supplier['is_default'] = true;
-							$default_supplier = $supplier['id_supplier'];
-						}
-					}
-			}
+							$associated_supplier->name = $supplier['name'];
+							$supplier['is_selected'] = true;
 
-			$data->assign(array(
-				'attributes' => $attributes,
-				'suppliers' => $suppliers,
-				'default_supplier' => $default_supplier,
-				'associated_suppliers' => $associated_suppliers,
-				'associated_suppliers_collection' => $product_supplier_collection,
-				'product_designation' => $product_designation,
-				'currencies' => Currency::getCurrencies(),
-				'product' => $obj,
-				'link' => $this->context->link,
-				'token' => $this->token,
-				'id_default_currency' => Configuration::get('PS_CURRENCY_DEFAULT'),
-			));
+							if ($obj->id_supplier == $supplier['id_supplier'])
+							{
+								$supplier['is_default'] = true;
+								$default_supplier = $supplier['id_supplier'];
+							}
+						}
+				}
+
+				$data->assign(array(
+					'attributes' => $attributes,
+					'suppliers' => $suppliers,
+					'default_supplier' => $default_supplier,
+					'associated_suppliers' => $associated_suppliers,
+					'associated_suppliers_collection' => $product_supplier_collection,
+					'product_designation' => $product_designation,
+					'currencies' => Currency::getCurrencies(),
+					'product' => $obj,
+					'link' => $this->context->link,
+					'token' => $this->token,
+					'id_default_currency' => Configuration::get('PS_CURRENCY_DEFAULT'),
+				));
+			}
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before managing suppliers'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before managing suppliers'));
@@ -3794,38 +3845,43 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($obj->id)
 		{
-			// Get all id_product_attribute
-			$attributes = $obj->getAttributesResume($this->context->language->id);
-			if (empty($attributes))
-				$attributes[] = array(
-					'id_product' => $obj->id,
-					'id_product_attribute' => 0,
-					'attribute_designation' => ''
-				);
+			if ($this->product_exists_in_shop)
+			{
+				// Get all id_product_attribute
+				$attributes = $obj->getAttributesResume($this->context->language->id);
+				if (empty($attributes))
+					$attributes[] = array(
+						'id_product' => $obj->id,
+						'id_product_attribute' => 0,
+						'attribute_designation' => ''
+					);
 
-			$product_designation = array();
+				$product_designation = array();
 
-			foreach ($attributes as $attribute)
-				$product_designation[$attribute['id_product_attribute']] = rtrim(
-					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
-					' - '
-				);
+				foreach ($attributes as $attribute)
+					$product_designation[$attribute['id_product_attribute']] = rtrim(
+						$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+						' - '
+					);
 
-			// Get all available warehouses
-			$warehouses = Warehouse::getWarehouses(true);
+				// Get all available warehouses
+				$warehouses = Warehouse::getWarehouses(true);
 
-			// Get already associated warehouses
-			$associated_warehouses_collection = WarehouseProductLocation::getCollection($obj->id);
+				// Get already associated warehouses
+				$associated_warehouses_collection = WarehouseProductLocation::getCollection($obj->id);
 
-			$data->assign(array(
-				'attributes' => $attributes,
-				'warehouses' => $warehouses,
-				'associated_warehouses' => $associated_warehouses_collection,
-				'product_designation' => $product_designation,
-				'product' => $obj,
-				'link' => $this->context->link,
-				'token' => $this->token
-			));
+				$data->assign(array(
+					'attributes' => $attributes,
+					'warehouses' => $warehouses,
+					'associated_warehouses' => $associated_warehouses_collection,
+					'product_designation' => $product_designation,
+					'product' => $obj,
+					'link' => $this->context->link,
+					'token' => $this->token
+				));
+			}
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before managing warehouses'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before managing warehouses'));
@@ -3844,34 +3900,39 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 		if ($obj->id)
 		{
-			$features = Feature::getFeatures($this->context->language->id);
-
-			foreach ($features as $k => $tab_features)
+			if ($this->product_exists_in_shop)
 			{
-				$features[$k]['current_item'] = false;
-				$features[$k]['val'] = array();
+				$features = Feature::getFeatures($this->context->language->id);
 
-				$custom = true;
-				foreach ($obj->getFeatures() as $tab_products)
-					if ($tab_products['id_feature'] == $tab_features['id_feature'])
-						$features[$k]['current_item'] = $tab_products['id_feature_value'];
+				foreach ($features as $k => $tab_features)
+				{
+					$features[$k]['current_item'] = false;
+					$features[$k]['val'] = array();
 
-				$features[$k]['featureValues'] = FeatureValue::getFeatureValuesWithLang($this->context->language->id, (int)$tab_features['id_feature']);
-				if (count($features[$k]['featureValues']))
-					foreach ($features[$k]['featureValues'] as $value)
-						if ($features[$k]['current_item'] == $value['id_feature_value'])
-							$custom = false;
+					$custom = true;
+					foreach ($obj->getFeatures() as $tab_products)
+						if ($tab_products['id_feature'] == $tab_features['id_feature'])
+							$features[$k]['current_item'] = $tab_products['id_feature_value'];
 
-				if ($custom)
-					$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+					$features[$k]['featureValues'] = FeatureValue::getFeatureValuesWithLang($this->context->language->id, (int)$tab_features['id_feature']);
+					if (count($features[$k]['featureValues']))
+						foreach ($features[$k]['featureValues'] as $value)
+							if ($features[$k]['current_item'] == $value['id_feature_value'])
+								$custom = false;
+
+					if ($custom)
+						$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+				}
+
+				$data->assign('available_features', $features);
+
+				$data->assign('product', $obj);
+				$data->assign('link', $this->context->link);
+				$data->assign('languages', $this->_languages);
+				$data->assign('default_form_language', $this->default_form_language);
 			}
-
-			$data->assign('available_features', $features);
-
-			$data->assign('product', $obj);
-			$data->assign('link', $this->context->link);
-			$data->assign('languages', $this->_languages);
-			$data->assign('default_form_language', $this->default_form_language);
+			else
+				$this->displayWarning($this->l('You must save this product in this shop before adding features.'));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding features.'));
