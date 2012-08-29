@@ -51,7 +51,7 @@ class BlockLink extends Module
 	public function install()
 	{
 		if (!parent::install() ||
-			!$this->registerHook('leftColumn') ||
+			!$this->registerHook('leftColumn') || !$this->registerHook('header') ||
 			!Db::getInstance()->execute('
 			CREATE TABLE '._DB_PREFIX_.'blocklink (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
@@ -107,6 +107,11 @@ class BlockLink extends Module
 	public function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
+	}
+	
+	public function hookHeader($params)
+	{
+		$this->context->controller->addCSS($this->_path.'blocklink.css', 'all');
 	}
 
 	public function getLinks()
