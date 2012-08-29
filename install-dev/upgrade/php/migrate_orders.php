@@ -110,7 +110,11 @@ function migrate_orders()
 				if (!in_array($k, $col_order_detail))
 					unset($order_details[$k]);
 				else
+				{
+					if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate')))
+						$order_details[$k] = (float)$order_details[$k];
 					$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
+				}
 			$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
 		}
 
@@ -164,7 +168,7 @@ function migrate_orders()
 		}
 	}
 
-	if ($cpt > 0)
+	if (count($values_order_detail))
 	{
 
 		if (!Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail)))
