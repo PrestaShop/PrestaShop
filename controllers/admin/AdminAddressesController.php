@@ -120,6 +120,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'size' => 33,
 					'required' => false,
+					'desc' => sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>')
 				),
 				array(
 					'type' => 'textarea',

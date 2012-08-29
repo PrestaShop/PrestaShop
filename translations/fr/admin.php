@@ -23,6 +23,7 @@ $_LANGADM['AdminAddresses38fb7d24e0d60a048f540ecb18e13376'] = 'Enregistrer';
 $_LANGADM['AdminAddresses3e053943605d9e4bf7dd7588ea19e9d2'] = 'Caractères interdits :';
 $_LANGADM['AdminAddresses41c2fff4867cc204120f001e7af20f7a'] = 'Téléphone mobile';
 $_LANGADM['AdminAddresses46a2a41cc6e552044816a2d04634545d'] = 'État/région';
+$_LANGADM['AdminAddresses4baf65516c9f7402c5b00b33aaa8a09f'] = 'Vous devez enregistrer au moins un numéro de téléphone %s';
 $_LANGADM['AdminAddresses57d056ed0984166336b7879c2af3657f'] = 'Ville';
 $_LANGADM['AdminAddresses59716c97497eb9694541f7c3d37b1a4d'] = 'Pays';
 $_LANGADM['AdminAddresses6252c0f2c2ed83b7b06dfca86d4650bb'] = 'Caractères interdits :';
@@ -3987,6 +3988,7 @@ $_LANGADM['AdminTaxese8cce94acc56227d96f94315fc5c0553'] = 'Activer ou désactive
 $_LANGADM['AdminTaxesede4759c9afae620fd586628789fa304'] = 'Activer la sélection';
 $_LANGADM['AdminTaxesf2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_LANGADM['AdminTaxesf8e46ee04ff2c7e26d46b9b5445825cf'] = 'La taxe à appliquer sur l\'écotaxe (ex. : écotaxe française = 19,6%)';
+$_LANGADM['AdminThemes08bce50e33470855b6cbc6b00d938586'] = 'Activer le thème mobile';
 $_LANGADM['AdminThemes1519f75ae34863531ec8743161c71c11'] = 'Caractère de séparation :';
 $_LANGADM['AdminThemes358b0205fd07c94c16a82d8278bc5b76'] = 'Logo des mails :';
 $_LANGADM['AdminThemes46238115be50712fd1d92c2362fb8e47'] = 'Dossier :';
