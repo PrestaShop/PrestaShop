@@ -93,32 +93,23 @@ class Autoload
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname])
 			{
-				require_once($this->root_dir.$this->index[$classname.'Core']);
-				if (file_exists($this->root_dir.'override/'.$this->index[$classname.'Core']))
-				{
-		 			$this->generateIndex();
-		 			require_once($this->root_dir.$this->index[$classname]);
-				}
-				else
-				{
-					// Since the classname does not exists (we only have a classCore class), we have to emulate the declaration of this class
-					$class_infos = new ReflectionClass($classname.'Core');
-					eval(($class_infos->isAbstract() ? 'abstract ' : '').'class '.$classname.' extends '.$classname.'Core {}');
-				}
+				require($this->root_dir.$this->index[$classname.'Core']);
+
+				// Since the classname does not exists (we only have a classCore class), we have to emulate the declaration of this class
+				$class_infos = new ReflectionClass($classname.'Core');
+				eval(($class_infos->isAbstract() ? 'abstract ' : '').'class '.$classname.' extends '.$classname.'Core {}');
 			}
 			else
 			{
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
-					require_once($this->root_dir.$this->index[$classname.'Core']);
-
-				if (isset($this->index[$classname]))
-					require_once($this->root_dir.$this->index[$classname]);
+					require($this->root_dir.$this->index[$classname.'Core']);
+				require($this->root_dir.$this->index[$classname]);
 			}
 		}
 		// Call directly ProductCore, ShopCore class
 		else
-			require_once($this->root_dir.$this->index[$classname]);
+			require($this->root_dir.$this->index[$classname]);
 	}
 
 	/**

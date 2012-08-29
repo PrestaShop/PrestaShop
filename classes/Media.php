@@ -218,7 +218,7 @@ class MediaCore
 			$file_uri = $js_uri;
 		// check if js files exists
 
-		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !file_exists($file_uri))
+		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
 		// adding file to the big array...;
@@ -240,7 +240,7 @@ class MediaCore
 		$url_data = parse_url($css_uri);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		// check if css files exists
-		if (!file_exists($file_uri))
+		if (!@filemtime($file_uri))
 			return false;
 
 		// adding file to the big array...
@@ -275,7 +275,7 @@ class MediaCore
 		// check if js files exists, if not try to load query from ajax.googleapis.com
 
 		$return = array();
-		if (file_exists($file_uri))
+		if (@filemtime($file_uri))
 			$return[] = Media::getJSPath($file);
 		else
 			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
@@ -314,7 +314,7 @@ class MediaCore
 				$ui_path['css'] = array_merge($ui_path['css'], $comp_css);
 		}
 
-		if (file_exists($file_uri))
+		if (@filemtime($file_uri))
 		{
 			if (!empty($ui_tmp))
 			{
@@ -351,9 +351,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (file_exists($file_uri.$file))
+		if (@filemtime($file_uri.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		else if (file_exists($file_uri.$name.'/'.$file))
+		elseif (@filemtime($file_uri.$name.'/'.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
@@ -373,9 +373,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (file_exists($file_uri.$file))
+		if (@filemtime($file_uri.$file))
 			return Media::getCSSPath($folder.$file);
-		else if (file_exists($file_uri.$name.'/'.$file))
+		elseif (@filemtime($file_uri.$name.'/'.$file))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;
