@@ -1,0 +1,9 @@
+/* Block links */
+#links_block_left .block_content li {border-bottom:1px dotted #eee}
+#links_block_left .block_contentt li.last {border:none;}
+#links_block_left .block_content li a {
+    display:block;
+    padding:7px 11px 5px 22px;
+    color:#333;
+    background:url(img/arrow_right_2.png) no-repeat 10px 10px transparent;
+}
