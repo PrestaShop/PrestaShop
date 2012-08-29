@@ -36,9 +36,11 @@
 		<span class="bold">
 			{if $nbManufacturers == 0}{l s='There are no manufacturers.'}
 			{else}
-				{if $nbManufacturers == 1}{l s='There is'}{else}{l s='There are'}{/if}&#160;
-				{$nbManufacturers}&#160;
-				{if $nbManufacturers == 1}{l s='manufacturer.'}{else}{l s='manufacturers.'}{/if}
+				{if $nbManufacturers == 1}
+					{l s='There is %d manufacturer.' sprintf=$nbManufacturers}
+				{else}
+					{l s='There are %d manufacturers.' sprintf=$nbManufacturers}
+				{/if}
 			{/if}
 		</span>{/strip}
 	</p>
@@ -51,7 +53,11 @@
 			<img src="{$img_manu_dir}{$manufacturer.image|escape:'htmlall':'UTF-8'}-medium.jpg" alt="" width="80" />
 			<h3>{$manufacturer.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}</h3>
 			<p>
-				{$manufacturer.nb_products|intval} {if $manufacturer.nb_products == 1}{l s='product'}{else}{l s='products'}{/if}
+				{if $manufacturer.nb_products == 1}
+					{l s='%d product' sprintf=$manufacturer.nb_products|intval}
+				{else}
+					{l s='%d products' sprintf=$manufacturer.nb_products|intval}
+				{/if}
 			</p>
 		{if $manufacturer.nb_products > 0}</a>{/if}
 		</li>
