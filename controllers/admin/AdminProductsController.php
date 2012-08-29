@@ -1648,36 +1648,39 @@ class AdminProductsControllerCore extends AdminController
 
 				if ($object->update())
 				{
-					if ($this->isTabSubmitted('Shipping'))
-						$this->addCarriers();
-					if ($this->isTabSubmitted('Associations'))
-						$this->updateAccessories($object);
-					if ($this->isTabSubmitted('Suppliers'))
-						$this->processSuppliers();
+					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
+					{
+						if ($this->isTabSubmitted('Shipping'))
+							$this->addCarriers();
+						if ($this->isTabSubmitted('Associations'))
+							$this->updateAccessories($object);
+						if ($this->isTabSubmitted('Suppliers'))
+							$this->processSuppliers();
+						if ($this->isTabSubmitted('Features'))
+							$this->processFeatures();
+						if ($this->isTabSubmitted('Combinations'))
+							$this->processProductAttribute();
+						if ($this->isTabSubmitted('Prices'))
+						{
+							$this->processPriceAddition();
+							$this->processSpecificPricePriorities();
+							$this->object->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
+						}
+						if ($this->isTabSubmitted('Customization'))
+							$this->processCustomizationConfiguration();
+						if ($this->isTabSubmitted('Attachments'))
+							$this->processAttachments();
+
+						$this->updatePackItems($object);
+						$this->updateDownloadProduct($object, 1);
+						$this->updateTags(Language::getLanguages(false), $object);
+						
+						if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'), true))
+							$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
+					}
+					
 					if ($this->isTabSubmitted('Warehouses'))
 						$this->processWarehouses();
-					if ($this->isTabSubmitted('Features'))
-						$this->processFeatures();
-					if ($this->isTabSubmitted('Combinations'))
-						$this->processProductAttribute();
-					if ($this->isTabSubmitted('Prices'))
-					{
-						$this->processPriceAddition();
-						$this->processSpecificPricePriorities();
-						$this->object->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
-					}
-					if ($this->isTabSubmitted('Customization'))
-						$this->processCustomizationConfiguration();
-					if ($this->isTabSubmitted('Attachments'))
-						$this->processAttachments();
-
-					$this->updatePackItems($object);
-					$this->updateDownloadProduct($object, 1);
-					$this->updateTags(Language::getLanguages(false), $object);
-
-					if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'), true))
-						$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-
 					if (empty($this->errors))
 					{
 						Hook::exec('actionProductUpdate', array('product' => $object));
