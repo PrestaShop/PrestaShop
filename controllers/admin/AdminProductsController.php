@@ -771,8 +771,6 @@ class AdminProductsControllerCore extends AdminController
 									$product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
 							}
 						}
-						else
-							$id_value = $product->addFeaturesToDB($match[1], 0, 1);
 					}
 				}
 			}
