@@ -59,7 +59,7 @@
 	var txtNoCarrierIsSelected = "{l s='No carrier has been selected'}";
 	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order'}";
 	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted'}";
-	var txtTOSIsAccepted = "{l s='Terms of service is accepted'}";
+	var txtTOSIsAccepted = "{l s='Terms of Service have been accepted'}";
 	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted'}";
 	var txtThereis = "{l s='There is'}";
 	var txtErrors = "{l s='error(s)'}";

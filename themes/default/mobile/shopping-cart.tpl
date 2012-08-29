@@ -181,14 +181,14 @@
 	</div><!-- /grid-a -->
 	<br />
 	{if $isLogged AND !$isGuest}
-		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back">Continue Shopping</a>
+		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back">{l s='Continue shopping'}</a>
 	{else}
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			<li data-theme="a" data-icon="back">
-				<a href="{$link->getPageLink('index', true)}">{l s='Continue Shopping'}</a>
+				<a href="{$link->getPageLink('index', true)}">{l s='Continue shopping'}</a>
 			</li>
 			<li data-theme="b" data-icon="check">
-				<a href="{$link->getPageLink('authentication', true)}&back=order-opc">{l s='Confirm Order'}</a>
+				<a href="{$link->getPageLink('authentication', true)}&back=order-opc">{l s='Confirm order'}</a>
 			</li>
 		</ul>
 	{/if}

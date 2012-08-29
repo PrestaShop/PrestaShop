@@ -28,7 +28,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-		<p>{l s='Welcome to your account. Here you can manage your addresses and orders.'}</p>
+		<p>{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</p>
 		
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			{if $has_customer_an_address}
