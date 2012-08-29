@@ -2966,7 +2966,8 @@ class ProductCore extends ObjectModel
 				($active ? ' AND product_shop.`active` = 1' : '');
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
-
+		foreach ($result as &$row)
+			$row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
 		return $this->getProductsProperties($id_lang, $result);
 	}
 
