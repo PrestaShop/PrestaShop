@@ -734,9 +734,9 @@ class DispatcherCore
 		{
 			if ($controller_filename[0] != '.')
 			{
-				if (is_dir($dir.$controller_filename))
+				if (!strpos($controller_filename, '.php') && is_dir($dir.$controller_filename))
 					$controllers += Dispatcher::getControllersInDirectory($dir.$controller_filename.DIRECTORY_SEPARATOR);
-				else if ($controller_filename != 'index.php')
+				elseif ($controller_filename != 'index.php')
 				{
 					$key = str_replace(array('controller.php', '.php'), '', strtolower($controller_filename));
 					$controllers[$key] = basename($controller_filename, '.php');
