@@ -72,7 +72,8 @@ class TranslateCore
 		else
 			$str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
 
-		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
+		if ($htmlentities)
+			$str = htmlentities($str, ENT_QUOTES, 'utf-8');
 		$str = str_replace('"', '&quot;', $str);
 
 		if ($sprintf !== null)
