@@ -40,7 +40,7 @@
 {elseif isset($category)}
 	<div class="block-cms">
 		{if isset($sub_category) & !empty($sub_category)}	
-			<h3 class="bg">{l s='List of sub categories in '}{$category->name}{l s=':'}</h3>
+			<h3 class="bg">{l s='List of sub categories in %s:' sprintf=$category->name}</h3>
 			<ul data-role="listview" data-inset="true">
 				{foreach from=$sub_category item=subcategory}
 					<li>
@@ -50,7 +50,7 @@
 			</ul>
 		{/if}
 		{if isset($cms_pages) & !empty($cms_pages)}
-		<h3 class="bg">{l s='List of pages in '}{$category->name}{l s=':'}</h3>
+		<h3 class="bg">{l s='List of pages in %s:' sprintf=$category->name}</h3>
 			<ul data-role="listview" data-inset="true">
 				{foreach from=$cms_pages item=cmspages}
 					<li>

@@ -34,11 +34,14 @@
 {else}
 	<p class="nbrmanufacturer">{strip}
 		<span class="bold">
-			{if $nbSuppliers == 0}{l s='There are no suppliers.'}
+			{if $nbSuppliers == 0}
+				{l s='There are no suppliers.'}
 			{else}
-				{if $nbSuppliers == 1}{l s='There is'}{else}{l s='There are'}{/if}&#160;
-				{$nbSuppliers}&#160;
-				{if $nbSuppliers == 1}{l s='supplier.'}{else}{l s='suppliers.'}{/if}
+				{if $nbSuppliers == 1}
+					{l s='There is %d supplier.' sprintf=$nbSuppliers}
+				{else}
+					{l s='There are %d suppliers.' sprintf=$nbSuppliers}
+				{/if}
 			{/if}
 		</span>{/strip}
 	</p>
@@ -55,7 +58,11 @@
 			<!-- name -->
 			<h3>{$supplier.name|truncate:60:'...'|escape:'htmlall':'UTF-8'}</h3>
 			<p>
-			{$supplier.nb_products|intval} {if $supplier.nb_products == 1}{l s='product'}{else}{l s='products'}{/if}
+			{if $supplier.nb_products == 1}
+				{l s='%d product' sprintf=$supplier.nb_products|intval}
+			{else}
+				{l s='%d products' sprintf=$supplier.nb_products|intval}
+			{/if}
 			</p>
 			{if $supplier.nb_products > 0}</a>{/if}
 		</li>

@@ -812,6 +812,8 @@ class AdminTranslationsControllerCore extends AdminController
 				$directories['tpl'] = array(
 					_PS_THEME_SELECTED_DIR_.'/' => scandir(_PS_THEME_SELECTED_DIR_),
 					_PS_THEME_OVERRIDE_DIR_.'/' => Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_) ? scandir(_PS_THEME_OVERRIDE_DIR_) : array(),
+					_PS_THEME_SELECTED_DIR_.'/mobile/' => scandir(_PS_THEME_SELECTED_DIR_.'/mobile/'),
+					_PS_THEME_OVERRIDE_DIR_.'/mobile/' => Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_.'/mobile/') ? scandir(_PS_THEME_OVERRIDE_DIR_.'/mobile/') : array(),
 					_PS_ALL_THEMES_DIR_.'/' => scandir(_PS_ALL_THEMES_DIR_)
 				);
 				break;
@@ -1490,7 +1492,11 @@ class AdminTranslationsControllerCore extends AdminController
 						}
 					}
 
-					$tabs_array[$prefix_key] = $new_lang;
+					if (isset($tabs_array[$prefix_key]))
+						$tabs_array[$prefix_key] = array_merge($tabs_array[$prefix_key], $new_lang);
+					else
+						$tabs_array[$prefix_key] = $new_lang;
+
 					$count += count($new_lang);
 				}
 			}
