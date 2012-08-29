@@ -309,10 +309,10 @@ class HomeSlider extends Module
 			$this->adminDisplayWarning(sprintf($this->l('modules %s must be writable (CHMOD 755 / 777)'), $this->name));
 
 		/* Gets languages and sets which div requires translations */
-		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
+		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$divLangName = 'image¤title¤url¤legend¤description';
-		$this->_html .= '<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
+		$this->_html .= '<script type="text/javascript">id_language = Number('.$id_lang_default.');</script>';
 
 		/* Form */
 		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">';
@@ -326,7 +326,7 @@ class HomeSlider extends Module
 		$this->_html .= '<label>'.$this->l('Select a file:').' * </label><div class="margin-form">';
 		foreach ($languages as $language)
 		{
-			$this->_html .= '<div id="image_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">';
+			$this->_html .= '<div id="image_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">';
 			$this->_html .= '<input type="file" name="image_'.$language['id_lang'].'" id="image_'.$language['id_lang'].'" size="30" value="'.(isset($slide->image[$language['id_lang']]) ? $slide->image[$language['id_lang']] : '').'"/>';
 			/* Sets image as hidden in case it does not change */
 			if ($slide && $slide->image[$language['id_lang']])
@@ -336,7 +336,7 @@ class HomeSlider extends Module
 				$this->_html .= '<img src="'.__PS_BASE_URI__.'modules/'.$this->name.'/images/'.$slide->image[$language['id_lang']].'" width="'.(Configuration::get('HOMESLIDER_WIDTH')/2).'" height="'.(Configuration::get('HOMESLIDER_HEIGHT')/2).'" alt=""/>';
 			$this->_html .= '</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'image', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'image', true);
 		/* End Fieldset Upload */
 		$this->_html .= '</fieldset><br /><br />';
 
@@ -358,11 +358,11 @@ class HomeSlider extends Module
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
-					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
 						<input type="text" name="title_'.$language['id_lang'].'" id="title_'.$language['id_lang'].'" size="30" value="'.(isset($slide->title[$language['id_lang']]) ? $slide->title[$language['id_lang']] : '').'"/>
 					</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'title', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'title', true);
 		$this->_html .= '</div><br /><br />';
 
 		/* URL */
@@ -370,11 +370,11 @@ class HomeSlider extends Module
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
-					<div id="url_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+					<div id="url_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
 						<input type="text" name="url_'.$language['id_lang'].'" id="url_'.$language['id_lang'].'" size="30" value="'.(isset($slide->url[$language['id_lang']]) ? $slide->url[$language['id_lang']] : '').'"/>
 					</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'url', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'url', true);
 		$this->_html .= '</div><br /><br />';
 
 		/* Legend */
@@ -382,11 +382,11 @@ class HomeSlider extends Module
 		foreach ($languages as $language)
 		{
 			$this->_html .= '
-					<div id="legend_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+					<div id="legend_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
 						<input type="text" name="legend_'.$language['id_lang'].'" id="legend_'.$language['id_lang'].'" size="30" value="'.(isset($slide->legend[$language['id_lang']]) ? $slide->legend[$language['id_lang']] : '').'"/>
 					</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'legend', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'legend', true);
 		$this->_html .= '</div><br /><br />';
 
 		/* Description */
@@ -395,11 +395,11 @@ class HomeSlider extends Module
 		<div class="margin-form">';
 		foreach ($languages as $language)
 		{
-			$this->_html .= '<div id="description_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+			$this->_html .= '<div id="description_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
 				<textarea name="description_'.$language['id_lang'].'" rows="10" cols="29">'.(isset($slide->description[$language['id_lang']]) ? $slide->description[$language['id_lang']] : '').'</textarea>
 			</div>';
 		}
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'description', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'description', true);
 		$this->_html .= '</div><div class="clear"></div><br />';
 
 		/* Active */
@@ -481,16 +481,16 @@ class HomeSlider extends Module
 			}
 
 			/* Checks title/url/legend/description for default lang */
-			$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
-			if (strlen(Tools::getValue('title_'.$defaultLanguage)) == 0)
+			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
+			if (strlen(Tools::getValue('title_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('Title is not set');
-			if (strlen(Tools::getValue('legend_'.$defaultLanguage)) == 0)
+			if (strlen(Tools::getValue('legend_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('Legend is not set');
-			if (strlen(Tools::getValue('url_'.$defaultLanguage)) == 0)
+			if (strlen(Tools::getValue('url_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('URL is not set');
-			if (!isset($_FILES['image_'.$defaultLanguage]) || empty($_FILES['image_'.$defaultLanguage]['tmp_name']))
+			if (!isset($_FILES['image_'.$id_lang_default]) || empty($_FILES['image_'.$id_lang_default]['tmp_name']))
 				$errors[] = $this->l('Image is not set');
-			if (Tools::getValue('image_old_'.$defaultLanguage) && !Validate::isFileName(Tools::getValue('image_old_'.$defaultLanguage)))
+			if (Tools::getValue('image_old_'.$id_lang_default) && !Validate::isFileName(Tools::getValue('image_old_'.$id_lang_default)))
 				$errors[] = $this->l('Image is not set');
 		} /* Validation for deletion */
 		elseif (Tools::isSubmit('delete_id_slide') && (!Validate::isInt(Tools::getValue('delete_id_slide')) || !$this->slideExists((int)Tools::getValue('delete_id_slide'))))

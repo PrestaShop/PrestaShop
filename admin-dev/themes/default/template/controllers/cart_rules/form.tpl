@@ -54,6 +54,6 @@
 			name: '{$language.name|escape:'quotes'}'
 		};
 	{/foreach}
-	displayFlags(languages, {$defaultLanguage});
+	displayFlags(languages, {$id_lang_default});
 </script>
 <script type="text/javascript" src="themes/default/template/controllers/cart_rules/form.js"></script>

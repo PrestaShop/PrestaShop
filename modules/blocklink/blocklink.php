@@ -149,7 +149,7 @@ class BlockLink extends Module
 	{
 		if (!($languages = Language::getLanguages()))
 			 return false;
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 
 		if ($id_link = Tools::getValue('id_link'))
 		{
@@ -165,7 +165,7 @@ class BlockLink extends Module
 						return false;
 		 	 	}
 				else
-					if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)$id_link.', '.$language['id_lang'].', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
+					if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)$id_link.', '.$language['id_lang'].', \''.pSQL($_POST['text_'.$id_lang_default]).'\')'))
 						return false;
 		}
 		else
@@ -183,7 +183,7 @@ class BlockLink extends Module
 						return false;
 				}
 				else
-					if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)$id_link.', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$defaultLanguage]).'\')'))
+					if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)$id_link.', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$id_lang_default]).'\')'))
 						return false;
 		}
 
@@ -289,7 +289,7 @@ class BlockLink extends Module
 	private function _displayForm()
 	{
 	 	/* Language */
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$divLangName = 'text¤title';
 		/* Title */
@@ -314,7 +314,7 @@ class BlockLink extends Module
 		}
 		$this->_html .= '
 		<script type="text/javascript">
-			id_language = Number('.$defaultLanguage.');
+			id_language = Number('.$id_lang_default.');
 		</script>
 		<fieldset>
 			<legend><img src="'.$this->_path.'add.png" alt="" title="" /> '.$this->l('Add a new link').'</legend>
@@ -324,10 +324,10 @@ class BlockLink extends Module
 				<div class="margin-form">';
 			foreach ($languages as $language)
 				$this->_html .= '
-					<div id="text_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
+					<div id="text_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
 						<input type="text" name="text_'.$language['id_lang'].'" id="textInput_'.$language['id_lang'].'" value="'.((isset($links) && isset($links['text'][$language['id_lang']])) ? $links['text'][$language['id_lang']] : '').'" /><sup> *</sup>
 					</div>';
-			$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'text', true);
+			$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'text', true);
 			$this->_html .= '
 					<div class="clear"></div>
 				</div>
@@ -358,10 +358,10 @@ class BlockLink extends Module
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$this->_html .= '
-					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
+					<div id="title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
 						<input type="text" name="title_'.$language['id_lang'].'" value="'.Tools::safeOutput(($this->error && isset($_POST['title'])) ? $_POST['title'] : Configuration::get('PS_BLOCKLINK_TITLE', $language['id_lang'])).'" /><sup> *</sup>
 					</div>';
-		$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'title', true);
+		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'title', true);
 		$this->_html .= '
 				<div class="clear"></div>
 				</div>

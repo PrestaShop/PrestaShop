@@ -169,7 +169,7 @@ class Loyalty extends Module
 	{
 		if (Tools::isSubmit('submitLoyalty'))
 		{
-			$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 			$languages = Language::getLanguages();
 			
 			$this->_errors = array();
@@ -196,28 +196,28 @@ class Loyalty extends Module
 					$this->loyaltyStateConvert->name[(int)($language['id_lang'])] = Tools::getValue('convert_loyalty_state_'.(int)($language['id_lang']));
 					$this->loyaltyStateNoneAward->name[(int)($language['id_lang'])] = Tools::getValue('none_award_loyalty_state_'.(int)($language['id_lang']));
 				}
-				if (empty($arrayVoucherDetails[$defaultLanguage]))
-					$arrayVoucherDetails[$defaultLanguage] = ' ';
+				if (empty($arrayVoucherDetails[$id_lang_default]))
+					$arrayVoucherDetails[$id_lang_default] = ' ';
 				Configuration::updateValue('PS_LOYALTY_VOUCHER_DETAILS', $arrayVoucherDetails);
 			
-				if (empty($this->loyaltyStateDefault->name[$defaultLanguage]))
-					$this->loyaltyStateDefault->name[$defaultLanguage] = ' ';
+				if (empty($this->loyaltyStateDefault->name[$id_lang_default]))
+					$this->loyaltyStateDefault->name[$id_lang_default] = ' ';
 				$this->loyaltyStateDefault->save();
 			
-				if (empty($this->loyaltyStateValidation->name[$defaultLanguage]))
-					$this->loyaltyStateValidation->name[$defaultLanguage] = ' ';
+				if (empty($this->loyaltyStateValidation->name[$id_lang_default]))
+					$this->loyaltyStateValidation->name[$id_lang_default] = ' ';
 				$this->loyaltyStateValidation->save();
 			
-				if (empty($this->loyaltyStateCancel->name[$defaultLanguage]))
-					$this->loyaltyStateCancel->name[$defaultLanguage] = ' ';
+				if (empty($this->loyaltyStateCancel->name[$id_lang_default]))
+					$this->loyaltyStateCancel->name[$id_lang_default] = ' ';
 				$this->loyaltyStateCancel->save();
 			
-				if (empty($this->loyaltyStateConvert->name[$defaultLanguage]))
-					$this->loyaltyStateConvert->name[$defaultLanguage] = ' ';
+				if (empty($this->loyaltyStateConvert->name[$id_lang_default]))
+					$this->loyaltyStateConvert->name[$id_lang_default] = ' ';
 				$this->loyaltyStateConvert->save();
 			
-				if (empty($this->loyaltyStateNoneAward->name[$defaultLanguage]))
-					$this->loyaltyStateNoneAward->name[$defaultLanguage] = ' ';
+				if (empty($this->loyaltyStateNoneAward->name[$id_lang_default]))
+					$this->loyaltyStateNoneAward->name[$id_lang_default] = ' ';
 				$this->loyaltyStateNoneAward->save();
 
 				echo $this->displayConfirmation($this->l('Settings updated.'));
@@ -249,13 +249,13 @@ class Loyalty extends Module
 
 		$order_states = OrderState::getOrderStates($this->context->language->id);
 		$currency = new Currency((int)(Configuration::get('PS_CURRENCY_DEFAULT')));
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$languageIds = 'voucher_details¤default_loyalty_state¤none_award_loyalty_state¤convert_loyalty_state¤validation_loyalty_state¤cancel_loyalty_state';
 
 		$html = '
 		<script type="text/javascript">
-			id_language = Number('.$defaultLanguage.');
+			id_language = Number('.$id_lang_default.');
 		</script>
 		<h2>'.$this->l('Loyalty Program').'</h2>
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
@@ -276,10 +276,10 @@ class Loyalty extends Module
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="voucher_details_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
+					<div id="voucher_details_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
 						<input size="33" type="text" name="voucher_details_'.$language['id_lang'].'" value="'.Configuration::get('PS_LOYALTY_VOUCHER_DETAILS', (int)($language['id_lang'])).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'voucher_details', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'voucher_details', true);
 		$html .= '	</div>
 				<div class="clear" style="margin-top: 20px"></div>
 				<label>'.$this->l('Minimum amount in which the voucher can be used').'</label>
@@ -335,50 +335,50 @@ class Loyalty extends Module
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="default_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="default_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateDefault->name[(int)($language['id_lang'])]) ? $this->loyaltyStateDefault->name[(int)($language['id_lang'])] : $this->loyaltyStateDefault->name[(int)$defaultLanguage]).'" />
+					<div id="default_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="default_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateDefault->name[(int)($language['id_lang'])]) ? $this->loyaltyStateDefault->name[(int)($language['id_lang'])] : $this->loyaltyStateDefault->name[(int)$id_lang_default]).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'default_loyalty_state', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'default_loyalty_state', true);
 		$html .= '	</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Unavailable').'</label>
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="none_award_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="none_award_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateNoneAward->name[(int)($language['id_lang'])]) ? $this->loyaltyStateNoneAward->name[(int)($language['id_lang'])] : $this->loyaltyStateNoneAward->name[(int)$defaultLanguage]).'" />
+					<div id="none_award_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="none_award_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateNoneAward->name[(int)($language['id_lang'])]) ? $this->loyaltyStateNoneAward->name[(int)($language['id_lang'])] : $this->loyaltyStateNoneAward->name[(int)$id_lang_default]).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'none_award_loyalty_state', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'none_award_loyalty_state', true);
 		$html .= '	</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Converted').'</label>
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="convert_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="convert_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateConvert->name[(int)($language['id_lang'])]) ? $this->loyaltyStateConvert->name[(int)($language['id_lang'])] : $this->loyaltyStateConvert->name[(int)$defaultLanguage]).'" />
+					<div id="convert_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="convert_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateConvert->name[(int)($language['id_lang'])]) ? $this->loyaltyStateConvert->name[(int)($language['id_lang'])] : $this->loyaltyStateConvert->name[(int)$id_lang_default]).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'convert_loyalty_state', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'convert_loyalty_state', true);
 		$html .= '	</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Validation').'</label>
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="validation_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="validation_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateValidation->name[(int)($language['id_lang'])]) ? $this->loyaltyStateValidation->name[(int)($language['id_lang'])] : $this->loyaltyStateValidation->name[(int)$defaultLanguage]).'" />
+					<div id="validation_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="validation_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateValidation->name[(int)($language['id_lang'])]) ? $this->loyaltyStateValidation->name[(int)($language['id_lang'])] : $this->loyaltyStateValidation->name[(int)$id_lang_default]).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'validation_loyalty_state', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'validation_loyalty_state', true);
 		$html .= '	</div>
 				<div class="clear"></div>
 				<label>'.$this->l('Cancelled').'</label>
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$html .= '
-					<div id="cancel_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').'; float: left;">
-						<input size="33" type="text" name="cancel_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateCancel->name[(int)($language['id_lang'])]) ? $this->loyaltyStateCancel->name[(int)($language['id_lang'])] : $this->loyaltyStateCancel->name[(int)$defaultLanguage]).'" />
+					<div id="cancel_loyalty_state_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
+						<input size="33" type="text" name="cancel_loyalty_state_'.$language['id_lang'].'" value="'.(isset($this->loyaltyStateCancel->name[(int)($language['id_lang'])]) ? $this->loyaltyStateCancel->name[(int)($language['id_lang'])] : $this->loyaltyStateCancel->name[(int)$id_lang_default]).'" />
 					</div>';
-		$html .= $this->displayFlags($languages, $defaultLanguage, $languageIds, 'cancel_loyalty_state', true);
+		$html .= $this->displayFlags($languages, $id_lang_default, $languageIds, 'cancel_loyalty_state', true);
 		$html .= '	</div>
 				<div class="clear center">
 					<input type="submit" style="margin-top:20px" name="submitLoyalty" id="submitLoyalty" value="'.$this->l('   Save   ').'" class="button" />
