@@ -1247,7 +1247,7 @@ class ToolsCore
 
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
 			return @file_get_contents($url, $use_include_path, $stream_context);
-		elseif (function_exists('curl_init') && in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
+		elseif (function_exists('curl_init'))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
