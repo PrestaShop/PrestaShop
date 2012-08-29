@@ -49,7 +49,7 @@ class Blockcustomerprivacy extends Module
 	
 	public function install()
 	{	
-		$return = (parent::install() && $this->registerHook('createAccountForm'));
+		$return = (parent::install() && $this->registerHook('createAccountForm') && $this->registerHook('header') && $this->registerHook('actionBeforeSubmitAccount'));
 		Configuration::updateValue('CUSTPRIV_MESSAGE', array($this->context->language->id => 
 			$this->l('The personal data you provide is used to answer to your queries, process your orders or allow you to access specific information.').' '.
 			$this->l('You have a right to modify and delete all the personal information which we hold concerning yourself in the "my account" page.')
@@ -153,18 +153,41 @@ class Blockcustomerprivacy extends Module
 		return $content;
 	}
 	
-	public function hookCreateAccountForm($params)
+	public function checkConfig()
 	{
 		if (!$this->active)
-			return;
+			return false;
+		
 		$message = Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id);
 		if (empty($message))
+			return false;
+		
+		return true;
+	}
+	
+	public function hookHeader($params)
+	{
+		if (!$this->checkConfig())
+			return;
+		$this->context->controller->addJS(($this->_path).'blockcustomerprivacy.js');
+	}
+	
+	public function hookActionBeforeSubmitAccount($params)
+	{
+		if (!$this->checkConfig())
 			return;
 		
-		$this->smarty->assign(array(
-			'privacy_message' => $message,
-			'error_message' => $this->l('Please agree with the customer data privacy by ticking the checkbox below.')
-		));
+		if (!Tools::getValue('customer_privacy'))
+			$this->context->controller->errors[] = $this->l('Please agree with the customer data privacy by ticking the checkbox below.');
+	}
+	
+	public function hookCreateAccountForm($params)
+	{
+		if (!$this->checkConfig())
+			return;
+		
+		$this->smarty->assign('privacy_message', Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id));
+		
 		return $this->display(__FILE__, 'blockcustomerprivacy.tpl');
 	}
-}
+} 
