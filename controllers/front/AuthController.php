@@ -372,6 +372,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitAccount()
 	{
+		Hook::exec('actionBeforeSubmitAccount');
 		$this->create_account = true;
 		if (Tools::isSubmit('submitAccount'))
 			$this->context->smarty->assign('email_create', 1);

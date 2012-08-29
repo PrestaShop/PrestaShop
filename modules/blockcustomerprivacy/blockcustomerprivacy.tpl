@@ -23,33 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-	var error_message = "<p>{$error_message}</p>";
-	{literal}
-		$(document).ready(function(){
-			if ($().live) {
-				$("#account-creation_form").live("submit", function(){
-					if($("#customer_privacy").length > 0 && !$("#customer_privacy").is(":checked")) {
-						$("div.error_customerprivacy").empty().append(error_message);
-						return false;
-					} else {
-						$("div.error_customerprivacy").empty();
-					}
-				});
-			} else {
-				$("#account-creation_form").submit(function(){
-					if($("#customer_privacy").length > 0 && !$("#customer_privacy").is(":checked")) {
-						$("div.error_customerprivacy").empty().append(error_message);
-						return false;
-					} else {
-						$("div.error_customerprivacy").empty();
-					}
-				});
-			}
-		});
-	{/literal}
-</script>
-
 <div class="error_customerprivacy" style="color:red;"></div>
 <fieldset class="account_creation customerprivacy">
 	<h3>{l s='Customer data privacy' mod='blockcustomerprivacy'}</h3>
