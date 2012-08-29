@@ -2300,7 +2300,7 @@ class CartCore extends ObjectModel
 		}
 		
 		$cache[(int)$dontAutoSeletectOptions] = $delivery_option;
-		
+
 		return $delivery_option;
 	}
 
