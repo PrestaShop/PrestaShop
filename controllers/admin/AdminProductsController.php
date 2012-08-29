@@ -45,23 +45,7 @@ class AdminProductsControllerCore extends AdminController
 	 * The tabs are preloaded from the smallest to the highest number.
 	 * @var array Product tabs.
 	 */
-	protected $available_tabs = array(
-		'Informations' => 0,
-		'Pack' => 7,
-		'VirtualProduct' => 8,
-		'Prices' => 1,
-		'Seo' => 2,
-		'Associations' => 3,
-		'Images' => 9,
-		'Shipping' => 4,
-		'Combinations' => 5,
-		'Features' => 10,
-		'Customization' => 11,
-		'Attachments' => 12,
-		'Quantities' => 6,
-		'Suppliers' => 13,
-		'Warehouses' => 14,
-	);
+	protected $available_tabs = array();
 
 	protected $default_tab = 'Informations';
 
@@ -185,6 +169,26 @@ class AdminProductsControllerCore extends AdminController
 			'Warehouses' => $this->l('Warehouses'),
 		);
 
+		$this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
+		if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP)
+			$this->available_tabs = array_merge($this->available_tabs, array(
+				'Informations' => 0,
+				'Pack' => 7,
+				'VirtualProduct' => 8,
+				'Prices' => 1,
+				'Seo' => 2,
+				'Associations' => 3,
+				'Images' => 9,
+				'Shipping' => 4,
+				'Combinations' => 5,
+				'Features' => 10,
+				'Customization' => 11,
+				'Attachments' => 12,
+				'Suppliers' => 13,
+			));
+
+		// Sort the tabs that need to be preloaded by their priority number
+		asort($this->available_tabs, SORT_NUMERIC);
 
 		/* Adding tab if modules are hooked */
 		$modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
@@ -1112,7 +1116,12 @@ class AdminProductsControllerCore extends AdminController
 
 		// And if still not set, use default
 		if (!$this->tab_display)
-			$this->tab_display = $this->default_tab;
+		{
+			if (in_array($this->default_tab, $this->available_tabs))
+				$this->tab_display = $this->default_tab;
+			else
+				$this->tab_display = key($this->available_tabs);
+		}
 	}
 
 	/**
@@ -2292,7 +2301,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->displayWarning($this->l('Warning: this product does not exist in this shop.'));
 			return;
-		}			
+		}
 		
 		// Product for multishop
 		$this->context->smarty->assign('bullet_common_field', '');
@@ -2313,8 +2322,6 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 
-		// Sort the tabs that need to be preloaded by their priority number
-		asort($this->available_tabs, SORT_NUMERIC);
 		$this->tpl_form_vars['tabs_preloaded'] = $this->available_tabs;
 
 		$this->tpl_form_vars['product_type'] = (int)Tools::getValue('type_product', $product->getType());
