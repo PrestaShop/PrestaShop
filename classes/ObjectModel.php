@@ -1185,9 +1185,8 @@ abstract class ObjectModelCore
 	public function hasMultishopEntries()
 	{
 		if (!Shop::isTableAssociated($this->def['table']) || !Shop::isFeatureActive())
-			return false;
-		//check if there is more than one entries in associated shop table 
-		return (bool)(Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id) > 1);
+			return false; 
+		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 	}
 
 	public function isMultishop()

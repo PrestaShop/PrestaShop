@@ -650,7 +650,7 @@ class ProductCore extends ObjectModel
 		StockAvailable::removeProductFromStockAvailable($this->id);
 
 		$result = parent::delete();
-
+		$result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
 		// If there are still entries in product_shop, don't remove completly the product
 		if ($this->hasMultishopEntries())
 			return true;
@@ -659,8 +659,6 @@ class ProductCore extends ObjectModel
 		if (!$result ||
 			!GroupReduction::deleteProductReduction($this->id) ||
 			!$this->deleteCategories(true) ||
-			!$this->deleteImages() ||
-			!$this->deleteProductAttributes() ||
 			!$this->deleteProductFeatures() ||
 			!$this->deleteTags() ||
 			!$this->deleteCartProducts() ||
@@ -670,7 +668,6 @@ class ProductCore extends ObjectModel
 			!SpecificPrice::deleteByProductId((int)$this->id) ||
 			!$this->deletePack() ||
 			!$this->deleteProductSale() ||
-			!$this->deleteSceneProducts() ||
 			!$this->deleteSearchIndexes() ||
 			!$this->deleteAccessories() ||
 			!$this->deleteFromAccessories() ||
