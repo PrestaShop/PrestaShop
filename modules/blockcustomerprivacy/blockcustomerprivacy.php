@@ -59,7 +59,7 @@ class Blockcustomerprivacy extends Module
 	
 	public function getContent()
 	{
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
+		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$iso = $this->context->language->iso_code;
 
@@ -87,7 +87,7 @@ class Blockcustomerprivacy extends Module
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>
-			<script language="javascript" type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
+			<script language="javascript" type="text/javascript">id_language = Number('.$id_lang_default.');</script>';
 		else
 		{
 			$content .= '
@@ -119,7 +119,7 @@ class Blockcustomerprivacy extends Module
 					convert_urls : false,
 					language : "'.(file_exists(_PS_ROOT_DIR_.'/js/tinymce/jscripts/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en').'"
 				});
-				id_language = Number('.$defaultLanguage.');
+				id_language = Number('.$id_lang_default.');
 			</script>';
 		}
 		
@@ -132,10 +132,10 @@ class Blockcustomerprivacy extends Module
 				<div class="margin-form">';
 		foreach ($languages as $language)
 			$content .= '					
-					<div id="ccont_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $defaultLanguage ? 'block' : 'none').';float: left;">
+					<div id="ccont_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $id_lang_default ? 'block' : 'none').';float: left;">
 						<textarea class="rte" cols="70" rows="30" id="custpriv_message_'.$language['id_lang'].'" name="custpriv_message_'.$language['id_lang'].'">'.(isset($values[$language['id_lang']]) ? $values[$language['id_lang']] : '').'</textarea>
 					</div>';		
-		$content .= $this->displayFlags($languages, $defaultLanguage, 'ccont', 'ccont', true).'
+		$content .= $this->displayFlags($languages, $id_lang_default, 'ccont', 'ccont', true).'
 					<div class="clear">
 				</div>
 					<p>

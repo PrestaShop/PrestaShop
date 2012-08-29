@@ -79,8 +79,6 @@ if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
 	$jsonArray = array();
 	$import = new AdminImportController();
 
-	$languages = Language::getLanguages(false);
-	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 	$fields = $import->getAvailableFields(true);
 	foreach ($fields AS $field)
 		$jsonArray[] = '{"field":"'.addslashes($field).'"}';

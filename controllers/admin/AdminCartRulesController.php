@@ -549,7 +549,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'gift_product_attribute_select' => $gift_product_attribute_select,
 				'reductionProductFilter' => $reduction_product_filter,
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
-				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
+				'id_lang_default' => Configuration::get('PS_LANG_DEFAULT'),
 				'languages' => $languages,
 				'currencies' => $currencies,
 				'countries' => $countries,
