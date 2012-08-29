@@ -43,7 +43,7 @@
 </div><!-- .ui-grid-a -->
 
 <div data-role="content" id="content">
-	<h3 class="bg">{l s='Order'} {l s='#'}{$order->id|string_format:"%06d"} - {l s='placed on'} {dateFormat date=$order->date_add full=0}</h3>
+	<h3 class="bg">{l s='Order #%s - placed on' sprintf=$order->id|string_format:"%06d"} {dateFormat date=$order->date_add full=0}</h3>
 
 
 <ul class="info-order" data-role="listview">
@@ -52,7 +52,7 @@
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-		<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a .PDF file'}</li>
+		<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file'}</li>
 	</li>
 	{/if}
 	{if $order->recyclable}
@@ -65,7 +65,7 @@
 </ul><!-- .info-order -->
 
 {if count($order_history)}
-<h3 class="bg">{l s='Follow your order step by step'}</h3>
+<h3 class="bg">{l s='Follow your order step-by-step'}</h3>
 <ul data-role="listview" >
 	{foreach from=$order_history item=state name="orderStates"}
 	<li>
@@ -92,9 +92,9 @@
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
 	{if $is_guest}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a .PDF file'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}&amp;secure_key=$order->secure_key")}" >{l s='Download your invoice as a PDF file'}</a>
 	{else}
-		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a .PDF file'}</a>
+		<a href="{$link->getPageLink('pdf-invoice', true, NULL, "id_order={$order->id}")}" >{l s='Download your invoice as a PDF file'}</a>
 	{/if}
 </p>
 {/if}
@@ -143,7 +143,7 @@
 {* > TO CHECK ==========================*}
 {*$HOOK_ORDERDETAILDISPLAYED*}
 {* / TO CHECK ==========================*}
-{if $return_allowed}<p>{l s='If you wish to return one or more products, please click on the product line and go to the "Merchandise return" section below.'}</p>{/if}
+{if $return_allowed}<p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. Then click the button below.'}</p>{/if}
 {if !$is_guest}<form action="{$link->getPageLink('order-follow', true)}" method="post">{/if}
 <ul data-role="listview" data-inset="true">
 {foreach from=$products item=product name=products}
@@ -224,7 +224,7 @@
 			<textarea cols="67" rows="3" name="returnText"></textarea>
 		</fieldset>
 		<fieldset>
-			<input type="submit" data-theme="a" value="{l s='Make a RMA slip'}" name="submitReturnMerchandise" class="button_large" />
+			<input type="submit" data-theme="a" value="{l s='Make an RMA slip'}" name="submitReturnMerchandise" class="button_large" />
 			<input type="hidden" class="hidden" value="{$order->id|intval}" name="id_order" />
 		</fieldset>
 	</div>
@@ -265,7 +265,7 @@
 	{/if}
 	{if isset($errors) && $errors}
 		<div class="error">
-			<p>{if $errors|@count > 1}{l s='There are'}{else}{l s='There is'}{/if} {$errors|@count} {if $errors|@count > 1}{l s='errors'}{else}{l s='error'}{/if} :</p>
+			<p>{if $errors|@count > 1}{l s='There are %d errors' sprintf=$errors|@count}{else}{l s='There is %d error' sprintf=$errors|@count}{/if} :</p>
 			<ol>
 			{foreach from=$errors key=k item=error}
 				<li>{$error}</li>
@@ -293,6 +293,6 @@
 		<input type="submit" data-role="button" data-theme="a" name="submitMessage" value="{l s='Send'}"/>
 	</form>
 {else}
-<p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You cannott make a merchandise return with a guest account'}</p>
+<p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You cannot make a merchandise return with a guest account'}</p>
 {/if}
 </div><!-- #content -->

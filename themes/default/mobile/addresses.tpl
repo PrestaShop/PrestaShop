@@ -29,7 +29,7 @@
 
 <div data-role="content" id="content">
 	<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}">{l s='My account'}</a>
-	<p>{l s='Please configure the desired billing and delivery addresses to be preselected when placing an order. You may also add additional addresses, useful for sending gifts or receiving your order at the office.'}</p>
+	<p>{l s='Please configure your default billing and delivery addresses when placing an order. You may also add additional addresses, which can be useful for sending gifts or receiving an order at your office.'}</p>
 	<div>
 		{if isset($multipleAddresses) && $multipleAddresses}
 		<h3>{l s='Your addresses are listed below.'}</h3>

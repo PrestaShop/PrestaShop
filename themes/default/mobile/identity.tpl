@@ -38,7 +38,7 @@
 		{if isset($pwd_changed)}<br />{l s='Your password has been sent to your e-mail:'} {$email|escape:'htmlall':'UTF-8'}{/if}
 	</p>
 {else}
-	<h3>{l s='Please do not hesitate to update your personal information if it has changed.'}</h3>
+	<h3>{l s='Please be sure to update your personal information if it has changed.'}</h3>
 	<p class="required bold"><sup>*</sup>{l s='Required field'}</p>
 	<form action="{$link->getPageLink('identity', true)}" method="post" class="std">
 		<label>{l s='Title'}</label>

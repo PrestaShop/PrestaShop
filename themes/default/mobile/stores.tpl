@@ -37,7 +37,7 @@
 		var defaultLat = '{$defaultLat}';
 		var defaultLong = '{$defaultLong}';
 		
-		var translation_1 = '{l s='No store found, try to select a wider radius' js=1}';
+		var translation_1 = '{l s='No stores found, try selecting a wider radius' js=1}';
 		var translation_2 = '{l s='store found - see details:' js=1}';
 		var translation_3 = '{l s='stores found - see all results:' js=1}';
 		var translation_4 = '{l s='Phone:' js=1}';
@@ -57,13 +57,13 @@
 
 	<div id="stores_search_block">
 		<label for="location">
-			{l s='Enter a location in order to find the nearest stores'}
+			{l s='Enter a location (e.g. zip/postal code, address, city or country) in order to find the nearest stores.'}
 		</label>
 	    <input type="text" name="location" id="location" value="" />
 	</div>
 	
 	<div id="stores_search_block">
-		<label for="radius">{l s='Radius'} ({$distance_unit})</label>
+		<label for="radius">{l s='Radius:'} ({$distance_unit})</label>
 		<input type="range" name="radius_slider" id="radius" value="15" min="0" max="100" data-highlight="true"/>
 	</div>
 	
