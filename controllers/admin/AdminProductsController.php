@@ -668,35 +668,31 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('attribute_default'))
 					$product->deleteDefaultAttributes();
 				// Change existing one
-				if ($id_product_attribute = (int)Tools::getValue('id_product_attribute'))
+				if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) || ($id_product_attribute = $product->productAttributeExists(Tools::getValue('attribute_combination_list'), false, null, true, true)))
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
-						if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'), (int)$id_product_attribute))
-							$this->errors[] = Tools::displayError('This attribute already exists.');
+
+						if ($this->isProductFieldUpdated('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))
+							$this->errors[] = Tools::displayError('Invalid date format.');
 						else
 						{
-							if ($this->isProductFieldUpdated('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))
-								$this->errors[] = Tools::displayError('Invalid date format.');
-							else
-							{
-								$product->updateAttribute((int)$id_product_attribute,
-									$this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
-									$this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
-									$this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
-									$this->isProductFieldUpdated('attribute_unit_impact') ? Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact') : null,
-									$this->isProductFieldUpdated('attribute_ecotax') ? Tools::getValue('attribute_ecotax') : null,
-									Tools::getValue('id_image_attr'),
-									Tools::getValue('attribute_reference'),
-									Tools::getValue('attribute_ean13'),
-									$this->isProductFieldUpdated('attribute_default') ? Tools::getValue('attribute_default') : null,
-									Tools::getValue('attribute_location'),
-									Tools::getValue('attribute_upc'),
-									$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-									$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
-									false);
-							}
-						}
+							$product->updateAttribute((int)$id_product_attribute,
+								$this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
+								$this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
+								$this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
+								$this->isProductFieldUpdated('attribute_unit_impact') ? Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact') : null,
+								$this->isProductFieldUpdated('attribute_ecotax') ? Tools::getValue('attribute_ecotax') : null,
+								Tools::getValue('id_image_attr'),
+								Tools::getValue('attribute_reference'),
+								Tools::getValue('attribute_ean13'),
+								$this->isProductFieldUpdated('attribute_default') ? Tools::getValue('attribute_default') : null,
+								Tools::getValue('attribute_location'),
+								Tools::getValue('attribute_upc'),
+								$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
+								$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+								false);
+						}						
 					}
 					else
 						$this->errors[] = Tools::displayError('You do not have permission to add here.');
