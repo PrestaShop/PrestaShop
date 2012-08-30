@@ -2011,16 +2011,15 @@ class AdminControllerCore extends Controller
 
 		if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className))
 		{
-			if (Shop::getContext() != Shop::CONTEXT_ALL || Shop::isTableAssociated($this->table) || !$this->context->employee->isSuperAdmin())
+			if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin())
 			{
-				$identifier_shop = Shop::getContextListShopID();
 				$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
-				if (Shop::isFeatureActive() && $test_join)
+				if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table))
 				{
 					$this->_where .= ' AND a.'.$this->identifier.' IN (
 						SELECT sa.'.$this->identifier.'
 						FROM `'._DB_PREFIX_.$this->table.'_shop` sa
-						WHERE sa.id_shop IN ('.implode(', ', $identifier_shop).')
+						WHERE sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					)';
 				}
 			}
