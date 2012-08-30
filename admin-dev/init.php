@@ -123,7 +123,7 @@ try
 						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 					}
 				}
-				else if ($context->employee->hasAuthOnShop($split[1]))
+				elseif ($context->employee->hasAuthOnShop($split[1]))
 				{
 					$shop_id = $split[1];
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
