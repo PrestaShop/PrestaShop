@@ -609,10 +609,10 @@ class CategoryCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
+				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Shop::addSqlAssociation('product', 'p').'
 				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (product_shop.`id_category_default` = cl.`id_category`
@@ -638,7 +638,8 @@ class CategoryCore extends ObjectModel
 					AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
-				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
+				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
+				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_product_attribute IS NOT NULL)
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
