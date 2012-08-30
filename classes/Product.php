@@ -987,7 +987,7 @@ class ProductCore extends ObjectModel
 		return count($result) > 0;
 	}
 
-	public function productAttributeExists($attributes_list, $current_product_attribute = false, Context $context = null)
+	public function productAttributeExists($attributes_list, $current_product_attribute = false, Context $context = null, $all_shops = false, $return_id = false)
 	{
 		if (!Combination::isFeatureActive())
 			return false;
@@ -998,7 +998,7 @@ class ProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			JOIN `'._DB_PREFIX_.'product_attribute_shop` pas ON (pas.id_product_attribute = pa.id_product_attribute)
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-			WHERE pas.id_shop ='.(int)$context->shop->id.' AND pa.`id_product` = '.(int)$this->id
+			WHERE 1 '.(!$all_shops ? ' AND pas.id_shop ='.(int)$context->shop->id : '').' AND pa.`id_product` = '.(int)$this->id
 		);
 
 		/* If something's wrong */
@@ -1017,9 +1017,17 @@ class ProductCore extends ObjectModel
 				$diff = false;
 				for ($i = 0; $diff == false && isset($product_attribute[$i]); $i++)
 					if (!in_array($product_attribute[$i], $attributes_list) || $key == $current_product_attribute)
-						$diff = true;
+					{
+						if ($return_id)
+							return $key;
+						return true;		
+					}
 				if (!$diff)
+				{
+					if ($return_id)
+						return $key;
 					return true;
+				}
 			}
 
 		return false;
