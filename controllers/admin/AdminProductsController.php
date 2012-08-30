@@ -2053,7 +2053,7 @@ class AdminProductsControllerCore extends AdminController
 				// Check if Module
 				if (substr($this->tab_display, 0, 6) == 'Module')
 				{
-					$this->tab_display = 'Module';
+					$this->tab_display = 'Modules';
 					$this->tab_display_module = strtolower(substr($this->tab_display, 6, strlen($this->tab_display) - 6));
 				}
 
@@ -2076,7 +2076,7 @@ class AdminProductsControllerCore extends AdminController
 
 					$product_tabs[$product_tab] = array(
 						'id' => $product_tab,
-						'selected' => (strtolower($product_tab) == strtolower($this->tab_display)),
+						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (substr($this->tab_display, 0, 6) == 'Module')),
 						'name' => $this->available_tabs_lang[$product_tab],
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)Tools::getValue('id_product').'&amp;action='.$product_tab,
 					);
