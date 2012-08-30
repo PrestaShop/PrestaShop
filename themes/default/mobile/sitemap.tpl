@@ -29,7 +29,7 @@
 <hr width="99%" align="center" size="2" class=""/>
 
 {if isset($categoriesTree.children)}
-	<h2>{l s="Our products"}</h2>
+	<h2>{l s='Our offers'}</h2>
 
 	<ul data-role="listview" data-inset="true">
 		{for $i=0 to 4}
@@ -53,9 +53,9 @@
 {/if}
 
 <hr width="99%" align="center" size="2" class=""/>
-<h2>{l s="Site map"}</h2>
+<h2>{l s='Sitemap'}</h2>
 <ul data-role="listview" data-inset="true" id="category">
-	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}">{l s="Home"}</a></li>{/if}
+	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}">{l s='Home'}</a></li>{/if}
 	<li>{l s='Our offers'}
 		<ul data-role="listview" data-inset="true">
 			<li><a href="{$link->getPageLink('new-products')}" title="{l s='New products'}">{l s='New products'}</a></li>
@@ -76,7 +76,7 @@
 			<li><a href="{$link->getPageLink('history', true)}">{l s='Order history'}</a></li>
 		</ul>
 	</li>
-	<li>{l s="Pages"}
+	<li>{l s='Pages'}
 		<ul data-role="listview" data-inset="true">
 			{if isset($categoriescmsTree.children)}
 				{foreach $categoriescmsTree.children as $child}

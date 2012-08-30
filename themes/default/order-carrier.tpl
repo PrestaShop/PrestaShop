@@ -190,9 +190,9 @@
 									{if isset($carrier.instance->delay[$cookie->id_lang])}
 										{$carrier.instance->delay[$cookie->id_lang]}<br />
 										{if count($carrier.product_list) <= 1}
-											({l s="product concerned:"}
+											({l s='product concerned:'}
 										{else}
-											({l s="products concerned:"}
+											({l s='products concerned:'}
 										{/if}
 										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
 										{foreach $carrier.product_list as $product}{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if !$product@last}, {else}){/if}{/if}{/foreach}

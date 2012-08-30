@@ -139,7 +139,7 @@
 </div><!-- .adresses_bloc -->
 
 <!-- order details -->
-<h3 class="bg">{l s="Order details"}</h3>
+<h3 class="bg">{l s='Order details'}</h3>
 {* > TO CHECK ==========================*}
 {*$HOOK_ORDERDETAILDISPLAYED*}
 {* / TO CHECK ==========================*}
