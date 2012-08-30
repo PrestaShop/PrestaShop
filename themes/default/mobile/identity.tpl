@@ -28,7 +28,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}">{l s='My account'}</a>
+<a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='My account'}</a>
 
 {include file="./errors.tpl"}
 

@@ -50,7 +50,7 @@
 						</tbody>
 					</table>
 				</a>
-				<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}">{l s='Delete'}</a>
+				<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" data-ajax="false">{l s='Delete'}</a>
 			</li>
 		{/foreach}
 	</ul>
@@ -70,7 +70,7 @@
 					</tr>
 				</table>
 			</a>
-			{if strlen($discount.code)}<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}">{l s='Delete'}</a>{/if}
+			{if strlen($discount.code)}<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}" data-ajax="false">{l s='Delete'}</a>{/if}
 		</li>
 		{/foreach}
 	</ul>
@@ -181,14 +181,14 @@
 	</div><!-- /grid-a -->
 	<br />
 	{if $isLogged AND !$isGuest}
-		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back">{l s='Continue shopping'}</a>
+		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back" data-ajax="false">{l s='Continue shopping'}</a>
 	{else}
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			<li data-theme="a" data-icon="back">
-				<a href="{$link->getPageLink('index', true)}">{l s='Continue shopping'}</a>
+				<a href="{$link->getPageLink('index', true)}" data-ajax="false">{l s='Continue shopping'}</a>
 			</li>
 			<li data-theme="b" data-icon="check">
-				<a href="{$link->getPageLink('authentication', true)}&back=order-opc">{l s='Confirm order'}</a>
+				<a href="{$link->getPageLink('authentication', true)}&back=order-opc" data-ajax="false">{l s='Confirm order'}</a>
 			</li>
 		</ul>
 	{/if}

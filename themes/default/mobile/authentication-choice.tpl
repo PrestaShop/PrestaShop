@@ -23,7 +23,7 @@
 		
 		<fieldset>
 			<input type="password" id="passwd" name="passwd" placeholder="{l s='Password'}" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|escape:'htmlall':'UTF-8'|stripslashes}{/if}" class="account_input" />
-			<p class="forget_pwd"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?'}</a></p>
+			<p class="forget_pwd"><a href="{$link->getPageLink('password')}" data-ajax="false">{l s='Forgot your password?'}</a></p>
 		</fieldset>
 		<button type="submit" class="ui-btn-hidden submit_button" id="SubmitLogin" name="SubmitLogin" aria-disabled="false" data-theme="a">{l s='Log in'}</button>
 	</form> 
