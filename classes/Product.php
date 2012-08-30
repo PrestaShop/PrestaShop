@@ -1885,8 +1885,8 @@ class ProductCore extends ObjectModel
 		if (Combination::isFeatureActive())
 		{
 			$sql->select('pa.id_product_attribute');
-			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product` AND pa.default_on = 1');
-			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
+			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
+			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
 		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1959,7 +1959,7 @@ class ProductCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (p.id_product = pa.id_product)
-					'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+					'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1').'
 					WHERE product_shop.`active` = 1
 						'.(($ids_product) ? $ids_product : '').'
 						AND p.`id_product` IN (
@@ -1968,7 +1968,6 @@ class ProductCore extends ObjectModel
 							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 							WHERE cg.`id_group` '.$sql_groups.'
 						)
-						AND ((pa.`default_on` = 1 AND pa.`id_product_attribute` != 0) OR (pa.`id_product_attribute` IS NULL))
 					GROUP BY p.id_product
 					ORDER BY RAND()';
 
@@ -2445,7 +2444,7 @@ class ProductCore extends ObjectModel
 			$sql->where('p.`id_product` = '.(int)$id_product);
 			if (Combination::isFeatureActive())
 			{
-				$sql->select('pa.id_product_attribute, product_attribute_shop.`price` AS attribute_price, pa.default_on');
+				$sql->select('pa.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
 				$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.id_shop = p.id_shop_default'));
 			}
@@ -2640,7 +2639,7 @@ class ProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product` = '.(int)$this->id.'
-			AND pa.`default_on` = 1'
+			AND product_attribute_shop.default_on = 1'
 		);
 
 		return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
