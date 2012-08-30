@@ -68,7 +68,8 @@
 			</select>
 			<select name="theme" style="float:left; margin-right:10px;">
 				{foreach $themes as $theme}
-					<option value="{$theme->directory}">{$theme->name} &nbsp;</option>
+
+					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name} &nbsp;</option>
 				{/foreach}
 			</select>
 			{foreach $languages as $language}
@@ -152,7 +153,7 @@
 			&nbsp;&nbsp;&nbsp;
 			<select name="theme" style="margin-top:10px;">
 				{foreach $themes as $theme}
-					<option value="{$theme->directory}">{$theme->name}</option>
+					<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 				{/foreach}
 			</select>&nbsp;&nbsp;
 			<input type="submit" class="button" name="submitExport" value="{l s='Export'}" />
@@ -176,7 +177,7 @@
 					&nbsp;&nbsp;&nbsp;
 					<select name="fromTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}">{$theme->name}</option>
+							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select> <span style="font-style: bold; color: red;">*</span>
 				</p>
@@ -190,7 +191,7 @@
 					&nbsp;&nbsp;&nbsp;
 					<select name="toTheme">
 						{foreach $themes as $theme}
-							<option value="{$theme->directory}">{$theme->name}</option>
+							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
 				</p>

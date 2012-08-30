@@ -197,6 +197,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'packs_to_update' => $packs_to_update,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
 			'themes' => $this->themes,
+			'id_theme_current' => $this->context->shop->id_theme,
 			'url_create_language' => 'index.php?controller=AdminLanguages&addlang&token='.$token,
 		);
 
