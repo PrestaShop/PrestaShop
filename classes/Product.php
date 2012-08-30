@@ -1017,11 +1017,7 @@ class ProductCore extends ObjectModel
 				$diff = false;
 				for ($i = 0; $diff == false && isset($product_attribute[$i]); $i++)
 					if (!in_array($product_attribute[$i], $attributes_list) || $key == $current_product_attribute)
-					{
-						if ($return_id)
-							return $key;
-						return true;		
-					}
+						$diff = true;
 				if (!$diff)
 				{
 					if ($return_id)
