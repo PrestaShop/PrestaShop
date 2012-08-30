@@ -30,10 +30,10 @@
 
 		
 		<!--<ul data-role="listview" data-inset="true" id="category">
-			<li><a href="category.html">Category 1</a></li>
-			<li><a href="category.html">Category 2</a></li>
-			<li><a href="category.html">Category 3</a></li>
-			<li><a href="category.html">Category 4</a></li>
+			<li><a href="category.html" data-ajax="false">Category 1</a></li>
+			<li><a href="category.html" data-ajax="false">Category 2</a></li>
+			<li><a href="category.html" data-ajax="false">Category 3</a></li>
+			<li><a href="category.html" data-ajax="false">Category 4</a></li>
 		</ul>--><!-- /category -->
 	
 		<hr width="99%" align="center" size="2" />
@@ -52,11 +52,11 @@
 		
 		<hr width="99%" align="center" size="2" />
 		<ul data-role="listview" data-inset="true" id="category">
-			<li><a href="index.html">Accueil</a></li>
-			<li><a href="category.html">IPod</a></li>
-			<li><a href="category.html">Accessoires</a></li>
-			<li><a href="my-account.html">Mon compte</a></li>
-			<li><a href="contact.html">Contact</a></li>
+			<li><a href="index.html" data-ajax="false">Accueil</a></li>
+			<li><a href="category.html" data-ajax="false">IPod</a></li>
+			<li><a href="category.html" data-ajax="false">Accessoires</a></li>
+			<li><a href="my-account.html" data-ajax="false">Mon compte</a></li>
+			<li><a href="contact.html" data-ajax="false">Contact</a></li>
 		</ul>
 		
 	</div><!-- /content -->

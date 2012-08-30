@@ -44,7 +44,7 @@
 			<ul data-role="listview" data-inset="true">
 				{foreach from=$sub_category item=subcategory}
 					<li>
-						<a href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}">{$subcategory.name|escape:'htmlall':'UTF-8'}</a>
+						<a href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" data-ajax="false">{$subcategory.name|escape:'htmlall':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>
@@ -54,7 +54,7 @@
 			<ul data-role="listview" data-inset="true">
 				{foreach from=$cms_pages item=cmspages}
 					<li>
-						<a href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'htmlall':'UTF-8'}">{$cmspages.meta_title|escape:'htmlall':'UTF-8'}</a>
+						<a href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'htmlall':'UTF-8'}" data-ajax="false">{$cmspages.meta_title|escape:'htmlall':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>

@@ -41,7 +41,7 @@
 				{if !empty($category->short_description)}
 					<p>{$category->short_description}</p>
 					<p class="hide_desc">{$category->description}</p>
-					<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;">{l s='More'}</a>
+					<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;" data-ajax="false">{l s='More'}</a>
 				{else}
 					<p>{$category->description}</p>
 				{/if}
@@ -55,7 +55,7 @@
 		
 		{* layered ? *}
 		{* ===================================== *}
-		{*<p><a href="layered.html">Affiner la recherche</a></p>*}
+		{*<p><a href="layered.html" data-ajax="false">Affiner la recherche</a></p>*}
 		{* ===================================== *}
 		<hr width="99%" align="center" size="2" class="margin_less"/>
 		

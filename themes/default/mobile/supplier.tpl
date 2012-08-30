@@ -31,13 +31,13 @@
 
 {if !isset($errors) OR !sizeof($errors)}
 	<div data-role="content" id="content">
-	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('supplier', true)}">{l s='Suppliers'}</a></p>
+	<p><a data-role="button" data-icon="arrow-l" data-theme="a" data-mini="true" data-inline="true" href="{$link->getPageLink('supplier', true)}" data-ajax="false">{l s='Suppliers'}</a></p>
 	{if !empty($supplier->description) || !empty($supplier->short_description)}
 		<div class="category_desc clearfix">
 			{if !empty($supplier->short_description)}
 				<p>{$supplier->short_description}</p>
 				<p class="hide_desc">{$supplier->description}</p>
-				<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;">{l s='More'}</a>
+				<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;" data-ajax="false">{l s='More'}</a>
 			{else}
 				<p>{$supplier->description}</p>
 			{/if}

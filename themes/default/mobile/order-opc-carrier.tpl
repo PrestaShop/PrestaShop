@@ -61,5 +61,5 @@
 		<input type="checkbox" value="1" id="cgv" name="cgv" {if $checkedTOS}checked="checked"{/if} />
 		<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label>
 	</fieldset>
-	<p class="lnk_CGV"><a href="{$link_conditions}">{l s='(Read Terms of Service)'}</a></p>
+	<p class="lnk_CGV"><a href="{$link_conditions}" data-ajax="false">{l s='(Read Terms of Service)'}</a></p>
 </div>

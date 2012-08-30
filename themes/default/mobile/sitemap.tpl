@@ -35,7 +35,7 @@
 		{for $i=0 to 4}
 			{if isset($categoriesTree.children.$i)}
 				<li data-icon="arrow-d">
-					<a href="{$categoriesTree.children.$i.link|escape:'htmlall':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'htmlall':'UTF-8'}">
+					<a href="{$categoriesTree.children.$i.link|escape:'htmlall':'UTF-8'}" title="{$categoriesTree.children.$i.desc|escape:'htmlall':'UTF-8'}" data-ajax="false">
 						{$categoriesTree.children.$i.name|escape:'htmlall':'UTF-8'}
 					</a>
 				</li>
@@ -55,25 +55,25 @@
 <hr width="99%" align="center" size="2" class=""/>
 <h2>{l s='Sitemap'}</h2>
 <ul data-role="listview" data-inset="true" id="category">
-	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}">{l s='Home'}</a></li>{/if}
+	{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}" data-ajax="false">{l s='Home'}</a></li>{/if}
 	<li>{l s='Our offers'}
 		<ul data-role="listview" data-inset="true">
-			<li><a href="{$link->getPageLink('new-products')}" title="{l s='New products'}">{l s='New products'}</a></li>
+			<li><a href="{$link->getPageLink('new-products')}" title="{l s='New products'}" data-ajax="false">{l s='New products'}</a></li>
 			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='Price drop'}">{l s='Price drop'}</a></li>
-			<li><a href="{$link->getPageLink('best-sales', true)}" title="{l s='Top sellers'}">{l s='Top sellers'}</a></li>
+			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='Price drop'}" data-ajax="false">{l s='Price drop'}</a></li>
+			<li><a href="{$link->getPageLink('best-sales', true)}" title="{l s='Top sellers'}" data-ajax="false">{l s='Top sellers'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" data-ajax="false">{l s='Manufacturers'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" data-ajax="false">{l s='Suppliers'}</a></li>{/if}
 		</ul>
 	</li>
 	<li>{l s='Your Account'}
 		<ul data-role="listview" data-inset="true">
-			<li><a href="{$link->getPageLink('my-account', true)}">{l s='Your Account'}</a></li>
-			<li><a href="{$link->getPageLink('identity', true)}">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)}">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)}">{l s='Order history'}</a></li>
+			<li><a href="{$link->getPageLink('my-account', true)}" data-ajax="false">{l s='Your Account'}</a></li>
+			<li><a href="{$link->getPageLink('identity', true)}" data-ajax="false">{l s='Personal information'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)}" data-ajax="false">{l s='Addresses'}</a></li>
+			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" data-ajax="false">{l s='Discounts'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('history', true)}" data-ajax="false">{l s='Order history'}</a></li>
 		</ul>
 	</li>
 	<li>{l s='Pages'}
@@ -86,10 +86,10 @@
 				{/foreach}
 			{/if}
 			{foreach from=$categoriescmsTree.cms item=cms name=cmsTree}
-			<li><a href="{$cms.link|escape:'htmlall':'UTF-8'}" title="{$cms.meta_title|escape:'htmlall':'UTF-8'}">{$cms.meta_title|escape:'htmlall':'UTF-8'}</a></li>
+			<li><a href="{$cms.link|escape:'htmlall':'UTF-8'}" title="{$cms.meta_title|escape:'htmlall':'UTF-8'}" data-ajax="false">{$cms.meta_title|escape:'htmlall':'UTF-8'}</a></li>
 			{/foreach}
-			<li><a href="{$link->getPageLink('contact', true)}">{l s='Contact'}</a></li>
-			{if $display_store}<li><a href="{$link->getPageLink('stores')}" title="{l s='Our stores'}">{l s='Our stores'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('contact', true)}" data-ajax="false">{l s='Contact'}</a></li>
+			{if $display_store}<li><a href="{$link->getPageLink('stores')}" title="{l s='Our stores'}" data-ajax="false">{l s='Our stores'}</a></li>{/if}
 		</ul>
 	</li>
 </ul>
