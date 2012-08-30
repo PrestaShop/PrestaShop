@@ -370,6 +370,10 @@ class AdminAddressesControllerCore extends AdminController
 				$_POST['id_address'] = '';
 		}
 
+		// Check the requires fields which are settings in the BO
+		$address = new Address();
+		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
+
 		if (empty($this->errors))
 			return parent::processSave();
 		else

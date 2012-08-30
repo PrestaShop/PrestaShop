@@ -182,6 +182,9 @@ class AddressControllerCore extends FrontController
 				AND deleted = 0') > 0)
 			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
 
+		// Check the requires fields which are settings in the BO
+		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
+
 		// Don't continue this process if we have errors !
 		if ($this->errors && !$this->ajax)
 			return;
