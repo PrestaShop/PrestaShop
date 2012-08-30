@@ -769,6 +769,10 @@ class AdminCustomersControllerCore extends AdminController
 		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
 			$this->errors[] = Tools::displayError('Default customer group must be selected in group box.');
 
+		// Check the requires fields which are settings in the BO
+		$customer = new Customer();
+		$this->errors = array_merge($this->errors, $customer->validateFieldsRequiredDatabase());
+
 		return parent::processSave();
 	}
 
