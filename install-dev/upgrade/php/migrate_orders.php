@@ -84,9 +84,8 @@ function migrate_orders()
 		$default_group_id = mo_getCustomerDefaultGroup((int)$order['id_customer']);
 		$price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
 		$order_details_list = Db::getInstance()->executeS('
-		SELECT *
+		SELECT od.*
 		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = od.product_id
 		WHERE od.`id_order` = '.(int)$order['id_order']);
 
 		foreach ($order_details_list as $order_details)
@@ -113,7 +112,8 @@ function migrate_orders()
 				{
 					if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate')))
 						$order_details[$k] = (float)$order_details[$k];
-					$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
+					else
+						$order_details[$k] = Db::getInstance()->escape($order_details[$k]);
 				}
 			$values_order_detail[] = '(\''.implode('\', \'', $order_details).'\')';
 		}
