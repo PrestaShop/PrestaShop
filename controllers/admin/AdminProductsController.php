@@ -692,6 +692,8 @@ class AdminProductsControllerCore extends AdminController
 								$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
 								$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
 								false);
+								StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
+								StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
 						}						
 					}
 					else
@@ -705,6 +707,7 @@ class AdminProductsControllerCore extends AdminController
 						if ($product->productAttributeExists(Tools::getValue('attribute_combination_list')))
 							$this->errors[] = Tools::displayError('This combination already exists.');
 						else
+						{
 							$id_product_attribute = $product->addCombinationEntity(
 								Tools::getValue('attribute_wholesale_price'),
 								Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
@@ -721,6 +724,9 @@ class AdminProductsControllerCore extends AdminController
 								Tools::getValue('attribute_upc'),
 								Tools::getValue('attribute_minimal_quantity')
 							);
+							StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
+							StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
+						}
 					}
 					else
 						$this->errors[] = Tools::displayError('You do not have permission to').'<hr>'.Tools::displayError('Edit here.');
