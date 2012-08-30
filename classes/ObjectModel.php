@@ -1058,6 +1058,28 @@ abstract class ObjectModelCore
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
+	public function validateFieldsRequiredDatabase($htmlentities = true)
+	{
+		$errors = array();
+		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
+
+		foreach ($this->def['fields'] as $field => $data)
+		{
+			if (!in_array($field, $required_fields))
+				continue;
+
+			if (!method_exists('Validate', $data['validate']))
+				throw new PrestaShopException('Validation function not found. '.$data['validate']);
+
+			$value = Tools::getValue($field);
+
+			if (empty($value))
+				$errors[] = sprintf(Tools::displayError('The field %s is required.'), self::displayFieldName($field, get_class($this), $htmlentities));
+		}
+
+		return $errors;
+	}
+
 	public function getFieldsRequiredDatabase($all = false)
 	{
 		return Db::getInstance()->executeS('
