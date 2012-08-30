@@ -86,13 +86,13 @@
 <!-- Classic products -->
 {if $product.product_quantity > $product.customizationQuantityTotal}
 	<li class="item" id="cb-{$product.id_order_detail|intval}" data-icon="back">
-		{if $return_allowed}<a href="#">{/if}
+		{if $return_allowed}<a href="#" data-ajax="false">{/if}
 		<h3>
 			{if $product.download_hash && $invoice && $product.display_filename != ''}
 				{if isset($is_guest) && $is_guest}
-				<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")}" title="{l s='download this product'}">
+				<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")}" title="{l s='download this product'}" data-ajax="false">
 				{else}
-					<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='download this product'}">
+					<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'htmlall':'UTF-8'}-{$product.download_hash|escape:'htmlall':'UTF-8'}")}" title="{l s='download this product'}" data-ajax="false">
 				{/if}
 					<img src="{$img_dir}icon/download_product.gif" class="icon" alt="{l s='Download product'}" />
 					{$product.product_name|escape:'htmlall':'UTF-8'}

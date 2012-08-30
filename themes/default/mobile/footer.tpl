@@ -30,17 +30,17 @@
 				</div><!-- /grid-a -->
 
 				<div id="full-site-section" class="center">
-					<a href="{$link->getPageLink('index', true)}?no_mobile_theme">{l s='Consult full site'}</a>
+					<a href="{$link->getPageLink('index', true)}?no_mobile_theme" data-ajax="false">{l s='Consult full site'}</a>
 				</div>
 
 				<div data-role="footer" data-theme="a" id="bar_footer">
 					<div id="link_bar_footer" class="ui-grid-a">
 						<div class="ui-block-a">
-							<a href="{$link->getPageLink('index', true)}">{$PS_SHOP_NAME}</a>
+							<a href="{$link->getPageLink('index', true)}" data-ajax="false">{$PS_SHOP_NAME}</a>
 						</div>
 						{if $conditions}
 						<div class="ui-block-b">
-							<a href="{$link->getCMSLink($id_cgv)}">CGV</a>
+							<a href="{$link->getCMSLink($id_cgv)}" data-ajax="false">CGV</a>
 						</div>
 						{/if}
 					</div>

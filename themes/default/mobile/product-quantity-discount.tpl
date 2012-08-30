@@ -27,7 +27,7 @@
 {if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 <!-- quantity discount -->
 <ul class="idTabs clearfix">
-	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
+	<li><a href="#discount" style="cursor: pointer" class="selected" data-ajax="false">{l s='Quantity discount'}</a></li>
 </ul>
 <div id="quantityDiscount">
 	<table class="std">

@@ -29,14 +29,14 @@
 
 <div class="ui-grid-a">
 	<div class="ui-block-a">
-		<a data-role="button" data-icon="arrow-l" data-theme="a" data-rel="back" href="#" title="">{l s='Back'}</a>
+		<a data-role="button" data-icon="arrow-l" data-theme="a" data-rel="back" href="#" title="" data-ajax="false">{l s='Back'}</a>
 	</div>
 	<div class="ui-block-b">
 		{assign var='type_order' value="order"}
 		{if isset($opc) && $opc}
 			{assign var='type_order' value="order-opc"}
 		{/if}
-		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")}" title="{l s='Reorder'}">
+		<a data-icon="refresh" data-role="button" data-theme="e" href="{$link->getPageLink({$type_order}, true, NULL, "submitReorder&id_order={$order->id|intval}")}" title="{l s='Reorder'}" data-ajax="false">
 		{l s='Reorder'}
 		</a>
 	</div>
@@ -52,7 +52,7 @@
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-		<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file'}</li>
+		<a href="{$link->getPageLink('pdf-invoice.php', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}" data-ajax="false">{l s='Download your invoice as a PDF file'}</li>
 	</li>
 	{/if}
 	{if $order->recyclable}
@@ -80,7 +80,7 @@
 {* > TO CHECK ==========================*}
 {if isset($followup)}
 <p class="bold">{l s='Click the following link to track the delivery of your order'}</p>
-<a href="{$followup|escape:'htmlall':'UTF-8'}">{$followup|escape:'htmlall':'UTF-8'}</a>
+<a href="{$followup|escape:'htmlall':'UTF-8'}" data-ajax="false">{$followup|escape:'htmlall':'UTF-8'}</a>
 {/if}
 {* / TO CHECK ==========================*}
 
@@ -207,7 +207,7 @@
 		<h3>{$line.state_name}</h3>
 		<p><strong>{l s='Weight'}</strong> {$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</p>
 		<p><strong>{l s='Shipping cost'}</strong> {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</p>
-		<p><strong>{l s='Tracking number'}</strong> {if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{elseif $line.tracking_number != ''}{$line.tracking_number}{else}----{/if}</p>
+		<p><strong>{l s='Tracking number'}</strong> {if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}" data-ajax="false">{$line.tracking_number}</a>{elseif $line.tracking_number != ''}{$line.tracking_number}{else}----{/if}</p>
 		<span class="ui-li-aside">{$line.date_add}</span>
 	</li>
 	{/foreach}

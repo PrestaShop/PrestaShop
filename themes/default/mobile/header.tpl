@@ -65,15 +65,15 @@
 		<div data-role="header" id="header" class="ui-body-c">
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
-					<a href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}"><img src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if} /></a>
+					<a href="{$base_dir}" title="{$shop_name|escape:'htmlall':'UTF-8'}" data-ajax="false"><img src="{$logo_url}" alt="{$shop_name|escape:'htmlall':'UTF-8'}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}" {/if} /></a>
 				</div>
 				<div class="ui-block-b">
 					<div id="block_cart" class="clearfix">
-						<a href="{$link->getPageLink('order-opc', true)}" class="link_cart">{l s='Cart'}</a>
+						<a href="{$link->getPageLink('order-opc', true)}" class="link_cart" data-ajax="false">{l s='Cart'}</a>
 						{if $logged}
-							<a href="{$link->getPageLink('my-account', true)}" class="link_account">{l s='My account'}</a>
+							<a href="{$link->getPageLink('my-account', true)}" class="link_account" data-ajax="false">{l s='My account'}</a>
 						{else}
-							<a href="{$link->getPageLink('authentication', true)}" class="link_account">{l s='Authenticate'}</a>
+							<a href="{$link->getPageLink('authentication', true)}" class="link_account" data-ajax="false">{l s='Authenticate'}</a>
 						{/if}
 					</div>
 					{hook h="displayMobileTop"}

@@ -29,7 +29,7 @@
 		{$node.name|escape:'htmlall':'UTF-8'}
 		<ul data-inset="true">
 			<li>
-				<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}">
+				<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}" data-ajax="false">
 					{l s='See products'}
 				</a>
 			</li>
@@ -38,7 +38,7 @@
 		{/foreach}
 		</ul>
 	{else}
-		<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}">
+		<a href="{$node.link|escape:'htmlall':'UTF-8'}" title="{$node.desc|escape:'htmlall':'UTF-8'}" data-ajax="false">
 			{$node.name|escape:'htmlall':'UTF-8'}
 		</a>
 	{/if}

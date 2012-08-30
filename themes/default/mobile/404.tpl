@@ -39,7 +39,7 @@
 				</form>
 			</div>
 			<p>
-				<a href="{$base_dir}" class="lnk_my-account_home" title="{l s='Home'}">
+				<a href="{$base_dir}" class="lnk_my-account_home" title="{l s='Home'}" data-ajax="false">
 					<img class="" alt="{l s='Home'}" src="{$img_mobile_dir}icon/home.png">
 					{l s='Home'}
 				</a>

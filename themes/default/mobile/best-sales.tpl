@@ -36,7 +36,7 @@
 			{if !empty($manufacturer->short_description)}
 				<p>{$manufacturer->short_description}</p>
 				<p class="hide_desc">{$manufacturer->description}</p>
-				<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;">{l s='More'}</a>
+				<a href="#" data-theme="a" data-role="button" data-mini="true" data-inline="true" data-icon="arrow-d" class="lnk_more" onclick="$(this).prev().slideDown('slow'); $(this).hide(); return false;" data-ajax="false">{l s='More'}</a>
 			{else}
 				<p>{$manufacturer->description}</p>
 			{/if}
