@@ -721,8 +721,8 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$context = Context::getContext();
 		$context->cart = new Cart($id_cart);
-		$context->customer = new Customer($context->cart->id_customer);
-		return Cart::getTotalCart($id_cart, true);
+		$context->customer = new Customer((int)$context->cart->id_customer);
+		return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
 	}
 
 	public static function replaceZeroByShopName($echo, $tr)
