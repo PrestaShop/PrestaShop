@@ -69,7 +69,7 @@ class ContactControllerCore extends FrontController
 				$contact = new Contact($id_contact, $this->context->language->id);
 
 				if (!((
-						$id_customer_thread = (int)Tools::getValue('id_customer_thread')
+						($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
 						&& (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
 						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->context->shop->id.' AND token = \''.pSQL(Tools::getValue('token')).'\'')
@@ -125,7 +125,8 @@ class ContactControllerCore extends FrontController
 						'{message}' => Tools::nl2br(stripslashes($message)),
 						'{id_order}' => $id_order,
 						'{order_name}' => $order->getUniqReference(),
-						'{attached_file}' => $_FILES['fileUpload']['name'] ? $_FILES['fileUpload']['name'] : '');
+						'{attached_file}' => isset($_FILES['fileUpload'], $_FILES['fileUpload']['name']) ? $_FILES['fileUpload']['name'] : ''
+					);
 
 					if (Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form'),
 						$mail_var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
