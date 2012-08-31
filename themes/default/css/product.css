@@ -379,3 +379,6 @@ ul#text_fields {list-style-type:none}
 #customizedDatas {
 	float:right;
 }
+.accessories_block  div ul li a {
+	display:inline-block
+}
