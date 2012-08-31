@@ -82,7 +82,7 @@ class AdminOrdersControllerCore extends AdminController
 			'icon' => array(
 				0 => 'blank.gif',
 				1 => array(
-					'src' => 'news-new.gif',
+					'src' => 'note.png',
 					'alt' => $this->l('First customer order'),
 				)
 			),
