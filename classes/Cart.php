@@ -1228,14 +1228,14 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public static function getTotalCart($id_cart, $use_tax_display = false)
+	public static function getTotalCart($id_cart, $use_tax_display = false, $type = CART::BOTH)
 	{
 		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
 			die(Tools::displayError());
 
 		$with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
-		return Tools::displayPrice($cart->getOrderTotal($with_taxes), Currency::getCurrencyInstance((int)$cart->id_currency), false);
+		return Tools::displayPrice($cart->getOrderTotal($with_taxes, $type), Currency::getCurrencyInstance((int)$cart->id_currency), false);
 	}
 
 
