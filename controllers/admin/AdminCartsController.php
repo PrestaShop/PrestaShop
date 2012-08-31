@@ -36,15 +36,12 @@ class AdminCartsControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
 
-		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest, (
-			SELECT SUM(quantity) FROM '._DB_PREFIX_.'cart_product cp WHERE cp.id_cart = a.id_cart
-		) as total_quantity';
+		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(NOW(), co.`date_add`)) < 1800)';
-		$this->_having = 'total_quantity > 0';
 
 		$this->fields_list = array(
 			'id_cart' => array(
@@ -246,53 +243,58 @@ class AdminCartsControllerCore extends AdminController
 		$errors = array();
 		if ($this->tabAccess['edit'] === '1')
 		{
-			if (!$this->context->cart->id || (!$id_product = (int)Tools::getValue('id_product')))
-				return;
-			$product = new Product((int)$id_product);
-			if (!$customization_fields = $product->getCustomizationFieldIds())
-				return;
-			foreach ($customization_fields as $customization_field)
+			$errors = array();
+			if (Tools::getValue('only_display') != 1)
 			{
-				$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
-				if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
+				if (!$this->context->cart->id || (!$id_product = (int)Tools::getValue('id_product')))
+					return;
+				$product = new Product((int)$id_product);
+				if (!$customization_fields = $product->getCustomizationFieldIds())
+					return;
+				foreach ($customization_fields as $customization_field)
 				{
-					if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
+					$field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
+					if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD)
 					{
-						if ($customization_field['required'])
-							$errors[] = Tools::displayError('Please fill in all required fields');
-						continue;
+						if (!isset($_POST[$field_id]) || empty($_POST[$field_id]))
+						{
+							if ($customization_field['required'])
+								$errors[] = Tools::displayError('Please fill in all required fields');
+							continue;
+						}
+						if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
+							$errors[] = Tools::displayError('Invalid message');
+						$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
 					}
-					if (!Validate::isMessage($_POST[$field_id]) || empty($_POST[$field_id]))
-						$errors[] = Tools::displayError('Invalid message');
-					$this->context->cart->addTextFieldToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, $_POST[$field_id]);
-				}
-				elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
-				{
-					if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name']))
+					elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE)
 					{
-						if ($customization_field['required'])
-							$errors[] = Tools::displayError('Please fill in all required fields');
-						continue;
+						if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name']))
+						{
+							if ($customization_field['required'])
+								$errors[] = Tools::displayError('Please fill in all required fields');
+							continue;
+						}
+						if ($error = ImageManager::validateUpload($_FILES[$field_id], (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
+							$errors[] = $error;
+						if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name))
+							$errors[] = Tools::displayError('An error occurred during the image upload.');
+						$file_name = md5(uniqid(rand(), true));
+						if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
+							continue;
+						elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')))
+							$errors[] = Tools::displayError('An error occurred during the image upload.');
+						elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
+							$errors[] = Tools::displayError('An error occurred during the image upload.');
+						else
+							$this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
+						unlink($tmp_name);
 					}
-					if ($error = ImageManager::validateUpload($_FILES[$field_id], (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
-						$errors[] = $error;
-					if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name))
-						$errors[] = Tools::displayError('An error occurred during the image upload.');
-					$file_name = md5(uniqid(rand(), true));
-					if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
-						continue;
-					elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')))
-						$errors[] = Tools::displayError('An error occurred during the image upload.');
-					elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
-						$errors[] = Tools::displayError('An error occurred during the image upload.');
-					else
-						$this->context->cart->addPictureToProduct((int)$product->id, (int)$customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
-					unlink($tmp_name);
 				}
 			}
 			$this->setMedia();
 			$this->initFooter();
-			$this->context->smarty->assign('customization_errors', implode('<br />', $errors));
+			$this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
+															'css_files' => $this->css_files));
 			return $this->context->smarty->display('controllers/orders/form_customization_feedback.tpl');
 		}
 	}
@@ -572,6 +574,7 @@ class AdminCartsControllerCore extends AdminController
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}
+			
 
 		return $summary;
 	}
