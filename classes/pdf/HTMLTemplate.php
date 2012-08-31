@@ -49,7 +49,7 @@ abstract class HTMLTemplateCore
 		$width = 0;
 		$height = 0;
 		if (!empty($path_logo))
-			list($width, $height) = getimagesize(_PS_ROOT_DIR_.'/'.$path_logo);
+			list($width, $height) = getimagesize($path_logo);
 
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
@@ -109,15 +109,12 @@ abstract class HTMLTemplateCore
 	{
 		$logo = '';
 
-		// TCPDF check if the document root is present in the image path, if not it will add it.
-		// In our case, _PS_ROOT_DIR_ could be different from document_root if we use symlinks, that's why
-		// we don't use _PS_ROOT_DIR_ and we let TCPDF add the document root.
 		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
-			$logo = $physical_uri.Configuration::get('PS_LOGO_INVOICE');
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE');
 		elseif (Configuration::get('PS_LOGO') != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
-			$logo = $physical_uri.Configuration::get('PS_LOGO');
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 		return $logo;
 	}
 
