@@ -516,8 +516,8 @@ UPDATE `PREFIX_hook` SET `name` = 'actionAttributeSave' WHERE `name` = 'afterSav
 UPDATE `PREFIX_hook` SET `name` = 'actionTaxManager' WHERE `name` = 'taxManager';
 
 ALTER TABLE `PREFIX_order_detail_tax` 
-ADD `unit_amount` DECIMAL( 10, 6 ) NOT NULL AFTER `id_tax` ,
-ADD `total_amount` DECIMAL( 10, 6 ) NOT NULL AFTER `unit_amount`;
+ADD `unit_amount` DECIMAL(16, 6) NOT NULL AFTER `id_tax`,
+ADD `total_amount` DECIMAL(16, 6) NOT NULL AFTER `unit_amount`;
 
 
 ALTER TABLE `PREFIX_specific_price` ADD `id_product_attribute` INT UNSIGNED NOT NULL AFTER `id_product`;
