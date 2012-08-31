@@ -103,9 +103,9 @@ class Autoload
 			{
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
-					require($this->root_dir.$this->index[$classname.'Core']);
+					require_once($this->root_dir.$this->index[$classname.'Core']);
 				if (isset($this->index[$classname]))
-					require($this->root_dir.$this->index[$classname]);
+					require_once($this->root_dir.$this->index[$classname]);
 			}
 		}
 		// Call directly ProductCore, ShopCore class

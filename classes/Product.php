@@ -1350,8 +1350,6 @@ class ProductCore extends ObjectModel
 			WHERE `id_product` = '.(int)$this->id.'
 		), \'0\')
 		WHERE `id_product` = '.(int)$this->id);
-
-
 	}
 	/**
 	* Delete product attributes
@@ -4931,11 +4929,10 @@ class ProductCore extends ObjectModel
 
 	public function hasAttributesInOtherShops()
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT pa.id_product_attribute
 			FROM `'._DB_PREFIX_.'product_attribute` pa
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` pas
-				ON (pa.`id_product_attribute` = pas.`id_product_attribute`)
+			LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` pas ON (pa.`id_product_attribute` = pas.`id_product_attribute`)
 			WHERE pa.`id_product` = '.(int)$this->id
 		);
 	}
