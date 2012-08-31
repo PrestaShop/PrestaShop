@@ -32,6 +32,7 @@ class OrderConfirmationControllerCore extends FrontController
 	public $id_cart;
 	public $id_module;
 	public $id_order;
+	public $reference;
 	public $secure_key;
 
 	/**
@@ -57,6 +58,7 @@ class OrderConfirmationControllerCore extends FrontController
 			Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
 
 		$order = new Order((int)($this->id_order));
+		$this->reference = $order->reference;
 		if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key)
 			Tools::redirect($redirectLink);
 		$module = Module::getInstanceById((int)($this->id_module));
@@ -82,6 +84,7 @@ class OrderConfirmationControllerCore extends FrontController
 		{
 			$this->context->smarty->assign(array(
 				'id_order' => $this->id_order,
+				'reference_order' => $this->reference,
 				'id_order_formatted' => sprintf('#%06d', $this->id_order)
 			));
 			/* If guest we clear the cookie for security reason */
