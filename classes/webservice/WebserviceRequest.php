@@ -392,6 +392,10 @@ class WebserviceRequestCore
 		$this->_startTime = microtime(true);
 		$this->objects = array();
 
+		// Error handler
+		set_error_handler(array($this, 'webserviceErrorHandler'));
+		ini_set('html_errors', 'off');
+
 		// Two global vars, for compatibility with the PS core...
 		global $webservice_call, $display_errors;
 		$webservice_call = true;
@@ -401,9 +405,7 @@ class WebserviceRequestCore
 		// set the output object which manage the content and header structure and informations
 		$this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
 
-		// Error handler
-		set_error_handler(array($this, 'webserviceErrorHandler'));
-		ini_set('html_errors', 'off');
+
 
 		$this->_key = trim($key);
 
@@ -545,7 +547,10 @@ class WebserviceRequestCore
 	public function setError($status, $label, $code)
 	{
 		global $display_errors;
-		$this->objOutput->setStatus($status);
+		if (!isset($display_errors))
+			$display_errors = strtolower(ini_get('display_errors')) != 'off';
+		if (isset($this->objOutput))
+			$this->objOutput->setStatus($status);
 		$this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
 	}
 
@@ -603,8 +608,28 @@ class WebserviceRequestCore
 	 */
 	public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-		if (!(error_reporting() & $errno))
+		echo 'Error Handler WebserviceRequest';
+		$display_errors = strtolower(ini_get('display_errors')) != 'off';
+		if (!(error_reporting() & $errno) || $display_errors)
 			return;
+			
+		$errortype = array (
+                E_ERROR              => 'Error',
+                E_WARNING            => 'Warning',
+                E_PARSE              => 'Parse',
+                E_NOTICE             => 'Notice',
+                E_CORE_ERROR         => 'Core Error',
+                E_CORE_WARNING       => 'Core Warning',
+                E_COMPILE_ERROR      => 'Compile Error',
+                E_COMPILE_WARNING    => 'Compile Warning',
+                E_USER_ERROR         => 'Error',
+                E_USER_WARNING       => 'User warning',
+                E_USER_NOTICE        => 'User notice',
+                E_STRICT             => 'Runtime Notice',
+                E_RECOVERABLE_ERROR => 'Recoverable error'
+                );
+		$type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
+		error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
 
 		switch($errno)
 		{
