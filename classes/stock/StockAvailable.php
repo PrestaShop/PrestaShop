@@ -492,15 +492,15 @@ class StockAvailableCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute Optional
-	 * @param int $id_shop Optional
+	 * @param mixed $id_shop shop id or shop object Optional
 	 */
-	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $id_shop = null)
+	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $shop = null)
 	{
 		return Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$id_product.
 			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
-			StockAvailable::addSqlShopRestriction(null, $id_shop)
+			StockAvailable::addSqlShopRestriction(null, $shop)
 		);
 	}
 
@@ -585,7 +585,7 @@ class StockAvailableCore extends ObjectModel
 	 *
 	 * @return mixed the DbQuery object or the sql restriction string
 	 */
-	public static function addSqlShopRestriction(DbQuery $sql = null, $id_shop = null, $alias = null)
+	public static function addSqlShopRestriction(DbQuery $sql = null, $shop = null, $alias = null)
 	{
 		$context = Context::getContext();
 
@@ -594,19 +594,19 @@ class StockAvailableCore extends ObjectModel
 
 		// if there is no $id_shop, gets the context one
 		// get shop group too
-		if ($id_shop === null)
+		if ($shop === null)
 		{
 			if (Shop::getContext() == Shop::CONTEXT_GROUP)
 				$shop_group = Shop::getContextShopGroup();
 			else
-			{
 				$shop_group = $context->shop->getGroup();
-				$id_shop = $context->shop->id;
-			}
+			$shop = $context->shop;
 		}
+		elseif (is_object($shop))
+			$shop_group = $shop->getGroup();
 		else
 		{
-			$shop = new Shop($id_shop);
+			$shop = new Shop($shop);
 			$shop_group = $shop->getGroup();
 		}
 
@@ -627,9 +627,9 @@ class StockAvailableCore extends ObjectModel
 		else
 		{
 			if (is_object($sql))
-				$sql->where(pSQL($alias).'id_shop = '.(int)$id_shop);
+				$sql->where(pSQL($alias).'id_shop = '.(int)$shop->id);
 			else
-				$sql = ' AND '.pSQL($alias).'id_shop = '.(int)$id_shop.' ';
+				$sql = ' AND '.pSQL($alias).'id_shop = '.(int)$shop->id.' ';
 		}
 
 		return $sql;

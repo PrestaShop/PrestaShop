@@ -114,7 +114,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				{
 					$attributes = Product::getProductAttributesIds($this->product->id);
 					foreach ($attributes as $attribute)
-						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop->id);
+						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop);
 				}
 
 				$this->product->deleteProductAttributes();

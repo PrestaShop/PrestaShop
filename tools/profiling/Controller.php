@@ -389,15 +389,18 @@ abstract class Controller extends ControllerCore
 		foreach ($queries as $data)
 		{
 			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'].'<br />in '.$data['file'].':'.$data['line'].'<br />';
-			$explain = Db::getInstance()->executeS('explain '.$data['query']);
-			if (stristr($explain[0]['Extra'], 'filesort'))
-				echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
-			$browsed_rows = 1;
-			foreach ($explain as $row)
-				$browsed_rows *= $row['rows'];
-			echo $this->displayRowsBrowsed($browsed_rows);
-			if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
-				echo '<br /><b>Useless GROUP BY need to be removed</b>';
+			if (preg_match('/^\s*select\s+/i', $data['query']))
+			{
+				$explain = Db::getInstance()->executeS('explain '.$data['query']);
+				if (stristr($explain[0]['Extra'], 'filesort'))
+					echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
+				$browsed_rows = 1;
+				foreach ($explain as $row)
+					$browsed_rows *= $row['rows'];
+				echo $this->displayRowsBrowsed($browsed_rows);
+				if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query']))
+					echo '<br /><b>Useless GROUP BY need to be removed</b>';
+			}
 		}
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px">
