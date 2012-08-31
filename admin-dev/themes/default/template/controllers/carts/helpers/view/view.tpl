@@ -56,7 +56,7 @@
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
 			{l s='No order created from this cart'}</span>
-			<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order with from cart'}</a></p>
+			{if $customer->id}<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order with from cart'}</a></p>{/if}
 		{/if}
 	</div>
 	<br style="clear:both;" />

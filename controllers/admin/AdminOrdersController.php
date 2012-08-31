@@ -151,14 +151,20 @@ class AdminOrdersControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive())
-		{
 			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
+
+		$id_cart = (int)Tools::getValue('id_cart');
+		$cart = new Cart((int)$id_cart);
+		if ($id_cart && !Validate::isLoadedObject($cart))
+			$this->errors[] = $this->l('This cart does not exists');
+		if ($id_cart && Validate::isLoadedObject($cart) && !$cart->id_customer)
+			$this->errors[] = $this->l('The cart must have a customer');
+		if (count($this->errors))
 			return false;
-		}
+
 		parent::renderForm();
 		unset($this->toolbar_btn['save']);
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
-		$cart = new Cart((int)Tools::getValue('id_cart'));
 
 		$defaults_order_state = array('cheque' => (int)Configuration::get('PS_OS_CHEQUE'),
 												'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
@@ -176,7 +182,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => array($this->l('Orders'), $this->l('create order')),
+			'title' => array($this->l('Orders'), $this->l('create order'))
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
