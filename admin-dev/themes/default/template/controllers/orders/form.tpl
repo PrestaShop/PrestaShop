@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	var id_cart = '';
+	var id_cart = {$cart->id|intval};
 	var id_customer = '';
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
@@ -132,8 +132,8 @@
 				add_cart_rule(data.id_cart_rule);
 			});
 		{if $cart->id}
-			setupCustomer('{$cart->id_customer}');
-			useCart('{$cart->id}');
+			setupCustomer({$cart->id_customer|intval});
+			useCart('{$cart->id|intval}');
 		{/if}
 
 		$('.delete_product').live('click', function(e) {
@@ -474,7 +474,8 @@
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
 				action: "searchCarts",
-				id_customer: id_customer
+				id_customer: id_customer,
+				id_cart: id_cart
 			},
 			success : function(res)
 			{
