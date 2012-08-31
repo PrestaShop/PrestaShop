@@ -1037,7 +1037,10 @@ abstract class ObjectModelCore
 										ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
 				foreach ($vars['shopIDs'] as $id_shop)
 					$or[] = ' `multi_shop_'.bqSQL($this->def['table']).'`.id_shop = '.(int)$id_shop.' ';
-				$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
+				$prepend = '';
+				if (count($or))
+					$prepend = 'AND ('.implode('OR', $or).')';
+				$sql_filter = $prepend.$sql_filter;
 				$sql_join = $multi_shop_join.' '.$sql_join;
 			}
 			else
@@ -1045,7 +1048,11 @@ abstract class ObjectModelCore
 				$vars = get_class_vars($class_name);
 				foreach ($vars['shopIDs'] as $id_shop)
 					$or[] = ' main.id_shop = '.(int)$id_shop.' ';
-				$sql_filter = ' AND ('.implode('OR', $or).') '.$sql_filter;
+				
+				$prepend = '';
+				if (count($or))
+					$prepend = 'AND ('.implode('OR', $or).')';
+				$sql_filter = $prepend.' '.$sql_filter;
 			}
 		}
 		$query = '
@@ -1054,7 +1061,6 @@ abstract class ObjectModelCore
 		WHERE 1 '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '');
-
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
