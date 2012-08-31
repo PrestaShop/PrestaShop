@@ -596,7 +596,10 @@ abstract class DbCore
 
 		$errno = $this->getNumberError();
 		if ($webservice_call && $errno)
-			WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. Query was : '.$sql, 97);
+		{
+			$dbg = debug_backtrace();
+			WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. From '.(isset($dbg[3]['class']) ? $dbg[3]['class'] : '').'->'.$dbg[3]['function'].'() Query was : '.$sql, 97);
+		}
 		else if (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS'))
 		{
 			if ($sql)
