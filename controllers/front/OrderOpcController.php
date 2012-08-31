@@ -165,10 +165,11 @@ class OrderOpcControllerCore extends ParentOrderController
 							/* Bypass payment step if total is 0 */
 							if (($id_order = $this->_checkFreeOrder()) && $id_order)
 							{
+								$order = new Order((int)$id_order);
 								$email = $this->context->customer->email;
 								if ($this->context->customer->is_guest)
 									$this->context->customer->logout(); // If guest we clear the cookie for security reason
-								die('freeorder:'.$id_order.':'.$email);
+								die('freeorder:'.$order->reference.':'.$email);
 							}
 							exit;
 							break;

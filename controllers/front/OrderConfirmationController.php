@@ -47,17 +47,24 @@ class OrderConfirmationControllerCore extends FrontController
 
 		/* check if the cart has been made by a Guest customer, for redirect link */
 		if (Cart::isGuestCartByCartId($this->id_cart))
+		{
+			$is_guest = true;
 			$redirectLink = 'index.php?controller=guest-tracking';
+		}
 		else
 			$redirectLink = 'index.php?controller=history';
 
 		$this->id_module = (int)(Tools::getValue('id_module', 0));
 		$this->id_order = Order::getOrderByCartId((int)($this->id_cart));
 		$this->secure_key = Tools::getValue('key', false);
+		$order = new Order((int)($this->id_order));
+		if ($is_guest)
+		{
+			$customer = new Customer((int)$order->id_customer);
+			$redirectLink .= '&id_order='.$order->reference.'&email='.urlencode($customer->email);
+		}
 		if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key))
 			Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
-
-		$order = new Order((int)($this->id_order));
 		$this->reference = $order->reference;
 		if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key)
 			Tools::redirect($redirectLink);
@@ -85,7 +92,8 @@ class OrderConfirmationControllerCore extends FrontController
 			$this->context->smarty->assign(array(
 				'id_order' => $this->id_order,
 				'reference_order' => $this->reference,
-				'id_order_formatted' => sprintf('#%06d', $this->id_order)
+				'id_order_formatted' => sprintf('#%06d', $this->id_order),
+				'email' => $this->context->customer->email
 			));
 			/* If guest we clear the cookie for security reason */
 			$this->context->customer->mylogout();
