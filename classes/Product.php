@@ -1855,7 +1855,6 @@ class ProductCore extends ObjectModel
 		);
 		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-		$sql->join(Product::sqlStock('p', 0));
 
 		$sql->where('product_shop.`active` = 1');
 		if ($front)
@@ -1885,7 +1884,9 @@ class ProductCore extends ObjectModel
 			$sql->select('pa.id_product_attribute');
 			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
+			$sql->where('(pa.id_product_attribute IS NULL OR product_attribute_shop.id_product_attribute IS NOT NULL)');
 		}
+		$sql->join(Product::sqlStock('p', Combination::isFeatureActive() ? 'product_attribute_shop' : 0));
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
