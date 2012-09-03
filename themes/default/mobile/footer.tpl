@@ -40,7 +40,7 @@
 						</div>
 						{if $conditions}
 						<div class="ui-block-b">
-							<a href="{$link->getCMSLink($id_cgv)}" data-ajax="false">CGV</a>
+							<a href="{$link->getCMSLink($id_cgv)}" data-ajax="false">{l s='Terms of service'}</a>
 						</div>
 						{/if}
 					</div>
