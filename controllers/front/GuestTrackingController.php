@@ -59,7 +59,7 @@ class GuestTrackingControllerCore extends FrontController
 					$order = new Order((int)$id_order);
 				else
 					$order = Order::getByReference($id_order);
-				
+
 				if (Validate::isLoadedObject($order))
 					$order_collection[] = $order;
 			}
@@ -69,10 +69,10 @@ class GuestTrackingControllerCore extends FrontController
 			// Ignore $result_number
 			if (!empty($order_reference))
 				$order_collection = Order::getByReference($order_reference);
-			
+
 			$email = Tools::getValue('email');
 
-			if (empty($order_reference) && empty($order_id))
+			if (empty($order_reference) && empty($id_order))
 				$this->errors[] = Tools::displayError('Please provide your Order Reference');
 			else if (empty($email))
 				$this->errors[] = Tools::displayError('Please provide your e-mail address');
@@ -134,39 +134,39 @@ class GuestTrackingControllerCore extends FrontController
 	 */
 	protected function assignOrderTracking($order_collection)
 	{
-		$customer = new Customer((int)($order_collection->getFirst()->id_customer));
-		
+		$customer = new Customer((int)$order_collection->getFirst()->id_customer);
+
 		$order_collection = ($order_collection->getAll());
-		
+
 		$order_list = array();
 		foreach ($order_collection as $order)
 			$order_list[] = $order;
-		
+
 		foreach ($order_list as &$order)
 		{
-			$order->id_order_state = (int)($order->getCurrentState());
-			$order->invoice = (OrderState::invoiceAvailable((int)($order->id_order_state)) && $order->invoice_number);
+			$order->id_order_state = (int)$order->getCurrentState();
+			$order->invoice = (OrderState::invoiceAvailable((int)$order->id_order_state) && $order->invoice_number);
 			$order->order_history = $order->getHistory((int)$this->context->language->id, false, true);
-			$order->carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-			$order->address_invoice = new Address((int)($order->id_address_invoice));
-			$order->address_delivery = new Address((int)($order->id_address_delivery));
+			$order->carrier = new Carrier((int)$order->id_carrier, (int)$order->id_lang);
+			$order->address_invoice = new Address((int)$order->id_address_invoice);
+			$order->address_delivery = new Address((int)$order->id_address_delivery);
 			$order->inv_adr_fields = AddressFormat::getOrderedAddressFields($order->address_invoice->id_country);
 			$order->dlv_adr_fields = AddressFormat::getOrderedAddressFields($order->address_delivery->id_country);
 			$order->invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_invoice, $order->inv_adr_fields);
 			$order->deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_delivery, $order->dlv_adr_fields);
 			$order->currency = new Currency($order->id_currency);
 			$order->discounts = $order->getCartRules();
-			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)($order->addressInvoice->id_state)) : false;
-			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)($order->addressDelivery->id_state)) : false;
+			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)$order->addressInvoice->id_state) : false;
+			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)$order->addressDelivery->id_state) : false;
 			$order->products = $order->getProducts();
-			$order->customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
+			$order->customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 			Product::addCustomizationPrice($order->products, $order->customizedDatas);
 			$order->total_old = ($order->total_discounts > 0) ? (float)($order->total_paid - $order->total_discounts) : false;
-			
+
 			if ($order->carrier->url && $order->shipping_number)
 				$order->followup = str_replace('@', $order->shipping_number, $order->carrier->url);
 			$order->hook_orderdetaildisplayed = Hook::exec('displayOrderDetail', array('order' => $order));
-			
+
 			Hook::exec('actionOrderDetail', array('carrier' => $order->carrier, 'order' => $order));
 		}
 
@@ -174,7 +174,7 @@ class GuestTrackingControllerCore extends FrontController
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'order_collection' => $order_list,
 			'return_allowed' => false,
-			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
+			'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 			'is_guest' => true,
 			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
