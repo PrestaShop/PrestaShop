@@ -1142,30 +1142,29 @@
 <fieldset id="carriers_part" style="display:none;">
 	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
 	<div id="carriers_err" style="display:none;" class="warn"></div>
-		<div id="carrier_form">
-			<div>
-				<p>
-					<label>{l s='Delivery option:'} </label>
-					<select name="delivery_option" id="delivery_option">
-					</select>
-				</p>
-				<p>
-					<label for="shipping_price">{l s='Shipping price:'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
-				</p>
-				<p>
-					<label for="free_shipping">{l s='Free shipping:'}</label>
-					<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
-				</p>
-			</div>
-			<div id="float:left;">
-				{if $recyclable_pack}
-					<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
-				{/if}
-				{if $gift_wrapping}
-					<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
-					<p><label for="gift_message">{l s='Gift message:'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
-				{/if}
-			</div>
+	<div id="carrier_form">
+		<div>
+			<p>
+				<label>{l s='Delivery option:'} </label>
+				<select name="delivery_option" id="delivery_option">
+				</select>
+			</p>
+			<p>
+				<label for="shipping_price">{l s='Shipping price:'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+			</p>
+			<p>
+				<label for="free_shipping">{l s='Free shipping:'}</label>
+				<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
+			</p>
+		</div>
+		<div id="float:left;">
+			{if $recyclable_pack}
+				<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
+			{/if}
+			{if $gift_wrapping}
+				<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
+				<p><label for="gift_message">{l s='Gift message:'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
+			{/if}
 		</div>
 	</div>
 </fieldset>
