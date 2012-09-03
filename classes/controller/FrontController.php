@@ -250,7 +250,7 @@ class FrontControllerCore extends Controller
 		}
 
 		// Check mobile context
-		if (Tools::isSubmit('no_mobile'))
+		if (Tools::isSubmit('no_mobile_theme'))
 			$this->context->cookie->no_mobile = true;
 
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
