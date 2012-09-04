@@ -352,7 +352,7 @@ class AdminOrdersControllerCore extends AdminController
 								foreach ($order->getProducts() as $product)
 								{
 									if (StockAvailable::dependsOnStock($product['product_id']))
-										StockAvailable::synchronize($product['product_id']);
+										StockAvailable::synchronize($product['product_id'], (int)$product['id_shop']);
 								}
 							}
 
@@ -1441,7 +1441,7 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					$product['warehouse_list'][0] = array();
 
-				$product['stock'][0] = Product::getRealQuantity($product['id_product'], 0, 0);
+				$product['stock'][0] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], 0, (int)$this->context->shop->id);
 
 				foreach ($combinations as &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
