@@ -1404,7 +1404,6 @@ class AdminTranslationsControllerCore extends AdminController
 		$return = array();
 		if ((ini_get('suhosin.post.max_vars') && ini_get('suhosin.post.max_vars') < $count) || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count))
 		{
-			$this->post_limit_exceed = true;
 			$return['error_type'] = 'suhosin';
 			$return['post.max_vars'] = ini_get('suhosin.post.max_vars');
 			$return['request.max_vars'] = ini_get('suhosin.request.max_vars');
@@ -1412,7 +1411,6 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count)
 		{
-			$this->post_limit_exceed = true;
 			$return['error_type'] = 'conf';
 			$return['max_input_vars'] = ini_get('max_input_vars');
 			$return['needed_limit'] = $count + 100;
