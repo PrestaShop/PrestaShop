@@ -28,7 +28,7 @@
 
 {block name="override_tpl"}
 
-	{if $post_limit_exceeded}
+	{if !empty($limit_warning)}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
 			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
@@ -37,7 +37,7 @@
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
 		{else}
-			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
+			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the this limit to'}
 		{/if}
