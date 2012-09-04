@@ -585,6 +585,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `user_agent` varchar(128) default NULL,
   `date_add` datetime NOT NULL,
   `private` TINYINT NOT NULL DEFAULT  '0',
+  `read` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_customer_message`),
   KEY `id_customer_thread` (`id_customer_thread`),
   KEY `id_employee` (`id_employee`)
