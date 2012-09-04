@@ -653,6 +653,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if (!$this->errors && $value)
 			Configuration::updateValue('PS_SAV_IMAP_OPT', implode('', $value));
 	}
-
+	
+	public function ajaxProcessMarkAsRead()
+	{
+		$id_thread = Tools::getValue('id_thread');
+		$messages = CustomerThread::getMessageCustomerThreads($id_thread);		
+		if (count($messages))
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer_message set `read` = 1');
+	}
 }
-
