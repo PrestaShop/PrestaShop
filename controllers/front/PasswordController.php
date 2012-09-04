@@ -85,7 +85,7 @@ class PasswordControllerCore extends FrontController
 					if ($customer->update())
 					{
 						Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
-						if (Mail::Send($this->context->language->id, 'password', Mail::l('Your password'),
+						if (Mail::Send($this->context->language->id, 'password', Mail::l('Your new admin password'),
 						array(
 							'{email}' => $customer->email,
 							'{lastname}' => $customer->lastname,
