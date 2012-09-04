@@ -72,15 +72,17 @@ class CustomerThreadCore extends ObjectModel
 		return (parent::delete());
 	}
 
-	public static function getCustomerMessages($id_customer)
+	public static function getCustomerMessages($id_customer, $read = null)
 	{
-		return Db::getInstance()->executeS('
-			SELECT *
+		$sql = 'SELECT *
 			FROM '._DB_PREFIX_.'customer_thread ct
 			LEFT JOIN '._DB_PREFIX_.'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
-			WHERE id_customer = '.(int)$id_customer
-		);
+			WHERE id_customer = '.(int)$id_customer;
+		if (!is_null($read))
+			$sql .= ' AND cm.`read` = '.(int)$read;
+
+		return Db::getInstance()->executeS($sql);
 	}
 
 	public static function getIdCustomerThreadByEmailAndIdOrder($email, $id_order)
