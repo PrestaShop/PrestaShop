@@ -1,6 +1,6 @@
 Hallo {firstname} {lastname},
  
-Ihre Bestellung Nr.{id_order} Verlauf
+Ihre Bestellung Nr.{order_name} Verlauf
  
 Ihre Bestellung wurde erfolgreich aufgenommen und wird, sobald die Zahlung eingegangen ist, versendet.
  
