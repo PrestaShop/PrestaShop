@@ -91,6 +91,10 @@
 				<dd>{sizeof($messages)}</dd>
 			|</dl>
 			<dl>
+				<dt><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{l s='New Customer Messages:'}</a></dt>
+				<dd><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'htmlall':'UTF-8'}">{sizeof($customer_thread_message)}</a></dd>
+			|</dl>
+			<dl>
 				<dt>{l s='Products:'}</dt>
 				<dd id="product_number">{sizeof($products)}</dd>
 			|</dl>
