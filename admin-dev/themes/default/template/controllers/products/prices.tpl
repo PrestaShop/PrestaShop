@@ -25,10 +25,10 @@
 *}
 
 <script type="text/javascript">
-
+var Customer = new Object();
 var product_url = '{$link->getAdminLink('AdminProducts', true)}';
 $(document).ready(function () {
-	var Customer = {
+	Customer = {
 		"hiddenField": jQuery('#id_customer'),
 		"field": jQuery('#customer'),
 		"container": jQuery('#customers'),
