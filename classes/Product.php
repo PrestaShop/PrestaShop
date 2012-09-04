@@ -2351,8 +2351,7 @@ class ProductCore extends ObjectModel
 			&& Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
-		$id_customer = 0;
-		if (Validate::isLoadedObject($context->customer))
+		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
 			$id_customer = $context->customer->id;
 
 		return Product::priceCalculation(
