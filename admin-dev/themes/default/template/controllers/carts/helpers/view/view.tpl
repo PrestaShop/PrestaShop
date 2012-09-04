@@ -77,12 +77,12 @@
 		</tr>
 		<tbody>
 		{foreach from=$products item='product'}
-			{if isset($customized_datas[$product.id_product][$product.id_product_attribute])}
+			{if isset($customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery])}
 				<tr>
 					<td align="center">{$product.image}</td>
 					<td><a href="{$link->getAdminLink('AdminProducts')|escape:'htmlall':'UTF-8'}&id_product={$product.id_product}&updateproduct">
 								<span class="productName">{$product.name}</span>{if isset($product.attributes)}<br />{$product.attributes}{/if}<br />
-							{if $product.reference}$this->l('Ref:') {$product.reference}{/if}
+							{if $product.reference}{l s='Ref:'} {$product.reference}{/if}
 							{if $product.reference && $product.supplier_reference} / {$product.supplier_reference}{/if}
 						</a>
 					</td>
@@ -91,7 +91,7 @@
 					<td align="center" class="productQuantity">{$product.qty_in_stock}</td>
 					<td align="right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 				</tr>
-				{foreach from=$customized_datas[$product.id_product][$product.id_product_attribute] item='customization'}
+				{foreach from=$customized_datas[$product.id_product][$product.id_product_attribute][$product.id_address_delivery] item='customization'}
 				<tr>
 					<td colspan="2">
 					{foreach from=$customization.datas key='type' item='datas'}
