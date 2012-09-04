@@ -697,7 +697,7 @@ function bindInputs()
 	});
 	
 	// Term Of Service (TOS)
-	$('#cgv').live('click', function() {
+	$('#cgv').click(function() {
 		if ($('#cgv:checked').length != 0)
 			var checked = 1;
 		else
