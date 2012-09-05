@@ -594,7 +594,7 @@ class CarrierCore extends ObjectModel
 
 	public static function checkCarrierZone($id_carrier, $id_zone)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT c.`id_carrier`
 			FROM `'._DB_PREFIX_.'carrier` c
 			LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)
@@ -1156,18 +1156,22 @@ class CarrierCore extends ObjectModel
 		$query->select('id_carrier');
 		$query->from('product_carrier', 'pc');
 		$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
-		$query->where('id_product = '.(int)$product->id);
-		$query->where('id_shop = '.(int)$id_shop);
+		$query->where('pc.id_product = '.(int)$product->id);
+		$query->where('pc.id_shop = '.(int)$id_shop);
+
 		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-		
+
 		if (!empty($carriers))
 		{
+			//the product is linked with carriers
 			$carrier_list = array();
-			foreach ($carriers as $carrier)
+			foreach ($carriers as $carrier) //check if the linked carriers are available in current zone
 				if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone))
 					$carrier_list[] = $carrier['id_carrier'];
 			if (!empty($carrier_list))
 				return $carrier_list;
+			else
+				return array();//no linked carrier are available for this zone
 		}
 
 		$carrier_list = array();
