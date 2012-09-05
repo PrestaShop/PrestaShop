@@ -148,6 +148,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
 			'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
 			'order' => $this->order,
+			'is_order_slip' => true
 		));
 
 		return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
