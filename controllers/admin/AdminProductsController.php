@@ -1137,7 +1137,13 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$result = parent::loadObject($opt);
 		if ($result)
+		{
+			if ($this->object->id)
+				if (!$this->object->isAssociatedToShop() && $this->object->id_shop_default)
+					$this->object = new $this->className((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
+
 			$this->object->loadStockData();
+		}
 		return $result;
 	}
 
@@ -2691,7 +2697,7 @@ class AdminProductsControllerCore extends AdminController
 		$root = Category::getRootCategory();
 		$default_category = Tools::getValue('id_category', Context::getContext()->shop->id_category);
 
-		if (!$product->id)
+		if (!$product->id || !$product->isAssociatedToShop())
 			$selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
 		else
 		{
