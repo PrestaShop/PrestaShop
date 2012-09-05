@@ -523,6 +523,7 @@ $_LANG['order-follow_e1b6d8e31d5a3dee879dddc77c492b81'] = 'Voici la liste des re
 $_LANG['order-follow_e6f6a5e58ee6d010f22e4b3dbd756213'] = 'Veuillez cocher au moins un produit à retourner.';
 $_LANG['order-opc-address_145769de0753212cb6f89a997ce200bc'] = 'Changer l\'adresse :';
 $_LANG['order-opc-address_32063d827ff1f7d07455a7b8e3e1c098'] = 'Adresse de livraison :';
+$_LANG['order-opc-address_b15e1100a6196acba01ef7aaa5b2a9e5'] = 'Ajouter une nouvelle adresse';
 $_LANG['order-opc-address_b3939ab02b5f8d716719f08ec581acbb'] = 'Vous devez indiquer une adresse de livraison et de facturation.';
 $_LANG['order-opc-address_dd7bf230fde8d4836917806aff6a6b27'] = 'Adresses';
 $_LANG['order-opc-address_ece53f91d0525eaa402014fe2736a158'] = 'Adresse de facturation :';
