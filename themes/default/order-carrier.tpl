@@ -71,21 +71,25 @@
 {/if}
 
 {if !$opc}
-{capture name=path}{l s='Shipping'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
+	{capture name=path}{l s='Shipping'}{/capture}
+	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 
-{if !$opc}<h1>{l s='Shipping'}</h1>{else}<h2><span>2</span> {l s='Delivery methods'}</h2>{/if}
+{if !$opc}
+	<h1>{l s='Shipping'}</h1>
+{else}
+	<h2><span>2</span> {l s='Delivery methods'}</h2>
+{/if}
 
 {if !$opc}
-{assign var='current_step' value='shipping'}
-{include file="$tpl_dir./order-steps.tpl"}
-
-{include file="$tpl_dir./errors.tpl"}
-
-<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();">
+	{assign var='current_step' value='shipping'}
+	{include file="$tpl_dir./order-steps.tpl"}
+	
+	{include file="$tpl_dir./errors.tpl"}
+	
+	<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();">
 {else}
-<div id="opc_delivery_methods" class="opc-main-block">
+	<div id="opc_delivery_methods" class="opc-main-block">
 	<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
 
@@ -96,16 +100,20 @@
 {else}
 	<h3 class="carrier_title">{l s='Choose your delivery method'}</h3>
 	
-	<div id="HOOK_BEFORECARRIER">{if isset($carriers) && isset($HOOK_BEFORECARRIER)}{$HOOK_BEFORECARRIER}{/if}</div>
+	<div id="HOOK_BEFORECARRIER">
+		{if isset($carriers) && isset($HOOK_BEFORECARRIER)}
+			{$HOOK_BEFORECARRIER}
+		{/if}
+	</div>
 	{if isset($isVirtualCart) && $isVirtualCart}
-	<p class="warning">{l s='No carrier needed for this order'}</p>
+		<p class="warning">{l s='No carrier needed for this order'}</p>
 	{else}
-	{if $recyclablePackAllowed}
-	<p class="checkbox">
-		<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
-		<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
-	</p>
-	{/if}
+		{if $recyclablePackAllowed}
+			<p class="checkbox">
+				<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
+				<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
+			</p>
+		{/if}
 	<div class="delivery_options_address">
 	{if isset($delivery_option_list)}
 		{foreach $delivery_option_list as $id_address => $option_list}
@@ -195,7 +203,8 @@
 											({l s='products concerned:'}
 										{/if}
 										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
-										{foreach $carrier.product_list as $product}{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if !$product@last}, {else}){/if}{/if}{/foreach}
+										{foreach $carrier.product_list as $product}
+										{if $product@index == 4}<acronym title="{/if}{if $product@index >= 4}{$product.name}{if !$product@last}, {else}">...</acronym>){/if}{else}{$product.name}{if !$product@last}, {else}){/if}{/if}{/foreach}
 									{/if}
 								</td>
 							</tr>
