@@ -92,6 +92,8 @@
 					</span>
 				{/if}
 			{/if}
+		{elseif get_class($document) eq 'OrderSlip'}
+			{displayPrice price=$document->amount currency=$currency->id}
 		{/if}
 		</td>
 		<td class="right document_action">
