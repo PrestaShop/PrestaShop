@@ -662,7 +662,7 @@
 						<tr id="total_shipping">
 							<td><b>{l s='Shipping'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields current-edit" style="display:none;"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;"><input type="text" size="3" name="partialRefundShippingCost" value="0" /> &euro;</td>
 						</tr>
 						<tr style="font-size: 20px" id="total_order">
 							<td style="font-size: 20px">{l s='Total'}</td>
