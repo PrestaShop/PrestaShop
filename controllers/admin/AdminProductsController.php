@@ -4126,14 +4126,18 @@ class AdminProductsControllerCore extends AdminController
 			$search = Tools::getValue('q');
 			$id_lang = Tools::getValue('id_lang');
 			$limit = Tools::getValue('limit');
-			$result = Db::getInstance()->executeS('
-				SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-					ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
-				WHERE pl.`name` LIKE "%'.pSQL($search).'%"
-				GROUP BY pl.`id_product`
-				LIMIT '.(int)$limit);
+			if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP)
+				$result = false;
+			else
+				$result = Db::getInstance()->executeS('
+					SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
+					FROM `'._DB_PREFIX_.'product` p
+					LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop ='.(int)Context::getContext()->shop->id.')
+					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+						ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
+					WHERE pl.`name` LIKE "%'.pSQL($search).'%" AND ps.id_product IS NULL
+					GROUP BY pl.`id_product`
+					LIMIT '.(int)$limit);
 			die(Tools::jsonEncode($result));
 		}
 	}
