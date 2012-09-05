@@ -790,6 +790,9 @@ class FrontControllerCore extends Controller
 	{
 		$this->context->smarty->assign(array(
 			'HOOK_FOOTER' => Hook::exec('displayFooter'),
+			'conditions' => Configuration::get('PS_CONDITIONS'),
+			'id_cgv' => Configuration::get('PS_CONDITIONS_CMS_ID'),
+			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME')
 		));
 
 	}
