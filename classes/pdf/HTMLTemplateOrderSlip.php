@@ -168,18 +168,17 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 				foreach ($tax_amount as $tax_id => $amount)
 				{
 					$tax = new Tax((int)$tax_id);
-
 					if (!isset($total_tax_amount[$tax->rate]))
 					{
-						$tmp_tax_infos[$tax->rate]['name'] = $tax->name;
-						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] = $order_slip_details['amount_tax_excl'];
-						$tmp_tax_infos[$tax->rate]['total_amount'] = $amount;
+						$tmp_tax_infos[(string)$tax->rate]['name'] = $tax->name;
+						$tmp_tax_infos[(string)$tax->rate]['total_price_tax_excl'] = $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[(string)$tax->rate]['total_amount'] = $amount;
 					}
 					else
 					{
 
-						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
-						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
+						$tmp_tax_infos[(string)$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[(string)$tax->rate]['total_amount'] += $amount;
 					}
 				}
 			} else {
@@ -199,7 +198,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 					$infos['total_amount'] += $amount;
 				}
 
-				$tmp_tax_infos[$tax_rate] = $infos;
+				$tmp_tax_infos[(string)$tax_rate] = $infos;
 			}
 
 		}
