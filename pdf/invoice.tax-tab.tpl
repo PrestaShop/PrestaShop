@@ -50,10 +50,10 @@
 				 <td style="width: 20%; text-align: right;">{$rate} %</td>
 				{if !$use_one_after_another_method}
 				 <td style="width: 20%; text-align: right;">
-					 {displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
+					 {if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
 				 </td>
 				{/if}
-				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
+				 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
 				{/if}
@@ -64,9 +64,9 @@
 				 <td style="width: 30%">{l s='Shipping' pdf='true'}</td>
 				 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
  				{if !$use_one_after_another_method}
-					 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
+					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
 				{/if}
-				 <td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
+				 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
 				</tr>
 				{/foreach}
 				{/if}
@@ -78,9 +78,9 @@
 						<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
 						<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
 						{if !$use_one_after_another_method}
-							<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
+							<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
 						{/if}
-						<td style="width: 20%; text-align: right;">{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
+						<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
 					</tr>
 					{/if}
 				{/foreach}
