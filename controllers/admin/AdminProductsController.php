@@ -3396,13 +3396,13 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function addCarriers()
 	{
-		if (Tools::getValue('carriers'))
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
-			if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
-			{
-				if (Tools::getValue('carriers'))
-					$product->setCarriers(Tools::getValue('carriers'));
-			}
+			$carriers = array();
+			
+			if (Tools::getValue('carriers'))
+				$carriers = Tools::getValue('carriers');
+			$product->setCarriers($carriers);
 		}
 	}
 
