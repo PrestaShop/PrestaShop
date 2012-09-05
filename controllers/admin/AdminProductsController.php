@@ -3514,7 +3514,7 @@ class AdminProductsControllerCore extends AdminController
 						'product' => $product,
 						'id_category' => $product->getDefaultCategory(),
 						'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
-						'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0)
+						'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0 && $product->hasAttributes())
 					));
 				}
 			}
