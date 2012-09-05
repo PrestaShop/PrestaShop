@@ -2198,14 +2198,13 @@ class ProductCore extends ObjectModel
 				'id_shop' => (int)$this->id_shop
 			);
 		}
-
 		Db::getInstance()->execute(
 			'DELETE FROM `'._DB_PREFIX_.'product_carrier`
 			WHERE id_product = '.(int)$this->id.'
 			AND id_shop = '.(int)$this->id_shop
 		);
-
-		Db::getInstance()->insert('product_carrier', $data);
+		if (count($data))
+			Db::getInstance()->insert('product_carrier', $data);
 	}
 
 	/**
