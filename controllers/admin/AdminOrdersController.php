@@ -215,7 +215,7 @@ class AdminOrdersControllerCore extends AdminController
 					'class' => 'process-icon-standardRefund'
 				);
 			
-			if ($order->hasBeenPaid())
+			if ($order->hasInvoice())
 				$this->toolbar_btn['partial_refund'] = array(
 					'short' => 'Create',
 					'href' => '',
