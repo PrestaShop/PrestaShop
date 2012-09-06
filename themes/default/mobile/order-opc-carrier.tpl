@@ -42,7 +42,7 @@
 	{/if}
 	</fieldset>
 	<fieldset data-role="fieldcontain">
-		<input type="checkbox" name="same" id="recyclable" checked="checked" value="1" class="delivery_option_radio" />
+		<input type="checkbox" name="same" id="recyclable" value="1" class="delivery_option_radio" {if $recyclable == 1}checked="checked"{/if} />
 		<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
 	</fieldset>
 
