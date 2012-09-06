@@ -321,7 +321,11 @@ CREATE TABLE `PREFIX_category` (
   `is_root_category` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_category`),
   KEY `category_parent` (`id_parent`),
-  KEY `nleftright` (`nleft`,`nright`)
+  KEY `nleftright` (`nleft`, `nright`),
+  KEY `nleftrightactive` (`nleft`, `nright`, `active`),
+  KEY `level_depth` (`level_depth`),
+  KEY `nright` (`nright`),
+  KEY `nleft` (`nleft`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_category_group` (
@@ -350,7 +354,7 @@ CREATE TABLE `PREFIX_category_product` (
   `id_category` int(10) unsigned NOT NULL,
   `id_product` int(10) unsigned NOT NULL,
   `position` int(10) unsigned NOT NULL default '0',
-  UNIQUE KEY `category_product_index` (`id_category`,`id_product`),
+  PRIMARY KEY (`id_category`,`id_product`),
   INDEX (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -395,7 +399,7 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `meta_title` varchar(128) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
-  UNIQUE KEY `category_lang_index` (`id_cms_category`,`id_lang`),
+  PRIMARY KEY (`id_cms_category`,`id_lang`),
   KEY `category_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -724,7 +728,8 @@ CREATE TABLE `PREFIX_feature_lang` (
   `id_feature` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) default NULL,
-  PRIMARY KEY  (`id_feature`,`id_lang`)
+  PRIMARY KEY  (`id_feature`,`id_lang`),
+  KEY (`id_lang`,`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_feature_product` (
@@ -1389,6 +1394,7 @@ CREATE TABLE `PREFIX_product` (
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
   KEY `id_category_default` (`id_category_default`),
+  KEY `indexed` (`indexed`),
   KEY `date_add` (`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1688,6 +1694,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`to` DATETIME NOT NULL,
 	PRIMARY KEY(`id_specific_price`),
 	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
+	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1702,6 +1709,7 @@ CREATE TABLE `PREFIX_state` (
   `active` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_state`),
   KEY `id_country` (`id_country`),
+  KEY `name` (`name`),
   KEY `id_zone` (`id_zone`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
