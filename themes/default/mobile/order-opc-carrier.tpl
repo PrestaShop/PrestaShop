@@ -28,7 +28,7 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content">
-	<h3 class="bg">{l s='Choose delivery method'}</h3>
+	<h3 class="bg">{l s='Choose your delivery method'}</h3>
 	<fieldset data-role="controlgroup">
 	{if isset($delivery_option_list)}
 		{foreach $delivery_option_list as $id_address => $option_list}

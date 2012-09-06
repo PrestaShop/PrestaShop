@@ -25,7 +25,7 @@
 *}
 
 		<hr width="99%" align="center" size="2" class=""/>
-		<h2 class="site_map">{l s='Site map'}</h2>
+		<h2 class="site_map">{l s='Sitemap'}</h2>
 		<ul data-role="listview" data-inset="true" id="category">
 			{if $controller_name != 'index'}<li><a href="{$link->getPageLink('index', true)}" data-ajax="false">Accueil</a></li>{/if}
 			
