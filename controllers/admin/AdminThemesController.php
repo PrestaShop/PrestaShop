@@ -39,12 +39,13 @@ class AdminThemesControllerCore extends AdminController
 	 * @static
 	 */
 	public static $check_features = array(
-		'ccc' => array( // feature key name
+		'ccc' => array(
 			'attributes' => array(
 				'available' => array(
-					'value' => 'true', // accepted attribute value
-					// if value doesnt match,
-					// prestashop configuration value must have thoses values
+					'value' => 'true',
+					/*
+					 * accepted attribute value if value doesnt match, prestashop configuration value must have thoses values
+					*/
 					'check_if_not_valid' => array(
 						'PS_CSS_THEME_CACHE' => 0,
 						'PS_JS_THEME_CACHE' => 0,
@@ -162,13 +163,20 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_ALLOW_MOBILE_DEVICE' => array(
 						'title' => $this->l('Enable mobile theme'),
-						'desc' => $this->l('Allows visitors browsing on a mobile device, to have a light version of website'),
-						'cast' => 'intval',
-						'type' => 'bool',
+						'desc' => $this->l('Allows visitors browsing on a mobile device or on a touchpad, to have a light version of website'),
+						'type' => 'radio',
+						'required' => true,
+						'validation' => 'isGenericName',
+						'choices' => array(
+							0 => $this->l('I want disable it'),
+							1 => $this->l('I want enable it only on mobiles devices'),
+							2 => $this->l('I want enable it only on touchpads'),
+							3 => $this->l('I want enable it on mobiles and touchpads devices')
+						)
 					)
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button')
-			),
+			)
 		);
 
 		$this->fields_list = array(
