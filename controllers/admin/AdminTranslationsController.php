@@ -810,13 +810,12 @@ class AdminTranslationsControllerCore extends AdminController
 		switch ($this->type_selected)
 		{
 			case 'front':
-				$directories['tpl'] = array(
-					_PS_THEME_SELECTED_DIR_.'/' => scandir(_PS_THEME_SELECTED_DIR_),
-					_PS_THEME_OVERRIDE_DIR_.'/' => Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_) ? scandir(_PS_THEME_OVERRIDE_DIR_) : array(),
-					_PS_THEME_SELECTED_DIR_.'/mobile/' => scandir(_PS_THEME_SELECTED_DIR_.'/mobile/'),
-					_PS_THEME_OVERRIDE_DIR_.'/mobile/' => Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_.'/mobile/') ? scandir(_PS_THEME_OVERRIDE_DIR_.'/mobile/') : array(),
-					_PS_ALL_THEMES_DIR_.'/' => scandir(_PS_ALL_THEMES_DIR_)
-				);
+				$directories['tpl'] = array(_PS_ALL_THEMES_DIR_.'/' => scandir(_PS_ALL_THEMES_DIR_));
+				$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_SELECTED_DIR_));
+
+				if (Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_))
+					$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_OVERRIDE_DIR_));
+
 				break;
 
 			case 'back':
