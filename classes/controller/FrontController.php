@@ -252,6 +252,8 @@ class FrontControllerCore extends Controller
 		// Check mobile context
 		if (Tools::isSubmit('no_mobile_theme'))
 			$this->context->cookie->no_mobile = true;
+		else if (Tools::isSubmit('mobile_theme_ok'))
+			$this->context->cookie->no_mobile = false;
 
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
 		setlocale(LC_COLLATE, $locale);
@@ -792,7 +794,8 @@ class FrontControllerCore extends Controller
 			'HOOK_FOOTER' => Hook::exec('displayFooter'),
 			'conditions' => Configuration::get('PS_CONDITIONS'),
 			'id_cgv' => Configuration::get('PS_CONDITIONS_CMS_ID'),
-			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME')
+			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
+			'PS_ALLOW_MOBILE_DEVICE' => file_exists(_PS_THEME_MOBILE_DIR_) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
 		));
 
 	}
