@@ -81,13 +81,13 @@ class Blockcontactinfos extends Module
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>	
 				<p><label for="company">'.$this->l('Company name').' :</label>
-				<input type="text" id="company" name="company" value="'.Configuration::get('blockcontactinfos_company').'" /></p>
+				<input type="text" id="company" name="company" value="'.Tools::safeOutput(Configuration::get('blockcontactinfos_company')).'" /></p>
 				<p><label for="address">'.$this->l('Address').' :</label>
-				<textarea id="address" name="address" cols="60" rows="4">'.Configuration::get('blockcontactinfos_address').'</textarea></p>
+				<textarea id="address" name="address" cols="60" rows="4">'.Tools::safeOutput(Configuration::get('blockcontactinfos_address')).'</textarea></p>
 				<p><label for="phone">'.$this->l('Phone number').' :</label>
-				<input type="text" id="phone" name="phone" value="'.Configuration::get('blockcontactinfos_phone').'" /></p>
+				<input type="text" id="phone" name="phone" value="'.Tools::safeOutput(Configuration::get('blockcontactinfos_phone')).'" /></p>
 				<p><label for="email">'.$this->l('Email').' :</label>
-				<input type="text" id="email" name="email" value="'.Configuration::get('blockcontactinfos_email').'" />	</p>
+				<input type="text" id="email" name="email" value="'.Tools::safeOutput(Configuration::get('blockcontactinfos_email')).'" />	</p>
 				<div class="margin-form">
 					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
 				</div>

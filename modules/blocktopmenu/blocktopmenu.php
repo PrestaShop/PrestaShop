@@ -201,7 +201,7 @@ class Blocktopmenu extends Module
 				<div style="display: none">
 				<label>'.$this->l('Items').'</label>
 				<div class="margin-form">
-					<input type="text" name="items" id="itemsInput" value="'.Configuration::get('MOD_BLOCKTOPMENU_ITEMS').'" size="70" />
+					<input type="text" name="items" id="itemsInput" value="'.Tools::safeOutput(Configuration::get('MOD_BLOCKTOPMENU_ITEMS')).'" size="70" />
 				</div>
 				</div>
 

@@ -159,7 +159,7 @@ class MailAlerts extends Module
 					$email = trim($email);
 					if (!empty($email) && !Validate::isEmail($email))
 					{
-						$errors[] = $this->l('Invalid e-mail:').' '.$email;
+						$errors[] = $this->l('Invalid e-mail:').' '.Tools::safeOutput($email);
 						break;
 					}
 					else if (!empty($email) && count($email) > 0)
@@ -224,7 +224,7 @@ class MailAlerts extends Module
 				</div>
 				<label>'.$this->l('Threshold:').'</label>
 				<div class="margin-form">
-					<input type="text" name="MA_LAST_QTIES" value="'.(Tools::getValue('MA_LAST_QTIES') != null ? (int)Tools::getValue('MA_LAST_QTIES') : Configuration::get('MA_LAST_QTIES')).'" size="3" />
+					<input type="text" name="MA_LAST_QTIES" value="'.(Tools::getValue('MA_LAST_QTIES') != null ? (int)Tools::getValue('MA_LAST_QTIES') : (int)Configuration::get('MA_LAST_QTIES')).'" size="3" />
 					<p>'.$this->l('Quantity for which a product is considered out of stock').'</p>
 				</div>
 				<div style="clear:both;">&nbsp;</div>
@@ -235,7 +235,7 @@ class MailAlerts extends Module
 				</div>
 				<label>'.$this->l('Coverage:').'</label>
 				<div class="margin-form">
-					<input type="text" name="MA_PRODUCT_COVERAGE" value="'.(Tools::getValue('MA_PRODUCT_COVERAGE') != null ? (int)Tools::getValue('MA_PRODUCT_COVERAGE') : Configuration::getGlobalValue('MA_PRODUCT_COVERAGE')).'" size="3" />
+					<input type="text" name="MA_PRODUCT_COVERAGE" value="'.(Tools::getValue('MA_PRODUCT_COVERAGE') != null ? (int)Tools::getValue('MA_PRODUCT_COVERAGE') : (int)Configuration::getGlobalValue('MA_PRODUCT_COVERAGE')).'" size="3" />
 					<p>'.$this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number').'</p>
 				</div>
 				<div style="clear:both;">&nbsp;</div>
@@ -243,7 +243,7 @@ class MailAlerts extends Module
 				<label>'.$this->l('E-mail addresses:').' </label>
 				<div class="margin-form">
 					<div style="float:left; margin-right:10px;">
-						<textarea name="ma_merchant_mails" rows="10" cols="40">'.Tools::getValue('ma_merchant_mails', str_replace(self::__MA_MAIL_DELIMITOR__, "\n", $this->_merchant_mails)).'</textarea>
+						<textarea name="ma_merchant_mails" rows="10" cols="40">'.Tools::safeOutput(Tools::getValue('ma_merchant_mails', str_replace(self::__MA_MAIL_DELIMITOR__, "\n", $this->_merchant_mails))).'</textarea>
 					</div>
 					<div style="float:left;">
 						'.$this->l('One e-mail address per line (e.g. bob@example.com)').'

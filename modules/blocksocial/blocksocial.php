@@ -71,13 +71,13 @@ class blocksocial extends Module
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset class="width2">				
 				<label for="facebook_url">'.$this->l('Facebook URL: ').'</label>
-				<input type="text" id="facebook_url" name="facebook_url" value="'.((Configuration::get('blocksocial_facebook') != "") ? Configuration::get('blocksocial_facebook') : "").'" />
+				<input type="text" id="facebook_url" name="facebook_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_facebook') != "") ? Configuration::get('blocksocial_facebook') : "").'" />
 				<div class="clear">&nbsp;</div>		
 				<label for="twitter_url">'.$this->l('Twitter URL: ').'</label>
-				<input type="text" id="twitter_url" name="twitter_url" value="'.((Configuration::get('blocksocial_twitter') != "") ? Configuration::get('blocksocial_twitter') : "").'" />
+				<input type="text" id="twitter_url" name="twitter_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_twitter') != "") ? Configuration::get('blocksocial_twitter') : "").'" />
 				<div class="clear">&nbsp;</div>		
 				<label for="rss_url">'.$this->l('RSS URL: ').'</label>
-				<input type="text" id="rss_url" name="rss_url" value="'.((Configuration::get('blocksocial_rss') != "") ? Configuration::get('blocksocial_rss') : "").'" />
+				<input type="text" id="rss_url" name="rss_url" value="'.Tools::safeOutput((Configuration::get('blocksocial_rss') != "") ? Configuration::get('blocksocial_rss') : "").'" />
 				<div class="clear">&nbsp;</div>						
 				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
 			</fieldset>
