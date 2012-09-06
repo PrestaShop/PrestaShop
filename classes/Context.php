@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+if ((bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+	include_once(_PS_TOOL_DIR_.'/Mobile_Detect/Mobile_Detect.php');
+
 /**
  * @since 1.5.0
  */
@@ -111,8 +114,27 @@ class ContextCore
 		{
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
-				if (preg_match('/(alcatel|amoi|android|avantgo|blackberry|benq|cell|cricket|docomo|elaine|htc|iemobile|iphone|ipaq|ipod|j2me|java|midp|mini|mmp|mobi\s|motorola|nec-|nokia|palm|panasonic|philips|phone|sagem|sharp|sie-|smartphone|sony|symbian|t-mobile|telus|up\.browser|up\.link|vodafone|wap|webos|wireless|xda|zte)/i', $_SERVER['HTTP_USER_AGENT'], $out))
-					$this->mobile_device = $out[0];
+			{
+				$detect = new Mobile_Detect();
+
+				switch (Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+				{
+					case '1': // Only for mobile device
+						if ($detect->isMobile() && !$detect->isTablet())
+							$this->mobile_device = true;
+						break;
+					case '2': // Only for touchpads
+						if ($detect->isTablet() && !$detect->is_mobile())
+							$this->mobile_device = true;
+						break;
+					case '3': // For touchpad and mobile devices
+						if ($detect->isMobile() && $detect->isTablet())
+							$this->mobile_device = true;
+						break;
+				}
+				if ($detect->isMobile() && !$detect->isTablet())
+					$this->mobile_device = true;
+			}
 		}
 
 		return $this->mobile_device;
@@ -124,28 +146,6 @@ class ContextCore
 			&& Configuration::get('PS_ALLOW_MOBILE_DEVICE')
 			&& isset($_SERVER['HTTP_USER_AGENT'])
 			&& !Context::getContext()->cookie->no_mobile;
-	}
-
-	protected function getTouchPadDevice()
-	{
-		if (is_null($this->touchpad_device))
-		{
-			$this->touchpad_device = false;
-			if ($this->checkMobileContext())
-			{
-				if (preg_match('/(xoom|ipad)/i', $_SERVER['HTTP_USER_AGENT'], $out))
-					$this->touchpad_device = $out[0];
-				if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'android') && !strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'mobile'))
-					$this->touchpad_device = 'android';
-
-				// for Galaxy tab
-				if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'android')
-					&& (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'sch-i800')
-						|| strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'gt-p1000')))
-					$this->touchpad_device = 'android';
-			}
-		}
-		return $this->touchpad_device;
 	}
 
 	/**
