@@ -393,7 +393,7 @@
 								<td>
 									<input type="text" name="payment_transaction_id" value="" />
 								</td>
-								<td {if count($not_paid_invoices_collection) <= 0}colspan="2"{/if}>
+								<td>
 									<input type="text" name="payment_amount" size="5" value="" />
 									<select name="payment_currency">
 									{foreach from=$currencies item=current_currency}
@@ -401,10 +401,10 @@
 									{/foreach}
 									</select>
 								</td>
-								{if count($not_paid_invoices_collection) > 0}
+								{if count($invoices_collection) > 0}
 								<td>
 									<select name="payment_invoice" id="payment_invoice">
-									{foreach from=$not_paid_invoices_collection item=invoice}
+									{foreach from=$invoices_collection item=invoice}
 										<option value="{$invoice->id}" selected="selected">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
 									{/foreach}
 									</select>
