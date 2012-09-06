@@ -338,7 +338,12 @@ class AdminOrdersControllerCore extends AdminController
 						$history = new OrderHistory();
 						$history->id_order = $order->id;
 						$history->id_employee = (int)$this->context->employee->id;
-						$history->changeIdOrderState($order_state->id, $order->id);
+
+						$use_existings_payment = false;
+						if (!$order->hasInvoice())
+							$use_existings_payment = true;
+						$history->changeIdOrderState($order_state->id, $order->id, true);
+
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
@@ -996,7 +1001,7 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('This order already has an invoice');
 			else
 			{
-				$order->setInvoice();
+				$order->setInvoice(true);
 				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 			}
 		}

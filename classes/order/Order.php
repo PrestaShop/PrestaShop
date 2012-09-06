@@ -1132,19 +1132,20 @@ class OrderCore extends ObjectModel
 			// Update order payment
 			if ($use_existing_payment)
 			{
-				$id_order_payment = Db::getInstance()->getValue('
-					SELECT MAX(id_order_payment) FROM `'._DB_PREFIX_.'order_payment` op
+				$id_order_payments = Db::getInstance()->executeS('
+					SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
 					INNER JOIN `'._DB_PREFIX_.'orders` o
 					ON o.reference = op.order_reference
 					WHERE id_order = '.(int)$order_invoice->id_order);
 				
-				if ($id_order_payment)
-					Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
-						SET
-							`id_order_invoice` = '.(int)$order_invoice->id.',
-							`id_order_payment` = '.(int)$id_order_payment.',
-							`id_order` = '.(int)$order_invoice->id_order);
+				if (count($id_order_payments))
+					foreach ($id_order_payments as $order_payment)
+						Db::getInstance()->execute('
+							INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+							SET
+								`id_order_invoice` = '.(int)$order_invoice->id.',
+								`id_order_payment` = '.(int)$order_payment['id_order_payment'].',
+								`id_order` = '.(int)$order_invoice->id_order);
 			}
 
 			// Update order cart rule
