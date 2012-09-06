@@ -27,7 +27,7 @@ function initEvent()
 				data: 'controller=cart&add&id_product='+$(this).data('id-product')+'&ipa='+$(this).data('id-product-attribute')+'&op='+op+'&qty='+qty+'&id_address_delivery=0&token='+static_token,
 				success: function()
 				{
-					$.mobile.changePage(baseDir+'index.php?controller=order-opc', { reloadPage: true });
+					window.location.href = baseDir+'index.php?controller=order-opc';
 				}
 			});
 		}
@@ -42,7 +42,7 @@ function initEvent()
 			data: 'controller=order-opc&ajax=true&mobile_theme=true&method=updateAddressesSelected&id_address_delivery=' + $('#delivery-address-choice').val() + '&id_address_invoice=' + $('#invoice-address-choice').val() + '&token=' + static_token,
 			success: function()
 			{
-				$.mobile.changePage(baseDir+'index.php?controller=order-opc', { reloadPage: true });
+				window.location.href = baseDir+'index.php?controller=order-opc';
 			}
 		});
 	});
@@ -82,7 +82,7 @@ function initEvent()
 			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
 			success: function(json)
 			{
-				$.mobile.changePage(baseDir+'index.php?controller=order-opc', { reloadPage: true });
+				window.location.href = baseDir+'index.php?controller=order-opc';
 			}
 		});
 	});
@@ -129,7 +129,7 @@ function updateCarrierSection(elm)
 		success: function(jsonData)
 		{
 			if (!elm.is('#gift'))
-				$.mobile.changePage(baseDir+'index.php?controller=order-opc', { reloadPage: true });
+				window.location.href = baseDir+'index.php?controller=order-opc';
 		}
 	});
 }
