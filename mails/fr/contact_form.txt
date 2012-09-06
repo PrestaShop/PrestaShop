@@ -6,7 +6,7 @@ Votre message :
 
 Référence commande : {order_name}
 
-Fichié attaché : {attached_file}
+Fichier attaché : {attached_file}
 
 Nous vous répondrons dés que possible.
 
