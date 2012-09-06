@@ -201,12 +201,11 @@ class BlockLink extends Module
 			$assos_shop = Tools::getValue('checkBoxShopAsso_blocklink');
 			if (empty($assos_shop))
 				return false;
-			foreach ($assos_shop as $asso)
-				foreach ($asso as $id_shop => $row)
-					Db::getInstance()->insert('blocklink_shop', array(
-						'id_blocklink' => (int)$id_link,
-						'id_shop' => (int)$id_shop,
-					));
+			foreach ($assos_shop as $id_shop => $row)
+				Db::getInstance()->insert('blocklink_shop', array(
+					'id_blocklink' => (int)$id_link,
+					'id_shop' => (int)$id_shop,
+				));
 		}
 		return true;
 	}
@@ -314,12 +313,12 @@ class BlockLink extends Module
 		}
 		$this->_html .= '
 		<script type="text/javascript">
-			id_language = Number('.$id_lang_default.');
+			id_language = Number('.(int)$id_lang_default.');
 		</script>
 		<fieldset>
 			<legend><img src="'.$this->_path.'add.png" alt="" title="" /> '.$this->l('Add a new link').'</legend>
 			<form method="post" action="index.php?controller=adminmodules&configure='.Tools::safeOutput(Tools::getValue('configure')).'&token='.Tools::safeOutput(Tools::getValue('token')).'&tab_module='.Tools::safeOutput(Tools::getValue('tab_module')).'&module_name='.Tools::safeOutput(Tools::getValue('module_name')).'">
-				<input type="hidden" name="id_link" value="'.Tools::getValue('id_link').'" />
+				<input type="hidden" name="id_link" value="'.(int)Tools::getValue('id_link').'" />
 				<label>'.$this->l('Text:').'</label>
 				<div class="margin-form">';
 			foreach ($languages as $language)

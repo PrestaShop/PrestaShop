@@ -103,7 +103,7 @@ class BlockCategories extends Module
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 				<label>'.$this->l('Maximum depth').'</label>
 				<div class="margin-form">
-					<input type="text" name="maxDepth" value="'.Configuration::get('BLOCK_CATEG_MAX_DEPTH').'" />
+					<input type="text" name="maxDepth" value="'.(int)Configuration::get('BLOCK_CATEG_MAX_DEPTH').'" />
 					<p class="clear">'.$this->l('Set the maximum depth of sublevels displayed in this block (0 = infinite)').'</p>
 				</div>
 				<label>'.$this->l('Dynamic').'</label>
@@ -129,7 +129,7 @@ class BlockCategories extends Module
 				</div>
 				<label>'.$this->l('Footer columns number').'</label>
 				<div class="margin-form">
-					<input type="text" name="nbrColumns" value="'.Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
+					<input type="text" name="nbrColumns" value="'.(int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
 					<p class="clear">'.$this->l('Set the number of footer columns').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockCategories" value="'.$this->l('Save').'" class="button" /></center>
