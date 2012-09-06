@@ -103,11 +103,6 @@ class ContextCore
 	 */
 	protected $mobile_device;
 
-	/**
-	 * @var boolean|string touch pad device of the customer
-	 */
-	protected $touchpad_device;
-
 	public function getMobileDevice()
 	{
 		if (is_null($this->mobile_device))
@@ -117,23 +112,21 @@ class ContextCore
 			{
 				$detect = new Mobile_Detect();
 
-				switch (Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+				switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 				{
-					case '1': // Only for mobile device
+					case 1: // Only for mobile device
 						if ($detect->isMobile() && !$detect->isTablet())
 							$this->mobile_device = true;
 						break;
-					case '2': // Only for touchpads
+					case 2: // Only for touchpads
 						if ($detect->isTablet() && !$detect->is_mobile())
 							$this->mobile_device = true;
 						break;
-					case '3': // For touchpad and mobile devices
-						if ($detect->isMobile() && $detect->isTablet())
+					case 3: // For touchpad or mobile devices
+						if ($detect->isMobile() || $detect->isTablet())
 							$this->mobile_device = true;
 						break;
 				}
-				if ($detect->isMobile() && !$detect->isTablet())
-					$this->mobile_device = true;
 			}
 		}
 
@@ -143,7 +136,7 @@ class ContextCore
 	protected function checkMobileContext()
 	{
 		return file_exists(_PS_THEME_MOBILE_DIR_)
-			&& Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+			&& (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
 			&& isset($_SERVER['HTTP_USER_AGENT'])
 			&& !Context::getContext()->cookie->no_mobile;
 	}
