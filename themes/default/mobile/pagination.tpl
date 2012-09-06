@@ -57,7 +57,7 @@
 			{assign var='p_previous' value=$p-1}
 		{/if}
 		<li class="pagination_previous">
-			<a {$no_follow_text} class="button_prev{if $p == 1} disabled{/if}" data-role="button" data-icon="arrow-l" data-iconpos="left" href="{if isset($p_previous)}{$link->goPage($requestPage, $p_previous)}{/if}" data-ajax="false">{l s='Prev'}</a>
+			<a {$no_follow_text} class="button_prev{if $p == 1} disabled{/if}" data-role="button" data-icon="arrow-l" data-iconpos="left" href="{if isset($p_previous)}{$link->goPage($requestPage, $p_previous)}{/if}" data-ajax="false">{l s='Previous'}</a>
 		</li>
 		{if $start>3}
 			<li><a {$no_follow_text}  href="{$link->goPage($requestPage, 1)}" data-ajax="false">1</a></li>
