@@ -342,7 +342,7 @@ class AdminOrdersControllerCore extends AdminController
 						$use_existings_payment = false;
 						if (!$order->hasInvoice())
 							$use_existings_payment = true;
-						$history->changeIdOrderState($order_state->id, $order->id, true);
+						$history->changeIdOrderState($order_state->id, $order->id, $use_existings_payment);
 
 						$carrier = new Carrier($order->id_carrier, $order->id_lang);
 						$templateVars = array();
