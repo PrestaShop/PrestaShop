@@ -37,6 +37,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	 	$this->table = 'product_attribute';
 		$this->className = 'Product';
 		$this->multishop_context_group = false;
+		
 		parent::__construct();
 	}
 
@@ -115,7 +116,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				{
 					$attributes = Product::getProductAttributesIds($this->product->id);
 					foreach ($attributes as $attribute)
-						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop);
+						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute']);
 				}
 				
 				$this->product->deleteProductAttributes();
@@ -127,7 +128,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					$attributes = Product::getProductAttributesIds($this->product->id);
 					$quantity = (int)Tools::getValue('quantity');
 					foreach ($attributes as $attribute)
-						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
+						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity);
 				}
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
 			}
