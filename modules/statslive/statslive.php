@@ -118,7 +118,6 @@ class StatsLive extends Module
 		$irow = 0;
 
 		$this->html .= '<script type="text/javascript" language="javascript">
-			$("#calendar").next().remove();
 			$("#calendar").remove();
 		</script>';
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
