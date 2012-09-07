@@ -25,9 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if ((bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
-	require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
-
 /**
  * @since 1.5.0
  */
@@ -108,12 +105,6 @@ class ContextCore
 	 */
 	protected $mobile_device;
 
-	public function __construct()
-	{
-		if ((bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
-			$this->mobile_detect = new Mobile_Detect();
-	}
-
 	public function getMobileDevice()
 	{
 		if (is_null($this->mobile_device))
@@ -121,6 +112,8 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
+				require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
+				$this->mobile_detect = new Mobile_Detect();
 				switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 				{
 					case 1: // Only for mobile device
