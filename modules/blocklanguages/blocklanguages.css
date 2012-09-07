@@ -3,10 +3,10 @@
 	float:right;
 	margin: 0;
 	padding:2px 6px 1px 6px;
-	-moz-border-radius-bottomright: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	-webkit-border-radius-bottomright: 3px;
-	-webkit-border-radius-bottomleft: 3px;
+	-moz-border-bottom-right-radius: 3px;
+	-moz-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px;
 	background: none repeat scroll 0 0 #000;
