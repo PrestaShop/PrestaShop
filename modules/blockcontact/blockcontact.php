@@ -73,10 +73,10 @@ class Blockcontact extends Module
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>			
 				<label for="telnumber">'.$this->l('Telephone number:').'</label>
-				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Configuration::get('blockcontact_telnumber') : '').'" />
+				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Tools::safeOutput(Configuration::get('blockcontact_telnumber')) : '').'" />
 				<div class="clear">&nbsp;</div>
 				<label for="email">'.$this->l('Email:').'</label>
-				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Configuration::get('blockcontact_email') : '').'" />
+				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Tools::safeOutput(Configuration::get('blockcontact_email')) : '').'" />
 				<div class="clear">&nbsp;</div>
 				<div class="margin-form">
 					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
