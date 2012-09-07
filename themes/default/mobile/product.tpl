@@ -159,3 +159,4 @@
 	</div>
 {/if}
 </div><!-- #content -->
+{if isset($HOOK_PRODUCT_FOOTER) && $HOOK_PRODUCT_FOOTER}{$HOOK_PRODUCT_FOOTER}{/if}
