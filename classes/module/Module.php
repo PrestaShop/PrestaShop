@@ -1304,9 +1304,14 @@ abstract class ModuleCore
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
 			$hookPayment = 'displayPayment';
 
+		$paypal_condition = '';
+		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
+		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
+			$paypal_condition = ' AND m.`name` = \'paypal\'';
+
 		$list = Shop::getContextListShopID();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		'.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'
 		'.($frontend ? 'INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module` AND mg.id_shop = '.(int)$context->shop->id.')' : '').'
@@ -1317,7 +1322,7 @@ abstract class ModuleCore
 		'.(isset($billing) && $frontend ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
 		AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
 		AND hm.id_shop IN('.implode(', ', $list).')
-		'.(count($groups) && $frontend ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').'
+		'.(count($groups) && $frontend ? 'AND (mg.`id_group` IN('.implode(', ', $groups).'))' : '').$paypal_condition.'
 		GROUP BY hm.id_hook, hm.id_module
 		ORDER BY hm.`position`, m.`name` DESC');
 	}
