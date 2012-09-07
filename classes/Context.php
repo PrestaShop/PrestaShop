@@ -110,7 +110,8 @@ class ContextCore
 
 	public function __construct()
 	{
-		$this->mobile_detect = new Mobile_Detect();
+		if ((bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
+			$this->mobile_detect = new Mobile_Detect();
 	}
 
 	public function getMobileDevice()
