@@ -145,6 +145,7 @@ class ContextCore
 	protected function checkMobileContext()
 	{
 		return isset($_SERVER['HTTP_USER_AGENT'])
+			&& isset(Context::getContext()->cookie)
 			&& (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
 			&& @filemtime(_PS_THEME_MOBILE_DIR_)
 			&& !Context::getContext()->cookie->no_mobile;
