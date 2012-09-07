@@ -1059,7 +1059,43 @@ class ProductCore extends ObjectModel
 		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		return $id_product_attribute;
 	}
+	
+	public function generateMultipleCombinations($combinations, $attributes)
+	{
+		$attributes_list = array();
+		$res = true;	
 
+		foreach ($combinations as $key => $combination)
+		{
+			$id_combination = (int)$this->productAttributeExists($attributes[$key], false, null, true, true);
+			$obj = new Combination($id_combination);
+			
+			if ($id_combination)
+			{
+				$obj->minimal_quantity = 1;
+				$obj->available_date = '0000-00-00';
+			}
+
+			foreach ($combination as $field => $value)
+				$obj->$field = $value;
+
+			$obj->save();
+		
+			if (!$id_combination)
+			{
+				$attribute_list = array();
+				foreach ($attributes[$key] as $id_attribute)
+					$attribute_list[] = array(
+						'id_product_attribute' => (int)$obj->id,
+						'id_attribute' => (int)$id_attribute
+					);
+				$res &= Db::getInstance()->insert('product_attribute_combination', $attribute_list);
+			}
+		}
+
+		return $res;
+	}
+	
 	/**
 	* @param integer $quantity DEPRECATED
 	* @param string $supplier_reference DEPRECATED
@@ -1089,6 +1125,7 @@ class ProductCore extends ObjectModel
 
 	public function addProductAttributeMultiple($attributes, $set_default = true)
 	{
+		Tools::displayAsDeprecated();
 		$return = array();
 		$default_value = 1;
 		foreach ($attributes as &$attribute)
@@ -1512,6 +1549,7 @@ class ProductCore extends ObjectModel
 
 	public function addAttributeCombinationMultiple($id_attributes, $combinations)
 	{
+		Tools::displayAsDeprecated();
 		$attributes_list = array();
 		foreach ($id_attributes as $nb => $id_product_attribute)
 			if (isset($combinations[$nb]))
@@ -1523,6 +1561,7 @@ class ProductCore extends ObjectModel
 
 		return Db::getInstance()->insert('product_attribute_combination', $attributes_list);
 	}
+
 
 	/**
 	* Delete a product attributes combination
