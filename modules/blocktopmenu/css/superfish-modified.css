@@ -149,8 +149,8 @@ li.sfHover > a > .sf-sub-indicator {
 .sf-shadow ul {
 	background:	url('../img/shadow.png') no-repeat bottom right;
 	padding: 0 8px 9px 0;
-	-moz-border-radius-bottomleft: 17px;
-	-moz-border-radius-topright: 17px;
+	-moz-border-bottom-left-radius: 17px;
+	-moz-border-top-right-radius: 17px;
 	-webkit-border-top-right-radius: 17px;
 	-webkit-border-bottom-left-radius: 17px;
 }
