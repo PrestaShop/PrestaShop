@@ -30,7 +30,7 @@
 				</div><!-- /grid-a -->
 
 				<div id="full-site-section" class="center">
-					<a href="{$link->getPageLink('index', true)}?no_mobile_theme" data-ajax="false">{l s='Consult full site'}</a>
+					<a href="{$link->getPageLink('index', true)}?no_mobile_theme" data-ajax="false">{l s='Browse the full site'}</a>
 				</div>
 
 				<div data-role="footer" data-theme="a" id="bar_footer">
