@@ -36,6 +36,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 	 	$this->table = 'product_attribute';
 		$this->className = 'Product';
+		$this->multishop_context_group = false;
 		parent::__construct();
 	}
 
@@ -116,11 +117,10 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					foreach ($attributes as $attribute)
 						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop);
 				}
-
+				
 				$this->product->deleteProductAttributes();
-				$res = $this->product->addProductAttributeMultiple($values);
-				$this->product->addAttributeCombinationMultiple($res, $this->combinations);
-
+				$this->product->generateMultipleCombinations($values, $this->combinations);
+				
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
 				{
