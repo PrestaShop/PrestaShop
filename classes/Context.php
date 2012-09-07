@@ -99,9 +99,19 @@ class ContextCore
 	public $smarty;
 
 	/**
+	 * @ var Mobile Detect
+	 */
+	public $mobile_detect;
+
+	/**
 	 * @var boolean|string mobile device of the customer
 	 */
 	protected $mobile_device;
+
+	public function __construct()
+	{
+		$this->mobile_detect = new Mobile_Detect();
+	}
 
 	public function getMobileDevice()
 	{
@@ -110,20 +120,19 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				$detect = new Mobile_Detect();
 
 				switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 				{
 					case 1: // Only for mobile device
-						if ($detect->isMobile() && !$detect->isTablet())
+						if ($this->mobile_detect->isMobile() && !$this->mobile_detect->isTablet())
 							$this->mobile_device = true;
 						break;
 					case 2: // Only for touchpads
-						if ($detect->isTablet() && !$detect->is_mobile())
+						if ($this->mobile_detect->isTablet() && !$this->mobile_detect->is_mobile())
 							$this->mobile_device = true;
 						break;
 					case 3: // For touchpad or mobile devices
-						if ($detect->isMobile() || $detect->isTablet())
+						if ($this->mobile_detect->isMobile() || $this->mobile_detect->isTablet())
 							$this->mobile_device = true;
 						break;
 				}
