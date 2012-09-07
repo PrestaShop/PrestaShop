@@ -1014,7 +1014,7 @@ class AdminModulesControllerCore extends AdminController
 
 			// Assign warnings
 			if (isset($module->warning) && !empty($module->warning))
-				$this->warnings[] = '<b>'.$module->displayName.' :</b> '.$module->warning;
+				$this->warnings[] = $module->displayName.$this->l(':').$module->warning;
 
 			// AutoComplete array
 			$autocompleteList .= Tools::jsonEncode(array(
