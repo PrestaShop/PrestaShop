@@ -87,6 +87,14 @@ class AdminTranslationsControllerCore extends AdminController
 		include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
 	}
 
+	/*
+	 * Set the type which is selected
+	 */
+	public function setTypeSelected($type_selected)
+	{
+		$this->type_selected = $type_selected;
+	}
+
 	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()
