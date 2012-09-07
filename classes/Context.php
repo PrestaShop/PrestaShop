@@ -26,7 +26,7 @@
 */
 
 if ((bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
-	include_once(_PS_TOOL_DIR_.'/Mobile_Detect/Mobile_Detect.php');
+	require_once(_PS_TOOL_DIR_.'Mobile_Detect/Mobile_Detect.php');
 
 /**
  * @since 1.5.0
