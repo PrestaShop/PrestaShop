@@ -1570,18 +1570,18 @@ class ToolsCore
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
 				}
-				// Redirections to dispatcher
-				if ($rewrite_settings)
-				{
-					fwrite($write_fd, "\n# Dispatcher\n");
-					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
-					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
-					fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
-					fwrite($write_fd, $domain_rewrite_cond);
-					fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
-					fwrite($write_fd, $domain_rewrite_cond);
-					fwrite($write_fd, "RewriteRule ^.*\$ index.php [NC,L]\n");
-				}
+			}
+			// Redirections to dispatcher
+			if ($rewrite_settings)
+			{
+				fwrite($write_fd, "\n# Dispatcher\n");
+				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -s [OR]\n");
+				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -l [OR]\n");
+				fwrite($write_fd, "RewriteCond %{REQUEST_FILENAME} -d\n");
+				fwrite($write_fd, $domain_rewrite_cond);
+				fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
+				fwrite($write_fd, $domain_rewrite_cond);
+				fwrite($write_fd, "RewriteRule ^.*\$ index.php [NC,L]\n");
 			}
 		}
 
