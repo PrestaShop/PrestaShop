@@ -793,7 +793,7 @@ table#cart_summary #total_price_container {
 	border:1px solid #000;
 	-moz-border-radius:0;
 	-webkit-border-radius:0;
-	border-raduis:0;
+	border-radius:0;
 	color:#fff;
 	text-transform:uppercase;
 	text-shadow:0 -1px 0 #333;
@@ -1348,7 +1348,7 @@ a.iframe {font-weight:bold}
 #address p.inline-infos {
 	margin:0 0 0 100px !important;
 	font-size:12px;
-	color:#666px;
+	color:#666;
 }
 
 
