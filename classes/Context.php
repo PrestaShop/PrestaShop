@@ -121,7 +121,6 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-
 				switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 				{
 					case 1: // Only for mobile device
@@ -145,9 +144,9 @@ class ContextCore
 
 	protected function checkMobileContext()
 	{
-		return file_exists(_PS_THEME_MOBILE_DIR_)
+		return isset($_SERVER['HTTP_USER_AGENT'])
 			&& (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
-			&& isset($_SERVER['HTTP_USER_AGENT'])
+			&& @filemtime(_PS_THEME_MOBILE_DIR_)
 			&& !Context::getContext()->cookie->no_mobile;
 	}
 
