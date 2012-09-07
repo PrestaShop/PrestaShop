@@ -36,7 +36,7 @@
 <!-- Footer -->
 			<div id="footer" class="grid_9 alpha omega clearfix">
 				{$HOOK_FOOTER}
-				<p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Consult the mobile site'}</a></p>
+				<p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>
 			</div>
 		</div>
 	{/if}
