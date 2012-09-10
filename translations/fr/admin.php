@@ -1869,6 +1869,7 @@ $_LANGADM['AdminModules7b4d2812164df0dceca0b53bb650e52d'] = 'Installé et non in
 $_LANGADM['AdminModules7d4eb04d5b71acb455329b4d6e228388'] = 'Fonctionnalités front-office';
 $_LANGADM['AdminModules7e4a9cd054588a95b0394d92a2030e72'] = 'Vue normale';
 $_LANGADM['AdminModules83218ac34c1834c26781fe4bde918ee4'] = 'Bienvenue';
+$_LANGADM['AdminModules853ae90f0351324bd73ea615e6487517'] = ' :';
 $_LANGADM['AdminModules85687c63fd82afbc21632f288e53a6e4'] = 'Cette action supprime définitivement le module sur votre serveur. Êtes-vous vraiment sûr ?';
 $_LANGADM['AdminModules8634e049945e0e8562673698a1abb485'] = 'Mettre ce module en ligne';
 $_LANGADM['AdminModules87a3a6caeffcd74b07ad451f7695dda7'] = 'Prix & Promotions';
