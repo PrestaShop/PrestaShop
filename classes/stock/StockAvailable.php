@@ -49,10 +49,10 @@ class StockAvailableCore extends ObjectModel
 	public $quantity = 0;
 
 	/** @var bool determine if the available stock value depends on physical stock */
-	public $depends_on_stock = 0;
+	public $depends_on_stock = false;
 
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
-	public $out_of_stock = 0;
+	public $out_of_stock = false;
 
 	/**
 	 * @see ObjectModel::$definition
