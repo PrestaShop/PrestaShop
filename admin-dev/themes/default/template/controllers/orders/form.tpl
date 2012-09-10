@@ -553,7 +553,10 @@
 
 				if(res.found)
 				{
-					$('#products_err').hide();
+					if (!customization_errors)
+						$('#products_err').hide();
+					else
+						customization_errors = false;
 					$('#products_found').show();
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
 					attributes_html += '<label>{l s='Combination:'}</label>';
