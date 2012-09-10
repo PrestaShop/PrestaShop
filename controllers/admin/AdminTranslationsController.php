@@ -2195,7 +2195,7 @@ class AdminTranslationsControllerCore extends AdminController
 					$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		// Get path of directory for find a good path of translation file
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME)
+		if ($this->theme_selected != self::DEFAULT_THEME_NAME && @filemtime($this->translations_informations[$this->type_selected]['override']['dir']))
 			$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
 		else
 			$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
