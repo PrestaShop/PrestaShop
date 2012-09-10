@@ -315,7 +315,6 @@ $_ERRORS['6fd4e04d113190d915a36b101ac92489'] = 'Cette commande a déjà cet éta
 $_ERRORS['700c53d8cec1b1e9cf6c247944126166'] = 'Une erreur est survenue durant la mise à jour de votre panier.';
 $_ERRORS['708d2bfb476ba46221602d549f0e7a4d'] = 'Identifiant de catégorie manquant';
 $_ERRORS['71754079aaeefc5c6e745ddd59f8a35f'] = 'Commande gratuite';
-$_ERRORS['71f4f008985ea6abc73e89a668e15197'] = 'Cet attribut existe déjà.';
 $_ERRORS['73fe0bd9b8402c2328fbf6dcb8e090f1'] = 'La liaison avec la base de données ne peut pas être établie : %s';
 $_ERRORS['74d93d946c302d8decb44dec33f4b3e6'] = 'La date de début n\'est pas valable (AAAA-MM-JJ)';
 $_ERRORS['74efb694173710062ae76c1e9949817e'] = 'Prix/réduction non valable';
