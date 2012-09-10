@@ -325,7 +325,7 @@ class MailCore
 
 		if (!is_array($_LANGMAIL))
 			return (str_replace('"', '&quot;', $string));
-		if (array_key_exists($key, $_LANGMAIL))
+		if (array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key]))
 			$str = $_LANGMAIL[$key];
 		else
 			$str = $string;
