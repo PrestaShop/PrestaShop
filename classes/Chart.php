@@ -166,7 +166,7 @@ class Curve
 	{
 		$this->type = '';
 		if ($type == 'bars')
-			$this->type = 'bars:{show:true}';
+			$this->type = 'bars:{show:true,lineWidth:10}';
 		if ($type == 'steps')
 			$this->type = 'lines:{show:true,steps:true}';
 	}
