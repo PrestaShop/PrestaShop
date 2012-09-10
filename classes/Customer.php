@@ -224,6 +224,17 @@ class CustomerCore extends ObjectModel
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 		if (Context::getContext()->controller->controller_type == 'admin')
 			$this->updateGroup($this->groupBox);
+			
+		if ($this->deleted)
+		{
+			$addresses = $this->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
+			foreach ($addresses as $address)
+			{
+				$obj = new Address((int)$address['id_address']);
+				$obj->delete();
+			}
+		}
+
 	 	return parent::update(true);
 	}
 
