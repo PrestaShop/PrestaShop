@@ -33,20 +33,19 @@
 </head>
 <body>
 	<script type="text/javascript">
-	{if $customization_errors|count}
-		customization_errors = true;
-		var id_selected_product = parent.$('#id_product option:selected').val();
-		if (parent.searchProducts())
-		{
-			parent.$('#products_err', window.parent.document).html('{$customization_errors}');
-			parent.$('#id_product option[value="'+id_selected_product+'"]').attr('selected', true);
-			parent.$('#id_product').change();
-		}
-		
+	{if $customization_errors}
+		parent.customization_errors = true;
 	{else}
+		parent.customization_errors = false;
 		parent.$('#products_err', window.parent.document).hide();
-		customization_errors = false;
 	{/if}
+	var id_selected_product = parent.$('#id_product option:selected').val();
+	if (parent.searchProducts())
+	{
+		parent.$('#products_err', window.parent.document).html('{$customization_errors}');
+		parent.$('#id_product option[value="'+id_selected_product+'"]').attr('selected', true);
+		parent.$('#id_product').change();
+	}
 	</script>
 	</body>
 </html>
