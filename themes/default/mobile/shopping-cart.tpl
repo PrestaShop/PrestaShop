@@ -1,3 +1,6 @@
+<div id="displayMobileShoppingCartTop">
+	{hook h="displayMobileShoppingCartTop"}
+</div>
 <div data-role="content" id="content" class="cart">
 	{include file="$tpl_dir./errors.tpl"}
 
@@ -194,3 +197,6 @@
 	{/if}
 	<br />
 </div><!-- /content -->
+<div id="displayMobileShoppingCartBottom">
+	{hook h="displayMobileShoppingCartBottom"}
+</div>
