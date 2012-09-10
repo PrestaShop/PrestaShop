@@ -350,6 +350,10 @@ class ProductCore extends ObjectModel
 				'getter' => 'getWsManufacturerName',
 				'setter' => false
 			),
+			'quantity' => array(
+				'getter' => false,
+				'setter' => false
+			),
 		),
 		'associations' => array(
 			'categories' => array(
