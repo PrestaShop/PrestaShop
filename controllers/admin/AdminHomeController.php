@@ -382,7 +382,7 @@ class AdminHomeControllerCore extends AdminController
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 		');
 		foreach ($result as $row)
-			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 14:00:00'), $row['total_converted']);
+			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);
 		$chart->setSize(580, 170);
 		$chart->setTimeMode(strtotime('-7 DAYS', time()), time(), 'd');
 		$currency = Tools::setCurrency($this->context->cookie);
