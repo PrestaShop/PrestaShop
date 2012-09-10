@@ -2551,10 +2551,7 @@ class AdminImportControllerCore extends AdminController
 				switch ($_FILES['file']['error'])
 				{
 					case UPLOAD_ERR_INI_SIZE:
-						$this->errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:')
-						.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
-						<code>php_value upload_max_filesize 20M</code> '.
-						Tools::displayError('(click to open "Generators" tab)').'</a>';
+						$this->errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.');
 						break;
 					case UPLOAD_ERR_FORM_SIZE:
 						$this->errors[] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
