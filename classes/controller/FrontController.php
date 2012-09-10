@@ -795,7 +795,7 @@ class FrontControllerCore extends Controller
 			'conditions' => Configuration::get('PS_CONDITIONS'),
 			'id_cgv' => Configuration::get('PS_CONDITIONS_CMS_ID'),
 			'PS_SHOP_NAME' => Configuration::get('PS_SHOP_NAME'),
-			'PS_ALLOW_MOBILE_DEVICE' => file_exists(_PS_THEME_MOBILE_DIR_) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+			'PS_ALLOW_MOBILE_DEVICE' => isset($_SERVER['HTTP_USER_AGENT']) && (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE') && @filemtime(_PS_THEME_MOBILE_DIR_)
 		));
 
 	}
