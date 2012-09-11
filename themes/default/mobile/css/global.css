@@ -909,3 +909,16 @@ ul.adress {
 	font-weight: normal;
 	font-size: 12px;
 }
+
+#authentication #account-creation_form p.select label {
+	display:inline;
+	font-size:16px;
+	font-weight:normal;
+	line-height:1.4;
+	margin:0 0 0.3em;
+	padding:0px;
+}
+
+#authentication #account-creation_form div.ui-radio label span {
+	text-align:center;
+}

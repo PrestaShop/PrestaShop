@@ -3,31 +3,31 @@
 	<fieldset class="account_creation">
 		<h3>{l s='Your personal information'}</h3>
 		<p class="radio required">
-			<span>{l s='Title'}</span>
+			<label>{l s='Title'}</label>
 			{foreach from=$genders key=k item=gender}
 				<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id}checked="checked"{/if} />
 				<label for="id_gender{$gender->id}" class="top">{$gender->name}</label>
 			{/foreach}
 		</p>
-		<p class="required text">
+		<p class="required">
 			<label for="customer_firstname">{l s='First name'} <sup>*</sup></label>
 			<input onkeyup="$('#firstname').val(this.value);" type="text" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.customer_firstname)}{$smarty.post.customer_firstname}{/if}" />
 		</p>
-		<p class="required text">
+		<p class="required">
 			<label for="customer_lastname">{l s='Last name'} <sup>*</sup></label>
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
-		<p class="required text">
+		<p class="required">
 			<label for="email">{l s='E-mail'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
-		<p class="required password">
+		<p class="required">
 			<label for="passwd">{l s='Password'} <sup>*</sup></label>
 			<input type="password" class="text" name="passwd" id="passwd" />
-			<span class="form_info">{l s='(5 characters min.)'}</span>
+			<span>{l s='(5 characters min.)'}</span>
 		</p>
 		<p class="select">
-			<span>{l s='Date of Birth'}</span>
+			<label>{l s='Date of Birth'}</label>
 			<select id="days" name="days">
 				<option value="">-</option>
 				{foreach from=$days item=day}
