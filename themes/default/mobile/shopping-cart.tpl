@@ -193,6 +193,7 @@
 			<li data-theme="b" data-icon="check">
 				<a href="{$link->getPageLink('authentication', true)}&back=order-opc" data-ajax="false">{l s='Confirm order'}</a>
 			</li>
+			{hook h="displayMobileShoppingCartButton"}
 		</ul>
 	{/if}
 	<br />
