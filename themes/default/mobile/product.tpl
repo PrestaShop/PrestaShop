@@ -125,7 +125,9 @@
 		{else}
 			<hr width="99%" align="center" size="2" class="margin_bottom"/>
 		{/if}
-		
+		<div id="displayMobileAddToCartTop">
+			{hook h="displayMobileAddToCartTop"}
+		</div>
 		<div id="add_to_cart" class="btn-row">
 			{assign var='cart_btn_class' value='btn-cart'}
 			{assign var='cart_btn_icon' value=''}
