@@ -414,10 +414,11 @@
 	{/if}
 	<a href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || strstr($smarty.server.HTTP_REFERER, 'order-opc') || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'htmlall':'UTF-8'|secureReferrer}{/if}" class="button_large" title="{l s='Continue shopping'}">&laquo; {l s='Continue shopping'}</a>
 </p>
-<p class="clear"><br /><br /></p>
-<div class="clear"></div>
-<p class="cart_navigation_extra">
-	<span id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</span>
-</p>
+	{if !empty($HOOK_SHOPPING_CART_EXTRA)}
+		<div class="clear"></div>
+		<div class="cart_navigation_extra">
+			<div id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</div>
+		</div>
+	{/if}
 {/if}
 
