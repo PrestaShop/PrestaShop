@@ -78,6 +78,7 @@ class Blocktopmenu extends Module
 			!$this->registerHook('actionObjectManufacturerDeleteAfter') ||
 			!$this->registerHook('actionObjectProductUpdateAfter') ||
 			!$this->registerHook('actionObjectProductDeleteAfter') ||
+			!$this->registerHook('categoryUpdate') ||
 			!$this->installDB())
 			return false;
 		return true;
@@ -805,7 +806,7 @@ class Blocktopmenu extends Module
 		$this->clearMenuCache();
 	}
 	
-	public function hookActionObjectCmsUpdateUpdate($params)
+	public function hookActionObjectCmsUpdateAfter($params)
 	{
 		$this->clearMenuCache();
 	}
@@ -841,6 +842,11 @@ class Blocktopmenu extends Module
 	}
 	
 	public function hookActionObjectProductDeleteAfter($params)
+	{
+		$this->clearMenuCache();
+	}
+	
+	public function hookCategoryUpdate($params)
 	{
 		$this->clearMenuCache();
 	}

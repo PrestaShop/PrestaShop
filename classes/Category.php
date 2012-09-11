@@ -460,7 +460,7 @@ class CategoryCore extends ObjectModel
 			WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
 			'.($active ? 'AND `active` = 1' : '').'
 			'.(!$id_lang ? 'GROUP BY c.id_category' : '').'
-			'.($sql_sort != '' ? $sql_sort : 'ORDER BY c.`level_depth` ASC, c.`position` ASC').'
+			'.($sql_sort != '' ? $sql_sort : 'ORDER BY c.`level_depth` ASC, category_shop.`position` ASC').'
 			'.($sql_limit != '' ? $sql_limit : '')
 		);
 
@@ -567,14 +567,14 @@ class CategoryCore extends ObjectModel
 			$order_way = 'ASC';
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
-		else if ($order_by == 'name')
+		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
-		else if ($order_by == 'manufacturer')
+		elseif ($order_by == 'manufacturer')
 		{
 			$order_by_prefix = 'm';
 			$order_by = 'name';
 		}
-		else if ($order_by == 'position')
+		elseif ($order_by == 'position')
 			$order_by_prefix = 'cp';
 
 		if ($order_by == 'price')
