@@ -178,7 +178,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			}
 		}
 		/* Delete multiple objects */
-		elseif (Tools::getValue('submitDel'.$this->table))
+		elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{

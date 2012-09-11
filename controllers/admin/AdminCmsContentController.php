@@ -45,6 +45,8 @@ class AdminCmsContentControllerCore extends AdminController
 			die('Category cannot be loaded');
 
 		$this->table = 'cms';
+		$this->className = 'CMS';
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->admin_cms_categories = new AdminCmsCategoriesController();
 		$this->admin_cms = new AdminCmsController();
 
@@ -117,13 +119,14 @@ class AdminCmsContentControllerCore extends AdminController
 			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
 			|| (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position')))
 			$this->admin_cms->postProcess();
-		else if (Tools::isSubmit('submitDelcms_category')
+		elseif (Tools::isSubmit('submitDelcms_category')
 			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
+			|| Tools::isSubmit('submitBulkdeletecms_category')
 			|| Tools::isSubmit('submitAddcms_category')
 			|| Tools::isSubmit('deletecms_category')
 			|| (Tools::isSubmit('statuscms_category') && Tools::isSubmit('id_cms_category'))
 			|| (Tools::isSubmit('position') && Tools::isSubmit('id_cms_category_to_move')))
-			$this->admin_cms_categories->postProcess();
+				$this->admin_cms_categories->postProcess();
 
 		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
 			|| Tools::isSubmit('updatecms_category')
