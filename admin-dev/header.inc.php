@@ -344,7 +344,7 @@ echo '
 if (Shop::isFeatureActive())
 {
    echo '<div class="multishop_toolbar">
-        <span class="text_multishop">'.translate('Multishop configuration for').'</span>'.
+        <span class="text_multishop">'.translate('Multistore configuration for').'</span>'.
 		Helper::renderShopList();
     echo '</div>';
 }

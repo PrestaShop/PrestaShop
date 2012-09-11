@@ -232,7 +232,7 @@
 
 		{if $display_header && $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 			<div class="multishop_toolbar">
-				<span class="text_multishop">{l s='Multishop configuration for'}</span>
+				<span class="text_multishop">{l s='Multistore configuration for'}</span>
 				{$shop_list}
 			</div>
 		{/if}
