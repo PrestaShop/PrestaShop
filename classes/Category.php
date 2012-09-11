@@ -1181,12 +1181,12 @@ class CategoryCore extends ObjectModel
 	 */
 	public static function getLastPosition($id_category_parent, $id_shop)
 	{
-		return (Db::getInstance()->getValue('
-		SELECT MAX(cs.`position`)+1
+		return (int)(Db::getInstance()->getValue('
+		SELECT MAX(cs.`position`)
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-		WHERE c.`id_parent` = '.(int)$id_category_parent));
+		WHERE c.`id_parent` = '.(int)$id_category_parent) + 1);
 	}
 
 	public static function getUrlRewriteInformations($id_category)
