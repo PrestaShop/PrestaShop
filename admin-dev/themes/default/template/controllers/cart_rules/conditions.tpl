@@ -4,7 +4,7 @@
 	<input type="text" id="customerFilter" name="customerFilter" value="{$customerFilter|escape:'htmlall':'UTF-8'}" style="width:400px" />
 	<p class="preference_description">{l s='Optional, the cart rule will be available for everyone if you leave this field blank.'}</p>
 </div>
-<label>{l s='Validity'}</label>
+<label>{l s='Valid'}</label>
 <div class="margin-form">
 	<strong>{l s='from'}</strong>
 	<input type="text" class="datepicker" name="date_from"
