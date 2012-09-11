@@ -172,7 +172,9 @@ class CartCore extends ObjectModel
 	{
 		if (!$this->id_lang)
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-
+		if (!$this->id_shop)
+			$this->id_shop = Context::getContext()->shop->id;
+		
 		$return = parent::add($autodate);
 		Hook::exec('actionCartSave');
 
@@ -2842,9 +2844,8 @@ class CartCore extends ObjectModel
 	{
 		$sql = 'SELECT c.`id_cart`
 				FROM '._DB_PREFIX_.'cart c
-				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
-				WHERE c.`id_customer` = '.(int)$id_customer.'
-					AND o.`id_cart` IS NULL
+				WHERE c.`id_cart` NOT IN (SELECT o.`id_cart` FROM '._DB_PREFIX_.'orders o)
+				AND c.`id_customer` = '.(int)$id_customer.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
 
