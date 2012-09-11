@@ -26,7 +26,7 @@
 {include file='header.tpl'}
 {if isset($conf)}
 	<div class="conf">
-		{$conf}
+		{$conf|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}
 	</div>
 {/if}
 {if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
@@ -42,7 +42,7 @@
 			<br/>
 			<ol>
 				{foreach $errors as $error}
-					<li>{$error|escape:html:'UTF-8'}</li>
+					<li>{$error|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}</li>
 				{/foreach}
 			</ol>
 		{/if}
@@ -52,7 +52,7 @@
 {if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
 		{foreach $informations as $info}
-			{$info|escape:html:'UTF-8'}<br />
+			{$info|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}<br />
 		{/foreach}
 	</div><br />
 {/if}
@@ -60,7 +60,7 @@
 {if isset($confirmations) && count($confirmations) && $confirmations}
 	<div class="conf" style="display:block;">
 		{foreach $confirmations as $conf}
-			{$conf|escape:html:'UTF-8'}<br />
+			{$conf|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}<br />
 		{/foreach}
 	</div><br />
 {/if}
@@ -78,13 +78,13 @@
 			</span>
 			<ul {if count($warnings) > 1}style="display:none;"{/if} id="seeMore">
 			{foreach $warnings as $warning}
-				<li>{$warning|escape:html:'UTF-8'}</li>
+				<li>{$warning|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}</li>
 			{/foreach}
 			</ul>
 		{else}
 			<ul style="margin-top: 3px">
 			{foreach $warnings as $warning}
-				<li>{$warning|escape:html:'UTF-8'}</li>
+				<li>{$warning|html_entity_decode:$smarty.const.ENT_QUOTES:'UTF-8'|escape:'htmlall':'UTF-8'}</li>
 			{/foreach}
 			</ul>
 		{/if}
