@@ -1862,3 +1862,178 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 	padding-bottom: 10px;
 }
 
+
+
+/* ************************************************************************************************
+		CSS Modules
+************************************************************************************************ */
+
+/******* IMPORTANT - Internet Explorer can read 31 CSS files max. Some CSS have been put here and erased from their own module folder.************/
+
+/*************** Block ADVERTISING ***************/
+.advertising_block { width: 191px; margin-bottom: 1em; text-align: center }
+
+
+
+/*************** Block CATEGORIES ***************/
+#categories_block_left  li {border-bottom:1px dotted #ccc}
+	#categories_block_left  li.last {	border:none;}
+		#categories_block_left  li a {
+			display:block;
+			padding:7px 11px 5px 22px;
+			color:#333;
+			background:url(../../../modules/blockcategories/img/arrow_right_2.png) no-repeat 10px 10px transparent
+		}
+		
+	#categories_block_left  li ul {margin-left:40px}
+		#categories_block_left  li ul li {border:none}
+			#categories_block_left  li ul li a {
+				padding-left:0;
+				background:none
+			}
+		
+#categories_block_left li .OPEN,
+#categories_block_left li .CLOSE {
+	display:block;
+	float:right;
+	margin:10px 10px 0;
+	height:9px;
+	width:9px;
+	background:url(../../../modules/blockcategories/img/icon/open-close.png) no-repeat 0 -9px;
+	cursor:pointer
+}
+#categories_block_left li .CLOSE {background-position:0 0}
+
+
+/* footer */
+.blockcategories_footer {
+	padding:15px 10px;
+}
+.blockcategories_footer ul ul {display:none !important}
+
+
+
+/*************** Block CMS ***************/
+/* footer */
+#footer .block_various_links {padding:15px 10px;}
+
+/* Block CMS links */
+.informations_block_left li {border-bottom:1px dotted #eee}
+.informations_block_left li.last {border:none;}
+.informations_block_left li a {
+    display:block;
+    padding:7px 11px 5px 22px;
+    color:#333;
+    background:url(../../../modules/blockcms/img/arrow_right_2.png) no-repeat 10px 10px transparent;
+}
+    
+tr.subitem > td:first-child + td {
+    padding-left: 10px;
+}
+
+
+
+/*************** Block CONTACTINFOS ***************/
+
+#block_contact_infos {padding:15px 10px;}
+#block_contact_infos li {
+	padding:0 !important;
+	line-height: 20px;
+}
+#block_contact_infos li  strong {
+	font-weight:normal;
+	font-size:13px;
+}
+#block_contact_infos li  pre {font: 11px/20px Arial,Verdana,sans-serif;}
+
+
+
+/*************** Block LINK ***************/
+#links_block_left .block_content li {border-bottom:1px dotted #eee}
+#links_block_left .block_contentt li.last {border:none;}
+#links_block_left .block_content li a {
+    display:block;
+    padding:7px 11px 5px 22px;
+    color:#333;
+    background:url(../../../modules/blocklink/img/arrow_right_2.png) no-repeat 10px 10px transparent;
+}
+
+
+
+/*************** Block MANUFACTURER ***************/
+.blockmanufacturer li {border-bottom:1px dotted #ccc}
+.blockmanufacturer li.last {	border:none;}
+	.blockmanufacturer li a {
+		display:block;
+		padding:7px 11px 5px 22px;
+		color:#333;
+		background:url(../../../modules/blockmanufacturer/img/arrow_right_2.png) no-repeat 10px 10px transparent
+	}
+
+
+.blockmanufacturer form {margin-top:10px;}
+.blockmanufacturer p {
+	padding:0;
+	text-align:center
+}
+
+/*************** Block LOGO PAYMENT ***************/
+
+.paiement_logo_block { width: 191px; text-align: center; margin-bottom: 1.5em }
+.paiement_logo_block a { text-decoration: none }
+.paiement_logo_block img { margin: 0 0.5em }
+
+
+
+/*************** Block RSS ***************/
+#rss_block_left p {
+	margin:0;
+	padding:10px;
+}
+
+#rss_block_left li {border-bottom:1px dotted #ccc}
+#rss_block_left li.last {	border:none;}
+	#rss_block_left li a {
+		display:block;
+		padding:7px 11px 5px 22px;
+		color:#333;
+		background:url(../../../modules/blockrss/img/arrow_right_2.png) no-repeat 10px 10px transparent
+	}
+
+	
+/*************** Block SOCIAL ***************/
+#social_block {padding:15px 10px;}
+#social_block li {padding-left:22px !important;}
+#social_block li.facebook {background:url(../../../modules/blocksocial/img/sprite_pict_social_block.png) no-repeat 0 6px;}
+#social_block li.twitter {background:url(../../../modules/blocksocial/img/sprite_pict_social_block.png) no-repeat 0 -26px;}
+#social_block li.rss {background:url(../../../modules/blocksocial/img/sprite_pict_social_block.png) no-repeat 0 -56px;}
+
+
+/*************** Block STORE ***************/
+.blockstore img { margin: 10px 0 0 0}
+.blockstore p { 
+	padding-bottom:0;
+	font-weight:bold;
+	text-align: right
+}
+.blockstore p.store_image { 
+	padding-bottom:10px;
+	text-align:center
+}
+
+
+/*************** Block SUPPLIER ***************/
+.blocksupplier li {border-bottom:1px dotted #ccc}
+.blocksupplier li.last {	border:none;}
+	.blocksupplier li a {
+		display:block;
+		padding:7px 11px 5px 22px;
+		color:#333;
+		background:url(../../../modules/blocksupplier/img/arrow_right_2.png) no-repeat 10px 10px transparent
+	}
+
+.blocksupplier form {margin-top:10px;}
+.blocksupplier p {
+	padding:0;
+	text-align:center
+}
