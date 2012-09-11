@@ -330,6 +330,6 @@ class MailCore
 		else
 			$str = $string;
 
-		return str_replace('"', '&quot;', addslashes($str));
+		return str_replace('"', '&quot;', stripslashes($str));
 	}
 }
