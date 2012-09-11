@@ -498,8 +498,13 @@ class AdminMetaControllerCore extends AdminController
 	{
 		if (!Shop::isFeatureActive() && $this->url && $this->url->domain != $value)
 		{
-			$this->url->domain = $value;
-			$this->url->update();
+			if (Validate::isCleanHtml($value))
+			{
+				$this->url->domain = $value;
+				$this->url->update();
+			}
+			else
+				$this->errors[] = Tools::displayError('Domain is not valid');
 		}
 	}
 
@@ -510,8 +515,13 @@ class AdminMetaControllerCore extends AdminController
 	{
 		if (!Shop::isFeatureActive() && $this->url && $this->url->domain_ssl != $value)
 		{
-			$this->url->domain_ssl = $value;
-			$this->url->update();
+			if (Validate::isCleanHtml($value))
+			{
+				$this->url->domain_ssl = $value;
+				$this->url->update();
+			}
+			else
+				$this->errors[] = Tools::displayError('SSL Domain is not valid');
 		}
 	}
 

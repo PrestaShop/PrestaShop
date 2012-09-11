@@ -608,7 +608,6 @@ class AdminControllerCore extends Controller
 	{
 		/* Checking fields validity */
 		$this->validateRules();
-
 		if (count($this->errors) <= 0)
 		{
 			$object = new $this->className();
@@ -2196,7 +2195,7 @@ class AdminControllerCore extends Controller
 				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
 					$this->errors[] = sprintf(
 						Tools::displayError('The field %s is required.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+						Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field, $class_name))
 					);
 
 		/* Checking for multilingual required fields */
@@ -2204,7 +2203,7 @@ class AdminControllerCore extends Controller
 			if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
 				$this->errors[] = sprintf(
 					Tools::displayError('The field %1$s is required at least in %2$s.'),
-					call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+					Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name)),
 					$default_language->name
 				);
 
@@ -2213,7 +2212,7 @@ class AdminControllerCore extends Controller
 			if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
 				$this->errors[] = sprintf(
 					Tools::displayError('The field %1$s is too long (%2$d chars max).'),
-					call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
+					Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)),
 					$max_length
 				);
 
@@ -2225,7 +2224,7 @@ class AdminControllerCore extends Controller
 				if ($field_lang !== false && Tools::strlen($field_lang) > $max_length)
 					$this->errors[] = sprintf(
 						Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
-						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+						Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name)),
 						$language['name'],
 						$max_length
 					);
@@ -2239,7 +2238,7 @@ class AdminControllerCore extends Controller
 				if (!Validate::$function($value) && !empty($value))
 					$this->errors[] = sprintf(
 						Tools::displayError('The field %s is invalid.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+						Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field, $class_name))
 					);
 
 		/* Checking for passwd_old validity */
@@ -2248,12 +2247,12 @@ class AdminControllerCore extends Controller
 			if ($class_name == 'Employee' && !Validate::isPasswdAdmin($value))
 				$this->errors[] = sprintf(
 					Tools::displayError('The field %s is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
+					Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name))
 				);
 			elseif ($class_name == 'Customer' && !Validate::isPasswd($value))
 				$this->errors[] = sprintf(
 					Tools::displayError('The field %s is invalid.'),
-					call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name)
+					Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name))
 				);
 		}
 
@@ -2264,7 +2263,7 @@ class AdminControllerCore extends Controller
 					if (!Validate::$function($value))
 						$this->errors[] = sprintf(
 							Tools::displayError('The field %1$s (%2$s) is invalid.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+							Tools::safeOutput(call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name)),
 							$language['name']
 						);
 	}
