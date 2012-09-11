@@ -158,7 +158,6 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => 1,
 					'weight' => 0,
 					'default_on' => 0,
-					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
 				);
 			break;
 
@@ -258,7 +257,6 @@ class AdminImportControllerCore extends AdminController
 					'link_rewrite' => array((int)Configuration::get('PS_LANG_DEFAULT') => ''),
 					'online_only' => 0,
 					'condition' => 'new',
-					'shop' => Configuration::get('PS_SHOP_DEFAULT'),
 					'date_add' => date('Y-m-d H:i:s'),
 					'condition' => 'new',
 				);
@@ -1012,8 +1010,10 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
-			if (!Shop::isFeatureActive() || !isset($product->shop) || empty($product->shop))
+			if (!Shop::isFeatureActive())
 				$product->shop = 1;
+			elseif (!isset($product->shop) || empty($product->shop))
+				$product->shop = implode($this->multiple_value_separator, Shop::getContextListShopID());
 
 			if (!Shop::isFeatureActive())
 				$product->id_shop_default = 1;
@@ -1457,6 +1457,9 @@ class AdminImportControllerCore extends AdminController
 
 			// Get shops for each attributes
 			$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
+			if (!isset($info['shop']) || !count($info['shop']))
+				$info['shop'] = Shop::getContextListShopID();
+				
 			$id_shop_list = array();
 			foreach ($info['shop'] as $shop)
 				if (!is_numeric($shop))

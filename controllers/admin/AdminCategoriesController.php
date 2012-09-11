@@ -162,14 +162,14 @@ class AdminCategoriesControllerCore extends AdminController
 		else
 			$id_parent = $this->context->shop->id_category;
 
+		$this->_select = 'sa.position position';
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-		if (Shop::isFeatureActive())
-		{
-			if (Shop::getContext() == Shop::CONTEXT_SHOP)
-				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
-			else
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+		else
 				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
-		}
+
 
 		// we add restriction for shop
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
@@ -201,9 +201,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		$alias = 'a';
-		if (Shop::isFeatureActive())
-			$alias = 'sa';
+		$alias = 'sa';
 		parent::getList($id_lang, $alias.'.position', $order_way, $start, $limit, Context::getContext()->shop->id);
 		// Check each row to see if there are combinations and get the correct action in consequence
 
