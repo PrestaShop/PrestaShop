@@ -135,7 +135,7 @@ class AdminProductsControllerCore extends AdminController
 			'title' => $this->l('Displayed'),
 			'width' => 70,
 			'active' => 'status',
-			'filter_key' => 'a!active',
+			'filter_key' => 'sa!active',
 			'align' => 'center',
 			'type' => 'bool',
 			'orderby' => false
