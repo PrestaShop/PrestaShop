@@ -34,7 +34,7 @@
 			{if $has_customer_an_address}
 			<li>
 				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}" data-ajax="false">
-					<img src="{$img_dir}icon/addrbook.png" alt="{l s='Add my first address'}" class="icon" />
+					<img src="{$img_mobile_dir}icon/addrbook.png" alt="{l s='Addresses'}" class="ui-li-icon ui-li-thumb" />
 					{l s='Add my first address'}
 				</a>
 			</li>
