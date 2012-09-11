@@ -171,7 +171,7 @@ class AdminImportControllerCore extends AdminController
 					'parent' => array('label' => $this->l('Parent category')),
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
-						'help' => $this->l('A category root is where a category tree can begin. This is used with multishop')
+						'help' => $this->l('A category root is where a category tree can begin. This is used with multistore')
 						),
 					'description' => array('label' => $this->l('Description')),
 					'meta_title' => array('label' => $this->l('Meta-title')),
