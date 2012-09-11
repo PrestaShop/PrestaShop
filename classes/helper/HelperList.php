@@ -532,9 +532,7 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-
-			$value = Tools::getValue($this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key));
-
+			$value = Context::getContext()->cookie->{$this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key)};
 			switch ($params['type'])
 			{
 				case 'bool':
@@ -558,9 +556,9 @@ class HelperListCore extends Helper
 				case 'select':
 					foreach ($params['list'] as $option_value => $option_display)
 					{
-						if (isset($_POST[$this->table.'Filter_'.$params['filter_key']])
-							&& Tools::getValue($this->table.'Filter_'.$params['filter_key']) == $option_value
-							&& Tools::getValue($this->table.'Filter_'.$params['filter_key']) != '')
+						if (isset(Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']})
+							&& Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']} == $option_value
+							&& Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']} != '')
 							$this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
 					}
 					break;
