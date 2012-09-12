@@ -21,7 +21,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b67
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_e6178f22c62901662347cfb2f7972d1f'] = 'Il seguente modulo è stato sganciato:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'I seguenti moduli sono stati abilitati';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Le immagini sono state correttamente aggiornate nel database';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Attenzione: Copia/Incolla I tuoi errori se vuoi impostare manualmente il tipodi immagine (nel Tab Preferenza >Immagini):';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_4e246bd71dd5fb033e402b373e6ee434'] = 'Attenzione: Copia/Incolla I tuoi errori se vuoi impostare manualmente il tipodi immagine (nel Tab Preferenza >Immagini):';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Alcuni tipi di immagini non possono essere aggiunti perchè già esistenti. Qui la lista:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_3b90370ac32dead2af37eabe3bdbb97f'] = 'Nome tipo immagine:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Larghezza:';

@@ -62,7 +62,7 @@
 	<div class="warn width2" style="float: left;">
 		<p>{l s='How to restore a database Backup in 10 easy steps:'}</p>
 		<ol style="font-size: 11px; font-weight: normal; line-height: 20px;">
-			<li>{l s='Set "Enable Shop" to "No" in the Preferences > Maintenance tab.'}</li>
+			<li>{l s='Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'}</li>
 			<li>{l s='Download the Backup from the list below or from your FTP server (in the folder "admin/backups").'}</li>
 			<li>{l s='Check the Backup integrity: look for errors, incomplete file, etc. Be sure to verify all your data.'}</li>
 			<li>{l s='Ask your hosting provider for "phpMyAdmin" access to your database'}</li>

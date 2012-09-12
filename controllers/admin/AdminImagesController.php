@@ -139,7 +139,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_LEGACY_IMAGES' => array(
 						'title' => $this->l('Use the legacy image filesystem'),
-						'desc' => $this->l('This should be set to yes unless you successfully moved images in Preferences > Images tab'),
+						'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,

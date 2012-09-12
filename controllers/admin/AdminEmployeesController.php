@@ -210,9 +210,9 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'default_tab',
-					'label' => $this->l('Default tab'),
+					'label' => $this->l('Default page'),
 					'name' => 'default_tab',
-					'desc' => $this->l('This tab will be displayed just after login'),
+					'desc' => $this->l('This page will be displayed just after login'),
 					'options' => $this->tabs_list
 				),
 				array(

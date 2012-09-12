@@ -620,7 +620,7 @@ class ThemeInstallator extends Module
 		else
 		{
 			$errors = '<em><strong>'.
-				$this->l('Warning: Copy/Paste your errors if you want to manually set the image type (in the tab Preferences > Images):').
+				$this->l('Warning: Copy/Paste your errors if you want to manually set the image type (in the "Images" page under the "Preferences" menu):').
 				'</em></strong><br />';
 			$errors .= $this->l('Some kind of image could not be added because they exists. Here\'s the list:');
 			$errors .= '<ul>';

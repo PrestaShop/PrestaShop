@@ -103,7 +103,7 @@ class AdminTabsControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Tabs'),
+				'title' => $this->l('Menus'),
 				'image' => '../img/admin/tab.gif'
 			),
 			'input' => array(
@@ -157,7 +157,7 @@ class AdminTabsControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Show or hide tab.')
+					'desc' => $this->l('Show or hide menu.')
 				),
 				array(
 					'type' => 'select',
@@ -272,7 +272,7 @@ class AdminTabsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
 		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
-			$this->errors[] = Tools::displayError('You can\'t put this tab in itself');
+			$this->errors[] = Tools::displayError('You can\'t put this menu in itself');
 		else
 		{
 			// Temporary add the position depend of the selection of the parent category

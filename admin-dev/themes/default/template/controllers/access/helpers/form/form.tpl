@@ -204,7 +204,7 @@
 				<table class="table float" cellspacing="0" style="margin-right:50px" id="table_{$profile.id_profile}">
 					<tr>
 						<th class="center">
-							{l s='Tabs'}
+							{l s='Menus'}
 						</th>
 						<th class="center">
 							<input type="checkbox" name="1" id="viewall"
@@ -254,7 +254,7 @@
 					</tr>
 					{if !count($tabs)}
 						<tr>
-							<td colspan="6">{l s='No tab'}</td>
+							<td colspan="6">{l s='No menu'}</td>
 						</tr>
 					{else}
 						{foreach $tabs AS $tab}
