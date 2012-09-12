@@ -251,14 +251,14 @@ function checkingTab($tab)
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
 			Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-		echo sprintf(Tools::displayError('Tab %s cannot be found.'),$tab);
+		echo sprintf(Tools::displayError('Page %s cannot be found.'),$tab);
 		return false;
 	}
 
 	// Class file is included in Dispatcher::dispatch() function
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
-		echo sprintf(Tools::displayError('Tab file %s cannot be found.'),$tab);
+		echo sprintf(Tools::displayError('The class %s cannot be found.'),$tab);
 		return false;
 	}
 	$adminObj = new $tab;
