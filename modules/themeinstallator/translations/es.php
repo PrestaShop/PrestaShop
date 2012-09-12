@@ -21,7 +21,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_00f0916ff7ef4b0a0583b67
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_e6178f22c62901662347cfb2f7972d1f'] = 'Los siguientes módulos han sido desanclados: ';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Se han activado los siguientes módulos';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Se han actualizado las imágenes en la base de datos';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Advertencia: Copiar / Pegar sus errores si desea configurar manualmente el tipo de imagen (en la ficha Preferencias> Imágenes):';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_4e246bd71dd5fb033e402b373e6ee434'] = 'Advertencia: Copiar / Pegar sus errores si desea configurar manualmente el tipo de imagen (en la ficha Preferencias> Imágenes):';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Advertencia: Copiar / Pegar sus errores si desea configurar manualmente el tipo de imagen (en la ficha Preferencias> Imágenes):';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_3b90370ac32dead2af37eabe3bdbb97f'] = 'Nombre de tipo de imagen:';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Ancho:';

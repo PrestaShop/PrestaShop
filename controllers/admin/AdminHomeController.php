@@ -169,7 +169,7 @@ class AdminHomeControllerCore extends AdminController
 		$shop = Context::getContext()->shop;
 		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
 			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This is different from the main shop domain name set in shop tab:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
+			$this->l('This is different from the main shop domain name set in "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}

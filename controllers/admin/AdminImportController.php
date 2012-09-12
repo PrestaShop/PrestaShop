@@ -2561,7 +2561,7 @@ class AdminImportControllerCore extends AdminController
 							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
 						.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
 						<code>php_value post_max_size 20M</code> '.
-						Tools::displayError('(click to open "Generators" tab)').'</a>';
+						Tools::displayError('(click to open "Generators" page)').'</a>';
 						break;
 					break;
 					case UPLOAD_ERR_PARTIAL:

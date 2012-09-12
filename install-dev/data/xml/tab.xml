@@ -276,7 +276,7 @@
     <tab id="Permissions" id_parent="Administration" active="1">
       <class_name>AdminAccess</class_name>
     </tab>
-    <tab id="Tabs" id_parent="Administration" active="1">
+    <tab id="Menus" id_parent="Administration" active="1">
       <class_name>AdminTabs</class_name>
     </tab>
     <tab id="Stats_1" id_parent="Stats" active="1">

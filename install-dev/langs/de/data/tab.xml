@@ -90,7 +90,7 @@
   <tab id="Employees" name="Mitarbeiter"/>
   <tab id="Profiles" name="Profile"/>
   <tab id="Permissions" name="Berechtigungen"/>
-  <tab id="Tabs" name="Tabs"/>
+  <tab id="Menus" name="Tabs"/>
   <tab id="Stats_1" name="Statistiken"/>
   <tab id="Search_Engines" name="Suchmaschinen"/>
   <tab id="Referrers" name="Referrer"/>

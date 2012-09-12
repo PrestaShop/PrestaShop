@@ -167,7 +167,7 @@ class AdminCarriersControllerCore extends AdminController
 				<li>'.$this->l('Fill in the fields and click "Save."').'</li>
 				<li>'.
 					$this->l('You need to set a price range or a weight range for which the new carrier will be available.').' '.
-					$this->l('Under the "Shipping" tab, click either "Price Ranges" or "Weight Ranges."').'
+					$this->l('Under the "Shipping" menu, click either "Price Ranges" or "Weight Ranges".').'
 				</li>
 				<li>'.$this->l('Click "Add new."').'</li>
 				<li>'.
@@ -175,7 +175,7 @@ class AdminCarriersControllerCore extends AdminController
 					$this->l('For example, the carrier can be made available for a weight range between 0 and 5lbs. Another carrier can have a range between 5 and 10lbs.').'
 				</li>
 				<li>'.$this->l('When you are done, click "Save."').'</li>
-				<li>'.$this->l('Click on the "Shipping" tab.').'</li>
+				<li>'.$this->l('Click on the "Shipping" menu.').'</li>
 				<li>'.
 					$this->l('You need to set the fees that will be applied for this carrier.').' '.
 					$this->l('At the bottom on the page, in the "Fees" section, select the name of the carrier.').'

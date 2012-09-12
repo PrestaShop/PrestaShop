@@ -140,7 +140,7 @@ class Blockcustomerprivacy extends Module
 				</div>
 					<p>
 						'.$this->l('Message that will be displayed in the account creation form.').'<br />
-						'.$this->l('Tips: Remember that if the text is too long to be written directly in the form, you can add a link to one of your pages created via the CMS tab.').'
+						'.$this->l('Tips: Remember that if the text is too long to be written directly in the form, you can add a link to one of your pages created via the "CMS" page under the "Preferences" menu.').'
 					</p>
 				</div>
 				<div class="clear">&nbsp;</div>
