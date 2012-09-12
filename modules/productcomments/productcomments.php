@@ -370,7 +370,7 @@ class ProductComments extends Module
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 					<tr>
-						<th><input class="noborder" type="checkbox" name="id_product_comment[]" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
+						<th><input class="noborder" type="checkbox" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
 						<th style="width:150px;">'.$this->l('Product name').'</th>
