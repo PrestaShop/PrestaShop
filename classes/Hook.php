@@ -257,6 +257,10 @@ class HookCore extends ObjectModel
 				$shop_list = Shop::getContextListShopID();
 				if (isset($context->customer) && $context->customer->isLogged())
 					$groups = $context->customer->getGroups();
+				elseif (isset($context->customer) && $context->customer->isLogged(true))
+					$groups = array((int)Configuration::get('PS_GUEST_GROUP'));
+				else
+					$groups = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
 			}
 			
 			// SQL Request
@@ -274,7 +278,7 @@ class HookCore extends ObjectModel
 			if (Validate::isLoadedObject($context->shop))
 				$sql->where('hm.id_shop = '.(int)$context->shop->id);
 
-			if (isset($context->customer) && $context->customer->isLogged())
+			if ($frontend)
 			{
 				$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 				$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
