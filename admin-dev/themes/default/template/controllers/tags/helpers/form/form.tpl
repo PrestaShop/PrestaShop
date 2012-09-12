@@ -47,7 +47,7 @@
 			<td>
 				<select multiple id="select_right" name="products[]">
 					{foreach from=$field.products item='product'}
-					<option value="{$product.id_product}">{$product.name}</option>
+					<option selected="selected" value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
 				<span class="hint" name="help_box">{l s='Double-click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
@@ -78,7 +78,7 @@
 	});
 	$('#tag_form').submit(function()
 	{
-		$('#select_left option').each(function(i){
+		$('#select_right option').each(function(i){
 			$(this).attr("selected", "selected");
 		});
 	});
