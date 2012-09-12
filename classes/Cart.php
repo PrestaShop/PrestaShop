@@ -3333,7 +3333,8 @@ class CartCore extends ObjectModel
 				WHERE `id_cart` = '.(int)$this->id.'
 					AND `id_shop` = '.(int)$this->id_shop.'
 			)
-			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop;
+			WHERE `id_cart` = '.(int)$this->id.'
+			'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
 
 		Db::getInstance()->execute($sql);
 
