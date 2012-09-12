@@ -981,7 +981,8 @@ class ToolsCore
 
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
 		// This way we lose fewer special chars.
-		$str = strtolower($str);
+		if (!function_exists('mb_strtolower'))
+			$str = strtolower($str);
 
 		return $str;
 	}
