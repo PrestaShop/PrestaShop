@@ -634,7 +634,7 @@ function checkMinimalQuantity(minimal_quantity)
 function colorPickerClick(elt)
 {
 	id_attribute = $(elt).attr('id').replace('color_', '');
-	$('.color_pick').parent().removeClass('selected');
+	$(elt).parent().parent().children().removeClass('selected');
 	$(elt).fadeTo('fast', 1, function(){
 								$(this).fadeTo('fast', 0, function(){
 									$(this).fadeTo('fast', 1, function(){
@@ -642,7 +642,7 @@ function colorPickerClick(elt)
 										});
 									});
 								});
-	$('#color_pick_hidden').val(id_attribute);
+	$(elt).parent().parent().parent().children('.color_pick_hidden,#color_pick_hidden').val(id_attribute);
 	findCombination(false);
 }
 
