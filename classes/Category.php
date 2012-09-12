@@ -302,6 +302,12 @@ class CategoryCore extends ObjectModel
 		}
 	}
 
+	public function deleteLite()
+	{
+		// Directly call the parent of delete, in order to avoid recursion
+		return parent::delete();
+	}
+
 	public function delete()
 	{
 		if ((int)$this->id === 0 || (int)$this->id === 1)
@@ -313,7 +319,7 @@ class CategoryCore extends ObjectModel
 		$all_cat[] = $this;
 		foreach ($all_cat as $cat)
 		{
-			parent::delete();
+			$cat->deleteLite();
 			if (!$this->hasMultishopEntries())
 			{
 				$cat->deleteImage();
