@@ -50,8 +50,8 @@ class SitemapControllerCore extends FrontController
 
 		$blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
 		$blocksupplier = Module::getInstanceByName('blocksupplier');
-		$this->context->smarty->assign('display_manufacturer_link', (((int)$blockmanufacturer->id) ? true : false));
-		$this->context->smarty->assign('display_supplier_link', (((int)$blocksupplier->id) ? true : false));
+		$this->context->smarty->assign('display_manufacturer_link', (bool)$blockmanufacturer->active);
+		$this->context->smarty->assign('display_supplier_link', (bool)$blocksupplier->active);
 		$this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
 		$this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
 
