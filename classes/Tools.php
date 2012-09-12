@@ -2181,7 +2181,10 @@ FileETag INode MTime Size
 
 	public static function modRewriteActive()
 	{
-		return Tools::apacheModExists('mod_rewrite');
+		if (!Tools::apacheModExists('mod_rewrite'))
+			if (strtolower($_SERVER['HTTP_MOD_REWRITE']) != 'on' && strtolower(getenv('HTTP_MOD_REWRITE')) != 'on')
+				return false;
+		return true;
 	}
 
 	public static function unSerialize($serialized, $object = false)
