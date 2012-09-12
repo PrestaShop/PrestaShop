@@ -124,6 +124,9 @@ class LinkCore
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
+		
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference'))
+			$params['reference'] = Tools::str2url($product->reference);
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'categories'))
 		{
@@ -441,7 +444,20 @@ class LinkCore
 		$controller = Dispatcher::getInstance()->getController();
 		if (!empty(Context::getContext()->controller->php_self))
 			$controller = Context::getContext()->controller->php_self;
-		
+
+		if ($controller == 'product' && isset($params['id_product']))
+			return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
+		elseif ($controller == 'category' && isset($params['id_category']))
+			return $this->getCategoryLink((int)$params['id_category'], null, (int)$id_lang);
+		elseif ($controller == 'supplier' && isset($params['id_supplier']))
+			return $this->getSupplierLink((int)$params['id_supplier'], null, (int)$id_lang);
+		elseif ($controller == 'manufacturer' && isset($params['id_manufacturer']))
+			return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang);
+		elseif ($controller == 'cms' && isset($params['id_cms']))
+			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang);
+		elseif ($controller == 'cms' && isset($params['id_cms_category']))
+			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
+
 		return $this->getPageLink($controller, false, $id_lang, $params);
 	}
 
