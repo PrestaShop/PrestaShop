@@ -95,6 +95,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		$query = new DbQuery();
 		$query->select('id_stock_available');
 		$query->from('stock_available');
@@ -114,6 +117,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function synchronize($id_product, $order_id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		// gets warehouse ids grouped by shops
 		$ids_warehouse = Warehouse::getWarehousesGroupedByShops();
 		if ($order_id_shop !== null)
@@ -240,6 +246,8 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
 
 		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, $id_shop);
 		if ($existing_id > 0)
@@ -275,6 +283,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		if ($id_shop === null)
 			$id_shop = Context::getContext()->shop->id;
 
@@ -388,6 +399,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		$id_stock_available = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
 
 		if (!$id_stock_available)
@@ -428,6 +442,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		$context = Context::getContext();
 
 		// if there is no $id_shop, gets the context one
@@ -496,12 +513,13 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
 		return Db::getInstance()->execute('
-			DELETE FROM '._DB_PREFIX_.'stock_available
-			WHERE id_product = '.(int)$id_product.
-			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
-			StockAvailable::addSqlShopRestriction(null, $shop)
-		);
+		DELETE FROM '._DB_PREFIX_.'stock_available
+		WHERE id_product = '.(int)$id_product.
+		($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
+		StockAvailable::addSqlShopRestriction(null, $shop));
 	}
 
 	/**
@@ -545,6 +563,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function dependsOnStock($id_product, $id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		$query = new DbQuery();
 		$query->select('depends_on_stock');
 		$query->from('stock_available');
@@ -565,6 +586,9 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function outOfStock($id_product, $id_shop = null)
 	{
+		if (!Validate::isUnsignedId($id_product))
+			return false;
+
 		$query = new DbQuery();
 		$query->select('out_of_stock');
 		$query->from('stock_available');
