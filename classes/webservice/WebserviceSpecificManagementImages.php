@@ -525,17 +525,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					$available_image_ids[] = $image['id_image'];
 
 
-			// Old Behavior
-			$nodes = scandir($directory);
-			foreach ($nodes as $node)
-				// avoid too much preg_match...
-				if ($node != '.' && $node != '..' && $node != '.svn')
-				{
-					preg_match('/^'.intval($object_id).'-(\d+)\.jpg*$/Ui', $node, $matches);
-					if (isset($matches[1]))
-						$available_image_ids[] = $matches[1];
-					}
-
 			// If an image id is specified
 			if ($this->wsObject->urlSegment[3] != '')
 			{
