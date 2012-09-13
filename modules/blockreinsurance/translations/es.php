@@ -16,3 +16,8 @@ $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_490aa6e856ccf208a054389
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_9dffbf69ffba8bc38bc4e01abf4b1675'] = 'Textos';
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_23498d91b6017e5d7f4ddde70daba286'] = 'ID tienda';
 $_MODULE['<{blockreinsurance}prestashop>blockreinsurance_ef61fb324d729c341ea8ab9901e23566'] = 'Añadir nuevo';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_212ec5c1ad6e7811c9ceca38b29f0aff'] = 'Reembolso de dinero';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_488ec823efaa6f1a629d149ecc0eacf9'] = 'Cambio en tienda';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_eb656114f93f0a44609969d05de3673c'] = 'Pago después del recibo';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_b00b85425e74ed2c85dc3119b78ff2c3'] = 'Transportista gratuito';
+$_MODULE['<{blockreinsurance}prestashop>blockreinsurance_1bb4719012d79b9dba021844dd57f116'] = 'Pago asegurado al 100%';
