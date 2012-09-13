@@ -1,5 +1,4 @@
 <?php
-require dirname(__FILE__).'/1.5.x/config/config.inc.php';
 
 $clean_tabs_15 = array(
 	9 => array(
