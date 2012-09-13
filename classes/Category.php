@@ -645,7 +645,8 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_product_attribute IS NOT NULL)
+				AND ((product_attribute_shop.id_product_attribute IS NOT NULL OR pa.id_product_attribute IS NULL) 
+					OR (product_attribute_shop.id_product_attribute IS NULL AND pa.default_on=1))
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
