@@ -39,10 +39,10 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_RECYCLABLE_PACK" name="PS_RECYCLABLE_PACK">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_GIFT_WRAPPING" name="PS_GIFT_WRAPPING">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_GIFT_WRAPPING_PRICE" name="PS_GIFT_WRAPPING_PRICE">
       <value>0</value>
