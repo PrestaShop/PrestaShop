@@ -96,6 +96,10 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
+		// No cache for auto-refresh uploaded logo
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+
 		parent::init();
 
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
@@ -357,12 +361,9 @@ class AdminThemesControllerCore extends AdminController
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
 		{
 			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
-			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
+			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 		}
-		// No cache for auto-refresh uploaded logo
-		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		$this->content .= $content;
 		return parent::initContent();
