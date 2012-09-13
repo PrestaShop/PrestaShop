@@ -1,5 +1,8 @@
 <?php
 
+function clean_tabs_15()
+{
+
 $clean_tabs_15 = array(
 	9 => array(
 		'class_name' => 'AdminCatalog',
@@ -249,8 +252,7 @@ $clean_tabs_15 = array(
 	),
 );
 
-function clean_tabs_15()
-{
+
 
 	//===== step 1 disabled all useless native tabs in 1.5 =====/
 
