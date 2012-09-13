@@ -284,8 +284,8 @@ $clean_tabs_15 = array(
 		if ($id = get_tab_id($tab))
 			$ids[] = $id;
 
-		foreach ($ids as $id)
-			Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), '`id_tab`= '.$id);
+		if ($ids)
+			Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), 'id_tab NOT IN ('.implode(', ', $ids).')');
 
 		//=====================================/
 
