@@ -249,7 +249,7 @@
       <value>3</value>
     </configuration>
     <configuration id="PS_ORDER_PROCESS_TYPE" name="PS_ORDER_PROCESS_TYPE">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_SPECIFIC_PRICE_PRIORITIES" name="PS_SPECIFIC_PRICE_PRIORITIES">
       <value>id_shop;id_currency;id_country;id_group</value>
@@ -318,7 +318,7 @@
       <value>cm</value>
     </configuration>
     <configuration id="PS_GUEST_CHECKOUT_ENABLED" name="PS_GUEST_CHECKOUT_ENABLED">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_DISPLAY_SUPPLIERS" name="PS_DISPLAY_SUPPLIERS">
       <value>1</value>
