@@ -905,7 +905,6 @@ class ShopCore extends ObjectModel
 		$asso_table = Shop::getAssoTable($table);
 		if ($asso_table === false || $asso_table['type'] != 'shop')
 			return;
-
 		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
 		ON ('.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table;
 		if ((int)self::$context_id_shop)
