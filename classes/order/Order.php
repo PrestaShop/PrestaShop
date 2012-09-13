@@ -1133,10 +1133,11 @@ class OrderCore extends ObjectModel
 			if ($use_existing_payment)
 			{
 				$id_order_payments = Db::getInstance()->executeS('
-					SELECT id_order_payment FROM `'._DB_PREFIX_.'order_payment` op
-					INNER JOIN `'._DB_PREFIX_.'orders` o
-					ON o.reference = op.order_reference
-					WHERE id_order = '.(int)$order_invoice->id_order);
+					SELECT op.id_order_payment 
+					FROM `'._DB_PREFIX_.'order_payment` op
+					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
+					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
+					WHERE oip.id_order_payment IS NULL AND o.id_order = '.(int)$order_invoice->id_order);
 				
 				if (count($id_order_payments))
 					foreach ($id_order_payments as $order_payment)
