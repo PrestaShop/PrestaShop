@@ -984,7 +984,11 @@ class AdminModulesControllerCore extends AdminController
 			{
 				// When the XML cache file is up-to-date, the module may not be loaded yet
 				if (!class_exists($module->name))
+				{
+					if (!file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php'))
+						continue;
 					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
+				}
 				if ($object = new $module->name())
 				{
 					$object->runUpgradeModule();
