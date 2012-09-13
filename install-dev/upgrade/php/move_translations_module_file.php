@@ -20,7 +20,7 @@ function move_translations_module_file()
 	foreach ($modules as $module_name)
 	{
 		// Check if is a good module
-		if (in_array($module_name, array('.', '..', '.svn', '.htaccess', 'index.php')))
+		if (in_array($module_name, array('.', '..', '.svn', '.htaccess', 'index.php', 'autoupgrade')))
 			continue;
 
 		foreach ($languages as $lang)
