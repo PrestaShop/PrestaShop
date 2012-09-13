@@ -14,6 +14,7 @@ $_MODULE['<{watermark}prestashop>watermark_c2cf8e33c907a4cc689881dc8fa571c2'] = 
 $_MODULE['<{watermark}prestashop>watermark_3a1f788dbe8957be92048606cf0d3fcb'] = 'X-Align ist nicht im zulässigen Bereich.';
 $_MODULE['<{watermark}prestashop>watermark_a9cac4be0fa0b815376b96f49e1435d7'] = 'Es ist mindestens eine Bildart erforderlich.';
 $_MODULE['<{watermark}prestashop>watermark_b670770ad59c1f8e7fb65f276074172b'] = 'Bild muss im GIF-Format sein';
+$_MODULE['<{watermark}prestashop>watermark_130aab6764f25267c79cef371270eb2a'] = 'Ein Fehler ist während des Uploads des Wasserzeichens aufgetreten : %1$s nach %2$s';
 $_MODULE['<{watermark}prestashop>watermark_444bcb3a3fcf8389296c49467f27e1d6'] = 'ok';
 $_MODULE['<{watermark}prestashop>watermark_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{watermark}prestashop>watermark_c0275788cf97660b52ab23f1f8c7c8d7'] = 'Wasserzeichen-Details';

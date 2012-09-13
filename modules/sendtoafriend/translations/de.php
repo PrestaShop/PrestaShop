@@ -3,8 +3,11 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{sendtoafriend}prestashop>product_page_2107f6398c37b4b9ee1e1b5afb5d3b2a'] = 'An einen Freund senden';
+$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_d1f092e79827eaffce4a33fa011fde24'] = 'Bitte füllen Sie alle Pflichtfelder aus';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_2107f6398c37b4b9ee1e1b5afb5d3b2a'] = 'An einen Freund senden';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_5d6103b662f41b07e10687f03aca8fdc'] = 'Empfänger:';
+$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_bb6aa0be8236a10e6d3b315ebd5f2547'] = 'Name deiner/es Freundin/es';
+$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_099bc8914b5be9e522a29e48cb3c01c4'] = 'E-Mailadresses deiner/es Freundin/es';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_70397c4b252a5168c5ec003931cea215'] = 'Pflichtfelder';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_ea4788705e6873b424c65e91c2846b19'] = 'Abbrechen';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'oder';

@@ -17,5 +17,7 @@ $_MODULE['<{producttooltip}prestashop>producttooltip_a536f110cc080569666e95e8f49
 $_MODULE['<{producttooltip}prestashop>producttooltip_44fdec47036f482b68b748f9d786801b'] = 'Tage';
 $_MODULE['<{producttooltip}prestashop>producttooltip_b17f3f4dcf653a5776792498a9b44d6a'] = 'Einstellungen aktualisieren';
 $_MODULE['<{producttooltip}prestashop>producttooltip_f0f5fac9602d88bc27f0edf960dda8b8'] = 'Beispiel:';
+$_MODULE['<{producttooltip}prestashop>producttooltip_a49dc1bf9fb1e2ba1c9735f91dfece9a'] = '%d Person schaut sich gerade dieses Produkt an';
+$_MODULE['<{producttooltip}prestashop>producttooltip_d33e6930ab863734cef083b815ff7356'] = '%d Personen schauen sich gerade dieses Produkt an';
 $_MODULE['<{producttooltip}prestashop>producttooltip_71736c614b237f4368128077411f1699'] = 'Dieses Produkt wurde zuletzt gekauft';
 $_MODULE['<{producttooltip}prestashop>producttooltip_4dda321f0231c2d50fcee5c20075dbbd'] = 'Dieses Produkt wurde zuletzt in den Warenkorb hinzugefügt';

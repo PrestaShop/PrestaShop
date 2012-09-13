@@ -36,10 +36,13 @@ $_MODULE['<{cheque}prestashop>payment_execution_46b9e3665f187c739c55983f757ccda0
 $_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Andere Zahlungsmethoden';
 $_MODULE['<{cheque}prestashop>payment_a5967aadef7d23b5027d46e107faf6d0'] = 'Zahlung per Scheck';
 $_MODULE['<{cheque}prestashop>payment_30bee0e9549e97b2f65f8fd8fc5948be'] = 'Zahlung per Scheck (Bestellungvorgang dauert länger)';
+$_MODULE['<{cheque}prestashop>payment_return_88526efe38fd18179a127024aba8c1d7'] = 'Ihre Bestellung auf %s ist abgeschlossen.';
 $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] = 'Bitte senden Sie uns einen Scheck über:';
 $_MODULE['<{cheque}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'] = 'folgenden Betrag';
 $_MODULE['<{cheque}prestashop>payment_return_84cca8efe379645790938f55b701a1a4'] = 'zahlbar an';
 $_MODULE['<{cheque}prestashop>payment_return_c5a6826dd3b059e32a3fa1ae029179de'] = 'E-Mail an';
+$_MODULE['<{cheque}prestashop>payment_return_e1c54fdba2544646684f41ace03b5fda'] = 'Bitte vergessen Sie nicht Ihre Bestellnummer  #%d mit anzugeben.';
+$_MODULE['<{cheque}prestashop>payment_return_4761b03b53bc2b3bd948bb7443a26f31'] = 'Bitte vergessen Sie nicht Ihre Referenznummer  %s mit anzugeben.';
 $_MODULE['<{cheque}prestashop>payment_return_13f4ac6dc75b5829499cb9cf8b733071'] = 'Eine E-Mail wurde Ihnen mit diesen Informationen gesendet.';
 $_MODULE['<{cheque}prestashop>payment_return_ffd2478830ca2f519f7fe7ee259d4b96'] = 'Ihre Bestellung wird gesendet werden, sobald wir Ihre Zahlung erhalten.';
 $_MODULE['<{cheque}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Bei Fragen oder für weitere Informationen, kontaktieren Sie bitte unseren';
