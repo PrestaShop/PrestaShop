@@ -47,12 +47,14 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_af1b98adf7f686b84cd0b443e022b7a
 $_MODULE['<{blocklayered}prestashop>blocklayered_f7f19392da30e81c3abf433ce7b8ca38'] = 'Erstellt am';
 $_MODULE['<{blocklayered}prestashop>blocklayered_06df33001c1d7187fdd81ea1f5b277aa'] = 'Handlungen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_7dce122004969d56ae2e0245cb754d35'] = 'Bearbeiten';
+$_MODULE['<{blocklayered}prestashop>blocklayered_ee7d4220e8cade335dde5e0f414b5969'] = 'Lösche Filter-Vorlage #%d?';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f2a6c498fb90ee345d997f888fce3b18'] = 'Löschen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_058eeeba77f547f8a9a295a0efd4f6cd'] = 'Kein Filter-Vorlage gefunden.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c25a08cd48b8fd27ff49f435f05640c3'] = 'Bauen Sie Ihren eigenen Filter-Vorlage';
 $_MODULE['<{blocklayered}prestashop>blocklayered_0ce4150f57948567deeaa58d0c367412'] = 'Schritt 1 / 3 - Wählen Sie die Kategorien';
 $_MODULE['<{blocklayered}prestashop>blocklayered_99cdd6365310333a594b16e5658eee5c'] = 'Verwenden Sie diese Vorlage für:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_62f5d708d6ad1fa1ddd9429a65cccbea'] = 'Alle Kategorien';
+$_MODULE['<{blocklayered}prestashop>blocklayered_4071a0db922638ac9648539ea2ddaa8b'] = '*Spezielle* Kategorien';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef7de3f485174ff47f061ad27d83d0ee'] = 'ausgewählt';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c2d0bf5ad42279c519cdcb4a94eb46b6'] = 'Wählen Sie die Shop Association:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f72c75bdf80dc88b2529162f4947edc8'] = 'Bitte wählen Sie mindestens eine bestimmte Kategorie oder wählen Sie \"Alle Kategorien\".';
@@ -75,6 +77,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_597c70730ebddba7d845e686665f9f2
 $_MODULE['<{blocklayered}prestashop>blocklayered_c48c42c966b3a35ad3b893e798bdec7c'] = 'Fehler:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_74a6a547d86659933a210680efb6e6d1'] = 'Schritt 3 / 3 - Name Ihrer Vorlage';
 $_MODULE['<{blocklayered}prestashop>blocklayered_f8263d99054a4cdb3428196f078fa212'] = 'Template Name:';
+$_MODULE['<{blocklayered}prestashop>blocklayered_32d2e6cd4bb1719c572ef470a3a525b6'] = 'Meine Vorlage %s';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5f514b580ea1b6bdb681916bc1deb207'] = 'Nur als Erinnerung';
 $_MODULE['<{blocklayered}prestashop>blocklayered_188185ae335eb523e53d6d31ede21f1c'] = 'Kein Filter wurde ausgewählt, für die betroffenden Kategorien wird die Facettennavigation deaktiviert';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef1094d9826e98f5417e0a37f1742133'] = 'Speichern Sie diese Filter-Vorlage';
@@ -91,6 +94,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_3e652bd299bb3ee3d458c0dcc7fd706
 $_MODULE['<{blocklayered}prestashop>blocklayered_cc787af9edec8ce947ada8ab5bbff6e5'] = 'Erlauben Sie Indexierungs-Robots (Google, Yahoo, Bing...) den Condition Filter zu nutzen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ab28e5086d1dcb1474a4bd4951b148b9'] = 'Erlauben Sie Indexierungs-Robots (Google, Yahoo, Bing...) den Availability Filter zu nutzen';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1218da2abb1e88e7fe8855995def9fef'] = 'Erlauben Sie Indexierungs-Robots (Google, Yahoo, Bing...) den Hersteller Filter zu nutzen';
+$_MODULE['<{blocklayered}prestashop>blocklayered_c41e97692bc79531a51dfca4b7f6bee0'] = 'erlauben die Indizierungs-Bots, die Kategoriefilter zu nutzen.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_cf565402d32b79d33f626252949a6941'] = 'Konfiguration speichern';
 $_MODULE['<{blocklayered}prestashop>blocklayered_3601146c4e948c32b6424d2c0a7f0118'] = 'Preis';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8c489d0946f66d17d73f26366a4bf620'] = 'Gewicht';
@@ -116,7 +120,11 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_2d9b9a764fb0be4be10e1b2fce63f56
 $_MODULE['<{blocklayered}prestashop>blocklayered_7e650380ef2b9cec2f2a96e6266ca93d'] = 'Input-Bereich';
 $_MODULE['<{blocklayered}prestashop>blocklayered_010359888c6e811caee8e540221f0a21'] = 'Werteliste';
 $_MODULE['<{blocklayered}prestashop>blocklayered_0649bb392812f99ff6b0e2ba160675fa'] = 'Produkt Preis-Filter (Slider)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_88abab51d4f2e6732b518911bfca58a4'] = 'Attribut-Gruppe: %1$s (%2$d Attribute)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_e38ebd31243143bf3f3bd3810b5fc156'] = 'Attribut-Gruppe: %1$s (%2$d Attribut)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ee59f74265cd7f85d0ad30206a1a89b0'] = 'Diese Gruppe wird Benutzer zu erlauben, eine Farbe auswählen';
+$_MODULE['<{blocklayered}prestashop>blocklayered_7d06fc6f3166570e5d8995088066c0a2'] = 'Produktmerkmale: %1$s (%2$d Werte)';
+$_MODULE['<{blocklayered}prestashop>blocklayered_57d6fd5e5b9c215d6edac66b67e65773'] = 'Produktmerkmale: %1$s (%2$d Wert)';
 $_MODULE['<{blocklayered}prestashop>blocklayered_c32516babc5b6c47eb8ce1bfc223253c'] = 'Katalog';
 $_MODULE['<{blocklayered}prestashop>blocklayered_1262d1b9fbffb3a8e85ac9e4b449e989'] = 'Aktivierte Filter:';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ea4788705e6873b424c65e91c2846b19'] = 'Abbrechen';

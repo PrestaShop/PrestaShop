@@ -82,6 +82,12 @@ $_MODULE['<{shopimporter}prestashop>shopimporter_807079d19357b6d44089c220f74cc2d
 $_MODULE['<{shopimporter}prestashop>shopimporter_29361e9c6917fb14b43d3e78e2811e56'] = 'Standardwährung stimmt nicht überein:';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6117c4d73fcf0c20fe3946f1d00dde85'] = 'Bitte ändern Sie die Standardwährung in Ihrer Konfiguration';
 $_MODULE['<{shopimporter}prestashop>shopimporter_8136c99d09cb6e9f0f998dd231fff6ed'] = 'Ein Fehler ist beim Hinzufügen des Objekts aufgetreten';
+$_MODULE['<{shopimporter}prestashop>shopimporter_2deae2efe4b65df80c188a31fed3cc17'] = 'Das Feld %s wird benötigt';
+$_MODULE['<{shopimporter}prestashop>shopimporter_1086ee44ab3d66a33d23308e942067e0'] = 'Das Feld %1$s ist zu lang (max. %2$d Zeichen).';
+$_MODULE['<{shopimporter}prestashop>shopimporter_3d2496e596f4cbc8045e689d94f77cbd'] = 'Das Feld %s ist ungültig';
+$_MODULE['<{shopimporter}prestashop>shopimporter_c662307430c97af94e120201c8d56c66'] = 'Das Feld %1$s wird mind. in %2$s benötigt';
+$_MODULE['<{shopimporter}prestashop>shopimporter_25d42a115ce1c8390ba062cbc958deb3'] = 'Das Feld %1$s (%2$s) ist zu land: Max. %3$d Zeichen.';
+$_MODULE['<{shopimporter}prestashop>shopimporter_35f428e10ac312a2d9a32325c8294df9'] = 'Das Feld %1$s (%2$s) ist ungültig';
 $_MODULE['<{shopimporter}prestashop>shopimporter_44205a67121fcca5ffa925d1ed77b65e'] = 'Das Archiv kann nicht extrahiert werden';
 $_MODULE['<{shopimporter}prestashop>shopimporter_edeb9e20655b946e4bee4ac44a6c0a7f'] = 'Der Server verfügt nicht über die Schreibberechtigungen';
 $_MODULE['<{shopimporter}prestashop>shopimporter_6cf73576720519e739771a4fa489410b'] = 'Sprache nicht gefunden';

@@ -19,7 +19,7 @@ $_MODULE['<{importerosc}prestashop>importerosc_dc647eb65e6711e155375218212b3964'
 $_MODULE['<{importerosc}prestashop>importerosc_14ae0ea02f571a833786d13d9ca6a897'] = '(Passwort kann leer sein)';
 $_MODULE['<{importerosc}prestashop>importerosc_e307db07b3975fef922a80d07455ee5e'] = 'Datenbank';
 $_MODULE['<{importerosc}prestashop>importerosc_dac130bdd2c5492a8108a4145bd9f04a'] = 'Database Prefix';
-$_MODULE['<{importerosc}prestashop>importerosc_6bdc02625540b5264cffe801c37a82dd'] = '(Das Präfix ist optional. Wenn alle Ihre Datenbank-Tabellen mit \\\"pref_\\\" beginnen, Ihre Präfix \\\"pref_\\\" ist)';
+$_MODULE['<{importerosc}prestashop>importerosc_6bdc02625540b5264cffe801c37a82dd'] = '(Das Präfix ist optional. Wenn alle Ihre Datenbank-Tabellen mit \"pref_\" beginnen, Ihre Präfix \"pref_\" ist)';
 $_MODULE['<{importerosc}prestashop>importerosc_4685343b5e2e0f0fbee63dddafde693f'] = 'Sie versuchen Kategorien zu importieren, welche in Ihrer osCommerce Datenbank keiner Ebene zugewiesen sind. Sie müssen dieses Feld angeben, um mit dem Import der Kategorien fortzufahren.';
 $_MODULE['<{importerosc}prestashop>importerosc_16f35420186575c2a1d9c0b59edf6ad3'] = 'Klicken Sie auf hinzufügen und berechnen Sie die Ebene.';
 $_MODULE['<{importerosc}prestashop>importerosc_fced104d747e0855ceff3020653104ab'] = 'Ebene ist berechnet und erstellt worden, Sie können fortfahren.';
