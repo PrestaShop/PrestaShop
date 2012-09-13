@@ -20,4 +20,5 @@ $_MODULE['<{blockrss}prestashop>blockrss_695d0986205c1ce17d03b026feb78c97'] = 'F
 $_MODULE['<{blockrss}prestashop>blockrss_ff9aa540e20285875ac8b190a3cb7ccf'] = 'Anzahl der angezeigten Threads';
 $_MODULE['<{blockrss}prestashop>blockrss_f33725e23a017705ad35897e849a4db4'] = 'Anzahl der im Block angezeigten Threads (Standardwert: 5)';
 $_MODULE['<{blockrss}prestashop>blockrss_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
+$_MODULE['<{blockrss}prestashop>blockrss_0a1c629f0e86804a9e165f4b1ee399b7'] = 'Fehler: Ungültiger RSS-Feed im \"blockrss\" Modul: %s';
 $_MODULE['<{blockrss}prestashop>blockrss_10fd25dcd3353c0ba3731d4a23657f2e'] = 'Kein RSS Feed hinzugefügt';

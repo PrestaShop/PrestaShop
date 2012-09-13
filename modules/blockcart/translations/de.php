@@ -22,6 +22,7 @@ $_MODULE['<{blockcart}prestashop>blockcart_86024cad1e83101d97359d7351051156'] = 
 $_MODULE['<{blockcart}prestashop>blockcart_f5bf48aa40cad7891eb709fcf1fde128'] = 'Produkt';
 $_MODULE['<{blockcart}prestashop>blockcart_9e65b51e82f2a9b9f72ebe3e083582bb'] = '(Leer)';
 $_MODULE['<{blockcart}prestashop>blockcart_4b7d496eedb665d0b5f589f2f874e7cb'] = 'Produkt-Detail';
+$_MODULE['<{blockcart}prestashop>blockcart_3d9e3bae9905a12dae384918ed117a26'] = 'Anpassung #%d:';
 $_MODULE['<{blockcart}prestashop>blockcart_09dc02ecbb078868a3a86dded030076d'] = 'Keine Produkte';
 $_MODULE['<{blockcart}prestashop>blockcart_ea9cf7e47ff33b2be14e6dd07cbcefc6'] = 'Versand';
 $_MODULE['<{blockcart}prestashop>blockcart_ba794350deb07c0c96fe73bd12239059'] = 'Verpackung';

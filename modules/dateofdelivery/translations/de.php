@@ -3,11 +3,13 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_75261aaef97717dda0ca98743b24f8f3'] = 'Ungefähres Zustelldamit mit diesem Versender ist zwischen';
+$_MODULE['<{dateofdelivery}prestashop>beforecarrier_c31e7bcb78c69bd37e6e77be0183567f'] = 'Die voraussichtliche Lieferzeit für aktuell %s Paket(e) beträgt, unter Berücksichtigung der gewählten Lieferart, zwischen';
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_be5d5d37542d75f93a87094459f76678'] = 'und';
 $_MODULE['<{dateofdelivery}prestashop>beforecarrier_c9ed8c0b07828727ca6653924b0498d3'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b0f76e26cffaf27784d901a64f39593e'] = 'Liefertermin';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_98110868b266d63c3bacdac4430169cf'] = 'Zeigt den voraussichtlichen Liefertermin an';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_a39df5444246aeb081729db7e17f51bc'] = 'Konfiguration des Liefertermins';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_32dfb655a7b12a2c5662516e82f5d79b'] = 'Das voraussichtliches Lieferdatum ist zwischen dem %1$s und %2$s';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_0ea55758c7a68c0309b915e4b718d6b8'] = 'ungültiges Datenformat';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7ccf58c950043c9fbfed668df13ce608'] = 'Die Einstellungen werden aktualisiert';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_ecfe3ba0ff66a97029088e8e90a3f051'] = 'Minimale Dauer ist ungültig';
@@ -27,6 +29,7 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_1b9f5204ddf0881dc9f3a7bf65d
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_52f253c711cff509bd5e4df2b18b697a'] = 'Samstagslieferung';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_fcddbca356dee064438a399fc0c4c84e'] = 'Sonntagslieferung';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_06df33001c1d7187fdd81ea1f5b277aa'] = 'Handlungen';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b5813d499e8a122485995dd7851c1fb2'] = '%1$d Tag(e) und %2$d Tag(e)';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_93cba07454f06a4a960172bbd6e2a435'] = 'Ja';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Nein';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7dce122004969d56ae2e0245cb754d35'] = 'Bearbeiten';
@@ -68,4 +71,5 @@ $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_cc5d90569e1c8313c2b1c2aab14
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_eca60ae8611369fe28a02e2ab8c5d12e'] = 'Oktober';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7e823b37564da492ca1629b4732289a8'] = 'November';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_82331503174acbae012b2004f6431fa5'] = 'Dezember';
+$_MODULE['<{dateofdelivery}prestashop>orderdetail_32dfb655a7b12a2c5662516e82f5d79b'] = 'Das voraussichtliches Lieferdatum ist zwischen dem %1$s und %2$s';
 $_MODULE['<{dateofdelivery}prestashop>orderdetail_c9ed8c0b07828727ca6653924b0498d3'] = 'mit direkten Zahlungsmethoden (z.B. Kreditkarte)';
