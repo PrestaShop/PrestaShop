@@ -114,18 +114,18 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
 				{
-					$attributes = Product::getProductAttributesIds($this->product->id);
+					$attributes = Product::getProductAttributesIds($this->product->id, true);
 					foreach ($attributes as $attribute)
-						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute']);
+						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
 				}
-				
+		
 				$this->product->deleteProductAttributes();
 				$this->product->generateMultipleCombinations($values, $this->combinations);
-				
+		
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
 				{
-					$attributes = Product::getProductAttributesIds($this->product->id);
+					$attributes = Product::getProductAttributesIds($this->product->id, true);
 					$quantity = (int)Tools::getValue('quantity');
 					foreach ($attributes as $attribute)
 						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity);
