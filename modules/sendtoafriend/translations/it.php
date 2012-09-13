@@ -3,6 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{sendtoafriend}prestashop>product_page_2107f6398c37b4b9ee1e1b5afb5d3b2a'] = 'Invia ad un amico';
+$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_d1f092e79827eaffce4a33fa011fde24'] = 'Non hai riempito campi richiesti';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_2107f6398c37b4b9ee1e1b5afb5d3b2a'] = 'Invia ad un amico';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_5d6103b662f41b07e10687f03aca8fdc'] = 'Destinatario';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_bb6aa0be8236a10e6d3b315ebd5f2547'] = 'Nome del tuo amico';
