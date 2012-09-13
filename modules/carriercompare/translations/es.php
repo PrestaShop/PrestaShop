@@ -29,6 +29,7 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_8a1ac57c0cc4eb3f6b2fe4c2525
 $_MODULE['<{carriercompare}prestashop>carriercompare_653e78154f5596fc293bf9db65110bbd'] = 'Actualizar lista de proveedores';
 $_MODULE['<{carriercompare}prestashop>configuration_aa4c031e8f3c596aaac3ba13f5f91c75'] = 'Ha ocurrido un error durante la validación de formularios';
 $_MODULE['<{carriercompare}prestashop>configuration_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuración actualizada';
+$_MODULE['<{carriercompare}prestashop>configuration_963744bc6b0cce93e202d860a4a2f84a'] = 'Este modulo es disponible sólo en un proceso básico de pedido porque en la \"One Page Checkout\" la lista ya esta disponible';
 $_MODULE['<{carriercompare}prestashop>configuration_6408d076fa6417e7bc8ddc3cdf9a0644'] = 'Configuración global';
 $_MODULE['<{carriercompare}prestashop>configuration_4c1f76824b0d7333652d5f64a3e07ef5'] = 'En cualquier momento';
 $_MODULE['<{carriercompare}prestashop>configuration_d82928a663ff868502586a0c515e602b'] = 'Se requiere todo el conjunto de información';

@@ -15,8 +15,7 @@ $_MODULE['<{statsforecast}prestashop>statsforecast_7442e29d7d53e549b78d93c46b8cd
 $_MODULE['<{statsforecast}prestashop>statsforecast_9dea4016dbcc290b773ab2fae678aaa8'] = 'Productos';
 $_MODULE['<{statsforecast}prestashop>statsforecast_e46b5c15331f34b9ff653fdf1ea0a7f0'] = '% insc.';
 $_MODULE['<{statsforecast}prestashop>statsforecast_1d34a18a13e480b0aa6a799bb8a49c1b'] = '% pedidos';
-$_MODULE['<{statsforecast}prestashop>statsforecast_cc4616c718d99e1face99b5e46a5755c'] = 'Descuentos';
-$_MODULE['<{statsforecast}prestashop>statsforecast_899433c0e135bcfe0d93e9397630f86a'] = 'Volumne de ventas de los productos';
+$_MODULE['<{statsforecast}prestashop>statsforecast_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'Ventas';
 $_MODULE['<{statsforecast}prestashop>statsforecast_96b0141273eabab320119c467cdcaf17'] = 'Total';
 $_MODULE['<{statsforecast}prestashop>statsforecast_b1897515d548a960afe49ecf66a29021'] = 'Media';
 $_MODULE['<{statsforecast}prestashop>statsforecast_89c1265be62d3ba835a3d963db5956b0'] = 'Previsiones';
@@ -37,7 +36,6 @@ $_MODULE['<{statsforecast}prestashop>statsforecast_e93f994f01c537c4e2f7d8528c3eb
 $_MODULE['<{statsforecast}prestashop>statsforecast_a85eba4c6c699122b2bb1387ea4813ad'] = 'carrito';
 $_MODULE['<{statsforecast}prestashop>statsforecast_f13877f6ad53ce91fcb20fb8b7969698'] = 'Repartición por categorías';
 $_MODULE['<{statsforecast}prestashop>statsforecast_3adbdb3ac060038aa0e6e6c138ef9873'] = 'Categoría';
-$_MODULE['<{statsforecast}prestashop>statsforecast_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'Ventas';
 $_MODULE['<{statsforecast}prestashop>statsforecast_52f39d7c5cad5c1550553385f55277ae'] = '% cálculo';
 $_MODULE['<{statsforecast}prestashop>statsforecast_41b63feded4acc3719f9bcd016388324'] = '% volume de ventas';
 $_MODULE['<{statsforecast}prestashop>statsforecast_4364f8c09d7bf97996a20840900e7b30'] = 'Precio medio';
