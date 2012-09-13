@@ -23720,6 +23720,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if (preg_match('%^/{2}%', $tag['attribute']['src'])) {
 							$tag['attribute']['src'] = 'http:'.$tag['attribute']['src'];
 						}
+						/* PrestaShop
 						// replace relative path with real server path
 						if (($tag['attribute']['src'][0] == '/') AND !empty($_SERVER['DOCUMENT_ROOT']) AND ($_SERVER['DOCUMENT_ROOT'] != '/')) {
 							$findroot = strpos($tag['attribute']['src'], $_SERVER['DOCUMENT_ROOT']);
@@ -23730,7 +23731,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 									$tag['attribute']['src'] = $_SERVER['DOCUMENT_ROOT'].$tag['attribute']['src'];
 								}
 							}
-						}
+						}*/
 						$tag['attribute']['src'] = htmlspecialchars_decode(urldecode($tag['attribute']['src']));
 						$type = $this->getImageFileType($tag['attribute']['src']);
 						$testscrtype = @parse_url($tag['attribute']['src']);
