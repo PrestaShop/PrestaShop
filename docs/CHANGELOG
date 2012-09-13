@@ -24,6 +24,178 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.17 - 17359 (2012-09-13)  #
+####################################
+
+	Improved/changed features:
+
+	[*] Installer : added timout to sql connection
+	[*] Installer : socket management for PDO + refactoring
+
+	[*] FO : Optimization - don't redirect and allow WS and other script to work
+
+	[*] BO : #PSCFV-3710 : select a current theme in AdminTranslations
+	[*] BO : #PSCFV-3831 : check each field which are required in databases
+	[*] BO : Added Mobile category in AdminModulesController
+	[*] BO : Changed the default list view for products and categories when multistore is activated
+	[*] BO : now you could translate a mobile theme
+	[*] BO : set context shop by default when creating a new catalog price rule #PSCFV-3412
+
+	[*] TR : #PSCFV-3999 : change string "multishop" by "multistore" in BO
+	[*] TR : #PSCFV-4000 : change string "validity" by "valid" in BO
+	[*] TR : add Deutsch translations
+	[*] TR : add French translations
+	[*] TR : add Italian translations
+	[*] TR : add Spanish translations
+	[*] TR : add setter for the type selected
+	[*] TR : add spanish object for confirmation order email
+	[*] TR : update French translations
+
+	Added Features:
+
+	[+] FO : mobile theme re-included in the trunk
+
+	[+] BO : Added Mobile tab image
+	[+] BO : in order tab you have new information of new customer message
+
+	Fixed bugs:
+
+	[-] INSTALLER : fixed bug #PSCFV-2979
+	[-] Installer : #PSCFV-3603 - loop while loading logo
+	[-] Installer : changed the primary keys of tha language tables of category, product, meta, carrier #PSCFV-3726
+	[-] Installer : deprecated tab removed in the 1.4 > 1.5 upgrade #PSCFV-3564
+	[-] Installer : fix #PSCFV-4050
+	[-] Installer : fixed errors at the installation with insertion of null values in the database #PSCFV-3544
+	[-] Installer : fixed warnings #PSCFV-3633
+	[-] Installer : fixed wrong return value in upgrade script
+	[-] Installer : ignore port when creating the sender e-mail address #PSCFV-3756
+	[-] Installer : install failed when you had an exotic (i.e. not by default in the installer) default country/language #PSCFV-3891
+	[-] Installer : set admin theme to default after an upgrade
+
+	[-] FO : Bug fix on carrier input value (comma)
+	[-] FO : ObjectModel/Db tried to add entities with a primary key pre-filled #PSCFV-3652 #PSCFV-3651
+	[-] FO : disable ajax transition on mobile theme in order to fix javascript issues
+	[-] FO : fixed #PSCFV-3675
+	[-] FO : fixed #PSCFV-3676
+	[-] FO : fixed accessories display
+	[-] FO : fixed bug #PNM-431
+	[-] FO : fixed bug #PSCFV-2741
+	[-] FO : fixed bug #PSCFV-3758 -  now you can display working hour on simplified mode in store locator
+	[-] FO : fixed bug #PSCFV-3784 - fixed display bug in dateofdelivery and order history
+	[-] FO : fixed bug #PSCFV-3794
+	[-] FO : fixed bug #PSCFV-3811 - Customization field non present while not long description on product page
+	[-] FO : fixed bug #PSCFV-3818
+	[-] FO : fixed bug #PSCFV-3853
+	[-] FO : fixed bug #PSCFV-3936
+	[-] FO : fixed bug #PSCFV-3964 - #PSCFV-3527
+	[-] FO : fixed bugs on customer messages #PSCFV-3733 #PSCFV-3712
+	[-] FO : fixed cache management conflict for packed product #PSCFV-3294
+	[-] FO : fixed country restrictions for payment modules #PSCFV-2738
+	[-] FO : fixed height of homefeatured products (missing height caused problem on floating div position sometimes) #PSCFV-3638
+	[-] FO : fixed mixed cache in different shops #PSCFV-3174
+	[-] FO : fixed undeletable products in cart (when price < 1¤) #PSCFV-3707
+	[-] FO : mobile : fix #PSCFV-3881
+	[-] FO : mobile : fix #PSCFV-3904
+	[-] FO : mobile theme: fix #PSCFV-3878 : now the cart isn't reload with Jquery Mobile
+	[-] FO : mobile theme: fix #PSCFV-3913
+	[-] FO : pagination form cannot have an css id because it is used more than once #PSCFV-3755
+	[-] FO : some categories should not appear in some stores #PSCFV-4020
+
+	[-] BO : #PSCFV-3670 : add a new format of currency in JS files
+	[-] BO : #PSCFV-3776 : small fix
+	[-] BO : #PSCFV-3797 : small fix
+	[-] BO : #PSCFV-3808 : small fix
+	[-] BO : #PSCFV-3834 : Check if file upload exist when use the contact form
+	[-] BO : #PSCFV-3848 : Add reference order instead of id order for follow an order
+	[-] BO : Attribute deletion fixed #PSCFV-3616
+	[-] BO : BugFix : #PSCFV-3554 : Class Category, Method calcLevelDepth: throw Exception
+	[-] BO : children categories were not really deleted #PSCFV-4028
+	[-] BO : deactivated tab does are not displayed anymore #PSCFV-3740
+	[-] BO : filename should be allowed to be empty #PSCFV-3592
+	[-] BO : fix #PSCFV-3855
+	[-] BO : fix #PSCFV-3874
+	[-] BO : fix #PSCFV-3893
+	[-] BO : fix #PSCFV-3908
+	[-] BO : fix #PSCFV-3926
+	[-] BO : fix #PSCFV-3928
+	[-] BO : fix #PSCFV-3945
+	[-] BO : fix #PSCFV-3979
+	[-] BO : fix #PSCFV-4025
+	[-] BO : fixed #PSCFV-3627
+	[-] BO : fixed #PSCFV-4034
+	[-] BO : fixed bug #PSCFV-2958
+	[-] BO : fixed bug #PSCFV-3226
+	[-] BO : fixed bug #PSCFV-3541
+	[-] BO : fixed bug #PSCFV-3724 - fixed bug with "Save and Stay" on product page with DisplayAdminProductsExtra
+	[-] BO : fixed bug #PSCFV-3738 - addCSS() and addJS() methods not working in backOfficeHeader hook
+	[-] BO : fixed bug #PSCFV-3787 - Front displaying blank features
+	[-] BO : fixed bug #PSCFV-3806 - fixed bug when unchecked all shop asso you can't access to item any more.
+	[-] BO : fixed bug #PSCFV-3886
+	[-] BO : fixed bug #PSCFV-3922
+	[-] BO : fixed incorrect substr in customer service #PSCFV-3621
+	[-] BO : fixed issue with dot and comma in import for floating numbers #PSCFV-3609
+	[-] BO : fixed right permissions for new tabs #PSCFV-3640
+	[-] BO : fixed wrong link on AdminHome #PSCFV-3614
+	[-] BO : function str2url fixed #PSCFV-4017
+	[-] BO : images extension weren't checked appropriately #PSCFV-3584
+	[-] BO : null values ignored in objectmodel::update #PSCFV-3591
+	[-] BO : original product price was saved without decimals #PSCFV-3968
+	[-] BO : restricted some unauthorized accesses #PSCFV-3611
+	[-] BO : set addresses to deleted when customer set to deleted #PSCFV-3975
+	[-] BO : status image was not saved #PSCFV-3654
+	[-] BO : super admins are now added to all shops #PSCFV-3561
+	[-] BO : theme mobile : #PSCFV-3880 : Now you have 4 options for enable the theme mobile
+	[-] BO : theme mobile : #PSCFV-3910
+	[-] BO : theme mobile : #PSCFV-3937
+	[-] BO : you can now delete multiple order statuses at one #PSCFV-3585
+
+	[-] CLASSES : Report Contry::getCountries() changes from 1.4 to 1.5
+	[-] Classes : Autoload, bug fix
+
+	[-] CORE : fixed bug #PSCFV-3406
+	[-] CORE : fixed bug #PSCFV-3889
+	[-] CORE : fixed bug #PSCFV-3916
+	[-] CORE : fixed bug #PSCFV-3982
+
+	[-] MO : #PSCFV-3550 - Module Check : Display warning only if the module is active
+	[-] MO : blocktopmenu : #PSCFV-3762 : Add link for CMS categories
+	[-] MO : fixed #PSCFV-3940
+	[-] MO : fixed #PSCFV-3944
+	[-] MO : fixed bug #PSCFV-3148 - now referalprogram use module controller
+	[-] MO : fixed bug #PSCFV-3751 - Links Block Formatting //need to re-install the module
+	[-] MO : fixed bug #PSCFV-3768
+	[-] MO : fixed bug #PSCFV-3770 - Uncheck "Display the Footer's informations" in CMS Block cause CMS links to hide too.
+	[-] MO : fixed bug #PSCFV-3791- customer privacy module error bug
+	[-] MO : fixed bug #PSCFV-3871
+	[-] MO : fixed bug #PSCFV-3871 - part 2
+	[-] MO : fixed context issues in loyalty #PNM-332
+	[-] MO : fixed deprecated link in statdata #PNM-315
+	[-] MO : fixed image upload in homeslider #PSCFV-3730
+	[-] MO : followup : #PSCFV-3946
+	[-] MO : loyalty : #PSCFV-3760 : fix warning && update number of loyalties by product && normalize
+	[-] MO : loyalty : #PSCFV-3764 : display points of default attribute
+	[-] MO : mailalert : #PSCFV-3763 : Fix error when i delete an mail alert
+	[-] MO : mailalert : Fix duplicate result
+	[-] MO : product_comment : fix #PSCFV-3983
+
+	[-] WS : Fix 1.5 compatibility
+	[-] WS : Fix id_shop behavior when use WS or script
+	[-] WS : Multiple fix on Web Services
+
+	[-] TR : #PSCFV-3849 : fix bug in TranslateCore class
+	[-] TR : #PSCFV-3972 : change "%7Bshop_url%7D" by "{shop_url}" in Deutsch emails
+	[-] TR : #PSCFV-3977 : fix bug when upgrade of 1.4.x to 1.5.x
+	[-] TR : #PSCFV-4027 : change string "tabs" by "Menus"...
+	[-] TR : #PSCFV-4032 : fix encoding of tabs.php file for all languages
+	[-] TR : Mail : #PSCFV-3987 : add stripslashes for email object
+	[-] TR : fix #PSCFV-3932
+	[-] TR : fix bug when not have a mobile folder in a theme folder
+	[-] TR : update French translations strings
+	[-] TR : update French translations strings (fo)
+	[-] TR : update translations strings
+
+
+####################################
 #   v1.5.0.15 - 16730 (2012-08-06)  #
 ####################################
 
