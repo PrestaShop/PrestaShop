@@ -10,3 +10,5 @@ INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALU
 /* PHP:p15017_add_id_shop_to_primary_key(); */;
 
 UPDATE `PREFIX_tab_lang` SET `name` = 'Menus' WHERE `name` = 'tabs' AND `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminTabs' LIMIT 1) AND `id_lang` IN (SELECT `id_lang` FROM `PREFIX_lang` WHERE `iso_code` IN ('en','fr','es','de','it'));
+
+/* PHP:clean_tabs_15(); */;
