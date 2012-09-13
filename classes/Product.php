@@ -1002,18 +1002,17 @@ class ProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			JOIN `'._DB_PREFIX_.'product_attribute_shop` pas ON (pas.id_product_attribute = pa.id_product_attribute)
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-			WHERE 1 '.(!$all_shops ? ' AND pas.id_shop ='.(int)$context->shop->id : '').' AND pa.`id_product` = '.(int)$this->id
+			WHERE 1 '.(!$all_shops ? ' AND pas.id_shop ='.(int)$context->shop->id : '').' AND pa.`id_product` = '.(int)$this->id.
+			($all_shops ? ' GROUP BY pac.id_attribute, pac.id_product_attribute ' : '')
 		);
 
 		/* If something's wrong */
 		if (!$result || empty($result))
 			return false;
-
 		/* Product attributes simulation */
 		$product_attributes = array();
 		foreach ($result as $product_attribute)
 			$product_attributes[$product_attribute['id_product_attribute']][] = $product_attribute['id_attribute'];
-
 		/* Checking product's attribute existence */
 		foreach ($product_attributes as $key => $product_attribute)
 			if (count($product_attribute) == count($attributes_list))
@@ -1635,23 +1634,33 @@ class ProductCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
+		$add_shop = '';
 
-		$sql = 'SELECT pa.*, product_attribute_shop.*, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',
-					al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
+		$combinations = Db::getInstance()->executeS('SELECT pa.*, product_attribute_shop.*
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				WHERE pa.`id_product` = '.(int)$this->id.'
+				GROUP BY pa.`id_product_attribute`');
+		
+		$product_attributes = array();
+		foreach ($combinations as $combination)
+			$product_attributes[] = (int)$combination['id_product_attribute'];
+		
+		$lang = Db::getInstance()->executeS('SELECT pac.id_product_attribute, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
+				FROM `'._DB_PREFIX_.'product_attribute_combination` pac 
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-				WHERE pa.`id_product` = '.(int)$this->id.'
-				GROUP BY pa.`id_product_attribute`';
-
-		$res = Db::getInstance()->executeS($sql);
-
+				WHERE pac.id_product_attribute IN ('.implode(',', $product_attributes).')
+				GROUP BY pac.id_product_attribute');
+		
+		foreach ($lang as $k => $row)
+			$combinations[$k]['attribute_designation'] = $row['attribute_designation'];
+			
+		
 		//Get quantity of each variations
-		foreach ($res as $key => $row)
+		foreach ($combinations as $key => $row)
 		{
 			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
@@ -1661,10 +1670,10 @@ class ProductCore extends ObjectModel
 					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
 				);
 
-			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+			$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
 		}
 
-		return $res;
+		return $combinations;
 	}
 
 	/**
@@ -2455,7 +2464,7 @@ class ProductCore extends ObjectModel
 		$cache_id = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.
 			'-'.$quantity.'-'.(int)$id_product_attribute.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
 			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer;
-
+	
 		// reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice(
 			(int)$id_product,
@@ -2490,7 +2499,7 @@ class ProductCore extends ObjectModel
 			}
 			else
 				$sql->select('0 as id_product_attribute');
-				
+
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			foreach ($res as $row)
 			{
@@ -2505,7 +2514,6 @@ class ProductCore extends ObjectModel
 					self::$_pricesLevel2[$cache_id_2][0] = $array_tmp;
 			}
 		}
-
 		if (!isset(self::$_pricesLevel2[$cache_id_2][(int)$id_product_attribute]))
 			return;
 
@@ -2515,7 +2523,6 @@ class ProductCore extends ObjectModel
 			$price = (float)$result['price'];
 		else
 			$price = (float)$specific_price['price'];
-
 		// convert only if the specific price is in the default currency (id_currency = 0)
 		if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency']))
 			$price = Tools::convertPrice($price, $id_currency);
@@ -4493,11 +4500,12 @@ class ProductCore extends ObjectModel
 	 * @param int $id_product the id of the product
 	 * @return array product attribute id list
 	 */
-	public static function getProductAttributesIds($id_product)
+	public static function getProductAttributesIds($id_product, $shop_only = false)
 	{
 		return Db::getInstance()->executeS('
 		SELECT pa.id_product_attribute
-		FROM `'._DB_PREFIX_.'product_attribute` pa
+		FROM `'._DB_PREFIX_.'product_attribute` pa'.
+		($shop_only ? Shop::addSqlAssociation('product_attribute', 'pa') : '').'
 		WHERE pa.`id_product` = '.(int)$id_product);
 	}
 
