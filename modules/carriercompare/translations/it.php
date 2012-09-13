@@ -29,6 +29,7 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_8a1ac57c0cc4eb3f6b2fe4c2525
 $_MODULE['<{carriercompare}prestashop>carriercompare_653e78154f5596fc293bf9db65110bbd'] = 'Aggiorna lista corrieri';
 $_MODULE['<{carriercompare}prestashop>configuration_aa4c031e8f3c596aaac3ba13f5f91c75'] = 'Si è verificato un errore durante la validazione del form';
 $_MODULE['<{carriercompare}prestashop>configuration_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configurazioni aggiornate';
+$_MODULE['<{carriercompare}prestashop>configuration_963744bc6b0cce93e202d860a4a2f84a'] = 'Questo modulo è solo disponibile per il trattamento standard dei ordini, perché la lista dei trasportatori è già disponibile nel \"Pagamento in Una Pagina\"';
 $_MODULE['<{carriercompare}prestashop>configuration_6408d076fa6417e7bc8ddc3cdf9a0644'] = 'Configurazioni globali';
 $_MODULE['<{carriercompare}prestashop>configuration_4c1f76824b0d7333652d5f64a3e07ef5'] = 'in qualsiasi momento';
 $_MODULE['<{carriercompare}prestashop>configuration_d82928a663ff868502586a0c515e602b'] = 'Richiedere tutte le informazioni impostate';
