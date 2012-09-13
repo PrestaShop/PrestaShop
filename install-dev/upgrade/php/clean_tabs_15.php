@@ -317,14 +317,6 @@ $clean_tabs_15 = array(
 
 //==== functions =====/
 
-function get_tab_id($class_name)
-{
-	static $cache = array();
-
-	if (!isset($cache[$class_name]))
-		$cache[$class_name] = (int)Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE `class_name` = \''.pSQL($class_name).'\'');
-	return $cache[$class_name];
-}
 
 function get_simple_clean_tab15($clean_tabs_15)
 {
