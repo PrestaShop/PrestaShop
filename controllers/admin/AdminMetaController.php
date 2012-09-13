@@ -373,7 +373,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				fwrite($write_fd, "# Private pages\n");
 				foreach ($this->rb_data['GB'] as $gb)
-					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$gb."\n");
+					fwrite($write_fd, 'Disallow: /*'.$gb."\n");
 			}
 			
 			// Directories
@@ -381,7 +381,7 @@ class AdminMetaControllerCore extends AdminController
 			{
 				fwrite($write_fd, "# Directories\n");
 				foreach ($this->rb_data['Directories'] as $dir)
-					fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$dir."\n");
+					fwrite($write_fd, 'Disallow: /*'.$dir."\n");
 			}
 			
 			// Files
@@ -390,7 +390,7 @@ class AdminMetaControllerCore extends AdminController
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						fwrite($write_fd, 'Disallow: '.__PS_BASE_URI__.$iso_code.'/'.$file."\n");
+						fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
 			}
 			
 			// Sitemap
@@ -621,11 +621,11 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'*orderby=','*orderway=','*tag=','*id_currency=','*search_query=','*id_lang=','*back=','*utm_source=','*utm_medium=','*utm_campaign=','*n='
+			'orderby=','orderway=','tag=','id_currency=','search_query=','id_lang=','back=','utm_source=','utm_medium=','utm_campaign=','n='
 		);
 
 		foreach ($disallow_controllers as $controller)
-			$tab['GB'][] = '*controller='.$controller;
+			$tab['GB'][] = 'controller='.$controller;
 
 		return $tab;
 	}
