@@ -252,8 +252,6 @@ $clean_tabs_15 = array(
 	),
 );
 
-
-
 	//===== step 1 disabled all useless native tabs in 1.5 =====/
 
 	$remove_tabs = array (
@@ -269,11 +267,10 @@ $clean_tabs_15 = array(
 		if ($ids)
 			Db::getInstance()->update('tab', array('active' => 0), 'id_tab IN ('.implode(', ', $ids).')');
 
-		//=====================================/
+	//=====================================/
 
 
-
-		//===== step 2 move all no native tabs in AdminTools  =====/
+	//===== step 2 move all no native tabs in AdminTools  =====/
 
 	$id_admin_tools = get_tab_id('AdminTools');
 
@@ -284,17 +281,38 @@ $clean_tabs_15 = array(
 		if ($id = get_tab_id($tab))
 			$ids[] = $id;
 
-		if ($ids)
-			Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), 'id_tab NOT IN ('.implode(', ', $ids).')');
-
-		//=====================================/
-
-		//===== step 3 sort all 1.5 tabs  =====/
-
-		updatePositionAndActive15($clean_tabs_15);
+	if ($ids)
+		Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), 'id_tab NOT IN ('.implode(', ', $ids).') AND `id_parent` <> -1');
 
 	//=====================================/
 
+	//===== step 3 sort all 1.5 tabs  =====/
+
+	updatePositionAndActive15($clean_tabs_15);
+
+	//=====================================/
+
+	//specific case for AdminStockMvt in AdminStock
+	
+	$id_AdminStockMvt = get_tab_id('AdminStockMvt');
+	$id_AdminStock = get_tab_id('AdminStock');
+	Db::getInstance()->update('tab', array('id_parent' => $id_AdminStock), 'id_tab ='.$id_AdminStockMvt);
+	
+	//rename some tabs
+	renameTab(get_tab_id('AdminCartRules'), array('fr' => 'Règles paniers', 'es' => 'Reglas de cesta', 'en' => 'Cart Rules', 'de' => 'Warenkorb Preisregein', 'it' => 'Regole Carrello'));
+	
+	renameTab(get_tab_id('AdminPreferences'), array('fr' => 'Générales', 'es' => 'General', 'en' => 'General', 'de' => 'Allgemein', 'it' => 'Generale'));
+	
+	renameTab(get_tab_id('AdminThemes'), array('fr' => 'Thèmes', 'es' => 'Temas', 'en' => 'Themes', 'de' => 'Themen', 'it' => 'Temi'));
+	
+	renameTab(get_tab_id('AdminStores'), array('fr' => 'Coordonnées & magasins', 'es' => 'Contacto y tiendas', 'en' => 'Store Contacts', 'de' => 'Shopadressen', 'it' => 'Contatti e Negozi'));
+	
+	renameTab(get_tab_id('AdminTools'), array('fr' => 'Paramètres avancés', 'es' => 'Parametros avanzados', 'en' => 'Advanced Parameters', 'de' => 'Erweiterte Parameter', 'it' => 'Parametri Avanzati'));
+		
+	renameTab(get_tab_id('AdminTools'), array('fr' => 'Paramètres avancés', 'es' => 'Parametros avanzados', 'en' => 'Advanced Parameters', 'de' => 'Erweiterte Parameter', 'it' => 'Parametri Avanzati'));
+	
+	renameTab(get_tab_id('AdminTabs'), array('fr' => 'Menus', 'es' => 'Pestañas', 'en' => 'Menus', 'de' => 'Tabs', 'it' => 'Tabs'));
+	
 }
 
 //==== functions =====/
@@ -304,15 +322,14 @@ function get_tab_id($class_name)
 	static $cache = array();
 
 	if (!isset($cache[$class_name]))
-		$cache[$class_name] = (int)Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = \''.pSQL($class_name).'\'');
+		$cache[$class_name] = (int)Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE `class_name` = \''.pSQL($class_name).'\'');
 	return $cache[$class_name];
 }
 
 function get_simple_clean_tab15($clean_tabs_15)
 {
 	$light_tab = array();
-	foreach
-	($clean_tabs_15 as $tab)
+	foreach ($clean_tabs_15 as $tab)
 	{
 		$light_tab[] = $tab['class_name'];
 		if (isset($tab['children']))
@@ -323,11 +340,21 @@ function get_simple_clean_tab15($clean_tabs_15)
 
 function updatePositionAndActive15($clean_tabs_15)
 {
-	foreach
-	($clean_tabs_15 as $id => $tab)
+	foreach ($clean_tabs_15 as $id => $tab)
 	{
-		Db::getInstance()->update('tab', array('position' => $tab['position'], 'active' => $tab['active']), '`id_tab`= '.$id);
+		Db::getInstance()->update('tab', array('position' => $tab['position'], 'active' => $tab['active']), '`id_tab`= '.get_tab_id($tab['class_name']));
 		if (isset($tab['children']))
 			updatePositionAndActive15($tab['children']);
 	}
+}
+
+function renameTab($id_tab, $names)
+{
+	if (!$id_tab)
+		return;
+	$langues = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+	foreach($langues as $lang)
+		if (array_key_exists($lang['iso_code'], $names))
+			Db::getInstance()->update('tab_lang', array('name' => $names[$lang['iso_code']]), '`id_tab`= '.$id_tab.' AND `id_lang` ='.$lang['id_lang']);
 }
