@@ -96,6 +96,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
 		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
+		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
 
 		// Set Id Employee, Iso Default Country and Filter Configuration
 		$this->id_employee = (int)$this->context->employee->id;
