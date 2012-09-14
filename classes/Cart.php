@@ -618,10 +618,11 @@ class CartCore extends ObjectModel
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
 			{
 				$row2 = Db::getInstance()->getRow('
-					SELECT i.`id_image`, il.`legend`
-					FROM `'._DB_PREFIX_.'image` i
-					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-					WHERE i.`id_product` = '.(int)$row['id_product'].' AND i.`cover` = 1'
+					SELECT image_shop.`id_image` id_image, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i'.
+					Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+					WHERE i.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1'
 				);
 
 				if (!$row2)

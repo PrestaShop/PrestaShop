@@ -215,9 +215,9 @@ class OrderInvoiceCore extends ObjectModel
 		if (!isset($image['id_image']) || !$image['id_image'])
 			$id_image = Db::getInstance()->getValue('
 				SELECT id_image
-				FROM '._DB_PREFIX_.'image
-				WHERE id_product = '.(int)($product['product_id']).' AND cover = 1
-			');
+				FROM '._DB_PREFIX_.'image'.
+				Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+				WHERE id_product = '.(int)($product['product_id']));
 
 		$product['image'] = null;
 		$product['image_size'] = null;

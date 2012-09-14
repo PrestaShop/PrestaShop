@@ -77,7 +77,7 @@ class ProductSaleCore
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					i.`id_image`, il.`legend`,
+					image_shop.`id_image`, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.$interval.' DAY)) > 0 AS new
@@ -87,7 +87,8 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
@@ -102,6 +103,7 @@ class ProductSaleCore
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
+					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
@@ -132,7 +134,7 @@ class ProductSaleCore
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, i.`id_image`, il.`legend`,
+		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, image_shop.`id_image`, il.`legend`,
 					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
@@ -140,7 +142,8 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON cl.`id_category` = product_shop.`id_category_default`
@@ -152,6 +155,7 @@ class ProductSaleCore
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
+					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				ORDER BY sales DESC
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))

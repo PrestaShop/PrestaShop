@@ -253,7 +253,7 @@ class SupplierCore extends ObjectModel
 					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
-					i.`id_image`,
+					image_shop.`id_image`,
 					il.`legend`,
 					s.`name` AS supplier_name,
 					tl.`name` AS tax_name,
@@ -267,8 +267,8 @@ class SupplierCore extends ObjectModel
 					AND ps.id_product_attribute = 0)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`
-					AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -291,6 +291,7 @@ class SupplierCore extends ObjectModel
 						($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
+					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
