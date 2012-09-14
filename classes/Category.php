@@ -79,10 +79,10 @@ class CategoryCore extends ObjectModel
 
 	/** @var boolean is Category Root */
 	public $is_root_category;
-	
+
 	/** @var integer */
 	public $id_shop_default;
-	
+
 	public $groupBox;
 
 	protected static $_links = array();
@@ -609,7 +609,7 @@ class CategoryCore extends ObjectModel
 		}
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`,
+					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`,
 					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -630,10 +630,10 @@ class CategoryCore extends ObjectModel
 					ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i
-					ON (i.`id_product` = p.`id_product`
-					AND i.`cover` = 1)
+					ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il
-					ON (i.`id_image` = il.`id_image`
+					ON (image_shop.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr
 					ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -650,6 +650,7 @@ class CategoryCore extends ObjectModel
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND ((product_attribute_shop.id_product_attribute IS NOT NULL OR pa.id_product_attribute IS NULL) 
 					OR (product_attribute_shop.id_product_attribute IS NULL AND pa.default_on=1))
+				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')

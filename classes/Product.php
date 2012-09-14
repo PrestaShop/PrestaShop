@@ -1067,7 +1067,7 @@ class ProductCore extends ObjectModel
 	{
 		$attributes_list = array();
 		$res = true;	
-
+		$default_on = 1;
 		foreach ($combinations as $key => $combination)
 		{
 			$id_combination = (int)$this->productAttributeExists($attributes[$key], false, null, true, true);
@@ -1078,6 +1078,9 @@ class ProductCore extends ObjectModel
 				$obj->minimal_quantity = 1;
 				$obj->available_date = '0000-00-00';
 			}
+
+			$obj->default_on = $default_on;
+			$default_on = 0;
 
 			foreach ($combination as $field => $value)
 				$obj->$field = $value;
@@ -1884,7 +1887,7 @@ class ProductCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
+			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 			DATEDIFF(
 				product_shop.`date_add`,
 				DATE_SUB(
@@ -1901,7 +1904,8 @@ class ProductCore extends ObjectModel
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('image', 'i', 'i.`id_product` = p.`id_product` AND i.`cover` = 1');
+		$sql->leftJoin('image', 'i', 'i.`id_product` = p.`id_product`');
+		$sql->join(Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1'));
 		$sql->leftJoin('image_lang', 'il', 'i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang);
 		$sql->leftJoin('tax_rule', 'tr', '
 			product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -1912,6 +1916,7 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$sql->where('product_shop.`active` = 1');
+		$sql->where('(image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1)');
 		if ($front)
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
 		$sql->where('
@@ -2032,14 +2037,15 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-						p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`
+						p.`ean13`, p.`upc`, image_shop.`id_image`, il.`legend`, t.`rate`
 					FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
 						AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 					)
 					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+					LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+					Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 						AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -2047,6 +2053,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 					'.Product::sqlStock('p', 0).'
 					WHERE p.id_product = '.(int)$id_product.'
+					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if ($result['id_product_attribute'])
@@ -2125,7 +2132,7 @@ class ProductCore extends ObjectModel
 		}
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
-					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
+					pl.`name`, image_shop.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -2140,7 +2147,8 @@ class ProductCore extends ObjectModel
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -2149,6 +2157,7 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE product_shop.`active` = 1
 				AND product_shop.`show_price` = 1
+				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 				AND p.`id_product` IN (
@@ -2273,7 +2282,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT i.`cover`, i.`id_image`, il.`legend`, i.`position`
+		$sql = 'SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
 				FROM `'._DB_PREFIX_.'image` i
 				'.Shop::addSqlAssociation('image', 'i').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
@@ -2292,11 +2301,11 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT i.`id_image`
+		$sql = 'SELECT image_shop.`id_image`
 				FROM `'._DB_PREFIX_.'image` i
 				'.Shop::addSqlAssociation('image', 'i').'
 				WHERE i.`id_product` = '.(int)$id_product.'
-				AND i.`cover` = 1';
+				AND image_shop.`cover` = 1';
 		return Db::getInstance()->getRow($sql);
 	}
 
@@ -2998,7 +3007,8 @@ class ProductCore extends ObjectModel
 					product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				)
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
@@ -3006,7 +3016,8 @@ class ProductCore extends ObjectModel
 					AND tr.`id_state` = 0)
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0).'
-				WHERE `id_product_1` = '.(int)$this->id.
+				WHERE `id_product_1` = '.(int)$this->id.'
+				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))'.
 				($active ? ' AND product_shop.`active` = 1' : '');
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
@@ -4420,12 +4431,12 @@ class ProductCore extends ObjectModel
 	*/
 	public function setCoverWs($id_image)
 	{
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 0 WHERE `id_product` = '.(int)$this->id.'
-		');
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 1 WHERE `id_product` = '.(int)$this->id.' AND `id_image` = '.(int)$id_image
-		);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, image i
+			SET image_shop.`cover` = 0 
+			WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
+			AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop`
+			SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
 
 		return true;
 	}
