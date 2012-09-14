@@ -608,7 +608,6 @@ class WebserviceRequestCore
 	 */
 	public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-		echo 'Error Handler WebserviceRequest';
 		$display_errors = strtolower(ini_get('display_errors')) != 'off';
 		if (!(error_reporting() & $errno) || $display_errors)
 			return;

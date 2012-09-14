@@ -79,7 +79,10 @@ class CategoryCore extends ObjectModel
 
 	/** @var boolean is Category Root */
 	public $is_root_category;
-
+	
+	/** @var integer */
+	public $id_shop_default;
+	
 	public $groupBox;
 
 	protected static $_links = array();
