@@ -70,7 +70,7 @@ class AdminCustomersControllerCore extends AdminController
 				'width' => 20
 			),
 			'id_gender' => array(
-				'title' => $this->l('Gender'),
+				'title' => $this->l('Titles'),
 				'width' => 70,
 				'align' => 'center',
 				'icon' => $genders_icon,
@@ -257,7 +257,7 @@ class AdminCustomersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Gender:'),
+					'label' => $this->l('Titles:'),
 					'name' => 'id_gender',
 					'required' => false,
 					'class' => 't',
