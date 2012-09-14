@@ -1641,7 +1641,10 @@ class ProductCore extends ObjectModel
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				GROUP BY pa.`id_product_attribute`');
-		
+
+		if (!$combinations)
+			return false;
+
 		$product_attributes = array();
 		foreach ($combinations as $combination)
 			$product_attributes[] = (int)$combination['id_product_attribute'];
