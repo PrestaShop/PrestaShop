@@ -66,7 +66,7 @@ class ImageCore extends ObjectModel
 		'fields' => array(
 			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
 		),
 	);
 
@@ -185,12 +185,17 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-
-		return Db::getInstance()->execute('
+		
+		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = 0
 			WHERE `id_product` = '.(int)$id_product
-		);
+		) &&
+		Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'image` i, `'._DB_PREFIX_.'image_shop` image_shop
+			SET image_shop.`cover` = 0
+			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.id_image = i.id_image AND i.`id_product` = '.(int)$id_product
+		));
 	}
 
 	/**
@@ -202,10 +207,10 @@ class ImageCore extends ObjectModel
 	public static function getCover($id_product)
 	{
 		return Db::getInstance()->getRow('
-			SELECT * FROM `'._DB_PREFIX_.'image`
-			WHERE `id_product` = '.(int)$id_product.'
-			AND `cover`= 1
-		');
+			SELECT * FROM `'._DB_PREFIX_.'image` i
+			WHERE `id_product` = '.(int)$id_product.
+			Shop::addSqlAssociation('image', 'i').'
+			AND image_shop.`cover`= 1');
 	}
 
 	/**

@@ -126,13 +126,14 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return array();
 
-		$sql = 'SELECT p.*, product_shop.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
+		$sql = 'SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.id_product = pl.id_product
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
@@ -144,6 +145,7 @@ class PackCore extends Product
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
+				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				AND a.`id_product_pack` = '.(int)$id_product;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if (!$full)
@@ -170,11 +172,12 @@ class PackCore extends Product
 			return array();
 
 		$sql = '
-		SELECT p.*, product_shop.*, pl.*, i.`id_image`, il.`legend`, t.`rate`
+		SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`, t.`rate`
 		FROM `'._DB_PREFIX_.'product` p
 		NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 		'.Shop::addSqlAssociation('product', 'p').'
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
 		                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
@@ -183,7 +186,8 @@ class PackCore extends Product
 		LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 		WHERE pl.`id_lang` = '.(int)$id_lang.'
 			'.Shop::addSqlRestrictionOnLang('pl').'
-			AND p.`id_product` IN ('.$packs.')';
+			AND p.`id_product` IN ('.$packs.')
+			AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
