@@ -323,7 +323,7 @@ class ManufacturerCore extends ObjectModel
 			$alias = 'p.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
-					pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`,
+					pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`,
 					DATEDIFF(
 						product_shop.`date_add`,
 						DATE_SUB(
@@ -340,7 +340,8 @@ class ManufacturerCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i
-					ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+					ON (i.`id_product` = p.`id_product`)'.
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il
 					ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr
@@ -367,6 +368,7 @@ class ManufacturerCore extends ObjectModel
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 					WHERE cg.`id_group` '.$sql_groups.'
 				)
+				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
