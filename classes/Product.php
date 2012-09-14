@@ -1079,11 +1079,11 @@ class ProductCore extends ObjectModel
 				$obj->available_date = '0000-00-00';
 			}
 
-			$obj->default_on = $default_on;
-			$default_on = 0;
-
 			foreach ($combination as $field => $value)
 				$obj->$field = $value;
+
+			$obj->default_on = $default_on;
+			$default_on = 0;
 
 			$obj->save();
 		
