@@ -270,7 +270,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
-					'id_gender' => array('label' => $this->l('Gender ID (Mr = 1, Ms = 2, else 0)')),
+					'id_gender' => array('label' => $this->l('Titles ID (Mr = 1, Ms = 2, else 0)')),
 					'email' => array('label' => $this->l('E-mail *')),
 					'passwd' => array('label' => $this->l('Password *')),
 					'birthday' => array('label' => $this->l('Birthday (yyyy-mm-dd)')),
