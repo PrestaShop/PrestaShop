@@ -30,6 +30,9 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp
 {
+	
+	public $list_countries = array();
+	
 	/**
 	 * @see InstallAbstractModel::processNextStep()
 	 */
