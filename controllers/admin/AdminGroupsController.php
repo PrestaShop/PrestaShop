@@ -149,7 +149,7 @@ class AdminGroupsControllerCore extends AdminController
 		}
 		$customer_fields_display = (array(
 				'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center'),
-				'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
+				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
 				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
 				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
 				'email' => array('title' => $this->l('E-mail address'), 'width' => 150, 'align' => 'center'),

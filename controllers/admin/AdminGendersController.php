@@ -92,7 +92,7 @@ class AdminGendersControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Gender'),
+				'title' => $this->l('Titles'),
 				'image' => '../img/admin/tab-genders.gif'
 			),
 			'input' => array(
