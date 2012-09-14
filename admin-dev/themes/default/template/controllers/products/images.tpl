@@ -109,6 +109,7 @@
 		var come_from = '{$table}';
 		var success_add =  '{l s='image has been successfully added'}';
 		var id_tmp = 0;
+		var current_shop_id = {$current_shop_id|intval};
 		{literal}
 		//Ready Function
 		$(document).ready(function(){
@@ -253,6 +254,11 @@
 					$(this).attr("src", $(this).attr("src").replace("enabled", "forbbiden"));
 				});
 				$(this).attr("src", $(this).attr("src").replace("forbbiden", "enabled"));
+
+				if (current_shop_id != 0)
+					$('#'+current_shop_id+id).attr('check', true);
+				else
+					$(this).parent().parent().parent().children('td input').attr('check', true);
 				doAdminAjax({
 					"action":"UpdateCover",
 					"id_image":id,

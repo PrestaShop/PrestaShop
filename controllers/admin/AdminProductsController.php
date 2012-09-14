@@ -215,35 +215,41 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$join_category = true;
 
+		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)';
 		if (Shop::isFeatureActive())
 		{
 			$alias = 'sa';
+			$alias_image = 'image_shop';
 			if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.(int)$this->context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') ';
+				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') 
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$this->context->shop->id.')';
 			else
 				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = a.id_shop_default)
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) ';
+				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) 
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop=a.id_shop_default)';
 			$this->_select .= 'shop.name as shopname, ';
 		}
 		else
 		{
 			$alias = 'a';
+			$alias_image = 'i';
 			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
 		}
 
-		$this->_join .= '
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
-		'.($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
+		$this->_join .= ($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
 		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON ('.$alias.'.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
+		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias_image.'.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
 
-		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', i.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
-		
+		if (Shop::isFeatureActive())
+			$this->_where .= ' AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
+		else
+			$this->_where .= ' AND i.cover=1';
 	}
 	protected function _cleanMetaKeywords($keywords)
 	{
@@ -1398,7 +1404,9 @@ class AdminProductsControllerCore extends AdminController
 			$res &= Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = 1
-			WHERE `id_product` = '.(int)$image->id_product.' LIMIT 1');
+			WHERE `id_product` = '.(int)$image->id_product.' 
+			AND id_shop='.(int)$this->context->shop->id.'
+			LIMIT 1');
 		}
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
@@ -3426,23 +3434,29 @@ class AdminProductsControllerCore extends AdminController
 					FROM '._DB_PREFIX_.'image
 					WHERE id_product = '.(int)$obj->id
 				);
-				$data->assign('countImages', $count_images);
-
+				
 				$images = Image::getImages($this->context->language->id, $obj->id);
-				$data->assign('id_product', (int)Tools::getValue('id_product'));
-				$data->assign('id_category_default', (int)$this->_category->id);
-
 				foreach ($images as $k => $image)
 					$images[$k] = new Image($image['id_image']);
 
-				$data->assign('images', $images);
-
-				$data->assign('token', $this->token);
-				$data->assign('table', $this->table);
-				$data->assign('max_image_size', $this->max_image_size / 1024 / 1024);
-
-				$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-				$data->assign('currency', $this->context->currency);
+				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP)
+					$current_shop_id = (int)$this->context->shop->id;
+				else
+					$current_shop_id = 0;
+					
+				$data->assign(array(
+									'countImages' => $count_images,
+									'id_product' => (int)Tools::getValue('id_product'),
+									'id_category_default' => (int)$this->_category->id,
+									'images' => $images,
+									'token' =>  $this->token,
+									'table' => $this->table,
+									'max_image_size' => $this->max_image_size / 1024 / 1024,
+									'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
+									'currency' => $this->context->currency,
+									'current_shop_id' => $current_shop_id
+									)
+								);
 			}
 			else
 				$this->displayWarning($this->l('You must save this product in this shop before adding images.'));	
