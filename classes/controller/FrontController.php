@@ -708,9 +708,9 @@ class FrontControllerCore extends Controller
 						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($default_country->id_currency ? (int)$default_country->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $default_country;
 				}
-				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
+				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation())
 					$this->restrictedCountry = true;
-				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_)
+				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation())
 					$this->context->smarty->assign(array(
 						'restricted_country_mode' => true,
 						'geolocation_country' => 'Undefined'
@@ -930,7 +930,12 @@ class FrontControllerCore extends Controller
 	{
 		$allowed = false;
 		$userIp = Tools::getRemoteAddr();
-		$ips = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
+		$ips = array();
+		// retrocompatibility
+		$ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
+		if (is_array($ips_old) && count($ips_old))
+			foreach ($ips_old as $ip)
+				$ips = array_merge($ips, explode("\n", $ip));
 		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
 				if (!empty($ip) && strpos($userIp, $ip) === 0)
