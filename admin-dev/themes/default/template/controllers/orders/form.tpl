@@ -1099,7 +1099,7 @@
 </fieldset>
 <br />
 <fieldset id="vouchers_part" style="display:none;">
-	<legend><img src="../img/t/AdminDiscounts.gif" />{l s='Vouchers'}</legend>
+	<legend><img src="../img/t/AdminCartRules.gif" />{l s='Vouchers'}</legend>
 	<p>
 		<label>{l s='Search a voucher:'} </label>
 		<input type="text" id="voucher" value="" />
