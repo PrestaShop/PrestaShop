@@ -911,6 +911,8 @@ class ShopCore extends ObjectModel
 			$sql .= ' AND '.$table_alias.'.id_shop = '.(int)self::$context_id_shop;
 		elseif (Shop::checkIdShopDefault($table))
 			$sql .= ' AND '.$table_alias.'.id_shop = '.$alias.'.id_shop_default';
+		else
+			$sql .= ' AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')';
 		$sql .= (($on) ? ' AND '.$on : '').')';
 		return $sql;
 	}
