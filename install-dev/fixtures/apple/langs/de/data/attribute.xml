@@ -42,14 +42,14 @@
   <attribute id="Black">
     <name>Schwarz</name>
   </attribute>
-  <attribute id="8Go">
-    <name>8Go</name>
+  <attribute id="8GB">
+    <name>8GB</name>
   </attribute>
-  <attribute id="16Go">
-    <name>16Go</name>
+  <attribute id="16GB">
+    <name>16GB</name>
   </attribute>
-  <attribute id="32Go">
-    <name>32Go</name>
+  <attribute id="32GB">
+    <name>32GB</name>
   </attribute>
   <attribute id="Purple">
     <name>Violett</name>
