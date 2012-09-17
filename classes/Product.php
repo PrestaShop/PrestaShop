@@ -1944,7 +1944,7 @@ class ProductCore extends ObjectModel
 			$sql->select('pa.id_product_attribute');
 			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
-			$sql->where('(pa.id_product_attribute IS NULL OR product_attribute_shop.id_product_attribute IS NOT NULL)');
+			$sql->where('pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')');
 		}
 		$sql->join(Product::sqlStock('p', Combination::isFeatureActive() ? 'product_attribute_shop' : 0));
 
@@ -2053,7 +2053,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 					'.Product::sqlStock('p', 0).'
 					WHERE p.id_product = '.(int)$id_product.'
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+					AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if ($result['id_product_attribute'])
