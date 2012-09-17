@@ -128,7 +128,7 @@
 										{$input.required = false}
 										{$input.desc = null}
 									{else}
-										<select name="{$input.name}" class=""
+										<select name="{$input.name}" class="{if isset($input.class)}{$input.class}{/if}"
 												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												{if isset($input.multiple)}multiple="multiple" {/if}
 												{if isset($input.size)}size="{$input.size}"{/if}
@@ -213,12 +213,12 @@
 										<div class="translatable">
 											{foreach $languages as $language}
 												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-													<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
+													<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall':'UTF-8'}</textarea>
 												</div>
 											{/foreach}
 										</div>
 									{else}
-										<textarea name="{$input.name}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" cols="{$input.cols}" rows="{$input.rows}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte {if isset($input.class)}{$input.class}{/if}"{/if}>{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 									{/if}
 								{elseif $input.type == 'checkbox'}
 									{foreach $input.values.query as $value}
@@ -226,6 +226,7 @@
 										<input type="checkbox"
 											name="{$id_checkbox}"
 											id="{$id_checkbox}"
+											class="{if isset($input.class)}{$input.class}{/if}"
 											{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
 											{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 										<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
@@ -248,11 +249,12 @@
 									<input type="password"
 											name="{$input.name}"
 											size="{$input.size}"
+											class="{if isset($input.class)}{$input.class}{/if}"
 											value=""
 											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 								{elseif $input.type == 'birthday'}
 									{foreach $input.options as $key => $select}
-										<select name="{$key}" class="">
+										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}">
 											<option value="">-</option>
 											{if $key == 'months'}
 												{*
@@ -299,6 +301,7 @@
 										{if isset($input.class)}class="{$input.class}"
 										{else}class="color mColorPickerInput"{/if}
 										name="{$input.name}"
+										class="{if isset($input.class)}{$input.class}{/if}"
 										value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 								{elseif $input.type == 'date'}
 									<input type="text"
