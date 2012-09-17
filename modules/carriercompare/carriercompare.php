@@ -119,7 +119,7 @@ class CarrierCompare extends Module
 		$refresh_method = Configuration::get('SE_RERESH_METHOD');
 		
 		$this->smarty->assign(array(
-			'countries' => Country::getCountries((int)$this->context->cookie->id_lang),
+			'countries' => Country::getCountries((int)$this->context->cookie->id_lang, true),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
 			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
 			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
@@ -215,21 +215,24 @@ class CarrierCompare extends Module
 	*/
 	private function checkZipcode($zipcode, $id_country)
 	{
+		$country = new Country((int)$id_country);
+		if (!Validate::isLoadedObject($country))
+			return true;
 		$zipcodeFormat = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `zip_code_format`
 				FROM `'._DB_PREFIX_.'country`
 				WHERE `id_country` = '.(int)$id_country);
 
-		if (!$zipcodeFormat)
-			return false;
+		if (!$country->need_zip_code || !$country->zip_code_format)
+			return true;
 
 		$regxMask = str_replace(
 				array('N', 'C', 'L'),
 				array(
 					'[0-9]',
-					Country::getIsoById((int)$id_country),
+					$country->iso_code,
 					'[a-zA-Z]'),
-				$zipcodeFormat);
+				$country->zip_code_format);
 		if (preg_match('/'.$regxMask.'/', $zipcode))
 			return true;
 		return false;
