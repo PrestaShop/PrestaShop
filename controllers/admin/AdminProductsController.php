@@ -249,7 +249,7 @@ class AdminProductsControllerCore extends AdminController
 		if (Shop::isFeatureActive())
 			$this->_where .= ' AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
 		else
-			$this->_where .= ' AND i.cover=1';
+			$this->_where .= ' AND (i.cover=1 OR i.id_image IS NULL)';
 	}
 	protected function _cleanMetaKeywords($keywords)
 	{
