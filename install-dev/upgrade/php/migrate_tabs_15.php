@@ -137,8 +137,11 @@ function migrate_tabs_15()
 	$sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
 			WHERE id_tab NOT IN ('.implode(', ', $parent).')
 				AND id_parent = 0';
-	foreach (Db::getInstance()->executeS($sql) as $row)
-		Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.$row['id_tab']);
+	
+	$id_tabs = Db::getInstance()->executeS($sql);
+	if (is_array($id_tabs) && count($id_tabs))
+		foreach (Db::getInstance()->executeS($sql) as $row)
+			Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.$row['id_tab']);
 }
 
 function get_tab_id($class_name)
