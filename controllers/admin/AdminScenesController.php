@@ -281,10 +281,8 @@ class AdminScenesControllerCore extends AdminController
 				);
 		}
 		else
-		{
 			$image_to_map_desc .= '<br/><span class="bold">'.$this->l('Please add a picture to continue mapping the image.').'</span><br/><br/>';
-			$image_to_map_desc .= '</div>';
-		}
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
