@@ -1944,7 +1944,7 @@ class ProductCore extends ObjectModel
 			$sql->select('pa.id_product_attribute');
 			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
-			$sql->where('pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')');
+			$sql->where('(pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')');
 		}
 		$sql->join(Product::sqlStock('p', Combination::isFeatureActive() ? 'product_attribute_shop' : 0));
 
