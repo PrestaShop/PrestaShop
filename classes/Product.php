@@ -2014,10 +2014,10 @@ class ProductCore extends ObjectModel
 			$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
 			// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
-			$sql = 'SELECT p.id_product, pa.id_product_attribute
+			$sql = 'SELECT product_shop.id_product, product_attribute_shop.id_product_attribute
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (p.id_product = pa.id_product)
+					LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (product_shop.id_product = pa.id_product)
 					'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1').'
 					WHERE product_shop.`active` = 1
 						'.(($ids_product) ? $ids_product : '').'
@@ -2027,6 +2027,7 @@ class ProductCore extends ObjectModel
 							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 							WHERE cg.`id_group` '.$sql_groups.'
 						)
+					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					GROUP BY p.id_product
 					ORDER BY RAND()';
 
@@ -2053,9 +2054,12 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 					'.Product::sqlStock('p', 0).'
 					WHERE p.id_product = '.(int)$id_product.'
-					AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')
-					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
+					AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')';
+
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+			if (!$row)
+				return false;
+
 			if ($result['id_product_attribute'])
 				$row['id_product_attribute'] = $result['id_product_attribute'];
 			return Product::getProductProperties($id_lang, $row);
