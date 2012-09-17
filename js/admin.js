@@ -464,7 +464,7 @@ function toggleShippingCost(obj)
 {
 	generateDiscount = $(obj).parent().find('#generateDiscount').attr("checked");
 	generateCreditSlip = $(obj).parent().find('#generateCreditSlip').attr("checked");
-	if (generateDiscount != true && generateCreditSlip != true)
+	if (generateDiscount != 'checked' && generateCreditSlip != 'checked')
 	{
 		$(obj).parent().find('#spanShippingBack input[type=checkbox]').attr("checked", false);
 		$(obj).parent().find('#spanShippingBack').css('display', 'none');
