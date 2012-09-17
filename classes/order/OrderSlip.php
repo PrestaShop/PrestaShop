@@ -213,9 +213,19 @@ class OrderSlipCore extends ObjectModel
 		$orderSlip = new OrderSlip();
 		$orderSlip->id_customer = (int)($order->id_customer);
 		$orderSlip->id_order = (int)($order->id);
-		$orderSlip->shipping_cost = (int)($shipping_cost);
+		$orderSlip->shipping_cost = (int)$shipping_cost;
+		if ($orderSlip->shipping_cost)
+			$orderSlip->shipping_cost_amount = $order->total_shipping_tax_incl;
 		$orderSlip->conversion_rate = $currency->conversion_rate;
 		$orderSlip->partial = 0;
+
+		$orderSlip->amount = $orderSlip->shipping_cost_amount;
+		foreach ($productList as $id_order_detail)
+		{
+			$order_detail = new OrderDetail((int)$id_order_detail);
+			$orderSlip->amount += $order_detail->unit_price_tax_incl * $qtyList[(int)$id_order_detail];
+		}
+
 		if (!$orderSlip->add())
 			return false;
 
