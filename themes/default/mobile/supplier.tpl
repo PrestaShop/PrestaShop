@@ -54,7 +54,7 @@
 		{include file="./pagination.tpl"}
 			
 	{else}
-		<p class="warning">{l s='No new products.'}</p>
+		<p class="warning">{l s='No products for this supplier.'}</p>
 	{/if}
 		{include file='./sitemap.tpl'}
 	</div><!-- #content -->
