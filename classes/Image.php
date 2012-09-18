@@ -207,9 +207,9 @@ class ImageCore extends ObjectModel
 	public static function getCover($id_product)
 	{
 		return Db::getInstance()->getRow('
-			SELECT * FROM `'._DB_PREFIX_.'image` i
-			WHERE `id_product` = '.(int)$id_product.
+			SELECT * FROM `'._DB_PREFIX_.'image` i'.
 			Shop::addSqlAssociation('image', 'i').'
+			WHERE `id_product` = '.(int)$id_product.'
 			AND image_shop.`cover`= 1');
 	}
 
