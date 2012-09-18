@@ -19,9 +19,9 @@
     <attribute id="80GB_20_000_Songs" id_attribute_group="Disk_space" color=""/>
     <attribute id="160GB_40_000_Songs" id_attribute_group="Disk_space" color=""/>
     <attribute id="Black" id_attribute_group="Color" color="#000000"/>
-    <attribute id="8Go" id_attribute_group="Disk_space" color=""/>
-    <attribute id="16Go" id_attribute_group="Disk_space" color=""/>
-    <attribute id="32Go" id_attribute_group="Disk_space" color=""/>
+    <attribute id="8GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="16GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="32GB" id_attribute_group="Disk_space" color=""/>
     <attribute id="Purple" id_attribute_group="Color" color="#7800F0"/>
     <attribute id="Yellow" id_attribute_group="Color" color="#F6EF04"/>
     <attribute id="Red" id_attribute_group="Color" color="#F60409"/>
