@@ -56,8 +56,8 @@
 	{if $key == 'rightCols'}
 		{foreach $field as $input}
 			{if $input.type == 'file'}
-				<label style="text-align: left; width: inherit;">{$input.label} </label>
-				<div class="margin-form" style="padding: 0; display: inline;">
+				<label style="text-align: left; width: inherit;width:250px;text-align:right">{$input.label} </label>
+				<div class="margin-form">
 					<input type="file" name="{$input.name}" />
 					<p class="clear">{$input.desc}</p>
 					{if isset($fields_value.image) && $fields_value.image}
@@ -71,7 +71,7 @@
 					{/if}
 				</div>
 			{/if}
-			<table cellpadding="2" cellspacing="2" style="padding: 10px; margin-top: 15px; border: 1px solid #BBB;">
+			<table cellpadding="2" cellspacing="2" style="padding: 10px; margin: 15px 0 20px 260px; border: 1px solid #BBB;">
 				<tr>
 					<th colspan="2">{l s='Hours:'}</th>
 				</tr>
