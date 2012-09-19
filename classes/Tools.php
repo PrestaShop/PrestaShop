@@ -1454,7 +1454,7 @@ class ToolsCore
 		return Tools::getHttpHost();
 	}
 
-	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null)
+	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false)
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return true;
@@ -1520,6 +1520,18 @@ class ToolsCore
 		fwrite($write_fd, "RewriteEngine on\n\n");
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
+		
+		if (!$medias)
+			$medias = array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_);
+		
+		$media_domains = '';
+		if ($medias[0] != '')
+			$media_domains = 'RewriteCond %{HTTP_HOST} ^'.$medias[0].'$ [OR]'."\n";
+		if ($medias[1] != '')
+			$media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$medias[1].'$ [OR]'."\n";
+		if ($medias[2] != '')
+			$media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$medias[2].'$ [OR]'."\n";
+
 		foreach ($domains as $domain => $list_uri)
 		{
 			foreach ($list_uri as $uri)
@@ -1531,14 +1543,17 @@ class ToolsCore
 				{
 					if (!$rewrite_settings)
 					{
+						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
 					}
 					else
 					{
+						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
 					}
+					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
 				}
@@ -1549,8 +1564,10 @@ class ToolsCore
 					fwrite($write_fd, "# Images\n");
 					if (Configuration::get('PS_LEGACY_IMAGES'))
 					{
+						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
+						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
 					}
@@ -1565,11 +1582,14 @@ class ToolsCore
 							$img_name .= '$'.$j;
 						}
 						$img_name .= '$'.$j;
+							fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
 						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
 					}
+					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-\.*]*)(-[0-9]+)?/.+\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
+					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
 				}
