@@ -90,7 +90,7 @@
 			<div id="submitAddLangContent" style="float:left;">
 				<p>{l s='You can add or update a language directly from prestashop.com here'}</p>
 				<div class="warn">
-					{l s='If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes Front Office expressions and default e-mail templates.'}
+					{l s='If you choose to update an existing language pack, all your previous customization in the theme named "Default" will be lost. This includes Front Office expressions and default e-mail templates.'}
 				</div>
 				{if $packs_to_update || $packs_to_install}
 					<div style="font-weight:bold; float:left;">{l s='Language you want to add or update:'}
