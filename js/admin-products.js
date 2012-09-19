@@ -214,7 +214,10 @@ product_tabs['Combinations'] = new function(){
 			if ($('.process-icon-newCombination').hasClass('toolbar-new'))
 				self.removeButtonCombination('add');
 			else
+			{
 				self.addButtonCombination('add');
+				$('#id_product_attribute').val(0);
+			}
 		});
 	};
 
