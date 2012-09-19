@@ -4435,7 +4435,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function setCoverWs($id_image)
 	{
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, image i
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, `'._DB_PREFIX_.'image` i
 			SET image_shop.`cover` = 0 
 			WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
 			AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
