@@ -1476,16 +1476,16 @@ class WebserviceRequestCore
 				}
 				elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId))
 					$object->$sqlId = null;
-
 				if (isset($fieldProperties['i18n']) && $fieldProperties['i18n'])
 				{
 					$i18n = true;
 					if (isset($attributes->$fieldName, $attributes->$fieldName->language))
 						foreach ($attributes->$fieldName->language as $lang)
 							$object->{$fieldName}[(int)$lang->attributes()->id] = (string)$lang;
+					else
+						$object->{$fieldName} = (string)$attributes->$fieldName;
 				}
 			}
-
 			if (!$this->hasErrors())
 			{
 				if ($i18n && ($retValidateFieldsLang = $object->validateFieldsLang(false, true)) !== true)
