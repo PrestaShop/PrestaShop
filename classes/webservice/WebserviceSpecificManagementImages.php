@@ -976,6 +976,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						}
 						@unlink($tmpName);
 						$this->imgToDisplay = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format;
+						$this->objOutput->setFieldsToDisplay('full');
+						$this->output = $this->objOutput->renderEntity($image, 1);
+						$image_content = array('sqlId' => 'content', 'value' => file_get_contents($this->imgToDisplay));
+						$this->output .= $this->objOutput->objectRender->renderField($image_content);
 					}
 					elseif ($this->imageType == 'categories')
 					{
