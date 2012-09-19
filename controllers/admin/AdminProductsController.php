@@ -655,7 +655,7 @@ class AdminProductsControllerCore extends AdminController
 	public function processProductAttribute()
 	{
 		// Don't process if the combination fields have not been submitted
-		if (!Combination::isFeatureActive() || !Tools::getIsset('attribute'))
+		if (!Combination::isFeatureActive() || !Tools::getValue('attribute_combination_list'))
 			return;
 
 		if (Validate::isLoadedObject($product = $this->object))
