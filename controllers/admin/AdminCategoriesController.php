@@ -507,11 +507,11 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (!in_array($this->display, array('edit', 'add')))
 			$this->multishop_context_group = false;
-
-		if (Tools::isSubmit('forcedeleteImage'))
+		if (Tools::isSubmit('forcedeleteImage') || isset($_FILES['image']))
 		{
 			$this->processForceDeleteImage();
-			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
+			if (Tools::isSubmit('forcedeleteImage'))
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
 		}
 		
 		return parent::postProcess();
