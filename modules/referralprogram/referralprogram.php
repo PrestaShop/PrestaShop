@@ -475,6 +475,8 @@ class ReferralProgram extends Module
 							'{voucher_num}' => $cartRule->code,
 							'{voucher_amount}' => (Configuration::get('REFERRAL_DISCOUNT_TYPE') == 2 ? Tools::displayPrice((float)Configuration::get('REFERRAL_DISCOUNT_VALUE_'.(int)$this->context->currency->id), (int)Configuration::get('PS_CURRENCY_DEFAULT')) : (float)Configuration::get('REFERRAL_PERCENTAGE').'%'));
 
+						$cookie = $this->context->cookie;
+
 						Mail::Send(
 							(int)$cookie->id_lang,
 							'referralprogram-voucher',
