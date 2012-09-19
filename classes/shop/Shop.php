@@ -340,10 +340,10 @@ class ShopCore extends ObjectModel
 					{
 						// extract url parameters
 						$request_uri = substr($request_uri, strlen($found_uri));
-
+						$url = str_replace('//', '/', $row['domain'].$row['uri'].$request_uri);
 						header('HTTP/1.1 301 Moved Permanently');
 						header('Cache-Control: no-cache');
-						header('location: http://'.$row['domain'].$row['uri'].$request_uri);
+						header('location: http://'.$url);
 						exit;
 					}
 				}
@@ -387,6 +387,7 @@ class ShopCore extends ObjectModel
 					else
 						$url = 'http://'.$uri;
 				}
+				die($url);
 				header('location: '.$url);
 				exit;
 			}
