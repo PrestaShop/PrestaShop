@@ -529,6 +529,11 @@ class AdminOrdersControllerCore extends AdminController
 								else
 								{
 									$currency = $this->context->currency;
+									$customer = new Customer((int)($order->id_customer));
+									$params['{lastname}'] = $customer->lastname;
+									$params['{firstname}'] = $customer->firstname;
+									$params['{id_order}'] = $order->id;
+									$params['{order_name}'] = $order->getUniqReference();
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
 									$customer = new Customer((int)$order->id_customer);
