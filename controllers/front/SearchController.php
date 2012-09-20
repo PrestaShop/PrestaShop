@@ -121,7 +121,7 @@ class SearchControllerCore extends FrontController
 				'pages_nb' => 1,
 				'nbProducts' => 0));
 		}
-		$this->context->smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
+		$this->context->smarty->assign(array('add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'), 'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')));
 
 		$this->setTemplate(_PS_THEME_DIR_.'search.tpl');
 	}
@@ -146,5 +146,8 @@ class SearchControllerCore extends FrontController
 
 		if (!$this->instant_search && !$this->ajax_search)
 			$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
+			
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 }
