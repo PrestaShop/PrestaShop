@@ -196,7 +196,7 @@
 					id="cart_rule_select_remove"
 					style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
 				>
-					
+					&lt;&lt; {l s='Remove'}
 				</a>
 			</td>
 		</tr>
