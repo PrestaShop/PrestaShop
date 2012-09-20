@@ -248,13 +248,21 @@ abstract class CacheCore
 		$this->set($key, $result);
 
 		// Get all table from the query and save them in cache
-		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
-			foreach ($res[1] as $table)
+		if ($tables = $this->getTables($query))
+			foreach ($tables as $table)
 				if (!isset($this->sql_tables_cached[$table][$key]))
 					$this->sql_tables_cached[$table][$key] = true;
 		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
 	}
 
+	protected function getTables($string)
+	{
+		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $string, $res))
+			return array_merge($res[1], $res[2]);
+		else
+			return false;
+	}
+	
 	/**
 	 * Delete a query from cache
 	 *
@@ -269,9 +277,7 @@ abstract class CacheCore
 				$this->sql_tables_cached = array();
 		}
 
-		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $query, $res))
-		{
-			$tables = array_merge($res[1], $res[2]);
+		if ($tables = $this->getTables($query))
 			foreach ($tables as $table)
 				if (isset($this->sql_tables_cached[$table]))
 				{
@@ -282,7 +288,6 @@ abstract class CacheCore
 					}
 					unset($this->sql_tables_cached[$table]);
 				}
-		}
 		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
 	}
 
