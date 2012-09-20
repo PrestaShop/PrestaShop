@@ -69,5 +69,35 @@ if (!@ini_get('date.timezone'))
 	@date_default_timezone_set('UTC');
 
 // Try to improve memory limit if it's under 32M
-if (Tools::getMemoryLimit() < Tools::getOctets('32M'))
+if (psinstall_get_memory_limit() < psinstall_get_octets('32M'))
 	ini_set('memory_limit', '32M');
+
+function psinstall_get_octets($option)
+{
+	if (preg_match('/[0-9]+k/i', $option))
+		return 1024 * (int)$option;
+
+	if (preg_match('/[0-9]+m/i', $option))
+		return 1024 * 1024 * (int)$option;
+
+	if (preg_match('/[0-9]+g/i', $option))
+		return 1024 * 1024 * 1024 * (int)$option;
+
+	return $option;
+}
+
+function psinstall_get_memory_limit()
+{
+	$memory_limit = @ini_get('memory_limit');
+	
+	if (preg_match('/[0-9]+k/i', $memory_limit))
+		return 1024 * (int)$memory_limit;
+	
+	if (preg_match('/[0-9]+m/i', $memory_limit))
+		return 1024 * 1024 * (int)$memory_limit;
+	
+	if (preg_match('/[0-9]+g/i', $memory_limit))
+		return 1024 * 1024 * 1024 * (int)$memory_limit;
+	
+	return $memory_limit;
+}
