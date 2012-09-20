@@ -269,7 +269,7 @@ abstract class CacheCore
 				$this->sql_tables_cached = array();
 		}
 
-		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
+		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $query, $res))
 			foreach ($res[1] as $table)
 				if (isset($this->sql_tables_cached[$table]))
 				{
