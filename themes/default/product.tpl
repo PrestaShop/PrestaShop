@@ -290,7 +290,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 								<ul id="color_to_pick_list" class="clearfix">
 									{assign var="default_colorpicker" value=""}
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<li>
+									<li{if $group.default == $id_attribute} class="selected"{/if}>
 										<a id="color_{$id_attribute|intval}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value};" title="{$colors.$id_attribute.name}" onclick="colorPickerClick(this);getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
 											{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 												<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$colors.$id_attribute.name}" width="20" height="20" /><br>
