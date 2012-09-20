@@ -357,7 +357,7 @@ function init()
 			$('#add_product_product_price_tax_incl').val(data.price_tax_incl);
 			$('#add_product_product_price_tax_excl').val(data.price_tax_excl);
 			addProductRefreshTotal();
-			$('#add_product_product_stock').html(data.qty_in_stock);
+			$('#add_product_product_stock').html(data.stock[0]);
 
 			if (current_product.combinations.length !== 0)
 			{
