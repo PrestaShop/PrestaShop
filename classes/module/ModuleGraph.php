@@ -293,10 +293,14 @@ abstract class ModuleGraphCore extends Module
 
 	protected static function getEmployee($employee = null, Context $context = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		if (!$employee)
+		if (!Validate::isLoadedObject($employee))
+		{
+			if (!$context)
+				$context = Context::getContext();
+			if (!Validate::isLoadedObject($context->employee))
+				return false;
 			$employee = $context->employee;
+		}
 
 		if (empty($employee->stats_date_from) || empty($employee->stats_date_to)
 			|| $employee->stats_date_from == '0000-00-00' || $employee->stats_date_to == '0000-00-00')
@@ -317,8 +321,9 @@ abstract class ModuleGraphCore extends Module
 
 	public static function getDateBetween($employee = null)
 	{
-		$employee = ModuleGraph::getEmployee($employee);
-		return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
+		if ($employee = ModuleGraph::getEmployee($employee))
+			return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
+		return ' \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m-t').' 23:59:59\' ';
 	}
 
 	public function getLang()
