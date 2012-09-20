@@ -195,7 +195,7 @@ class AdminCartRulesControllerCore extends AdminController
 		}
 
 		// If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
-		if ($currentObject->cart_rule_restriction == 0)
+		if (!Tools::getValue('cart_rule_restriction'))
 		{
 			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
@@ -209,6 +209,7 @@ class AdminCartRulesControllerCore extends AdminController
 			SELECT cr.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule cr
 			WHERE cr.id_cart_rule != '.(int)$currentObject->id.'
+			AND cr.cart_rule_restriction = 0
 			AND cr.id_cart_rule NOT IN (
 				SELECT IF(id_cart_rule_1 = '.(int)$currentObject->id.', id_cart_rule_2, id_cart_rule_1)
 				FROM '._DB_PREFIX_.'cart_rule_combination
