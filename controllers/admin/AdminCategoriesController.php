@@ -519,7 +519,7 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	public function processForceDeleteImage()
 	{
-		$category = $this->loadObject();
+		$category = $this->loadObject(true);
 		if (Validate::isLoadedObject($category))
 			$category->deleteImage(true);
 	}
