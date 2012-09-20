@@ -415,7 +415,7 @@ ul.step li {
 	text-transform:uppercase;
 	background:url(../img/step_standard.gif) no-repeat center bottom transparent
 }
-ul.step li a, ul.step li.step_current span {
+ul.step li a, ul.step li.step_current span, ul.step li.step_current_end span {
 	display:inline-block;
 	padding:8px 10px 12px;
 	color:#000;
@@ -424,6 +424,11 @@ ul.step li a, ul.step li.step_current span {
 ul.step li.step_current {
 	font-weight:bold;
 	background:url(../img/step_current.gif) no-repeat center bottom transparent
+}
+
+ul.step li.step_current_end {
+	font-weight:bold;
+	background:url(../img/step_end_current.gif) no-repeat center bottom transparent
 }
 ul.step li.step_todo span {
 	display:inline-block;
@@ -436,7 +441,7 @@ ul.step li.step_done {
 	font-weight:bold;
 	background:url(../img/step_done.gif) no-repeat center bottom transparent
 }
-ul.step li#step_end {background:url(../img/step_end.gif) no-repeat center bottom transparent}
+/*ul.step li#step_end {background:url(../img/step_end.gif) no-repeat center bottom transparent}*/
 
 /* module productcomments ********************************************************************** */
 .rating {

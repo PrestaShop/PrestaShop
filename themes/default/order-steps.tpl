@@ -72,7 +72,7 @@
 			<span>4. {l s='Shipping'}</span>
 		{/if}
 	</li>
-	<li id="step_end" class="{if $current_step=='payment'}step_current{else}step_todo{/if}">
+	<li id="step_end" class="{if $current_step=='payment'}step_current_end{else}step_todo{/if}">
 		<span>5. {l s='Payment'}</span>
 	</li>
 </ul>
