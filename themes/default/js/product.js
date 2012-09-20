@@ -704,6 +704,7 @@ function checkUrl()
 			product_id = $('#product_page_product_id').val();
 			// fill html with values
 			$('.color_pick').removeClass('selected');
+			$('.color_pick').parent().parent().children().removeClass('selected');
 			count = 0;
 			for (z in tabValues)
 				for (a in attributesCombinations)
