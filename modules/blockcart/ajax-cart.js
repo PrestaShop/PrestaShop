@@ -269,7 +269,7 @@ var ajaxCart = {
 	//hide the products displayed in the page but no more in the json data
 	hideOldProducts : function(jsonData) {
 		//delete an eventually removed product of the displayed cart (only if cart is not empty!)
-		if($('#cart_block #cart_block_list dl.products').length > 0)
+		if ($('#cart_block #cart_block_list dl.products').length > 0)
 		{
 			var removedProductId = null;
 			var removedProductData = null;
@@ -295,38 +295,34 @@ var ajaxCart = {
 					}
 				}
 				//remove product if it's no more in the cart
-				if(!stayInTheCart)
+				if (!stayInTheCart)
 				{
 					removedProductId = $(this).attr('id');
-					//return false; // Regarding that the customer can only remove products one by one, we break the loop
+					if (removedProductId != null)
+					{
+						var firstCut =  removedProductId.replace('cart_block_product_', '');
+						var ids = firstCut.split('_');
+
+						$('#'+removedProductId).addClass('strike').fadeTo('slow', 0, function(){
+							$(this).slideUp('slow', function(){
+								$(this).remove();
+								// If the cart is now empty, show the 'no product in the cart' message and close detail
+								if($('#cart_block dl.products dt').length == 0)
+								{
+									$("#header #cart_block").stop(true, true).slideUp(200);
+									$('p#cart_block_no_products:hidden').slideDown(450);
+									$('div#cart_block dl.products').remove();
+								}
+							});
+						});
+						$('dd#cart_block_combination_of_' + ids[0] + (ids[1] ? '_'+ids[1] : '') + (ids[2] ? '_'+ids[2] : '')).fadeTo('fast', 0, function(){
+							$(this).slideUp('fast', function(){
+								$(this).remove();
+							});
+						});
+					}
 				}
 			});
-
-			//if there is a removed product, delete it from the displayed block cart
-			if (removedProductId != null)
-			{
-				var firstCut =  removedProductId.replace('cart_block_product_', '');
-				var ids = firstCut.split('_');
-
-				$('#'+removedProductId).addClass('strike').fadeTo('slow', 0, function(){
-					$(this).slideUp('slow', function(){
-						$(this).remove();
-						// If the cart is now empty, show the 'no product in the cart' message and close detail
-						if($('#cart_block dl.products dt').length == 0)
-						{
-							$("#header #cart_block").stop(true, true).slideUp(200);
-							$('p#cart_block_no_products:hidden').slideDown(450);
-							$('div#cart_block dl.products').remove();
-						}
-					});
-				});
-				$('dd#cart_block_combination_of_' + ids[0] + (ids[1] ? '_'+ids[1] : '') + (ids[2] ? '_'+ids[2] : '')).fadeTo('fast', 0, function(){
-					$(this).slideUp('fast', function(){
-						$(this).remove();
-					});
-				});
-			}
-
 		}
 	},
 
