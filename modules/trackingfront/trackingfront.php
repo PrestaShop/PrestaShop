@@ -155,18 +155,15 @@ class TrackingFront extends Module
 	public function displayAccount()
 	{
 		if (!isset($this->context->cookie->stats_date_from))
-			$this->context->cookie->stats_date_from = date('Y-m-d');
+			$this->context->cookie->stats_date_from = date('Y-m-01');
 		if (!isset($this->context->cookie->stats_date_to))
 			$this->context->cookie->stats_date_to = date('Y-m-t');
-		$fakeEmployee = new Employee();
-		$fakeEmployee->stats_date_from = $this->context->cookie->stats_date_from;
-		$fakeEmployee->stats_date_to = $this->context->cookie->stats_date_to;
-		Referrer::refreshCache(array(array('id_referrer' => (int)($this->context->cookie->tracking_id))), $fakeEmployee);
+		Referrer::refreshCache(array(array('id_referrer' => (int)$this->context->cookie->tracking_id)));
 		
 		$referrer = new Referrer((int)($this->context->cookie->tracking_id));
 		$this->smarty->assign('referrer', $referrer);
-		$this->smarty->assign('datepickerFrom', $fakeEmployee->stats_date_from);
-		$this->smarty->assign('datepickerTo', $fakeEmployee->stats_date_to);
+		$this->smarty->assign('datepickerFrom', $this->context->cookie->stats_date_from);
+		$this->smarty->assign('datepickerTo', $this->context->cookie->stats_date_to);
 		
 		$displayTab = array(
 			'uniqs' => $this->l('Unique visitors'),
@@ -190,7 +187,6 @@ class TrackingFront extends Module
 			$productsArray[] = $product['id_product'];
 		
 		$echo = '
-		<script type="text/javascript" src="../../js/jquery/datepicker/ui/i18n/ui.datepicker-'.Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)$this->context->language->id).'.js"></script>
 		<script type="text/javascript">
 			$("#datepickerFrom").datepicker({
 				prevText:"",

@@ -202,7 +202,7 @@ class ReferrerCore extends ObjectModel
 	 * @param int $id_product
 	 * @param int $employee
 	 */
-	public function getStatsSales($id_product, $employe)
+	public function getStatsSales($id_product, $employee)
 	{
 		$join = $where = '';
 		if ($id_product)
