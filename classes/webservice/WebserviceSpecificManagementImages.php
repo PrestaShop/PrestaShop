@@ -978,7 +978,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						$this->imgToDisplay = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format;
 						$this->objOutput->setFieldsToDisplay('full');
 						$this->output = $this->objOutput->renderEntity($image, 1);
-						$image_content = array('sqlId' => 'content', 'value' => file_get_contents($this->imgToDisplay));
+						$image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
 						$this->output .= $this->objOutput->objectRender->renderField($image_content);
 					}
 					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
