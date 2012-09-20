@@ -121,6 +121,7 @@ $(document).ready(function() {
 	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 
 	{hook h="displayAdminHomeInfos"}
+	{hook h="displayBackOfficeHome"} //old name of the hook
 
 </div>
 
