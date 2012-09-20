@@ -270,7 +270,9 @@ abstract class CacheCore
 		}
 
 		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $query, $res))
-			foreach ($res[1] as $table)
+		{
+			$tables = array_merge($res[1], $res[2]);
+			foreach ($tables as $table)
 				if (isset($this->sql_tables_cached[$table]))
 				{
 					foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key)
@@ -280,6 +282,7 @@ abstract class CacheCore
 					}
 					unset($this->sql_tables_cached[$table]);
 				}
+		}
 		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);
 	}
 
