@@ -136,7 +136,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 							'type' => 'bool'
 						),
 					'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-							'title' => $this->l('Allow file upload'),
+							'title' => $this->l('Default message'),
 							'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'),
 							'type' => 'textareaLang',
 							'lang' => true,
