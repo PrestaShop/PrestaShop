@@ -444,7 +444,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			else
 				return '<p class="warning">'.Tools::displayError('Error: There are no carriers available that deliver to this address').'</p>';
 		}
-		if (!$this->context->cart->getDeliveryOption(null, true) && !$this->context->cart->isVirtualCart())
+		if (!$this->context->cart->getDeliveryOption(null, false) && !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: please choose a carrier').'</p>';
 		if (!$this->context->cart->id_currency)
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
