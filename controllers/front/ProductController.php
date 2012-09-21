@@ -322,14 +322,14 @@ class ProductControllerCore extends FrontController
 		}
 		if (!isset($cover))
 			$cover = array('id_image' => $this->context->language->iso_code.'-default', 'legend' => 'No picture', 'title' => 'No picture');
-		$size = Image::getSize('large');
+		$size = Image::getSize('large_default');
 		$this->context->smarty->assign(array(
 			'have_image' => Product::getCover((int)Tools::getValue('id_product')),
 			'cover' => $cover,
 			'imgWidth' => (int)$size['width'],
-			'mediumSize' => Image::getSize('medium'),
-			'largeSize' => Image::getSize('large'),
-			'homeSize' => Image::getSize('home'),
+			'mediumSize' => Image::getSize('medium_default'),
+			'largeSize' => Image::getSize('large_default'),
+			'homeSize' => Image::getSize('home_default'),
 			'col_img_dir' => _PS_COL_IMG_DIR_));
 		if (count($product_images))
 			$this->context->smarty->assign('images', $product_images);

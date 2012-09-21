@@ -263,7 +263,7 @@ class StoresControllerCore extends FrontController
 			$this->assignStores();
 
 		$this->context->smarty->assign(array(
-			'mediumSize' => Image::getSize('medium'),
+			'mediumSize' => Image::getSize('medium_default'),
 			'defaultLat' => (float)Configuration::get('PS_STORES_CENTER_LAT'),
 			'defaultLong' => (float)Configuration::get('PS_STORES_CENTER_LONG'),
 			'searchUrl' => $this->context->link->getPageLink('stores'),
