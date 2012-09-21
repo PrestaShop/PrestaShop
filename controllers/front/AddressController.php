@@ -124,7 +124,7 @@ class AddressControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Invalid token');
 
 		// Check phone
-		if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		if ($address->id_country)
 		{
