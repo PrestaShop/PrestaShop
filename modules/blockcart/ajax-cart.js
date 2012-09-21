@@ -591,7 +591,7 @@ var ajaxCart = {
 	updateCartEverywhere : function(jsonData) {
 		$('.ajax_cart_total').text(jsonData.productTotal);
 		
-		if (parseFloat(jsonData.shippingCostFloat) > 0)
+		if (parseFloat(jsonData.shippingCostFloat) > 0 || jsonData.nbTotalProducts < 1)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
 		else
 			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
@@ -601,23 +601,22 @@ var ajaxCart = {
 
 		this.nb_total_products = jsonData.nbTotalProducts;
 		
-		if(parseInt(jsonData.nbTotalProducts) > 0)
+		if (parseInt(jsonData.nbTotalProducts) > 0)
 		{
 			$('.ajax_cart_no_product').hide();
 			$('.ajax_cart_quantity').text(jsonData.nbTotalProducts);
 			$('.ajax_cart_quantity').fadeIn('slow');
 			$('.ajax_cart_total').fadeIn('slow');
 
-			if(parseInt(jsonData.nbTotalProducts) > 1)
+			if (parseInt(jsonData.nbTotalProducts) > 1)
 			{
 				$('.ajax_cart_product_txt').each( function () {
-					$(this).hide	();
+					$(this).hide();
 				});
 
 				$('.ajax_cart_product_txt_s').each( function () {
 					$(this).show();
 				});
-
 			}
 			else
 			{
@@ -632,9 +631,9 @@ var ajaxCart = {
 		}
 		else
 		{
-			$('.ajax_cart_quantity, .ajax_cart_product_txt_s, .ajax_cart_product_txt, .ajax_cart_total').each( function () {
-					$(this).hide();
-				});
+			$('.ajax_cart_quantity, .ajax_cart_product_txt_s, .ajax_cart_product_txt, .ajax_cart_total').each(function(){
+				$(this).hide();
+			});
 			$('.ajax_cart_no_product').show('slow');
 		}
 	}
