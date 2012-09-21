@@ -72,12 +72,13 @@ class OrderOpcControllerCore extends ParentOrderController
 								if ($this->_processCarrier())
 								{
 									$carriers = $this->context->cart->simulateCarriersOutput();
-									$return = array(
-										'summary' => $this->context->cart->getSummaryDetails(),
+									$return = array_merge(array(
 										'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 										'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 										'carrier_data' => $this->_getCarrierList(),
 										'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array('carriers' => $carriers))
+										),
+										$this->getFormatedSummaryDetail()
 									);
 									Cart::addExtraCarriers($return);
 									die(Tools::jsonEncode($return));
@@ -146,8 +147,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
 								$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
 								$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
-								$return = array(
-									'summary' => $this->context->cart->getSummaryDetails(),
+								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookTop(array()) : ''),
 									'carrier_data' => $this->_getCarrierList(),
@@ -155,6 +155,8 @@ class OrderOpcControllerCore extends ParentOrderController
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 									'no_address' => 0,
 									'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
+									),
+									$this->getFormatedSummaryDetail()
 								);
 								die(Tools::jsonEncode($return));
 							}
@@ -208,12 +210,12 @@ class OrderOpcControllerCore extends ParentOrderController
 										$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
 										$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
 										$result = array_merge($result, array(
-											'summary' => $this->context->cart->getSummaryDetails(),
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency)))),
-											'carrier_data' => $this->_getCarrierList()
-										));
+											'carrier_data' => $this->_getCarrierList()),
+											$this->getFormatedSummaryDetail()
+										);
 										die(Tools::jsonEncode($result));
 									}
 								}
@@ -575,5 +577,27 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
 		}
 	}
+	
+	protected function getFormatedSummaryDetail()
+	{
+		$result = array('summary' => $this->context->cart->getSummaryDetails(),
+							'customizedDatas' => Product::getAllCustomizedDatas($this->context->cart->id, null, true)
+						);
+		foreach ($result['summary']['products'] as $key => &$product)
+		{
+			$product['quantity_without_customization'] = $product['quantity'];
+			if ($result['customizedDatas'])
+			{
+				foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses)
+					foreach ($addresses as $customization)
+						$product['quantity_without_customization'] -= (int)$customization['quantity'];
+			}
+		}
+		
+		if ($result['customizedDatas'])
+			Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
+		return $result;
+	}
+	
 }
 
