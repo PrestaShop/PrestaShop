@@ -1455,10 +1455,13 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
+			if (!Shop::isFeatureActive())
+				$info['shop'] = 1;
+			elseif (!isset($info['shop']) || empty($info['shop']))
+				$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
+
 			// Get shops for each attributes
 			$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
-			if (!isset($info['shop']) || !count($info['shop']))
-				$info['shop'] = Shop::getContextListShopID();
 				
 			$id_shop_list = array();
 			foreach ($info['shop'] as $shop)
