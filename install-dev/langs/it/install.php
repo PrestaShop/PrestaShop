@@ -63,7 +63,7 @@
     'Can create new files and folders ?' => NULL,
     'Is GD Library installed ?' => NULL,
     'Is MySQL support is on ?' => NULL,
-    'Write permissions on files:' => NULL,
+    'WRecursive write permissions on files and folders:' => NULL,
     'Can open external URLs ?' => NULL,
     'Is PHP register global option off (recommended) ?' => NULL,
     'Is GZIP compression activated (recommended) ?' => NULL,
