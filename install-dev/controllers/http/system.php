@@ -90,7 +90,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					)
 				),
 				array(
-					'title' => $this->l('Write permissions on files:'),
+					'title' => $this->l('Recursive write permissions on files and folders:'),
 					'checks' => array(
 						'config_dir' => '~/config/',
 						'cache_dir' => '~/cache/',

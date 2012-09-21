@@ -63,7 +63,7 @@
     'Can create new files and folders ?' => 'Können neue Dateien und Ordner erstellt weden ?',
     'Is GD Library installed ?' => 'Ist GD-Library installiert ?',
     'Is MySQL support is on ?' => 'Ist MySQL-Support aktiviert ?',
-    'Write permissions on files:' => 'Schreibrechte in Dateien:',
+    'Recursive write permissions on files and folders:' => 'Schreibrechte in Dateien und Ordner:',
     'Can open external URLs ?' => 'Können externe URLs geöffnet werden',
     'Is PHP register global option off (recommended) ?' => 'Ist register global auf off (emfohlen)?',
     'Is GZIP compression activated (recommended) ?' => 'Ist GZIP Kompression aktiviert (empfohlen)?',
