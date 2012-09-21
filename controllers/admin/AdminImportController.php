@@ -1948,7 +1948,10 @@ class AdminImportControllerCore extends AdminController
 						);
 				}
 				else
+				{
 					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid e-mail address'), $address->customer_email);
+					continue;
+				}
 			}
 
 			if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer))
@@ -1997,7 +2000,7 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
-				if (count($customer_list) > 0)
+				if (isset($customer_list) && count($customer_list) > 0)
 				{
 					$filter_list = array();
 					foreach ($customer_list as $customer)
