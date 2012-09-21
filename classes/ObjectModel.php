@@ -911,8 +911,13 @@ abstract class ObjectModelCore
 	public function validateController($htmlentities = true)
 	{
 		$errors = array();
+		$required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		foreach ($this->def['fields'] as $field => $data)
 		{
+			// Check if field is required by user
+			if (in_array($field, $required_fields_database))
+				$data['required'] = true;
+			
 			// Checking for required fields
 			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
 				if (!$this->id || $field != 'passwd')
