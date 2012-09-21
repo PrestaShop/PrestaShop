@@ -538,12 +538,11 @@ function updateCartSummary(json)
 		return;
 
 	$('.cart_quantity_input').val(0);
-	
+
 	product_list = {};
 	for (i=0;i<json.products.length;i++)
-	{
 		product_list[json.products[i].id_product+'_'+json.products[i].id_product_attribute+'_'+json.products[i].id_address_delivery] = json.products[i];
-	}
+
 	if (!$('.multishipping-cart:visible').length)
 	{
 		for (i=0;i<json.gift_products.length;i++)
@@ -560,7 +559,7 @@ function updateCartSummary(json)
 				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery] = json.gift_products[i];
 		}
 	}
-	
+
 	for (i in product_list)
 	{
 		// if reduction, we need to show it in the cart by showing the initial price above the current one
@@ -598,7 +597,6 @@ function updateCartSummary(json)
 		}
 
 		nbrProducts += parseInt(product_list[i].quantity);
-
 		$('input[name=quantity_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_0_'+product_list[i].id_address_delivery+']').val(product_list[i].quantity_without_customization);
 		$('input[name=quantity_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_0_'+product_list[i].id_address_delivery+'_hidden]').val(product_list[i].quantity_without_customization);
 		
