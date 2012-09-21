@@ -333,7 +333,7 @@ class HomeSlider extends Module
 				$this->_html .= '<input type="hidden" name="image_old_'.$language['id_lang'].'" value="'.($slide->image[$language['id_lang']]).'" id="image_old_'.$language['id_lang'].'" />';
 			/* Display image */
 			if ($slide && $slide->image[$language['id_lang']])
-				$this->_html .= '<img src="'.__PS_BASE_URI__.'modules/'.$this->name.'/images/'.$slide->image[$language['id_lang']].'" width="'.(Configuration::get('HOMESLIDER_WIDTH')/2).'" height="'.(Configuration::get('HOMESLIDER_HEIGHT')/2).'" alt=""/>';
+				$this->_html .= '<input type="hidden" name="has_picture" value="1" /><img src="'.__PS_BASE_URI__.'modules/'.$this->name.'/images/'.$slide->image[$language['id_lang']].'" width="'.(Configuration::get('HOMESLIDER_WIDTH')/2).'" height="'.(Configuration::get('HOMESLIDER_HEIGHT')/2).'" alt=""/>';
 			$this->_html .= '</div>';
 		}
 		$this->_html .= $this->displayFlags($languages, $id_lang_default, $divLangName, 'image', true);
@@ -488,7 +488,7 @@ class HomeSlider extends Module
 				$errors[] = $this->l('Legend is not set');
 			if (strlen(Tools::getValue('url_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('URL is not set');
-			if (!isset($_FILES['image_'.$id_lang_default]) || empty($_FILES['image_'.$id_lang_default]['tmp_name']))
+			if (!Tools::isSubmit('has_picture') && (!isset($_FILES['image_'.$id_lang_default]) || empty($_FILES['image_'.$id_lang_default]['tmp_name'])))
 				$errors[] = $this->l('Image is not set');
 			if (Tools::getValue('image_old_'.$id_lang_default) && !Validate::isFileName(Tools::getValue('image_old_'.$id_lang_default)))
 				$errors[] = $this->l('Image is not set');
