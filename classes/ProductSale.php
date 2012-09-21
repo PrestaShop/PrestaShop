@@ -66,7 +66,9 @@ class ProductSaleCore
 	{
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
-		if (empty($order_by) || $order_by == 'position') $order_by = 'sales';
+
+		$final_order_by = $order_by;
+		if (empty($order_by) || $order_by == 'position' || $order_by = 'price') $order_by = 'sales';
 		if (empty($order_way)) $order_way = 'DESC';
 
 		$groups = FrontController::getCurrentCustomerGroups();
@@ -109,7 +111,7 @@ class ProductSaleCore
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-		if ($order_by == 'price')
+		if ($final_order_by == 'price')
 			Tools::orderbyPrice($result, $order_way);
 		if (!$result)
 			return false;
