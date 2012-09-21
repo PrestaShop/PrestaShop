@@ -600,14 +600,14 @@ class InstallXmlLoader
 				if (!is_writable(dirname($target_file)))
 					$this->setError($this->language->l('Cannot create image "%1$s" (bad permissions on folder "%2$s")', $identifier.'-'.$type['name'], dirname($target_file)));
 				// If a file named folder/entity-type.extension exists just copy it, this is an optimisation in order to prevent to much resize
-				else if (file_exists($origin_file))
+				elseif (file_exists($origin_file))
 				{
 					if (!@copy($origin_file, $target_file))
 						$this->setError($this->language->l('Cannot create image "%s"', $identifier.'-'.$type['name']));
 					@chmod($target_file, 0644);
 				}
 				// Resize the image if no cache was prepared in fixtures
-				else if (!ImageManager::resize($from_path.$identifier.'.'.$extension, $target_file, $type['width'], $type['height']))
+				elseif (!ImageManager::resize($from_path.$identifier.'.'.$extension, $target_file, $type['width'], $type['height']))
 					$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier.'-'.$type['name'], $entity));
 			}
 		}
@@ -621,7 +621,7 @@ class InstallXmlLoader
 		$dst_path =  _PS_IMG_DIR_.'scenes/thumbs/';
 		$entity_id = $this->retrieveId('scene', $identifier);
 
-		if (!@copy($from_path.$identifier.'-thumb_scene.jpg', $dst_path.$entity_id.'-thumb_scene.jpg'))
+		if (!@copy($from_path.$identifier.'-m_scene_default.jpg', $dst_path.$entity_id.'-m_scene_default.jpg'))
 		{
 			$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, 'scene'));
 			return;
