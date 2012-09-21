@@ -1239,13 +1239,15 @@ class AdminControllerCore extends Controller
 			else
 			{
 				$path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-				$img = _PS_IMG_.'t/'.$tab['class_name'].'.png';
+				// Relative link will always work, whatever the base uri set in the admin
+				$img = '../img/t/'.$tab['class_name'].'.png';
 			}
 
 			if (trim($tab['module']) != '')
 			{
 				$path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-				$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+				// Relative link will always work, whatever the base uri set in the admin
+				$img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
 			}
 
 			// retrocompatibility
@@ -1651,7 +1653,7 @@ class AdminControllerCore extends Controller
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '&redirect='.$this->controller_name : ''));
 
 		// Set current index
-		$current_index = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
+		$current_index = 'index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
 		if ($back = Tools::getValue('back'))
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
