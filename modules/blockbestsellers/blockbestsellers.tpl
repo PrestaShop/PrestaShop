@@ -34,7 +34,7 @@
 			<li class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} clearfix">
 				<a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}" class="content_img clearfix">
 					<span class="number">{$smarty.foreach.myLoop.iteration}</span>
-					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small')}" height="{$smallSize.height}" width="{$smallSize.width}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
+					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" height="{$smallSize.height}" width="{$smallSize.width}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
 				
 				</a>
 				<p><a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}">
