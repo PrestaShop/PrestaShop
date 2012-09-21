@@ -41,7 +41,7 @@ class BestSalesControllerCore extends FrontController
 			'products' => ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => $nbProducts,
-			'homeSize' => Image::getSize('home')
+			'homeSize' => Image::getSize('home_default')
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');

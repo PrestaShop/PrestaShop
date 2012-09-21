@@ -3869,7 +3869,7 @@ class BlockLayered extends Module
 		
 		$smarty->assign(
 			array(
-				'homeSize' => Image::getSize('home'),
+				'homeSize' => Image::getSize('home_default'),
 				'nb_products' => $nb_products,
 				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
 				'pages_nb' => (int)($pages_nb),

@@ -674,7 +674,7 @@ class InstallXmlLoader
 				@chmod($target_file, 0644);
 			}
 			// Resize the image if no cache was prepared in fixtures
-			else if (!ImageManager::resize($path.$id.'.jpg', $target_file, $type['width'], $type['height']))
+			else if (!ImageManager::resize($path.$identifier.'.jpg', $target_file, $type['width'], $type['height']))
 				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier.'-'.$type['name'], 'product'));
 		}
 	}

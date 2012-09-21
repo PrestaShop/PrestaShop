@@ -82,7 +82,7 @@ class SearchControllerCore extends FrontController
 				'nbProducts' => $search['total'],
 				'search_query' => $query,
 				'instant_search' => $this->instant_search,
-				'homeSize' => Image::getSize('home')));
+				'homeSize' => Image::getSize('home_default')));
 		}
 		else if (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
 		{
@@ -98,7 +98,7 @@ class SearchControllerCore extends FrontController
 				'search_products' => $search['result'],
 				'nbProducts' => $search['total'],
 				'search_query' => $query,
-				'homeSize' => Image::getSize('home')));
+				'homeSize' => Image::getSize('home_default')));
 		}
 		else if (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag))
 		{
@@ -111,7 +111,7 @@ class SearchControllerCore extends FrontController
 				'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 				'search_products' => $result,
 				'nbProducts' => $nbProducts,
-				'homeSize' => Image::getSize('home')));
+				'homeSize' => Image::getSize('home_default')));
 		}
 		else
 		{
