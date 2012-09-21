@@ -380,14 +380,14 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$tabs_default = array();
 		foreach ($tabs_default_lang as $tab)
-			$tabs_default[$tab['class_name']] = utf8_decode($tab['name']);
+			$tabs_default[$tab['class_name']] = pSQL($tab['name']);
 
 		// Create content
 		$content = "<?php\n\n\$tabs = array();";
 		if (!empty($tabs))
 			foreach ($tabs as $tab)
-				if ($tabs_default[$tab['class_name']] != utf8_decode($tab['name']))
-				$content .= "\n\$tabs['".$tab['class_name']."'] = '".utf8_decode($tab['name'])."';";
+				if ($tabs_default[$tab['class_name']] != pSQL($tab['name']))
+				$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
 		$content .= "\n\nreturn \$tabs;";
 
 		$dir = _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.DIRECTORY_SEPARATOR;
