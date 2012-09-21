@@ -963,13 +963,21 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				// Associate category to shop
-				if (Shop::isFeatureActive() && $info['shop'])
+				if (Shop::isFeatureActive())
 				{
 					Db::getInstance()->execute('
 						DELETE FROM '._DB_PREFIX_.'category_shop
 						WHERE id_category = '.(int)$category->id
 					);
+
+					if (!Shop::isFeatureActive())
+						$info['shop'] = 1;
+					elseif (!isset($info['shop']) || empty($info['shop']))
+						$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
+
+					// Get shops for each attributes
 					$info['shop'] = explode($this->multiple_value_separator, $info['shop']);
+
 					foreach ($info['shop'] as $shop)
 						if (!is_numeric($shop))
 							$category->addShop(Shop::getIdByName($shop));
