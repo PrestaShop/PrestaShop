@@ -221,7 +221,12 @@ class MediaCore
 		if (!preg_match('/^http(s?):\/\//i', $file_uri) && !@filemtime($file_uri))
 			return false;
 
-		// adding file to the big array...;
+		if (Context::getContext()->controller->controller_type == 'admin')
+		{
+			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
+			$js_uri = dirname($_SERVER['REQUEST_URI'].'a').'/..'.$js_uri;
+		}
+		
 		return $js_uri;
 	}
 
@@ -243,9 +248,12 @@ class MediaCore
 		if (!@filemtime($file_uri))
 			return false;
 
-		// adding file to the big array...
-		if (is_array($css_uri))
-			return $css_uri;
+		if (Context::getContext()->controller->controller_type == 'admin')
+		{
+			$css_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $css_uri);
+			$css_uri = dirname($_SERVER['REQUEST_URI'].'a').'/..'.$css_uri;
+		}
+
 		return array($css_uri => $css_media_type);
 	}
 
@@ -269,6 +277,7 @@ class MediaCore
 			$folder = _PS_JS_DIR_.'jquery/'; //set default folder
 		//check if file exist
 		$file = $folder.'jquery-'.$version.($minifier ? '.min.js' : '.js');
+
 		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 		$url_data = parse_url($file);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
