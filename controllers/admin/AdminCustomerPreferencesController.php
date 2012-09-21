@@ -59,6 +59,13 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'list' => $registration_process_type,
 						'identifier' => 'value'
 					),
+					'PS_ONE_PHONE_AT_LEAST' => array(
+						'title' => $this->l('Phone number'),
+						'desc' => $this->l('If you choose this option your customer will must register at least one phone number.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_CART_FOLLOWING' => array(
 						'title' => $this->l('Cart re-display at login'),
 						'desc' => $this->l('After customer logs in, recall and display contents of his/her last shopping cart'),
