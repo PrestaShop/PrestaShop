@@ -781,8 +781,9 @@ class CartCore extends ObjectModel
 		$sql .= '
 			WHERE cp.`id_product` = '.(int)$id_product.'
 			AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
-			AND cp.`id_cart` = '.(int)$this->id.'
-			AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+			AND cp.`id_cart` = '.(int)$this->id;
+		if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery())
+			$sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
 
 		if ($id_customization)
 			$sql .= ' AND c.`id_customization` = '.(int)$id_customization;
@@ -886,7 +887,7 @@ class CartCore extends ObjectModel
 						SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
 						WHERE `id_product` = '.(int)$id_product.
 						(!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-						AND `id_cart` = '.(int)$this->id.' AND `id_address_delivery` = '.(int)$id_address_delivery.'
+						AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
 						LIMIT 1'
 					);
 			}
