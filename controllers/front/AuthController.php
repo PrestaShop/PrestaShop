@@ -538,7 +538,8 @@ class AuthControllerCore extends FrontController
 					else
 					{
 						$address->id_customer = (int)$customer->id;
-						if ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || $this->ajax || Tools::isSubmit('submitGuestAccount')) && !$address->add())
+						$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
+						if (!count($this->errors) && (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || $this->ajax || Tools::isSubmit('submitGuestAccount')) && !$address->add())
 							$this->errors[] = Tools::displayError('An error occurred while creating your address.');
 						else
 						{
