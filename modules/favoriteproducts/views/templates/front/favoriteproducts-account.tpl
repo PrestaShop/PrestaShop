@@ -55,7 +55,7 @@ $('document').ready(function()
 </script>
 
 {capture name=path}
-	<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}">
+	<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}</a>
 		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}
 {/capture}
@@ -84,7 +84,7 @@ $('document').ready(function()
 
 	<ul class="footer_links">
 		<li class="fleft">
-			<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a>
-			<a href="{$link->getPageLink('my-account.php', true)|escape:'htmlall':'UTF-8'}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
+			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a>
+			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
 	</ul>
 </div>
