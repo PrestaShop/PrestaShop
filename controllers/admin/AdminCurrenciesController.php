@@ -92,13 +92,12 @@ class AdminCurrenciesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Currency:'),
+					'label' => $this->l('Currency name:'),
 					'name' => 'name',
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus character are allowed'),
-					'desc' => $this->l('Will appear in Front Office (e.g. $, €)').'...',
+					'hint' => $this->l('Only letters and the minus character are allowed')
 				),
 				array(
 					'type' => 'text',
