@@ -611,6 +611,7 @@ class InstallXmlLoader
 					$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier.'-'.$type['name'], $entity));
 			}
 		}
+		Image::moveToNewFileSystem();
 	}
 
 	public function copyImagesScene($identifier, array $data)

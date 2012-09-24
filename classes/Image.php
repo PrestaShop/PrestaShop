@@ -594,9 +594,9 @@ class ImageCore extends ObjectModel
 				// image exists in DB and with the correct product?
 				if (Validate::isLoadedObject($image) && $image->id_product == (int)rtrim($matches[1], '-'))
 				{
-				// create the new folder if it does not exist
-				if (!$image->createImgFolder())
-					return false;
+					// create the new folder if it does not exist
+					if (!$image->createImgFolder())
+						return false;
 
 					// if there's already a file at the new image path, move it to a dump folder
 					// most likely the preexisting image is a demo image not linked to a product and it's ok to replace it
