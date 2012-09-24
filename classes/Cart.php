@@ -2934,6 +2934,12 @@ class CartCore extends ObjectModel
 	{
 		return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
 	}
+	
+	public function deletePictureToProduct($id_product, $index)
+	{
+		Tools::displayAsDeprecated();
+		return $this->deleteCustomizationToProduct($id_product, 0);
+	}
 
 	/**
 	 * Remove a customer's customization
