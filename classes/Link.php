@@ -408,7 +408,7 @@ class LinkCore
 				$request = urlencode($request);
 			parse_str($request, $request);
 		}
-		unset($request['controller']);
+		unset($request['controller'], $request['module']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request);
 		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
