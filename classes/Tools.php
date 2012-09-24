@@ -1518,7 +1518,6 @@ class ToolsCore
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
 		fwrite($write_fd, "RewriteEngine on\n");
-		fwrite($write_fd, "RewriteBase /\n\n");
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 		
@@ -1535,8 +1534,17 @@ class ToolsCore
 
 		foreach ($domains as $domain => $list_uri)
 		{
+			$physicals = array();
 			foreach ($list_uri as $uri)
 			{
+				
+				if (!isset($physicals[$uri['physical']]))
+				{
+					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+					fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
+					$physicals[$uri['physical']] = true;
+				}
+
 				$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
 				$domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n";
 				// Rewrite virtual multishop uri
@@ -1567,10 +1575,10 @@ class ToolsCore
 					{
 						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
+						fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
 						fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+						fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
 					}
 
 					// Rewrite product images < 100 millions
@@ -1585,14 +1593,14 @@ class ToolsCore
 						$img_name .= '$'.$j;
 							fwrite($write_fd, $media_domains);
 						fwrite($write_fd, $domain_rewrite_cond);
-						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
+						fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}'._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
 					}
 					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
-					fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
+					fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]'."\n");
 					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
-					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
+					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
 				}
 			}
 			// Redirections to dispatcher
@@ -1605,7 +1613,7 @@ class ToolsCore
 				fwrite($write_fd, $domain_rewrite_cond);
 				fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
 				fwrite($write_fd, $domain_rewrite_cond);
-				fwrite($write_fd, "RewriteRule ^.*\$ index.php [NC,L]\n");
+				fwrite($write_fd, "RewriteRule ^.*\$ %{ENV:REWRITEBASE}index.php [NC,L]\n");
 			}
 		}
 
