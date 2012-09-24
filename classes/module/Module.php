@@ -995,7 +995,7 @@ abstract class ModuleCore
 						$item->$k = (string)$v;
 					$item->displayName = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name));
 					$item->description = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name));
-					$item->author = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
+					$item->author = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name));
 
 					if (isset($xml_module->confirmUninstall))
 						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
