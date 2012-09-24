@@ -1517,7 +1517,8 @@ class ToolsCore
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
-		fwrite($write_fd, "RewriteEngine on\n\n");
+		fwrite($write_fd, "RewriteEngine on\n");
+		fwrite($write_fd, "RewriteBase /\n\n");
 		// Webservice
 		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
 		
