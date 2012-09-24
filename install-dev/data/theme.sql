@@ -31,7 +31,7 @@ UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_STORES_DISPLAY_FO
 UPDATE `PREFIX_configuration` SET value = '209' WHERE name = 'SHOP_LOGO_WIDTH';
 UPDATE `PREFIX_configuration` SET value = '52' WHERE name = 'SHOP_LOGO_HEIGHT';
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_DISPLAY_SUPPLIERS';
-UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_LEGACY_IMAGES';
+UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_LEGACY_IMAGES';
 UPDATE `PREFIX_configuration` SET value = 'jpg' WHERE name = 'PS_IMAGE_QUALITY';
 UPDATE `PREFIX_configuration` SET value = '7' WHERE name = 'PS_PNG_QUALITY';
 UPDATE `PREFIX_configuration` SET value = '90' WHERE name = 'PS_JPEG_QUALITY';
