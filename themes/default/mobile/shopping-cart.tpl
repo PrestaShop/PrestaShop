@@ -183,7 +183,7 @@
 		</div>
 	</div><!-- /grid-a -->
 	<br />
-	{if $isLogged AND !$isGuest}
+	{if $opc && $isLogged && !$isGuest}
 		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back" data-ajax="false">{l s='Continue shopping'}</a>
 	{else}
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
@@ -191,7 +191,7 @@
 				<a href="{$link->getPageLink('index', true)}" data-ajax="false">{l s='Continue shopping'}</a>
 			</li>
 			<li data-theme="b" data-icon="check">
-				<a href="{$link->getPageLink('authentication', true)}&back=order-opc" data-ajax="false">{l s='Confirm order'}</a>
+				<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}" data-ajax="false">{l s='Confirm order'}</a>
 			</li>
 			{hook h="displayMobileShoppingCartButton"}
 		</ul>
