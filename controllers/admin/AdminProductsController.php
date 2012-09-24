@@ -3701,7 +3701,8 @@ class AdminProductsControllerCore extends AdminController
 				// Check if product has combination, to display the available date only for the product or for each combination
 				if (Combination::isFeatureActive())
 					$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
-
+				else
+					$data->assign('countAttributes', false);
 				// if advanced stock management is active, checks associations
 				$advanced_stock_management_warning = false;
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
