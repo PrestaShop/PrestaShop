@@ -315,11 +315,14 @@ class Blockreinsurance extends Module
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 		return $helper;
-
 	}
 
 	public function hookFooter($params)
 	{
+		// Check if not a mobile theme
+		if ($this->context->getMobileDevice() != false)
+			return false;
+
 		$this->context->controller->addCSS($this->_path.'style.css', 'all');
 		$infos = $this->getListContent($this->context->language->id);
 		$this->context->smarty->assign(array('infos' => $infos, 'nbblocks' => count($infos)));

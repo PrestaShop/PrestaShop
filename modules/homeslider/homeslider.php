@@ -648,6 +648,10 @@ class HomeSlider extends Module
 		if(!$this->_prepareHook())
 			return;
 
+		// Check if not a mobile theme
+		if ($this->context->getMobileDevice() != false)
+			return false;
+
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
