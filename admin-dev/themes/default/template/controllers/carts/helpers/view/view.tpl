@@ -99,7 +99,7 @@
 							<ul style="margin: 0; padding: 0; list-style-type: none;">
 							{foreach from=$datas key='index' item='data'}
 									<li style="display: inline; margin: 2px;">
-										<a href="displayImage.php?img={$data.value}&name={$order->id}-file{$smarty.foreach.count.index}" target="_blank">
+										<a href="displayImage.php?img={$data.value}&name={$order->id}-file{$index}" target="_blank">
 										<img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 									</li>
 							{/foreach}
@@ -107,7 +107,7 @@
 						{elseif $type == constant('Product::CUSTOMIZE_TEXTFIELD')}
 							<ul style="margin-bottom: 4px; padding: 0; list-style-type: none;">
 							{foreach from=$datas key='index' item='data'}
-								<li>{if $data.name}{$data.name}{else}{l s='Text #'}{$smarty.foreach.count.index}{/if}{l s=':'}<b>{$data.value}</b></li>
+								<li>{if $data.name}{$data.name}{else}{l s='Text #'}{$index}{/if}{l s=':'}<b>{$data.value}</b></li>
 							{/foreach}
 							</ul>
 						{/if}
