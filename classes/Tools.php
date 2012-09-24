@@ -1518,9 +1518,7 @@ class ToolsCore
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
 		fwrite($write_fd, "RewriteEngine on\n");
-		// Webservice
-		fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
-		
+	
 		if (!$medias)
 			$medias = array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_);
 		
@@ -1537,14 +1535,12 @@ class ToolsCore
 			$physicals = array();
 			foreach ($list_uri as $uri)
 			{
+				fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+				fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
 				
-				if (!isset($physicals[$uri['physical']]))
-				{
-					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-					fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
-					$physicals[$uri['physical']] = true;
-				}
-
+				// Webservice
+				fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."%{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
+				
 				$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
 				$domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n";
 				// Rewrite virtual multishop uri
