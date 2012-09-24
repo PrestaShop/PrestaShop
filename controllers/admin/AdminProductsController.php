@@ -3342,7 +3342,7 @@ class AdminProductsControllerCore extends AdminController
 		$images = Image::getImages($this->context->language->id, $product->id);
 
 		foreach ($images as $k => $image)
-			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small');
+			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small_default');
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
@@ -3513,7 +3513,7 @@ class AdminProductsControllerCore extends AdminController
 					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
 
 					$i = 0;
-					$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
+					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
 					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
 					foreach ($images as $k => $image)
 					{
