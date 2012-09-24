@@ -7,3 +7,4 @@ UPDATE `PREFIX_image_shop` image_shop SET image_shop.`cover`=1 WHERE `id_image` 
 
 INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_ONE_PHONE_AT_LEAST', '1', NOW(), NOW());
 
+/* PHP:p15018_change_image_types(); */;
