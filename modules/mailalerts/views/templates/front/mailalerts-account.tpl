@@ -57,7 +57,7 @@ $('document').ready(function()
 });
 </script>
 
-{capture name=path}<a href="{$link->getPageLink('my-account.php', true)}">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='mailalerts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My alerts' mod='mailalerts'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="mailalerts_block_account">
@@ -81,6 +81,6 @@ $('document').ready(function()
 	{/if}
 
 	<ul class="footer_links">
-		<li class="fleft"><a href="{$link->getPageLink('my-account.php', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account.php', true)}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
+		<li class="fleft"><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}">{l s='Back to Your Account' mod='mailalerts'}</a></li>
 	</ul>
 </div>
