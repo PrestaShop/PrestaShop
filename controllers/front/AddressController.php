@@ -172,7 +172,7 @@ class AddressControllerCore extends FrontController
 				$address->dni = null;
 		}
 		// Check if the alias exists
-		if (!empty($_POST['alias'])
+		if (!$this->context->customer->is_guest && !empty($_POST['alias'])
 			&& (int)$this->context->customer->id > 0
 			&& Db::getInstance()->getValue('
 				SELECT count(*)
