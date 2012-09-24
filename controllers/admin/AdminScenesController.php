@@ -77,14 +77,14 @@ class AdminScenesControllerCore extends AdminController
 
 			foreach ($images_types as $k => $image_type)
 			{
-				if ($image_type['name'] == 'large_scene' && isset($_FILES['image']))
+				if ($image_type['name'] == 'scene_default' && isset($_FILES['image']))
 					ImageManager::resize(
 						$base_img_path,
 						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
 					);
-				else if ($image_type['name'] == 'thumb_scene')
+				else if ($image_type['name'] == 'm_scene_default')
 				{
 					if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
 						$base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
@@ -135,9 +135,9 @@ class AdminScenesControllerCore extends AdminController
 		$thumb_scene_image_type = null;
 		foreach ($scene_image_types as $scene_image_type)
 		{
-			if ($scene_image_type['name'] == 'large_scene')
+			if ($scene_image_type['name'] == 'scene_default')
 				$large_scene_image_type = $scene_image_type;
-			if ($scene_image_type['name'] == 'thumb_scene')
+			if ($scene_image_type['name'] == 'm_scene_default')
 				$thumb_scene_image_type = $scene_image_type;
 		}
 		$fields_form = array(
@@ -202,13 +202,13 @@ class AdminScenesControllerCore extends AdminController
 				$large_scene_image_type['width'], $large_scene_image_type['height'])
 				.$this->l('If smaller than the image size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
-		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
+		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg'))
 		{
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
 			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
 			$image_to_map_desc .= '<br /><img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'.
-				_THEME_SCENE_DIR_.$obj->id.'-large_scene.jpg" /><br />';
+				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg" /><br />';
 
 			$image_to_map_desc .= '
 						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
@@ -221,7 +221,7 @@ class AdminScenesControllerCore extends AdminController
 
 			if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg'))
 				$image_to_map_desc .= '<br/>
-					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-thumb_scene.jpg" />
+					<img id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg" />
 					<br />';
 
 			$img_alt_desc = '';

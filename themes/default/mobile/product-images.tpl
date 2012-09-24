@@ -36,7 +36,7 @@
 			{foreach from=$images item=image name=thumbnails}
 				{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 				<li id="thumbnail_{$image.id_image}">
-					<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" data-large="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox')}" />
+					<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" data-large="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')}" />
 				</li>
 			{/foreach}
 			</ul>
