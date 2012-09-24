@@ -172,7 +172,7 @@ class ProductControllerCore extends FrontController
 				$this->textRecord();
 				$this->formTargetFormat();
 			}
-			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deletePictureToProduct($this->product->id, Tools::getValue('deletePicture')))
+			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
 			$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
