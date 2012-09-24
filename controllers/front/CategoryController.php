@@ -36,15 +36,19 @@ class CategoryControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		//TODO : check why cluetip css is include without js file
-		$this->addCSS(array(
-			_THEME_CSS_DIR_.'scenes.css' => 'all',
-			_THEME_CSS_DIR_.'category.css' => 'all',
-			_THEME_CSS_DIR_.'product_list.css' => 'all',
-		));
 
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
+		if ($this->context->getMobileDevice() == false)
+		{
+			//TODO : check why cluetip css is include without js file
+			$this->addCSS(array(
+				_THEME_CSS_DIR_.'scenes.css' => 'all',
+				_THEME_CSS_DIR_.'category.css' => 'all',
+				_THEME_CSS_DIR_.'product_list.css' => 'all',
+			));
+
+			if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
+				$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
+		}
 	}
 
 	public function canonicalRedirection($canonicalURL = '')
