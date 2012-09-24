@@ -482,6 +482,7 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
+		copy2friendlyURL();
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
