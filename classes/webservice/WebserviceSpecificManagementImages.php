@@ -945,6 +945,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						$image = new Image();
 						$image->id_product = (int)($product->id);
 						$image->position = Image::getHighestPosition($product->id) + 1;
+
+						if (!Image::getCover((int)$product->id))
+							$image->cover = 1;
+						else
+							$image->cover = 0;
+							
 						if (!$image->add())
 							throw new WebserviceException('Error while creating image', array(76, 400));
 						if (!Validate::isLoadedObject($product))
@@ -987,6 +993,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 							throw new WebserviceException('An error occurred during the image upload', array(76, 400));
 						elseif (!ImageManager::resize($tmpName, $receptionPath))
 							throw new WebserviceException('An error occurred while copying image', array(76, 400));
+						$imagesTypes = ImageType::getImagesTypes($this->imageType);
+						foreach ($imagesTypes as $imageType)
+							if (!ImageManager::resize($tmpName, $parentPath.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']))
+								$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 						@unlink(_PS_TMP_IMG_DIR_.$tmpName);
 						$this->imgToDisplay = $receptionPath;
 					}
