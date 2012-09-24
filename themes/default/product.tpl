@@ -181,7 +181,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			</span>
 		{else}
 			<span id="view_full_size">
-				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img src="{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')}" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
 				<span class="span_link">{l s='View full size'}</span>
 			</span>
 		{/if}
