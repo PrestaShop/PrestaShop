@@ -440,7 +440,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
+					'hint' => $this->l('Forbidden characters:').' <>;=#{}%'
 				),
 				array(
 					'type' => 'group',
@@ -544,7 +544,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$object = parent::processAdd();
 		
 		//if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
-		if (Tools::isSubmit('is_root_category'))
+		if ($object && Tools::isSubmit('is_root_category'))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
 
 		return $object;
