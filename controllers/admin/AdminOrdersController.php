@@ -199,7 +199,7 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$type = $this->l('Cancel products');
 
-			if (!$order->hasBeenDelivered())
+			if (!$order->hasBeenDelivered() && !$this->lite_display)
 				$this->toolbar_btn['new'] = array(
 					'short' => 'Create',
 					'href' => '#',
@@ -207,7 +207,7 @@ class AdminOrdersControllerCore extends AdminController
 					'class' => 'add_product'
 				);
 
-			if (Configuration::get('PS_ORDER_RETURN'))
+			if (Configuration::get('PS_ORDER_RETURN') && !$this->lite_display)
 				$this->toolbar_btn['standard_refund'] = array(
 					'short' => 'Create',
 					'href' => '',
@@ -215,7 +215,7 @@ class AdminOrdersControllerCore extends AdminController
 					'class' => 'process-icon-standardRefund'
 				);
 			
-			if ($order->hasInvoice())
+			if ($order->hasInvoice() && !$this->lite_display)
 				$this->toolbar_btn['partial_refund'] = array(
 					'short' => 'Create',
 					'href' => '',
