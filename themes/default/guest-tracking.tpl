@@ -93,7 +93,7 @@
 {else}
 	{include file="$tpl_dir./errors.tpl"}
 	{if isset($show_login_link) && $show_login_link}
-		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account.php', true)}">{l s='Click here to log in to your customer account'}</a><br /><br /></p>
+		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)}">{l s='Click here to log in to your customer account'}</a><br /><br /></p>
 	{/if}
 	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std">
 		<fieldset class="description_box">

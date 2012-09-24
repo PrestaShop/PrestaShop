@@ -125,7 +125,7 @@ var img_dir = '{$img_dir}';
 							<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
 							<td class="delete">
 								{if strlen($discount.code)}
-									<a class="delete_voucher" href="{$link->getPageLink('$order_process.php', true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete' mod='blockcart'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete' mod='blockcart'}" class="icon" /></a>
+									<a class="delete_voucher" href="{$link->getPageLink('$order_process', true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete' mod='blockcart'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete' mod='blockcart'}" class="icon" /></a>
 								{/if}
 							</td>
 						</tr>
@@ -166,8 +166,8 @@ var img_dir = '{$img_dir}';
 			{/if}
 		{/if}
 		<p id="cart-buttons">
-			{if $order_process == 'order'}<a href="{$link->getPageLink("$order_process.php", true)}" class="button_small" title="{l s='Cart' mod='blockcart'}">{l s='Cart' mod='blockcart'}</a>{/if}
-			<a href="{$link->getPageLink("$order_process.php", true)}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}"><span></span>{l s='Check out' mod='blockcart'}</a>
+			{if $order_process == 'order'}<a href="{$link->getPageLink("$order_process", true)}" class="button_small" title="{l s='Cart' mod='blockcart'}">{l s='Cart' mod='blockcart'}</a>{/if}
+			<a href="{$link->getPageLink("$order_process", true)}" id="button_order_cart" class="exclusive{if $order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}"><span></span>{l s='Check out' mod='blockcart'}</a>
 		</p>
 	</div>
 	</div>

@@ -85,7 +85,7 @@
 						</span>
 					{/if}
 				</p>
-				<a class="cmp_remove" href="{$link->getPageLink('products-comparison.php', true)}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
+				<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
 				{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
 					{if ($product->quantity > 0 OR $product->allow_oosp)}
 						<a class="exclusive ajax_add_to_cart_button" rel="ajax_id_product_{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")}" title="{l s='Add to cart'}"><span></span>{l s='Add to cart'}</a>

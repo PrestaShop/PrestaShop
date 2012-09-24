@@ -182,7 +182,7 @@
 						{/foreach}
 						</ul>
 					{/if}
-					<form action="{if $opc}{$link->getPageLink('order-opc.php', true)}{else}{$link->getPageLink('order.php', true)}{/if}" method="post" id="voucher">
+					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 						<fieldset>
 							<h4><label for="discount_name">{l s='Vouchers'}</label></h4>
 							<p>
