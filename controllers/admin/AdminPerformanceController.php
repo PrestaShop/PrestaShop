@@ -49,19 +49,19 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
 							'value' => _PS_SMARTY_NO_COMPILE_,
-							'label' => $this->l('Never compile cache'),
+							'label' => $this->l('Never recompile template files'),
 							'desc' => $this->l('Templates are never recompiled, performance is better and this option should be used in production environment')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
-							'label' => $this->l('Compile cache if templates are updated'),
+							'label' => $this->l('Recompile templates if the files have been updated'),
 							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
 							'value' => _PS_SMARTY_FORCE_COMPILE_,
-							'label' => $this->l('Force Compile'),
+							'label' => $this->l('Force compilation'),
 							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.')
 						)
 					)
