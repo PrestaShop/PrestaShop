@@ -44,15 +44,15 @@
 						<td>
 						<select name="i_{$module->name}" class="moduleFavorite" style="width:50px">
 							<option value="" selected="selected">---</option>
-							<option value="1" {if isset($module->preferences.interest) && $module->preferences.interest eq '1'}selected="selected"{/if}>Yes</option>
-							<option value="0" {if isset($module->preferences.interest) && $module->preferences.interest eq '0'}selected="selected"{/if}>No</option>
+							<option value="1" {if isset($module->preferences.interest) && $module->preferences.interest eq '1'}selected="selected"{/if}>{l s='Yes'}</option>
+							<option value="0" {if isset($module->preferences.interest) && $module->preferences.interest eq '0'}selected="selected"{/if}>{l s='No'}</option>
 						</select>
 						</td>
 						<td>
 						<select name="f_{$module->name}" class="moduleFavorite" style="width:50px">
 							<option value="" selected="selected">---</option>
-							<option value="1" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '1'}selected="selected"{/if}>Yes</option>
-							<option value="0" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '0'}selected="selected"{/if}>No</option>
+							<option value="1" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '1'}selected="selected"{/if}>{l s='Yes'}</option>
+							<option value="0" {if isset($module->preferences.favorite) && $module->preferences.favorite eq '0'}selected="selected"{/if}>{l s='No'}</option>
 						</select>
 						</td>
 						<td id="r_{$module->name}">&nbsp;</td>
