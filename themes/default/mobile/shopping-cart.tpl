@@ -15,7 +15,7 @@
 					<input type="hidden" id="cart_product_address_delivery_id_{$product.id_product}" value="{$product.id_address_delivery}"/>
 
 					<div class="fl width-20">
-						<img src="{$img_prod_dir}{$product.id_image}-small.jpg" class="img_product_cart" />
+						<img src="{$img_prod_dir}{$product.id_image}-small_default.jpg" class="img_product_cart" />
 					</div>
 					<div class="fl width-70 padding-left-5px">
 						<h3>{$product.name}</h3>
