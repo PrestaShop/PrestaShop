@@ -192,14 +192,14 @@ class AdminOrdersControllerCore extends AdminController
 		if ($this->display == 'view')
 		{
 			$order = new Order((int)Tools::getValue('id_order'));
-			if ($order->hasBeenDelivered())
+			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
 			elseif ($order->hasBeenPaid())
 				$type = $this->l('Standard refund');
 			else
 				$type = $this->l('Cancel products');
 
-			if (!$order->hasBeenDelivered() && !$this->lite_display)
+			if (!$order->hasBeenShipped() && !$this->lite_display)
 				$this->toolbar_btn['new'] = array(
 					'short' => 'Create',
 					'href' => '#',
