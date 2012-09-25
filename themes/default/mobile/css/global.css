@@ -439,7 +439,7 @@ h2.site_map {
 }
 #category-list .ui-li-heading {height:45px; white-space:normal;}
 #category-list .ui-li-price {text-align:right; color:#990000; font-size:12pt; font-weight: bold;}
-#category-list .ui-li-price-info {text-align:right; font-size:8pt; text-transform: uppercase;}
+#category-list .ui-li-price-info {text-align:right; font-size:7pt; text-transform: uppercase;}
 #category-list .ui-li-price-info span {display:inline-block;}
 #category-list .ui-li-price-info.discount span {background-color:#9B0000; color:#ffffff; text-shadow:none;}
 #category-list .ui-btn-icon-right .ui-icon {display:none}
