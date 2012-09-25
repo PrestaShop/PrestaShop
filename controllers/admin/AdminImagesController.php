@@ -41,9 +41,15 @@ class AdminImagesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'size' => 16),
+			'name' => array('title' => $this->l('Name'), 'width' => 300),
 			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
-			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5)
+			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
+			'products' => array('title' => $this->l('Products'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'categories' => array('title' => $this->l('Categories'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'manufacturers' => array('title' => $this->l('Manufacturers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'suppliers' => array('title' => $this->l('Suppliers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'scenes' => array('title' => $this->l('Scenes'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'stores' => array('title' => $this->l('Stores'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
 
 		$this->fields_options = array(
@@ -370,6 +376,11 @@ class AdminImagesControllerCore extends AdminController
 
 		else
 			parent::postProcess();
+	}
+
+	public static function printEntityActiveIcon($value, $object)
+	{
+		return ($value ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />');
 	}
 
 	protected function _childValidation()
