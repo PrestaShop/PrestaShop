@@ -165,6 +165,8 @@ class Editorial extends Module
 					'lang' => true,
 					'autoload_rte' => true,
 					'hint' => $this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.'),
+					'cols' => 60,
+					'rows' => 30
 				),
 				array(
 					'type' => 'file',
