@@ -147,20 +147,21 @@ class OrderControllerCore extends ParentOrderController
 
 			case 3:
 				// Check that the conditions (so active) were accepted by the customer
-				$cgv = Tools::getValue('cgv');
+				$cgv = Tools::getValue('cgv') || $this->context->cookie->check_cgv;
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
 					Tools::redirect('index.php?controller=order&step=2');
+				Context::getContext()->cookie->check_cgv = true;
 
 				// Check the delivery option is setted
 				if (!$this->context->cart->isVirtualCart())
 				{
-					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier'))
+					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier') && !$this->context->cart->delivery_option && !$this->context->cart->id_carrier)
 						Tools::redirect('index.php?controller=order&step=2');
-					elseif (!Tools::getValue('id_carrier'))
+					elseif (!Tools::getValue('id_carrier') && !$this->context->cart->id_carrier)
 					{
 						foreach (Tools::getValue('delivery_option') as $delivery_option)
-						if (empty($delivery_option))
-							Tools::redirect('index.php?controller=order&step=2');
+							if (empty($delivery_option))
+								Tools::redirect('index.php?controller=order&step=2');
 					}
 				}
 
