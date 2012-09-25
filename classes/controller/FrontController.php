@@ -188,7 +188,10 @@ class FrontControllerCore extends Controller
 		{
 			$cart = new Cart($this->context->cookie->id_cart);
 			if ($cart->OrderExists())
+			{
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
+				$this->context->cookie->check_cgv = false;
+			}
 			/* Delete product of cart, if user can't make an order from his country */
 			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) &&
 					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) &&
