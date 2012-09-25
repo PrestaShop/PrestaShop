@@ -301,6 +301,7 @@ class ProductCore extends ObjectModel
 			'default_category' => 			array('type' => self::HAS_ONE, 'field' => 'id_category_default', 'object' => 'Category'),
 			'tax_rules_group' => 			array('type' => self::HAS_ONE),
 			'categories' =>					array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
+			'stock_availables' =>			array('type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'),
 		),
 	);
 
@@ -392,6 +393,13 @@ class ProductCore extends ObjectModel
 				'fields' => array(
 					'id' => array('required' => true),
 			)),
+			'stock_availables' => array('resource' => 'stock_available',
+				'fields' => array(
+					'id' => array('required' => true),
+					'id_product_attribute' => array('required' => true),
+			),
+				'setter' => false
+			),
 		),
 	);
 
@@ -4460,6 +4468,13 @@ class ProductCore extends ObjectModel
 		ORDER BY i.`position`');
 	}
 
+	public function getWsStockAvailables()
+	{
+		return Db::getInstance()->executeS('SELECT `id_stock_available` id, `id_product_attribute`
+														FROM `'._DB_PREFIX_.'stock_available`
+														WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
+	}
+	
 	public function getWsTags()
 	{
 		return Db::getInstance()->executeS('

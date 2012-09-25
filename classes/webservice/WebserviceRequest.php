@@ -269,7 +269,7 @@ class WebserviceRequestCore
 			'stock_movement_reasons' => array('description' => 'Stock movement reason', 'class' => 'StockMvtReason'),
 			'warehouses' => array('description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => array('DELETE')),
 			'stocks' => array('description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
-			'stock_availables' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'stock_availables' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('POST', 'DELETE')),
 			'warehouse_product_locations' => array('description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_orders' => array('description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_details' => array('description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
@@ -1537,7 +1537,7 @@ class WebserviceRequestCore
 								}
 							}
 						$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-						if ($assoc !== false)
+						if ($assoc !== false && $assoc['type'] != 'fk_shop')
 						{
 							// PUT nor POST is destructive, no deletion
 							$sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
