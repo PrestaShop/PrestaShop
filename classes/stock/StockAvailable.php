@@ -83,6 +83,10 @@ class StockAvailableCore extends ObjectModel
  		),
  		'hidden_fields' => array(
  		),
+		'objectMethods' => array(
+			'add' => 'addWs',
+			'update' => 'updateWs',
+		),
  	);
 
 	/**
@@ -93,6 +97,14 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_shop Optional
 	 * @return int
 	 */
+	
+	public function updateWs()
+	{
+		if ($this->depends_on_stock)
+			return WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t update stock available when it\'s depend on stock'));
+		return $this->update();
+	}
+	
 	public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
 	{
 		if (!Validate::isUnsignedId($id_product))
@@ -361,7 +373,7 @@ class StockAvailableCore extends ObjectModel
 	{
 		if (!parent::update($null_values))
 			return false;
-		$this->postSave();
+		return $this->postSave();
 	}
 
 	/**
