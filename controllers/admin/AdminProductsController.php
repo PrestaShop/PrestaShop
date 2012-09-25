@@ -2096,7 +2096,7 @@ class AdminProductsControllerCore extends AdminController
 
 					$product_tabs[$product_tab] = array(
 						'id' => $product_tab,
-						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || substr($product_tab, 0, 6) == 'Module'),
+						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (substr($product_tab, 0, 6) == substr($this->tab_display, 0, 6))),
 						'name' => $this->available_tabs_lang[$product_tab],
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)Tools::getValue('id_product').'&amp;action='.$product_tab,
 					);
