@@ -210,14 +210,14 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'default_tab',
-					'label' => $this->l('Default page'),
+					'label' => $this->l('Default page:'),
 					'name' => 'default_tab',
 					'desc' => $this->l('This page will be displayed just after login'),
 					'options' => $this->tabs_list
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Back Office width'),
+					'label' => $this->l('Back Office width:'),
 					'name' => 'bo_width',
 					'size' => 10,
 					'desc' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
