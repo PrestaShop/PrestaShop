@@ -83,6 +83,26 @@ function p15018_change_image_types()
 						rename(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
 							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type.'.jpg');
 		}
+		
+		// Then the other entities (if there is less than 500 products, that should not be a problem)
+		$directories = array('c', 'm', 's', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
+		foreach ($directories as $directory)
+			foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory) as $file)
+			{
+				if (!preg_match('/^[0-9]+\-[a-z_-]\.jpg$/i', $file))
+					continue;
+				foreach ($replace_types as $type => $type_array)
+					foreach ($type_array as $old_type => $new_type)
+						if (preg_match('/^([0-9]+)\-'.$old_type.'\.jpg$/i', $file, $matches))
+						{
+							if ($option)
+								copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
+									_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg');
+							else
+								rename(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
+									_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg');
+						}
+			}
 	}
 
 	return true;
