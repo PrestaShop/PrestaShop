@@ -139,8 +139,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->_orderBy = 'position';
 
 			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id);
-
+			$this->getList($this->context->language->id, null, null, 0, false);
 
 			// Render list
 			$helper = new HelperList();
