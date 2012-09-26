@@ -96,23 +96,22 @@ class AuthControllerCore extends FrontController
 		if (!empty($key))
 			$back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
 		if (!empty($back))
-		{
 			$this->context->smarty->assign('back', Tools::safeOutput($back));
-			if (strpos($back, 'order') !== false)
-			{
-				if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
-					$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
-				else
-					$countries = Country::getCountries($this->context->language->id, true);
+	
+		if (Tools::getValue('display_guest_checkout'))
+		{
+			if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
+				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
+			else
+				$countries = Country::getCountries($this->context->language->id, true);
 
-				$this->context->smarty->assign(array(
-						'inOrderProcess' => true,
-						'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
-						'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-						'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
-						'countries' => $countries
-					));
-			}
+			$this->context->smarty->assign(array(
+					'inOrderProcess' => true,
+					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
+					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+					'sl_country' => (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT')),
+					'countries' => $countries
+				));
 		}
 
 		if (Tools::getValue('create_account'))
@@ -400,6 +399,7 @@ class AuthControllerCore extends FrontController
 
 		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{
+			
 			if (!count($this->errors))
 			{
 				if (Tools::isSubmit('newsletter'))
@@ -515,6 +515,7 @@ class AuthControllerCore extends FrontController
 				$this->processCustomerNewsletter($customer);
 
 			$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
+			
 			if (!count($this->errors))
 			{
 				// if registration type is in one step, we save the address
@@ -605,6 +606,10 @@ class AuthControllerCore extends FrontController
 
 		if (count($this->errors))
 		{
+			//for retro compatibility to display guest account creation form on authentication page
+			if (Tools::getValue('submitGuestAccount'))
+				$_GET['display_guest_checkout'] = 1;
+			
 			if (!Tools::getValue('is_new_customer'))
 				unset($_POST['passwd']);
 			if ($this->ajax)

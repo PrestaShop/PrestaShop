@@ -344,8 +344,10 @@ $(function(){ldelim}
 				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 			</p>
 		</fieldset>
+		{$HOOK_CREATE_ACCOUNT_FORM}
 		<p class="cart_navigation required submit">
 			<span><sup>*</sup>{l s='Required field'}</span>
+			<input type="hidden" name="display_guest_checkout" value="1" />
 			<input type="submit" class="exclusive" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'}">
 		</p>
 	</form>
@@ -575,6 +577,5 @@ $(function(){ldelim}
 		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive" />
 		<span><sup>*</sup>{l s='Required field'}</span>
 	</p>
-
 </form>
 {/if}
