@@ -293,7 +293,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'hint' => $this->l('Only letters and the minus (-) character are allowed'),
 					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
