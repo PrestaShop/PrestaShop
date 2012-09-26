@@ -169,7 +169,7 @@ class Blockcustomerprivacy extends Module
 	{
 		if (!$this->checkConfig())
 			return;
-		$this->context->controller->addJS(($this->_path).'blockcustomerprivacy.js');
+		$this->context->controller->addJS($this->_path.'blockcustomerprivacy.js');
 	}
 	
 	public function hookActionBeforeSubmitAccount($params)
