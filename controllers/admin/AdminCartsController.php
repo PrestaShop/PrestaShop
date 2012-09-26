@@ -32,6 +32,7 @@ class AdminCartsControllerCore extends AdminController
 		$this->table = 'cart';
 		$this->className = 'Cart';
 		$this->lang = false;
+		$this->explicitSelect = true;
 
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
@@ -87,7 +88,6 @@ class AdminCartsControllerCore extends AdminController
 				'width' => 40,
 				'align' => 'center',
 				'type' => 'bool',
-				'filter_key' => 'id_guest',
 				'havingFilter' => true,
 				'icon' => array(0 => 'blank.gif', 1 => 'tab-customers.gif')
 			)

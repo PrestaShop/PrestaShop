@@ -41,6 +41,7 @@ class AdminCustomersControllerCore extends AdminController
 		$this->className = 'Customer';
 		$this->lang = false;
 		$this->deleted = true;
+		$this->explicitSelect = true;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
@@ -63,6 +64,15 @@ class AdminCustomersControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 
+		$this->_select = '
+		a.date_add,
+		IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
+			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
+			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
+			WHERE g.id_customer = a.id_customer
+			ORDER BY c.date_add DESC
+			LIMIT 1
+		) as connect';
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
@@ -212,14 +222,6 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderList()
 	{
-		$this->_select = 'IF (YEAR(`birthday`) = 0, "-", (YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5))) AS `age`, (
-			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
-			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
-			WHERE g.id_customer = a.id_customer
-			ORDER BY c.date_add DESC
-			LIMIT 1
-		) as connect';
-
 		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
 			$this->tpl_list_vars = array(
 				'delete_customer' => true,

@@ -41,6 +41,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
+		$this->explicitSelect = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
