@@ -67,21 +67,34 @@ function p15018_change_image_types()
 		{
 			if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'.jpg'))
 				foreach ($replace_types['products'] as $old_type => $new_type)
-					if ($option)
-						copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$old_type.'.jpg',
-							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$new_type.'.jpg');
-					else
-						rename(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$old_type.'.jpg',
-							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$new_type.'.jpg');
+					p15018_copy_or_rename(
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$old_type.'.jpg',
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$row['id_product'].'-'.$row['id_image'].'-'.$new_type.'.jpg',
+						$option
+					);
 			$folder = implode(DIRECTORY_SEPARATOR, str_split((string)$row['id_image'])).DIRECTORY_SEPARATOR;
 			if (file_exists(_PS_ROOT_DIR_.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'.jpg'))
 				foreach ($replace_types['products'] as $old_type => $new_type)
-					if ($option)
-						copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
-							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type.'.jpg');
-					else
-						rename(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
-							_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type.'.jpg');
+					p15018_copy_or_rename(
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$old_type.'.jpg',
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p'.DIRECTORY_SEPARATOR.$folder.$row['id_image'].'-'.$new_type.'.jpg',
+						$option
+					);
+		}
+		
+		foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p') as $file)
+		{
+			if (!preg_match('/^[a-z]{2}\-[a-z_-]+\.jpg$/i', $file))
+				continue;
+			foreach ($replace_types['products'] as $old_type => $new_type)
+				if (preg_match('/^([a-z]{2})\-'.$old_type.'\.jpg$/i', $file, $matches))
+				{
+					p15018_copy_or_rename(
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg',
+						$option
+					);
+				}
 		}
 		
 		// Then the other entities (if there is less than 500 products, that should not be a problem)
@@ -89,21 +102,28 @@ function p15018_change_image_types()
 		foreach ($directories as $directory)
 			foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory) as $file)
 			{
-				if (!preg_match('/^[0-9]+\-[a-z_-]+\.jpg$/i', $file))
+				if (!preg_match('/^([0-9]+|[a-z]{2})\-[a-z_-]+\.jpg$/i', $file))
 					continue;
 				foreach ($replace_types as $type => $type_array)
 					foreach ($type_array as $old_type => $new_type)
-						if (preg_match('/^([0-9]+)\-'.$old_type.'\.jpg$/i', $file, $matches))
+						if (preg_match('/^([0-9]+|[a-z]{2})\-'.$old_type.'\.jpg$/i', $file, $matches))
 						{
-							if ($option)
-								copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
-									_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg');
-							else
-								rename(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
-									_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg');
+							p15018_copy_or_rename(
+								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
+								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg',
+								$option
+							);
 						}
 			}
 	}
 
 	return true;
+}
+
+function p15018_copy_or_rename($from, $to, $option)
+{
+	if ($option)
+		copy($from, $to);
+	else
+		rename($fome, $to);
 }
