@@ -274,7 +274,7 @@ class CustomerCore extends ObjectModel
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_message WHERE id_customer_thread='.(int)$ct['id_customer_thread']);
 			}
 
-		Discount::deleteByIdCustomer((int)$this->id);
+		CartRule::deleteByIdCustomer((int)$this->id);
 		return parent::delete();
 	}
 
