@@ -35,6 +35,9 @@ class SupplierControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
+
+		if (Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 
 	public function canonicalRedirection($canonicalURL = '')
@@ -99,6 +102,7 @@ class SupplierControllerCore extends FrontController
 			'products' => $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 			'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
 			'supplier' => $this->supplier,
+			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
 		));
 	}
 
