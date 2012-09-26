@@ -254,7 +254,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$shop_group->active = true;
 		if (!$shop_group->add())
 		{
-			$this->setError($this->language->l('Cannot create group shop'));
+			$this->setError($this->language->l('Cannot create group shop').' / '.Db::getInstance()->getMsgError());
 			return false;
 		}
 
@@ -267,7 +267,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$shop->name = $shop_name;
 		if (!$shop->add())
 		{
-			$this->setError($this->language->l('Cannot create shop'));
+			$this->setError($this->language->l('Cannot create shop').' / '.Db::getInstance()->getMsgError());
 			return false;
 		}
 		Context::getContext()->shop = $shop;
@@ -282,7 +282,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$shop_url->active = true;
 		if (!$shop_url->add())
 		{
-			$this->setError($this->language->l('Cannot create shop URL'));
+			$this->setError($this->language->l('Cannot create shop URL').' / '.Db::getInstance()->getMsgError());
 			return false;
 		}
 
