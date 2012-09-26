@@ -247,7 +247,7 @@ class CustomerCore extends ObjectModel
 			$obj->delete();
 		}
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
-		Discount::deleteByIdCustomer((int)$this->id);
+		CartRule::deleteByIdCustomer((int)$this->id);
 		return parent::delete();
 	}
 
