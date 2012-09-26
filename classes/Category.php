@@ -943,7 +943,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function getParentsCategories($id_lang = null)
 	{
-		$context = Context::getContext();
+		$context = Context::cloneContext();
 		if (is_null($id_lang))
 			$id_lang = $context->language->id;
 
