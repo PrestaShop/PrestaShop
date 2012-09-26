@@ -692,7 +692,8 @@ class Swift_Message extends Swift_Message_Mime
           break;
       }
     }
-    $this->getReference("parent", $new_branch)->removeChild($tag);
+    if ($this->getReference("parent", $new_branch)->hasChild($tag))
+		$this->getReference("parent", $new_branch)->removeChild($tag);
     $mixed = $this->getReference("parent", $new_branch);//parentRefs[$new_branch];
     $this->setReference("parent", $old_branch, $mixed);//parentRefs[$old_branch] = $mixed;
     switch ($new_branch)
