@@ -38,6 +38,7 @@ class AdminAddressesControllerCore extends AdminController
 	 	$this->className = 'Address';
 	 	$this->lang = false;
 		$this->addressType = 'customer';
+		$this->explicitSelect = true;
 		$this->context = Context::getContext();
 
 		$this->addRowAction('edit');

@@ -45,6 +45,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->className = 'Category';
 		$this->lang = true;
 		$this->deleted = false;
+		$this->explicitSelect = true;
 
 		$this->context = Context::getContext();
 
@@ -73,7 +74,7 @@ class AdminCategoriesControllerCore extends AdminController
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cs!position',
+				'filter_key' => 'sa!position',
 				'align' => 'center',
 				'position' => 'position'
 			),

@@ -60,6 +60,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
+		$this->explicitSelect = true;
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		if (!Tools::getValue('id_product'))
@@ -71,84 +72,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->_defaultOrderBy = 'position';
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
-
-		$this->fields_list = array();
-		$this->fields_list['id_product'] = array(
-			'title' => $this->l('ID'),
-			'align' => 'center',
-			'width' => 20
-		);
-		$this->fields_list['image'] = array(
-			'title' => $this->l('Photo'),
-			'align' => 'center',
-			'image' => 'p',
-			'width' => 70,
-			'orderby' => false,
-			'filter' => false,
-			'search' => false
-		);
-		$this->fields_list['name'] = array(
-			'title' => $this->l('Name'),
-			'filter_key' => 'b!name'
-		);
-		$this->fields_list['reference'] = array(
-			'title' => $this->l('Reference'),
-			'align' => 'left',
-			'width' => 80
-		);
-		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
-			$this->fields_list['shopname'] = array(
-				'title' => $this->l('Default Shop'),
-				'width' => 230,
-				'filter_key' => 'shop!name',
-			);
-		else
-			$this->fields_list['name_category'] = array(
-				'title' => $this->l('Category'),
-				'width' => 230,
-				'filter_key' => 'cl!name',
-			);
-		$this->fields_list['price'] = array(
-			'title' => $this->l('Base price'),
-			'width' => 90,
-			'type' => 'price',
-			'align' => 'right',
-			'filter_key' => 'a!price'
-		);
-		$this->fields_list['price_final'] = array(
-			'title' => $this->l('Final price'),
-			'width' => 90,
-			'type' => 'price',
-			'align' => 'right',
-			'havingFilter' => true,
-			'orderby' => false
-		);
-		$this->fields_list['sav_quantity'] = array(
-			'title' => $this->l('Quantity'),
-			'width' => 90,
-			'align' => 'right',
-			'filter_key' => 'sav!quantity',
-			'orderby' => true,
-			'hint' => $this->l('This is the quantity available in the current shop/group'),
-		);
-		$this->fields_list['active'] = array(
-			'title' => $this->l('Displayed'),
-			'width' => 70,
-			'active' => 'status',
-			'filter_key' => 'sa!active',
-			'align' => 'center',
-			'type' => 'bool',
-			'orderby' => false
-		);
-		if ((int)Tools::getValue('id_category'))
-			$this->fields_list['position'] = array(
-				'title' => $this->l('Position'),
-				'width' => 70,
-				'filter_key' => 'cp!position',
-				'align' => 'center',
-				'position' => 'position'
-			);
-
 
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array (
@@ -250,7 +173,86 @@ class AdminProductsControllerCore extends AdminController
 			$this->_where .= ' AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
 		else
 			$this->_where .= ' AND (i.cover=1 OR i.id_image IS NULL)';
+			
+		$this->fields_list = array();
+		$this->fields_list['id_product'] = array(
+			'title' => $this->l('ID'),
+			'align' => 'center',
+			'width' => 20
+		);
+		$this->fields_list['image'] = array(
+			'title' => $this->l('Photo'),
+			'align' => 'center',
+			'image' => 'p',
+			'width' => 70,
+			'orderby' => false,
+			'filter' => false,
+			'search' => false
+		);
+		$this->fields_list['name'] = array(
+			'title' => $this->l('Name'),
+			'filter_key' => 'b!name'
+		);
+		$this->fields_list['reference'] = array(
+			'title' => $this->l('Reference'),
+			'align' => 'left',
+			'width' => 80
+		);
+
+		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+			$this->fields_list['shopname'] = array(
+				'title' => $this->l('Default Shop'),
+				'width' => 230,
+				'filter_key' => 'shop!name',
+			);
+		else
+			$this->fields_list['name_category'] = array(
+				'title' => $this->l('Category'),
+				'width' => 230,
+				'filter_key' => 'cl!name',
+			);
+		$this->fields_list['price'] = array(
+			'title' => $this->l('Base price'),
+			'width' => 90,
+			'type' => 'price',
+			'align' => 'right',
+			'filter_key' => 'a!price'
+		);
+		$this->fields_list['price_final'] = array(
+			'title' => $this->l('Final price'),
+			'width' => 90,
+			'type' => 'price',
+			'align' => 'right',
+			'havingFilter' => true,
+			'orderby' => false
+		);
+		$this->fields_list['sav_quantity'] = array(
+			'title' => $this->l('Quantity'),
+			'width' => 90,
+			'align' => 'right',
+			'filter_key' => 'sav!quantity',
+			'orderby' => true,
+			'hint' => $this->l('This is the quantity available in the current shop/group'),
+		);
+		$this->fields_list['active'] = array(
+			'title' => $this->l('Displayed'),
+			'width' => 70,
+			'active' => 'status',
+			'filter_key' => $alias.'!active',
+			'align' => 'center',
+			'type' => 'bool',
+			'orderby' => false
+		);
+		if ((int)Tools::getValue('id_category'))
+			$this->fields_list['position'] = array(
+				'title' => $this->l('Position'),
+				'width' => 70,
+				'filter_key' => 'cp!position',
+				'align' => 'center',
+				'position' => 'position'
+			);
 	}
+	
 	protected function _cleanMetaKeywords($keywords)
 	{
 		if (!empty($keywords) && $keywords != '')

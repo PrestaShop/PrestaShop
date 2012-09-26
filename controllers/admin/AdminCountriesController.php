@@ -34,6 +34,7 @@ class AdminCountriesControllerCore extends AdminController
 	 	$this->lang = true;
 		$this->deleted = false;
 
+		$this->explicitSelect = true;
 		$this->addRowAction('edit');
 
 		$this->context = Context::getContext();
