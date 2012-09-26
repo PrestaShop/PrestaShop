@@ -681,7 +681,7 @@ class AdminCustomersControllerCore extends AdminController
 			'addresses' => $customer->getAddresses($this->default_form_language),
 
 			// Discounts
-			'discounts' => Discount::getCustomerDiscounts($this->default_form_language, $customer->id, false, false),
+			'discounts' => CartRule::getCustomerCartRules($this->default_form_language, $customer->id, false, false),
 
 			// Carts
 			'carts' => $carts,
@@ -705,7 +705,7 @@ class AdminCustomersControllerCore extends AdminController
 		if ($this->delete_mode == 'real')
 		{
 			$this->deleted = false;
-			Discount::deleteByIdCustomer((int)Tools::getValue('id_customer'));
+			CartRule::deleteByIdCustomer((int)Tools::getValue('id_customer'));
 		}
 		elseif ($this->delete_mode == 'deleted')
 			$this->deleted = true;
