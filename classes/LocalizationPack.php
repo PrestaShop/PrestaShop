@@ -53,9 +53,7 @@ class LocalizationPackCore
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
 			$res &= $this->updateDefaultGroupDisplayMethod($xml);
-
-			if (!defined('_PS_MODE_DEV_') || !_PS_MODE_DEV_)
-				$res &= $this->_installLanguages($xml, $install_mode);
+			$res &= $this->_installLanguages($xml, $install_mode);
 
 			if ($res && isset($this->iso_code_lang))
 			{
@@ -158,9 +156,9 @@ class LocalizationPackCore
 				$tax->rate = (float)$attributes['rate'];
 				$tax->active = 1;
 
-				if (!$tax->validateFields())
+				if ($error = $tax->validateFields(false, true) || $error = $tax->validateFieldsLang(false, true))
 				{
-					$this->_errors[] = Tools::displayError('Invalid tax properties.');
+					$this->_errors[] = Tools::displayError('Invalid tax properties.').' '.$error;
 					return false;
 				}
 
@@ -301,44 +299,40 @@ class LocalizationPackCore
 				$native_iso_code = array();
 				foreach ($native_lang as $lang)
 					$native_iso_code[] = $lang['iso_code'];
-				if ((in_array((string)$attributes['iso_code'], $native_iso_code) && !$install_mode)
-					|| !in_array((string)$attributes['iso_code'], $native_iso_code))
+				// if we are not in an installation context or if the pack is not available in the local directory
+				if (!$install_mode || !in_array((string)$attributes['iso_code'], $native_iso_code))
+				{
 					$errno = 0;
 					$errstr = '';
-					if (@fsockopen('api.prestashop.com', 80, $errno, $errstr, 10))
+					if (!@fsockopen('api.prestashop.com', 80, $errno, $errstr, 5))
+						$this->_errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
+					elseif (!($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$attributes['iso_code']))))
+						$this->_errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
+					elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$attributes['iso_code'].'.gzip'))
 					{
-						if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$attributes['iso_code'])))
+						$file = _PS_TRANSLATIONS_DIR_.$attributes['iso_code'].'.gzip';
+						if (file_put_contents($file, $content))
 						{
-							if ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$attributes['iso_code'].'.gzip'))
+							$gz = new Archive_Tar($file, true);
+
+							if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 							{
-								$file = _PS_TRANSLATIONS_DIR_.$attributes['iso_code'].'.gzip';
-								if (file_put_contents($file, $content))
-								{
-									$gz = new Archive_Tar($file, true);
-
-									if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-									{
-										$this->_errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$attributes['iso_code'];
-										return false;
-									}
-
-									if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))
-									{
-										$this->_errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$attributes['iso_code'];
-										return false;
-									}
-
-									@unlink($file);
-								}
-								else
-									$this->_errors[] = Tools::displayError('Server does not have permissions for writing.');
+								$this->_errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$attributes['iso_code'];
+								return false;
 							}
+
+							if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))
+							{
+								$this->_errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$attributes['iso_code'];
+								return false;
+							}
+
+							@unlink($file);
 						}
 						else
-							$this->_errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
+							$this->_errors[] = Tools::displayError('Server does not have permissions for writing.');
 					}
-					else
-						$this->_errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
+				}
 			}
 
 		// change the default language if there is only one language in the localization pack

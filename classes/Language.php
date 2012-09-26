@@ -718,14 +718,18 @@ class LanguageCore extends ObjectModel
 				else
 					Language::_copyNoneFlag($insert_id);
 
-				$files_copy = array('/en.jpg', '/en-default-thickbox.jpg', '/en-default-home.jpg', '/en-default-large.jpg', '/en-default-medium.jpg', '/en-default-small.jpg', '/en-default-large_scene.jpg');
-				$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-				foreach ($tos as $to)
+				$files_copy = array(
+					'/en.jpg',
+					'/en-default-thickbox_default.jpg',
+					'/en-default-home_default.jpg',
+					'/en-default-large_default.jpg',
+					'/en-default-medium_default.jpg',
+					'/en-default-small_default.jpg',
+					'/en-default-scene_default.jpg'
+				);
+				foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
 					foreach ($files_copy as $file)
-					{
-						$name = str_replace('/en', '/'.$iso_code, $file);
-						copy(dirname(__FILE__).'/../img/l'.$file, $to.$name);
-					}
+						@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));
 				return true;
 			}
 			else
