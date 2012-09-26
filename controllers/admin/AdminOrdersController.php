@@ -35,11 +35,13 @@ class AdminOrdersControllerCore extends AdminController
 		$this->className = 'Order';
 		$this->lang = false;
 		$this->addRowAction('view');
+		$this->explicitSelect = true;
 
 		$this->deleted = false;
 		$this->context = Context::getContext();
 
 		$this->_select = '
+		a.id_currency,
 		a.id_order AS id_pdf,
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
@@ -77,7 +79,6 @@ class AdminOrdersControllerCore extends AdminController
 			'width' => 25,
 			'align' => 'center',
 			'type' => 'bool',
-			'filter_key' => 'new',
 			'tmpTableFilter' => true,
 			'icon' => array(
 				0 => 'blank.gif',
@@ -90,7 +91,6 @@ class AdminOrdersControllerCore extends AdminController
 		),
 		'customer' => array(
 			'title' => $this->l('Customer'),
-			'filter_key' => 'customer',
 			'tmpTableFilter' => true
 		),
 		'total_paid_tax_incl' => array(

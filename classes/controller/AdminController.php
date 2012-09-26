@@ -189,6 +189,9 @@ class AdminControllerCore extends Controller
 	 * @var array ids of the rows selected
 	 */
 	protected $boxes;
+	
+	/** @var string Do not automatically select * anymore but select only what is necessary */
+	protected $explicitSelect = false;
 
 	/** @var string Add fields into data query to display list */
 	protected $_select;
@@ -2063,8 +2066,24 @@ class AdminControllerCore extends Controller
 
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
-		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
-		'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
+		'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
+		
+		if ($this->explicitSelect)
+		{
+			foreach ($this->fields_list as $key => $array_value)
+				if (isset($array_value['filter_key']))
+					$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).',';
+				elseif ($key == 'id_'.$this->table)
+					$this->_listsql .= 'a.`'.bqSQL($key).'`,';
+				elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
+					$this->_listsql .= '`'.bqSQL($key).'`,';
+			$this->_listsql = rtrim($this->_listsql, ',');
+		}
+		else
+			$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
+		
+		$this->_listsql .= '
+		'.(isset($this->_select) ? ', '.$this->_select : '').$select_shop.'
 		FROM `'._DB_PREFIX_.$sql_table.'` a
 		'.$lang_join.'
 		'.(isset($this->_join) ? $this->_join.' ' : '').'
