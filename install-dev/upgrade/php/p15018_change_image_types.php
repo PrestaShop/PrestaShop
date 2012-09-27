@@ -125,5 +125,5 @@ function p15018_copy_or_rename($from, $to, $option)
 	if ($option)
 		copy($from, $to);
 	else
-		rename($fome, $to);
+		rename($from, $to);
 }
