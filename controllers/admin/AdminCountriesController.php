@@ -44,7 +44,7 @@ class AdminCountriesControllerCore extends AdminController
 			'enableSelection' => array('text' => $this->l('Enable selection')),
 			'disableSelection' => array('text' => $this->l('Disable selection')),
 			'affectzone' => array('text' => $this->l('Assign to a new zone'))
-			);
+		);
 		
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
