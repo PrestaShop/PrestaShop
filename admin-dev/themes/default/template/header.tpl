@@ -80,7 +80,8 @@
 	{/foreach}
 {/if}
 
-	<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 {if isset($displayBackOfficeHeader)}
 	{$displayBackOfficeHeader}
 {/if}
