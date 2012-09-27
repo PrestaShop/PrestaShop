@@ -491,9 +491,9 @@ abstract class PaymentModuleCore extends Module
 					$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
 					if ($old_message)
 					{
-						$message = new Message((int)$old_message['id_message']);
-						$message->id_order = (int)$order->id;
-						$message->update();
+						$update_message = new Message((int)$old_message['id_message']);
+						$update_message->id_order = (int)$order->id;
+						$update_message->update();
 
 						// Add this message in the customer thread
 						$customer_thread = new CustomerThread();
@@ -510,7 +510,7 @@ abstract class PaymentModuleCore extends Module
 						$customer_message = new CustomerMessage();
 						$customer_message->id_customer_thread = $customer_thread->id;
 						$customer_message->id_employee = 0;
-						$customer_message->message = htmlentities($message->message, ENT_COMPAT, 'UTF-8');
+						$customer_message->message = htmlentities($update_message->message, ENT_COMPAT, 'UTF-8');
 						$customer_message->private = 0;
 
 						if (!$customer_message->add())
