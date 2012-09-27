@@ -1584,12 +1584,6 @@ class AdminProductsControllerCore extends AdminController
 						Search::indexation(false, $this->object->id);
 				}
 
-				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
-				if (Tools::getValue('type_product') == Product::PTYPE_VIRTUAL)
-					StockAvailable::setProductOutOfStock($this->object->id, 1);
-				else
-					StockAvailable::setProductOutOfStock($this->object->id, 2);
-
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 				{

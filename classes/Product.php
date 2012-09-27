@@ -461,6 +461,11 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
+			
+		if ($this->getType() == Product::PTYPE_VIRTUAL)
+			StockAvailable::setProductOutOfStock((int)$this->id, 1);
+		else
+			StockAvailable::setProductOutOfStock((int)$this->id, 2);
 
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return true;
