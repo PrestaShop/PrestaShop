@@ -159,7 +159,6 @@ class CookieCore
 		if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value)))
 			$this->_modified = true;
 		$this->_content[$key] = $value;
-		$this->write();
 	}
 
 	/**
@@ -172,7 +171,6 @@ class CookieCore
 		if (isset($this->_content[$key]))
 			$this->_modified = true;
 		unset($this->_content[$key]);
-		$this->write();
 	}
 
 	/**
@@ -220,7 +218,6 @@ class CookieCore
 		$this->_setcookie();
 		unset($_COOKIE[$this->_name]);
 		$this->_modified = true;
-		$this->write();
 	}
 
 	/**
@@ -244,7 +241,6 @@ class CookieCore
 		unset($this->_content['id_address_invoice']);
 		unset($this->_content['id_address_delivery']);
 		$this->_modified = true;
-		$this->write();
 	}
 
 	public function makeNewLog()
@@ -318,6 +314,12 @@ class CookieCore
 			return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, 0);
 		else
 			return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, 0, true);
+	}
+
+	public function __destruct()
+	{
+		if ($this->_modified)
+			$this->write();
 	}
 
 	/**
