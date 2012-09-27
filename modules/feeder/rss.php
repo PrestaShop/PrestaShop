@@ -63,7 +63,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 		if (is_array($image) AND sizeof($image))
 		{
 			$imageObj = new Image($image[0]['id_image']);
-			echo "<![CDATA[<img src='"._PS_BASE_URL_._THEME_PROD_DIR_.$imageObj->getExistingImgPath()."-small.jpg' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
+			echo "<![CDATA[<img src='"._PS_BASE_URL_._THEME_PROD_DIR_.$imageObj->getExistingImgPath()."-small_default.jpg' title='".str_replace('&', '', $product['name'])."' alt='thumb' />";
 			$cdata = false;
 		}
 		if ($cdata)
