@@ -156,7 +156,7 @@ class LocalizationPackCore
 				$tax->rate = (float)$attributes['rate'];
 				$tax->active = 1;
 
-				if ($error = $tax->validateFields(false, true) || $error = $tax->validateFieldsLang(false, true))
+				if (($error = $tax->validateFields(false, true)) !== true || ($error = $tax->validateFieldsLang(false, true)) !== true)
 				{
 					$this->_errors[] = Tools::displayError('Invalid tax properties.').' '.$error;
 					return false;
