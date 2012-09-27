@@ -574,6 +574,7 @@ class AdminManufacturersControllerCore extends AdminController
 		for ($i = 0; $i < $total_product; $i++)
 		{
 			$products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
+			$products[$i]->loadStockData();
 			/* Build attributes combinations */
 			$combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
 			foreach ($combinations as $k => $combination)
