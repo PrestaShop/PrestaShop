@@ -15,13 +15,12 @@ ul#header_links {
 #header_links a:hover {text-decoration:underline}
 
 /*block permanent links right and left columns*/
-.permanent_links_block li {border-bottom: 1px dotted #eee}
-.permanent_links_block li a {
+#permanent_links div {border-bottom: 1px dotted #eee}
+#permanent_links div a {
 	display: block;
 	padding: 7px 11px 5px 22px;
 	color: #333;
 	background:url(img/arrow_right_2.png) no-repeat 10px 10px;
- 
 }
 
 /* block footer links */

@@ -1649,7 +1649,7 @@ ul#suppliers_list li .right_side {float:right;}
 	height: 24px;
 	width: 200px;
 	color: #ccc;
-	background: url(../../../img/bg_search_input.png) repeat-x scroll 0 0 #fff
+	background: url(../../../modules/blocksearch/img/bg_search_input.png) repeat-x scroll 0 0 #fff
 }
 #pagenotfound .button_small {
 	padding: 4px 7px;
@@ -1659,7 +1659,7 @@ ul#suppliers_list li .right_side {float:right;}
 	border-radius:0;
 	color: #fff;
 	text-transform: uppercase;
-	background: url("../../../img/bg_search_submit.png") repeat-x scroll 0 0 #101010
+	background: url("../../../modules/blocksearch/img/bg_search_submit.png") repeat-x scroll 0 0 #101010
 }
 #pagenotfound .pagenotfound a {
 	font-weight:bold;
