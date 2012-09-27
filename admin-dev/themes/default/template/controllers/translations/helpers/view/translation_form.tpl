@@ -128,6 +128,7 @@
 				</fieldset><br />
 			{/if}
 		{/foreach}
+		</form>
 	{/if}
 
 {/block}

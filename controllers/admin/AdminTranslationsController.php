@@ -412,7 +412,20 @@ class AdminTranslationsControllerCore extends AdminController
 			$gz = new Archive_Tar(_PS_TRANSLATIONS_DIR_.'/export/'.$this->lang_selected->iso_code.'.gzip', true);
 			$file_name = Tools::getCurrentUrlProtocolPrefix().Tools::getShopDomain().__PS_BASE_URI__.'translations/export/'.$this->lang_selected->iso_code.'.gzip';
 			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
-				Tools::redirectLink($file_name);
+			{
+				ob_start();
+				header('Pragma: public');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+				header('Cache-Control: public');
+				header('Content-Description: File Transfer');
+				header('Content-type: application/octet-stream');
+				header('Content-Disposition: attachment; filename="'.$this->lang_selected->iso_code.'.gzip'.'"');
+				header('Content-Transfer-Encoding: binary');
+				header('Content-Length: '.filesize($file_name));
+				ob_end_flush();
+				@readfile($file_name);
+			}
 			$this->errors[] = Tools::displayError('An error occurred while creating archive.');
 		}
 		$this->errors[] = Tools::displayError('Please choose a language and a theme.');
