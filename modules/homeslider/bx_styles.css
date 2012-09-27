@@ -63,18 +63,6 @@
 	background:url(gray_pager.png) no-repeat 0 -20px;
 }
 
-/*auto start button*/
-.bx-auto .start {
-	background: url(gray_auto.png) no-repeat 0 2px;
-	padding-left: 13px;
-}
-
-/*auto stop button*/
-.bx-auto .stop {
-	background: url(gray_auto.png) no-repeat 0 -14px;
-	padding-left: 13px;
-}
-
 /*
  * End color scheme styles
  */
