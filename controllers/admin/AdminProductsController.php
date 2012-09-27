@@ -293,7 +293,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Tools::getIsset('unit_price') != null)
 			$object->unit_price = str_replace(',', '.', Tools::getValue('unit_price'));
-		if (Tools::getIsset('unit_price') != null)
+		if (Tools::getIsset('ecotax') != null)
 			$object->ecotax = str_replace(',', '.', Tools::getValue('ecotax'));
 		$object->available_for_order = (int)Tools::getValue('available_for_order');
 		$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
