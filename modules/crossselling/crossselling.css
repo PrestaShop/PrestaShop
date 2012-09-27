@@ -9,7 +9,8 @@
 #crossselling ul {list-style-type:none}
 #crossselling li {
 	float:left;
-	margin-right:25px
+	margin-right:25px;
+	height:80px;
 }
 #crossselling li a.lnk_img {display:block}
 #crossselling li a img {border:1px solid #ccc}
