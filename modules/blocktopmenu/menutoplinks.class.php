@@ -101,7 +101,6 @@ class MenuTopLinks
 
 	public static function update($link, $labels, $newWindow = 0, $id_shop, $id_link)
 	{
-		d($id_shop);
 		if(!is_array($labels))
 			return false;
 		if(!is_array($link))
