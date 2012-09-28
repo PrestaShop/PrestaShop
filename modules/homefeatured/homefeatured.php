@@ -49,7 +49,7 @@ class HomeFeatured extends Module
 
 	function install()
 	{
-		if (!Configuration::updateValue('HOME_FEATURED_NBR', 8) || !parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader'))
+		if (!Configuration::updateValue('HOME_FEATURED_NBR', 8) || !parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('header'))
 			return false;
 		return true;
 	}
@@ -92,7 +92,12 @@ class HomeFeatured extends Module
 
 	public function hookDisplayHeader($params)
 	{
-		$this->context->controller->addCss($this->_path.'homefeatured.css');
+		$this->hookHeader($params);
+	}
+
+	public function hookHeader($params)
+	{
+		$this->context->controller->addCss($this->_path.'homefeatured.css', 'all');
 	}
 
 	public function hookDisplayHome($params)
