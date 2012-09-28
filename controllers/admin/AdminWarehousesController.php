@@ -251,7 +251,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'required' => false,
 					'multiple' => true,
 					'options' => array(
-						'query' => Carrier::getCarriers($this->context->language->id, true),
+						'query' => Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS),
 						'id' => 'id_reference',
 						'name' => 'name'
 					),
