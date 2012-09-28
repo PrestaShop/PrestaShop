@@ -1634,6 +1634,11 @@ class AdminImportControllerCore extends AdminController
 
 					$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
 
+					$info['wholesale_price'] = str_replace(',', '.', $info['wholesale_price']);
+					$info['price'] = str_replace(',', '.', $info['price']);
+					$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
+					$info['weight'] = str_replace(',', '.', $info['weight']);
+
 					// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
 					if (isset($info['reference']) && !empty($info['reference']))
 					{
