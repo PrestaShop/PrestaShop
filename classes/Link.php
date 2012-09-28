@@ -355,9 +355,9 @@ class LinkCore
 		$theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->id_theme.'.jpg')) ? '-'.Context::getContext()->shop->id_theme : '');
 		if ((Configuration::get('PS_LEGACY_IMAGES')
 			&& (file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').$theme.'.jpg')))
-			|| strpos($ids, 'default') !== false)
+			|| ($not_default = strpos($ids, 'default') !== false))
 		{
-			if ($this->allow == 1)
+			if ($this->allow == 1 && !$not_default)
 				$uri_path = __PS_BASE_URI__.$ids.($type ? '-'.$type : '').$theme.'/'.$name.'.jpg';
 			else
 				$uri_path = _THEME_PROD_DIR_.$ids.($type ? '-'.$type : '').$theme.'.jpg';
