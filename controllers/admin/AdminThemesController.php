@@ -172,10 +172,10 @@ class AdminThemesControllerCore extends AdminController
 						'required' => true,
 						'validation' => 'isGenericName',
 						'choices' => array(
-							0 => $this->l('I want disable it'),
-							1 => $this->l('I want enable it only on mobiles devices'),
-							2 => $this->l('I want enable it only on touchpads'),
-							3 => $this->l('I want enable it on mobiles and touchpads devices')
+							0 => $this->l('I want to disable it'),
+							1 => $this->l('I want to enable it only on mobiles devices'),
+							2 => $this->l('I want to enable it only on touchpads'),
+							3 => $this->l('I want to enable it on mobile and touchpad devices')
 						)
 					)
 				),
