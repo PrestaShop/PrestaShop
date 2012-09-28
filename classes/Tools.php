@@ -1052,7 +1052,7 @@ class ToolsCore
 	public static function dateYears()
 	{
 		$tab = array();
-		for ($i = date('Y') - 10; $i >= 1900; $i--)
+		for ($i = date('Y'); $i >= 1900; $i--)
 			$tab[] = $i;
 		return $tab;
 	}
