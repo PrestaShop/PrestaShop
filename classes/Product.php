@@ -4827,7 +4827,7 @@ class ProductCore extends ObjectModel
 
 	public function addWs($autodate = true, $null_values = false)
 	{
-		$success = parent::add($autodate, $null_values);
+		$success = $this->add($autodate, $null_values);
 		if ($success && Configuration::get('PS_SEARCH_INDEXATION'))
 			Search::indexation(false, $this->id);
 		return $success;
