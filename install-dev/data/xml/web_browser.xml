@@ -7,26 +7,32 @@
     <web_browser id="Safari">
       <name>Safari</name>
     </web_browser>
-    <web_browser id="Firefox_2_x">
-      <name>Firefox 2.x</name>
+    <web_browser id="Safari_ipad">
+      <name>Safari iPad</name>
     </web_browser>
-    <web_browser id="Firefox_3_x">
-      <name>Firefox 3.x</name>
+    <web_browser id="Firefox">
+      <name>Firefox</name>
     </web_browser>
     <web_browser id="Opera">
       <name>Opera</name>
     </web_browser>
-    <web_browser id="IE_6_x">
-      <name>IE 6.x</name>
+    <web_browser id="IE_6">
+      <name>IE 6</name>
     </web_browser>
-    <web_browser id="IE_7_x">
-      <name>IE 7.x</name>
+    <web_browser id="IE_7">
+      <name>IE 7</name>
     </web_browser>
-    <web_browser id="IE_8_x">
-      <name>IE 8.x</name>
+    <web_browser id="IE_8">
+      <name>IE 8</name>
     </web_browser>
-    <web_browser id="Google_Chrome">
-      <name>Google Chrome</name>
+    <web_browser id="IE_9">
+      <name>IE 9</name>
+    </web_browser>
+    <web_browser id="IE_10">
+      <name>IE 10</name>
+    </web_browser>
+    <web_browser id="Chrome">
+      <name>Chrome</name>
     </web_browser>
   </entities>
 </entity_web_browser>
