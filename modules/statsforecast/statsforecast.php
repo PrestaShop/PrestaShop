@@ -333,7 +333,7 @@ class StatsForecast extends Module
 
 		$this->_html .= '
 		<br />';
-		$this->_html .= '<div class="blocStats"><h2 class="icon-payment"><span></span>'.$this->l('Payment distibution').'</h2>
+		$this->_html .= '<div class="blocStats"><h2 class="icon-payment"><span></span>'.$this->l('Payment distribution').'</h2>
 			<form id="cat" action="'.$ru.'#payment" method="post" >
 				<input type="hidden" name="submitIdZone" value="1" />
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
