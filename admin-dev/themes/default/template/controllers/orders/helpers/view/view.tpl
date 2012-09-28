@@ -109,7 +109,7 @@
 		<!-- Left column -->
 		<div style="width: 49%; float:left;">
 			<!-- Change status form -->
-			<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post">
+			<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
 					{if $state['id_order_state'] != $currentState->id}
@@ -264,7 +264,7 @@
 				<legend><img src="../img/admin/money.gif" /> {l s='Payment'}</legend>
 
 				{if (!$order->valid && sizeof($currencies) > 1)}
-				<form method="post" action="{$currentIndex}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form method="post" action="{$currentIndex}&vieworder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
 					<label>{l s='Don\'t forget to update your conversion rate before make this change.'}</label>
 					<select name="new_currency">
