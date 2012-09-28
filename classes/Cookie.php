@@ -318,8 +318,7 @@ class CookieCore
 
 	public function __destruct()
 	{
-		if ($this->_modified)
-			$this->write();
+		$this->write();
 	}
 
 	/**
@@ -327,6 +326,9 @@ class CookieCore
 	 */
 	public function write()
 	{
+		if (!$this->_modified || headers_sent())
+			return;
+
 		$cookie = '';
 
 		/* Serialize cookie content */
@@ -336,7 +338,7 @@ class CookieCore
 
 		/* Add checksum to cookie */
 		$cookie .= 'checksum|'.crc32($this->_iv.$cookie);
-
+		$this->_modified = false;
 		/* Cookies are encrypted for evident security reasons */
 		return $this->_setcookie($cookie);
 	}
