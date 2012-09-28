@@ -94,6 +94,12 @@ class AdminWebserviceControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	protected function processUpdateOptions()
+	{
+		parent::processUpdateOptions();
+		Tools::generateHtaccess();
+	}
+
 	public function renderForm()
 	{
 		$this->fields_form = array(

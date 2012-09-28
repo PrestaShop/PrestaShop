@@ -1530,6 +1530,9 @@ class ToolsCore
 		if ($medias[2] != '')
 			$media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$medias[2].'$ [OR]'."\n";
 
+		if (Configuration::get('PS_WEBSERVICE_CGI_HOST'))
+			fwrite($write_fd, "RewriteCond %{HTTP:Authorization} ^(.*)\nRewriteRule . - [E=HTTP_AUTHORIZATION:%1]\n\n");
+
 		foreach ($domains as $domain => $list_uri)
 		{
 			$physicals = array();
@@ -1539,7 +1542,7 @@ class ToolsCore
 				fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
 				
 				// Webservice
-				fwrite($write_fd, 'RewriteRule ^api/?(.*)$ '."%{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]\n\n");
+				fwrite($write_fd, 'RewriteRule ^api/?(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]'."\n\n");
 				
 				$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
 				$domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n";
