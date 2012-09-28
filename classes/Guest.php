@@ -102,14 +102,16 @@ class GuestCore extends ObjectModel
 	protected function getBrowser($userAgent)
 	{
 		$browserArray = array(
-			'Google Chrome' => 'Chrome/',
+			'Chrome' => 'Chrome/',
 			'Safari' => 'Safari',
-			'Firefox 3.x' => 'Firefox/3',
-			'Firefox 2.x' => 'Firefox/2',
+			'Safari iPad' => 'iPad',
+			'Firefox' => 'Firefox/',
 			'Opera' => 'Opera',
-			'IE 8.x' => 'MSIE 8',
-			'IE 7.x' => 'MSIE 7',
-			'IE 6.x' => 'MSIE 6'
+			'IE 10' => 'MSIE 10',
+			'IE 9' => 'MSIE 9',
+			'IE 8' => 'MSIE 8',
+			'IE 7' => 'MSIE 7',
+			'IE 6' => 'MSIE 6'
 		);
 		foreach ($browserArray as $k => $value)
 			if (strstr($userAgent, $value))
@@ -127,9 +129,12 @@ class GuestCore extends ObjectModel
 	protected function getOs($userAgent)
 	{
 		$osArray = array(
-			'Windows Vista' => 'Windows NT 6',
+			'Windows 8' => 'Windows NT 6.2',
+			'Windows 7' => 'Windows NT 6.1',
+			'Windows Vista' => 'Windows NT 6.0',
 			'Windows XP' => 'Windows NT 5',
 			'MacOsX' => 'Mac OS X',
+			'Android' => 'Android',
 			'Linux' => 'X11'
 		);
 		foreach ($osArray as $k => $value)
