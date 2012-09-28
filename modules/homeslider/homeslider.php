@@ -520,7 +520,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', (int)Tools::getValue('HOMESLIDER_PAUSE'));
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', (int)Tools::getValue('HOMESLIDER_LOOP'));
 			if (!$res)
-				$errors .= $this->displayError($this->l('Configuration could not be updated'));
+				$errors[] = $this->displayError($this->l('Configuration could not be updated'));
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
 		} /* Process Slide status */
 		elseif (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
@@ -579,11 +579,11 @@ class HomeSlider extends Module
 					$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 					$salt = sha1(microtime());
 					if ($error = ImageManager::validateUpload($_FILES['image_'.$language['id_lang']]))
-						$errors .= $error;
+						$errors[] = $error;
 					elseif (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
 					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type))
-						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
+						$errors[] = $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						@unlink($temp_name);
 					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).'.'.$type);
@@ -599,10 +599,10 @@ class HomeSlider extends Module
 				if (!Tools::getValue('id_slide'))
 				{
 					if (!$slide->add())
-						$errors .= $this->displayError($this->l('Slide could not be added'));
+						$errors[] = $this->displayError($this->l('Slide could not be added'));
 				} /* Update */
 				elseif (!$slide->update())
-					$errors .= $this->displayError($this->l('Slide could not be updated'));
+					$errors[] = $this->displayError($this->l('Slide could not be updated'));
 			}
 		} /* Deletes */
 		elseif (Tools::isSubmit('delete_id_slide'))
