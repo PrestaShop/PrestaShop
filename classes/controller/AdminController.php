@@ -1160,9 +1160,9 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('page', Tools::jsonEncode($page));
 		else
 			$this->context->smarty->assign('page', $page);
-
-		$this->context->smarty->display($this->layout);
+		$this->smartyOutputContent($this->layout);
 	}
+
 
 	/**
 	 * add a warning message to display at the top of the page

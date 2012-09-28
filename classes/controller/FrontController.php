@@ -497,7 +497,7 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
 
 		$this->display_header = $display;
-		$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
+		$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
 
 	}
 
@@ -508,7 +508,7 @@ class FrontControllerCore extends Controller
 	{
 		// This method will be removed in 1.6
 		Tools::displayAsDeprecated();
-		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+		$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
 	}
 
 	public function initCursedPage()
@@ -572,28 +572,28 @@ class FrontControllerCore extends Controller
 				ob_clean();
 				$this->context->smarty->assign('template', $template);
 			}
-			$this->context->smarty->display($layout);
+			$this->smartyOutputContent($layout);
 		}
 		else
 		{
 			// BEGIN - 1.4 retrocompatibility - will be removed in 1.6
 			Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
 			if ($this->display_header)
-				$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
+				$this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
 
 			if ($this->template)
-				$this->context->smarty->display($this->template);
+				$this->smartyOutputContent($this->template);
 			else // For retrocompatibility with 1.4 controller
 				$this->displayContent();
 
 			if ($this->display_footer)
-				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
 
 			// live edit
 			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 			{
 				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-				$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+				$this->smartyOutputContent(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
 			}
 			// END - 1.4 retrocompatibility - will be removed in 1.6
 		}
@@ -613,7 +613,7 @@ class FrontControllerCore extends Controller
 				$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
-				$this->context->smarty->display($template_dir.'maintenance.tpl');
+				$this->smartyOutputContent($template_dir.'maintenance.tpl');
 				exit;
 			}
 		}
@@ -624,7 +624,7 @@ class FrontControllerCore extends Controller
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
 		$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
-		$this->context->smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
+		$this->smartyOutputContent(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
 	}
 

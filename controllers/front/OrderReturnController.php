@@ -89,7 +89,7 @@ class OrderReturnControllerCore extends FrontController
 
 	public function displayAjax()
 	{
-		$this->context->smarty->display($this->template);
+		$this->smartyOutputContent($this->template);
 	}
 }
 
