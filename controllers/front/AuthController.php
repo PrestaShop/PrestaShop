@@ -649,6 +649,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function updateContext(Customer $customer)
 	{
+		$this->context->customer = $customer;
 		$this->context->smarty->assign('confirmation', 1);
 		$this->context->cookie->id_customer = (int)$customer->id;
 		$this->context->cookie->customer_lastname = $customer->lastname;
