@@ -2104,22 +2104,6 @@ FileETag INode MTime Size
 					return true;
 			}
 		}
-		else
-		{
-			if (function_exists('phpinfo'))
-			{
-				// If apache_get_modules does not exists,
-				// we parse phpinfo(INFO_MODULES) return string
-				ob_start();
-				phpinfo(INFO_MODULES);
-				$phpinfo = ob_get_contents();
-				ob_end_clean();
-				if (strpos($phpinfo, $name) !== false)
-					return true;
-			}
-			// otherwise, use the default behavior
-			// see return value at the end of the function
-		}
 		return false;
 	}
 
