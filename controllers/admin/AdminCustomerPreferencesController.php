@@ -61,7 +61,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_ONE_PHONE_AT_LEAST' => array(
 						'title' => $this->l('Phone number'),
-						'desc' => $this->l('If you choose this option your customer will must register at least one phone number.'),
+						'desc' => $this->l('If you chose yes, your customer will have to provide at least one phone number to register.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
