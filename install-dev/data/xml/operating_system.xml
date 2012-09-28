@@ -10,11 +10,20 @@
     <operating_system id="Windows_Vista">
       <name>Windows Vista</name>
     </operating_system>
+    <operating_system id="Windows_7">
+      <name>Windows 7</name>
+    </operating_system>
+    <operating_system id="Windows_8">
+      <name>Windows 8</name>
+    </operating_system>
     <operating_system id="MacOsX">
       <name>MacOsX</name>
     </operating_system>
     <operating_system id="Linux">
       <name>Linux</name>
+    </operating_system>
+    <operating_system id="Android">
+      <name>Android</name>
     </operating_system>
   </entities>
 </entity_operating_system>
