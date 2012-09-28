@@ -517,8 +517,6 @@ select optgroup option {
 	background: #FEEFB3 url(../img/admin/icon-attention.png) no-repeat scroll 6px 6px;
 	border: 1px solid #9e6014;
 	color:#9e6014;
-	padding: 10px 5px 5px 40px;
-	min-height:32px;
 }
 
 #content .warn h2 {
