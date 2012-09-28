@@ -934,19 +934,18 @@ class AdminOrdersControllerCore extends AdminController
 							'ecotax',
 							'product_price',
 							'reduction_amount',
-							'total_shipping',
-							'total_shipping_tax_excl',
-							'total_shipping_tax_incl',
-							'total_products',
-							'total_products_wt',
-							'total_paid',
-							'total_paid_tax_incl',
-							'total_paid_tax_excl',
-							'total_paid_real',
+							'total_shipping_price_tax_excl',
+							'total_shipping_price_tax_incl',
+							'total_price_tax_incl',
+							'total_price_tax_excl',
 							'product_quantity_discount',
 							'purchase_supplier_price',
+							'reduction_amount',
 							'reduction_amount_tax_incl',
-							'reduction_amount_tax_excl'
+							'reduction_amount_tax_excl',
+							'unit_price_tax_incl',
+							'unit_price_tax_excl',
+							
 						);
 						foreach ($fields as $field)
 							$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
