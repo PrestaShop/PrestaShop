@@ -1370,6 +1370,8 @@ class AdminImportControllerCore extends AdminController
 						$error = false;
 						if (!empty($url))
 						{
+							$url = str_replace(' ', '%20', $url);
+
 							$image = new Image();
 							$image->id_product = (int)$product->id;
 							$image->position = Image::getHighestPosition($product->id) + 1;
