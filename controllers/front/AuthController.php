@@ -396,7 +396,7 @@ class AuthControllerCore extends FrontController
 			&& !Tools::getValue('phone_mobile')
 			&& (Configuration::get('PS_ORDER_PROCESS_TYPE') //check if is in OPC mode
 			|| (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Configuration::get('PS_ORDER_PROCESS_TYPE')) //check if is simple registration mode and not in OPC mode)
-			)
+			))
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
