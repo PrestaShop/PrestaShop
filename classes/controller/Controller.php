@@ -347,4 +347,10 @@ abstract class ControllerCore
 	{
 		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 	}
+	
+	protected function smartyOutputContent($content)
+	{
+		$this->context->cookie->write();
+		$this->context->smarty->display($content);
+	}
 }

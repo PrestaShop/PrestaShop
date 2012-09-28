@@ -222,7 +222,7 @@ class AdminModulesControllerCore extends AdminController
 			Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
 
 		$this->initContent();
-		$this->context->smarty->display('controllers/modules/list.tpl');
+		$this->smartyOutputContent('controllers/modules/list.tpl');
 		exit;
 	}
 
