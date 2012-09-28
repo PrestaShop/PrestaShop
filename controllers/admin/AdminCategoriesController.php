@@ -545,9 +545,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$object = parent::processAdd();
 		
 		//if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
-		if ($object && Tools::isSubmit('is_root_category'))
+		if ($object && Tools::getValue('is_root_category'))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
-
 		return $object;
 	}
 	
