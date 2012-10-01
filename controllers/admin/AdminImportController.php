@@ -298,6 +298,7 @@ class AdminImportControllerCore extends AdminController
 					'address1',
 					'postcode',
 					'country',
+					'customer_email',
 					'city'
 				);
 
@@ -2055,7 +2056,7 @@ class AdminImportControllerCore extends AdminController
 					$info['alias'],
 					(isset($info['id']) ? $info['id'] : 'null')
 				);
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
