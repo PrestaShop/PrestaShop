@@ -64,7 +64,11 @@ class OrderControllerCore extends ParentOrderController
 			);
 		}
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
-			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, 'back='.$this->context->link->getPageLink('order', true, (int)$this->context->language->id, 'step='.$this->step.'&multi-shipping='.(int)Tools::getValue('multi-shipping')).'&multi-shipping='.(int)Tools::getValue('multi-shipping').'&display_guest_checkout='.(int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED')));
+		{
+			$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => $this->step, 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
+			$params = array('back' => $back_url, 'multi-shipping' => (int)Tools::getValue('multi-shipping'), 'display_guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'));
+			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
+		}
 
 		if (Tools::getValue('multi-shipping') == 1)
 			$this->context->smarty->assign('multi_shipping', true);
