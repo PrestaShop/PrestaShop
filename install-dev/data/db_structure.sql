@@ -360,7 +360,6 @@ CREATE TABLE `PREFIX_category_product` (
 
 CREATE TABLE `PREFIX_cms` (
   `id_cms` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_cms_category` int(10) unsigned NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL default '0',
