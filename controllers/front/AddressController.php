@@ -76,16 +76,21 @@ class AddressControllerCore extends FrontController
 			{
 				if (Tools::isSubmit('delete'))
 				{
-					if ($this->context->cart->id_address_invoice == $this->_address->id)
-						unset($this->context->cart->id_address_invoice);
-					if ($this->context->cart->id_address_delivery == $this->_address->id)
-						unset($this->context->cart->id_address_delivery);
 					if ($this->_address->delete())
+					{
+						if ($this->context->cart->id_address_invoice == $this->_address->id)
+							unset($this->context->cart->id_address_invoice);
+						if ($this->context->cart->id_address_delivery == $this->_address->id)
+						{
+							unset($this->context->cart->id_address_delivery);
+							$this->context->cart->updateAddressId($this->_address->id, (int)Address::getFirstCustomerAddressId(Context::getContext()->customer->id));
+						}
 						Tools::redirect('index.php?controller=addresses');
+					}
 					$this->errors[] = Tools::displayError('This address cannot be deleted.');
 				}
 			}
-			else if ($this->ajax)
+			elseif ($this->ajax)
 				exit;
 			else
 				Tools::redirect('index.php?controller=addresses');
