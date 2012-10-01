@@ -870,8 +870,8 @@ abstract class ObjectModelCore
 				$size = array('min' => 0, 'max' => $data['size']);
 
 			$length = Tools::strlen($value);
-			if ($length < $size['min'] || $length > $size)
-				return 'Property '.get_class($this).'->'.$field.' has bad length ('.$length.') and must be between '.$size['min'].' and '.$size['max'];
+			if ($length < $size['min'] || $length > $size['max'])
+				return 'Property '.get_class($this).'->'.$field.' length ('.$length.') must be between '.$size['min'].' and '.$size['max'];
 		}
 
 		// Check field validator
