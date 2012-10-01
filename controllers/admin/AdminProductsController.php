@@ -3911,7 +3911,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				if ($this->product_exists_in_shop)
 				{
-					$features = Feature::getFeatures($this->context->language->id);
+					$features = Feature::getFeatures($this->context->language->id, (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP));
 
 					foreach ($features as $k => $tab_features)
 					{
