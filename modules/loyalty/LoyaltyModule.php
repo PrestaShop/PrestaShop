@@ -86,6 +86,13 @@ class LoyaltyModule extends ObjectModel
 		$total = 0;
 		if (Validate::isLoadedObject($cart))
 		{
+			$context = Context::getContext();
+			$context->cart = $cart;
+			$context->customer = new Customer($context->cart->id_customer);
+			$context->language = new Language($context->cart->id_lang);
+			$context->shop = new Shop($context->cart->id_shop);
+			$context->currency = new Currency($context->cart->id_currency, null, $context->shop->id);
+
 			$cartProducts = $cart->getProducts();
 			$taxesEnabled = Product::getTaxCalculationMethod();
 			if (isset($newProduct) AND !empty($newProduct))
