@@ -387,7 +387,6 @@ class ShopCore extends ObjectModel
 					else
 						$url = 'http://'.$uri;
 				}
-				die($url);
 				header('location: '.$url);
 				exit;
 			}
