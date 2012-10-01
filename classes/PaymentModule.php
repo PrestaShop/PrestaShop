@@ -111,21 +111,13 @@ abstract class PaymentModuleCore extends Module
 	 */
 	public function addCheckboxCountryRestrictionsForModule(array $shops = array())
 	{
-		if (!$shops)
-			$shops = Shop::getShops(true, null, true);
-
-		foreach ($shops as $s)
-		{
-			if (!Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'module_country` (`id_module`, `id_shop`, `id_country`)
-					SELECT '.(int)$this->id.', "'.(int)$s.'", `id_country` FROM `'._DB_PREFIX_.'country` WHERE active = 1'))
-				return false;
-		}
-		return true;
+		$countries = Country::getCountries((int)Context::getContext()->cookie->id_lang, true); //get only active country
+		$country_ids = array();
+		foreach ($countries as $country)
+			$country_ids[] = $country['id_country'];
+		return Country::addModuleRestrictions($shops, $countries, array(array('id_module' => (int)$this->id)));
 	}
-
-
-
+	
 	/**
 	* Validate an order in database
 	* Function called from a payment module
