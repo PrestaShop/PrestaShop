@@ -2020,7 +2020,7 @@ class ProductCore extends ObjectModel
 		{
 			$ids_product = ' AND (';
 			foreach ($product_reductions as $product_reduction)
-				$ids_product .= '( p.`id_product` = '.(int)$product_reduction['id_product'].($product_reduction['id_product_attribute'] ? ' AND pa.`id_product_attribute`='.(int)$product_reduction['id_product_attribute'] :'').') OR';
+				$ids_product .= '( product_shop.`id_product` = '.(int)$product_reduction['id_product'].($product_reduction['id_product_attribute'] ? ' AND product_attribute_shop.`id_product_attribute`='.(int)$product_reduction['id_product_attribute'] :'').') OR';
 			$ids_product = rtrim($ids_product, 'OR').')';
 
 			$groups = FrontController::getCurrentCustomerGroups();
@@ -2041,7 +2041,8 @@ class ProductCore extends ObjectModel
 							WHERE cg.`id_group` '.$sql_groups.'
 						)
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					GROUP BY p.id_product
+					AND (pa.id_product_attribute IS NULL OR product_attribute_shop.default_on = 1)
+					GROUP BY product_shop.id_product
 					ORDER BY RAND()';
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -2147,7 +2148,7 @@ class ProductCore extends ObjectModel
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, product_attribute_shop.id_product_attribute,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, image_shop.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(
@@ -2159,6 +2160,8 @@ class ProductCore extends ObjectModel
 					) > 0 AS new
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN '._DB_PREFIX_.'product_attribute pa ON (pa.id_product = p.id_product)
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on=1').'
 				'.Product::sqlStock('p', 0, false, $context->shop).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
@@ -2183,6 +2186,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 					WHERE cg.`id_group` '.$sql_groups.'
 				)
+				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.default_on = 1)
 				ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
