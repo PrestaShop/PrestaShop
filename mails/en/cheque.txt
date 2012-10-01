@@ -4,13 +4,13 @@ Thank you for shopping at {shop_name}!
 
 Your order with the reference {order_name} has been placed successfully and will be shipped as soon as we receive your payment.
 
-You have selected to pay by check. Please include on your cheque:
+You have selected to pay by check. Please include on your check:
 
 Amount: {total_paid}
 
 Payable to the order of: {cheque_name}
 
-Please mail your cheque to:
+Please mail your check to:
 
 {cheque_address}
 
