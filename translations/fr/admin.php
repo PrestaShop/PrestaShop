@@ -1432,6 +1432,7 @@ $_LANGADM['AdminImportca676c9ec4e1ae9fe9df3ac28910e6ef'] = 'Le prix unitaire HT 
 $_LANGADM['AdminImportcbfb910715c99134a5987630fff104da'] = 'Exemple de fichier de catégories';
 $_LANGADM['AdminImportcf7a1f189bbd1f48db0ece1da9cc0802'] = 'Disponible à la commande (0 = Non, 1 = Oui)';
 $_LANGADM['AdminImportd1457b72c3fb323a2671125aef3eab5d'] = '?';
+$_LANGADM['AdminImportd37c2bf1bd3143847fca087b354f920e'] = 'ID du client';
 $_LANGADM['AdminImportd66424c2034991e541dee7face1851fc'] = 'Fichier encodé en ISO-8859-1 ?';
 $_LANGADM['AdminImportd7a158f13040edafc30b622d16c8b12d'] = '* Champs requis';
 $_LANGADM['AdminImportd7fa0b529a16e87f34d8ef35054c765c'] = 'Importer des produits dans une commande fournisseur va d\'abord effacer les produits contenus dans cette commande.';
