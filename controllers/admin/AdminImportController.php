@@ -308,6 +308,7 @@ class AdminImportControllerCore extends AdminController
 					'alias' => array('label' => $this->l('Alias *')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
 					'customer_email' => array('label' => $this->l('Customer e-mail')),
+					'id_customer' => array('label' => $this->l('Customer ID')),
 					'manufacturer' => array('label' => $this->l('Manufacturer')),
 					'supplier' => array('label' => $this->l('Supplier')),
 					'company' => array('label' => $this->l('Company')),
@@ -1971,6 +1972,31 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid e-mail address'), $address->customer_email);
 					continue;
 				}
+			}
+			elseif (isset($address->id_customer) && !empty($address->id_customer))
+			{
+				if (Customer::customerIdExistsStatic((int)$address->id_customer))
+				{
+					$customer = new Customer((int)$address->id_customer);
+
+					// a customer could exists in different shop
+					$customer_list = Customer::getCustomersByEmail($customer->email);
+
+					if (count($customer_list) == 0)
+						$this->errors[] = sprintf(
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Db::getInstance()->getMsgError(),
+							$customer->email,
+							(int)$address->customer_id
+						);
+				}
+				else
+					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in database (ID: %d) cannot be saved'), $address->customer_id);
+			}
+			else
+			{
+				$customer_list = array();
+				$address->id_customer = 0;
 			}
 
 			if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer))
