@@ -705,11 +705,14 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function processDelete()
 	{
+		$this->_setDeletedMode();
+		parent::processDelete();
+	}
+	
+	protected function _setDeletedMode()
+	{
 		if ($this->delete_mode == 'real')
-		{
 			$this->deleted = false;
-			CartRule::deleteByIdCustomer((int)Tools::getValue('id_customer'));
-		}
 		elseif ($this->delete_mode == 'deleted')
 			$this->deleted = true;
 		else
@@ -717,8 +720,12 @@ class AdminCustomersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Unknown delete mode:').' '.$this->deleted;
 			return;
 		}
-
-		parent::processDelete();
+	}
+		
+	protected function processBulkDelete()
+	{
+		$this->_setDeletedMode();
+		parent::processBulkDelete();
 	}
 
 	public function processAdd()
