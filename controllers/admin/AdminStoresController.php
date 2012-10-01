@@ -461,7 +461,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_ADDR2' => array(
-				'title' => 'Shop Address line 2',
+				'title' => $this->l('Shop address line 2'),
 				'validation' => 'isAddress',
 				'size' => 30,
 				'type' => 'text'
