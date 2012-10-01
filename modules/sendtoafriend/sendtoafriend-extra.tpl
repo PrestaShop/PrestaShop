@@ -52,7 +52,7 @@ $('document').ready(function(){
 			});
 		}
 		else
-			$('#send_friend_form_error').text('{/literal}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{literal}');
+			$('#send_friend_form_error').text("{/literal}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{literal}");
 	});
 });
 {/literal}
