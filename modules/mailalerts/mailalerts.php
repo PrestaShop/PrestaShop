@@ -403,7 +403,7 @@ class MailAlerts extends Module
 
 	public function hookActionProductOutOfStock($params)
 	{
-		if (!$this->_customer_qty)
+		if (!$this->_customer_qty || !Configuration::get('PS_STOCK_MANAGEMENT'))
 			return;
 
 		$id_product = (int)$params['product']->id;
