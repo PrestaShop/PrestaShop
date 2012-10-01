@@ -1040,7 +1040,7 @@ abstract class ObjectModelCore
 				$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc['type']).'`
 										AS `multi_shop_'.bqSQL($this->def['table']).'`
 										ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
-				$sql_filter = 'AND id_shop = '.Context::getContext()->shop->id.' '.$sql_filter;
+				$sql_filter = 'AND `multi_shop_'.bqSQL($this->def['table']).'`.id_shop = '.Context::getContext()->shop->id.' '.$sql_filter;
 				$sql_join = $multi_shop_join.' '.$sql_join;
 			}
 			else
