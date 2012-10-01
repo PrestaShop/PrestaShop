@@ -66,11 +66,6 @@ class EditorialClass extends ObjectModel
 		)
 	);
 
-	public function add($autodate = true, $null_values = false)
-	{
-		return parent::add($autodate, $null_values);
-	}
-	
 	static public function getByIdShop($id_shop)
 	{
 		$id = Db::getInstance()->getValue('SELECT `id_editorial` FROM `'._DB_PREFIX_.'editorial` WHERE `id_shop` ='.(int)$id_shop);
