@@ -82,23 +82,8 @@ function p15018_change_image_types()
 					);
 		}
 		
-		foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'p') as $file)
-		{
-			if (!preg_match('/^[a-z]{2}\-[a-z_-]+\.jpg$/i', $file))
-				continue;
-			foreach ($replace_types['products'] as $old_type => $new_type)
-				if (preg_match('/^([a-z]{2})\-'.$old_type.'\.jpg$/i', $file, $matches))
-				{
-					p15018_copy_or_rename(
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
-						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$new_type.'.jpg',
-						$option
-					);
-				}
-		}
-		
 		// Then the other entities (if there is less than 500 products, that should not be a problem)
-		$directories = array('c', 'm', 's', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
+		$directories = array('p', 'c', 'm', 's', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
 		foreach ($directories as $directory)
 			foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory) as $file)
 			{
