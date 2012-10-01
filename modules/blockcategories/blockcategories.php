@@ -54,6 +54,7 @@ class BlockCategories extends Module
 			!$this->registerHook('categoryUpdate') ||
 			!$this->registerHook('categoryDeletion') ||
 			!$this->registerHook('actionAdminMetaControllerUpdate_optionsBefore') ||
+			!$this->registerHook('actionAdminLanguagesControllerStatusBefore') ||
 			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 4) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
