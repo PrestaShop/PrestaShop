@@ -2229,7 +2229,7 @@ CREATE TABLE `PREFIX_stock_available` (
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `product_sqlstock` ( `id_product` , `id_product_attribute` , `id_shop` )
+  UNIQUE `product_sqlstock` ( `id_product` , `id_product_attribute` , `id_shop` )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supply_order` (
