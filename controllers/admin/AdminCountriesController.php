@@ -404,6 +404,29 @@ class AdminCountriesControllerCore extends AdminController
 
 		return $res;
 	}
+	
+	public function processStatus()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+			Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
+		
+		parent::processStatus();
+	}
+	
+	public function processBulkStatusSelection($way)
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$countries_ids = array();
+			foreach ($this->boxes as $id)
+				$countries_ids[] = array('id_country' => $id);
+
+			if (count($countries_ids))
+				Country::addModuleRestrictions(array(), $countries_ids, array());
+		}
+		parent::processBulkStatusSelection($way);
+	}
+
 
 	protected function displayValidFields()
 	{

@@ -1311,7 +1311,7 @@ abstract class ModuleCore
 			$paypal_condition = ' AND m.`name` = \'paypal\'';
 
 		$list = Shop::getContextListShopID();
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT h.`id_hook`, m.`name`, hm.`position`
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		'.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'
 		'.($frontend ? 'INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module` AND mg.id_shop = '.(int)$context->shop->id.')' : '').'

@@ -344,4 +344,30 @@ class CountryCore extends ObjectModel
 
 		return (bool)preg_match($zip_regexp, $zip_code);
 	}
+	
+	public static function addModuleRestrictions(array $shops = array(), array $countries = array(), array $modules = array())
+	{
+		if (!count($shops))
+			$shops = Shop::getShops(true, null, true);
+		
+		if (!count($countries))
+			$countries = Country::getCountries((int)Context::getContext()->cookie->id_lang);
+		
+		if (!count($modules))
+			$modules = Module::getPaymentModules();
+			
+		$sql = false;
+		foreach ($shops as $id_shop)
+			foreach ($countries as $country)
+				foreach ($modules as $module)
+					$sql .= '('.(int)$module['id_module'].', '.(int)$id_shop.', '.(int)$country['id_country'].'),';
+		
+		if ($sql)
+		{
+			$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.'module_country` (`id_module`, `id_shop`, `id_country`) VALUES '.rtrim($sql, ',');
+			return Db::getInstance()->execute($sql);
+		}
+		else
+			return true; 
+	}
 }
