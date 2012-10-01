@@ -273,8 +273,13 @@ class HookCore extends ObjectModel
 			if ($hook_name != 'displayPayment')
 				$sql->where('h.name != "displayPayment"');
 			// For payment modules, we check that they are available in the contextual country
-			elseif ($frontend && Validate::isLoadedObject($context->country))
-				$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
+			elseif ($frontend)
+			{
+				if (Validate::isLoadedObject($context->country))
+					$sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' LIMIT 1) = '.(int)$context->country->id.')');
+				if (Validate::isLoadedObject($context->currency))
+					$sql->where('(h.name = "displayPayment" AND (SELECT id_currency FROM '._DB_PREFIX_.'module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency = '.(int)$context->currency->id.' LIMIT 1) = '.(int)$context->currency->id.')');
+			}
 			if (Validate::isLoadedObject($context->shop))
 				$sql->where('hm.id_shop = '.(int)$context->shop->id);
 
