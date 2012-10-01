@@ -422,7 +422,6 @@ class AdminTranslationsControllerCore extends AdminController
 				header('Content-type: application/octet-stream');
 				header('Content-Disposition: attachment; filename="'.$this->lang_selected->iso_code.'.gzip'.'"');
 				header('Content-Transfer-Encoding: binary');
-				header('Content-Length: '.filesize($file_name));
 				ob_end_flush();
 				@readfile($file_name);
 			}
