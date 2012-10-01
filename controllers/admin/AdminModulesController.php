@@ -1018,7 +1018,7 @@ class AdminModulesControllerCore extends AdminController
 			$this->makeModulesStats($module);
 
 			// Assign warnings
-			if (isset($module->warning) && !empty($module->warning))
+			if ($module->active && isset($module->warning) && !empty($module->warning))
 				$this->warnings[] = sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning);
 
 			// AutoComplete array
