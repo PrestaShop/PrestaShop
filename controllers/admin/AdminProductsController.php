@@ -2053,10 +2053,9 @@ class AdminProductsControllerCore extends AdminController
 			// Check if Module
 			if (substr($this->tab_display, 0, 6) == 'Module')
 			{
-				$this->tab_display_module = strtolower(substr($this->tab_display, 6, strlen($this->tab_display) - 6));
+				$this->tab_display_module = strtolower(substr($this->tab_display, 6, Tools::strlen($this->tab_display) - 6));
 				$this->tab_display = 'Modules';
 			}
-
 			if (method_exists($this, 'initForm'.$this->tab_display))
 				$this->tpl_form = strtolower($this->tab_display).'.tpl';
 
@@ -2065,13 +2064,6 @@ class AdminProductsControllerCore extends AdminController
 			else
 			{
 				$product_tabs = array();
-
-				// Check if Module
-				if (substr($this->tab_display, 0, 6) == 'Module')
-				{
-					$this->tab_display = 'Modules';
-					$this->tab_display_module = strtolower(substr($this->tab_display, 6, strlen($this->tab_display) - 6));
-				}
 
 				// tab_display defines which tab to display first
 				if (!method_exists($this, 'initForm'.$this->tab_display))
@@ -2092,7 +2084,7 @@ class AdminProductsControllerCore extends AdminController
 
 					$product_tabs[$product_tab] = array(
 						'id' => $product_tab,
-						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (substr($product_tab, 0, 6) == substr($this->tab_display, 0, 6))),
+						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
 						'name' => $this->available_tabs_lang[$product_tab],
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)Tools::getValue('id_product').'&amp;action='.$product_tab,
 					);
