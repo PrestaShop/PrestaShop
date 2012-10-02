@@ -660,11 +660,10 @@ class ProductCore extends ObjectModel
 			if ($real_quantity > $physical_quantity)
 				return false;
 		}
+		$result = parent::delete();
 
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable($this->id);
-
-		$result = parent::delete();
 		$result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
 		// If there are still entries in product_shop, don't remove completly the product
 		if ($this->hasMultishopEntries())
