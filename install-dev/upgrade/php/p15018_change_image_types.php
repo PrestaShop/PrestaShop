@@ -87,11 +87,11 @@ function p15018_change_image_types()
 		foreach ($directories as $directory)
 			foreach (scandir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory) as $file)
 			{
-				if (!preg_match('/^([0-9]+|[a-z]{2})\-[a-z_-]+\.jpg$/i', $file))
+				if (!preg_match('/^([0-9]+|[a-z]{2}-default)\-[a-z_-]+\.jpg$/i', $file))
 					continue;
 				foreach ($replace_types as $type => $type_array)
 					foreach ($type_array as $old_type => $new_type)
-						if (preg_match('/^([0-9]+|[a-z]{2})\-'.$old_type.'\.jpg$/i', $file, $matches))
+						if (preg_match('/^([0-9]+|[a-z]{2}-default)\-'.$old_type.'\.jpg$/i', $file, $matches))
 						{
 							p15018_copy_or_rename(
 								_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$directory.DIRECTORY_SEPARATOR.$matches[1].'-'.$old_type.'.jpg',
