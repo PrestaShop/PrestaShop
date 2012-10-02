@@ -504,6 +504,7 @@ class AdminImportControllerCore extends AdminController
 				'entity' => (int)Tools::getValue('entity'),
 				'iso_lang' => Tools::getValue('iso_lang'),
 				'truncate' => Tools::getValue('truncate'),
+				'forceIDs' => Tools::getValue('forceIDs'),
 				'match_ref' => Tools::getValue('match_ref'),
 				'separator' => $this->separator,
 				'multiple_value_separator' => $this->multiple_value_separator
@@ -728,7 +729,7 @@ class AdminImportControllerCore extends AdminController
 		foreach (self::$column_mask as $type => $nb)
 			$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
 
-		if (Tools::getValue('truncate')) //if you choose to truncate table before import the column id is remove from the CSV file.
+		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is remove from the CSV file.
 			unset($res['id']);
 
 		return $res;
@@ -850,7 +851,12 @@ class AdminImportControllerCore extends AdminController
 				continue;
 			}
 			AdminImportController::setDefaultValues($info);
-			$category = new Category();
+
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+				$category = new Category((int)$info['id']);
+			else
+				$category = new Category();
+
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
 
 			if (isset($category->parent) && is_numeric($category->parent))
@@ -863,7 +869,10 @@ class AdminImportControllerCore extends AdminController
 			{
 				$category_parent = Category::searchByName($default_language_id, $category->parent, true);
 				if ($category_parent['id_category'])
+				{
 					$category->id_parent = (int)$category_parent['id_category'];
+					$category->level_depth = (int)$category_parent['level_depth'] + 1;
+				}
 				else
 				{
 					$category_to_create = new Category();
@@ -1006,16 +1015,19 @@ class AdminImportControllerCore extends AdminController
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
+
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+				$product = new Product((int)$info['id']);
+			else
+				$product = new Product();
+
 			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
 			{
-				$product = new Product((int)$info['id']);
 				$product->loadStockData();
 				$category_data = Product::getProductCategories((int)$product->id);
 				foreach ($category_data as $tmp)
 					$product->category[] = $tmp;
 			}
-			else
-				$product = new Product();
 
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);

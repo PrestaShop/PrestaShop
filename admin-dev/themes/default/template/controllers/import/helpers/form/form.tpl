@@ -122,7 +122,7 @@
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
 
-			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=files_to_import}{else}{l s='Your CSV file (%d file):' sprintf=files_to_import}{/if}</label>
+			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
 			<div class="margin-form">
 				{if count($files_to_import)}
 					<select name="csv">
@@ -173,9 +173,13 @@
 			<div class="margin-form">
 				<input name="truncate" id="truncate" type="checkbox"/>
 			</div>
-			<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
+				<label for="match_ref" class="clear" style="display: none">{l s='Use product reference as key?'}</label>
 			<div class="margin-form">
 				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
+			</div>
+			<label for="forceIDs" class="clear">{l s='Force all ids during import?'} </label>
+			<div class="margin-form">
+				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all IDs will be auto-incremented.'}
 			</div>
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
@@ -254,6 +258,11 @@
 		}
 		else
 			$(".import_products_categories").hide();
+
+		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3)
+			$("label[for=forceIDs],#forceIDs").show();
+		else
+			$("label[for=forceIDs],#forceIDs").hide();
 
 		$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 		$.ajax({
