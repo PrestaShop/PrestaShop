@@ -224,7 +224,7 @@ class MediaCore
 		if (Context::getContext()->controller->controller_type == 'admin')
 		{
 			$js_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $js_uri);
-			$js_uri = dirname($_SERVER['REQUEST_URI'].'a').'/..'.$js_uri;
+			$js_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$js_uri;
 		}
 		
 		return $js_uri;
@@ -251,7 +251,7 @@ class MediaCore
 		if (Context::getContext()->controller->controller_type == 'admin')
 		{
 			$css_uri = preg_replace('/^'.preg_quote(__PS_BASE_URI__, '/').'/', '/', $css_uri);
-			$css_uri = dirname($_SERVER['REQUEST_URI'].'a').'/..'.$css_uri;
+			$css_uri = dirname(preg_replace('/\?.+$/', '', $_SERVER['REQUEST_URI']).'a').'/..'.$css_uri;
 		}
 
 		return array($css_uri => $css_media_type);
