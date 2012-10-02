@@ -138,7 +138,7 @@ class AdminProductsControllerCore extends AdminController
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$join_category = true;
 
-		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)';
+		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` '.(!Shop::isFeatureActive() ? ' AND i.cover=1' : '').')';
 		if (Shop::isFeatureActive())
 		{
 			$alias = 'sa';
@@ -171,8 +171,6 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Shop::isFeatureActive())
 			$this->_where .= ' AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
-		else
-			$this->_where .= ' AND (i.cover=1 OR i.id_image IS NULL)';
 			
 		$this->fields_list = array();
 		$this->fields_list['id_product'] = array(
