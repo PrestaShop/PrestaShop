@@ -357,6 +357,18 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$themes = array();
+		foreach (Theme::getThemes() as $theme)
+			$themes[] = $theme->directory;
+
+		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
+			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir) && is_dir(_PS_ALL_THEMES_DIR_.$theme_dir) && file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg') && !in_array($theme_dir, $themes))
+			{
+				$theme = new Theme();
+				$theme->name = $theme->directory = $theme_dir;
+				$theme->add();
+			}
+	
 		$content = '';
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
 		{
