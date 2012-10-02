@@ -458,7 +458,7 @@ abstract class ObjectModelCore
 		}
 		
 		// Database insertion
-		if (isset($this->id))
+		if (isset($this->id) && !Tools::getValue('forceIDs'))
 			unset($this->id);
 		if (Shop::checkIdShopDefault($this->def['table']))
 			$this->id_shop_default = min($id_shop_list);
