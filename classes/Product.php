@@ -487,10 +487,8 @@ class ProductCore extends ObjectModel
 				die(Tools::displayError());
 			self::$_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
-		else if (Validate::isLoadedObject(Context::getContext()->customer))
-			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Context::getContext()->customer->id_default_group);
 		else
-			self::$_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+			self::$_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
 	}
 
 	public static function getTaxCalculationMethod($id_customer = null)
