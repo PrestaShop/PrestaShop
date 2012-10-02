@@ -245,6 +245,16 @@ class OrderDetailCore extends ObjectModel
 		if ($this->context != null && isset($this->context->shop))
 			$id_shop = $this->context->shop->id;
 		parent::__construct($id, $id_lang, $id_shop);
+
+		if ($context == null)
+			$context = Context::getContext();
+		$this->context = $context->cloneContext();
+	}
+	
+	protected function setContext($id_shop)
+	{
+		if ($this->context->shop->id != $id_shop)
+			$this->context->shop = new Shop((int)$id_shop);
 	}
 
 	public static function getDownloadFromHash($hash)
@@ -406,7 +416,8 @@ class OrderDetailCore extends ObjectModel
 		// Exclude VAT
 		if (!Tax::excludeTaxeOption())
 		{
-			$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product']);
+			$this->setContext((int)$product['id_shop']);
+			$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product'], $this->context);
 
 			$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
 			$this->tax_calculator = $tax_manager->getTaxCalculator();
@@ -424,7 +435,7 @@ class OrderDetailCore extends ObjectModel
 	 * Set specific price of the product
 	 * @param object $order
 	 */
-	protected function setSpecificPrice(Order $order)
+	protected function setSpecificPrice(Order $order, $product = null)
 	{
 		$this->reduction_amount = 0.00;
 		$this->reduction_percent = 0.00;
@@ -442,8 +453,9 @@ class OrderDetailCore extends ObjectModel
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
 					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
 					$price : $this->specificPrice['reduction']);
-
-					$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$this->specificPrice['id_product']);
+					if ($product !== null)
+						$this->setContext((int)$product['id_shop']);
+					$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$this->specificPrice['id_product'], $this->context);
 					$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
 					$this->tax_calculator = $tax_manager->getTaxCalculator();
 
@@ -461,10 +473,11 @@ class OrderDetailCore extends ObjectModel
 	 */
 	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
-		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price);
+		$this->setContext((int)$product['id_shop']);
+		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
 		$this->specificPrice = $specific_price;
 
-		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false);
+		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
 		$this->product_price = $this->original_product_price;
 		$this->unit_price_tax_incl = (float)$product['price_wt'];
 		$this->unit_price_tax_excl = (float)$product['price'];
@@ -475,23 +488,19 @@ class OrderDetailCore extends ObjectModel
         if ($product['id_supplier'] > 0)
             $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute']);
 
-		$this->setSpecificPrice($order);
+		$this->setSpecificPrice($order, $product);
 
 		$this->group_reduction = (float)(Group::getReduction((int)($order->id_customer)));
 
-		if (isset($this->context->shop))
-			$shop_id = $this->context->shop->id;
-		else
-			$shop_id = $cart->id_shop;
+		$shop_id = $this->context->shop->id;
 
 		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $shop_id,
 			(int)$cart->id_currency, (int)$this->vat_address->id_country,
-			(int)$this->customer->id_default_group, (int)$product['cart_quantity']);
+			(int)$this->customer->id_default_group, (int)$product['cart_quantity'], false, null, null, $null, true, true, $this->context);
 
 		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true,
 			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
-			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-
+			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
 		$this->product_quantity_discount = 0.00;
 		if ($quantityDiscount)
 		{
