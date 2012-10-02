@@ -588,7 +588,7 @@ class CartCore extends ObjectModel
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
 					((int)$address_id ? (int)$address_id : null),
-					null,
+					$null,
 					true,
 					true,
 					$cart_shop_context
