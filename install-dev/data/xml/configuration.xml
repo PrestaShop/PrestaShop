@@ -639,21 +639,21 @@
       <value>RSS</value>
     </configuration>
     <configuration id="blockcontactinfos_company" name="blockcontactinfos_company">
-      <value>Prestashop</value>
+      <value>Your company</value>
     </configuration>
     <configuration id="blockcontactinfos_address" name="blockcontactinfos_address">
-      <value>41, boulevard des capucines
-75002 Paris
-France</value>
+      <value>Address line 1
+City
+Country</value>
     </configuration>
     <configuration id="blockcontactinfos_phone" name="blockcontactinfos_phone">
-      <value>+33 (0)1.40.18.30.04</value>
+      <value>0123-456-789</value>
     </configuration>
     <configuration id="blockcontactinfos_email" name="blockcontactinfos_email">
       <value>pub@prestashop.com</value>
     </configuration>
     <configuration id="blockcontact_telnumber" name="blockcontact_telnumber">
-      <value>+33 (0)1.40.18.30.04</value>
+      <value>0123-456-789</value>
     </configuration>
     <configuration id="blockcontact_email" name="blockcontact_email">
       <value>pub@prestashop.com</value>
