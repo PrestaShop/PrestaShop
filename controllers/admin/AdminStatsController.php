@@ -25,6 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminStatsControllerCore extends AdminStatsTabControllerCore
+class AdminStatsControllerCore extends AdminStatsTabController
 {
 }
