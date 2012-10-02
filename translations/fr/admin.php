@@ -1321,6 +1321,7 @@ $_LANGADM['AdminImport2415390fb5052bb8221a93c9fc51b17f'] = 'Importer les donnée
 $_LANGADM['AdminImport2688a544cd5ac33f27ab78c8d8c3acaa'] = 'Nom *';
 $_LANGADM['AdminImport278c491bdd8a53618c149c4ac790da34'] = 'Modèle';
 $_LANGADM['AdminImport284b47b0bb63ae2df3b29f0e691d6fcf'] = 'Adresses';
+$_LANGADM['AdminImport28bc6f0862918aba3c4b3e80212a3fc5'] = 'Forcer tous les identifiants lors de l\'importation?';
 $_LANGADM['AdminImport2a08996307b8694521492f3ca7b5df40'] = 'Exemple de fichier de déclinaisons';
 $_LANGADM['AdminImport2a1a026f56b4c51cc839e513370379fd'] = 'Langue du fichier :';
 $_LANGADM['AdminImport2a982c2c140ad66259355df1e2c5b69f'] = 'Méta description';
@@ -1363,6 +1364,7 @@ $_LANGADM['AdminImport6afcfa28445fa35c1f6618a471891ed8'] = 'La commande fourniss
 $_LANGADM['AdminImport6c7c9fbb27699c4018dc15744547b4a4'] = 'Catégorie racine (0/1)';
 $_LANGADM['AdminImport6d5030fd40c1e08767b4b70d3786b0fb'] = 'L\'ID du fournisseur (%d) n\'est pas valable(ligne %d).';
 $_LANGADM['AdminImport70e7a6fcceb39a1e3ea3925182b85d18'] = 'AAAA-MM-JJ';
+$_LANGADM['AdminImport72412dc8aa8825cd4f72b4fd1c0b05a2'] = 'Si vous n\'utilisez pas cette option, tous les identifiants seront générés via l\'auto-incrémentation.';
 $_LANGADM['AdminImport72d6d7a1885885bb55a565fd1070581a'] = 'Import';
 $_LANGADM['AdminImport72ef2b9b6965d078e3c7f95487a82d1c'] = 'Sauter';
 $_LANGADM['AdminImport76aeea9f48196068e6b47d46d41e7618'] = 'Afficher le prix (0 = Non, 1 = Oui)';

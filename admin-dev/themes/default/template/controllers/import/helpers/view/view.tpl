@@ -67,6 +67,9 @@
 		{if $fields_value.truncate}
 			<input type="hidden" name="truncate" value="1" />
 		{/if}
+		{if $fields_value.forceIDs}
+			<input type="hidden" name="forceIDs" value="1" />
+		{/if}
 		{if $fields_value.match_ref}
 			<input type="hidden" name="match_ref" value="1" />
 		{/if}
