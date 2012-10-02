@@ -2533,11 +2533,12 @@ class ProductCore extends ObjectModel
 			{
 				$sql->select('product_attribute_shop.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product AND product_attribute_shop.id_shop='.(int)$id_shop.')');
+				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')');
 			}
 			else
 				$sql->select('0 as id_product_attribute');
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			
 			foreach ($res as $row)
 			{
 				$array_tmp = array(
