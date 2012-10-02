@@ -2487,9 +2487,16 @@ class ProductCore extends ObjectModel
 		$id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0)
 	{
 		static $address = null;
+		static $context = null;
 
 		if ($address === null)
 			$address = new Address();
+		
+		if ($context == null)
+			$context = Context::getContext()->cloneContext();
+		
+		if ($context->shop->id != (int)$id_shop)
+			$context->shop = new Shop((int)$id_shop);
 		
 		if (!$use_customer_price)
 			$id_customer = 0;
@@ -2522,17 +2529,16 @@ class ProductCore extends ObjectModel
 			$sql = new DbQuery();
 			$sql->select('product_shop.`price`, product_shop.`ecotax`');
 			$sql->from('product', 'p');
-			$sql->join(Shop::addSqlAssociation('product', 'p'));
+			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop='.(int)$id_shop.')');
 			$sql->where('p.`id_product` = '.(int)$id_product);
 			if (Combination::isFeatureActive())
 			{
 				$sql->select('product_attribute_shop.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-				$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.id_shop ='.(int)$id_shop));
+				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product AND product_attribute_shop.id_shop='.(int)$id_shop.')');
 			}
 			else
 				$sql->select('0 as id_product_attribute');
-
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			foreach ($res as $row)
 			{
@@ -2573,7 +2579,7 @@ class ProductCore extends ObjectModel
 		$address->id_state = $id_state;
 		$address->postcode = $zipcode;
 
-		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$id_product));
+		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$id_product, $context));
 		$product_tax_calculator = $tax_manager->getTaxCalculator();
 
 		// Add Tax
@@ -4197,14 +4203,13 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-
 		$key = 'product_id_tax_rules_group_'.(int)$id_product.'_'.(int)$context->shop->id;
 		if (!Cache::isStored($key))
 			Cache::store($key,
 			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_tax_rules_group`
 				FROM `'._DB_PREFIX_.'product_shop`
-				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)Context::getContext()->shop->id));
+				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id));
 
 		return Cache::retrieve($key);
 	}
