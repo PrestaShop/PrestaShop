@@ -54,7 +54,8 @@ $(function() {
 		e.preventDefault();
 
 		// Form element
-		url_options = productcomments_url_rewrite ? '&' : '?';
+
+		url_options = parseInt(productcomments_url_rewrite) ? '?' : '&';
 		$.ajax({
 			url: productcomments_controller_url+url_options+'action=add_comment&secure_key='+secure_key,
 			data: $('#fancybox-content form').serialize(),
