@@ -620,6 +620,25 @@ ul.idTabs li {
 #more_info_sheets dl {margin-left:20px}
 #more_info_sheets em {font-style:italic}
 
+#more_info_sheets .product_desc{
+	margin-top:5px
+}
+
+#more_info_sheets .product_desc .product_image{
+	float:left
+}
+
+#more_info_sheets .product_desc .block_description{
+	float:left;
+	margin-left:10px;
+	width:420px
+}
+#more_info_sheets .product_desc .clear_product_desc{
+	clear:both;
+	height:0px;
+	line-height:0px
+}
+
 /* Make sure lists are correctly displayed in tinyMCE BO edition mode too */
 #short_description_content ul,
 #short_description_content ol,
