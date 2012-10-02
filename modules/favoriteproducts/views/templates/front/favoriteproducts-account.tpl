@@ -68,7 +68,7 @@ $('document').ready(function()
 			{foreach from=$favoriteProducts item=favoriteProduct}
 			<div class="favoriteproduct clearfix">
 				<a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}" class="product_img_link">
-					<img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium')|escape:'htmlall':'UTF-8'}" alt=""/></a>
+					<img src="{$link->getImageLink($favoriteProduct.link_rewrite, $favoriteProduct.image, 'medium_default')|escape:'htmlall':'UTF-8'}" alt=""/></a>
 				<h3><a href="{$link->getProductLink($favoriteProduct.id_product, null, null, null, null, $favoriteProduct.id_shop)|escape:'htmlall':'UTF-8'}">{$favoriteProduct.name|escape:'htmlall':'UTF-8'}</a></h3>
 				<div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'htmlall':'UTF-8'}</div>
 
