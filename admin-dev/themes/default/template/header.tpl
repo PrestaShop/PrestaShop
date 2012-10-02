@@ -103,126 +103,129 @@
 {* begin  HEADER *}
 	<div id="header">
 		<div id="header_infos">
-			<a id="header_shopname" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
-			{if {$show_new_orders} == 1}
-				<div id="orders_notif" class="notifs">
-						<span id="orders_notif_number_wrapper" class="number_wrapper">
-							<span id="orders_notif_value">0</span>
-						</span>
-					<div id="orders_notif_wrapper" class="notifs_wrapper">
-						<h3>{l s='Last orders'}</h3>
-						<p class="no_notifs">{l s='No new orders has been placed on your shop'}</p>
-						<ul id="list_orders_notif"></ul>
-						<p><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
+			<a id="header_shopname" href="{$link->getAdminLink('AdminHome')|escape:'htmlall':'UTF-8'}"><span>{$shop_name}</span></a>
+			<div id="notifs_icon_wrapper">
+				{if {$show_new_orders} == 1}
+					<div id="orders_notif" class="notifs">
+							<span id="orders_notif_number_wrapper" class="number_wrapper">
+								<span id="orders_notif_value">0</span>
+							</span>
+						<div id="orders_notif_wrapper" class="notifs_wrapper">
+							<h3>{l s='Last orders'}</h3>
+							<p class="no_notifs">{l s='No new orders has been placed on your shop'}</p>
+							<ul id="list_orders_notif"></ul>
+							<p><a href="index.php?controller=AdminOrders&amp;token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
+						</div>
 					</div>
-				</div>
-			{/if}
-			{if ($show_new_customers == 1)}
-				<div id="customers_notif" class="notifs notifs_alternate">
-						<span id="customers_notif_number_wrapper" class="number_wrapper">
-							<span id="customers_notif_value">0</span>
-						</span>
-					<div id="customers_notif_wrapper" class="notifs_wrapper">
-						<h3>{l s='Last customers'}</h3>
-						<p class="no_notifs">{l s='No new customers registered on your shop'}</p>
-						<ul id="list_customers_notif"></ul>
-						<p><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a></p>
+				{/if}
+				{if ($show_new_customers == 1)}
+					<div id="customers_notif" class="notifs notifs_alternate">
+							<span id="customers_notif_number_wrapper" class="number_wrapper">
+								<span id="customers_notif_value">0</span>
+							</span>
+						<div id="customers_notif_wrapper" class="notifs_wrapper">
+							<h3>{l s='Last customers'}</h3>
+							<p class="no_notifs">{l s='No new customers registered on your shop'}</p>
+							<ul id="list_customers_notif"></ul>
+							<p><a href="index.php?controller=AdminCustomers&amp;token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a></p>
+						</div>
 					</div>
-				</div>
-			{/if}
-			{if {$show_new_messages} == 1}
-				<div id="customer_messages_notif" class="notifs">
-						<span id="customer_messages_notif_number_wrapper" class="number_wrapper">
-							<span id="customer_messages_notif_value">0</span>
-						</span>
-					<div id="customer_messages_notif_wrapper" class="notifs_wrapper">
-						<h3>{l s='Last messages'}</h3>
-						<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
-						<ul id="list_customer_messages_notif"></ul>
-						<p><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a></p>
+				{/if}
+				{if {$show_new_messages} == 1}
+					<div id="customer_messages_notif" class="notifs">
+							<span id="customer_messages_notif_number_wrapper" class="number_wrapper">
+								<span id="customer_messages_notif_value">0</span>
+							</span>
+						<div id="customer_messages_notif_wrapper" class="notifs_wrapper">
+							<h3>{l s='Last messages'}</h3>
+							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
+							<ul id="list_customer_messages_notif"></ul>
+							<p><a href="index.php?tab=AdminCustomerThreads&amp;token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a></p>
+						</div>
 					</div>
-				</div>
-			{/if}
-		</div>
-		<div id="employee_links">
-			<span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
-			<span class="separator">&nbsp;</span>
-			<a class="employee" href="index.php?controller=AdminEmployees&amp;id_employee={$employee->id}&amp;updateemployee&amp;token={getAdminToken tab='AdminEmployees'}" alt="">{l s='My preferences'}</a>
-			<span class="separator">&nbsp;</span>
-			<a href="index.php?logout" id="header_logout">{l s='logout'}</a>
-			{if {$base_url}}
-				<span class="separator">&nbsp;</span>
-				<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-			{/if}
-		</div>
-		<div id="header_search">
-			<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
-				<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
-				<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
-					<option value="0">{l s='everywhere'}</option>
-					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
-					<optgroup label="{l s='customers'}:">
-						<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
-						<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
-					</optgroup>
-					<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
-					<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
-					<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
-				</select>
-				<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
-			</form>
-		</div>
-
-		{if count($quick_access) > 0}
-		<div id="header_quick">
-			<script type="text/javascript">
-				function quickSelect(elt)
-				{
-					var eltVal = $(elt).val();
-					if (eltVal == "0")
-						return false;
-					else if (eltVal.substr(eltVal.length - 6) == '_blank')
-						window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
-					else
-						location.href = eltVal;
-				}
-			</script>
-			<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
-				<option value="0">{l s='Quick Access'}</option>
-				{foreach $quick_access as $quick}
-					<option value="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}">&raquo; {$quick.name}</option>
-				{/foreach}
-			</select>
-		</div>
-		{/if}
-		{if isset($displayBackOfficeTop)}
-			{$displayBackOfficeTop}
-		{/if}
-	</div> {* end header *}
-
-	<ul id="menu">
-		{if !$tab}
-			<div class="mainsubtablist" style="display:none">
+				{/if}
 			</div>
-		{/if}
-		{foreach $tabs AS $t}
-			{if $t.active}
-				<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-					<span class="title">
-						<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
-					</span>
-					<ul class="submenu">
-						{foreach from=$t.sub_tabs item=t2}
-							{if $t2.active}
-								<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
-							{/if}
-						{/foreach}
-					</ul>
-				</li>
+			<div id="employee_links">
+				<span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
+				<span class="separator">&nbsp;</span>
+				<a class="employee" href="index.php?controller=AdminEmployees&amp;id_employee={$employee->id}&amp;updateemployee&amp;token={getAdminToken tab='AdminEmployees'}" alt="">{l s='My preferences'}</a>
+				<span class="separator">&nbsp;</span>
+				<a href="index.php?logout" id="header_logout">{l s='logout'}</a>
+				{if {$base_url}}
+					<span class="separator">&nbsp;</span>
+					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
+				{/if}
+			</div>
+			<div id="header_search">
+				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
+					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
+					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
+						<option value="0">{l s='everywhere'}</option>
+						<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
+						<optgroup label="{l s='customers'}:">
+							<option value="2" {if {$search_type} == 2} selected="selected" {/if}>{l s='by name'}</option>
+							<option value="6" {if {$search_type} == 6} selected="selected" {/if}>{l s='by ip address'}</option>
+						</optgroup>
+						<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
+						<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
+						<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
+					</select>
+					<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
+				</form>
+			</div>
+
+			{if count($quick_access) > 0}
+			<div id="header_quick">
+				<script type="text/javascript">
+					function quickSelect(elt)
+					{
+						var eltVal = $(elt).val();
+						if (eltVal == "0")
+							return false;
+						else if (eltVal.substr(eltVal.length - 6) == '_blank')
+							window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
+						else
+							location.href = eltVal;
+					}
+				</script>
+				<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
+					<option value="0">{l s='Quick Access'}</option>
+					{foreach $quick_access as $quick}
+						<option value="{$quick.link|escape:'htmlall':'UTF-8'}{if $quick.new_window}_blank{/if}">&raquo; {$quick.name}</option>
+					{/foreach}
+				</select>
+			</div>
 			{/if}
-		{/foreach}
-	</ul>
-{/if}
+			{if isset($displayBackOfficeTop)}
+				{$displayBackOfficeTop}
+			{/if}
+		</div>{* end header_infos*}
+
+		<ul id="menu">
+			{if !$tab}
+				<div class="mainsubtablist" style="display:none">
+				</div>
+			{/if}
+			{foreach $tabs AS $t}
+				{if $t.active}
+					<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
+						<span class="title">
+							<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
+						</span>
+						<ul class="submenu">
+							{foreach from=$t.sub_tabs item=t2}
+								{if $t2.active}
+									<li><a href="{$t2.href|escape:'htmlall':'UTF-8'}">{if $t2.name eq ''}{$t2.class_name}{else}{$t2.name|escape:'htmlall':'UTF-8'}{/if}</a></li>
+								{/if}
+							{/foreach}
+						</ul>
+					</li>
+				{/if}
+			{/foreach}
+		</ul>
+	{/if}
+	</div>{* end header*}
+	
 	<div id="main">
 		<div id="content">
 		{if $display_header && $install_dir_exists}
