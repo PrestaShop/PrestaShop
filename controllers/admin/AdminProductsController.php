@@ -144,15 +144,21 @@ class AdminProductsControllerCore extends AdminController
 			$alias = 'sa';
 			$alias_image = 'image_shop';
 			if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			{
 				$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.(int)$this->context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$this->context->shop->id.')';
+				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$this->context->shop->id.')';
+			}
 			else
+			{
 				$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = a.id_shop_default)
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop=a.id_shop_default)';
+				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop=a.id_shop_default)';
+			}
 			$this->_select .= 'shop.name as shopname, ';
 		}
 		else
@@ -168,9 +174,6 @@ class AdminProductsControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
 		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias_image.'.`id_image`, '.$alias.'.`price`, ('.$alias.'.`price` * ((100 + (t.`rate`))/100)) AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
-
-		if (Shop::isFeatureActive())
-			$this->_where .= ' AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
 			
 		$this->fields_list = array();
 		$this->fields_list['id_product'] = array(
@@ -3413,6 +3416,11 @@ class AdminProductsControllerCore extends AdminController
 				$shops = false;
 				if (Shop::isFeatureActive())
 					$shops = Shop::getShops();
+
+				foreach ($shops as $key => $shop)
+					if (!$obj->isAssociatedToShop($shop['id_shop']))
+						unset($shops[$key]);
+
 				$data->assign('shops', $shops);
 
 				$count_images = Db::getInstance()->getValue('

@@ -749,7 +749,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getSharedShops($shop_id, $type)
 	{
-		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER)))
+		if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, SHOP::SHARE_STOCK)))
 			die('Wrong argument ($type) in Shop::getSharedShops() method');
 
 		Shop::cacheShops();

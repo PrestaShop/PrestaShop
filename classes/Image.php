@@ -89,9 +89,13 @@ class ImageCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!parent::delete() ||
-			!$this->deleteProductAttributeImage() ||
-			!$this->deleteImage())
+		if (!parent::delete())
+			return false;
+
+		if ($this->hasMultishopEntries())
+			return true;
+
+		if (!$this->deleteProductAttributeImage() || !$this->deleteImage())
 			return false;
 
 		// update positions
