@@ -53,7 +53,8 @@
 	right:3px;
 	padding:5px 10px;
 	height:auto;
-	width:10px;
+	text-align: center;
+    width: auto;
 	background:#000000;
 }
 #setCurrency .currencies_ul_hover a {color:#fff;}
