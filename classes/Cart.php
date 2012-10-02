@@ -205,12 +205,12 @@ class CartCore extends ObjectModel
 	public function updateAddressId($id_address, $id_address_new)
 	{
 		$to_update = false;
-		if ($this->id_address_invoice == $id_address)
+		if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address)
 		{
 			$to_update = true;
 			$this->context->cart->id_address_invoice = $id_address_new;
 		}
-		if ($this->id_address_delivery == $id_address)
+		if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address)
 		{
 			$to_update = true;
 			$this->id_address_delivery = $id_address_new;
@@ -222,6 +222,12 @@ class CartCore extends ObjectModel
 		SET `id_address_delivery` = '.(int)$id_address_new.'
 		WHERE  `id_cart` = '.(int)$this->id.'
 			AND `id_address_delivery` = '.(int)$id_address;
+		Db::getInstance()->execute($sql);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
+			SET `id_address_delivery` = '.(int)$id_address_new.'
+			WHERE  `id_cart` = '.(int)$this->id.'
+				AND `id_address_delivery` = '.(int)$id_address;
 		Db::getInstance()->execute($sql);
 	}
 
@@ -411,6 +417,12 @@ class CartCore extends ObjectModel
 			return $this->_products;
 		}
 
+		$shop_group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
+		if ($shop_group['share_order'])
+			$id_shop = 'cp.id_shop';
+		else
+			$id_shop = (int)Shop::getContextShopID();
+
 		if (!$id_country)
 			$id_country = Context::getContext()->country->id;
 
@@ -431,10 +443,10 @@ class CartCore extends ObjectModel
 
 		// Build JOIN
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
-		$sql->join(Shop::addSqlAssociation('product', 'p'));
+		$sql->innerJoin('product_shop', 'product_shop', 'product_shop.id_shop='.$id_shop);
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl')
+			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', $id_shop)
 		);
 		
 		$sql->leftJoin('tax_rule', 'tr', '
@@ -451,7 +463,7 @@ class CartCore extends ObjectModel
 
 		$sql->leftJoin('category_lang', 'cl', '
 			product_shop.`id_category_default` = cl.`id_category`
-			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl')
+			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', $id_shop)
 		);
 
 		// @todo test if everything is ok, then refactorise call of this method
@@ -492,7 +504,7 @@ class CartCore extends ObjectModel
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
-			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
+			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', 'product_attribute_shop.id_shop='.$id_shop);
 			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
@@ -519,6 +531,7 @@ class CartCore extends ObjectModel
 		if (empty($result))
 			return array();
 
+		$cart_shop_context = Context::getContext()->cloneContext();
 		foreach ($result as $row)
 		{
 			if (isset($row['ecotax_attr']) && $row['ecotax_attr'] > 0)
@@ -538,6 +551,9 @@ class CartCore extends ObjectModel
 			if (!Address::addressExists($address_id))
 				$address_id = null;
 
+			if ($cart_shop_context->shop->id != $row['id_shop'])
+				$cart_shop_context->shop = new Shop((int)$row['id_shop']);
+
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				$row['price'] = Product::getPriceStatic(
@@ -553,7 +569,10 @@ class CartCore extends ObjectModel
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
 					((int)$address_id ? (int)$address_id : null),
-					$specific_price_output
+					$specific_price_output,
+					true,
+					true,
+					$cart_shop_context
 				); // Here taxes are computed only once the quantity has been applied to the product price
 
 				$row['price_wt'] = Product::getPriceStatic(
@@ -568,7 +587,11 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null)
+					((int)$address_id ? (int)$address_id : null),
+					null,
+					true,
+					true,
+					$cart_shop_context
 				);
 
 				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$address_id);
@@ -591,7 +614,10 @@ class CartCore extends ObjectModel
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
 					((int)$address_id ? (int)$address_id : null),
-					$specific_price_output
+					$specific_price_output,
+					true,
+					true,
+					$cart_shop_context
 				);
 
 				$row['price_wt'] = Product::getPriceStatic(
@@ -606,9 +632,13 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null)
+					((int)$address_id ? (int)$address_id : null),
+					$null,
+					true,
+					true,
+					$cart_shop_context
 				);
-
+				
 				// In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals
 				$row['price_wt'] = Tools::ps_round($row['price_wt'], 2);
 				$row['total_wt'] = $row['price_wt'] * (int)$row['cart_quantity'];
@@ -1338,6 +1368,9 @@ class CartCore extends ObjectModel
 
 		foreach ($products as $product) // products refer to the cart details
 		{
+			if ($virtual_context->shop->id != $product['id_shop'])
+				$virtual_context->shop = new Shop((int)$product['id_shop']);
+
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 				$address_id = (int)$this->id_address_invoice;
 			else
@@ -1360,7 +1393,11 @@ class CartCore extends ObjectModel
 					false,
 					(int)$this->id_customer ? (int)$this->id_customer : null,
 					(int)$this->id,
-					$address_id
+					$address_id,
+					$null,
+					true,
+					true,
+					$virtual_context
 				);
 
 				$total_ecotax = $product['ecotax'] * (int)$product['cart_quantity'];
@@ -1368,7 +1405,7 @@ class CartCore extends ObjectModel
 
 				if ($with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id);
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id, $virtual_context);
 					$product_eco_tax_rate = Tax::getProductEcotaxRate((int)$address_id);
 
 					$total_price = ($total_price - $total_ecotax) * (1 + $product_tax_rate / 100);
@@ -1390,14 +1427,18 @@ class CartCore extends ObjectModel
 					false,
 					((int)$this->id_customer ? (int)$this->id_customer : null),
 					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null)
+					((int)$address_id ? (int)$address_id : null),
+					$null,
+					true,
+					true,
+					$virtual_context
 				);
 
 				$total_price = Tools::ps_round($price, 2) * (int)$product['cart_quantity'];
 
 				if (!$with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id);
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id, $virtual_context);
 					$total_price = Tools::ps_round($total_price / (1 + ($product_tax_rate / 100)), 2);
 				}
 			}

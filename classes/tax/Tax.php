@@ -250,10 +250,13 @@ class TaxCore extends ObjectModel
 	 * @param integer $id_country
 	 * @return Tax
 	 */
-	public static function getProductTaxRate($id_product, $id_address = null)
+	public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
 	{
+		if ($context == null)
+			$context = Context::getContext();
+
 		$address = Address::initialize($id_address);
-		$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product);
+		$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product, $context);
 
 		$tax_manager = TaxManagerFactory::getManager($address, $id_tax_rules);
 		$tax_calculator = $tax_manager->getTaxCalculator();
