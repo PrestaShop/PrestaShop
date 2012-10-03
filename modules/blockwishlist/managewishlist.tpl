@@ -53,7 +53,7 @@
 				<div class="clearfix">
 					<div class="product_image">
 						<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}">
-							<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium')}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
+							<img src="{$link->getImageLink($product.link_rewrite, $product.cover, 'medium_default')}" alt="{$product.name|escape:'htmlall':'UTF-8'}" />
 						</a>
 					</div>
 					<div class="product_infos">
