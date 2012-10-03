@@ -132,6 +132,8 @@ class AdminAccessControllerCore extends AdminController
 
 	public function ajaxProcessUpdateAccess()
 	{
+		if (_PS_MODE_DEMO_)
+			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
 			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
 
@@ -190,9 +192,10 @@ class AdminAccessControllerCore extends AdminController
 
 	public function ajaxProcessUpdateModuleAccess()
 	{
+		if (_PS_MODE_DEMO_)
+			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
 			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
-			/* Update Access Modules */
 
 		if (Tools::isSubmit('changeModuleAccess'))
 		{
