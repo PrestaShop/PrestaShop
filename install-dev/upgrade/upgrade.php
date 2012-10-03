@@ -42,7 +42,13 @@ if (substr($memory_limit,-1) != 'G'
 
 // redefine REQUEST_URI if empty (on some webservers...)
 if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
-	$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
+{
+	if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME']))
+		$_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
+	else
+		$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
+}
+
 if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
 	$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
