@@ -2124,10 +2124,16 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Manufacturer::existsInDatabase((int)$info['id'], 'manufacturer'))
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$manufacturer = new Manufacturer((int)$info['id']);
 			else
-				$manufacturer = new Manufacturer();
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Manufacturer::existsInDatabase((int)$info['id'], 'manufacturer'))
+					$manufacturer = new Manufacturer((int)$info['id']);
+				else
+					$manufacturer = new Manufacturer();
+			}
+
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $manufacturer);
 
 			$res = false;
@@ -2189,10 +2195,16 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Supplier::existsInDatabase((int)$info['id'], 'supplier'))
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$supplier = new Supplier((int)$info['id']);
 			else
-				$supplier = new Supplier();
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Supplier::existsInDatabase((int)$info['id'], 'supplier'))
+					$supplier = new Supplier((int)$info['id']);
+				else
+					$supplier = new Supplier();
+			}
+
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
 			if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
