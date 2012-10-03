@@ -287,6 +287,7 @@ class DispatcherCore
 			case self::FC_ADMIN :
 				$tab = Tab::getInstanceFromClassName($this->controller);
 				$retrocompatibility_admin_tab = null;
+
 				if ($tab->module)
 				{
 					if (file_exists(_PS_MODULE_DIR_.$tab->module.'/'.$tab->class_name.'.php'))
@@ -636,7 +637,7 @@ class DispatcherCore
 			return $this->controller;
 
 		$controller = Tools::getValue('controller');
-
+	
 		if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
 		{
 			$controller = $m[1];
@@ -648,7 +649,7 @@ class DispatcherCore
 
 		if (!Validate::isControllerName($controller))
 			$controller = false;
-
+	
 		// Use routes ? (for url rewriting)
 		if ($this->use_routes && !$controller)
 		{
