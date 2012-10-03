@@ -605,7 +605,7 @@ class CartCore extends ObjectModel
 					(int)$row['id_product'],
 					false,
 					(int)$row['id_product_attribute'],
-					6,
+					2,
 					null,
 					false,
 					true,
