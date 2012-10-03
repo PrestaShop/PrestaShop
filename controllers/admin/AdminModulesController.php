@@ -806,7 +806,7 @@ class AdminModulesControllerCore extends AdminController
 	{
 		foreach ($modules as $k => $module)
 		{
-			// Check add permissions, if add permissions not set, addons modules and non installed modules will not be displayed
+			// Check add permissions, if add permissions not set, addons modules and uninstalled modules will not be displayed
 			if ($this->tabAccess['add'] !== '1' && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought'))
 				unset($modules[$k]);
 			else if ($this->tabAccess['add'] !== '1' && (!isset($module->id) || $module->id < 1))
