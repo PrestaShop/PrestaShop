@@ -329,6 +329,7 @@ class WebserviceRequestCore
 		$arr_return = array();
 		foreach($parameters as $name => $value)
 		{
+			$id_shop = (int)Context::getContext()->shop->id;
 			$id_country = (int)(isset($value['country']) ? $value['country'] : (Configuration::get('PS_COUNTRY_DEFAULT')));
 			$id_state = (int)(isset($value['state']) ? $value['state'] : 0);
 			$id_currency = (int)(isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -344,7 +345,7 @@ class WebserviceRequestCore
 			$use_ecotax = (int)(isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
 			$id_county = (isset($value['county']) ? $value['county'] : 0);
-			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
+			$return_value = Product::priceCalculation($id_shop, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
 			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
 		}

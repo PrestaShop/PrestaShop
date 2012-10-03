@@ -2488,8 +2488,8 @@ class ProductCore extends ObjectModel
 		
 		if ($context == null)
 			$context = Context::getContext()->cloneContext();
-		
-		if ($context->shop->id != (int)$id_shop)
+
+		if ($id_shop !== null && $context->shop->id != (int)$id_shop)
 			$context->shop = new Shop((int)$id_shop);
 		
 		if (!$use_customer_price)
@@ -2533,6 +2533,7 @@ class ProductCore extends ObjectModel
 			}
 			else
 				$sql->select('0 as id_product_attribute');
+
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			
 			foreach ($res as $row)
