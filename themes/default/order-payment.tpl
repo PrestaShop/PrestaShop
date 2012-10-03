@@ -146,7 +146,7 @@
 				{if $use_taxes}
 					{if $priceDisplay}
 						<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none;"{/if}>
-							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}}</td>
+							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</td>
 							<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
 						</tr>
 					{else}
