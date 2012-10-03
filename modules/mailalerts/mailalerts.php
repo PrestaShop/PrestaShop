@@ -388,7 +388,7 @@ class MailAlerts extends Module
 			file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
 			Mail::Send(
 				$id_lang,
-				'new_order',
+				$template,
 				sprintf(Mail::l('New order - #%06d', $id_lang), $order->id),
 				$template_vars,
 				explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails),

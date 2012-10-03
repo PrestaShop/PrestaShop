@@ -13,10 +13,12 @@
 <p style="background-color: #db3484; width: 540px; color: #fff; font-size: 12px; font-weight: bold; padding: 5px;">Detalles de la orden</p>
 <p>Orden: <strong><span style="color: #db3484;">#{order_name}</span> puesto en {date}</strong></p>
 <p>M&eacute;todo de pago: <strong>{payment}</strong></p>
-{items}
 <table style="width: 100%; font-size: 11px; color: #374953;">
 <tbody>
 <tr style="background-color: #b9babe; text-align: center;"><th style="width: 15%; padding: 0.6em;">Referencia</th><th>Producto</th><th style="width: 15%; padding: 0.6em;">Precio</th><th style="width: 15%; padding: 0.6em;">Cantidad</th><th style="width: 20%; padding: 0.6em;">Precio total</th></tr>
+<tr>
+	<td>{items}</td>
+</tr>
 <tr style="text-align: right;">
 <td style="background-color: #b9babe; padding: 0.6em 0.4em;" colspan="4">Productos</td>
 <td style="background-color: #b9babe; padding: 0.6em 0.4em;">{total_products}</td>
