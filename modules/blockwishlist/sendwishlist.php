@@ -28,6 +28,7 @@
 require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/WishList.php');
+require_once(dirname(__FILE__).'/blockwishlist.php');
 
 $context = Context::getContext();
 
