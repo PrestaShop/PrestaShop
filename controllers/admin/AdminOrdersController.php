@@ -1821,10 +1821,10 @@ class AdminOrdersControllerCore extends AdminController
 		// Return value
 		$res = true;
 
-		$order = new Order(Tools::getValue('id_order'));
-		$order_detail = new OrderDetail(Tools::getValue('product_id_order_detail'));
+		$order = new Order((int)Tools::getValue('id_order'));
+		$order_detail = new OrderDetail((int)Tools::getValue('product_id_order_detail'));
 		if (Tools::isSubmit('product_invoice'))
-			$order_invoice = new OrderInvoice(Tools::getValue('product_invoice'));
+			$order_invoice = new OrderInvoice((int)Tools::getValue('product_invoice'));
 
 		// Check fields validity
 		$this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
@@ -1908,6 +1908,10 @@ class AdminOrdersControllerCore extends AdminController
 		$old_quantity = $order_detail->product_quantity;
 
 		$order_detail->product_quantity = $product_quantity;
+		
+		// update taxes
+		$res &= $order_detail->updateTaxAmount($order);
+	
 		// Save order detail
 		$res &= $order_detail->update();
 		// Save order invoice
