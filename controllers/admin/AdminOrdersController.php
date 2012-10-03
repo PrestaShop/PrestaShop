@@ -1575,13 +1575,14 @@ class AdminOrdersControllerCore extends AdminController
 		$this->context->cart = $cart;
 		$this->context->customer = new Customer($order->id_customer);
 
-		$use_taxes = ($order->getTaxCalculationMethod() == PS_TAX_INC);
+		// always add taxes even if there are not displayed to the customer
+		$use_taxes = true;
 
-		$initial_prodcut_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
+		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
 			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 		// Creating specific price if needed
-		if ($product_informations['product_price_tax_incl'] != $initial_prodcut_price_tax_incl)
+		if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl)
 		{
 			$specific_price = new SpecificPrice();
 			$specific_price->id_shop = 0;
@@ -1659,7 +1660,7 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$invoice_address = new Address((int)$order->id_address_invoice);
+				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 				$carrier = new Carrier((int)$order->id_carrier);
 				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
 
@@ -1702,10 +1703,6 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
 				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_shipping_tax_excl += (float)$cart->getTotalShippingCost(null, false);
-				$order_invoice->total_shipping_tax_incl += (float)$cart->getTotalShippingCost(null, $use_taxes);
-				$order_invoice->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-				$order_invoice->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->update();
 			}
 		}
@@ -1721,7 +1718,13 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
 		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
 		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
-
+		
+		if (isset($order_invoice) && Validate::isLoadedObject($order_invoice))
+		{
+			$order->total_shipping = $order_invoice->total_shipping_tax_incl;
+			$order->total_shipping_tax_incl = $order_invoice->total_shipping_tax_incl;
+			$order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
+		}
 		// discount
 		$order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 		$order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
@@ -1729,6 +1732,9 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
+
+		// Update Tax lines
+		$order_detail->updateTaxAmount($order);
 
 		// Delete specific price if exists
 		if (isset($specific_price))
