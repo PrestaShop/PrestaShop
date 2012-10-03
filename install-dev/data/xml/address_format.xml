@@ -112,6 +112,7 @@ vat_number
 address1
 address2
 postcode city
+State:name
 Country:name
 phone</format>
     </address_format>
@@ -440,6 +441,7 @@ vat_number
 address1
 address2
 postcode city
+State:name
 Country:name
 phone</format>
     </address_format>
@@ -1110,6 +1112,7 @@ vat_number
 address1
 address2
 postcode city
+State:name
 Country:name
 phone</format>
     </address_format>
@@ -1450,6 +1453,7 @@ vat_number
 address1
 address2
 postcode city
+State:name
 Country:name
 phone</format>
     </address_format>
