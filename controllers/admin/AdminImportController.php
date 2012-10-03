@@ -855,7 +855,12 @@ class AdminImportControllerCore extends AdminController
 			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$category = new Category((int)$info['id']);
 			else
-				$category = new Category();
+			{
+				if (isset($info['id']) && (int)$info['id'] && Category::existsInDatabase((int)$info['id'], 'category'))
+					$category = new Category((int)$info['id']);
+				else
+					$category = new Category();
+			}
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
 
@@ -1019,7 +1024,12 @@ class AdminImportControllerCore extends AdminController
 			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
 				$product = new Product((int)$info['id']);
 			else
-				$product = new Product();
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
+					$product = new Product((int)$info['id']);
+				else
+					$product = new Product();
+			}
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
 			{
