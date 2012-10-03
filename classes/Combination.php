@@ -108,6 +108,20 @@ class CombinationCore extends ObjectModel
 			return false;
 		return true;
 	}
+	
+	public function add($autodate = true, $null_values = false)
+	{
+		if (!parent::add($autodate, $null_values))
+			return false;
+
+		$product = new Product((int)$this->id_product);
+		if ($product->getType() == Product::PTYPE_VIRTUAL)
+			StockAvailable::setProductOutOfStock((int)$this->id_product, 1, null, (int)$this->id);
+		else
+			StockAvailable::setProductOutOfStock((int)$this->id_product, StockAvailable::outOfStock((int)$this->id_product), null, $this->id);
+
+		SpecificPriceRule::applyAllRules(array((int)$this->id_product));
+	}
 
 	public function deleteAssociations()
 	{
@@ -185,7 +199,10 @@ class CombinationCore extends ObjectModel
 
 	public function setWsImages($values)
 	{
-		return $this->setImages($values);
+		$ids_images = array();
+		foreach ($values as $value)
+			$ids_images[] = (int)$value['id'];
+		return $this->setImages($ids_images);
 	}
 
 	public function getAttributesName($id_lang)
