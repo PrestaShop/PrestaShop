@@ -571,11 +571,7 @@ class AdminControllerCore extends Controller
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
 				}
 				elseif ($object->delete())
-				{
-					if (method_exists($object, 'cleanPositions'))
-						$object->cleanPositions();
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
-				}
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}

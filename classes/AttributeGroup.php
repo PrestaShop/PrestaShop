@@ -139,6 +139,7 @@ class AttributeGroupCore extends ObjectModel
 					IN (SELECT id_attribute FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id.')') === false ||
 					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'attribute` WHERE `id_attribute_group` = '.(int)$this->id) === false)
 				return false;
+			$this->cleanPositions();
 		}
 		$return = parent::delete();
 		if ($return)
