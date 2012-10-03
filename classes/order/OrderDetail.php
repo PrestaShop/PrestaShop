@@ -318,7 +318,7 @@ class OrderDetailCore extends ObjectModel
 	 * @since 1.5.0.1
 	 * @return boolean
 	 */
-	public function saveTaxCalculator(Order $order)
+	public function saveTaxCalculator(Order $order, $replace = false)
 	{
 		// Nothing to save
 		if ($this->tax_calculator == null)
@@ -345,11 +345,24 @@ class OrderDetailCore extends ObjectModel
 			$values .= '('.(int)$this->id.','.(float)$id_tax.','.$unit_amount.','.(float)$total_amount.'),';
 		}
 
+		if ($replace)
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$this->id);
+			
 		$values = rtrim($values, ',');
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
 				VALUES '.$values;
-
+		
 		return Db::getInstance()->execute($sql);
+	}
+	
+	public function updateTaxAmount($order)
+	{
+		$this->setContext((int)$this->id_shop);
+		$address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		$tax_manager = TaxManagerFactory::getManager($address, (int)Product::getIdTaxRulesGroupByIdProduct((int)$this->product_id, $this->context));
+		$this->tax_calculator = $tax_manager->getTaxCalculator();
+
+		return $this->saveTaxCalculator($order, true);
 	}
 
 	/**
