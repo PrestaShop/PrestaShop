@@ -85,14 +85,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 						$exceptions = (isset($exceptions[0])) ? $exceptions[0] : array();
 						$exceptions = explode(',', str_replace(' ', '', $exceptions));
 
-						foreach ($exceptions as $except)
-							if (!Validate::isFileName($except))
+						foreach ($exceptions as $key => $except)
+						{
+							if (empty($except))
+								unset($exceptions[$key]);
+							else if (!Validate::isFileName($except))
 								$this->errors[] = Tools::displayError('No valid value for field exceptions');
-
+						}
 						if (!$this->errors && !$module->registerExceptions($id_hook, $exceptions, Shop::getContextListShopID()))
 							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					}
-
 					if (!$this->errors)
 						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 				}
