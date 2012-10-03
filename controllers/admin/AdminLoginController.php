@@ -185,8 +185,9 @@ class AdminLoginControllerCore extends AdminController
 	
 	public function processForgot()
 	{
-		$email = trim(Tools::getValue('email_forgot'));
-		if (empty($email))
+		if (_PS_MODE_DEMO_)
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+		elseif (!($email = trim(Tools::getValue('email_forgot'))))
 			$this->errors[] = Tools::displayError('E-mail is empty');
 		elseif (!Validate::isEmail($email))
 			$this->errors[] = Tools::displayError('Invalid e-mail address');
@@ -201,8 +202,6 @@ class AdminLoginControllerCore extends AdminController
 					Configuration::get('PS_PASSWD_TIME_BACK')
 				);
 		}
-		if (_PS_MODE_DEMO_)
-			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 
 		if (!count($this->errors))
 		{	

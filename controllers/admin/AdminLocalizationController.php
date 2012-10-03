@@ -174,6 +174,10 @@ class AdminLocalizationControllerCore extends AdminController
 			}
 		}
 
+		// Remove the module list cache if the default country changed
+		if (Tools::isSubmit('submitOptionsconfiguration') && file_exists(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST))
+			@unlink(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);			
+		
 		parent::postProcess();
 	}
 

@@ -126,13 +126,12 @@ class AdminAttachmentsControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
-		/* PrestaShop demo mode*/
+
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
 			$id = (int)Tools::getValue('id_attachment');
