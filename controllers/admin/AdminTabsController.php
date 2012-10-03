@@ -278,8 +278,11 @@ class AdminTabsControllerCore extends AdminController
 			// Temporary add the position depend of the selection of the parent category
 			if (!Tools::isSubmit('id_tab')) // @todo Review
 				$_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
-			parent::postProcess();
 		}
+		
+		if (!count($this->errors))
+			parent::postProcess();
+		
 	}
 
 	protected function afterImageUpload()
