@@ -545,7 +545,7 @@ abstract class ObjectModelCore
 		if (count($this->id_shop_list) > 0)
 			$id_shop_list = $this->id_shop_list;
 
-		if (Shop::checkIdShopDefault($this->def['table']))
+		if (Shop::checkIdShopDefault($this->def['table']) && !$this->id_shop_default)
 			$this->id_shop_default = min($id_shop_list);
 		// Database update
 		if (!$result = ObjectModel::$db->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
