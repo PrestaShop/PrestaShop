@@ -3417,9 +3417,10 @@ class AdminProductsControllerCore extends AdminController
 				if (Shop::isFeatureActive())
 					$shops = Shop::getShops();
 
-				foreach ($shops as $key => $shop)
-					if (!$obj->isAssociatedToShop($shop['id_shop']))
-						unset($shops[$key]);
+				if ($shops)
+					foreach ($shops as $key => $shop)
+						if (!$obj->isAssociatedToShop($shop['id_shop']))
+							unset($shops[$key]);
 
 				$data->assign('shops', $shops);
 
