@@ -1273,7 +1273,7 @@ class AdminOrdersControllerCore extends AdminController
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);
 		$products = $this->getProducts($order);
-
+		$currency = new Currency((int)$order->id_currency);
 		// Carrier module call
 		$carrier_module_call = null;
 		if ($carrier->is_module)
@@ -1345,7 +1345,7 @@ class AdminOrdersControllerCore extends AdminController
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
-			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 			
