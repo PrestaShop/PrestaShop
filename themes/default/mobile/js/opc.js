@@ -82,7 +82,7 @@ function initEvent()
 			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
 			success: function(json)
 			{
-				window.location.href = baseDir+'index.php?controller=order-opc';
+				window.location.href = orderOpcUrl;
 			}
 		});
 	});
