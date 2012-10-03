@@ -137,6 +137,12 @@ class ContextCore
 
 	protected function checkMobileContext()
 	{
+		// Check mobile context
+		if (Tools::isSubmit('no_mobile_theme'))
+			Context::getContext()->cookie->no_mobile = true;
+		else if (Tools::isSubmit('mobile_theme_ok'))
+			Context::getContext()->cookie->no_mobile = false;
+
 		return isset($_SERVER['HTTP_USER_AGENT'])
 			&& isset(Context::getContext()->cookie)
 			&& (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE')

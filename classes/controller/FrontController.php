@@ -252,12 +252,6 @@ class FrontControllerCore extends Controller
 			CartRule::autoAddToCart($this->context);
 		}
 
-		// Check mobile context
-		if (Tools::isSubmit('no_mobile_theme'))
-			$this->context->cookie->no_mobile = true;
-		else if (Tools::isSubmit('mobile_theme_ok'))
-			$this->context->cookie->no_mobile = false;
-
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
 		setlocale(LC_COLLATE, $locale);
 		setlocale(LC_CTYPE, $locale);
