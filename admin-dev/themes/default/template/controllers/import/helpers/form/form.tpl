@@ -259,7 +259,7 @@
 		else
 			$(".import_products_categories").hide();
 
-		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3)
+		if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6)
 			$("label[for=forceIDs],#forceIDs").show();
 		else
 			$("label[for=forceIDs],#forceIDs").hide();
