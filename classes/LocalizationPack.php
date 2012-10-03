@@ -314,11 +314,18 @@ class LocalizationPackCore
 						if (file_put_contents($file, $content))
 						{
 							$gz = new Archive_Tar($file, true);
+							$files_list = $gz->listContent();
 
 							if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 							{
 								$this->_errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$attributes['iso_code'];
 								return false;
+							}
+							else
+							{
+								$translations = new AdminTranslationsController();
+								$translations->checkAndAddMailsFiles($attributes['iso_code'], $files_list);
+								$translations->addNewTabs($attributes['iso_code'], $files_list);
 							}
 
 							if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))

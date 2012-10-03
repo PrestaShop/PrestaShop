@@ -615,6 +615,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 					{
 						$this->checkAndAddMailsFiles($arr_import_lang[0], $files_list);
+						$this->addNewTabs($arr_import_lang[0], $files_list);
 						if (!Language::checkAndAddLanguage($arr_import_lang[0]))
 							$conf = 20;
 						if (!unlink($file))
