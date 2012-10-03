@@ -2723,13 +2723,13 @@ class AdminControllerCore extends Controller
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'must-have')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY')).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
 		}
 		if ($request == 'customer')
 		{
@@ -2757,7 +2757,6 @@ class AdminControllerCore extends Controller
 				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']);
 			}
 		}
-
 
 		// Make the request
 		$opts = array(
