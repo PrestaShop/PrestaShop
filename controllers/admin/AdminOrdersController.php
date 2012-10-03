@@ -943,12 +943,14 @@ class AdminOrdersControllerCore extends AdminController
 							'reduction_amount_tax_excl',
 							'unit_price_tax_incl',
 							'unit_price_tax_excl',
+							'original_product_price'
 							
 						);
 						foreach ($fields as $field)
 							$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
 
 						$order_detail->update();
+						$order_detail->updateTaxAmount($order);
 					}
 
 					$id_order_carrier = Db::getInstance()->getValue('
@@ -963,11 +965,13 @@ class AdminOrdersControllerCore extends AdminController
 						$order_carrier->update();
 					}
 
-					// Update order amount
+					// Update order && order_invoice amount
 					$fields = array(
 						'total_discounts',
 						'total_discounts_tax_incl',
 						'total_discounts_tax_excl',
+						'total_discount_tax_excl',
+						'total_discount_tax_incl',
 						'total_paid',
 						'total_paid_tax_incl',
 						'total_paid_tax_excl',
@@ -981,12 +985,25 @@ class AdminOrdersControllerCore extends AdminController
 						'total_wrapping_tax_incl',
 						'total_wrapping_tax_excl',
 					);
+
+					$invoices = $order->getInvoicesCollection();
+					if ($invoices)
+						foreach ($invoices as $invoice)
+						{
+							foreach ($fields as $field)
+								if (isset($invoice->$field))
+									$invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $old_currency, $currency);
+							$invoice->save();
+						}
+
 					foreach ($fields as $field)
-						$order->{$field} = Tools::convertPriceFull($order->{$field}, $old_currency, $currency);
+						if (isset($order->$field))
+							$order->{$field} = Tools::convertPriceFull($order->{$field}, $old_currency, $currency);
 
 					// Update currency in order
 					$order->id_currency = $currency->id;
-
+					// Update conversion rate
+					$order->conversion_rate = (float)$currency->conversion_rate;
 					$order->update();
 				}
 				else
@@ -1396,7 +1413,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function ajaxProcessSearchProducts()
 	{
 		Context::getContext()->customer = new Customer((int)Tools::getValue('id_customer'));
-		$currency = new Currency(Tools::getValue('id_currency'));
+		$currency = new Currency((int)Tools::getValue('id_currency'));
 		if ($products = Product::searchByName((int)$this->context->language->id, pSQL(Tools::getValue('product_search'))))
 		{
 			foreach ($products as &$product)
