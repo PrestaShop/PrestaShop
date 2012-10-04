@@ -472,8 +472,7 @@ class AdminOrdersControllerCore extends AdminController
 							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
-							$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
-
+							$order_detail_list[$id_order_detail]['amount'] = (float)str_replace(',', '.', $amount_detail);
 						$amount += $order_detail_list[$id_order_detail]['amount'];
 					}
 
