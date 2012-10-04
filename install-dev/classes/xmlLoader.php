@@ -508,6 +508,12 @@ class InstallXmlLoader
 
 		$this->storeId($entity, $identifier, $entity_id);
 	}
+	
+	public function createEntityStockAvailable($identifier, array $data, array $data_lang)
+	{
+		$stock_available = new StockAvailable();
+		$stock_available->updateQuantity($data['id_product'], $data['id_product_attribute'], $data['quantity'], $data['id_shop']);
+	}
 
 	public function createEntityTab($identifier, array $data, array $data_lang)
 	{
