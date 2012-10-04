@@ -48,7 +48,7 @@ class AdminTranslationsControllerCore extends AdminController
 	protected $modules_translations = array();
 
 	/** @var array : List of folder which must be ignored */
-	protected $ignore_folder = array('.', '..', '.svn', '.htaccess', 'index.php');
+	protected static $ignore_folder = array('.', '..', '.svn', '.htaccess', 'index.php');
 
 	/** @var array : List of theme by translation type : FRONT, BACK, ERRORS... */
 	protected $translations_informations = array();
@@ -430,7 +430,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->errors[] = Tools::displayError('Please choose a language and a theme.');
 	}
 
-	public function checkAndAddMailsFiles($iso_code, $files_list)
+	public static function checkAndAddMailsFiles($iso_code, $files_list)
 	{
 		// 1 - Scan mails files
 		$mails = scandir(_PS_MAIL_DIR_.'en/');
@@ -452,7 +452,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// Add mails files
 		foreach ($arr_mails_needed as $mail_to_add)
-			if (!in_array($mail_to_add, $this->ignore_folder))
+			if (!in_array($mail_to_add, self::$ignore_folder))
 				@copy(_PS_MAIL_DIR_.'en/'.$mail_to_add, _PS_MAIL_DIR_.$iso_code.'/'.$mail_to_add);
 
 		// 2 - Scan modules files
@@ -463,13 +463,13 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($modules as $module)
 		{
-			if (!in_array($module, $this->ignore_folder) && Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/en/'))
+			if (!in_array($module, self::$ignore_folder) && Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/en/'))
 			{
 				$arr_files = scandir(_PS_MODULE_DIR_.$module.'/mails/en/');
 
 				foreach ($arr_files as $file)
 				{
-					if (!in_array($file, $this->ignore_folder))
+					if (!in_array($file, self::$ignore_folder))
 					{
 						if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/en/'.$file))
 							$module_mail_en[] = _PS_MODULE_DIR_.$module.'/mails/ISO_CODE/'.$file;
@@ -543,7 +543,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param array $iso_code
 	 * @param array $files
 	 */
-	public function addNewTabs($iso_code, $files)
+	public static function addNewTabs($iso_code, $files)
 	{
 		foreach ($files as $file)
 		{
@@ -584,9 +584,9 @@ class AdminTranslationsControllerCore extends AdminController
 			$files_list = $gz->listContent();
 			if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 			{
-				$this->checkAndAddMailsFiles($iso_code, $files_list);
+				AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
 				$this->checkAndAddThemesFiles($files_list, $themes_selected);
-				$this->addNewTabs($iso_code, $files_list);
+				AdminTranslationsController::addNewTabs($iso_code, $files_list);
 				if (Validate::isLanguageFileName($_FILES['file']['name']))
 				{
 					if (!Language::checkAndAddLanguage($iso_code))
@@ -614,8 +614,8 @@ class AdminTranslationsControllerCore extends AdminController
 					$files_list = $gz->listContent();
 					if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 					{
-						$this->checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-						$this->addNewTabs($arr_import_lang[0], $files_list);
+						AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
+						AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
 						if (!Language::checkAndAddLanguage($arr_import_lang[0]))
 							$conf = 20;
 						if (!unlink($file))
@@ -678,7 +678,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files as $file)
 		{
-			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
+			if (preg_match('/^(.*).(tpl|php)$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, self::$ignore_folder))
 			{
 				// Get content for this file
 				$content = file_get_contents($file_path);
@@ -1551,7 +1551,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($files_per_directory['php'] as $dir => $files)
 			foreach ($files as $file)
 				// Check if is a PHP file and if the override file exists
-				if (preg_match('/^(.*)\.php$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
+				if (preg_match('/^(.*)\.php$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, self::$ignore_folder))
 				{
 					$prefix_key = basename($file);
 					// -4 becomes -14 to remove the ending "Controller.php" from the filename
@@ -1594,7 +1594,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files_per_directory['specific'] as $dir => $files)
 			foreach ($files as $file)
-				if (Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
+				if (Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, self::$ignore_folder))
 				{
 					$prefix_key = 'index';
 
@@ -1769,13 +1769,13 @@ class AdminTranslationsControllerCore extends AdminController
 		if ($modules = $this->getListModules())
 		{
 			foreach ($modules as $module)
-				if (is_dir(_PS_MODULE_DIR_.$module) && !in_array($module, $this->ignore_folder))
+				if (is_dir(_PS_MODULE_DIR_.$module) && !in_array($module, self::$ignore_folder))
 					$file_by_directory['php'] = array_merge($file_by_directory['php'], $this->listFiles(_PS_MODULE_DIR_.$module.'/', array(), 'php'));
 		}
 
 		foreach ($file_by_directory['php'] as $dir => $files)
 			foreach ($files as $file)
-				if (preg_match('/\.php$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, $this->ignore_folder))
+				if (preg_match('/\.php$/', $file) && Tools::file_exists_cache($file_path = $dir.$file) && !in_array($file, self::$ignore_folder))
 				{
 					if (!filesize($file_path))
 						continue;
@@ -2156,7 +2156,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach (scandir($i18n_dir) as $module_dir)
 		{
 			$dir = $i18n_dir.$module_dir.'/';
-			if (!in_array($module_dir, $this->ignore_folder) && Tools::file_exists_cache($dir.'mails/'))
+			if (!in_array($module_dir, self::$ignore_folder) && Tools::file_exists_cache($dir.'mails/'))
 				if ($with_module_name)
 					$arr_modules[$module_dir] = $dir;
 				else
@@ -2204,7 +2204,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($files_by_directiories['php'] as $dir => $files)
 			foreach ($files as $file)
-				if (Tools::file_exists_cache($dir.$file) && is_file($dir.$file) && !in_array($file, $this->ignore_folder) && preg_match('/\.php$/', $file))
+				if (Tools::file_exists_cache($dir.$file) && is_file($dir.$file) && !in_array($file, self::$ignore_folder) && preg_match('/\.php$/', $file))
 					$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		// Get path of directory for find a good path of translation file
@@ -2276,7 +2276,7 @@ class AdminTranslationsControllerCore extends AdminController
 					}
 			}
 
-		if (!in_array($file, $this->ignore_folder) && is_dir($dir.'/'.$file))
+		if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
 			 $subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		return $subject_mail;
@@ -2508,7 +2508,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($files_by_directory as $type => $directories)
 			foreach ($directories as $dir => $files)
 				foreach ($files as $file)
-					if (!in_array($file, $this->ignore_folder) && Tools::file_exists_cache($file_path = $dir.$file))
+					if (!in_array($file, self::$ignore_folder) && Tools::file_exists_cache($file_path = $dir.$file))
 					{
 						if ($type == 'tpl')
 						{
@@ -2567,7 +2567,7 @@ class AdminTranslationsControllerCore extends AdminController
 		// copied (and kind of) adapted from AdminImages.php
 		foreach ($to_parse as $file)
 		{
-			if (!in_array($file, $this->ignore_folder))
+			if (!in_array($file, self::$ignore_folder))
 			{
 				if (preg_match('#'.preg_quote($file_ext, '#').'$#i', $file))
 					$list[$dir][] = $file;
