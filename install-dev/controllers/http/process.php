@@ -132,7 +132,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$success)
 			$this->ajaxJsonAnswer(false);
-		$this->session->process_validated = array('generateSettingsFile' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('generateSettingsFile' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -144,7 +144,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	{
 		if (!$this->model_install->installDatabase($this->session->database_clear) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
-		$this->session->process_validated = array('installDatabase' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installDatabase' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -175,7 +175,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
-		$this->session->process_validated = array('populateDatabase' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('populateDatabase' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -207,7 +207,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$success || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
-		$this->session->process_validated = array('configureShop' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('configureShop' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -222,7 +222,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$result = $this->model_install->installModules(Tools::getValue('module'));
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
-		$this->session->process_validated = array('installModules' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -253,7 +253,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if ($this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 
-		$this->session->process_validated = array('installTheme' => true);
+		$this->session->process_validated = array_merge($this->session->process_validated, array('installTheme' => true));
 		$this->ajaxJsonAnswer(true);
 	}
 
