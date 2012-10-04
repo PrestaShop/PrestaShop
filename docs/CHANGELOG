@@ -24,6 +24,160 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.1.0 - 17769 (2012-10-04)  #
+####################################
+
+	Improved/changed features:
+
+	[*] Installer : added brazilian/portuguese
+
+	[*] Classes : Tools::replaceAccentedChars() method improved (lowercase/uppercase chars)
+
+	[*] TR : update translations
+
+	Added Features:
+
+	[+] FO : now you can choose if at least on phone number is required
+
+	[+] BO : Add CloudCache in Performance Tab
+
+	Fixed bugs:
+
+	[-] INSTALLER : fixed bug #PSCFV-4072
+	[-] Installer : Fix #PSCFV-4306
+	[-] Installer : removed calls to Tools in installer (replace by local function) #PSCFV-4113
+
+	[-] FO : #PSCFV-4329
+	[-] FO : #PSCFV-4356 : index.php added when this file not exist on the default theme
+	[-] FO : URL possibly misinterpreted (remove a product in the cart) #PSCFV-4179
+	[-] FO : blockcart was only able to remove 1 product at a time #PSCFV-4170
+	[-] FO : changed confusing "free shipping" mention #PSCFV-4151
+	[-] FO : fixed #PSCFV-4120
+	[-] FO : fixed #PSCFV-4123
+	[-] FO : fixed bug #PSCFI-2571 #PSCFI-2571
+	[-] FO : fixed bug #PSCFV-4092
+	[-] FO : fixed bug #PSCFV-4112
+	[-] FO : fixed bug #PSCFV-4117
+	[-] FO : fixed bug #PSCFV-4137
+	[-] FO : fixed bug #PSCFV-4175
+	[-] FO : fixed bug #PSCFV-4223
+	[-] FO : fixed bug #PSCFV-4310
+	[-] FO : fixed bug #PSCFV-4316
+	[-] FO : fixed bug #PSCFV-4317
+	[-] FO : fixed bug #PSCFV-4336
+	[-] FO : fixed bug #PSCFV-4340
+	[-] FO : fixed bug #PSCFV-4341
+	[-] FO : fixed bug #PSCFV-4347
+	[-] FO : fixed bug #PSCFV-4357, #PSCFV-4270
+	[-] FO : fixed bug #PSCFV-4367
+	[-] FO : fixed bug #PSCFV-4368
+	[-] FO : fixed bug #PSCFV-4388
+	[-] FO : fixed bug #PSCFV-4414
+	[-] FO : fixed bug #PSCFV-4488
+	[-] FO : fixed bug #PSCFV-4490
+	[-] FO : fixed bug #PSCFV-4495
+	[-] FO : fixed bug #PSCFV-4526
+	[-] FO : fixed bug #PSCFV-4535
+	[-] FO : fixed bug #PSCFV-4553
+	[-] FO : fixed bug #PSCFV-4557
+	[-] FO : fixed bug #PSCFV-4611
+	[-] FO : fixed bug #PSCFV-4618
+	[-] FO : fixed width bug #PSCFV-4245
+	[-] FO : instant search relevancy fixed #PSCFV-4267
+	[-] FO : mobile theme : fix #PSCFV-4275
+	[-] FO : mobile theme : fix #PSCFV-4275 : delete calls to css and js not used
+
+	[-] BO : #PSCFV-4356 : index.php added when export translations
+	[-] BO : #PSCFV-4392 : index.php in modules folder and sub folders
+	[-] BO : added a truncate on a too long string #PSCFV-4009
+	[-] BO : attribute values can appear beyond 50 values #PSCFV-2801 #PSCFV-4353
+	[-] BO : changed misleading description in the performance tab #PSCFV-4281
+	[-] BO : features are not doubled anymore in multishop #PSCFV-4527
+	[-] BO : fix #PSCFV-2097
+	[-] BO : fix #PSCFV-3600
+	[-] BO : fix #PSCFV-3910
+	[-] BO : fix #PSCFV-4037
+	[-] BO : fix #PSCFV-4045
+	[-] BO : fix #PSCFV-4069
+	[-] BO : fix #PSCFV-4074
+	[-] BO : fix #PSCFV-4081
+	[-] BO : fix #PSCFV-4116
+	[-] BO : fix #PSCFV-4131
+	[-] BO : fix #PSCFV-4167
+	[-] BO : fix #PSCFV-4204
+	[-] BO : fix #PSCFV-4205
+	[-] BO : fix #PSCFV-4216
+	[-] BO : fix #PSCFV-4238 and fix #PSCFV-4258
+	[-] BO : fix #PSCFV-4249
+	[-] BO : fix #PSCFV-4295
+	[-] BO : fix #PSCFV-4296
+	[-] BO : fix #PSCFV-4309
+	[-] BO : fix #PSCFV-4344
+	[-] BO : fix #PSCFV-4401
+	[-] BO : fix #PSCFV-4424
+	[-] BO : fix #PSCFV-4461
+	[-] BO : fix #PSCFV-4464
+	[-] BO : fix #PSCFV-4469
+	[-] BO : fix #PSCFV-4519
+	[-] BO : fix #PSCFV-4582
+	[-] BO : fix #PSCFV-4596
+	[-] BO : fix #PSCFV-4596 : added an option for to force the id during CSV import
+	[-] BO : fix #PSCFV-4607
+	[-] BO : fix #PSCFV-4626
+	[-] BO : fix #PSCFV-4631
+	[-] BO : fix #PSCFV-4644
+	[-] BO : fix #PSCFV-4662
+	[-] BO : fix #PSCFV-4664
+	[-] BO : fix #PSCFV-4672
+	[-] BO : fix #PSCFV-4681
+	[-] BO : fix #PSCFV-4718
+	[-] BO : fixed bug #PSCFV-3934
+	[-] BO : fixed bug #PSCFV-3957
+	[-] BO : fixed bug #PSCFV-4021
+	[-] BO : fixed bug #PSCFV-4157
+	[-] BO : fixed bug #PSCFV-4201
+	[-] BO : fixed bug #PSCFV-4213
+	[-] BO : fixed bug #PSCFV-4247
+	[-] BO : fixed bug #PSCFV-4262
+	[-] BO : fixed bug #PSCFV-4288
+	[-] BO : fixed bug #PSCFV-4319
+	[-] BO : fixed bug #PSCFV-4355
+	[-] BO : fixed bug #PSCFV-4373
+	[-] BO : fixed bug #PSCFV-4395
+	[-] BO : fixed bug #PSCFV-4471
+	[-] BO : fixed bug #PSCFV-4472
+	[-] BO : fixed bug #PSCFV-4555
+	[-] BO : fixed bug #PSCFV-4660 , #PSCFV-4124
+	[-] BO : fixed combination of cart rules when saving the rule #PSCFV-4147
+	[-] BO : fixed country listing #PSCFV-4438
+	[-] BO : fixed ecotax #PSCFV-4443
+	[-] BO : fixed size management in objectmodel #PSCFV-4537
+	[-] BO : fixed wrong extends in the stats #PSCFV-3852
+	[-] BO : strange behaviour with the admin path fixed #PSCFV-4354
+
+	[-] CORE : fixed bug #PSCFV-4002 - Error in webservices with /api/categories/1
+	[-] CORE : fixed bug #PSCFV-4148 #PSCFV-4218 #PSCFV-4217
+	[-] CORE : fixed bug #PSCFV-4272
+	[-] CORE : fixed bug #PSCFV-4330
+	[-] CORE : fixed bug #PSCFV-4366
+	[-] CORE : fixed bug #PSCFV-4634 - Object::cleanPosition() is no longer call in controller but in Object::delete();
+
+	[-] MO : fixed bug #PSCFV-3765
+	[-] MO : fixed bug #PSCFV-3769
+	[-] MO : fixed bug #PSCFV-4256
+	[-] MO : fixed bug #PSCFV-4261
+	[-] MO : fixed bug #PSCFV-4456
+	[-] MO : fixed bug #PSCFV-4483
+	[-] MO : fixed link in referral program #PNM-532
+	[-] MO : statsales : fix #PSCFV-4089
+	[-] MO : stupid code removed in editorial module template #PNM-467
+
+	[-] TR : change string "gender" by "titles"...
+	[-] TR : fix #PSCFV-4202
+	[-] TR : fix #PSCFV-4282 : updated of some bad link on mail template
+
+
+####################################
 #   v1.5.0.17 - 17369 (2012-09-13)  #
 ####################################
 
