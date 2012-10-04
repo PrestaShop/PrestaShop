@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="iPods" id_shop="1">
+    <name>iPods</name>
+    <description>Agora que voc&#xEA; pode comprar filmes na iTunes Store e sincroniz&#xE1;-los para o seu iPod, o mundo inteiro &#xE9; seu cinema.</description>
+    <link_rewrite>musica-ipods</link_rewrite>
+    <meta_title/>
+    <meta_keywords>Adicione tag</meta_keywords>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Access&#xF3;rios</name>
+    <description>Maravilhosos acess&#xF3;rios para o seu ipod</description>
+    <link_rewrite>access&#xF3;rios</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Laptops" id_shop="1">
+    <name>Laptops</name>
+    <description>O mais recente processador Intel, um disco r&#xED;gido maior, muita mem&#xF3;ria, e at&#xE9; mesmo mais novos recursos todos cabem dentro de apenas uma polegada libertadora. Os novos Mac laptops possuem a performance, poder e conectividade de um computador desktop. Sem a parte da mesa.</description>
+    <link_rewrite>laptops</link_rewrite>
+    <meta_title> Laptops da Apple</meta_title>
+    <meta_keywords/>
+    <meta_description> A Apple poderosa e chique</meta_description>
+  </category>
+</entity_category>
