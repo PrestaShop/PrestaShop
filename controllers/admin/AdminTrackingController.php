@@ -98,7 +98,8 @@ class AdminTrackingControllerCore extends AdminController
 			'description' => array('title' => $this->l('Description')),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		));
-
+		$this->clearFilters();
+		
 		$this->_join = Shop::addSqlAssociation('category', 'a');
 		$this->_filter = ' AND a.`id_category` NOT IN (
 			SELECT DISTINCT(cp.id_category)
@@ -108,7 +109,7 @@ class AdminTrackingControllerCore extends AdminController
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of empty categories:'));
 
-		$this->clearFilters();
+		
 
 		return $this->renderList();
 	}
@@ -137,6 +138,9 @@ class AdminTrackingControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
+		
+		$this->clearFilters();
+		
 		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
@@ -151,7 +155,7 @@ class AdminTrackingControllerCore extends AdminController
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes and without available quantities for sale:'));
 
-		$this->clearFilters();
+
 
 		return $this->renderList();
 	}
@@ -180,6 +184,8 @@ class AdminTrackingControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name')),
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
+		$this->clearFilters();
+		
 		$this->_join = Shop::addSqlAssociation('product', 'a');
 		$this->_filter = 'AND a.id_product IN (
 			SELECT p.id_product
@@ -193,8 +199,6 @@ class AdminTrackingControllerCore extends AdminController
 		)';
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products without attributes and without available quantities for sale:'));
-		
-		$this->clearFilters();
 		
 		return $this->renderList();
 	}
