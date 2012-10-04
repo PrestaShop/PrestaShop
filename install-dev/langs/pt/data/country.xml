@@ -1,100 +1,100 @@
 <?xml version="1.0"?>
 <entity_country>
   <country id="DE">
-    <name>Germany</name>
+    <name>Alemanha</name>
   </country>
   <country id="AT">
-    <name>Austria</name>
+    <name>&#xC1;ustria</name>
   </country>
   <country id="BE">
-    <name>Belgium</name>
+    <name>B&#xE9;lgica</name>
   </country>
   <country id="CA">
-    <name>Canada</name>
+    <name>Canad&#xE1;</name>
   </country>
   <country id="CN">
     <name>China</name>
   </country>
   <country id="ES">
-    <name>Spain</name>
+    <name>Espanha</name>
   </country>
   <country id="FI">
-    <name>Finland</name>
+    <name>Finl&#xE2;ndia</name>
   </country>
   <country id="FR">
-    <name>France</name>
+    <name>Fran&#xE7;a</name>
   </country>
   <country id="GR">
-    <name>Greece</name>
+    <name>Gr&#xE9;cia</name>
   </country>
   <country id="IT">
-    <name>Italy</name>
+    <name>It&#xE1;lia</name>
   </country>
   <country id="JP">
-    <name>Japan</name>
+    <name>Jap&#xE3;o</name>
   </country>
   <country id="LU">
-    <name>Luxemburg</name>
+    <name>Luxemburgo</name>
   </country>
   <country id="NL">
-    <name>Netherlands</name>
+    <name>Holanda</name>
   </country>
   <country id="PL">
-    <name>Poland</name>
+    <name>Pol&#xF4;nia</name>
   </country>
   <country id="PT">
     <name>Portugal</name>
   </country>
   <country id="CZ">
-    <name>Czech Republic</name>
+    <name>Rep&#xFA;blica Tcheca</name>
   </country>
   <country id="GB">
-    <name>United Kingdom</name>
+    <name>Reino Unido</name>
   </country>
   <country id="SE">
-    <name>Sweden</name>
+    <name>Su&#xE9;cia</name>
   </country>
   <country id="CH">
-    <name>Switzerland</name>
+    <name>Su&#xED;&#xE7;a</name>
   </country>
   <country id="DK">
-    <name>Denmark</name>
+    <name>Dinamarca</name>
   </country>
   <country id="US">
-    <name>United States</name>
+    <name>Estados Unidos</name>
   </country>
   <country id="HK">
     <name>HongKong</name>
   </country>
   <country id="NO">
-    <name>Norway</name>
+    <name>Noruega</name>
   </country>
   <country id="AU">
     <name>Australia</name>
   </country>
   <country id="SG">
-    <name>Singapore</name>
+    <name>Singapura</name>
   </country>
   <country id="IE">
-    <name>Ireland</name>
+    <name>Irlanda</name>
   </country>
   <country id="NZ">
-    <name>New Zealand</name>
+    <name>Nova Zel&#xE2;ndia</name>
   </country>
   <country id="KR">
-    <name>South Korea</name>
+    <name>Cor&#xE9;a do Sul</name>
   </country>
   <country id="IL">
     <name>Israel</name>
   </country>
   <country id="ZA">
-    <name>South Africa</name>
+    <name>&#xC1;frica do Sul</name>
   </country>
   <country id="NG">
     <name>Nigeria</name>
   </country>
   <country id="CI">
-    <name>Ivory Coast</name>
+    <name>Costa do Marfim</name>
   </country>
   <country id="TG">
     <name>Togo</name>
@@ -115,7 +115,7 @@
     <name>Algeria</name>
   </country>
   <country id="AS">
-    <name>American Samoa</name>
+    <name>Samoa Americana</name>
   </country>
   <country id="AD">
     <name>Andorra</name>
