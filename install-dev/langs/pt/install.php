@@ -97,7 +97,7 @@ return array(
 		'Last name:' => 'Sobrenome :',
 		'E-mail address:' => 'Endereço de e-mail :',
 		'Shop password:' => 'Senha da loja :',
-		'Re-type to confirm:' => 'Digite novamente para confirmar :',
+		'Re-type to confirm:' => 'Digite novamente para confirmar&nbsp;:',
 		'Receive this information by e-mail' => 'Receba esta informação por e-mail',
 		'Warning: You will receive this information only if your e-mail configuration is correct.' => 'Atenção: Você receberá esta informação apenas se a configuração do seu e-mail está correta.',
 		'Configure your database by filling out the following fields:' => 'Configure o seu banco de dados, preencha os seguintes campos :',
