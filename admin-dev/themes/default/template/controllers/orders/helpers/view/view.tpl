@@ -719,7 +719,7 @@
 			<div style="clear:both; height:15px;">&nbsp;</div>
 			<div style="float: right; width: 160px; display: none;" class="standard_refund_fields">
 				{if ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN'))}
-					<input type="checkbox" id="reinjectQuantities" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
+					<input type="checkbox" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
 				{/if}
 				{if ((!$order->hasBeenDelivered() && $order->hasBeenPaid()) || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
 					<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateCreditSlip" style="float:none; font-weight:normal;">{l s='Generate a credit slip'}</label><br />
@@ -733,10 +733,9 @@
 				{/if}
 			</div>
 			<div style="float: right; width: 160px; display:none;" class="partial_refund_fields">
-				<div style="text-align:center; margin-top:5px;">
-					<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
-					<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="button" style="margin-top:8px;" />
-				</div>
+				<input type="checkbox" name="reinjectQuantities" class="button" />&nbsp;<label for="reinjectQuantities" style="float:none; font-weight:normal;">{l s='Re-stock products'}</label><br />
+				<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" class="button" onclick="toggleShippingCost(this)" />&nbsp;<label for="generateDiscount" style="float:none; font-weight:normal;">{l s='Generate a voucher'}</label><br />
+				<input type="submit" name="partialRefund" value="{l s='Partial refund'}" class="button" style="margin-top:8px;" />
 			</div>
 		</fieldset>
 	</form>
