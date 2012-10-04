@@ -35,6 +35,8 @@
 
 <script type="text/javascript">
 
+	var truncateAuthorized = {$truncateAuthorized|intval};
+
 	$(document).ready(function(){
 		activeClueTip();
 		$("a#upload_file_import_link").fancybox({
@@ -46,9 +48,18 @@
 		$('#preview_import').submit(function(e) {
 			if ($('#truncate').get(0).checked)
 			{
-				if (!confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+				console.log(truncateAuthorized);
+				if (truncateAuthorized)
 				{
-					e.preventDefault();
+					if (!confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+					{
+						e.preventDefault();
+					}
+				}
+				else
+				{
+					jAlert('{l s='You do not have permission to delete here. When the multi-store is enable, only a SuperAdmin can delete all items before import.' js=1}');
+					return false;
 				}
 			}
 		});
