@@ -49,8 +49,8 @@ function p15018_change_image_types()
 		foreach ($replace_types as $type => $type_array)
 			foreach ($type_array as $old_type => $new_type)
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
-				SELECT "'.$new_type.'", width, height, products, categories, manufacturers, suppliers, scenes, stores
-				FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1');
+				SELECT NULL, "'.$new_type.'", width, height, products, categories, manufacturers, suppliers, scenes, stores
+				FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
 	// But if there is only the default one, we can update de names
 	else
 		foreach ($replace_types as $type => $type_array)
@@ -107,10 +107,8 @@ function p15018_change_image_types()
 
 function p15018_copy_or_rename($from, $to, $option)
 {
-	if (!file_exists($from))
-		return;
 	if ($option)
-		copy($from, $to);
+		@copy($from, $to);
 	else
-		rename($from, $to);
+		@rename($from, $to);
 }
