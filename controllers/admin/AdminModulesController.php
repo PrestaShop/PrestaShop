@@ -1001,16 +1001,21 @@ class AdminModulesControllerCore extends AdminController
 			}
 			// Module can't be upgraded if not file exist but can change the database version...
 			// User has to be prevented
-			else if (Module::getUpgradeStatus($module->name))
+			elseif (Module::getUpgradeStatus($module->name))
 			{
 				// When the XML cache file is up-to-date, the module may not be loaded yet
 				if (!class_exists($module->name))
-					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-				$object = new $module->name();
-				$module_success[] = array('name' => $module->name, 'message' => array(
-					0 => $this->l('Current version:').$object->version,
-					1 => $this->l('No file upgrades applied (none exist)'))
-				);
+					if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php'))
+					{
+						require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
+						$object = new $module->name();
+						$module_success[] = array('name' => $module->name, 'message' => array(
+							0 => $this->l('Current version:').$object->version,
+							1 => $this->l('No file upgrades applied (none exist)'))
+						);
+					}
+					else
+						continue;
 				unset($object);
 			}
 
