@@ -107,6 +107,8 @@ function p15018_change_image_types()
 
 function p15018_copy_or_rename($from, $to, $option)
 {
+	if (!file_exists($from))
+		return;
 	if ($option)
 		copy($from, $to);
 	else
