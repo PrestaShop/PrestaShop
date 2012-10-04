@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <entity_meta>
   <meta id="404" id_shop="1">
-    <title>404 error</title>
-    <description>This page cannot be found</description>
+    <title>erro 404</title>
+    <description>Esta p&#xE1;gina n&#xE3;o pode ser encontrada</description>
     <keywords>error, 404, not found</keywords>
     <url_rewrite>page-not-found</url_rewrite>
   </meta>
   <meta id="best-sales" id_shop="1">
-    <title>Best sales</title>
-    <description>Our best sales</description>
+    <title>Mais vendidos</title>
+    <description>Nossos produto mais vendidos</description>
     <keywords>best sales</keywords>
     <url_rewrite>best-sales</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
-    <title>Contact us</title>
-    <description>Use our form to contact us</description>
+    <title>Entre em Contato</title>
+    <description>Use nosso formul&#xE1;rio para nos contatar</description>
     <keywords>contact, form, e-mail</keywords>
     <url_rewrite>contact-us</url_rewrite>
   </meta>
@@ -25,26 +25,26 @@
     <url_rewrite/>
   </meta>
   <meta id="manufacturer" id_shop="1">
-    <title>Manufacturers</title>
-    <description>Manufacturers list</description>
+    <title>Fabricantes</title>
+    <description>Lista de Fabricantes</description>
     <keywords>manufacturer</keywords>
     <url_rewrite>manufacturers</url_rewrite>
   </meta>
   <meta id="new-products" id_shop="1">
-    <title>New products</title>
-    <description>Our new products</description>
+    <title>Novos produtos</title>
+    <description>Nossos novos produtos</description>
     <keywords>new, products</keywords>
     <url_rewrite>new-products</url_rewrite>
   </meta>
   <meta id="password" id_shop="1">
-    <title>Forgot your password</title>
-    <description>Enter your e-mail address used to register in goal to get e-mail with your new password</description>
+    <title>Esqueceu sua senha</title>
+    <description>Digite seu e-mail usado para registrar para obter um e-mail com a nova senha</description>
     <keywords>forgot, password, e-mail, new, reset</keywords>
     <url_rewrite>password-recovery</url_rewrite>
   </meta>
   <meta id="prices-drop" id_shop="1">
-    <title>Prices drop</title>
-    <description>Our special products</description>
+    <title>Promo&#xE7;&#xE3;o</title>
+    <description>Nossos produtos em especiais</description>
     <keywords>special, prices drop</keywords>
     <url_rewrite>prices-drop</url_rewrite>
   </meta>
@@ -55,61 +55,61 @@
     <url_rewrite>sitemap</url_rewrite>
   </meta>
   <meta id="supply" id_shop="1">
-    <title>Suppliers</title>
-    <description>Suppliers list</description>
+    <title>Fornecedores</title>
+    <description>Lista de Fornecedores</description>
     <keywords>supplier</keywords>
     <url_rewrite>supplier</url_rewrite>
   </meta>
   <meta id="address" id_shop="1">
-    <title>Address</title>
+    <title>Endere&#xE7;o</title>
     <description/>
     <keywords/>
     <url_rewrite>address</url_rewrite>
   </meta>
   <meta id="addresses" id_shop="1">
-    <title>Addresses</title>
+    <title>Endere&#xE7;os</title>
     <description/>
     <keywords/>
     <url_rewrite>addresses</url_rewrite>
   </meta>
   <meta id="authentication" id_shop="1">
-    <title>Authentication</title>
+    <title>Autentifica&#xE7;&#xE3;o</title>
     <description/>
     <keywords/>
     <url_rewrite>authentication</url_rewrite>
   </meta>
   <meta id="cart" id_shop="1">
-    <title>Cart</title>
+    <title>Carrinho de compra</title>
     <description/>
     <keywords/>
     <url_rewrite>cart</url_rewrite>
   </meta>
   <meta id="discount" id_shop="1">
-    <title>Discount</title>
+    <title>Descontos</title>
     <description/>
     <keywords/>
     <url_rewrite>discount</url_rewrite>
   </meta>
   <meta id="history" id_shop="1">
-    <title>Order history</title>
+    <title>Hist&#xF3;rico de Pedidos</title>
     <description/>
     <keywords/>
     <url_rewrite>order-history</url_rewrite>
   </meta>
   <meta id="identity" id_shop="1">
-    <title>Identity</title>
+    <title>Identidade</title>
     <description/>
     <keywords/>
     <url_rewrite>identity</url_rewrite>
   </meta>
   <meta id="my-account" id_shop="1">
-    <title>My account</title>
+    <title>Minha conta</title>
     <description/>
     <keywords/>
     <url_rewrite>my-account</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
-    <title>Order follow</title>
+    <title>Acompanhar Pedido</title>
     <description/>
     <keywords/>
     <url_rewrite>order-follow</url_rewrite>
@@ -121,31 +121,31 @@
     <url_rewrite>order-slip</url_rewrite>
   </meta>
   <meta id="order" id_shop="1">
-    <title>Order</title>
+    <title>Pedido</title>
     <description/>
     <keywords/>
     <url_rewrite>order</url_rewrite>
   </meta>
   <meta id="search" id_shop="1">
-    <title>Search</title>
+    <title>Pesquisa</title>
     <description/>
     <keywords/>
     <url_rewrite>search</url_rewrite>
   </meta>
   <meta id="stores" id_shop="1">
-    <title>Stores</title>
+    <title>Lojas</title>
     <description/>
     <keywords/>
     <url_rewrite>stores</url_rewrite>
   </meta>
   <meta id="order-opc" id_shop="1">
-    <title>Order</title>
+    <title>Pedido</title>
     <description/>
     <keywords/>
     <url_rewrite>quick-order</url_rewrite>
   </meta>
   <meta id="guest-tracking" id_shop="1">
-    <title>Guest tracking</title>
+    <title>Acompanhar comprador sem cadastro</title>
     <description/>
     <keywords/>
     <url_rewrite>guest-tracking</url_rewrite>
