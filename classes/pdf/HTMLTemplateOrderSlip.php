@@ -96,7 +96,13 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
 
 		if ($this->order_slip->partial == 1 && $this->order_slip->shipping_cost_amount > 0)
-			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
+			$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
+
+		$tax = new Tax();
+		$tax->rate = $this->order->carrier_tax_rate;
+		$tax_calculator = new TaxCalculator(array($tax));
+		$this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
+		
 
 		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
 		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
@@ -158,6 +164,11 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 	public function getProductTaxesBreakdown()
 	{
 		$tmp_tax_infos = array();
+		$infos = array(
+					'total_price_tax_excl' => 0,
+					'total_amount' => 0
+				);
+
 		foreach ($this->order_slip->getOrdersSlipDetail((int)$this->order_slip->id) as $order_slip_details)
 		{
 			$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$order_slip_details['id_order_detail']);
@@ -176,33 +187,26 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 					}
 					else
 					{
-
 						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
 						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
 					}
 				}
-			} else {
-				$infos = array(
-					'total_price_tax_excl' => 0,
-					'total_amount' => 0
-				);
-
-				$tax_rate = 0;
-
+			} 
+			else 
+			{
 				foreach ($tax_amount as $tax_id => $amount)
 				{
+					$tax_rate = 0;
+
 					$tax = new Tax((int)$tax_id);
-
-					$tax_rate += $tax->rate;
-					$infos['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
-					$infos['total_amount'] += $amount;
+					$tax_rate = $tax->rate;
+					$infos['total_price_tax_excl'] += (float)Tools::ps_round($order_slip_details['amount_tax_excl'], 2);
+					$infos['total_amount'] += (float)Tools::ps_round($amount, 2);
 				}
-
 				$tmp_tax_infos[(string)number_format($tax_rate, 3)] = $infos;
 			}
 
 		}
-
 		return $tmp_tax_infos;
 	}
 
