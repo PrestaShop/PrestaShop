@@ -13,7 +13,7 @@ $_MODULE['<{homeslider}prestashop>homeslider_9ce04a5715756f9c0fece348db9b7da1'] 
 $_MODULE['<{homeslider}prestashop>homeslider_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{homeslider}prestashop>homeslider_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{homeslider}prestashop>homeslider_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
-$_MODULE['<{homeslider}prestashop>homeslider_571988492824e57070d78e6c86333f20'] = 'Configuration d\'une diapositive';
+$_MODULE['<{homeslider}prestashop>homeslider_571988492824e57070d78e6c86333f20'] = 'Configuration des diapositives';
 $_MODULE['<{homeslider}prestashop>homeslider_02023fc24279454047fd419ecd1db9af'] = 'Ajouter une diapositive';
 $_MODULE['<{homeslider}prestashop>homeslider_a9884c8f5501dc36b3ae14a380f0013f'] = 'Vous n\'avez pas encore ajouté de diapositive.';
 $_MODULE['<{homeslider}prestashop>homeslider_7dce122004969d56ae2e0245cb754d35'] = 'Modifier';
