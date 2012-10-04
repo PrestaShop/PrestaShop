@@ -1412,6 +1412,7 @@ $_LANGADM['AdminImportb718adec73e04ce3ec720dd11a06a308'] = 'Identifiant';
 $_LANGADM['AdminImportb8495b50f5c172ebad1cc5c615548afa'] = 'Ignorer cette colonne';
 $_LANGADM['AdminImportb884d81a33fb67e1d4fe450b3cbde8d6'] = 'Newsletter (0/1)';
 $_LANGADM['AdminImportb9208b03bcc9eb4a336258dcdcb66207'] = 'Déclinaisons';
+$_LANGADM['AdminImportb92d393e294507e43cef7bf9dac9a234'] = 'Vous n\'avez pas la permission de supprimer ici. Quand le multi-boutique est activé, seul un SuperAdmin peut supprimer tous les éléments avant l\'import.';
 $_LANGADM['AdminImportb990d5cecd822de3b6922abcf71549b4'] = 'Notez que plusieurs produits peuvent avoir la même référence.';
 $_LANGADM['AdminImportbb19d4490bdc48656603c0a7ef30db73'] = 'La commande fournisseur (%s) n\'a pas pu être chargée (ligne %d).';
 $_LANGADM['AdminImportbcc254b55c4a1babdf1dcb82c207506b'] = 'Téléphone';
