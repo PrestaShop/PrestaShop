@@ -92,7 +92,10 @@ class CartControllerCore extends FrontController
 
 				Tools::redirect('index.php?controller=order&'.(isset($this->id_product) ? 'ipa='.$this->id_product : ''));
 			}
+
 		}
+		elseif (!$this->isTokenValid())
+			Tools::redirect('index.php');
 	}
 
 	/**
