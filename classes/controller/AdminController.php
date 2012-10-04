@@ -417,6 +417,33 @@ class AdminControllerCore extends Controller
 	 */
 	public function processFilter()
 	{
+		// Filter memorization
+		if (isset($_POST) && !empty($_POST) && isset($this->table))
+			foreach ($_POST as $key => $value)
+			{
+				if (is_array($this->table))
+				{
+					foreach ($this->table as $table)
+						if (stripos($key, $table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
+							$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
+				}
+				elseif (stripos($key, $this->table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
+					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
+			}
+
+		if (isset($_GET) && !empty($_GET) && isset($this->table))
+			foreach ($_GET as $key => $value)
+			{
+				if (is_array($this->table))
+				{
+					foreach ($this->table as $table)
+						if (stripos($key, $table.'OrderBy') === 0 || stripos($key, $table.'Orderway') === 0)
+							$this->context->cookie->$key = $value;
+				}
+				elseif (stripos($key, $this->table.'OrderBy') === 0 || stripos($key, $this->table.'Orderway') === 0)
+					$this->context->cookie->$key = $value;
+			}
+			
 		$filters = $this->context->cookie->getFamily($this->table.'Filter_');
 
 		foreach ($filters as $key => $value)
@@ -808,7 +835,6 @@ class AdminControllerCore extends Controller
 	public function processResetFilters()
 	{
 		$filters = $this->context->cookie->getFamily($this->table.'Filter_');
-
 		foreach ($filters as $cookie_key => $filter)
 			if (strncmp($cookie_key, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
 			{
@@ -817,7 +843,7 @@ class AdminControllerCore extends Controller
 				$tmp_tab = explode('!', $key);
 				$key = (count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0]);
 
-				if (array_key_exists($key, $this->fields_list))
+				if (is_array($this->fields_list) && array_key_exists($key, $this->fields_list))
 					unset($this->context->cookie->$cookie_key);
 			}
 
@@ -1763,32 +1789,6 @@ class AdminControllerCore extends Controller
 	 */
 	public function initProcess()
 	{
-		// Filter memorization
-		if (isset($_POST) && !empty($_POST) && isset($this->table))
-			foreach ($_POST as $key => $value)
-			{
-				if (is_array($this->table))
-				{
-					foreach ($this->table as $table)
-						if (stripos($key, $table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
-							$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
-				}
-				elseif (stripos($key, $this->table.'Filter_') === 0 || stripos($key, 'submitFilter') === 0)
-					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
-			}
-		if (isset($_GET) && !empty($_GET) && isset($this->table))
-			foreach ($_GET as $key => $value)
-			{
-				if (is_array($this->table))
-				{
-					foreach ($this->table as $table)
-						if (stripos($key, $table.'OrderBy') === 0 || stripos($key, $table.'Orderway') === 0)
-							$this->context->cookie->$key = $value;
-				}
-				elseif (stripos($key, $this->table.'OrderBy') === 0 || stripos($key, $this->table.'Orderway') === 0)
-					$this->context->cookie->$key = $value;
-			}
-
 		// Manage list filtering
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
