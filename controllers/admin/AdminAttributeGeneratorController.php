@@ -130,6 +130,8 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					foreach ($attributes as $attribute)
 						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity);
 				}
+				else
+					StockAvailable::synchronize($this->product->id);
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
 			}
 			else
