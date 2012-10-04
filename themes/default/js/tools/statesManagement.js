@@ -1,12 +1,15 @@
-$(document).ready(function(){
+$(document).ready(function()
+{	
+	bindStateInputAndUpdate();
+});
+
+function bindStateInputAndUpdate()
+{
 	$('select#id_country').change(function(){
 		updateState();
 		updateNeedIDNumber();
 		updateZipCode();
 	});
-	updateState();
-	updateNeedIDNumber();
-	updateZipCode();
 	
 	if ($('select#id_country_invoice').length != 0)
 	{
@@ -22,10 +25,15 @@ $(document).ready(function(){
 			updateZipCode('invoice');
 		}
 	}
-});
+	
+	updateState();
+	updateNeedIDNumber();
+	updateZipCode();
+}
 
 function updateState(suffix)
 {
+	console.log($('select#id_state'+(suffix !== undefined ? '_'+suffix : '')+' option:not(:first-child)'));
 	$('select#id_state'+(suffix !== undefined ? '_'+suffix : '')+' option:not(:first-child)').remove();
 	var states = countries[$('select#id_country'+(suffix !== undefined ? '_'+suffix : '')).val()];
 	if(typeof(states) != 'undefined')
@@ -37,7 +45,8 @@ function updateState(suffix)
 		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')+':hidden').slideDown('slow');
 	}
 	else
-		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')).slideUp('fast');
+		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')).hide();
+		
 }
 
 function updateNeedIDNumber(suffix)

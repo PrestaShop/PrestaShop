@@ -123,7 +123,7 @@ $(function(){ldelim}
 					$('#noSlide').fadeOut('slow', function(){
 						$('#noSlide').html(jsonData.page);
 						// update the state (when this file is called from AJAX you still need to update the state)
-						updateState();
+						bindStateInputAndUpdate();
 					});
 					$('#noSlide').fadeIn('slow');
 					document.location = '#account-creation';
