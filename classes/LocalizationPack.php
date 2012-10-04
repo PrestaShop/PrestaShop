@@ -323,9 +323,8 @@ class LocalizationPackCore
 							}
 							else
 							{
-								$translations = new AdminTranslationsController();
-								$translations->checkAndAddMailsFiles($attributes['iso_code'], $files_list);
-								$translations->addNewTabs($attributes['iso_code'], $files_list);
+								AdminTranslationsController::checkAndAddMailsFiles($attributes['iso_code'], $files_list);
+								AdminTranslationsController::addNewTabs($attributes['iso_code'], $files_list);
 							}
 
 							if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))
