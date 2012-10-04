@@ -58,7 +58,7 @@
 				}
 				else
 				{
-					jAlert('{l s='You do not have permission to delete here. When the multi-store is enable, only a SuperAdmin can delete all items before import.' js=1}');
+					jAlert('{l s='You do not have permission to delete here. When the multi-store is enable, only a SuperAdmin can delete all items before import.'}');
 					return false;
 				}
 			}
