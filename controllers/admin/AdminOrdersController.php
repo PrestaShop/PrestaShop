@@ -474,6 +474,10 @@ class AdminOrdersControllerCore extends AdminController
 						else
 							$order_detail_list[$id_order_detail]['amount'] = (float)str_replace(',', '.', $amount_detail);
 						$amount += $order_detail_list[$id_order_detail]['amount'];
+
+						$order_detail = new OrderDetail((int)$id_order_detail);
+						if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $order_detail_list[$id_order_detail]['quantity'] > 0)
+							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
 					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
@@ -638,58 +642,9 @@ class AdminOrdersControllerCore extends AdminController
 								$qty_cancel_product = abs($qtyList[$key]);
 								$order_detail = new OrderDetail((int)($id_order_detail));
 
-								// Reinject product
-								if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')))
-								{
-									$reinjectable_quantity = (int)$order_detail->product_quantity - (int)$order_detail->product_quantity_reinjected;
-									$quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
-
-									// @since 1.5.0 : Advanced Stock Management
-									$product_to_inject = new Product($order_detail->product_id, false, $this->context->language->id, $order->id_shop);
-
-									$product = new Product($order_detail->product_id);
-
-									if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-										&& $product->advanced_stock_management
-										&& $order_detail->id_warehouse != 0)
-									{
-
-										$manager = StockManagerFactory::getManager();
-
-										$movements = StockMvt::getNegativeStockMvts(
-											$order_detail->id_order,
-											$order_detail->product_id,
-											$order_detail->product_attribute_id,
-											$quantity_to_reinject
-										);
-
-										foreach ($movements as $movement)
-										{
-											$manager->addProduct(
-												$order_detail->product_id,
-												$order_detail->product_attribute_id,
-												new Warehouse($movement['id_warehouse']),
-												$movement['physical_quantity'],
-												null,
-												$movement['price_te'],
-												true
-											);
-										}
-										StockAvailable::synchronize($order_detail->product_id);
-									}
-									else if ($order_detail->id_warehouse == 0)
-									{
-										StockAvailable::updateQuantity(
-											$order_detail->product_id,
-											$order_detail->product_attribute_id,
-											$quantity_to_reinject,
-											$order->id_shop
-										);
-									}
-									else
-										$this->errors[] = Tools::displayError('Cannot re-stock product');
-								}
-
+								if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $qty_cancel_product > 0)
+									$this->reinjectQuantity($order_detail, $qty_cancel_product);
+								
 								// Delete product
 								$order_detail = new OrderDetail((int)$id_order_detail);
 								if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
@@ -2179,6 +2134,53 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		return $products;
+	}
+	
+	protected function reinjectQuantity($order_detail, $qty_cancel_product)
+	{
+		// Reinject product
+		$reinjectable_quantity = (int)$order_detail->product_quantity - (int)$order_detail->product_quantity_reinjected;
+		$quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
+		// @since 1.5.0 : Advanced Stock Management
+		$product_to_inject = new Product($order_detail->product_id, false, (int)$this->context->language->id, (int)$order_detail->id_shop);
+
+		$product = new Product($order_detail->product_id, false, (int)$this->context->language->id, (int)$order_detail->id_shop);
+
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && $order_detail->id_warehouse != 0)
+		{
+			$manager = StockManagerFactory::getManager();
+			$movements = StockMvt::getNegativeStockMvts(
+								$order_detail->id_order,
+								$order_detail->product_id,
+								$order_detail->product_attribute_id,
+								$quantity_to_reinject
+							);
+
+				foreach ($movements as $movement)
+				{
+					$manager->addProduct(
+						$order_detail->product_id,
+						$order_detail->product_attribute_id,
+						new Warehouse($movement['id_warehouse']),
+						$movement['physical_quantity'],
+						null,
+						$movement['price_te'],
+						true
+					);
+				}
+					StockAvailable::synchronize($order_detail->product_id);
+			}
+			elseif ($order_detail->id_warehouse == 0)
+			{
+				StockAvailable::updateQuantity(
+					$order_detail->product_id,
+					$order_detail->product_attribute_id,
+					$quantity_to_reinject,
+					$order_detail->id_shop
+				);
+			}
+			else
+				$this->errors[] = Tools::displayError('Cannot re-stock product');
 	}
 
 	protected function applyDiscountOnInvoice($order_invoice, $value_tax_incl, $value_tax_excl)
