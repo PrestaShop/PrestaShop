@@ -474,6 +474,7 @@ class AdminImportControllerCore extends AdminController
 			'languages' => Language::getLanguages(false),
 			'id_language' => $this->context->language->id,
 			'available_fields' => $this->getAvailableFields(),
+			'truncateAuthorized' => (Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive(),
 			'PS_ADVANCED_STOCK_MANAGEMENT' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 		);
 
@@ -2667,7 +2668,8 @@ class AdminImportControllerCore extends AdminController
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
 			{
-				if (Tools::getValue('truncate'))
+				// If i am a superadmin, i can truncate table
+				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
 
 				switch ((int)Tools::getValue('entity'))
