@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <entity_profile>
   <profile id="Administrator">
-    <name>Administrator</name>
+    <name>Administrador</name>
   </profile>
   <profile id="Logistician">
     <name>Logistician</name>
   </profile>
   <profile id="Translator">
-    <name>Translator</name>
+    <name>Tradutor</name>
   </profile>
   <profile id="Salesman">
-    <name>Salesman</name>
+    <name>Vendedor</name>
   </profile>
 </entity_profile>
