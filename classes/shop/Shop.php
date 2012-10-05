@@ -802,10 +802,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function setContext($type, $id = null)
 	{
-		// Always use global context for mono-shop mode
-		if (!Shop::isFeatureActive())
-			$type = self::CONTEXT_ALL;
-
 		switch ($type)
 		{
 			case self::CONTEXT_ALL :
@@ -845,8 +841,10 @@ class ShopCore extends ObjectModel
 	 *
 	 * @return int
 	 */
-	public static function getContextShopID()
+	public static function getContextShopID($null_value_without_multishop = false)
 	{
+		if ($null_value_without_multishop && !Shop::isFeatureActive())
+			return null;
 		return self::$context_id_shop;
 	}
 
@@ -855,8 +853,11 @@ class ShopCore extends ObjectModel
 	 *
 	 * @return int
 	 */
-	public static function getContextShopGroupID()
+	public static function getContextShopGroupID($null_value_without_multishop = false)
 	{
+		if ($null_value_without_multishop && !Shop::isFeatureActive())
+			return null;
+
 		return self::$context_id_shop_group;
 	}
 	
@@ -950,7 +951,7 @@ class ShopCore extends ObjectModel
 		static $feature_active = null;
 
 		if ($feature_active === null)
-			$feature_active = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop') > 1);
+			$feature_active = Configuration::getGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE') && (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop') > 1);
 
 		return $feature_active;
 	}
