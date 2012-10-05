@@ -94,9 +94,9 @@ class ConfigurationCore extends ObjectModel
 	public static function getIdByName($key, $id_shop_group = null, $id_shop = null)
 	{
 		if ($id_shop === null)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 		if ($id_shop_group === null)
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		$sql = 'SELECT id_configuration
 				FROM '._DB_PREFIX_.'configuration
@@ -153,12 +153,11 @@ class ConfigurationCore extends ObjectModel
 			if (!self::$_CONF)
 				return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "'.pSQL($key).'"');
 		}
-			
 		$id_lang = (int)$id_lang;
 		if ($id_shop === null)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 		if ($id_shop_group === null)
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!isset(self::$_CONF[$id_lang]))
 			$id_lang = 0;
@@ -208,9 +207,9 @@ class ConfigurationCore extends ObjectModel
 
 		$id_lang = (int)$id_lang;
 		if ($id_shop === null)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 		if ($id_shop_group === null)
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 
 	 	$results = array();
 	 	foreach ($keys as $key)
@@ -251,9 +250,9 @@ class ConfigurationCore extends ObjectModel
 			die(Tools::displayError());
 
 		if ($id_shop === null)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 		if ($id_shop_group === null)
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!is_array($values))
 			$values = array($values);
@@ -298,9 +297,9 @@ class ConfigurationCore extends ObjectModel
 			die(Tools::displayError());
 
 		if ($id_shop === null)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 		if ($id_shop_group === null)
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!is_array($values))
 			$values = array($values);
@@ -411,9 +410,9 @@ class ConfigurationCore extends ObjectModel
 			return;
 		
 		$id_shop = null;
-		$id_shop_group = Shop::getContextShopGroupID();
+		$id_shop_group = Shop::getContextShopGroupID(true);
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
-			$id_shop = Shop::getContextShopID();
+			$id_shop = Shop::getContextShopID(true);
 
 		$id = Configuration::getIdByName($key, $id_shop_group, $id_shop);
 		Db::getInstance()->execute('
@@ -437,22 +436,22 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$id_shop = $id_shop_group = null;
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 		{
-			$id_shop_group = Shop::getContextShopGroupID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
 			$id_shop = null;
 		}
 		else
 		{
-			$id_shop_group = Shop::getContextShopGroupID();
-			$id_shop = Shop::getContextShopID();
+			$id_shop_group = Shop::getContextShopGroupID(true);
+			$id_shop = Shop::getContextShopID(true);
 		}
 
 		if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $id_lang, null, $id_shop))
 			return true;
-		else if ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_shop_group))
+		elseif ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_shop_group))
 			return true;
-		else if ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang))
+		elseif ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang))
 			return true;
 		return false;
 	}
@@ -497,9 +496,9 @@ class ConfigurationCore extends ObjectModel
 	protected static function sqlRestriction($id_shop_group, $id_shop)
 	{
 		if ($id_shop)
-			return ' AND id_shop = '.$id_shop;
+			return ' AND id_shop = '.(int)$id_shop;
 		else if ($id_shop_group)
-			return ' AND id_shop_group = '.$id_shop_group.' AND id_shop IS NULL';
+			return ' AND id_shop_group = '.(int)$id_shop_group.' AND id_shop IS NULL';
 		else
 			return ' AND id_shop_group IS NULL AND id_shop IS NULL';
 	}
@@ -516,11 +515,11 @@ class ConfigurationCore extends ObjectModel
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$query = '
-		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
+		SELECT DISTINCT main.`'.bqSQL($this->def['primary']).'` FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'` main
 		'.$sql_join.'
 		WHERE id_configuration NOT IN
 		(	SELECT id_configuration
-			FROM '._DB_PREFIX_.$this->def['table'].'_lang
+			FROM '._DB_PREFIX_.bqSQL($this->def['table']).'_lang
 		) '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'
