@@ -535,7 +535,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		BREADCRUMB
 ************************************************************************************************ */
 .breadcrumb {
-	margin-bottom:20px;
+	margin-bottom:10px;
 	font-size:12px
 }
 .breadcrumb .navigation-pipe {margin:0 3px 0 5px}
