@@ -472,7 +472,7 @@ class OrderDetailCore extends ObjectModel
 					$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
 					$this->tax_calculator = $tax_manager->getTaxCalculator();
 
-                    $this->reduction_amount_tax_incl = $this->reduction_amount;
+					$this->reduction_amount_tax_incl = $this->reduction_amount;
 					$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
 				break;
 			}
