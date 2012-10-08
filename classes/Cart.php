@@ -443,7 +443,7 @@ class CartCore extends ObjectModel
 
 		// Build JOIN
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
-		$sql->innerJoin('product_shop', 'product_shop', 'product_shop.id_shop='.$id_shop);
+		$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_shop='.(int)$id_shop.' AND product_shop.id_product = p.id_product)');
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', $id_shop)
@@ -504,7 +504,7 @@ class CartCore extends ObjectModel
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
-			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', 'product_attribute_shop.id_shop='.$id_shop);
+			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_shop='.(int)$id_shop.' AND product_attribute_shop.id_product_attribute = pa.id_product_attribute)');
 			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
@@ -532,7 +532,7 @@ class CartCore extends ObjectModel
 			return array();
 
 		$cart_shop_context = Context::getContext()->cloneContext();
-		foreach ($result as $row)
+		foreach ($result as &$row)
 		{
 			if (isset($row['ecotax_attr']) && $row['ecotax_attr'] > 0)
 				$row['ecotax'] = (float)$row['ecotax_attr'];
