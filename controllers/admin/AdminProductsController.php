@@ -1405,9 +1405,14 @@ class AdminProductsControllerCore extends AdminController
 		if (!Image::getCover($image->id_product))
 		{
 			$res &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 1
-			WHERE `id_product` = '.(int)$image->id_product.' 
+			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
+			SET image_shop.`cover` = 1
+			WHERE image_shop.`id_image` = (SELECT id_image FROM
+														(SELECT image_shop.id_image
+															FROM '._DB_PREFIX_.'image i'.
+															Shop::addSqlAssociation('image', 'i').'
+															WHERE i.id_product ='.(int)$image->id_product.' LIMIT 1
+														) tmpImage)
 			AND id_shop='.(int)$this->context->shop->id.'
 			LIMIT 1');
 		}
