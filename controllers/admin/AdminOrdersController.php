@@ -89,7 +89,7 @@ class AdminOrdersControllerCore extends AdminController
 		),
 		'customer' => array(
 			'title' => $this->l('Customer'),
-			'tmpTableFilter' => true
+			'havingFilter' => true,
 		),
 		'total_paid_tax_incl' => array(
 			'title' => $this->l('Total'),
