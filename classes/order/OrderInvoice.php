@@ -302,7 +302,7 @@ class OrderInvoiceCore extends ObjectModel
 		{
 			// sum by order details in order to retrieve real taxes rate
 			$taxes_infos = Db::getInstance()->executeS('
-			SELECT odt.`id_order_detail`, t.`rate` AS `name`, SUM(od.`total_price_tax_excl`) AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`
+			SELECT odt.`id_order_detail`, t.`rate` AS `name`, SUM(od.`total_price_tax_excl`) AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`
 			FROM `'._DB_PREFIX_.'order_detail_tax` odt
 			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
@@ -324,10 +324,9 @@ class OrderInvoiceCore extends ObjectModel
 
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
 				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
-
-				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
+				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['ecotax_tax_rate'] / 100, 2));
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += ($tax_infos['total_price_tax_excl'] - $order_reduction_amount);
+				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += ($tax_infos['total_price_tax_excl'] - $order_reduction_amount - $tax_infos['ecotax']);
 			}
 		}
 
@@ -381,7 +380,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getEcoTaxTaxesBreakdown()
 	{
-		return Db::getInstance()->executeS('
+		$res = Db::getInstance()->executeS('
 		SELECT `ecotax_tax_rate` as `rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$this->id_order.'
@@ -389,6 +388,11 @@ class OrderInvoiceCore extends ObjectModel
 		GROUP BY `ecotax_tax_rate`'
 		);
 
+		if ($res)
+			foreach ($res as &$row)
+				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), 2);
+
+		return $res;
 	}
 
 	/**

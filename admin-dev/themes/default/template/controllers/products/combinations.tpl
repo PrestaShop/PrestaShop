@@ -202,7 +202,7 @@
 				<tr>
 					<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">
 						{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
-						<label>{l s='Eco-tax:'}</label>
+						<label>{l s='Eco-tax (tax excl.):'}</label>
 					</td>
 					<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
 						<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
