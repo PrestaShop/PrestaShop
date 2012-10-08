@@ -55,7 +55,7 @@ UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' W
 UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'blocksocial_twitter';
 UPDATE `PREFIX_configuration` SET value = 'RSS' WHERE name = 'blocksocial_rss';
 UPDATE `PREFIX_configuration` SET value = 'My Company' WHERE name = 'blockcontactinfos_company';
-UPDATE `PREFIX_configuration` SET value = '42 avenue des Champs Elysées\n75000 Paris\nFrance' WHERE name = 'blockcontactinfos_address';
+UPDATE `PREFIX_configuration` SET value = '42 avenue des Champs ElysÃ©es\n75000 Paris\nFrance' WHERE name = 'blockcontactinfos_address';
 UPDATE `PREFIX_configuration` SET value = '+33 (0)1.23.45.67.89' WHERE name = 'blockcontactinfos_phone';
 UPDATE `PREFIX_configuration` SET value = 'sales@yourcompany.com' WHERE name = 'blockcontactinfos_email';
 UPDATE `PREFIX_configuration` SET value = '+33 (0)1.23.45.67.89' WHERE name = 'blockcontact_telnumber';
