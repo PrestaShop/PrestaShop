@@ -27,6 +27,7 @@
 <script type="text/javascript">
 var Customer = new Object();
 var product_url = '{$link->getAdminLink('AdminProducts', true)}';
+var ecotax_tax_excl = parseFloat({$ecotax_tax_excl});
 $(document).ready(function () {
 	Customer = {
 		"hiddenField": jQuery('#id_customer'),
@@ -405,8 +406,10 @@ $(document).ready(function () {
 		<tbody>
 			{$specificPriceModificationForm}
 				<script type="text/javascript">
-					calcPriceTI();
-					unitPriceWithTax('unit');
+					$(document).ready(function() {
+						calcPriceTI();
+						unitPriceWithTax('unit');
+						});
 				</script>
 			{/if}
 
