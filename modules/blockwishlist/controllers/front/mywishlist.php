@@ -30,8 +30,6 @@
  */
 class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 {
-	public $display_column_left = false;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -46,6 +44,7 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
+		$this->display_column_left = false;
 		parent::initContent();
 
 		$this->assign();
