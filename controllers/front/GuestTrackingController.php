@@ -29,7 +29,6 @@ class GuestTrackingControllerCore extends FrontController
 {
 	public $ssl = true;
 	public $php_self = 'guest-tracking';
-	public $display_column_left = false;
 
 	/**
 	 * Initialize guest tracking controller
@@ -37,6 +36,7 @@ class GuestTrackingControllerCore extends FrontController
 	 */
 	public function init()
 	{
+		$this->display_column_left = false;
 		parent::init();
 		if ($this->context->customer->isLogged())
 			Tools::redirect('history.php');

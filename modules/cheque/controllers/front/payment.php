@@ -30,7 +30,6 @@
  */
 class ChequePaymentModuleFrontController extends ModuleFrontController
 {
-	public $display_column_left = false;
 	public $ssl = true;
 
 	/**
@@ -38,6 +37,7 @@ class ChequePaymentModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
+		$this->display_column_left = false;
 		parent::initContent();
 
 		$cart = $this->context->cart;
