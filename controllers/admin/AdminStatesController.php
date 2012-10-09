@@ -179,6 +179,9 @@ class AdminStatesControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
+			$this->filter = true;
+		
 		if (!isset($this->table))
 			return false;
 			

@@ -414,6 +414,9 @@ class AdminStatusesControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
+			$this->filter = true;
+				
 		if (Tools::isSubmit('submitAddorder_return_state') || Tools::isSubmit('submitAddorder_return_state'))
 		{
 			$id_order_return_state = Tools::getValue('id_order_return_state');
