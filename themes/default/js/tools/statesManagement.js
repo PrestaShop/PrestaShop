@@ -33,7 +33,6 @@ function bindStateInputAndUpdate()
 
 function updateState(suffix)
 {
-	console.log($('select#id_state'+(suffix !== undefined ? '_'+suffix : '')+' option:not(:first-child)'));
 	$('select#id_state'+(suffix !== undefined ? '_'+suffix : '')+' option:not(:first-child)').remove();
 	var states = countries[$('select#id_country'+(suffix !== undefined ? '_'+suffix : '')).val()];
 	if(typeof(states) != 'undefined')
