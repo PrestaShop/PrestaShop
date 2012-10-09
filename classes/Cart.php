@@ -1415,32 +1415,46 @@ class CartCore extends ObjectModel
 			}
 			else
 			{
-				$price = Product::getPriceStatic(
-					(int)$product['id_product'],
-					true,
-					(int)$product['id_product_attribute'],
-					2,
-					null,
-					false,
-					true,
-					$product['cart_quantity'],
-					false,
-					((int)$this->id_customer ? (int)$this->id_customer : null),
-					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null),
-					$null,
-					true,
-					true,
-					$virtual_context
-				);
+				if ($with_taxes)
+					$price = Product::getPriceStatic(
+						(int)$product['id_product'],
+						true,
+						(int)$product['id_product_attribute'],
+						2,
+						null,
+						false,
+						true,
+						$product['cart_quantity'],
+						false,
+						((int)$this->id_customer ? (int)$this->id_customer : null),
+						(int)$this->id,
+						((int)$address_id ? (int)$address_id : null),
+						$null,
+						true,
+						true,
+						$virtual_context
+					);
+				else
+					$price = Product::getPriceStatic(
+						(int)$product['id_product'],
+						false,
+						(int)$product['id_product_attribute'],
+						2,
+						null,
+						false,
+						true,
+						$product['cart_quantity'],
+						false,
+						((int)$this->id_customer ? (int)$this->id_customer : null),
+						(int)$this->id,
+						((int)$address_id ? (int)$address_id : null),
+						$null,
+						true,
+						true,
+						$virtual_context
+					);
 
-				$total_price = Tools::ps_round($price, 2) * (int)$product['cart_quantity'];
-
-				if (!$with_taxes)
-				{
-					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$address_id, $virtual_context);
-					$total_price = Tools::ps_round($total_price / (1 + ($product_tax_rate / 100)), 2);
-				}
+				$total_price = Tools::ps_round($price * (int)$product['cart_quantity'], 2);
 			}
 			$order_total += $total_price;
 		}

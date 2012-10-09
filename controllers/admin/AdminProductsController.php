@@ -2781,6 +2781,9 @@ class AdminProductsControllerCore extends AdminController
 				$this->context->currency, $shops, $currencies, $countries, $groups)
 			);
 
+			$data->assign('ecotax_tax_excl', $obj->ecotax);
+			$this->_applyTaxToEcotax($obj);
+
 			$data->assign(array(
 				'shops' => $shops,
 				'admin_one_shop' => count($this->context->employee->getAssociatedShops()) == 1,
@@ -3288,7 +3291,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
-		$this->_applyTaxToEcotax($product);
+
 
 		/*
 		* Form for adding a virtual product like software, mp3, etc...
