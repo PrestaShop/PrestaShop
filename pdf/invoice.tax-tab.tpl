@@ -30,7 +30,7 @@
 		<td style="width: 80%">
 			{if $tax_exempt}
 				{l s='Exempt of VAT according section 259B of the General Tax Code.' pdf='true'}
-			{else if (count($shipping_tax_breakdown) + count($product_tax_breakdown) == 0)}
+			{else if (count($shipping_tax_breakdown) + count($product_tax_breakdown) + count($ecotax_tax_breakdown) + count($wrapping_tax_breakdown) == 0)}
 					{l s='No tax' pdf='true'}
 			{else}
 			<table style="width: 70%" >
