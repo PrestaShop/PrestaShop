@@ -471,6 +471,7 @@ class AdminFeaturesControllerCore extends AdminController
 				$query->select('COUNT(fv.id_feature_value) as count_values');
 				$query->from('feature_value', 'fv');
 				$query->where('fv.id_feature ='.(int)$item['id_feature']);
+				$query->where('fv.custom =0');
 				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 				$item['value'] = (int)$res;
 				unset($query);
