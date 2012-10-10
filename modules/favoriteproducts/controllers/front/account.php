@@ -44,7 +44,7 @@ class FavoriteproductsAccountModuleFrontController extends ModuleFrontController
 		parent::initContent();
 
 		if (!Context::getContext()->customer->isLogged())
-			Tools::redirect('index.php?controller=auth&redirect=module&module=favoriteproducts&action=account');
+			Tools::redirect('index.php?controller=authentication&redirect=module&module=favoriteproducts&action=account');
 
 		if (Context::getContext()->customer->id)
 		{
