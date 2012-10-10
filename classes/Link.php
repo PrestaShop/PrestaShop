@@ -351,6 +351,7 @@ class LinkCore
 	 */
 	public function getImageLink($name, $ids, $type = null)
 	{
+		$not_default = false;
 		// legacy mode or default image
 		$theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->id_theme.'.jpg')) ? '-'.Context::getContext()->shop->id_theme : '');
 		if ((Configuration::get('PS_LEGACY_IMAGES')
