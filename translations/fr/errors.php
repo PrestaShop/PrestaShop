@@ -424,6 +424,7 @@ $_ERRORS['a34d208d4c1e25fa85739aa0b2f51553'] = 'Une erreur s\'est produite lors 
 $_ERRORS['a4469e51691856c0d06b6cca6842666d'] = 'Une erreur est survenue lors de l\'envoi de l\'e-mail.';
 $_ERRORS['a467de484bad00fe4980b05ac6a8af5d'] = 'Vous n\'avez pas la permission d\'utiliser ce module';
 $_ERRORS['a478ec266116342449ae1705c79d5cc2'] = 'Type d\'archive inconnu';
+$_ERRORS['a4a9d544dda922c68fe127c1661441b2'] = 'ISO CODE invalide \"%1$s\" pour le fichier suivant \"%2$s\"';
 $_ERRORS['a551c1b1a24beff63aa3cc70ea172351'] = 'Vous devez indiquer un nom afin de créer un bon de réduction';
 $_ERRORS['a56b6c43645970e79a8098df1dfc9746'] = 'Cette adresse ne peut pas être effacée.';
 $_ERRORS['a5df8bfce318a15ea55f18082b9b56c0'] = 'Vous n\'avez pas accès à ce produit.';
