@@ -410,7 +410,7 @@
 									</select>
 								</td>
 								{/if}
-								<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
+								<td><input class="button" type="submit" name="submitAddPayment" value="{l s='Add'}" /></td>
 							</tr>
 						</tbody>
 					</table>
