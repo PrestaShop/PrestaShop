@@ -444,7 +444,7 @@ class AdminAddressesControllerCore extends AdminController
 			if (!empty($customer))
 			{
 				$customer = $customer['0'];
-				echo Tools::jsonEncode(array('infos' => pSQL($customer['firstname']).'_'.pSQL($customer['lastname'])));
+				echo Tools::jsonEncode(array('infos' => pSQL($customer['firstname']).'_'.pSQL($customer['lastname']).'_'.pSQL($customer['company'])));
 			}
 		}
 		die;
