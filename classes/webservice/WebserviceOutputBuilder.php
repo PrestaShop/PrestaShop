@@ -534,9 +534,10 @@ class WebserviceOutputBuilderCore
 		$field = $this->overrideSpecificField($ws_params['objectsNodeName'], $field_name, $field, $object, $ws_params);
 
 		// don't display informations for a not existant id
-		if (substr($field['sqlId'], 0, 3) == 'id_' && $field['value'] == 0)
+		if (substr($field['sqlId'], 0, 3) == 'id_' && !$field['value'])
 		{
-			$field['value'] = '';
+			if ($field['value'] === null)
+				$field['value'] = '';
 			// delete the xlink except for schemas
 			if (isset($field['xlink_resource']) && is_null($this->schemaToDisplay))
 				 unset($field['xlink_resource']);
