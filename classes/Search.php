@@ -461,11 +461,11 @@ class SearchCore
 		$products_array = array();
 
 		// Every indexed words are cached into a PHP array
-		$word_ids = Db::getInstance()->executeS('
+		$word_ids = $db->executeS('
 			SELECT id_word, word, id_lang, id_shop
-			FROM '._DB_PREFIX_.'search_word');
+			FROM '._DB_PREFIX_.'search_word', false);
 		$word_ids_by_word = array();
-		foreach ($word_ids as $word_id)
+		while ($word_id = $db->nextRow($word_ids))
 		{
 			if (!isset($word_ids_by_word[$word_id['id_shop']][$word_id['id_lang']]))
 				$word_ids_by_word[$word_id['id_shop']][$word_id['id_lang']] = array();
