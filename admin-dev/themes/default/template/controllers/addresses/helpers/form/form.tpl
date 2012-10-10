@@ -76,6 +76,7 @@
 								var infos = msg.infos.split('_');
 								$('input[name=firstname]').val(infos[0]);
 								$('input[name=lastname]').val(infos[1]);
+								$('input[name=company]').val(infos[2]);
 							}
 						},
 						error: function(msg)
