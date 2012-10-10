@@ -579,22 +579,28 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 		{
 			$gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
-			$iso_code = str_replace(array('.tar.gz', '.gzip'), '', $_FILES['file']['name']);
-			$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
-			$files_list = $gz->listContent();
-			if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+			$filename = $_FILES['file']['name'];
+			$iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
+			if (Validate::isLangIsoCode($iso_code))
 			{
-				AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-				$this->checkAndAddThemesFiles($files_list, $themes_selected);
-				AdminTranslationsController::addNewTabs($iso_code, $files_list);
-				if (Validate::isLanguageFileName($_FILES['file']['name']))
+				$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
+				$files_list = $gz->listContent();
+				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				{
-					if (!Language::checkAndAddLanguage($iso_code))
-						$conf = 20;
+					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+					$this->checkAndAddThemesFiles($files_list, $themes_selected);
+					AdminTranslationsController::addNewTabs($iso_code, $files_list);
+					if (Validate::isLanguageFileName($filename))
+					{
+						if (!Language::checkAndAddLanguage($iso_code))
+							$conf = 20;
+					}
+					$this->redirect(false, (isset($conf) ? $conf : '15'));
 				}
-				$this->redirect(false, (isset($conf) ? $conf : '15'));
+				$this->errors[] = Tools::displayError('Archive cannot be extracted.');
 			}
-			$this->errors[] = Tools::displayError('Archive cannot be extracted.');
+			else
+				$this->errors[] = sprintf(Tools::displayError('ISO CODE invalid "%1$s" for the following file: "%2$s"'), $iso_code, $filename);
 		}
 	}
 
