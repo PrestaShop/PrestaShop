@@ -162,7 +162,7 @@ class ConfigurationTestCore
 	public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
 	{
 		$dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
-		if (!file_exists($dir) || !$dh = opendir($dir))
+		if (!file_exists($dir) || !$dh = @opendir($dir))
 		{
 			$full_report = sprintf('Directory %s does not exists or is not writable', $dir); // sprintf for future translation
 			return false;
