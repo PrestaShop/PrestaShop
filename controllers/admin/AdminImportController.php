@@ -2558,7 +2558,8 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'compare_product');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product');
+				if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'favorite_product\' '))) //check if table exist
+					Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download');
