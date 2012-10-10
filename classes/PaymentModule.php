@@ -304,7 +304,12 @@ abstract class PaymentModuleCore extends Module
 				// $order is the last order loop in the foreach
 				// The method addOrderPayment of the class Order make a create a paymentOrder
 				//     linked to the order reference and not to the order id
-				if (!$order->addOrderPayment($amount_paid))
+				if (isset($extra_vars['transaction_id']))
+					$transaction_id = $extra_vars['transaction_id'];
+				else
+					$transaction_id = null;
+				
+				if (!$order->addOrderPayment($amount_paid, null, $transaction_id))
 					throw new PrestaShopException('Can\'t save Order Payment');
 			}
 
