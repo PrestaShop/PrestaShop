@@ -1548,7 +1548,7 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
-			else if (isset($info['image_position']) && $info['image_position'])
+			elseif (isset($info['image_position']) && $info['image_position'])
 			{
 				$images = $product->getImages($default_language);
 
@@ -1735,6 +1735,9 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
+			$product->checkDefaultAttributes();
+			if (!$product->cache_default_attribute)
+						Product::updateDefaultAttribute($product->id);
 			if ($id_product_attribute)
 			{
 				// now adds the attributes in the attribute_combination table

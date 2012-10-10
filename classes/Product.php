@@ -617,7 +617,7 @@ class ProductCore extends ObjectModel
 
 	public static function updateDefaultAttribute($id_product)
 	{
-		Db::getInstance()->update('product', array(
+		Db::getInstance()->update('product_shop', array(
 			'cache_default_attribute' => (int)Product::getDefaultAttribute($id_product),
 		), 'id_product = '.(int)$id_product);
 	}
@@ -1284,7 +1284,7 @@ class ProductCore extends ObjectModel
 				'ecotax' => !is_null($ecotax),
 				'weight' => !is_null($weight),
 				'unit_price_impact' => !is_null($unit),
-				'default_on' => !is_null($ecotax),
+				'default_on' => !is_null($default),
 				'minimal_quantity' => !is_null($minimal_quantity),
 				'available_date' => !is_null($available_date),
 			));
@@ -2897,6 +2897,17 @@ class ProductCore extends ObjectModel
 		if (!$this->id)
 			return false;
 
+		if (Db::getInstance()->getValue('SELECT COUNT(*)
+				FROM `'._DB_PREFIX_.'product_attribute` pa
+				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				WHERE product_attribute_shop.`default_on` = 1
+				AND pa.`id_product` = '.(int)$this->id) > 1)
+				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_attribute_shop product_attribute_shop, '._DB_PREFIX_.'product_attribute pa
+					SET product_attribute_shop.default_on=0, pa.default_on = 0
+					WHERE product_attribute_shop.id_product_attribute=pa.id_product_attribute AND pa.id_product='.(int)$this->id
+					.Shop::addSqlRestriction(false, 'product_attribute_shop'));
+			
+			
 		$row = Db::getInstance()->getRow('
 			SELECT pa.id_product
 			FROM `'._DB_PREFIX_.'product_attribute` pa
