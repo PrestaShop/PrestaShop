@@ -97,6 +97,7 @@ class AdminInformationControllerCore extends AdminController
 			'cache_dir' => $this->l('Set write permissions for "cache" folder'),
 			'sitemap' => $this->l('Set write permissions for "sitemap.xml" file'),
 			'img_dir' => $this->l('Set write permissions for "img" folder and subfolders, recursively'),
+			'log_dir' => $this->l('Set write permissions for "log" folder and subfolders, recursively'),
 			'mails_dir' => $this->l('Set write permissions for "mails" folder and subfolders, recursively'),
 			'module_dir' => $this->l('Set write permissions for "modules" folder and subfolders, recursively'),
 			'theme_lang_dir' => $this->l('Set write permissions for "themes/')._THEME_NAME_.$this->l('/lang/" folder and subfolders, recursively'),
