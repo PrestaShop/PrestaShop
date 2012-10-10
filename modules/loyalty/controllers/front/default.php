@@ -32,6 +32,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 {
 	public function __construct()
 	{
+		$this->auth = true;
 		parent::__construct();
 
 		$this->context = Context::getContext();
