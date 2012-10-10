@@ -341,7 +341,7 @@ echo '
 				if(defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 					echo '<div class="warn">This tab is an AdminTab</div>';
 
-if (Shop::isFeatureActive())
+if (Shop::isFeatureActive() && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
 {
    echo '<div class="multishop_toolbar">
         <span class="text_multishop">'.translate('Multistore configuration for').'</span>'.
