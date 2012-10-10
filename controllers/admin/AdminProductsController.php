@@ -2806,7 +2806,8 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
 		$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
 		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-		$product_price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
+
+		$product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
 		if ($product->unit_price_ratio != 0)
 			$data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 2));
 		else
