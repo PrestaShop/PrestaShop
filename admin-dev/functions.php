@@ -410,6 +410,7 @@ function runAdminTab($tab, $ajaxMode = false)
 	// $tab = $_REQUEST['tab'];
 	if ($adminObj = checkingTab($tab))
 	{
+		Context::getContext()->controller = $adminObj;
 		// init is different for new tabs (AdminController) and old tabs (AdminTab)
 		if ($adminObj instanceof AdminController)
 		{
@@ -462,7 +463,7 @@ function runAdminTab($tab, $ajaxMode = false)
 				<a href="?token='.Tools::getAdminToken($tab.intval(Tab::getIdFromClassName($tab)).(int)Context::getContext()->employee->id).'">'.translate('Back Office').'</a>
 				'.$bread.'</div>';
 
-			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
+			if (!$ajaxMode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
 			{
 				echo '<div class="multishop_info">';
 				if (Shop::getContext() == Shop::CONTEXT_GROUP)
