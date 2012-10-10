@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($cms) && ($content_only == 0)}
+{if ($content_only == 0)}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 {if isset($cms) && !isset($category)}
@@ -45,7 +45,7 @@
 	</div>
 {elseif isset($category)}
 	<div class="block-cms">
-		<h1><a href="{if $category->id eq 1}{$base_dir}{else}{$link->getCategoryLink($category->id, $category->link_rewrite)}{/if}">{$category->name|escape:'htmlall':'UTF-8'}</a></h1>
+		<h1><a href="{if $category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($category->id, $category->link_rewrite)}{/if}">{$category->name|escape:'htmlall':'UTF-8'}</a></h1>
 		{if isset($sub_category) & !empty($sub_category)}	
 			<h4>{l s='List of sub categories in %s:' sprintf=$category->name}</h4>
 			<ul class="bullet">
