@@ -98,20 +98,6 @@ $(function(){ldelim}
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 			<sup>*</sup>
 		</p>
-	{if $vat_display == 2}
-		<div id="vat_area">
-	{elseif $vat_display == 1}
-		<div id="vat_area" style="display: none;">
-	{else}
-		<div style="display: none;">
-	{/if}
-		<div id="vat_number">
-			<p class="text">
-				<label for="vat_number">{l s='VAT number'}</label>
-				<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
-			</p>
-		</div>
-		</div>
 	{assign var="stateExist" value="false"}
 	{foreach from=$ordered_adr_fields item=field_name}
 		{if $field_name eq 'company'}
@@ -120,6 +106,20 @@ $(function(){ldelim}
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company}{/if}{/if}" />
 		</p>
+		{if $vat_display == 2}
+			<div id="vat_area">
+		{elseif $vat_display == 1}
+			<div id="vat_area" style="display: none;">
+		{else}
+			<div style="display: none;">
+		{/if}
+			<div id="vat_number">
+				<p class="text">
+					<label for="vat_number">{l s='VAT number'}</label>
+					<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
+				</p>
+			</div>
+		</div>
 		{/if}
 		{if $field_name eq 'firstname'}
 		<p class="required text">
