@@ -60,7 +60,7 @@ class AdminCartRulesControllerCore extends AdminController
 				
 				// First, check if it is not already part of the restrictions
 				$already_restricted = false;
-				if (Tools::getValue('product_restriction') && is_array($rule_group_array = Tools::getValue('product_rule_group')) && count($rule_group_array))
+				if (is_array($rule_group_array = Tools::getValue('product_rule_group')) && count($rule_group_array) && Tools::getValue('product_restriction'))
 					foreach ($rule_group_array as $rule_group_id)
 						if (is_array($rule_array = Tools::getValue('product_rule_'.$rule_group_id)) && count($rule_array))
 							foreach ($rule_array as $rule_id)
