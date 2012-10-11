@@ -610,7 +610,7 @@ class AdminShopControllerCore extends AdminController
 		}
 
 		Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
-
+		Search::indexation(true);
 		return $object;
 	}
 
