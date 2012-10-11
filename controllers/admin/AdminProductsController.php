@@ -2798,14 +2798,18 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding specific prices'));
+
 		// prices part
-		$data->assign('link', $this->context->link);
-		$data->assign('currency', $currency = $this->context->currency);
-		$data->assign('tax_rules_groups', TaxRulesGroup::getTaxRulesGroups(true));
-		$data->assign('taxesRatesByGroup', TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id));
-		$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
-		$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
-		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+		$data->assign(array(
+			'link' => $this->context->link,
+			'currency' => $currency = $this->context->currency,
+			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
+			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
+			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
+			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
+			'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),
+			'ecotax_tax_excl' => 0
+		));
 
 		$product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
 		if ($product->unit_price_ratio != 0)
