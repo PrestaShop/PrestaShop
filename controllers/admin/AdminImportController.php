@@ -1776,9 +1776,18 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
+			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+				$customer = new Customer((int)$info['id']);
+			else
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
+					$customer = new Customer((int)$info['id']);
+				else
+					$customer = new Customer();
+			}
+
 			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
 			{
-				$customer = new Customer((int)$info['id']);
 				$current_id_customer = $customer->id;
 				$current_id_shop = $customer->id_shop;
 				$current_id_shop_group = $customer->id_shop_group;
@@ -1789,8 +1798,6 @@ class AdminImportControllerCore extends AdminController
 					if ($group == $customer->id_default_group)
 						unset($customer_groups[$key]);
 			}
-			else
-				$customer = new Customer();
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
@@ -1847,7 +1854,6 @@ class AdminImportControllerCore extends AdminController
 
 							else
 							{
-								unset($customer->id);
 								$res &= $customer->add();
 								if (isset($customer_groups))
 									$customer->addGroups($customer_groups);
@@ -1872,7 +1878,6 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 						{
-							unset($customer->id);
 							$res &= $customer->add();
 							if (isset($customer_groups))
 									$customer->addGroups($customer_groups);
