@@ -306,7 +306,7 @@ class OrderHistoryCore extends ObjectModel
 		$last_order_state = $order->getCurrentOrderState();
 		$new_order_state = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT'));
 
-		if (!parent::add($autodate))
+		if (!$this->add($autodate))
 			return false;
 
 		$result = Db::getInstance()->getRow('
@@ -380,12 +380,6 @@ class OrderHistoryCore extends ObjectModel
 					null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
 		}
 
-		// Update id_order_state attribute in Order
-		$order->current_state = $new_order_state->id;
-		$order->update();
-
-		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
-
 		return true;
 	}
 
@@ -393,7 +387,14 @@ class OrderHistoryCore extends ObjectModel
 	{
 		if (!parent::add($autodate))
 			return false;
+
+		$order = new Order((int)$this->id_order);
+		// Update id_order_state attribute in Order
+		$order->current_state = $this->id_order_state;
+		$order->update();
+
 		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
+
 		return true;
 	}
 
