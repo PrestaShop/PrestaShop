@@ -562,6 +562,13 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+
 		if (Tools::isSubmit('submitAddServer'))
 		{
 			if ($this->tabAccess['add'] === '1')
@@ -792,6 +799,10 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function ajaxProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+			die(Tools::displayError('This functionality has been disabled.'));
+		/* PrestaShop demo mode*/
 		if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server')
 		{
 			$host = pSQL(Tools::getValue('sHost', ''));
