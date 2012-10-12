@@ -387,7 +387,7 @@ class OrderCore extends ObjectModel
 			{
 				$history = new OrderHistory();
 				$history->id_order = (int)($this->id);
-				$history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), (int)($this->id));
+				$history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $this);
 				if (!$history->addWithemail())
 					return false;
 			}
@@ -1289,7 +1289,7 @@ class OrderCore extends ObjectModel
 		$history = new OrderHistory();
 		$history->id_order = (int)$this->id;
 		$history->id_employee = (int)$id_employee;
-		$history->changeIdOrderState((int)$id_order_state, (int)$this->id);
+		$history->changeIdOrderState((int)$id_order_state, $this);
 		$res = Db::getInstance()->getRow('
 			SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
 			FROM `'._DB_PREFIX_.'orders`
@@ -1298,10 +1298,9 @@ class OrderCore extends ObjectModel
 		$this->invoice_number = $res['invoice_number'];
 		$this->delivery_date = $res['delivery_date'];
 		$this->delivery_number = $res['delivery_number'];
-		$history->addWithemail();
-
-		$this->current_state = $id_order_state;
 		$this->update();
+
+		$history->addWithemail();		
 	}
 
 	public function addWs($autodate = true, $nullValues = false)
