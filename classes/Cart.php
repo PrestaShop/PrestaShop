@@ -2459,15 +2459,6 @@ class CartCore extends ObjectModel
 		else
 			$products = $product_list;
 
-
-		$cache_id = 'getPackageShippingCost_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
-		if ($products)
-			foreach ($products as $product)
-				$cache_id .= '_'.(int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
-
-		if (Cache::isStored($cache_id))
-			return Cache::retrieve($cache_id);
-
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 			$address_id = (int)$this->id_address_invoice;
 		elseif (count($product_list))
@@ -2479,6 +2470,14 @@ class CartCore extends ObjectModel
 			$address_id = null;
 		if (!Address::addressExists($address_id))
 			$address_id = null;
+
+		$cache_id = 'getPackageShippingCost_'.(int)$address_id.'_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
+		if ($products)
+			foreach ($products as $product)
+				$cache_id .= '_'.(int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
+
+		if (Cache::isStored($cache_id))
+			return Cache::retrieve($cache_id);
 
 		// Order total in default currency without fees
 		$order_total = $this->getOrderTotal(true, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING, $product_list);
@@ -2727,11 +2726,12 @@ class CartCore extends ObjectModel
 		}
 
 		// Apply tax
-		if (isset($carrier_tax))
+		if ($use_tax && isset($carrier_tax))
 			$shipping_cost *= 1 + ($carrier_tax / 100);
 
 		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
 		Cache::store($cache_id, $shipping_cost);
+
 		return $shipping_cost;
 	}
 
