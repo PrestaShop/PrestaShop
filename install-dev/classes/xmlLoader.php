@@ -644,7 +644,7 @@ class InstallXmlLoader
 	{
 		$from_path = $this->img_path.'t/';
 		$dst_path =  _PS_IMG_DIR_.'t/';
-		if (file_exists($from_path.$data['class_name'].'.gif'))
+		if (file_exists($from_path.$data['class_name'].'.gif') && !file_exists($dst_path.$data['class_name'].'.gif'))//test if file exist in install dir and if do not exist in dest folder.
 			if (!@copy($from_path.$data['class_name'].'.gif', $dst_path.$data['class_name'].'.gif'))
 			{
 				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier, 'tab'));
