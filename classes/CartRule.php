@@ -734,6 +734,13 @@ class CartRuleCore extends ObjectModel
 
 		$reduction_value = 0;
 
+		$cache_id = 'getContextualValue_'.(int)$use_tax.'_'.(int)$context->cart->id.'_'.(int)$filter;
+		foreach ($package_products as $product)
+			$cache_id .= (int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
+
+		if (Cache::isStored($cache_id))
+			return Cache::retrieve($cache_id);
+
 		// Free shipping on selected carriers
 		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
 		{
@@ -918,6 +925,7 @@ class CartRuleCore extends ObjectModel
 				}
 		}
 
+		Cache::store($cache_id, $reduction_value);
 		return $reduction_value;
 	}
 	
