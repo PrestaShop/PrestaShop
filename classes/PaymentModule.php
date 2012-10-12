@@ -531,7 +531,7 @@ abstract class PaymentModuleCore extends Module
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)$order->id;
-						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), (int)$order->id);
+						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order);
 						$history->addWithemail();
 					}
 
@@ -539,7 +539,7 @@ abstract class PaymentModuleCore extends Module
 					// So you migth have two order states
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
-					$new_history->changeIdOrderState((int)$id_order_state, (int)$order->id, true);
+					$new_history->changeIdOrderState((int)$id_order_state, $order, true);
 					$new_history->addWithemail(true, $extra_vars);
 
 					unset($order_detail);

@@ -74,13 +74,18 @@ class OrderHistoryCore extends ObjectModel
 	 * @param int $id_order
 	 * @param bool $use_existing_payment
 	 */
-	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
+	public function changeIdOrderState($new_order_state, &$id_order, $use_existing_payment = false)
 	{
 		if (!$new_order_state || !$id_order)
 			return;
 
-		// sets order and states
-		$order = new Order($id_order);
+		if (!is_object($id_order) && is_numeric($id_order))
+			$order = new Order((int)$id_order);
+		elseif (is_object($id_order))
+			$order = $id_order;
+		else
+			return;
+
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
@@ -149,7 +154,7 @@ class OrderHistoryCore extends ObjectModel
 						$product['product_quantity'],
 						Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
 						true,
-						(int)$id_order
+						(int)$order->id
 					);
 				}
 				// @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
