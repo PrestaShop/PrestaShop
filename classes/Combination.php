@@ -121,6 +121,8 @@ class CombinationCore extends ObjectModel
 			StockAvailable::setProductOutOfStock((int)$this->id_product, StockAvailable::outOfStock((int)$this->id_product), null, $this->id);
 
 		SpecificPriceRule::applyAllRules(array((int)$this->id_product));
+		
+		return true;
 	}
 
 	public function deleteAssociations()
