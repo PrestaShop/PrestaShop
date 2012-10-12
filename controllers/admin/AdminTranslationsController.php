@@ -2486,7 +2486,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
 		$default_i18n_file = $i18n_dir.$this->translations_informations[$this->type_selected]['file'];
 
-		if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+		if (($this->theme_selected == self::DEFAULT_THEME_NAME) || _PS_MODE_DEV_)
 			$i18n_file = $default_i18n_file;
 		else
 		{
