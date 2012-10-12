@@ -158,12 +158,29 @@ class AdminRequestSqlControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+
+	public function postProcess()
+	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+		/* PrestaShop demo mode*/
+		return parent::postProcess();
+	}
+	
 	/**
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
 	public function ajaxProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+			die(Tools::displayError('This functionality has been disabled.'));
+		/* PrestaShop demo mode*/
 		if ($table = Tools::GetValue('table'))
 		{
 			$request_sql = new RequestSql();
