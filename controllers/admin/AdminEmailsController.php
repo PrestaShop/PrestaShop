@@ -209,6 +209,10 @@ class AdminEmailsControllerCore extends AdminController
 
 	public function ajaxProcessSendMailTest()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+			die(Tools::displayError('This functionality has been disabled.'));
+		/* PrestaShop demo mode */
 		if ($this->tabAccess['view'] === '1')
 		{
 			$smtpChecked = (trim(Tools::getValue('mailMethod')) == 'smtp');
