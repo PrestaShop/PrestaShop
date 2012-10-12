@@ -4,7 +4,7 @@ We have processed your {shop_name} refund for order with the reference {order_na
 
 You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
 
-If you have guest account, you can follow your order using this link: {shop_url}?controller=guest-tracking
+If you have guest account, you can follow your order using this link: {guest_tracking_url}
 
 {shop_name} - {shop_url}
 
