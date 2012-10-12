@@ -2459,6 +2459,15 @@ class CartCore extends ObjectModel
 		else
 			$products = $product_list;
 
+
+		$cache_id = 'getPackageShippingCost_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
+		if ($products)
+			foreach ($products as $product)
+				$cache_id .= '_'.(int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
+
+		if (Cache::isStored($cache_id))
+			return Cache::retrieve($cache_id);
+
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 			$address_id = (int)$this->id_address_invoice;
 		elseif (count($product_list))
@@ -2476,7 +2485,6 @@ class CartCore extends ObjectModel
 
 		// Start with shipping cost at 0
 		$shipping_cost = 0;
-
 		// If no product added, return 0
 		if ($order_total <= 0
 			&& (
@@ -2484,7 +2492,10 @@ class CartCore extends ObjectModel
 				||
 				(count($product_list) && !is_null($product_list))
 		))
+		{
+			Cache::store($cache_id, $shipping_cost);
 			return $shipping_cost;
+		}
 
 		// Get id zone
 		if (!$this->isMultiAddressDelivery()
@@ -2581,11 +2592,17 @@ class CartCore extends ObjectModel
 			die(Tools::displayError('Fatal error: "no default carrier"'));
 
 		if (!$carrier->active)
+		{
+			Cache::store($cache_id, $shipping_cost);
 			return $shipping_cost;
+		}
 
 		// Free fees if free carrier
 		if ($carrier->is_free == 1)
+		{
+			Cache::store($cache_id, 0);
 			return 0;
+		}
 
 		// Select carrier tax
 		if ($use_tax && !Tax::excludeTaxeOption())
@@ -2604,12 +2621,18 @@ class CartCore extends ObjectModel
 			$free_fees_price = Tools::convertPrice((float)$configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
 		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
 		if ($orderTotalwithDiscounts >= (float)($free_fees_price) && (float)($free_fees_price) > 0)
+		{
+			Cache::store($cache_id, $shipping_cost);
 			return $shipping_cost;
+		}
 
 		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
 			&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
 			&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
+		{
+			Cache::store($cache_id, $shipping_cost);
 			return $shipping_cost;
+		}
 
 		// Get shipping cost using correct method
 		if ($carrier->range_behavior)
@@ -2691,17 +2714,25 @@ class CartCore extends ObjectModel
 
 				// Check if carrier is available
 				if ($shipping_cost === false)
+				{
+					Cache::store($cache_id, false);
 					return false;
+				}
 			}
 			else
+			{
+				Cache::store($cache_id, false);
 				return false;
+			}
 		}
 
 		// Apply tax
 		if (isset($carrier_tax))
 			$shipping_cost *= 1 + ($carrier_tax / 100);
 
-		return (float)Tools::ps_round((float)$shipping_cost, 2);
+		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
+		Cache::store($cache_id, $shipping_cost);
+		return $shipping_cost;
 	}
 
 	/**
