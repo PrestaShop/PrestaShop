@@ -1239,7 +1239,7 @@ class BlockLayered extends Module
 		$description = strtolower(rtrim(substr($description, 0, -2)));
 		// kewords attributes (ex: <attr1> <value1>, <attr1> <value2>, <attr2> <value1>)
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$category_metas = Meta::getMetaTags($id_lang, '', $title);
+			$category_metas = Meta::getMetaTags($id_lang, 'category', $title);
 		else
 			$category_metas = Tools::getMetaTags($id_lang, '', $title);
 
