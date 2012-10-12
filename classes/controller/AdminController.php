@@ -1790,7 +1790,10 @@ class AdminControllerCore extends Controller
 	public function initProcess()
 	{
 		// Manage list filtering
-		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
+		if (Tools::isSubmit('submitFilter'.$this->table) 
+			|| $this->context->cookie->{'submitFilter'.$this->table} !== false
+			|| Tools::getValue($this->table.'Orderby')
+			|| Tools::getValue($this->table.'Orderway'))
 			$this->filter = true;
 
 		$this->id_object = (int)Tools::getValue($this->identifier);
