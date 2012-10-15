@@ -539,6 +539,7 @@ class AdminCartsControllerCore extends AdminController
 				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
+				$product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true);
 			}
 		if (count($summary['discounts']))
 			foreach ($summary['discounts'] as &$voucher)

@@ -1165,7 +1165,7 @@ class CartCore extends ObjectModel
 
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, $id_product_attribute, $id_address_delivery));
+			return ($this->deleteProduct((int)$id_product, $id_product_attribute, $id_address_delivery) && $customization_quantity == $product_total_quantity);
 		}
 
 		/* Get customization quantity */
