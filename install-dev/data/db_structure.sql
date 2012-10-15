@@ -25,7 +25,7 @@ CREATE TABLE `PREFIX_address` (
   `id_supplier` int(10) unsigned NOT NULL default '0',
   `id_warehouse` int(10) unsigned NOT NULL default '0',
   `alias` varchar(32) NOT NULL,
-  `company` varchar(32) default NULL,
+  `company` varchar(64) default NULL,
   `lastname` varchar(32) NOT NULL,
   `firstname` varchar(32) NOT NULL,
   `address1` varchar(128) NOT NULL,
