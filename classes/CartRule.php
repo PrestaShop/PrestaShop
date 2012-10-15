@@ -536,7 +536,7 @@ class CartRuleCore extends ObjectModel
 					OR (id_cart_rule_2 = '.(int)$this->id.' AND id_cart_rule_1 = '.(int)$otherCartRule['id_cart_rule'].')');
 					if (!$combinable)
 					{
-						$cart_rule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
+						$cart_rule = new CartRule((int)$otherCartRule['id_cart_rule'], $context->cart->id_lang);
 						// The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
 						if ($cart_rule->priority <= $this->priority)
 							return (!$display_error) ? false : Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
