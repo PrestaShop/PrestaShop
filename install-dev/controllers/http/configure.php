@@ -75,10 +75,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 			$this->errors['shop_name'] = $this->l('Invalid shop name');
 
 		// Check admin name
-		if ($this->session->admin_firstname && !Validate::isGenericName($this->session->admin_firstname))
+		if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname))
 			$this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
 
-		if ($this->session->admin_lastname && !Validate::isGenericName($this->session->admin_lastname))
+		if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname))
 			$this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
 
 		// Check passwords
