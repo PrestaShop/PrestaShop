@@ -216,7 +216,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				array(
 					'type' => 'select',
 					'label' => $this->l('Country:'),
-					'name' => 'country[]',
+					'name' => 'country',
 					'id' => 'country',
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id),
@@ -386,7 +386,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$behavior = (int)Tools::getValue('behavior');
 		$description = pSQL(Tools::getValue('description'));
 
-		$this->selected_countries = Tools::getValue('country');
+		if ((int)($id_country = Tools::getValue('country')) == 0)
+		{
+			$countries = Country::getCountries($this->context->language->id);
+			$this->selected_countries = array();
+			foreach ($countries as $country)
+				$this->selected_countries[] = (int)$country['id_country'];
+		}
+		else
+			$this->selected_countries = array($id_country);
 		$this->selected_states = Tools::getValue('states');
 
 		if (empty($this->selected_states) || count($this->selected_states) == 0)
@@ -435,14 +443,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$this->errors = array_merge($this->errors, $this->validateTaxRule($tr));
 
 				if (count($this->errors) == 0)
-				{
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
-					else
-						Tools::redirectAdmin(
-							self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
-						);
-				}
 			}
 		}
 
