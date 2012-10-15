@@ -87,6 +87,8 @@ h4 {
 /* text **************************************************************************************** */
 p {padding-bottom:20px}
 
+p em {font-style:italic}
+
 .warning {
 	margin:0 0 10px 0;
 	padding:10px;
