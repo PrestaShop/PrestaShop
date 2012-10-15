@@ -671,7 +671,7 @@ class AdminControllerCore extends Controller
 			return false;
 		}
 
-		return $object;
+		return $this->object;
 	}
 
 
