@@ -636,30 +636,30 @@ class AdminControllerCore extends Controller
 		$this->validateRules();
 		if (count($this->errors) <= 0)
 		{
-			$object = new $this->className();
+			$this->object = new $this->className();
 
-			$this->copyFromPost($object, $this->table);
-			$this->beforeAdd($object);
-			if (method_exists($object, 'add') && !$object->add())
+			$this->copyFromPost($this->object, $this->table);
+			$this->beforeAdd($this->object);
+			if (method_exists($this->object, 'add') && !$this->object->add())
 			{
 				$this->errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			/* voluntary do affectation here */
-			elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
+			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
-				$this->afterAdd($object);
-				$this->updateAssoShop($object->id);
+				$this->afterAdd($this->object);
+				$this->updateAssoShop($this->object->id);
 				// Save and stay on same form
 				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$this->object->id.'&conf=3&update'.$this->table.'&token='.$this->token;
 				// Save and back to parent
 				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token;
 				// Default behavior (save and back)
 				if (empty($this->redirect_after) && $this->redirect_after !== false)
-					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token;
+					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$this->object->id : '').'&conf=3&token='.$this->token;
 			}
 		}
 
