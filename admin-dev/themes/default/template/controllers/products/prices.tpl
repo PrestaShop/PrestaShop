@@ -177,18 +177,16 @@ $(document).ready(function () {
 			{/if}
 		</td>
 	</tr>
-	{if $ps_use_ecotax}
-		<tr>
-			<td class="col-left">
-				{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
-				<label>{l s='Eco-tax (tax incl.):'}</label>
-			</td>
-			<td>
-				{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
-				<span style="margin-left:10px">({l s='already included in price'})</span>
-			</td>
-		</tr>
-	{/if}
+	<tr {if !$ps_use_ecotax} style="display:none;"{/if}>
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="ecot" type="default"}
+			<label>{l s='Eco-tax (tax incl.):'}</label>
+		</td>
+		<td>
+			{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
+			<span style="margin-left:10px">({l s='already included in price'})</span>
+		</td>
+	</tr>
 	<tr {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none"{/if} >
 		<td class="col-left"><label>{l s='Retail price with tax:'}</label></td>
 		<td>
