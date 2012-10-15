@@ -145,7 +145,6 @@ class TranslateCore
 					include_once($file);
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 					$translations_merged[$name] = true;
-					break;
 				}
 		}
 
