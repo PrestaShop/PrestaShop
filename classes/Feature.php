@@ -203,19 +203,30 @@ class FeatureCore extends ObjectModel
 			WHERE `name` = \''.pSQL($name).'\'
 			GROUP BY `id_feature`
 		');
-		if (!empty($rq))
-			return (int)$rq['id_feature'];
-		// Feature doesn't exist, create it
-		$feature = new Feature();
-		$languages = Language::getLanguages();
-		foreach ($languages as $language)
-			$feature->name[$language['id_lang']] = strval($name);
-		if ($position)
-			$feature->position = (int)$position;
+		if (empty($rq))
+		{
+			// Feature doesn't exist, create it
+			$feature = new Feature();
+			$languages = Language::getLanguages();
+			foreach ($languages as $language)
+				$feature->name[$language['id_lang']] = strval($name);
+			if ($position)
+				$feature->position = (int)$position;
+			else
+				$feature->position = Feature::getHigherPosition() + 1;
+			$feature->add();
+			return $feature->id;
+		}
 		else
-			$feature->position = Feature::getHigherPosition() + 1;
-		$feature->add();
-		return $feature->id;
+		{
+			if ($position && $feature = new Feature((int)$rq['id_feature']))
+			{
+				$feature->position = (int)$position;
+				$feature->update();
+			}
+
+			return (int)$rq['id_feature'];
+		}
 	}
 
 	public static function getFeaturesForComparison($list_ids_product, $id_lang)
