@@ -163,7 +163,7 @@
 					</tr>
 				{/if}
 			{/if}
-
+			{if $use_taxes}
 			<tr class="cart_total_price">
 				<td colspan="5">{l s='Total (tax excl.):'}</td>
 				<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
@@ -172,6 +172,7 @@
 				<td colspan="5">{l s='Total tax:'}</td>
 				<td colspan="2" class="price" id="total_tax">{displayPrice price=$total_tax}</td>
 			</tr>
+			{/if}
 			<tr class="cart_total_price">
 				<td colspan="5" id="cart_voucher" class="cart_voucher">
 				{if $voucherAllowed}
