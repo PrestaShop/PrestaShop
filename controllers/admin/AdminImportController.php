@@ -1437,7 +1437,7 @@ class AdminImportControllerCore extends AdminController
 						$tab_feature = explode(':', $single_feature);
 						$feature_name = trim($tab_feature[0]);
 						$feature_value = trim($tab_feature[1]);
-						$position = isset($tab_feature[2]) ? $tab_feature[1]: false;
+						$position = isset($tab_feature[2]) ? $tab_feature[2]: false;
 						$id_feature = Feature::addFeatureImport($feature_name, $position);
 						$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
 						Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
