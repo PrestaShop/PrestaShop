@@ -38,6 +38,7 @@
 	var txt_hide_carts = '{l s='Hide carts and orders for this customer'}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
+	var pic_dir = '{$pic_dir}';
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
@@ -639,16 +640,44 @@
 		}
 	}
 
-	function updateCartProducts(products, gifts)
+	function updateCartProducts(products, gifts, id_address_delivery)
 	{
 		var cart_content = '';
 		$.each(products, function() {
+			var id_product = Number(this.id_product);
+			var id_product_attribute = Number(this.id_product_attribute);
 			cart_quantity[Number(this.id_product)+'_'+Number(this.id_product_attribute)+'_'+Number(this.id_customization)] = this.cart_quantity;
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
-			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>';
-			cart_content += '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />';
-			cart_content += '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/delete.gif" /></a>';
-			cart_content += '</div></td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
+			cart_content += (!this.id_customization ? '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'"><img src="../img/admin/down.gif" /></a></div>' : '');
+			cart_content += (!this.id_customization ? '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />' : '');
+			cart_content += (!this.id_customization ? '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><img src="../img/admin/delete.gif" /></a></div>' : '');
+			cart_content += '</td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
+			if (this.id_customization)
+			{
+				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
+					var customized_desc = '';
+					if(this.datas[1].length)
+					{
+						$.each(this.datas[1],function() {
+							customized_desc += this.name+':'+this.value+'<br />';
+							id_customization = this.id_customization;
+						});
+					}
+					if(this.datas[0] && this.datas[0].length)
+					{
+						$.each(this.datas[0],function() {
+							customized_desc += this.name+':<img src="'+pic_dir+this.value+'_small" /><br />';
+							id_customization = this.id_customization;
+						});
+					}
+			console.log(cart_content);
+			cart_content += '<tr><td></td><td>'+customized_desc+'</td><td></td><td></td><td>';
+			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+id_product+'_'+id_product_attribute+'_'+id_customization+'"><img src="../img/admin/down.gif" /></a></div>';
+			cart_content += '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+id_customization +'" class="cart_quantity" size="2" value="'+this.quantity+'" />';
+			cart_content += '<a href="#" class="delete_product" rel="delete_'+id_product+'_'+id_product_attribute+'_'+id_customization+'" ><img src="../img/admin/delete.gif" /></a>';
+			cart_content += '</div></td><td></td></tr>';
+				});
+			}
 		});
 		$.each(gifts, function() {
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td>';
@@ -680,7 +709,7 @@
 
 	function displaySummary(jsonSummary)
 	{
-		updateCartProducts(jsonSummary.summary.products, jsonSummary.summary.gift_products);
+		updateCartProducts(jsonSummary.summary.products, jsonSummary.summary.gift_products, jsonSummary.cart.id_address_delivery);
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
 
