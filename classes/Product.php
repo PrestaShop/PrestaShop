@@ -467,6 +467,7 @@ class ProductCore extends ObjectModel
 		else
 			StockAvailable::setProductOutOfStock((int)$this->id, 2);
 
+		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return true;
 	}
@@ -474,6 +475,7 @@ class ProductCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		$return = parent::update($null_values);
+		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return $return;
 	}
@@ -803,8 +805,6 @@ class ProductCore extends ObjectModel
 		if (!$this->addToCategories($categories))
 			return false;
 
-		if (!$this->setGroupReduction())
-			return false;
 		SpecificPriceRule::applyAllRules(array((int)$this->id));
 		return true;
 	}
@@ -4522,15 +4522,7 @@ class ProductCore extends ObjectModel
 	 */
 	public function setGroupReduction()
 	{
-		$row = GroupReduction::getGroupByCategoryId($this->id_category_default);
-		if (!$row) // Remove
-		{
-			if (!GroupReduction::deleteProductReduction($this->id))
-				return false;
-		}
-		else if (!GroupReduction::setProductReduction($this->id, $row['id_group'], $this->id_category_default, (float)$row['reduction']))
-				return false;
-		return true;
+		return GroupReduction::setProductReduction($this->id, null, $this->id_category_default);
 	}
 
 	/**
