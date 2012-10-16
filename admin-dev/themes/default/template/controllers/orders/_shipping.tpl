@@ -44,7 +44,7 @@
 	<tbody>
 	{foreach from=$order->getShipping() item=line}
 	<tr>
-		<td>{$line.date_add}</td>
+		<td>{dateFormat date=$line.date_add full=true}</td>
 		<td>{$line.type}</td>
 		<td>{$line.state_name}</td>
 		<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
