@@ -215,7 +215,9 @@ $(function(){ldelim}
 			<label for="other">{l s='Additional information'}</label>
 			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other}{/if}{/if}</textarea>
 		</p>
-		<p class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
+		{if $onr_phone_at_least}
+			<p class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
+		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone}{/if}{/if}" />
