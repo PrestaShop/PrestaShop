@@ -168,13 +168,17 @@ class AdminOrdersControllerCore extends AdminController
 												'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
 												'cashondelivery' => (int)Configuration::get('PS_OS_PREPARATION'),
 												'other' => (int)Configuration::get('PS_OS_PAYMENT'));
+		$payment_modules = array();
+		foreach (PaymentModule::getInstalledPaymentModules() as $p_module)
+			$payment_modules[] = Module::getInstanceById((int)$p_module['id_module']);
+
 		$this->context->smarty->assign(array(
 			'recyclable_pack' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
 			'gift_wrapping' => (int)Configuration::get('PS_GIFT_WRAPPING'),
 			'cart' => $cart,
 			'currencies' => Currency::getCurrencies(),
 			'langs' => Language::getLanguages(true, Context::getContext()->shop->id),
-			'payment_modules' => PaymentModule::getInstalledPaymentModules(),
+			'payment_modules' => $payment_modules,
 			'order_states' => OrderState::getOrderStates((int)Context::getContext()->language->id),
 			'defaults_order_state' => $defaults_order_state,
 			'show_toolbar' => $this->show_toolbar,
