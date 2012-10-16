@@ -1095,12 +1095,15 @@ class CartRuleCore extends ObjectModel
 		)
 		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule	FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority');
-
-		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
 		
-		foreach ($cartRules as $cartRule)
-			if ($cartRule->checkValidity($context, false, false))
-				$context->cart->addCartRule($cartRule->id);
+		if ($result)
+		{
+			$cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
+			if ($cart_rules)
+				foreach ($cart_rules as $cart_rule)
+					if ($cart_rule->checkValidity($context, false, false))
+						$context->cart->addCartRule($cart_rule->id);
+		}
 	}
 
 	/**

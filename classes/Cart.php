@@ -518,11 +518,12 @@ class CartCore extends ObjectModel
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
 		$products_ids = array();
 		$pa_ids = array();
-		foreach ($result as $row)
-		{
-			$products_ids[] = $row['id_product'];
-			$pa_ids[] = $row['id_product_attribute'];
-		}
+		if ($result)
+			foreach ($result as $row)
+			{
+				$products_ids[] = $row['id_product'];
+				$pa_ids[] = $row['id_product_attribute'];
+			}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
 		Product::cacheProductsFeatures($products_ids);
 		Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
