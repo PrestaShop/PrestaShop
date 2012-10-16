@@ -29,8 +29,6 @@ class MenuTopLinks
 {
 	public static function gets($id_lang, $id_linksmenutop = null, $id_shop)
 	{
-		$id_shop = (int)((bool) Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) ? $id_shop : 0;
-
 		$sql = 'SELECT l.id_linksmenutop, l.new_window, ll.link, ll.label
 				FROM '._DB_PREFIX_.'linksmenutop l
 				LEFT JOIN '._DB_PREFIX_.'linksmenutop_lang ll ON (l.id_linksmenutop = ll.id_linksmenutop AND ll.id_lang = '.(int)$id_lang.' AND ll.id_shop='.(int)$id_shop.')
