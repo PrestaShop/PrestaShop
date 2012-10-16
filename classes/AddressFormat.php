@@ -491,7 +491,12 @@ class AddressFormatCore extends ObjectModel
 		{
 			$layoutData['ordered'] = AddressFormat::getOrderedAddressFields((int)$address->id_country);
 			$layoutData['formated'] = AddressFormat::getFormattedAddressFieldsValues($address, $layoutData['ordered']);
-			$layoutData['object'] = get_object_vars($address);
+			$layoutData['object'] = array();
+
+			$reflect = new ReflectionObject($address);
+			$public_properties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+			foreach ($public_properties as $property)
+				$layoutData['object'][$property->getName()] = $address->{$property->getName()};
 		}
 		return $layoutData;
 	}
