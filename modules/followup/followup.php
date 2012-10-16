@@ -278,7 +278,7 @@ class Followup extends Module
 	{
 		$emailLogs = $this->getLogsEmail(1);
 		$sql = '
-		SELECT c.id_cart, o.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT c.id_cart, c.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'cart c
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = c.id_cart)
 		LEFT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = c.id_customer)
@@ -482,6 +482,7 @@ class Followup extends Module
 	
 	public function cronTask()
 	{
+		Context::getContext()->link = new Link(); //when this is call by cron context is not init
 		$conf = Configuration::getMultiple(array('PS_FOLLOW_UP_ENABLE_1', 'PS_FOLLOW_UP_ENABLE_2', 'PS_FOLLOW_UP_ENABLE_3', 'PS_FOLLOW_UP_ENABLE_4', 'PS_FOLLOW_UP_CLEAN_DB'));
 
 		if ($conf['PS_FOLLOW_UP_ENABLE_1'])
