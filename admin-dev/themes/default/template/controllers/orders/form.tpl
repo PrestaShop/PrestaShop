@@ -1228,7 +1228,7 @@
 		<div class="margin-form">
 			<select name="payment_module_name" id="payment_module_name">
 				{foreach from=$payment_modules item='module'}
-					<option value="{$module.name}" {if isset($smarty.post.payment_module_name) && $module.name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module.name}</option>
+					<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
 				{/foreach}
 			</select>
 		</div>
