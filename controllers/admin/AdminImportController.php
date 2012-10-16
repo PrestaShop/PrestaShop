@@ -1055,7 +1055,12 @@ class AdminImportControllerCore extends AdminController
 				$product->id_shop_default = (int)Context::getContext()->shop->id;
 
 			// link product to shops
-			$product->id_shop_list = explode($this->multiple_value_separator, $product->shop);
+			$product->id_shop_list = array();
+			foreach (explode($this->multiple_value_separator, $product->shop) as $shop)
+				if (!is_numeric($shop))
+					$product->id_shop_list[] = Shop::getIdByName($shop);
+				else
+					$product->id_shop_list[] = $shop;
 
 			if ((int)$product->id_tax_rules_group != 0)
 			{
