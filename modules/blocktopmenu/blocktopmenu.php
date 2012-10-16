@@ -79,6 +79,7 @@ class Blocktopmenu extends Module
 			!$this->registerHook('actionObjectProductUpdateAfter') ||
 			!$this->registerHook('actionObjectProductDeleteAfter') ||
 			!$this->registerHook('categoryUpdate') ||
+			!$this->registerHook('actionShopDataDuplication') ||
 			!$this->installDB())
 			return false;
 		return true;
@@ -341,7 +342,7 @@ class Blocktopmenu extends Module
 
 		$this->_html .= '
 		<fieldset>
-			<legend><img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
+			<legend>tptptp<img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
 
 				';
@@ -854,5 +855,38 @@ class Blocktopmenu extends Module
 	private function clearMenuCache()
 	{
 		$this->_clearCache('blocktopmenu.tpl');
+	}
+	
+	public function hookActionShopDataDuplication($params)
+	{
+		$linksmenutop = Db::getInstance()->executeS('
+			SELECT *
+			FROM '._DB_PREFIX_.'linksmenutop 
+			WHERE id_shop = '.(int)$params['old_id_shop']
+			);
+
+		foreach($linksmenutop as $id => $link)
+		{
+			Db::getInstance()->execute('
+				INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop (id_linksmenutop, id_shop, new_window) 
+				VALUES (null, '.(int)$params['new_id_shop'].', '.(int)$link['new_window'].')');
+			
+			$linksmenutop[$id]['new_id_linksmenutop'] = Db::getInstance()->Insert_ID();
+		}
+		
+		foreach($linksmenutop as $id => $link)
+		{
+			$lang = Db::getInstance()->executeS('
+					SELECT id_lang, '.(int)$params['new_id_shop'].', label, link 
+					FROM '._DB_PREFIX_.'linksmenutop_lang 
+					WHERE id_linksmenutop = '.(int)$link['id_linksmenutop'].' AND id_shop = '.(int)$params['old_id_shop']);
+			
+			foreach($lang as $l)
+				Db::getInstance()->execute('
+					INSERT IGNORE INTO '._DB_PREFIX_.'linksmenutop_lang (id_linksmenutop, id_lang, id_shop, label, link) 
+					VALUES ('.(int)$link['new_id_linksmenutop'].', '.(int)$l['id_lang'].', '.(int)$params['new_id_shop'].', '.(int)$l['label'].', '.(int)$l['link'].' )');
+		}
+		
+		
 	}
 }
