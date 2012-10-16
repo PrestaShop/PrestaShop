@@ -167,6 +167,7 @@ class AuthControllerCore extends FrontController
 		$days = Tools::dateDays();
 
 		$this->context->smarty->assign(array(
+				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 				'years' => $years,
 				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 				'months' => $months,
