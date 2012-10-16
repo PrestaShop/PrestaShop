@@ -496,7 +496,8 @@ class AddressFormatCore extends ObjectModel
 			$reflect = new ReflectionObject($address);
 			$public_properties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
 			foreach ($public_properties as $property)
-				$layoutData['object'][$property->getName()] = $address->{$property->getName()};
+				if (isset($address->{$property->getName()}))
+					$layoutData['object'][$property->getName()] = $address->{$property->getName()};
 		}
 		return $layoutData;
 	}
