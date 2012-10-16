@@ -762,7 +762,8 @@ class AdminImportControllerCore extends AdminController
 					$entity->{$key}[$id_lang_tmp] = $value;
 		}
 		else
-			$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
+			if (!empty($infos))
+				$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
 
 		return true;
 	}
@@ -2772,8 +2773,8 @@ class AdminImportControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
-		   Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
-		   die;
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '.(int)Tools::getValue('idImportMatchs'));
+			die;
 		}
 	}
 }
