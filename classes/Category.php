@@ -332,7 +332,7 @@ class CategoryCore extends ObjectModel
 				CartRule::cleanProductRuleIntegrity('categories', array($cat->id));
 				Category::cleanPositions($cat->id_parent);
 				/* Delete Categories in GroupReduction */
-				if (GroupReduction::getGroupReductionByCategoryId((int)$cat->id))
+				if (GroupReduction::getGroupsReductionByCategoryId((int)$cat->id))
 					GroupReduction::deleteCategory($cat->id);
 			}
 		}
