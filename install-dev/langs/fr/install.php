@@ -155,7 +155,7 @@ return array(
 		'Did you know?' => 'Le saviez vous ?',
 		'PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop et sa communauté vous proposent plus de 40 langues gratuites directement accessibles depuis votre administration',
 		'Licenses Agreement' => 'Contrat de licences',
-		'PrestaShop core is released under the AFL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => 'Le cœur de PrestaShop est publié sous licence AFL 3.0 tandis que les modules et thèmes sont publiés sous licence AFL 3.0.',
+		'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => 'Le cœur de PrestaShop est publié sous licence OSL 3.0 tandis que les modules et thèmes sont publiés sous licence AFL 3.0.',
 		'I agree to the above terms and conditions.' => 'J\'approuve les termes et conditions du contrat ci-dessus.',
 		'I agree to participate in improving the solution by sending anonymous information about my configuration.' => 'J\'accepte de participer à l\'amélioration de la solution en envoyant des informations anonymes sur ma configuration',
 		'If you have any questions, please visit our <a href="%1$s" target="_blank">documentation</a> and <a href="%2$s" target="_blank">community forum</a>.' => 'Si vous avez la moindre question, n\'hésitez pas à visiter notre <a href="%1$s" target="_blank">documentation</a> et notre <a href="%2$s" target="_blank">forum communautaire</a>.',
