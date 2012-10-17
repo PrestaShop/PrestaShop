@@ -321,7 +321,10 @@ class LinkCore
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang))
+		{
+			unset($params['module']);
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
+		}
 		else
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow);
 	}
@@ -409,7 +412,7 @@ class LinkCore
 				$request = urlencode($request);
 			parse_str($request, $request);
 		}
-		unset($request['controller'], $request['module']);
+		unset($request['controller']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request);
 		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
