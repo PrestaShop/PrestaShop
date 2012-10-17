@@ -753,6 +753,7 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function fillInfo($infos, $key, &$entity)
 	{
+		$infos = trim($infos);
 		if (isset(self::$validators[$key][1]) && self::$validators[$key][1] == 'createMultiLangField' && Tools::getValue('iso_lang'))
 		{
 			$id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
