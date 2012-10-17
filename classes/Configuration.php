@@ -302,7 +302,12 @@ class ConfigurationCore extends ObjectModel
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!is_array($values))
+		{
+			$is_i18n = false;
 			$values = array($values);
+		}
+		else
+			$is_i18n = true;
 
 		$result = true;
 		foreach ($values as $lang => $value)
@@ -364,9 +369,12 @@ class ConfigurationCore extends ObjectModel
 					));
 				}
 			}
-
-			Configuration::set($key, $value, $id_shop_group, $id_shop);
+			if (!$is_i18n)
+				Configuration::set($key, $value, $id_shop_group, $id_shop);
 		}
+
+		if ($is_i18n)
+			Configuration::set($key, $values, $id_shop_group, $id_shop);
 
 		return $result;
 	}
