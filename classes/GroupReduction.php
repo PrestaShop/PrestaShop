@@ -189,11 +189,11 @@ class GroupReductionCore extends ObjectModel
 
 	public static function setProductReduction($id_product, $id_group = null, $id_category, $reduction = null)
 	{
+		$res = true;
 		GroupReduction::deleteProductReduction((int)$id_product);
 		$reductions = GroupReduction::getGroupsByCategoryId((int)$id_category);
 		if ($reductions)
 		{
-			$res = true;
 			foreach ($reductions as $reduction)
 				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`)
 								VALUES ('.(int)$id_product.', '.(int)$reduction['id_group'].', '.(float)$reduction['reduction'].')');
