@@ -148,7 +148,7 @@
     'Did you know?' => '¿Sabía que?',
     'PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.' => NULL,
     'Licenses Agreement' => 'Contrato de Licencia',
-    'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => NULL,
+    'PrestaShop core is released under the AFL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => NULL,
     'I agree to the above terms and conditions.' => 'Estoy de acuerdo con los términos y condiciones.',
     'I agree to participate in improving the solution by sending anonymous information about my configuration.' => NULL,
     'If you have any questions, please visit our <a href="%1$s" target="_blank">documentation</a> and <a href="%2$s" target="_blank">community forum</a>.' => NULL,
