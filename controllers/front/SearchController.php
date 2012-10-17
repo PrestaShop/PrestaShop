@@ -58,7 +58,7 @@ class SearchControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$query = urldecode(Tools::getValue('q'));
+		$query = Tools::replaceAccentedChars(urldecode(Tools::getValue('q')));
 		if ($this->ajax_search)
 		{
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
