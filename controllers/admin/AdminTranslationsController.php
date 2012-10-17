@@ -276,6 +276,9 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 			$file_path = $translation_informations['dir'].$translation_informations['file'];
 
+		if (!file_exists($file_path))
+			throw new PrestaShopException(sprintf(Tools::displayError('This file doesn\'t exists: "%s". Please create this file.'), $file_path));
+
 		if ($fd = fopen($file_path, 'w'))
 		{
 			// Get value of button save and stay
