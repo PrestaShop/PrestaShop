@@ -1523,7 +1523,7 @@ class CartCore extends ObjectModel
 								$in_order = true;
 
 					if ($in_order)
-						$order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, null, CartRule::FILTER_ACTION_GIFT, $package, $use_cache);
+						$order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_GIFT, $package, $use_cache);
 				}
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)

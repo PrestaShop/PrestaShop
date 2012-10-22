@@ -164,9 +164,9 @@ class ConfigurationCore extends ObjectModel
 			
 		if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop))
 			return self::$_CONF[$id_lang]['shop'][$id_shop][$key];
-		else if ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
+		elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
 			return self::$_CONF[$id_lang]['group'][$id_shop_group][$key];
-		else if (Configuration::hasKey($key, $id_lang))
+		elseif (Configuration::hasKey($key, $id_lang))
 			return self::$_CONF[$id_lang]['global'][$key];
 		return false;
 	}
@@ -231,7 +231,7 @@ class ConfigurationCore extends ObjectModel
 		$id_lang = (int)$id_lang;
 		if ($id_shop)
 			return isset(self::$_CONF[$id_lang]['shop'][$id_shop]) && array_key_exists($key, self::$_CONF[$id_lang]['shop'][$id_shop]);
-		else if ($id_shop_group)
+		elseif ($id_shop_group)
 			return isset(self::$_CONF[$id_lang]['group'][$id_shop_group]) && array_key_exists($key, self::$_CONF[$id_lang]['group'][$id_shop_group]);
 		return isset(self::$_CONF[$id_lang]['global']) && array_key_exists($key, self::$_CONF[$id_lang]['global']);
 	}

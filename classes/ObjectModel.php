@@ -210,8 +210,8 @@ abstract class ObjectModelCore
 				// Get shop informations
 				if (Shop::isTableAssociated($this->def['table']))
 					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
-
-				Cache::store($cache_id, ObjectModel::$db->getRow($sql));
+				if ($row = ObjectModel::$db->getRow($sql))
+					Cache::store($cache_id, $row);
 			}
 
 			$result = Cache::retrieve($cache_id);
