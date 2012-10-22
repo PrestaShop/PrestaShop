@@ -162,7 +162,7 @@ class ManufacturerCore extends ObjectModel
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 
-		$sql = 'SELECT m.*, ml.`description`
+		$sql = 'SELECT m.*, ml.`description`, ml.`short_description`
 			FROM `'._DB_PREFIX_.'manufacturer` m
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (
 				m.`id_manufacturer` = ml.`id_manufacturer`
