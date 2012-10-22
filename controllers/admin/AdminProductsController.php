@@ -597,62 +597,67 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function processBulkDelete()
 	{
-		if (is_array($this->boxes) && !empty($this->boxes))
+		if ($this->tabAccess['delete'] === '1')
 		{
-			$object = new $this->className();
-
-			if (isset($object->noZeroObject) &&
-				// Check if all object will be deleted
-				(count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject)))))
-				$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
-			else
+			if (is_array($this->boxes) && !empty($this->boxes))
 			{
-				$success = 1;
-				$products = Tools::getValue($this->table.'Box');
-				if (is_array($products) && ($count = count($products)))
+				$object = new $this->className();
+	
+				if (isset($object->noZeroObject) &&
+					// Check if all object will be deleted
+					(count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject)))))
+					$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+				else
 				{
-					// Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
-					if (intval(ini_get('max_execution_time')) < round($count * 1.5))
-						ini_set('max_execution_time', round($count * 1.5));
-					
-					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$stock_manager = StockManagerFactory::getManager();
-
-					foreach ($products as $id_product)
+					$success = 1;
+					$products = Tools::getValue($this->table.'Box');
+					if (is_array($products) && ($count = count($products)))
 					{
-						$product = new Product((int)$id_product);
-						/*
-						 * @since 1.5.0
-						 * It is NOT possible to delete a product if there are currently:
-						 * - physical stock for this product
-						 * - supply order(s) for this product
-						 */
-						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management)
+						// Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
+						if (intval(ini_get('max_execution_time')) < round($count * 1.5))
+							ini_set('max_execution_time', round($count * 1.5));
+
+						if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+							$stock_manager = StockManagerFactory::getManager();
+	
+						foreach ($products as $id_product)
 						{
-							$physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
-							$real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
-							if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
-								$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left or supply orders in progress.'), $product->id);
+							$product = new Product((int)$id_product);
+							/*
+							 * @since 1.5.0
+							 * It is NOT possible to delete a product if there are currently:
+							 * - physical stock for this product
+							 * - supply order(s) for this product
+							 */
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management)
+							{
+								$physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
+								$real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
+								if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
+									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left or supply orders in progress.'), $product->id);
+								else
+									$success &= $product->delete();
+							}
 							else
 								$success &= $product->delete();
 						}
-						else
-							$success &= $product->delete();
 					}
+					
+					if ($success)
+					{
+						$id_category = (int)Tools::getValue('id_category');
+						$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+						$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
+					}
+					else
+						$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
-				
-				if ($success)
-				{
-					$id_category = (int)Tools::getValue('id_category');
-					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$this->token.$category_url;
-				}
-				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
+			else
+				$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 		}
 		else
-			$this->errors[] = Tools::displayError('You must select at least one element to delete.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
 	public function processProductAttribute()

@@ -66,9 +66,6 @@ class AdminTrackingControllerCore extends AdminController
 				$this->clearListOptions();
 				$this->content .= call_user_func(array($this,$matches[0]));
 			}
-		
-		$this->content .= $this->getCustomListProductsDisabled();
-
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
