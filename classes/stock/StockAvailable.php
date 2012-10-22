@@ -484,7 +484,7 @@ class StockAvailableCore extends ObjectModel
 				$stock_available->id_product_attribute = (int)$id_product_attribute;
 				$stock_available->quantity = (int)$quantity;
 
-				$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
+				$shop_group = new ShopGroup((int)Shop::getGroupFromShop((int)$id_shop));
 		
 				// if quantities are shared between shops of the group
 				if ($shop_group->share_stock)
@@ -494,8 +494,8 @@ class StockAvailableCore extends ObjectModel
 				}
 				else
 				{
-					$stock_available->id_shop = $id_shop;
-					$stock_available->id_shop_group = Shop::getGroupFromShop($id_shop);
+					$stock_available->id_shop = (int)$id_shop;
+					$stock_available->id_shop_group = 0;
 				}
 				$stock_available->add();
 			}
