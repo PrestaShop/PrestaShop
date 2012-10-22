@@ -154,6 +154,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
 			'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
 			'order' => $this->order,
+			'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
 			'is_order_slip' => true
 		));
 
@@ -205,8 +206,17 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 				}
 				$tmp_tax_infos[(string)number_format($tax_rate, 3)] = $infos;
 			}
-
 		}
+		
+		// Delete ecotax from the total
+		$ecotax =  $this->order_slip->getEcoTaxTaxesBreakdown();
+		if ($ecotax)
+			foreach ($tmp_tax_infos as $rate => &$row)
+			{
+				$row['total_price_tax_excl'] -= $ecotax[$rate]['ecotax_tax_excl'];
+				$row['total_amount'] -= ($ecotax[$rate]['ecotax_tax_incl'] - $ecotax[$rate]['ecotax_tax_excl']);
+			}
+		
 		return $tmp_tax_infos;
 	}
 
