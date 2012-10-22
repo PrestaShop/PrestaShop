@@ -35,9 +35,9 @@
 	var currencyBlank = '{$currencyBlank|intval}';
 	var id_carrier = '{$id_carrier|intval}';
 	var id_state = '{$id_state|intval}';
-	var SE_RedirectTS = "{l s='Refreshing page and updating cart…' mod='carriercompare'}";
-	var SE_RefreshStateTS = "{l s='Checking available states…' mod='carriercompare'}";
-	var SE_RetrievingInfoTS = "{l s='Retrieving information…' mod='carriercompare'}";
+	var SE_RedirectTS = "{l s='Refreshing page and updating cart...' mod='carriercompare'}";
+	var SE_RefreshStateTS = "{l s='Checking available states...' mod='carriercompare'}";
+	var SE_RetrievingInfoTS = "{l s='Retrieving information...' mod='carriercompare'}";
 	var SE_RefreshMethod = {$refresh_method};
 
 	var txtFree = "{l s='Free!' mod='carriercompare'}";
@@ -101,7 +101,7 @@
 		
 		<p class="SE_SubmitRefreshCard">
 			<input class="exclusive_large" id="carriercompare_submit" type="submit" name="carriercompare_submit" value="{l s='Update Cart' mod='carriercompare'}"/>
-			<input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Update carrier list'}" />
+			<input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Update carrier list' mod='carriercompare'}" />
 		</p>
 	</fieldset>
 </form>

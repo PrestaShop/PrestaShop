@@ -30,14 +30,17 @@
 {if $ajax_allowed}
 <script type="text/javascript">
 var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
+var img_dir = '{$img_dir}';
+</script>
+{/if}
+<script type="text/javascript">
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
 var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
 var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart'}';
-var img_dir = '{$img_dir}';
 </script>
-{/if}
+
 
 <!-- MODULE Block cart -->
 <div id="cart_block" class="block exclusive">

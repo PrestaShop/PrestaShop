@@ -1380,14 +1380,14 @@ class BlockLayered extends Module
 
 	public function hookCategoryDeletion($params)
 	{
-		$layered_filter_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter');
+		$layered_filter_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter');
 		foreach ($layered_filter_list as $layered_filter)
 		{
-			$data = self::unSerialize($layered_filter_list['filters']);
+			$data = self::unSerialize($layered_filter['filters']);
 			if (in_array((int)$params['category']->id, $data['categories']))
 			{
 				unset($data['categories'][array_search((int)$params['category']->id, $data['categories'])]);
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'layered_filter` SET `filters` = \''.pSQL(serialize($data)).'\'');
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'layered_filter` SET `filters` = \''.pSQL(serialize($data)).'\' WHERE `id_layered_filter` = '.(int)$layered_filter['id_layered_filter'].'');
 			}
 		}
 		$this->buildLayeredCategories();
@@ -3959,7 +3959,7 @@ class BlockLayered extends Module
 		`filter_show_limit` int(10) UNSIGNED NOT NULL DEFAULT 0,
 		PRIMARY KEY (`id_layered_category`),
 		KEY `id_category` (`id_category`,`type`)
-		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;'); /* MyISAM + latin1 = Smaller/faster */
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;'); /* MyISAM + latin1 = Smaller/faster */
 		
 		Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter` (

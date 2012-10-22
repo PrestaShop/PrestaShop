@@ -59,7 +59,9 @@ class ParentOrderControllerCore extends FrontController
 		// Redirect to the good order process
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Dispatcher::getInstance()->getController() != 'order')
 			Tools::redirect('index.php?controller=order');
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc')
+			
+		//if getMobileDevice is on a mobile or a tablet we don't redirect to OPC
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc' && !$this->context->getMobileDevice())
 		{
 			if (isset($_GET['step']) && $_GET['step'] == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');

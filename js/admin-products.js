@@ -1584,9 +1584,6 @@ $(document).ready(function() {
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
 		.live("change", function(e)
 		{
-			if(typeof e == KeyboardEvent)
-				if(isArrowKey(e))
-					return;
 			$(this).trigger("handleSaveButtons");
 		});
 	// bind that custom event
