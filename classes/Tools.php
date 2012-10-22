@@ -658,6 +658,8 @@ class ToolsCore
 
 	public static function safePostVars()
 	{
+		if (!is_array($_POST))
+			return array();
 		$_POST = array_map(array('Tools', 'htmlentitiesUTF8'), $_POST);
 	}
 

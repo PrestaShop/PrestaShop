@@ -24,7 +24,7 @@ function update_stock_mvt_reason()
 
 	//Recreate new standards movements
 	Db::getInstance()->execute('
-		INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`)
+		INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`)
 		VALUES
 			(1, 1, NOW(), NOW()),
 			(2, -1, NOW(), NOW()),
@@ -37,7 +37,7 @@ function update_stock_mvt_reason()
 	');
 
 	Db::getInstance()->execute("
-		INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+		INSERT INTO `"._DB_PREFIX_."stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
 		VALUES
 			(1, 1, 'Increase'),
 			(1, 2, 'Augmenter'),
@@ -87,7 +87,7 @@ function update_stock_mvt_reason()
 		foreach ($mvts as $mvt)
 		{
 			Db::getInstance()->execute('
-				INSERT INTO `PREFIX_stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
+				INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
 				VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
 			');
 
@@ -99,7 +99,7 @@ function update_stock_mvt_reason()
 					continue;
 
 				Db::getInstance()->execute('
-					INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+					INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
 					VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
 				');
 			}

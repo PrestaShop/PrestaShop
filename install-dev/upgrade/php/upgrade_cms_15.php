@@ -36,7 +36,7 @@ function upgrade_cms_15()
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id_cms`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;');
+) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8;');
 
 	// /!\ : _cms_shop and _cms are wrong tables name (fixed in 1.5.0.12.sql : upgrade_cms_15_rename() )
 	$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'_cms_shop` (id_shop, id_cms)

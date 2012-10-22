@@ -1172,8 +1172,12 @@ class OrderCore extends ObjectModel
 		{
 			$number = (int)Configuration::get('PS_DELIVERY_NUMBER');
 			if (!$number)
-				throw new PrestaShopException('Invalid delivery number');
-
+			{
+				//if delivery number is not set or wrong, we set a default one.
+				Configuration::updateValue('PS_DELIVERY_NUMBER', 1);
+				$number = 1;
+			}
+				
 			// Set delivery number on invoice
 			$order_invoice->delivery_number = $number;
 			$order_invoice->delivery_date = date('Y-m-d H:i:s');
