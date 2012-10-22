@@ -514,7 +514,7 @@ class AdminLanguagesControllerCore extends AdminController
 	protected function checkEmployeeIdLang($current_id_lang)
 	{
 		//update employee lang if current id lang is disabled
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
 	}
 }
 
