@@ -224,7 +224,7 @@ class DispatcherCore
 		$this->setRequestUri();
 
 		// Switch language if needed (only on front)
-		if ($this->front_controller == self::FC_FRONT)
+		if (in_array($this->front_controller, array(self::FC_FRONT, self::FC_MODULE)))
 			Tools::switchLanguage();
 
 		if (Language::isMultiLanguageActivated())
