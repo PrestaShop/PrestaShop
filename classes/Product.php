@@ -930,7 +930,7 @@ class ProductCore extends ObjectModel
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
-		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add')
+		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
@@ -1853,7 +1853,7 @@ class ProductCore extends ObjectModel
 		if ($nb_products < 1) $nb_products = 10;
 		if (empty($order_by) || $order_by == 'position') $order_by = 'date_add';
 		if (empty($order_way)) $order_way = 'DESC';
-		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add')
+		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add'  || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
@@ -2096,7 +2096,7 @@ class ProductCore extends ObjectModel
 		if ($nb_products < 1) $nb_products = 10;
 		if (empty($order_by) || $order_by == 'position') $order_by = 'price';
 		if (empty($order_way)) $order_way = 'DESC';
-		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add')
+		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add'  || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
