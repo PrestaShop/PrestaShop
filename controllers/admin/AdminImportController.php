@@ -873,7 +873,7 @@ class AdminImportControllerCore extends AdminController
 					$category->parent = $cat_moved[$category->parent];
 				$category->id_parent = $category->parent;
 			}
-			else if (isset($category->parent) && is_string($category->parent))
+			elseif (isset($category->parent) && is_string($category->parent))
 			{
 				$category_parent = Category::searchByName($default_language_id, $category->parent, true);
 				if ($category_parent['id_category'])

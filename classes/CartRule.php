@@ -1112,7 +1112,10 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
+		static $is_feature_active = null;
+		if ($is_feature_active === null)
+			$is_feature_active = (bool)Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
+		return $is_feature_active;
 	}
 	
 	/* When an entity associated to a product rule (product, category, attribute, supplier, manufacturer...) is deleted, the product rules must be updated */

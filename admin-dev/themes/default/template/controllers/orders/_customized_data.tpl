@@ -109,11 +109,29 @@
 					{else}
 						{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id}
 					{/if}
+				</td>				
+				<td align="center" class="cancelCheck standard_refund_fields current-edit" style="display:none">
+					<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$customization['quantity_returned']}" />
+					<input type="hidden" name="totalQty" id="totalQty" value="{$customization['quantity']}" />
+					<input type="hidden" name="productName" id="productName" value="{$product['product_name']}" />
+					{if ((!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN')) AND (int)($customization['quantity_returned']) < (int)($customization['quantity']))}
+						<input type="checkbox" name="id_order_detail[{$product['id_order_detail']}]" id="id_order_detail[{$product['id_order_detail']}]" value="{$product['id_order_detail']}" onchange="setCancelQuantity(this, {$product['id_order_detail']}, {$customization['quantity'] - $product['customizationQuantityTotal'] - $product['product_quantity_reinjected']})" {if ($product['product_quantity_return'] + $product['product_quantity_refunded'] >= $product['product_quantity'])}disabled="disabled" {/if}/>
+					{else}
+					--
+				{/if}
+				</td>
+				<td class="cancelQuantity standard_refund_fields current-edit" style="display:none">
+				{if ($customization['quantity_returned'] + $customization['quantity_refunded'] >= $customization['quantity'])}
+					<input type="hidden" name="cancelQuantity[{$product['id_order_detail']}]" value="0" />
+				{elseif (!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN'))}
+					<input type="text" id="cancelQuantity_{$product['id_order_detail']}" name="cancelQuantity[{$product['id_order_detail']}]" size="2" onclick="selectCheckbox(this);" value="" />0/{$customization['quantity']-$customization['quantity_refunded']}
+				{/if}
 				</td>
 				<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
-					<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProductQuantity[{$k}]" value="0" /> 0/{$customization['quantity']-$product['product_quantity_refunded']}</div>
-					<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</div>
-				</td>
+					<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProductQuantity[{$product['id_order_detail']}]" value="0" />		
+					0/{$customization['quantity']-$customization['quantity_refunded']}
+					</div>
+				<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left">{$currency->prefix}<input type="text" size="3" name="partialRefundProduct[{$product['id_order_detail']}]" />{$currency->suffix}</div>				
 				<td class="edit_product_fields" colspan="2" style="display:none"></td>
 				<td class="product_action" style="text-align:right">
 				</td>

@@ -296,5 +296,26 @@ class OrderSlipCore extends ObjectModel
 			Db::getInstance()->insert('order_slip_detail', $insertOrderSlip);
 		}
 	}
+	
+	public function getEcoTaxTaxesBreakdown()
+	{
+		$ecotax_detail = array(); 
+		foreach ($this->getOrdersSlipDetail((int)$this->id) as $order_slip_details)
+		{
+				$row = Db::getInstance()->getRow('
+					SELECT `ecotax_tax_rate` as `rate`, `ecotax` as `ecotax_tax_excl`, `ecotax` as `ecotax_tax_incl`, `product_quantity`
+					FROM `'._DB_PREFIX_.'order_detail`
+					WHERE `id_order_detail` = '.(int)$order_slip_details['id_order_detail']
+				);
+				
+			if (!isset($ecotax_detail[$row['rate']]))
+				$ecotax_detail[$row['rate']] = array('ecotax_tax_incl' => 0, 'ecotax_tax_excl' => 0, 'rate' => $row['rate']);
+
+			$ecotax_detail[$row['rate']]['ecotax_tax_incl'] += Tools::ps_round(($row['ecotax_tax_excl'] * $order_slip_details['product_quantity']) + ($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'] * $row['rate'] / 100), 2);
+			$ecotax_detail[$row['rate']]['ecotax_tax_excl'] += Tools::ps_round($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'], 2);
+		}
+
+		return $ecotax_detail;
+	}
 }
 
