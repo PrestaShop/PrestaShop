@@ -364,6 +364,9 @@ class CurrencyCore extends ObjectModel
 					}
 			}
 
+			if (!isset($rate))
+				$rate = 1;
+
 			$this->conversion_rate = round($rate / $conversion_rate, 6);
 		}
 		$this->update();
