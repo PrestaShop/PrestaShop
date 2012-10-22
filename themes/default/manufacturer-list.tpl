@@ -64,7 +64,7 @@
 					</h3>
 					<p class="description rte">
 					{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
-						{$manufacturer.description}
+						{$manufacturer.short_description}
 					{if $manufacturer.nb_products > 0}</a>{/if}
 					<br />
 					{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}">{/if}
