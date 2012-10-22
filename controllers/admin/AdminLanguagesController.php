@@ -294,7 +294,11 @@ class AdminLanguagesControllerCore extends AdminController
 					else if ($object->id == $this->context->language->id)
 						$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 					else if ($this->deleteNoPictureImages((int)Tools::getValue('id_lang')) && $object->delete())
+					{
+						$this->checkEmployeeIdLang($object->id);
 						Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
+					}
+						
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.
@@ -315,6 +319,8 @@ class AdminLanguagesControllerCore extends AdminController
 				{
 				 	foreach ($_POST[$this->table.'Box'] as $language)
 				 		$this->deleteNoPictureImages($language);
+				 	if (Validate::isLoadedObject($object = $this->loadObject()))
+				 		$this->checkEmployeeIdLang($object->id);
 					parent::postProcess();
 				}
 			}
@@ -384,7 +390,12 @@ class AdminLanguagesControllerCore extends AdminController
 				if ((int)$object->id == (int)Configuration::get('PS_LANG_DEFAULT'))
 					$this->errors[] = Tools::displayError('You cannot change the status of the default language.');
 				else
+				{
+					if (Validate::isLoadedObject($object))
+						$this->checkEmployeeIdLang($object->id);
 					return parent::postProcess();
+				}
+					
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -498,6 +509,12 @@ class AdminLanguagesControllerCore extends AdminController
 			$this->status = 'error';
 			$this->errors[] = '[TECHNICAL ERROR] Server unreachable';
 		}
+	}
+	
+	protected function checkEmployeeIdLang($current_id_lang)
+	{
+		//update employee lang if current id lang is disabled
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
 	}
 }
 
