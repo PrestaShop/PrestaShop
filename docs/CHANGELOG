@@ -24,6 +24,64 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.2.0 - 17927 (2012-10-23)  #
+####################################
+
+	Added Features:
+
+	[+] CORE : added transaction_id in PaymentModule::validateOrder() in $extra_vars['transaction_id']
+
+	Fixed bugs:
+
+	[-] INSTALLER : fixed bug #PSCFV-4809
+
+	[-] FO : fixed bug #PSCFV-4625
+	[-] FO : fixed bug #PSCFV-4702
+	[-] FO : fixed bug #PSCFV-4946
+	[-] FO : fixed bug #PSCFV-4950
+	[-] FO : fixed bug #PSCFV-5007
+	[-] FO : fixed bug #PSCFV-5048
+
+	[-] BO : fix #PSCFV-4053
+	[-] BO : fix #PSCFV-4764
+	[-] BO : fix #PSCFV-4766
+	[-] BO : fix #PSCFV-4816
+	[-] BO : fix #PSCFV-4846
+	[-] BO : fix #PSCFV-4848
+	[-] BO : fix #PSCFV-4854
+	[-] BO : fix #PSCFV-4862
+	[-] BO : fix #PSCFV-4884
+	[-] BO : fix #PSCFV-4888
+	[-] BO : fix #PSCFV-4901
+	[-] BO : fix #PSCFV-4933 : add recursively index.php file
+	[-] BO : fix #PSCFV-4953
+	[-] BO : fix #PSCFV-4988
+	[-] BO : fix #PSCFV-5008
+	[-] BO : fix #PSCFV-5019
+	[-] BO : fix #PSCFV-5031
+	[-] BO : fixed bug #PSCFV-4209
+	[-] BO : fixed bug #PSCFV-4439
+	[-] BO : fixed bug #PSCFV-4653
+	[-] BO : fixed bug #PSCFV-4674
+	[-] BO : fixed bug #PSCFV-4750
+	[-] BO : fixed bug #PSCFV-4769
+	[-] BO : fixed bug #PSCFV-4865
+
+	[-] Classes : Hook - Display payment method & shop default currency bug fix
+
+	[-] CORE : fixed bug #PSCFV-4595
+	[-] CORE : fixed bug #PSCFV-4759
+	[-] CORE : fixed bug #PSCFV-4860
+	[-] Core : Fix #PSCFV-4986
+
+	[-] MO : fixed bug #PSCFV-4602
+	[-] MO : fixed bug #PSCFV-4829
+	[-] MO : fixed bug #PSCFV-4897
+	[-] MO : fixed bug #PSCFV-4932
+	[-] MO : fixed bug #PSCFV-4952
+
+
+####################################
 #   v1.5.1.0 - 17784 (2012-10-04)  #
 ####################################
 
