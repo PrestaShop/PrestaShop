@@ -245,7 +245,7 @@ class StockAvailableCore extends ObjectModel
 		}
 
 		// In case there are no warehouses, removes product from StockAvailable
-		if (count($ids_warehouse) == 0)
+		if (count($ids_warehouse) == 0 && StockAvailable::dependsOnStock((int)$id_product))
 			Db::getInstance()->update('stock_available', array('quantity' => 0 ), 'id_product = '.(int)$id_product);
 	}
 
