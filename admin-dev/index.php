@@ -31,6 +31,14 @@ define('_PS_ADMIN_DIR_', getcwd());
 require(dirname(__FILE__).'/../config/config.inc.php');
 require(dirname(__FILE__).'/functions.php');
 
+//small test to clear cache after upgrade
+if (Configuration::get('PS_UPGRADE_CLEAR_CACHE'))
+{
+	header('Cache-Control: max-age=0, must-revalidate');
+	header('Expires: Mon, 06 Jun 1985 06:06:00 GMT+1');
+	Configuration::updateValue('PS_UPGRADE_CLEAR_CACHE', 0);
+}
+
 // For retrocompatibility with "tab" parameter
 if (!isset($_GET['controller']) && isset($_GET['tab']))
 	$_GET['controller'] = strtolower($_GET['tab']);
