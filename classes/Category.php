@@ -376,7 +376,7 @@ class CategoryCore extends ObjectModel
 		if (!$this->id_parent)
 			return 0;
 
-		$parent_category = new Category($this->id_parent);
+		$parent_category = new Category((int)$this->id_parent);
 		if (!Validate::isLoadedObject($parent_category))
 			throw new PrestaShopException('Parent category does not exist');
 		return $parent_category->level_depth + 1;

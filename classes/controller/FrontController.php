@@ -1106,7 +1106,7 @@ class FrontControllerCore extends Controller
 		$blocksupplier = Module::getInstanceByName('blocksupplier');
 		$this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
 		$this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
-		$this->context->smarty->assign('voucherAllowed', (int)Configuration::get('PS_VOUCHERS'));
+		$this->context->smarty->assign('voucherAllowed', (int)CartRule::isFeatureActive());
 		$this->context->smarty->assign('display_manufacturer_link', (bool)$blockmanufacturer->active);
 		$this->context->smarty->assign('display_supplier_link', (bool)$blocksupplier->active);
 		$this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
