@@ -604,7 +604,12 @@ class FrontControllerCore extends Controller
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 			{
 				header('HTTP/1.1 503 temporarily overloaded');
-				$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
+				$this->context->smarty->assign(array(
+					'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+					'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
+					'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
+					'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
+				));
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
 				$this->smartyOutputContent($template_dir.'maintenance.tpl');
