@@ -41,7 +41,7 @@
 	</head>
 	<body>
 		<div id="maintenance">
-			 <p><img src="{$content_dir}img/logo.jpg" alt="logo" /><br /><br /></p>
+			 <p><img src="{$logo_url}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /><br /><br /></p>
 			 <p id="message">
 				{l s='In order to perform site maintenance, our online shop has shut down temporarily.'}<br /><br />
 				{l s='We apologize for the inconvenience and ask that you please try again later.'}
