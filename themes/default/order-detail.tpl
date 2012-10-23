@@ -381,7 +381,7 @@
 						<br />
 						{dateFormat date=$message.date_add full=1}
 					</td>
-					<td>{$message.message|nl2br}</td>
+					<td>{$message.message|escape:'htmlall':'UTF-8'|nl2br}</td>
 				</tr>
 			{/foreach}
 			</tbody>

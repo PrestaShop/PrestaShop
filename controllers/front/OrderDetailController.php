@@ -51,13 +51,13 @@ class OrderDetailControllerCore extends FrontController
 		if (Tools::isSubmit('submitMessage'))
 		{
 			$idOrder = (int)(Tools::getValue('id_order'));
-			$msgText = htmlentities(Tools::getValue('msgText'), ENT_COMPAT, 'UTF-8');
+			$msgText = Tools::getValue('msgText');
 
 			if (!$idOrder || !Validate::isUnsignedId($idOrder))
 				$this->errors[] = Tools::displayError('Order is no longer valid');
-			else if (empty($msgText))
+			elseif (empty($msgText))
 				$this->errors[] = Tools::displayError('Message cannot be blank');
-			else if (!Validate::isMessage($msgText))
+			elseif (!Validate::isMessage($msgText))
 				$this->errors[] = Tools::displayError('Message is invalid (HTML is not allowed)');
 			if (!count($this->errors))
 			{
@@ -86,7 +86,7 @@ class OrderDetailControllerCore extends FrontController
 					else
 						$ct = new CustomerThread((int)$id_customer_thread);
 					$cm->id_customer_thread = $ct->id;
-					$cm->message = Tools::htmlentitiesutf8($msgText);
+					$cm->message = $msgText;
 					$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 					$cm->add();
 
@@ -196,6 +196,7 @@ class OrderDetailControllerCore extends FrontController
 					'customizedDatas' => $customizedDatas
 					/* DEPRECATED: customizedDatas @since 1.5 */
 				));
+
 				if ($carrier->url && $order->shipping_number)
 					$this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
 				$this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Hook::exec('displayOrderDetail', array('order' => $order)));
