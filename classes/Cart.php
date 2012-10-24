@@ -488,7 +488,7 @@ class CartCore extends ObjectModel
 				'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.id_product_attribute AND cu.id_cart='.(int)$this->id);
 		}
 		else
-			$sql->select('0 AS customization_quantity, 0 AS id_customization');
+			$sql->select('NULL AS customization_quantity, NULL AS id_customization');
 
 		if (Combination::isFeatureActive())
 		{
