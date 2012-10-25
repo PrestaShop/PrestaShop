@@ -342,7 +342,7 @@ class Blocktopmenu extends Module
 
 		$this->_html .= '
 		<fieldset>
-			<legend>tptptp<img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
+			<legend><img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
 
 				';
