@@ -508,7 +508,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if (!in_array($this->display, array('edit', 'add')))
 			$this->multishop_context_group = false;
-		if (Tools::isSubmit('forcedeleteImage') || isset($_FILES['image']))
+		if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0))
 		{
 			$this->processForceDeleteImage();
 			if (Tools::isSubmit('forcedeleteImage'))
