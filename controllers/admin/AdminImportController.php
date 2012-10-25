@@ -763,7 +763,7 @@ class AdminImportControllerCore extends AdminController
 					$entity->{$key}[$id_lang_tmp] = $value;
 		}
 		else
-			if (!empty($infos))
+			if (!empty($infos) || $infos == '0') // ($infos == '0') => if you want to disable a product by using "0" in active because empty('0') return true 
 				$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
 
 		return true;
