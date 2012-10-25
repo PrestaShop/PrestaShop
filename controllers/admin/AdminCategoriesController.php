@@ -565,23 +565,28 @@ class AdminCategoriesControllerCore extends AdminController
 	
 	protected function processBulkDelete()
 	{
-		$cats_ids = array();
-		foreach (Tools::getValue($this->table.'Box') as $id_category)
+		if ($this->tabAccess['delete'] === '1')
 		{
-			$category = new Category((int)$id_category);
-			if (!$category->isRootCategoryForAShop())
-				$cats_ids[$category->id] = $category->id_parent;
-		}
-		
-		if (parent::processBulkDelete())
-		{
-				$this->setDeleteMode();
-				foreach ($cats_ids as $id => $id_parent)
-					$this->processFatherlessProducts((int)$id_parent);
-				return true;
+			$cats_ids = array();
+			foreach (Tools::getValue($this->table.'Box') as $id_category)
+			{
+				$category = new Category((int)$id_category);
+				if (!$category->isRootCategoryForAShop())
+					$cats_ids[$category->id] = $category->id_parent;
+			}
+	
+			if (parent::processBulkDelete())
+			{
+					$this->setDeleteMode();
+					foreach ($cats_ids as $id => $id_parent)
+						$this->processFatherlessProducts((int)$id_parent);
+					return true;
+			}
+			else
+				return false;
 		}
 		else
-			return false;
+			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 	}
 	
 	public function processDelete()
