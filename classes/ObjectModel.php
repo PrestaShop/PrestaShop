@@ -1414,7 +1414,12 @@ abstract class ObjectModelCore
 	{
 		$reflection = new ReflectionClass($class);
 		$definition = $reflection->getStaticPropertyValue('definition');
-		$definition['classname'] = $class;
+
+		if (is_object($class))
+			$definition['classname'] = get_class($class);
+		else
+			$definition['classname'] = $class;
+
 		if (!empty($definition['multilang']))
 			$definition['associations'][Collection::LANG_ALIAS] = array(
 				'type' => self::HAS_MANY,
