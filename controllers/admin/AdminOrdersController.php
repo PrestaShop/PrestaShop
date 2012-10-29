@@ -1474,14 +1474,14 @@ class AdminOrdersControllerCore extends AdminController
 	public function ajaxProcessAddProductOnOrder()
 	{
 		// Load object
-		$order = new Order(Tools::getValue('id_order'));
+		$order = new Order((int)Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t load Order object')
 			)));
 
-		if ($order->hasBeenDelivered())
+		if ($order->hasBeenShipped())
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t add a product on delivered order')
@@ -1702,10 +1702,12 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Get the last product
 		$product = end($products);
-		$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
+		$resume = OrderSlip::getProductSlipResume((int)$product['id_order_detail']);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+		$product['return_history'] = OrderReturn::getProductReturnDetail((int)$product['id_order_detail']);
+		$product['refund_history'] = OrderSlip::getProductSlipDetail((int)$product['id_order_detail']);
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
