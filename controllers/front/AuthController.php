@@ -399,6 +399,8 @@ class AuthControllerCore extends FrontController
 				if (Tools::isSubmit('newsletter'))
 					$this->processCustomerNewsletter($customer);
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
+				if (!Validate::isBirthDate($customer->birthday))
+					$this->errors[] = Tools::displayError('Invalid birthday.');
 				$customer->active = 1;
 				// New Guest customer
 				if (Tools::isSubmit('is_new_customer'))
@@ -498,7 +500,9 @@ class AuthControllerCore extends FrontController
 				$this->processCustomerNewsletter($customer);
 
 			$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
-			
+			if (!Validate::isBirthDate($customer->birthday))
+					$this->errors[] = Tools::displayError('Invalid birthday.');
+
 			if (!count($this->errors))
 			{
 				// if registration type is in one step, we save the address
