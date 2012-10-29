@@ -25,7 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_MODE_DEV_', true);
 define('_PS_DEBUG_PROFILING_', false);
 define('_PS_MODE_DEMO_', false);
 
