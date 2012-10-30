@@ -191,7 +191,6 @@ class AdminStoresControllerCore extends AdminController
 					'label' => $this->l('City'),
 					'name' => 'city',
 					'size' => 33,
-					'class' => 'uppercase',
 					'required' => true
 				),
 				array(
@@ -332,7 +331,7 @@ class AdminStoresControllerCore extends AdminController
 		{
 			/* Cleaning fields */
 			foreach ($_POST as $kp => $vp)
-				if ($kp != 'checkBoxShopAsso_store')
+				if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store')))
 					$_POST[$kp] = trim($vp);
 
 			/* If the selected country does not contain states */
