@@ -228,7 +228,7 @@
 				delay: 100,
 				minChars: 3,
 				autoFill: true,
-				max:20,
+				max:100,
 				matchContains: true,
 				mustMatch:false,
 				scroll:false,
