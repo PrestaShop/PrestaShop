@@ -334,6 +334,10 @@ class AdminStoresControllerCore extends AdminController
 				if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store')))
 					$_POST[$kp] = trim($vp);
 
+			/* Rewrite latitude and longitude to 8 digits */
+			$_POST['latitude'] = number_format($_POST['latitude'], 8)
+			$_POST['longitude'] = number_format($_POST['longitude'], 8);
+
 			/* If the selected country does not contain states */
 			$id_state = (int)Tools::getValue('id_state');
 			$id_country = (int)Tools::getValue('id_country');
