@@ -55,6 +55,9 @@ body{
 	color:#222;
 	background:#fff
 }
+body.content_only {
+	background: #FFF;
+}
 
 /* positionnement ****************************************************************************** */
 .hidden {display:none}
