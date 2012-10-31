@@ -123,6 +123,7 @@ class AdminImportControllerCore extends AdminController
 					'attribute' => array(
 						'label' => $this->l('Value (Value:Position)').'*'
 					),
+					'supplier_reference' => array('label' => $this->l('Supplier reference')),
 					'reference' => array('label' => $this->l('Reference')),
 					'ean13' => array('label' => $this->l('EAN13')),
 					'upc' => array('label' => $this->l('UPC')),
