@@ -1940,7 +1940,7 @@ class AdminProductsControllerCore extends AdminController
 	public function updateDownloadProduct($product, $edit = 0)
 	{
 		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
-
+		$product->setDefaultAttribute(0);//reset cache_default_attribute
 		// add or update a virtual product
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
@@ -4104,7 +4104,7 @@ class AdminProductsControllerCore extends AdminController
 	public function updatePackItems($product)
 	{
 		Pack::deleteItems($product->id);
-
+		$product->setDefaultAttribute(0);//reset cache_default_attribute
 		// lines format: QTY x ID-QTY x ID
 		if (Tools::getValue('type_product') == Product::PTYPE_PACK)
 		{
