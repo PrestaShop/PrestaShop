@@ -2204,7 +2204,7 @@ class CartCore extends ObjectModel
 	{
 		$elm = explode($delimiter, $string);
 		$max = max($elm);
-		return strlen($max).join(str_repeat('0', strlen($max) + 1), $elm);
+		return strlen($max).implode(str_repeat('0', strlen($max) + 1), $elm);
 	}
 
 	/**
@@ -2213,9 +2213,9 @@ class CartCore extends ObjectModel
 	public static function desintifier($int, $delimiter = ',')
 	{
 		$delimiter_len = $int[0];
-		$int = substr($int, 1);
+		$int = strrev(substr($int, 1));
 		$elm = explode(str_repeat('0', $delimiter_len + 1), $int);
-		return join($delimiter, $elm);
+		return strrev(implode($delimiter, $elm));
 	}
 
 	/**
