@@ -77,7 +77,7 @@ class CombinationCore extends ObjectModel
 			'price' => 				array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
 			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
 			'weight' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
-			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20),
+			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
 			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
 			'default_on' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isBool'),
 			'available_date' => 	array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
