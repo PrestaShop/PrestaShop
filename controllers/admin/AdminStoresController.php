@@ -335,7 +335,7 @@ class AdminStoresControllerCore extends AdminController
 					$_POST[$kp] = trim($vp);
 
 			/* Rewrite latitude and longitude to 8 digits */
-			$_POST['latitude'] = number_format($_POST['latitude'], 8)
+			$_POST['latitude'] = number_format($_POST['latitude'], 8);
 			$_POST['longitude'] = number_format($_POST['longitude'], 8);
 
 			/* If the selected country does not contain states */
