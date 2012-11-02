@@ -283,7 +283,8 @@ class Editorial extends Module
 		$id_shop = (int)$this->context->shop->id;
 		$editorial = EditorialClass::getByIdShop($id_shop);
 		$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
-
+		if (!$editorial)
+			return;
 		$this->smarty->assign(array(
 				'editorial' => $editorial,
 				'default_lang' => (int)$this->context->language->id,
