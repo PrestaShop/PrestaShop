@@ -566,6 +566,7 @@ class AdminCarriersControllerCore extends AdminController
 						Warehouse::removeCarrier($id);
 				}
 				parent::postProcess();
+				Carrier::cleanPositions();
 			}
 		}
 	}
