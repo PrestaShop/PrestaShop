@@ -1473,13 +1473,19 @@ abstract class ObjectModelCore
 		else
 		{
 			$this->def['fields'] = array();
-			$suffix = (isset($data['lang']) && $data['lang']) ? 'Lang' : '';
-			foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
-				$this->def['fields'][$field]['validate'] = $validate;
-			foreach ($this->{'fieldsRequired'.$suffix} as $field)
-				$this->def['fields'][$field]['required'] = true;
-			foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
-				$this->def['fields'][$field]['size'] = $size;
+			$suffixs = array('', 'Lang');
+			foreach($suffixs as $suffix)
+			{
+				foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
+					$this->def['fields'][$field]['validate'] = $validate;
+				
+				foreach ($this->{'fieldsRequired'.$suffix} as $field)
+					$this->def['fields'][$field]['required'] = true;
+				
+				foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
+					$this->def['fields'][$field]['size'] = $size;
+
+			}
 		}
 	}
 
