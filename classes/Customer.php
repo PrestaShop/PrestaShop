@@ -171,7 +171,7 @@ class CustomerCore extends ObjectModel
 			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'siret' =>						array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
 			'ape' =>						array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
-			'outstanding_allow_amount' =>	array('type' => self::TYPE_INT, 'validate' => 'isFloat', 'copy_post' => false),
+			'outstanding_allow_amount' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false),
 			'show_public_prices' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
 			'id_risk' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false),
 			'max_payment_days' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false),
