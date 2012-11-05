@@ -551,7 +551,7 @@ CREATE TABLE `PREFIX_customer` (
   `newsletter_date_add` datetime default NULL,
   `optin` tinyint(1) unsigned NOT NULL default '0',
   `website` varchar(128),
-  `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default '0.00',
+  `outstanding_allow_amount` DECIMAL( 20,6 ) NOT NULL default '0.00',
   `show_public_prices` tinyint(1) unsigned NOT NULL default '0',
   `max_payment_days` int(10) unsigned NOT NULL default '60',
   `secure_key` varchar(32) NOT NULL default '-1',
