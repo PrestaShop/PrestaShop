@@ -349,7 +349,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$ids_shop[] = $shop['id_shop'];
 
 		// loads current carriers associated with this warehouse
-		$carriers = $obj->getCarriers();
+		$carriers = $obj->getCarriers(true);
 
 		// if an address is available : force specific fields values
 		if ($address != null)

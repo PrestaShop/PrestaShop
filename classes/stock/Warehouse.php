@@ -132,12 +132,15 @@ class WarehouseCore extends ObjectModel
 	 *
 	 * @return array Ids of the associated carriers
 	 */
-	public function getCarriers()
+	public function getCarriers($return_reference = false)
 	{
 		$ids_carrier = array();
 
 		$query = new DbQuery();
-		$query->select('c.id_carrier');
+		if ($return_reference)
+			$query->select('wc.id_carrier');
+		else
+			$query->select('c.id_carrier');
 		$query->from('warehouse_carrier', 'wc');
 		$query->innerJoin('carrier', 'c', 'c.id_reference = wc.id_carrier');
 		$query->where($this->def['primary'].' = '.(int)$this->id);
