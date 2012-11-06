@@ -441,6 +441,8 @@ class StockAvailableCore extends ObjectModel
 				   	'quantity' => $stock_available->quantity
 				   )
 				  );
+
+		return true;
 	}
 
 
