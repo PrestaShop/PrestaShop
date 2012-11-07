@@ -31,8 +31,6 @@ class AdminSlipControllerCore extends AdminController
 	{
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
-		$this->addRowAction('delete');
-
 		$this->fields_list = array(
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
@@ -48,10 +46,18 @@ class AdminSlipControllerCore extends AdminController
 				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
- 			)
- 		);
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+ 			),
+ 			'id_pdf' => array(
+				'title' => $this->l('PDF'),
+				'width' => 35,
+				'align' => 'center',
+				'callback' => 'printPDFIcons',
+				'orderby' => false,
+				'search' => false,
+				'remove_onclick' => true)
+		);
 
+		$this->_select = 'a.id_order_slip AS id_pdf';
 		$this->optionTitle = $this->l('Slip');
 
 		parent::__construct();
@@ -138,6 +144,20 @@ class AdminSlipControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Generate PDF file')
 		);
+	}
+	
+	public function printPDFIcons($id_order_slip, $tr)
+	{
+		$order_slip = new OrderSlip((int)$id_order_slip);
+		if (!Validate::isLoadedObject($order_slip))
+			return '';
+
+		$this->context->smarty->assign(array(
+			'order_slip' => $order_slip,
+			'tr' => $tr
+		));
+
+		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
 }
 
