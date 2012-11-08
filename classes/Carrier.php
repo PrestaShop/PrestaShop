@@ -1182,17 +1182,19 @@ class CarrierCore extends ObjectModel
 		if ($id_warehouse)
 		{
 			$warehouse = new Warehouse($id_warehouse);
-			$carrier_list = $warehouse->getCarriers();
+			$warehouse_carrier_list = $warehouse->getCarriers();
 		}
 
-		if (empty($carrier_list)) // No carriers defined, get all available carriers
-		{
-			$carrier_list = array();
-			$customer = new Customer($cart->id_customer);
-			$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
-			foreach ($carriers as $carrier)
-				$carrier_list[] = $carrier['id_carrier'];
-		}
+		$available_carrier_list = array();
+		$customer = new Customer($cart->id_customer);
+		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
+		foreach ($carriers as $carrier)
+			$available_carrier_list[] = $carrier['id_carrier'];
+
+		if (empty($warehouse_carrier_list))
+			$carrier_list = $available_carrier_list;
+		else
+			$carrier_list = array_intersect($warehouse_carrier_list, $available_carrier_list);
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
