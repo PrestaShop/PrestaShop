@@ -488,14 +488,29 @@ class AdminImagesControllerCore extends AdminController
 			{
 				$imageObj = new Image($image['id_image']);
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
+				{
 					foreach ($type as $imageType)
 					{
-						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
-							if (!ImageManager::resize($dir.$imageObj->getExistingImgPath().'.jpg', $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
-								$errors = true;
-						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
-							return 'timeout';
+						$existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
+						
+						if (!file_exists($existing_img)) //test if original file exist
+						{
+							$errors = true;
+							$this->errors[] = Tools::displayError('Can\'t find original image '.$dir.$imageObj->getExistingImgPath().'.jpg');
+						}
+						else
+						{
+							if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
+							{
+								if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+								{
+									$errors = true;
+									$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) or bad permission on folder'), $existing_img);
+								}
+							}	
+						}
 					}
+				}
 			}
 		}
 
@@ -594,7 +609,7 @@ class AdminImagesControllerCore extends AdminController
 			if ($deleteOldImages)
 				$this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
 			if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true)
-				$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions.'), $proc['type']);
+				$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions %s.'), $proc['type'], $proc['dir']);
 			elseif ($return == 'timeout')
 				$this->errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
 			else
