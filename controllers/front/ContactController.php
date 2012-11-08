@@ -181,7 +181,21 @@ class ContactControllerCore extends FrontController
 						if ($cm->add())
 						{
 							if (empty($contact->email))
-								Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), array('{message}' => stripslashes($message)), $from);
+							{
+								$var_list = array(
+									'{order_name}' => '-',
+									'{attached_file}' => '-',
+									'{message}' => stripslashes($message)
+								);
+								if ($ct->id_order)
+								{
+									$order = new Order($ct->id_order);
+									$var_list['{order_name}'] = $order->reference;
+								}
+								if (isset($filename))
+									$var_list['{attached_file}'] = $_FILES['fileUpload']['name'];
+								Mail::Send($this->context->language->id, 'contact_form', Mail::l('Your message has been correctly sent'), $var_list, $from);
+							}
 							$this->context->smarty->assign('confirmation', 1);
 						}
 						else
