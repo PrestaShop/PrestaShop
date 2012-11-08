@@ -1839,17 +1839,21 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($files_by_directory['php'] as $dir => $files)
 			foreach ($files as $file)
 			{
-				if (!preg_match('/\.php$/', $file) || $file == 'index.php')
+				$exclude_files  = array('index.php', 'Autoload.php', 'StockManagerInterface.php',
+					'TaxManagerInterface.php', 'WebserviceOutputInterface.php', 'WebserviceSpecificManagementInterface.php');
+				
+				if (!preg_match('/\.php$/', $file) || in_array($file, $exclude_files))
 					continue;
-				include_once($dir.$file);
-				$prefix_key = substr($file, 0, -4);
-				if (!class_exists($prefix_key))
-					continue;
-				if (!is_subclass_of($prefix_key, 'ObjectModel'))
-					continue;
-				$class_array[$prefix_key] = call_user_func(array($prefix_key, 'getValidationRules'), $prefix_key);
-			}
 
+				$class_name = substr($file, 0, -4);	
+
+				if (!class_exists($class_name, false))
+					Autoload::getInstance()->load($class_name);
+
+				if (!is_subclass_of($class_name.'Core', 'ObjectModel'))
+					continue;
+				$class_array[$class_name] = call_user_func(array($class_name, 'getValidationRules'), $class_name);
+			}
 		foreach ($class_array as $prefix_key => $rules)
 		{
 			if (isset($rules['validate']))
