@@ -25,23 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* Debug only */
-define('_PS_MODE_DEV_', true);
-if (_PS_MODE_DEV_)
-{
-	@ini_set('display_errors', 'on');	
-	define('_PS_DEBUG_SQL_', true);
-}
-else
-{
-	@ini_set('display_errors', 'off');
-	define('_PS_DEBUG_SQL_', false);
-}
-
+require_once(dirname(__FILE__).'/defines.inc.php');
 $start_time = microtime(true);
-
-/* Compatibility warning */
-define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
 
 /* SSL configuration */
 define('_PS_SSL_PORT_', 443);
@@ -66,7 +51,7 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 }
 
 require_once(dirname(__FILE__).'/settings.inc.php');
-require_once(dirname(__FILE__).'/defines.inc.php');
+
 require_once(dirname(__FILE__).'/autoload.php');
 
 if (_PS_DEBUG_PROFILING_)
