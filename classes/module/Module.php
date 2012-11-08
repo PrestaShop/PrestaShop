@@ -444,6 +444,8 @@ abstract class ModuleCore
 			self::$modules_cache[$module_name]['upgrade']['success'] = true;
 			Module::upgradeModuleVersion($module_name, $module_version);
 		}
+		
+		usort($list, 'ps_module_version_sort');
 
 		// Set the list to module cache
 		self::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
@@ -1971,3 +1973,7 @@ abstract class ModuleCore
 	}
 }
 
+function ps_module_version_sort($a, $b)
+{
+	return version_compare($a['version'], $b['version']);
+}
