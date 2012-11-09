@@ -172,7 +172,7 @@ class DiscountCore extends CartRule
 	  */
 	public static function getVouchersToCartDisplay($id_lang, $id_customer)
 	{
-		return array();
+		return CartRule::getCustomerCartRules($id_lang, $id_customer);
 	}
 
 	/**

@@ -805,7 +805,7 @@ table#cart_summary #total_price_container {
 	font-weight:normal;
 	border-top:1px dotted #ccc
 }
-.cart_voucher #display_cart_vouchers .title_offers {margin-top:10px}
+.cart_voucher .title_offers {margin-top:10px}
 .cart_voucher #display_cart_vouchers span {font-weight:bold}
 .cart_voucher input.discount_name {
 	padding:0 5px;
