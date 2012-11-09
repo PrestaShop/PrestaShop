@@ -90,7 +90,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<button class="ui-btn-hidden" type="submit" aria-disabled="false" data-theme="a" name="submitMessage" id="submitMessage">Envoyer</button>
+				<button class="ui-btn-hidden" type="submit" aria-disabled="false" data-theme="a" name="submitMessage" id="submitMessage">{l s='Send'}</button>
 			</fieldset>
 		</form> 
 		
