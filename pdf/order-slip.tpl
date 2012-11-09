@@ -76,7 +76,7 @@
 			{$order->getUniqReference()}<br />
 			<br />
 			<b>{l s='Order Date:' pdf='true'}</b><br />
-			{$order->date_add|date_format:"%d-%m-%Y %H:%M"}<br />
+			{dateFormat date=$order->date_add full=0}<br />
 			<br />
 			<b>{l s='Payment Method:' pdf='true'}</b><br />
 			{$order->payment}<br />
