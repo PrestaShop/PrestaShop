@@ -159,7 +159,7 @@ CREATE TABLE `PREFIX_image_shop` (
 	PRIMARY KEY (`id_image`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_image_shop` (id_shop, id_image) (SELECT 1, id_image FROM PREFIX_image);
+INSERT INTO `PREFIX_image_shop` (id_shop, id_image) (SELECT 1, id_image FROM `PREFIX_image`);
 
 CREATE TABLE `PREFIX_attribute_group_shop` (
 `id_attribute` INT(11) UNSIGNED NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE `PREFIX_attribute_group_shop` (
 	PRIMARY KEY (`id_attribute`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_attribute_group_shop` (id_group_shop, id_attribute) (SELECT 1, id_attribute FROM PREFIX_attribute);
+INSERT INTO `PREFIX_attribute_group_shop` (id_group_shop, id_attribute) (SELECT 1, id_attribute FROM `PREFIX_attribute`);
 
 CREATE TABLE `PREFIX_feature_group_shop` (
 `id_feature` INT(11) UNSIGNED NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE `PREFIX_feature_group_shop` (
 	PRIMARY KEY (`id_feature`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_feature_group_shop` (id_group_shop, id_feature) (SELECT 1, id_feature FROM PREFIX_feature);
+INSERT INTO `PREFIX_feature_group_shop` (id_group_shop, id_feature) (SELECT 1, id_feature FROM `PREFIX_feature`);
 
 CREATE TABLE `PREFIX_group_group_shop` (
 `id_group` INT( 11 ) UNSIGNED NOT NULL,
@@ -183,7 +183,7 @@ CREATE TABLE `PREFIX_group_group_shop` (
 	PRIMARY KEY (`id_group`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_group_group_shop` (id_group_shop, id_group) (SELECT 1, id_group FROM PREFIX_group);
+INSERT INTO `PREFIX_group_group_shop` (id_group_shop, id_group) (SELECT 1, id_group FROM `PREFIX_group`);
 
 CREATE TABLE `PREFIX_attribute_group_group_shop` (
 `id_attribute_group` INT( 11 ) UNSIGNED NOT NULL ,
@@ -191,7 +191,7 @@ CREATE TABLE `PREFIX_attribute_group_group_shop` (
 	PRIMARY KEY (`id_attribute_group`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_attribute_group_group_shop` (id_group_shop, id_attribute_group) (SELECT 1, id_attribute_group FROM PREFIX_attribute_group);
+INSERT INTO `PREFIX_attribute_group_group_shop` (id_group_shop, id_attribute_group) (SELECT 1, id_attribute_group FROM `PREFIX_attribute_group`);
 
 CREATE TABLE `PREFIX_tax_rules_group_group_shop` (
 	`id_tax_rules_group` INT( 11 ) UNSIGNED NOT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE `PREFIX_zone_group_shop` (
 	PRIMARY KEY (`id_zone`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_zone_group_shop` (id_group_shop, id_zone) (SELECT 1, id_zone FROM PREFIX_zone);
+INSERT INTO `PREFIX_zone_group_shop` (id_group_shop, id_zone) (SELECT 1, id_zone FROM `PREFIX_zone`);
 
 CREATE TABLE `PREFIX_manufacturer_group_shop` (
 `id_manufacturer` INT( 11 ) UNSIGNED NOT NULL ,
@@ -215,7 +215,7 @@ CREATE TABLE `PREFIX_manufacturer_group_shop` (
 	PRIMARY KEY (`id_manufacturer`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_manufacturer_group_shop` (id_group_shop, id_manufacturer) (SELECT 1, id_manufacturer FROM PREFIX_manufacturer);
+INSERT INTO `PREFIX_manufacturer_group_shop` (id_group_shop, id_manufacturer) (SELECT 1, id_manufacturer FROM `PREFIX_manufacturer`);
 
 CREATE TABLE `PREFIX_supplier_group_shop` (
 `id_supplier` INT( 11 ) UNSIGNED NOT NULL,
@@ -223,7 +223,7 @@ CREATE TABLE `PREFIX_supplier_group_shop` (
 PRIMARY KEY (`id_supplier`, `id_group_shop`),
 	KEY `id_group_shop` (`id_group_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_supplier_group_shop` (id_group_shop, id_supplier) (SELECT 1, id_supplier FROM PREFIX_supplier);
+INSERT INTO `PREFIX_supplier_group_shop` (id_group_shop, id_supplier) (SELECT 1, id_supplier FROM `PREFIX_supplier`);
 
 CREATE TABLE `PREFIX_store_shop` (
 `id_store` INT( 11 ) UNSIGNED NOT NULL ,
@@ -231,7 +231,7 @@ CREATE TABLE `PREFIX_store_shop` (
 PRIMARY KEY (`id_store`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_store_shop` (id_shop, id_store) (SELECT 1, id_store FROM PREFIX_store);
+INSERT INTO `PREFIX_store_shop` (id_shop, id_store) (SELECT 1, id_store FROM `PREFIX_store`);
 
 CREATE TABLE `PREFIX_product_shop` (
 `id_product` INT( 11 ) UNSIGNED NOT NULL,
@@ -239,7 +239,7 @@ CREATE TABLE `PREFIX_product_shop` (
 PRIMARY KEY ( `id_shop` , `id_product` ),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_product_shop` (id_shop, id_product) (SELECT 1, id_product FROM PREFIX_product);
+INSERT INTO `PREFIX_product_shop` (id_shop, id_product) (SELECT 1, id_product FROM `PREFIX_product`);
 
 ALTER TABLE `PREFIX_category_lang` ADD `id_shop` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_category`;
 ALTER TABLE `PREFIX_category_lang` ADD UNIQUE KEY( `id_category`, `id_shop`, `id_lang`);
