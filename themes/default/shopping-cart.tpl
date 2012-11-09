@@ -196,7 +196,7 @@
 						<h4 class="title_offers">{l s='Take advantage of our offers:'}</h4>
 						<div id="display_cart_vouchers">
 						{foreach $displayVouchers as $voucher}
-							<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> - {$voucher.name} <br />
+							{if $voucher.code != ''}<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> - {/if}{$voucher.name}<br />
 						{/foreach}
 						</div>
 					{/if}
