@@ -335,7 +335,7 @@ class ParentOrderControllerCore extends FrontController
 			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'lastProductAdded' => $this->context->cart->getLastProduct(),
-			'displayVouchers' => Discount::getVouchersToCartDisplay($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0)),
+			'displayVouchers' => CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0)),
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,

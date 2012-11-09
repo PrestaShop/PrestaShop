@@ -190,16 +190,16 @@
 								<input type="text" class="discount_name" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 							</p>
 							<p class="submit"><input type="hidden" name="submitDiscount" /><input type="submit" name="submitAddDiscount" value="{l s='OK'}" class="button" /></p>
-						{if $displayVouchers}
-							<h4 class="title_offers">{l s='Take advantage of our offers:'}</h4>
-							<div id="display_cart_vouchers">
-							{foreach $displayVouchers as $voucher}
-								<span onclick="$('#discount_name').val('{$voucher.name}');return false;" class="voucher_name">{$voucher.name}</span> - {$voucher.description} <br />
-							{/foreach}
-							</div>
-						{/if}
 						</fieldset>
 					</form>
+					{if $displayVouchers}
+						<h4 class="title_offers">{l s='Take advantage of our offers:'}</h4>
+						<div id="display_cart_vouchers">
+						{foreach $displayVouchers as $voucher}
+							<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> - {$voucher.name} <br />
+						{/foreach}
+						</div>
+					{/if}
 				{/if}
 				</td>
 				{if $use_taxes}
