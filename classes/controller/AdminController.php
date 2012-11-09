@@ -2242,8 +2242,8 @@ class AdminControllerCore extends Controller
 		foreach ($rules['sizeLang'] as $field_lang => $max_length)
 			foreach ($languages as $language)
 			{
-				$field_lang = Tools::getValue($field_lang.'_'.$language['id_lang']);
-				if ($field_lang !== false && Tools::strlen($field_lang) > $max_length)
+				$field_lang_value = Tools::getValue($field_lang.'_'.$language['id_lang']);
+				if ($field_lang_value !== false && Tools::strlen($field_lang_value) > $max_length)
 					$this->errors[] = sprintf(
 						Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
 						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
