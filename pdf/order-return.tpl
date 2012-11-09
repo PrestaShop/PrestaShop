@@ -90,7 +90,7 @@
 			{'%06d'|sprintf:$order_return->id}<br />
 			<br />
 			<b>{l s='Date:' pdf='true'}</b><br />
-			{$order_return->date_add|date_format:"%d-%m-%Y %H:%M"}<br />
+			{dateFormat date=$order_return->date_add full=0}<br />
 			<br />
 			<!-- / CUSTOMER INFORMATIONS -->
 		</td>
