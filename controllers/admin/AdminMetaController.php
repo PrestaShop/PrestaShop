@@ -432,20 +432,26 @@ class AdminMetaControllerCore extends AdminController
 			return;
 
 		$rule = Tools::getValue('PS_ROUTE_'.$route_id);
-		if (!$rule || $rule == $default_routes[$route_id]['rule'])
-		{
-			Configuration::updateValue('PS_ROUTE_'.$route_id, '');
-			return;
-		}
-
-		$errors = array();
-		if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
-		{
-			foreach ($errors as $error)
-				$this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $route_id, htmlspecialchars($rule));
-		}
+		if (!Validate::isRoutePattern($rule))
+			$this->errors[] = sprintf('The route %s is not valide', htmlspecialchars($rule));
 		else
-			Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
+		{
+			if (!$rule || $rule == $default_routes[$route_id]['rule'])
+			{
+				Configuration::updateValue('PS_ROUTE_'.$route_id, '');
+				return;
+			}
+	
+			$errors = array();
+			if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
+			{
+				foreach ($errors as $error)
+					$this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $route_id, htmlspecialchars($rule));
+			}
+			else
+				Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
+		}
+		
 	}
 
 	/**

@@ -32,8 +32,10 @@ function str2url(str,encoding,ucfirst)
 {
 	str = str.toUpperCase();
 	str = str.toLowerCase();
-
-	str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
+	if (PS_ALLOW_ACCENTED_CHARS_URL)
+		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
+	else		
+		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]/g,'');
 	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g,'');
 	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
 

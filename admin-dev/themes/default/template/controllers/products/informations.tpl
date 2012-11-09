@@ -33,6 +33,11 @@
 	<h4 class="tab">1. {l s='Info.'}</h4>
 	<h4>{l s='Product global information'}</h4>
 	<script type="text/javascript">
+		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
+		{else}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 0;
+		{/if}
 		{$combinationImagesJs}
 		{if $check_product_association_ajax}
 				var search_term = '';

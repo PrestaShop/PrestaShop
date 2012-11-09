@@ -975,11 +975,15 @@ class ToolsCore
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
-		if (!function_exists('mb_strtolower'))
+		if (!function_exists('mb_strtolower') || !Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
-		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);
+		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);	
+		else
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+		
 		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
 

@@ -322,9 +322,24 @@ class ValidateCore
 	 */
 	public static function isLinkRewrite($link)
 	{
-		return preg_match('/^[_a-zA-Z0-9\-\pL]+$/u', $link);
+		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+			return preg_match('/^[_a-zA-Z0-9\-\pL]+$/u', $link);
+		return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
 	}
-
+	
+	/**
+	 * Check for a route pattern validity
+	 *
+	 * @param string $pattern to validate
+	 * @return boolean Validity is ok or not
+	 */
+	public static function isRoutePattern($pattern)
+	{
+		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+			return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-\pL]+$/u', $pattern);
+		return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
+	}
+	
 	/**
 	 * Check for a postal address validity
 	 *
