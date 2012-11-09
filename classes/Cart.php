@@ -1677,14 +1677,15 @@ class CartCore extends ObjectModel
 					'in_stock' => array(),
 					'out_of_stock' => array(),
 				);
-
-			// Determine the warehouse to use for this product in order to reduce the number of package
+			
+			$product['carrier_list'] = array();
 			$id_warehouse = 0;
-			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_warehouse => $val)
-				if (in_array((int)$id_warehouse, $product['warehouse_list']))
-					break;
-
-			$id_warehouse = (int)$id_warehouse;
+			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
+			{
+				$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+				if (in_array((int)$id_war, $product['warehouse_list']) && $id_warehouse == 0)
+					$id_warehouse = $id_war;
+			}
 
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
 			{
@@ -1696,8 +1697,6 @@ class CartCore extends ObjectModel
 				$key = 'in_stock';
 			else
 				$key = (!$product['out_of_stock']) ? 'in_stock' : 'out_of_stock';
-
-			$product['carrier_list'] = Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_warehouse, $product['id_address_delivery'], null, $this);
 
 			if (empty($product['carrier_list']))
 				$product['carrier_list'] = array(0);
@@ -1714,7 +1713,6 @@ class CartCore extends ObjectModel
 					'in_stock' => array(),
 					'out_of_stock' => array(),
 				);
-
 			foreach ($products_in_stock_list as $key => $warehouse_list)
 			{
 				if (!isset($grouped_by_carriers[$id_address_delivery][$key]))
@@ -1731,7 +1729,8 @@ class CartCore extends ObjectModel
 						if (!isset($grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key]))
 							$grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key] = array(
 								'product_list' => array(),
-								'carrier_list' => $product['carrier_list']
+								'carrier_list' => $product['carrier_list'],
+								'warehouse_list' => $product['warehouse_list']
 							);
 
 						$grouped_by_carriers[$id_address_delivery][$key][$id_warehouse][$package_carriers_key]['product_list'][] = $product;
@@ -1769,7 +1768,6 @@ class CartCore extends ObjectModel
 					}
 				}
 				arsort($carrier_count);
-
 				foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers)
 				{
 					if (!isset($package_list[$id_address_delivery][$key][$id_warehouse]))
@@ -1783,6 +1781,7 @@ class CartCore extends ObjectModel
 								if (!isset($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]))
 									$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier] = array(
 										'carrier_list' => $data['carrier_list'],
+										'warehouse_list' => $data['warehouse_list'],
 										'product_list' => array(),
 									);
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'] =
@@ -1813,13 +1812,32 @@ class CartCore extends ObjectModel
 						$final_package_list[$id_address_delivery][] = array(
 							'product_list' => $data['product_list'],
 							'carrier_list' => $data['carrier_list'],
+							'warehouse_list' => $data['warehouse_list'],
 							'id_warehouse' => $id_warehouse,
 						);
 					}
 		}
-
 		$cache = $final_package_list;
 		return $final_package_list;
+	}
+
+	public function getPackageIdWarehouse($package, $id_carrier = null)
+	{
+		if ($id_carrier === null)
+			if (isset($package['id_carrier']))
+				$id_carrier = (int)$package['id_carrier'];
+
+		if ($id_carrier == null)
+			return $package['id_warehouse'];
+		
+		foreach ($package['warehouse_list'] as $id_warehouse)
+		{
+			$warehouse = new Warehouse((int)$id_warehouse);
+			$available_warehouse_carriers = $warehouse->getCarriers();
+			if (in_array($id_carrier, $available_warehouse_carriers))
+				return (int)$id_warehouse;
+		}
+		return 0;
 	}
 
 	/**
