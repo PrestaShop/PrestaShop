@@ -2486,12 +2486,7 @@ class CartCore extends ObjectModel
 		// Start with shipping cost at 0
 		$shipping_cost = 0;
 		// If no product added, return 0
-		if ($order_total <= 0
-			&& (
-				!(Cart::getNbProducts($this->id) && is_null($product_list))
-				||
-				(count($product_list) && !is_null($product_list))
-		))
+		if (!count($products))
 		{
 			Cache::store($cache_id, $shipping_cost);
 			return $shipping_cost;
