@@ -397,9 +397,17 @@ class ProductCore extends ObjectModel
 				'fields' => array(
 					'id' => array('required' => true),
 					'id_product_attribute' => array('required' => true),
-			),
+				),
 				'setter' => false
 			),
+			'accessories' => array(
+				'resource' => 'product',
+				'fields' => array(
+					'id' => array(
+						'required' => true,
+						'xlink_resource' => 'product'),
+				)
+			),			
 		),
 	);
 
@@ -4339,6 +4347,39 @@ class ProductCore extends ObjectModel
 		}
 		return true;
 	}
+
+ 	/**
+	* Webservice getter : get product accessories ids of current product for association
+	*
+	* @return array
+	*/
+	public function getWsAccessories()
+	{
+		$result = Db::getInstance()->executeS(
+			'SELECT p.`id_product` AS id
+			FROM `'._DB_PREFIX_.'accessory` a
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product_2)
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE a.`id_product_1` = '.(int)$this->id
+		);
+
+		return $result;
+	}
+	
+	/**
+	* Webservice setter : set product accessories ids of current product for association
+	*
+	* @param $accessories product ids
+	*/
+	public function setWsAccessories($accessories)
+	{
+		foreach ($accessories as $accessory) 
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'accessory` (`id_product_1`, `id_product_2`) VALUES ('.(int)$this->id.', '.(int)$accessory['id'].')');
+		
+		return true;
+	}
+
+       /**
 
 	/**
 	* Webservice getter : get combination ids of current product for association
