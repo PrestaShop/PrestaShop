@@ -2493,7 +2493,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
 		$default_i18n_file = $i18n_dir.$this->translations_informations[$this->type_selected]['file'];
 
-		if (($this->theme_selected == self::DEFAULT_THEME_NAME) || _PS_MODE_DEV_)
+		if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
 			$i18n_file = $default_i18n_file;
 		else
 		{
@@ -2502,10 +2502,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 
 		$this->checkDirAndCreate($i18n_file);
-		if (!file_exists($i18n_file))
-			$this->errors[] = sprintf(Tools::displayError('Please create a "%1$s.php" file in "%2$s"'), $this->lang_selected->iso_code, $i18n_dir);
-
-		if (!is_writable($i18n_file))
+		if ((!file_exists($i18n_file) && !is_writable($i18n_dir)) && !is_writable($i18n_file))
 			$this->errors[] = sprintf(Tools::displayError('Cannot write into the "%s"'), $i18n_file);
 
 		@include($i18n_file);
