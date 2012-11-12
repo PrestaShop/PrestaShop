@@ -4022,8 +4022,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))
 					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if the product is a pack'))));
 
-				$product->advanced_stock_management = (int)Tools::getValue('value');
-				$product->save();
+				$product->setAdvancedStockManagement((int)Tools::getValue('value'));
 				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
 					StockAvailable::setProductDependsOnStock($product->id, 0);
 				break;
