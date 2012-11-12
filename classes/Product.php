@@ -4978,10 +4978,30 @@ class ProductCore extends ObjectModel
 			$this->out_of_stock = StockAvailable::outOfStock($this->id);
 			$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
 			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1)
-				$this->advanced_stock_management = Db::getInstance()->getValue('SELECT `advanced_stock_management`
-																	FROM '._DB_PREFIX_.'product_shop
-																	WHERE id_product='.(int)$this->id.Shop::addSqlRestriction());
+				$this->advanced_stock_management = $this->useAdvancedStockManagement();
 		}
+	}
+	
+	public function useAdvancedStockManagement()
+	{
+		return Db::getInstance()->getValue('
+					SELECT `advanced_stock_management`
+					FROM '._DB_PREFIX_.'product_shop
+					WHERE id_product='.(int)$this->id.Shop::addSqlRestriction()
+				);
+	}
+	
+	public function setAdvancedStockManagement($value)
+	{
+		$this->advanced_stock_management = (int)$value;
+		if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1)
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'product_shop`
+				SET `advanced_stock_management`='.(int)$value.'
+				WHERE id_product='.(int)$this->id.Shop::addSqlRestriction()
+			);
+		else
+			$this->save();
 	}
 
 	/**
