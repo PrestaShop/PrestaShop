@@ -225,6 +225,7 @@ class WebserviceRequestCore
 			'addresses' => array('description' => 'The Customer, Manufacturer and Customer addresses','class' => 'Address'),
 			'carriers' => array('description' => 'The Carriers','class' => 'Carrier'),
 			'carts' => array('description' => 'Customer\'s carts', 'class' => 'Cart'),
+			'cart_rules' => array('description' => 'Cart rules management', 'class' => 'CartRule'),
 			'categories' => array('description' => 'The product categories','class' => 'Category'),
 			'combinations' => array('description' => 'The product combinations','class' => 'Combination'),
 			'configurations' => array('description' => 'Shop configuration', 'class' => 'Configuration'),
