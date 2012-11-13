@@ -196,7 +196,8 @@ class FrontControllerCore extends Controller
 			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) &&
 					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) &&
 					$cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
-					!FrontController::isInWhitelistForGeolocation())
+					!FrontController::isInWhitelistForGeolocation() &&
+					!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 				unset($this->context->cookie->id_cart, $cart);
 			// update cart values
 			elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency)
@@ -931,16 +932,17 @@ class FrontControllerCore extends Controller
 	protected static function isInWhitelistForGeolocation()
 	{
 		$allowed = false;
-		$userIp = Tools::getRemoteAddr();
+		$user_ip = Tools::getRemoteAddr();
 		$ips = array();
 		// retrocompatibility
 		$ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
 		if (is_array($ips_old) && count($ips_old))
 			foreach ($ips_old as $ip)
 				$ips = array_merge($ips, explode("\n", $ip));
+		$ips = array_map('trim', $ips);
 		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
-				if (!empty($ip) && strpos($userIp, $ip) === 0)
+				if (!empty($ip) && strpos($user_ip, $ip) === 0)
 					$allowed = true;
 		return $allowed;
 	}
