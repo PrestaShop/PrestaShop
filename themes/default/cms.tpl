@@ -26,7 +26,7 @@
 {if ($content_only == 0)}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
-{if isset($cms) && !isset($category)}
+{if isset($cms) && !isset($cms_category)}
 	{if !$cms->active}
 		<br />
 		<div id="admin-action-cms">
@@ -43,11 +43,11 @@
 	<div class="rte{if $content_only} content_only{/if}">
 		{$cms->content}
 	</div>
-{elseif isset($category)}
+{elseif isset($cms_category)}
 	<div class="block-cms">
-		<h1><a href="{if $category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($category->id, $category->link_rewrite)}{/if}">{$category->name|escape:'htmlall':'UTF-8'}</a></h1>
+		<h1><a href="{if $cms_category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'htmlall':'UTF-8'}</a></h1>
 		{if isset($sub_category) & !empty($sub_category)}	
-			<h4>{l s='List of sub categories in %s:' sprintf=$category->name}</h4>
+			<h4>{l s='List of sub categories in %s:' sprintf=$cms_category->name}</h4>
 			<ul class="bullet">
 				{foreach from=$sub_category item=subcategory}
 					<li>
@@ -57,7 +57,7 @@
 			</ul>
 		{/if}
 		{if isset($cms_pages) & !empty($cms_pages)}
-		<h4>{l s='List of pages in %s:' sprintf=$category->name}</h4>
+		<h4>{l s='List of pages in %s:' sprintf=$cms_category->name}</h4>
 			<ul class="bullet">
 				{foreach from=$cms_pages item=cmspages}
 					<li>
