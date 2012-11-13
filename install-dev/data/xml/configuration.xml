@@ -143,9 +143,6 @@
     <configuration id="PS_DISP_UNAVAILABLE_ATTR" name="PS_DISP_UNAVAILABLE_ATTR">
       <value>1</value>
     </configuration>
-    <configuration id="PS_VOUCHERS" name="PS_VOUCHERS">
-      <value>1</value>
-    </configuration>
     <configuration id="PS_SEARCH_MINWORDLEN" name="PS_SEARCH_MINWORDLEN">
       <value>3</value>
     </configuration>

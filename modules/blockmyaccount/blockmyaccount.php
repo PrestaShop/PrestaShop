@@ -65,7 +65,7 @@ class BlockMyAccount extends Module
 			return false;
 
 		$this->smarty->assign(array(
-			'voucherAllowed' => (int)Configuration::get('PS_VOUCHERS'),
+			'voucherAllowed' => CartRule::isFeatureActive(),
 			'returnAllowed' => (int)Configuration::get('PS_ORDER_RETURN'),
 			'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlock'),
 		));
