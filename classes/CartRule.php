@@ -734,9 +734,9 @@ class CartRuleCore extends ObjectModel
 
 		$reduction_value = 0;
 
-		$cache_id = 'getContextualValue_'.(int)$use_tax.'_'.(int)$context->cart->id.'_'.(int)$filter;
+		$cache_id = 'getContextualValue_'.(int)$this->id.'_'.(int)$use_tax.'_'.(int)$context->cart->id.'_'.(int)$filter;
 		foreach ($package_products as $product)
-			$cache_id .= (int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
+			$cache_id .= '_'.(int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
 
 		if (Cache::isStored($cache_id))
 			return Cache::retrieve($cache_id);
