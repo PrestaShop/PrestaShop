@@ -74,12 +74,46 @@ class AdminSearchControllerCore extends AdminController
 			}
 
 			/* Order */
-			if ($searchType == 3)
+			if (!$searchType || $searchType == 3)
 			{
-				$order = new Order($this->query);
-				if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && $order && Validate::isLoadedObject($order))
-					Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)($order->id).'&vieworder'.'&token='.Tools::getAdminToken('AdminOrders'.(int)(Tab::getIdFromClassName('AdminOrders')).(int)$this->context->employee->id));
-				$this->errors[] = Tools::displayError('No order found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+				if (Validate::isUnsignedInt(trim($this->query)) && (int)$this->query && ($order = new Order((int)$this->query)) && Validate::isLoadedObject($order))
+				{
+					if ($searchType == 3)
+						Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
+					else
+					{
+						$row = get_object_vars($order);
+						$row['id_order'] = $row['id'];
+						$customer = $order->getCustomer();
+						$row['customer'] = $customer->firstname.' '.$customer->lastname;
+						$order_state = $order->getCurrentOrderState();
+						$row['osname'] = $order_state->name[$this->context->language->id];
+						$this->_list['orders'] = array($row);
+					}
+				}
+				else
+				{
+					$orders = Order::getByReference($this->query);
+					$nb_orders = count($orders);
+					if ($nb_orders == 1 && $searchType == 3)
+						Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)$orders[0]->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
+					elseif ($nb_orders)
+					{
+						$this->_list['orders'] = array();
+						foreach ($orders as $order)
+						{
+							$row = get_object_vars($order);
+							$row['id_order'] = $row['id'];
+							$customer = $order->getCustomer();
+							$row['customer'] = $customer->firstname.' '.$customer->lastname;
+							$order_state = $order->getCurrentOrderState();
+							$row['osname'] = $order_state->name[$this->context->language->id];
+							$this->_list['orders'][] = $row;
+						}
+					}
+					elseif ($searchType == 3)
+						$this->errors[] = Tools::displayError('No order found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+				}
 			}
 
 			/* Invoices */
@@ -180,6 +214,19 @@ class AdminSearchControllerCore extends AdminController
 			$this->_list['features'] = false;
 		else
 			$this->_list['features'];
+	}
+
+	protected function initOrderList()
+	{
+		$this->fields_list['orders'] = array(
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
+			'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'customer' => array('title' => $this->l('Customer')),
+			'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'type' => 'price', 'currency' => true),
+			'payment' => array( 'title' => $this->l('Payment'), 'width' => 100),
+			'osname' => array('title' => $this->l('Status'), 'width' => 280),
+			'date_add' => array('title' => $this->l('Date'), 'width' => 130, 'align' => 'right', 'type' => 'datetime'),
+		);
 	}
 
 	protected function initCustomerList()
@@ -294,6 +341,25 @@ class AdminSearchControllerCore extends AdminController
 					$view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
 				}
 				$this->tpl_view_vars['customers'] = $view;
+			}
+			if (isset($this->_list['orders']))
+			{
+				$view = '';
+				$this->initOrderList();
+
+				$helper = new HelperList();
+				$helper->shopLinkType = '';
+				$helper->simple_header = true;
+				$helper->identifier = 'id_order';
+				$helper->actions = array('view');
+				$helper->show_toolbar = false;
+				$helper->table = 'order';
+				$helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
+				$helper->token = Tools::getAdminTokenLite('AdminOrders');
+
+				if ($this->_list['orders'])
+					$view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
+				$this->tpl_view_vars['orders'] = $view;
 			}
 			return parent::renderView();
 		}
