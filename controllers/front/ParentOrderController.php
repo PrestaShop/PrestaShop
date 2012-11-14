@@ -46,6 +46,8 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	public function init()
 	{
+		$this->isLogged = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer));
+		
 		parent::init();
 
 		/* Disable some cache related bugs on the cart/order */
