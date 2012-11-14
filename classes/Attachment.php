@@ -57,7 +57,17 @@ class AttachmentCore extends ObjectModel
 	public function delete()
 	{
 		@unlink(_PS_DOWNLOAD_DIR_.$this->file);
+
+		$products = Db::getInstance()->executeS('
+							SELECT id_product
+							FROM '._DB_PREFIX_.'product_attachment
+							WHERE id_attachment='.(int)$this->id);
+
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)$this->id);
+
+		foreach ($products as $product)
+			Product::updateCacheAttachment((int)$product['id_product']);
+
 		return parent::delete();
 	}
 
@@ -96,9 +106,13 @@ class AttachmentCore extends ObjectModel
 	 */
 	public static function deleteProductAttachments($id_product)
 	{
-		return Db::getInstance()->execute('
+		$res = Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'product_attachment
 			WHERE id_product = '.(int)$id_product);
+
+		Product::updateCacheAttachment((int)$id_product);
+		
+		return $res;
 	}
 
 	/**
@@ -109,10 +123,14 @@ class AttachmentCore extends ObjectModel
 	 */
 	public function attachProduct($id_product)
 	{
-		return Db::getInstance()->execute('
+		$res = Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'product_attachment 
 				(id_attachment, id_product) VALUES
 				('.(int)$this->id.', '.(int)$id_product.')');
+			
+		Product::updateCacheAttachment((int)$id_product);
+		
+		return $res;			
 	}
 
 	/**
@@ -135,15 +153,15 @@ class AttachmentCore extends ObjectModel
 				if ((int)$id_attachment > 0)
 					$ids[] = array('id_product' => (int)$id_product, 'id_attachment' => (int)$id_attachment);
 
-			Db::getInstance()->update('product', array(
-				'cache_has_attachments' => count($ids) ? 1 : 0
-			), 'id_product = '.(int)$id_product);
-
 			if (!empty($ids))
 				$result2 = Db::getInstance()->insert('product_attachment', $ids);
 
-			return ($result1 && (!isset($result2) || $result2));
 		}
+		
+		Product::updateCacheAttachment((int)$id_product);
+		if (is_array($array))
+			return ($result1 && (!isset($result2) || $result2));
+			
 		return $result1;
 	}
 
