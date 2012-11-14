@@ -271,20 +271,19 @@ class ContactControllerCore extends FrontController
 				SELECT id_order
 				FROM '._DB_PREFIX_.'orders
 				WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
+			$order_tab = array();
 			foreach ($getOrders as $row)
 			{
 				$order = new Order($row['id_order']);
 				$date = explode(' ', $order->date_add);
-				$orders[$row['id_order']] = Tools::displayDate($date[0], $this->context->language->id);
+				$orders[] = 
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
 					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
+					p(Tools::getValue('id_order'));
+				$order_tab[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], $this->context->language->id), 'selected' => (int)Tools::getValue('id_order') == $order->id);
 			}
 
-			$order_tab = array();
-			foreach ($orders as $key => $val)
-				$order_tab[] = array('value' => $key, 'label' => $key.' -- '.$val, 'selected' => (int)(Tools::getValue('id_order')) == $key);
-							
 			$this->context->smarty->assign('orderList', $order_tab);
 			$this->context->smarty->assign('orderedProductList', $products);
 		}

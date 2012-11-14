@@ -81,12 +81,12 @@
 		{if !$PS_CATALOG_MODE}
 			{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 			<p class="text select">
-				<label for="id_order">{l s='Order ID'}</label>
+				<label for="id_order">{l s='Order Reference'}</label>
 				{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
 					<select name="id_order" >
 						<option value="0">{l s='-- Choose --'}</option>
 						{foreach from=$orderList item=order}
-							<option value="{$order.value|intval}">{$order.label|escape:'htmlall':'UTF-8'}</option>
+							<option value="{$order.value|intval}" {if $order.selected|intval}selected="selected"{/if}>{$order.label|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				{elseif !isset($customerThread.id_order) && !isset($isLogged)}
