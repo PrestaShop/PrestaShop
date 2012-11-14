@@ -2372,6 +2372,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->display = 'edit';
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
+		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
 		$this->tpl_form_vars['save_error'] = !empty($this->errors);
 
