@@ -2161,14 +2161,19 @@ class AdminOrdersControllerCore extends AdminController
 								$order_detail->product_attribute_id,
 								$quantity_to_reinject
 							);
-
+				$left_to_reinject = $quantity_to_reinject;
 				foreach ($movements as $movement)
 				{
+					if ($left_to_reinject > $movement['physical_quantity'])
+						$quantity_to_reinject = $movement['physical_quantity'];
+
+					$left_to_reinject -= $quantity_to_reinject;
+										
 					$manager->addProduct(
 						$order_detail->product_id,
 						$order_detail->product_attribute_id,
 						new Warehouse($movement['id_warehouse']),
-						$movement['physical_quantity'],
+						$quantity_to_reinject,
 						null,
 						$movement['price_te'],
 						true
