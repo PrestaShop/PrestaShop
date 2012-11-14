@@ -198,7 +198,24 @@ class AdminThemesControllerCore extends AdminController
 				'width' => 'auto',
 			),
 		);
+	}
 
+	protected function checkMobileNeeds()
+	{
+		$allow_mobile = (bool)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
+		if (!$allow_mobile && Context::getContext()->shop->getTheme() == 'default')
+			return;
+		
+		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$paypal_installed = (bool)Module::isInstalled('paypal');
+		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
+		
+		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
+		{
+			$this->errors[] = $this->l('The mobile theme only works with the PayPal\'s payment module at this time. Please activate the module to enable payments.')
+				.'<br>'.
+				$this->l('In order to use the mobile theme you have to install and configure the PayPal module.');
+		}
 	}
 
 	public function renderForm()
@@ -361,6 +378,9 @@ class AdminThemesControllerCore extends AdminController
 
 	public function initContent()
 	{
+
+		$this->checkMobileNeeds();
+		
 		$themes = array();
 		foreach (Theme::getThemes() as $theme)
 			$themes[] = $theme->directory;
