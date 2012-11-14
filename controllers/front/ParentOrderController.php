@@ -60,8 +60,7 @@ class ParentOrderControllerCore extends FrontController
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Dispatcher::getInstance()->getController() != 'order')
 			Tools::redirect('index.php?controller=order');
 			
-		//if getMobileDevice is on a mobile or a tablet we don't redirect to OPC
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc' && !$this->context->getMobileDevice())
+		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc')
 		{
 			if (isset($_GET['step']) && $_GET['step'] == 3)
 				Tools::redirect('index.php?controller=order-opc&isPaymentStep=true');
@@ -326,6 +325,7 @@ class ParentOrderControllerCore extends FrontController
 		$this->context->smarty->assign($summary);
 		$this->context->smarty->assign(array(
 			'token_cart' => Tools::getToken(false),
+			'isLogged' => $this->isLogged,
 			'isVirtualCart' => $this->context->cart->isVirtualCart(),
 			'productNumber' => $this->context->cart->nbProducts(),
 			'voucherAllowed' => CartRule::isFeatureActive(),

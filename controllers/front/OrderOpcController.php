@@ -318,7 +318,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->context->smarty->assign(array(
 			'free_shipping' => $free_shipping,
-			'isLogged' => $this->isLogged,
 			'isGuest' => isset($this->context->cookie->is_guest) ? $this->context->cookie->is_guest : 0,
 			'countries' => $countries,
 			'sl_country' => isset($selectedCountry) ? $selectedCountry : 0,
