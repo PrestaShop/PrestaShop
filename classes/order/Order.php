@@ -1843,7 +1843,6 @@ class OrderCore extends ObjectModel
 		$query->select('MIN(id_order) as min, MAX(id_order) as max');
 		$query->from('orders');
 		$query->where('id_cart = '.(int)$this->id_cart);
-		$query->orderBy('id_order');
 		
 		$order = Db::getInstance()->getRow($query);
 		
