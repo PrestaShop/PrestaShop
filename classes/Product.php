@@ -1451,6 +1451,20 @@ class ProductCore extends ObjectModel
 		return $this->deleteFeatures();
 	}
 
+
+	public static function updateCacheAttachment($id_product)
+	{
+		$value = (bool)Db::getInstance()->getValue('
+								SELECT id_attachment
+								FROM '._DB_PREFIX_.'product_attachment
+								WHERE id_product='.(int)$id_product);
+		return Db::getInstance()->update(
+						'product', 
+						array('cache_has_attachments' => (int)$value), 
+						'id_product = '.(int)$id_product
+					);
+	}	
+	
 	/**
 	* Delete product attachments
 	*
@@ -1458,10 +1472,14 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteAttachments()
 	{
-		return Db::getInstance()->execute('
+		$res = Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attachment`
 			WHERE `id_product` = '.(int)$this->id
 		);
+		
+		Product::updateCacheAttachment((int)$this->id);
+
+		return $res;
 	}
 
 	/**
@@ -3390,7 +3408,9 @@ class ProductCore extends ObjectModel
 			);
 
 		// Duplicate product attachement
-		return Db::getInstance()->insert('product_attachment', $data);
+		$res = Db::getInstance()->insert('product_attachment', $data);
+		Product::updateCacheAttachment((int)$id_product_new);
+		return $res;
 	}
 
 	/**
