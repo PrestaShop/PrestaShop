@@ -72,7 +72,7 @@ $(function() {
 {/if}
 {if isset($products)}
 	{if !$products}
-		<h3>{l s='No products matching your query'} : {$query}</h3>
+		<h3>{l s='There are no products matching your query'} : {$query}</h3>
 	{else}
 		<h3>{l s='Products matching your query'} : {$query}</h3>
 		{$products}
@@ -82,7 +82,15 @@ $(function() {
 	{if !$customers}
 		<h3>{l s='There are no customers matching your query'} : {$query}</h3>
 	{else}
-		<h3>{l s='Customer matching your query'} : {$query}</h3>
+		<h3>{l s='Customers matching your query'} : {$query}</h3>
 		{$customers}
+	{/if}
+{/if}
+{if isset($orders)}
+	{if !$orders}
+		<h3>{l s='There are no orders matching your query'} : {$query}</h3>
+	{else}
+		<h3>{l s='Orders matching your query'} : {$query}</h3>
+		{$orders}
 	{/if}
 {/if}
