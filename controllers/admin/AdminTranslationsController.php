@@ -427,6 +427,7 @@ class AdminTranslationsControllerCore extends AdminController
 				header('Content-Transfer-Encoding: binary');
 				ob_end_flush();
 				@readfile($file_name);
+				exit;
 			}
 			$this->errors[] = Tools::displayError('An error occurred while creating archive.');
 		}
