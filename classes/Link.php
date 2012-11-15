@@ -132,7 +132,8 @@ class LinkCore
 			$params['category'] = (!$category) ? $product->category : $category;
 			$cats = array();
 			foreach ($product->getParentCategories() as $cat)
-				$cats[] = $cat['link_rewrite'];
+				if (!in_array($cat['id_category'], array(1, 2)))//remove root and home category from the URL
+					$cats[] = $cat['link_rewrite'];
 			$params['categories'] = implode('/', $cats);
 		}
 		$anchor = $ipa ? $product->getAnchor($ipa) : '';
