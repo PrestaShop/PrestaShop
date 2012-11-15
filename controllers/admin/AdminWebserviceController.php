@@ -67,8 +67,7 @@ class AdminWebserviceControllerCore extends AdminController
 			)
 		);
 
-		if (file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->fields_options = array(
+		$this->fields_options = array(
 				'general' => array(
 					'title' =>	$this->l('Configuration'),
 					'fields' =>	array(
@@ -230,18 +229,18 @@ class AdminWebserviceControllerCore extends AdminController
 
 	protected function afterAdd($object)
 	{
+		Tools::generateHtaccess();
 		WebserviceKey::setPermissionForAccount($object->id, Tools::getValue('resources', array()));
 	}
 
 	protected function afterUpdate($object)
 	{
+		Tools::generateHtaccess();
 		WebserviceKey::setPermissionForAccount($object->id, Tools::getValue('resources', array()));
 	}
 
 	public function checkForWarning()
 	{
-		if (!file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->warnings[] = $this->l('In order to enable the PrestaShop Webservice, please generate the .htaccess file in "Preferences" > "SEO & URLs".');
 		if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false)
 		{
 			$this->warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
