@@ -849,18 +849,18 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteCategories($clean_positions = false)
 	{
-		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
 		if ($clean_positions === true)
-		{
 			$result = Db::getInstance()->executeS(
 				'SELECT `id_category`
 				FROM `'._DB_PREFIX_.'category_product`
 				WHERE `id_product` = '.(int)$this->id
 			);
 
+		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
+		if ($clean_positions === true)
 			foreach ($result as $row)
-				$this->cleanPositions((int)$row['id_category']);
-		}
+					$return &= $this->cleanPositions((int)$row['id_category']);
+		
 		return $return;
 	}
 
