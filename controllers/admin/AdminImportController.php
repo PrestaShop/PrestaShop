@@ -2608,7 +2608,7 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute=0');
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute !=0');
 				break;
 			case $this->entities[$this->l('Customers')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer');
