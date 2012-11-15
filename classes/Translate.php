@@ -62,7 +62,7 @@ class TranslateCore
 			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 			{
 				$string = str_replace('\'', '\\\'', $string);
-				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class);
+				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
 			}
 		}
 
