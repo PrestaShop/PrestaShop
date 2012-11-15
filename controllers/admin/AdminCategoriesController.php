@@ -462,7 +462,7 @@ class AdminCategoriesControllerCore extends AdminController
 		);
 		
 		$this->tpl_form_vars['shared_category'] = Validate::isLoadedObject($obj) && $obj->hasMultishopEntries(); 
-		
+		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		if (Shop::isFeatureActive())
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
