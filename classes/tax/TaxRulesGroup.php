@@ -72,7 +72,11 @@ class TaxRulesGroupCore extends ObjectModel
 		return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
 	}
 
-
+	public function delete()
+	{
+		$res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax_rules_group`='.(int)$this->id);
+		return (parent::delete() && $res);
+	}
 	/**
 	* @return array
 	*/
