@@ -89,7 +89,9 @@ class TaxRuleCore extends ObjectModel
 				 t.`rate`,
 				 g.`zipcode_from`, g.`zipcode_to`,
 				 g.`description`,
-				 g.`behavior`
+				 g.`behavior`,
+				 g.`id_country`,
+				 g.`id_state`
 		FROM `'._DB_PREFIX_.'tax_rule` g
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
