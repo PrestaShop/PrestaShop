@@ -113,6 +113,16 @@ class TaxRulesGroupCore extends ObjectModel
 	    WHERE `name` = \''.pSQL($name).'\''
 	    );
 	}
+	
+	public function hasUniqueTaxRuleForCountry($id_country, $id_state)
+	{
+		$rules = TaxRule::getTaxRulesByGroupId((int)Context::getContext()->language->id, (int)$this->id);
+		foreach ($rules as $rule)
+			if ($rule['id_country'] == $id_country && $id_state == $rule['id_state'] && !$rule['behavior'])
+				return true;
+
+		return false;
+	}
 
 	/**
 	* @deprecated since 1.5
