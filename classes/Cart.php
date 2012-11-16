@@ -434,7 +434,7 @@ class CartCore extends ObjectModel
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, product_shop.`id_category_default`, p.`id_supplier`,
 						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`, product_shop.`available_for_order`, product_shop.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, product_shop.`active`, p.`date_add`,
-						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery,
 						product_shop.`wholesale_price`, product_shop.advanced_stock_management');
 
@@ -449,17 +449,6 @@ class CartCore extends ObjectModel
 			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', $id_shop)
 		);
 		
-		$sql->leftJoin('tax_rule', 'tr', '
-			product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			AND tr.`id_country` = '.(int)$id_country.'
-			AND tr.`id_state` = 0
-			AND tr.`zipcode_from` = 0'
-		);
-		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
-		$sql->leftJoin('tax_lang', 'tl', '
-			t.`id_tax` = tl.`id_tax`
-			AND tl.`id_lang` = '.(int)$this->id_lang
-		);
 
 		$sql->leftJoin('category_lang', 'cl', '
 			product_shop.`id_category_default` = cl.`id_category`
@@ -675,6 +664,8 @@ class CartCore extends ObjectModel
 
 			if (array_key_exists($row['id_product_attribute'].'-'.$this->id_lang, self::$_attributesLists))
 				$row = array_merge($row, self::$_attributesLists[$row['id_product_attribute'].'-'.$this->id_lang]);
+
+			$row = Product::getTaxesInformations($row, $cart_shop_context);
 
 			$this->_products[] = $row;
 		}

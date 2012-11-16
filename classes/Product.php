@@ -951,14 +951,10 @@ class ProductCore extends ObjectModel
 			$order_by_prefix = $order_by[0];
 			$order_by = $order_by[1];
 		}
-		$sql = 'SELECT p.*, product_shop.*, pl.* , t.`rate` AS tax_rate, m.`name` AS manufacturer_name, s.`name` AS supplier_name
+		$sql = 'SELECT p.*, product_shop.*, pl.* , m.`name` AS manufacturer_name, s.`name` AS supplier_name
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-		 		  AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-		 		  AND tr.`id_state` = 0)
-	  		 	LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (s.`id_supplier` = p.`id_supplier`)'.
 				($id_category ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` c ON (c.`id_product` = p.`id_product`)' : '').'
@@ -971,6 +967,10 @@ class ProductCore extends ObjectModel
 		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		if ($order_by == 'price')
 			Tools::orderbyPrice($rq, $order_way);
+
+		foreach ($rq as &$row)
+			$row = Product::getTaxesInformations($row);
+
 		return ($rq);
 	}
 
@@ -1920,15 +1920,14 @@ class ProductCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
+			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
 			DATEDIFF(
 				product_shop.`date_add`,
 				DATE_SUB(
 					NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 				)
-			) > 0 AS new,
-			(product_shop.`price` * ((100 + (t.`rate`))/100)) AS orderprice'
+			) > 0 AS new'
 		);
 
 		$sql->from('product', 'p');
@@ -1940,12 +1939,6 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('image', 'i', 'i.`id_product` = p.`id_product`');
 		$sql->join(Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1'));
 		$sql->leftJoin('image_lang', 'il', 'i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang);
-		$sql->leftJoin('tax_rule', 'tr', '
-			product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-			AND tr.`id_country` = '.(int)$context->country->id.'
-			AND tr.`id_state` = 0'
-		);
-		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$sql->where('product_shop.`active` = 1');
@@ -2072,7 +2065,7 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-						p.`ean13`, p.`upc`, image_shop.`id_image`, il.`legend`, t.`rate`
+						p.`ean13`, p.`upc`, image_shop.`id_image`, il.`legend`
 					FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
@@ -2082,10 +2075,6 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 					Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-					LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-						AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-						AND tr.`id_state` = 0)
-					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 					'.Product::sqlStock('p', 0).'
 					WHERE p.id_product = '.(int)$id_product.'
 					AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')';
@@ -2170,7 +2159,7 @@ class ProductCore extends ObjectModel
 		}
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, product_attribute_shop.id_product_attribute,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
-					pl.`name`, image_shop.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
+					pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -2190,10 +2179,6 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-					AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE product_shop.`active` = 1
 				AND product_shop.`show_price` = 1
@@ -3048,7 +3033,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-					i.`id_image`, il.`legend`, t.`rate`, m.`name` as manufacturer_name, cl.`name` AS category_default,
+					i.`id_image`, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -3071,10 +3056,6 @@ class ProductCore extends ObjectModel
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)$context->country->id.'
-					AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0).'
 				WHERE `id_product_1` = '.(int)$this->id.'
 				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))'.
@@ -3713,8 +3694,30 @@ class ProductCore extends ObjectModel
 		if ($row['pack'] && !Pack::isInStock($row['id_product']))
 			$row['quantity'] = 0;
 
+		$row = Product::getTaxesInformations($row, $context);
+
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
+	}
+	
+	public static function getTaxesInformations($row, Context $context = null)
+	{
+		static $address = null;
+
+		if ($context === null)
+			$context = Context::getContext();
+		if ($address === null)
+			$address = new Address();
+
+		$address->id_country = (int)$context->country->id;
+		$address->id_state = 0;
+		$address->postcode = 0;
+		
+		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$row['id_product'], $context));
+		$row['rate'] = $tax_manager->getTaxCalculator()->getTotalRate();
+		$row['tax_name'] = $tax_manager->getTaxCalculator()->getTaxesName();
+
+		return $row;
 	}
 
 	public static function getProductsProperties($id_lang, $query_result)
