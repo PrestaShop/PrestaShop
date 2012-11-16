@@ -116,6 +116,17 @@ class TaxCalculatorCore
 
 		return (float)$taxes;
 	}
+	
+	public function getTaxesName()
+	{
+		$name = '';
+		foreach ($this->taxes as $tax)
+			$name .= $tax->name[(int)Context::getContext()->language->id].' - ';
+
+		$name = rtrim($name, ' - ');
+
+		return $name;
+	}
 
 	/**
 	 * Return the tax amount associated to each taxes of the TaxCalculator

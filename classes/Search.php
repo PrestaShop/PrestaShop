@@ -284,7 +284,7 @@ class SearchCore
 			$alias = 'product_shop.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-				tax.`rate`, image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.',
+			 image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.',
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -298,10 +298,6 @@ class SearchCore
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)$context->country->id.'
-					AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
@@ -320,10 +316,6 @@ class SearchCore
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
-				AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
@@ -636,7 +628,7 @@ class SearchCore
 		}
 
 		$sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
-					tax.`rate`, image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
+					image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -653,10 +645,6 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'		
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`
-					AND tr.`id_country` = '.(int)$context->country->id.'
-					AND tr.`id_state` = 0)
-				LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (tax.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
