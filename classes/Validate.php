@@ -45,7 +45,7 @@ class ValidateCore
 	 */
 	public static function isEmail($email)
 	{
-		return !empty($email) && preg_match('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+$/ui', $email);
+		return !empty($email) && preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+$/ui'), $email);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class ValidateCore
 	 */
 	public static function isCarrierName($name)
 	{
-		return empty($name) || preg_match('/^[^<>;=#{}]*$/u', $name);
+		return empty($name) || preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $name);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class ValidateCore
 	 */
 	public static function isName($name)
 	{
-		return preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:]*$/u', stripslashes($name));
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:]*$/u'), stripslashes($name));
 	}
 
 	/**
@@ -175,7 +175,7 @@ class ValidateCore
 	 */
 	public static function isMailName($mail_name)
 	{
-		return preg_match('/^[^<>;=#{}]*$/u', $mail_name);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name);
 	}
 
 	/**
@@ -186,7 +186,7 @@ class ValidateCore
 	 */
 	public static function isMailSubject($mail_subject)
 	{
-		return preg_match('/^[^<>]*$/u', $mail_subject);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>]*$/u'), $mail_subject);
 	}
 
 	/**
