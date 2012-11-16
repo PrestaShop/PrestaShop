@@ -468,7 +468,7 @@ class StockManagerCore implements StockManagerInterface
 
 		// Gets client_orders_qty
 		$query = new DbQuery();
-		$query->select('SUM(od.product_quantity) + SUM(od.product_quantity_refunded)');
+		$query->select('od.product_quantity, od.product_quantity_refunded');
 		$query->from('order_detail', 'od');
 		$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
 		$query->where('od.product_id = '.(int)$id_product);
@@ -479,9 +479,14 @@ class StockManagerCore implements StockManagerInterface
 		$query->where('os.shipped != 1');
 		$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
 					   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
+		$query->groupBy('od.id_order_detail');
 		//if (count($ids_warehouse))
 			//$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
-		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		$client_orders_qty = 0;
+		if (count($res))
+			foreach ($res as $row)
+				$client_orders_qty += $row['product_quantity'] + $row['product_quantity_refunded'];
 
 		// Gets supply_orders_qty
 		$query = new DbQuery();
