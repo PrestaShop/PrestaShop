@@ -141,7 +141,8 @@ class ShopCore extends ObjectModel
 	protected static function init()
 	{
 		Shop::$id_shop_default_tables = array('product', 'category');
-		Shop::$asso_tables = array(
+		
+		$asso_tables = array(
 			'carrier' => array('type' => 'shop'),
 			'carrier_lang' => array('type' => 'fk_shop'),
 			'category' => array('type' => 'shop'),
@@ -179,6 +180,10 @@ class ShopCore extends ObjectModel
 			'manufacturer' => array('type' => 'shop'),
 			'supplier' => array('type' => 'shop'),
 		);
+		
+		foreach($asso_tables as $table_name => $table_details)
+			Shop::addTableAssociation($table_name, $table_details);
+
 		Shop::$initialized = true;
 	}
 
@@ -534,7 +539,23 @@ class ShopCore extends ObjectModel
 			Shop::init();
 		return Shop::$asso_tables;
 	}
-
+	
+	/**
+	 * Add table associated to shop
+	 *
+	 * @param string $table_name
+	 * @param array $table_details
+	 * @return bool
+	 */
+	public static function addTableAssociation($table_name, $table_details)
+	{
+		if (!isset(Shop::$asso_tables[$table_name]))
+			Shop::$asso_tables[$table_name] = $table_details;
+		else
+			return false;
+		return true;
+	}
+	
 	/**
 	 * Check if given table is associated to shop
 	 *
