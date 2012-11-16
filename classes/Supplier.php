@@ -256,7 +256,7 @@ class SupplierCore extends ObjectModel
 					image_shop.`id_image`,
 					il.`legend`,
 					s.`name` AS supplier_name,
-					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new
+					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
 					m.`name` AS manufacturer_name
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
