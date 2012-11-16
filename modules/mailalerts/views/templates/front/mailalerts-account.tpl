@@ -66,7 +66,7 @@ $('document').ready(function()
 		<div>
 			{foreach from=$mailAlerts item=mailAlert}
 			<div class="mailalert clearfix">
-				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small')}" alt=""/></a>
+				<a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}" class="product_img_link"><img src="{$link->getImageLink($mailAlert.link_rewrite, $mailAlert.cover, 'small_default')}" alt=""/></a>
 				<h3><a href="{$link->getProductLink($mailAlert.id_product, null, null, null, null, $mailAlert.id_shop)}">{$mailAlert.name}</a></h3>
 				<div class="product_desc">{$mailAlert.attributes_small|escape:'htmlall':'UTF-8'}</div>
 
