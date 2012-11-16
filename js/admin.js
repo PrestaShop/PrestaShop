@@ -53,11 +53,14 @@ function str2url(str,encoding,ucfirst)
 
 function copy2friendlyURL()
 {
-	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
-	if ($('#friendly-url'))
-		$('#friendly-url').html($('#link_rewrite_' + id_language).val());
-	// trigger onchange event to use anything binded there
-	$('#link_rewrite_' + id_language).change(); 
+	if (!$('#link_rewrite_' + id_language).val().length)//check if user didn't type anything in rewrite field, to prevent overwriting
+	{
+		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
+		if ($('#friendly-url'))
+			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
+		// trigger onchange event to use anything binded there
+		$('#link_rewrite_' + id_language).change(); 
+	}
 	return;
 }
 
@@ -121,7 +124,7 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 	if (employee_cookie)
 		$.post("ajax.php", { form_language_id: id_language_new });
 	id_language = id_language_new;
-	updateFriendlyURL();
+
 	updateCurrentText();
 }
 
@@ -691,7 +694,7 @@ $(document).ready(function()
 			if(isArrowKey(e))
 				return;
 
-		updateCurrentText()
+		updateCurrentText();
 	});
 
 	$(".copyMeta2friendlyURL").live('keyup change',function(e){

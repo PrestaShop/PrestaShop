@@ -482,7 +482,6 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
-		copy2friendlyURL();
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
@@ -1578,9 +1577,7 @@ tabs_manager.setTabs(product_tabs);
 $(document).ready(function() {
 	// The manager schedules the onReady() methods of each tab to be called when the tab is loaded
 	tabs_manager.init();
-
 	updateCurrentText();
-
 	$("#name_" + id_lang_default + ",#link_rewrite_" + id_lang_default)
 		.live("change", function(e)
 		{
@@ -1592,7 +1589,6 @@ $(document).ready(function() {
 		{
 			handleSaveButtons()
 		});
-	updateFriendlyURL();
 
 	// Pressing enter in an input field should not submit the form
 	$('#product_form').delegate('input', 'keypress', function(e){
@@ -1601,4 +1597,3 @@ $(document).ready(function() {
 		return (code == 13) ? false : true;
 	});
 });
-
