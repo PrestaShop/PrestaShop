@@ -326,6 +326,21 @@ span.view_scroll_spacer {
 	padding:4px 7px 4px 15px;
 }
 
+@media screen and (-webkit-min-device-pixel-ratio:0) { /*hack Chrome and Safari */
+ 
+    .content_prices #add_to_cart .exclusive,.content_prices #add_to_cart .exclusive_disabled {
+		padding:6px 7px 4px 15px;
+	}
+
+}
+
+.ie9 .content_prices #add_to_cart .exclusive,.content_prices #add_to_cart .exclusive_disabled,
+.ie8 .content_prices #add_to_cart .exclusive,.content_prices #add_to_cart .exclusive_disabled,
+.ie7 .content_prices #add_to_cart .exclusive,.content_prices #add_to_cart .exclusive_disabled {
+		padding:8px 7px 4px 15px;
+		line-height:12px;
+	}
+
 :first-child+html .content_prices #add_to_cart .exclusive {
 	padding:4px 3px 4px 11px;
 }
