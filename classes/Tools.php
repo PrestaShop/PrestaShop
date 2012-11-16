@@ -2247,6 +2247,18 @@ FileETag INode MTime Size
 		else
 			return array_unique($array, SORT_REGULAR);
 	}
+
+	/**
+	 * Delete unicode class from regular expression patterns
+	 * @param string $pattern
+	 * @return pattern
+	 */
+	public static function cleanNonUnicodeSupport($pattern)
+	{
+		if (!defined('PREG_BAD_UTF8_OFFSET'))
+			return $pattern;
+		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
+	}
 }
 
 /**
