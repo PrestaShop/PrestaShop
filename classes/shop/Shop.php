@@ -136,7 +136,6 @@ class ShopCore extends ObjectModel
 	
 	/**
 	 * Initialize an array with all the multistore associations in the database
-	 * You can override this method in order to add a new association
 	 */
 	protected static function init()
 	{
