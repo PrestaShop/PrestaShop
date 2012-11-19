@@ -28,7 +28,7 @@
 class MediaCore
 {
 	public static $jquery_ui_dependencies = array(
-		'ui.core' => array('fileName' => 'jquery.ui.core.min.js', 'dependencies' => array(), 'theme' => false),
+		'ui.core' => array('fileName' => 'jquery.ui.core.min.js', 'dependencies' => array(), 'theme' => true),
 		'ui.widget' => array('fileName' => 'jquery.ui.widget.min.js', 'dependencies' => array(), 'theme' => false),
 		'ui.mouse' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => false),
 		'ui.position' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array(), 'theme' => false),
@@ -309,10 +309,6 @@ class MediaCore
 		$url_data = parse_url($folder.$file);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$ui_tmp = array();
-		if ($check_dependencies && array_key_exists($component, self::$jquery_ui_dependencies))
-			foreach (self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency)
-				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
-
 		if (self::$jquery_ui_dependencies[$component]['theme'] && $check_dependencies)
 		{
 			$theme_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.ui.theme.css');
@@ -322,7 +318,17 @@ class MediaCore
 			if (!empty($comp_css) || $comp_css)
 				$ui_path['css'] = array_merge($ui_path['css'], $comp_css);
 		}
-
+		if ($check_dependencies && array_key_exists($component, self::$jquery_ui_dependencies))
+		{
+			foreach (self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency)
+			{
+				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
+				if (self::$jquery_ui_dependencies[$dependency]['theme'])
+					$dep_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$dependency.'.css');
+				if (!empty($dep_css) || $dep_css)
+					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
+			}
+		}
 		if (@filemtime($file_uri))
 		{
 			if (!empty($ui_tmp))
