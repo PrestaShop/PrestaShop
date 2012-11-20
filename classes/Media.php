@@ -325,7 +325,7 @@ class MediaCore
 				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
 				if (self::$jquery_ui_dependencies[$dependency]['theme'])
 					$dep_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$dependency.'.css');
-				if (!empty($dep_css) || $dep_css)
+				if (isset($dep_css) && (!empty($dep_css) || $dep_css))
 					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
 			}
 		}

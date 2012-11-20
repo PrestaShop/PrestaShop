@@ -183,6 +183,13 @@ class CategoryControllerCore extends FrontController
 		else
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
+
+		foreach ($this->cat_products as &$product)
+		{
+			if ($product['id_product_attribute'])
+				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
+		}
+
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
 }
