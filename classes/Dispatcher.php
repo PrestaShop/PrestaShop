@@ -385,6 +385,15 @@ class DispatcherCore
 	{
 		$context = Context::getContext();
 		
+		// Load custom routes from modules
+		$modules_routes = Hook::exec('moduleRoutes', array(), null, true, false);
+		if (is_array($modules_routes) && count($modules_routes))
+		foreach($modules_routes as $module_route)
+		  foreach($module_route as $route => $route_details)
+		    if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
+		      && array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
+		      $this->addRoute($route, $route_details['rule'], $route_details['controller'], null, $route_details['keywords'], $route_details['params']);
+		
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
 			foreach ($this->default_routes as $id => $route)
@@ -579,7 +588,8 @@ class DispatcherCore
 
 			if (!array_key_exists($key, $params))
 				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
-			$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
+			if (isset($this->default_routes[$route_id]))
+				$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}
 
 		// Build an url which match a route

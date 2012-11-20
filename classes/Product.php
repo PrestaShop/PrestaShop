@@ -3191,7 +3191,8 @@ class ProductCore extends ObjectModel
 		{
 			if (!array_key_exists($row['id_product'].'-'.$id_lang, self::$_frontFeaturesCache))
 				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang] = array();
-			self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][] = $row;
+			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']]))
+				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']] = $row;
 		}
 	}
 
@@ -3588,8 +3589,9 @@ class ProductCore extends ObjectModel
 		$cache_key = $row['id_product'].'-'.$row['id_product_attribute'].'-'.$id_lang.'-'.(int)$usetax;
 		if (isset($row['id_product_pack']))
 			$cache_key .= '-pack'.$row['id_product_pack'];
+
 		if (isset(self::$producPropertiesCache[$cache_key]))
-			return self::$producPropertiesCache[$cache_key];
+			return array_merge($row, self::$producPropertiesCache[$cache_key]);
 
 		// Datas
 		$row['category'] = Category::getLinkRewrite((int)$row['id_category_default'], (int)$id_lang);

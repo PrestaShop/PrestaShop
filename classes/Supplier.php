@@ -240,7 +240,7 @@ class SupplierCore extends ObjectModel
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 		$alias = '';
-		if ($order_by == 'price')
+		if (in_array($order_by, array('price', 'date_add', 'date_upd')))
 			$alias = 'product_shop.';
 		elseif ($order_by == 'id_product')
 			$alias = 'p.';

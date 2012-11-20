@@ -110,6 +110,7 @@ Context::getContext()->country = $defaultCountry;
 
 /* Instantiate cookie */
 $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
+
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
 else
@@ -117,7 +118,13 @@ else
 	if (Context::getContext()->shop->getGroup()->share_order)
 		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookieLifetime, Context::getContext()->shop->getUrlsSharedCart());
 	else
-		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookieLifetime);
+	{
+		$domains = null;
+		if(Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
+		  $domains = array(Context::getContext()->shop->domain_ssl, Context::getContext()->shop->domain);
+		
+		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookieLifetime, $domains);
+	}
 }
 
 Context::getContext()->cookie = $cookie;
