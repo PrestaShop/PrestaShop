@@ -417,15 +417,6 @@ class CartCore extends ObjectModel
 			return $this->_products;
 		}
 
-		$shop_group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
-		if ($shop_group['share_order'])
-			$id_shop = 'cp.id_shop';
-		else
-			$id_shop = (int)Shop::getContextShopID();
-
-		if (!$id_country)
-			$id_country = Context::getContext()->country->id;
-
 		// Build query
 		$sql = new DbQuery();
 
@@ -443,16 +434,16 @@ class CartCore extends ObjectModel
 
 		// Build JOIN
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
-		$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_shop='.$id_shop.' AND product_shop.id_product = p.id_product)');
+		$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_shop=cp.id_shop AND product_shop.id_product = p.id_product)');
 		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', $id_shop)
+			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
 		);
 		
 
 		$sql->leftJoin('category_lang', 'cl', '
 			product_shop.`id_category_default` = cl.`id_category`
-			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', $id_shop)
+			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
 		);
 
 		// @todo test if everything is ok, then refactorise call of this method
@@ -493,7 +484,7 @@ class CartCore extends ObjectModel
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
-			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_shop='.$id_shop.' AND product_attribute_shop.id_product_attribute = pa.id_product_attribute)');
+			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_shop=cp.id_shop AND product_attribute_shop.id_product_attribute = pa.id_product_attribute)');
 			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
