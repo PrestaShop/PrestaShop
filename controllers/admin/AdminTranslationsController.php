@@ -970,7 +970,10 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
-						$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*mod=\'.+\')?(\s*js=1)?\s*\}/U';
+					{
+						$regex  = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*mod=\'.+\')?(\s*js=1)?\s*\}/U';
+						$regex_alt = '/\{l\s*mod=\'.+\' \s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
+					}
 				break;
 
 			case 'pdf':
@@ -981,9 +984,16 @@ class AdminTranslationsControllerCore extends AdminController
 						$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
 				break;
 		}
-
+		
 		preg_match_all($regex, $content, $matches);
-
+		
+		if(isset($regex_alt))
+		{			
+			preg_match_all($regex_alt, $content, $matches2);
+			$matches[1] = array_merge($matches[1], $matches2[1]);
+		}
+	
+		
 		return $matches[1];
 	}
 
@@ -1400,7 +1410,7 @@ class AdminTranslationsControllerCore extends AdminController
 			var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 			var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
 		</script>
-		<input type="button" class="button" id="buttonall" onclick="openCloseAllDiv(\''.$this->type_selected.'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
+		<input type="button" class="button" id="buttonall" onClick="openCloseAllDiv(\''.$this->type_selected.'_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
 		<script type="text/javascript">toggleElemValue(\'buttonall\', '.($closed ? 'openAll' : 'closeAll').', '.($closed ? 'closeAll' : 'openAll').');</script>';
 		return $str_output;
 	}
@@ -2011,7 +2021,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$str_return .= '
 		<div class="mails_field" >
-			<h3 style="cursor : pointer" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.' - <font color="red">'.$mails['empty_values'].'</font> '
+			<h3 style="cursor : pointer" onClick="$(\'#'.$id_html.'\').slideToggle();">'.$title.' - <font color="red">'.$mails['empty_values'].'</font> '
 			.sprintf($this->l('missing translation(s) on %1$s template(s) for %2$s'),
 				'<font color="blue">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).'</font>',
 			 	$obj_lang->name)
@@ -2147,7 +2157,7 @@ class AdminTranslationsControllerCore extends AdminController
 				</div><!-- .label-subject -->';
 		$str_return .= '
 				<iframe style="background:white;border:1px solid #DFD5C3;" border="0" src ="'.$url.'?'.(rand(0, 1000000000)).'" width="565" height="497"></iframe>
-					<a style="display:block;margin-top:5px;width:130px;" href="#" onclick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="button">'.$this->l('Edit this e-mail template').'</a>
+					<a style="display:block;margin-top:5px;width:130px;" href="#" onClick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="button">'.$this->l('Edit this e-mail template').'</a>
 				</div>
 				<textarea style="display:none;" class="rte mailrte" cols="80" rows="30" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>
 			</div><!-- .mail-form -->
