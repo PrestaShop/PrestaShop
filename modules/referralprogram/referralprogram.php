@@ -123,8 +123,8 @@ class ReferralProgram extends Module
 	{
 		$langs = Language::getLanguages(false);
 		foreach ($langs AS $lang)
-			foreach ($this->_mails['name'] AS $name)
-				foreach ($this->_mails['ext'] AS $ext)
+			foreach (array('referralprogram-congratulations', 'referralprogram-invitation', 'referralprogram-voucher') AS $name)
+				foreach (array('txt', 'html') AS $ext)
 				{
 					$file = _PS_MAIL_DIR_.$lang['iso_code'].'/'.$name.'.'.$ext;
 					if (file_exists($file) AND !@unlink($file))
