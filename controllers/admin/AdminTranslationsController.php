@@ -277,7 +277,12 @@ class AdminTranslationsControllerCore extends AdminController
 			$file_path = $translation_informations['dir'].$translation_informations['file'];
 
 		if (!file_exists($file_path))
-			throw new PrestaShopException(sprintf(Tools::displayError('This file doesn\'t exists: "%s". Please create this file.'), $file_path));
+		{
+			if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true))
+				throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
+			elseif (!touch($file_path))
+				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
+		}
 
 		if ($fd = fopen($file_path, 'w'))
 		{
@@ -1121,110 +1126,115 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		/* PrestaShop demo mode */
 
-		if (Tools::isSubmit('submitCopyLang'))
-		{
-		 	if ($this->tabAccess['add'] === '1')
-				$this->submitCopyLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitExport'))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->submitExportLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitImport'))
-		{
-		 	if ($this->tabAccess['add'] === '1')
-				$this->submitImportLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitAddLanguage'))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->submitAddLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsFront'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsPdf'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
-				if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+		try {
+		
+			if (Tools::isSubmit('submitCopyLang'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitCopyLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitExport'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitExportLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitImport'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitImportLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitAddLanguage'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitAddLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsFront'))
+			{
+				if ($this->tabAccess['edit'] === '1')
 					$this->writeTranslationFile();
 				else
-					$this->writeTranslationFile(true);
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsBack'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsErrors'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsFields'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-
-		}
-		else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-		 		$this->submitTranslationsMails();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsModules'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				// Get a good path for module directory
-				if ($this->theme_selected == self::DEFAULT_THEME_NAME)
-					$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
-				else
-					$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
-
-				// Get list of modules
-				if ($modules = $this->getListModules())
-				{
-					// Get files of all modules
-					$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
-
-					// Find and write all translation modules files
-					foreach ($arr_files as $value)
-						$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
-
-					// Redirect
-					if (Tools::getValue('submitTranslationsModulesAndStay'))
-						$this->redirect(true);
-					else
-						$this->redirect();
-				}
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			else if (Tools::isSubmit('submitTranslationsPdf'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
+					if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+						$this->writeTranslationFile();
+					else
+						$this->writeTranslationFile(true);
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsBack'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsErrors'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsFields'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+
+			}
+			else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->submitTranslationsMails();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsModules'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+				{
+					// Get a good path for module directory
+					if ($this->theme_selected == self::DEFAULT_THEME_NAME)
+						$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
+					else
+						$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
+
+					// Get list of modules
+					if ($modules = $this->getListModules())
+					{
+						// Get files of all modules
+						$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
+
+						// Find and write all translation modules files
+						foreach ($arr_files as $value)
+							$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
+
+						// Redirect
+						if (Tools::getValue('submitTranslationsModulesAndStay'))
+							$this->redirect(true);
+						else
+							$this->redirect();
+					}
+				}
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+		} catch (PrestaShopException $e) {
+			$this->errors[] = $e->getMessage();
 		}
 	}
 
