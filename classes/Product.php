@@ -2676,11 +2676,11 @@ class ProductCore extends ObjectModel
 			WHERE `id_product` = '.(int)$id_product.' AND `id_cart` = '.(int)$context->cart->id
 		);
 		$quantity = $cart_quantity ? $cart_quantity : $quantity;
+
 		$id_currency = (int)$context->currency->id;
 		$ids = Address::getCountryAndState((int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-
-		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity);
+		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
 	}
 
 	/**
