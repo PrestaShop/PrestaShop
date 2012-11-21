@@ -3219,7 +3219,10 @@ class ProductCore extends ObjectModel
 		);
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
-		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
+		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
+		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
+		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
+		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
 		$sql->groupBy('`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
