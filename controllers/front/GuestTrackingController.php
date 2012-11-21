@@ -51,17 +51,18 @@ class GuestTrackingControllerCore extends FrontController
 		if (Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer'))
 		{
 			// These lines are here for retrocompatibility with old theme
-			$id_order = (int)Tools::getValue('id_order');
+			$id_order = Tools::getValue('id_order');
 			$order_collection = array();
 			if ($id_order)
 			{
 				if (is_numeric($id_order))
+				{
 					$order = new Order((int)$id_order);
+					if (Validate::isLoadedObject($order))
+						$order_collection[] = $order;
+				}
 				else
-					$order = Order::getByReference($id_order);
-
-				if (Validate::isLoadedObject($order))
-					$order_collection[] = $order;
+					$order_collection = Order::getByReference($id_order);
 			}
 
 			// Get order reference, ignore package reference (after the #, on the order reference)
