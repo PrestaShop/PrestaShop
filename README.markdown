@@ -8,9 +8,12 @@ To contribute to PrestaShop, you can make pull requests on the **development** b
 
 Make sure to respect our [coding standards](http://doc.prestashop.com/display/PS15/Coding+Standard)
 
-If you fix an issue already present in our [bugtracker](http://forge.prestashop.com/), please specify the issue number in your pull request message or in the name of the branch (_ex: PSCFV-007_)
+If you fix an issue already present in our [bugtracker](http://forge.prestashop.com/), 
+please specify the issue number in your pull request message or in the name of the branch, 
+for example _PSCFV-007_
 
-Read the [Fork a repo](https://help.github.com/articles/fork-a-repo) article if you aren't familiare with GitHub. 
+Read the [Fork a repo](https://help.github.com/articles/fork-a-repo) article 
+if you aren't familiare with GitHub. 
 
 ### Quick start
 
@@ -24,7 +27,8 @@ $ git remote
 origin
 </pre>
 
-Checkout the `development` branch of your fork, create a `topic` branch from there, make changes, and push them to your remote. 
+Checkout the `development` branch of your fork, create a `topic` branch from there, 
+make changes, and push them to your remote. 
 
 <pre>
 $ git checkout --track origin/development
@@ -51,7 +55,8 @@ origin
 upstream
 </pre>
 
-Fetch changes made by PrestaShop developers or other contributors on the `development` branch of the blessed repo, and push them back to your fork.
+Fetch changes made by PrestaShop developers or other contributors 
+on the `development` branch of the blessed repo, and push them back to your fork.
 
 <pre>
 $ git checkout development
