@@ -121,6 +121,8 @@ class AdminCartRulesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
+			if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))))
+				$this->errors[] = sprintf(Tools::displayError('This cart rule code is already used (conflict with cart rule %d)'), $same_code);
 		}
 
 		return parent::postProcess();
