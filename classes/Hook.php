@@ -358,7 +358,7 @@ class HookCore extends ObjectModel
 	 * @param int $id_module Execute hook for this module only
 	 * @return string modules output
 	 */
-	public static function exec($hook_name, $hook_args = array(), $id_module = null)
+	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true)
 	{
 		// Check arguments validity
 		if (($id_module && !is_numeric($id_module)) || !Validate::isHookName($hook_name))
@@ -397,11 +397,14 @@ class HookCore extends ObjectModel
 				continue;
 
 			// Check permissions
-			$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-			if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
-				continue;
-			if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
-				continue;
+			if ($check_exceptions)
+			{
+				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
+				if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
+					continue;
+				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
+					continue;
+			}
 
 			// Check which / if method is callable
 			$hook_callable = is_callable(array($moduleInstance, 'hook'.$hook_name));
@@ -416,19 +419,22 @@ class HookCore extends ObjectModel
 				else if ($hook_retro_callable)
 					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
 				// Live edit
-				if ($array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+				if ($array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 				{
 					$live_edit = true;
 					$output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
 				}
+				else if ($array_return)
+					$output[] = $display;
 				else
 					$output .= $display;
 			}
 		}
-
-		// Return html string
-		return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script>
-				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
+		if ($array_return)
+			return $output;
+		else
+			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script>
+				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
 	}
 
 	public static function wrapLiveEdit($display, $moduleInstance, $id_hook)

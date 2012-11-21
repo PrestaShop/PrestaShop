@@ -524,6 +524,8 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
 					{
+						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
+						$module->uninstall();
 						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
 						$this->recursiveDeleteOnDisk($moduleDir);
 						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));

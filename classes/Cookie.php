@@ -92,7 +92,7 @@ class CookieCore
 			return false;
 		if (!strstr(Tools::getHttpHost(false, false), '.'))
 			return false;
-		
+
 		$domain = false;
 		if ($shared_urls !== null)
 		{
