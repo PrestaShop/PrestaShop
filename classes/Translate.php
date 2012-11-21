@@ -127,6 +127,7 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
+		
 		if (!isset($translations_merged[$name]))
 		{
 			$filesByPriority = array(
@@ -138,16 +139,14 @@ class TranslateCore
 				// PrestaShop 1.4 translations
 				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
 			);
-
 			foreach ($filesByPriority as $file)
 				if (Tools::file_exists_cache($file))
 				{
 					include_once($file);
-					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+					$_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
 					$translations_merged[$name] = true;
 				}
 		}
-
 		$key = md5(str_replace('\'', '\\\'', $string));
 
 		$cache_key = $name.'|'.$string.'|'.$source;
