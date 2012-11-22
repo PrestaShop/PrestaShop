@@ -1473,8 +1473,10 @@ if (Smarty::$_CHARSET !== 'UTF-8') {
  * Smarty exception class
  * @package Smarty
  */
+ /*
 class SmartyException extends Exception {
 }
+*/
 
 /**
  * Smarty compiler exception class
