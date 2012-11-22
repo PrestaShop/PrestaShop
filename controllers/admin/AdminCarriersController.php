@@ -472,17 +472,20 @@ class AdminCarriersControllerCore extends AdminController
 						$current_carrier = new Carrier($id);
 						if (!Validate::isLoadedObject($current_carrier))
 							throw new PrestaShopException('Cannot load Carrier object');
-						// Set flag deteled to true for historization
-						$current_carrier->deleted = true;
-						$current_carrier->update();
-
-						// Create new carrier
-						$new_carrier = new Carrier();
-						// Fill the new carrier object
-						$this->copyFromPost($new_carrier, $this->table);
-						$new_carrier->position = $current_carrier->position;
-						if ($new_carrier->add())
+						
+						// Duplicate current Carrier
+						$new_carrier = $current_carrier->duplicateObject();
+						if (Validate::isLoadedObject($new_carrier))
 						{
+							// Set flag deteled to true for historization
+							$current_carrier->deleted = true;
+							$current_carrier->update();
+
+							// Fill the new carrier object
+							$this->copyFromPost($new_carrier, $this->table);
+							$new_carrier->position = $current_carrier->position;
+							$new_carrier->update();
+
 							$this->updateAssoShop($new_carrier->id);
 							$new_carrier->copyCarrierData((int)$current_carrier->id);
 							$this->changeGroups($new_carrier->id);
