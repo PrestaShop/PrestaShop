@@ -201,18 +201,18 @@ class DispatcherCore
 		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 
 		// Select right front controller
-		if (defined('_PS_ADMIN_DIR_'))
+		if (Tools::getValue('fc') == 'module')
+		{
+			$this->front_controller = self::FC_MODULE;
+			$this->controller_not_found = 'pagenotfound';
+			$this->default_controller = 'default';
+		}
+		elseif (defined('_PS_ADMIN_DIR_'))
 		{
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
 			$this->default_controller = 'adminhome';
 			$this->use_routes = false;
-		}
-		elseif (Tools::getValue('fc') == 'module')
-		{
-			$this->front_controller = self::FC_MODULE;
-			$this->controller_not_found = 'pagenotfound';
-			$this->default_controller = 'default';
 		}
 		else
 		{
