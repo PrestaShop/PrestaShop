@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+	<filter>
+  		<blacklist>
+    		<directory suffix=".php">vendor</directory>
+  		</blacklist>
+	</filter>
+    <testsuites>
+        <testsuite name="PrestaShop">
+            <directory>.</directory>
+            <exclude>vendor</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>
