@@ -50,7 +50,7 @@ class AdminStatusesControllerCore extends AdminController
 		if (Tools::isSubmit('updateorder_return_state'))
 			$this->display = 'edit';
 
-		parent::init();
+		return parent::init();
 	}
 	
 	/**
@@ -114,7 +114,6 @@ class AdminStatusesControllerCore extends AdminController
 				'width' => 120
 			)
 		);
-		
 	}
 	
 	/**
@@ -142,10 +141,6 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => 'color'
 			)
 		);
-
-		// call postProcess() for take care about actions and filters
-		$this->postProcess();
-		$this->toolbar_title = $this->l('Return statuses');
 	}
 	
 	protected function initOrderReturnsForm()
@@ -193,8 +188,14 @@ class AdminStatusesControllerCore extends AdminController
 		$lists = parent::renderList();
 		
 		//init and render the second list
+		$this->_filter = false;
 		$this->initOrdersReturnsList();
+
+		// call postProcess() to take care of actions and filters
+		$this->postProcess();
+		$this->toolbar_title = $this->l('Return statuses');
 		$this->checkFilterForOrdersReturnsList();
+
 		parent::initToolbar();
 		$lists .= parent::renderList();
 		
@@ -393,7 +394,6 @@ class AdminStatusesControllerCore extends AdminController
 		return $helper->generateForm($this->fields_form);
 	}
 	
-
 	protected function getTemplates($iso_code)
 	{
 		$array = array();
@@ -409,7 +409,6 @@ class AdminStatusesControllerCore extends AdminController
 
 		return $array;
 	}
-
 
 	public function postProcess()
 	{
@@ -501,6 +500,13 @@ class AdminStatusesControllerCore extends AdminController
 		else
 			return parent::postProcess();
 	}
+	
+	protected function filterToField($key, $filter)
+	{
+		if ($this->table == 'order_state')
+			$this->initOrderStatutsList();
+		elseif ($this->table == 'order_return_state')
+			$this->initOrdersReturnsList();
+		return parent::filterToField($key, $filter);
+	}
 }
-
-
