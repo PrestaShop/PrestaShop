@@ -481,7 +481,7 @@ abstract class PaymentModuleCore extends Module
 						}
 
 						$cart_rules_list .= '
-						<tr style="background-color:#EBECEE;">
+						<tr>
 							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</td>
 							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false).'</td>
 						</tr>';
@@ -565,12 +565,12 @@ abstract class PaymentModuleCore extends Module
 						'{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
 						'{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
 						'{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
-							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+							'firstname'	=> '<span style="font-weight:bold;">%s</span>',
+							'lastname'	=> '<span style="font-weight:bold;">%s</span>'
 						)),
 						'{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
-								'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-								'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+								'firstname'	=> '<span style="font-weight:bold;">%s</span>',
+								'lastname'	=> '<span style="font-weight:bold;">%s</span>'
 						)),
 						'{delivery_company}' => $delivery->company,
 						'{delivery_firstname}' => $delivery->firstname,
