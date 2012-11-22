@@ -13,7 +13,7 @@ please specify the issue number in your pull request message or in the name of t
 for example _PSCFV-007_
 
 Read the [Fork a repo](https://help.github.com/articles/fork-a-repo) article 
-if you aren't familiare with GitHub. 
+if you aren't familiar with GitHub. 
 
 ### Quick start
 
