@@ -916,7 +916,7 @@ class ShopCore extends ObjectModel
 	 * @param string $on
 	 * @return string
 	 */
-	public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null)
+	public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null, $force_not_default = false)
 	{
 		$table_alias = $table.'_shop';
 		if (strpos($table, '.') !== false)
@@ -929,7 +929,7 @@ class ShopCore extends ObjectModel
 		ON ('.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table;
 		if ((int)self::$context_id_shop)
 			$sql .= ' AND '.$table_alias.'.id_shop = '.(int)self::$context_id_shop;
-		elseif (Shop::checkIdShopDefault($table))
+		elseif (Shop::checkIdShopDefault($table) && !$force_not_default)
 			$sql .= ' AND '.$table_alias.'.id_shop = '.$alias.'.id_shop_default';
 		else
 			$sql .= ' AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')';
