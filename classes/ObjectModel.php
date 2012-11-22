@@ -518,6 +518,54 @@ abstract class ObjectModelCore
 
 		return $result;
 	}
+	
+	/**
+	 * Duplicate current object to database
+	 *
+	 * @return new object
+	 */
+	public function duplicateObject()
+	{
+		$definition = ObjectModel::getDefinition($this);
+
+		$res = Db::getInstance()->getRow('
+					SELECT * 
+					FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
+					WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
+				);
+		if (!$res)
+			return false;
+		unset($res[$definition['primary']]);
+
+		if (!Db::getInstance()->insert($definition['table'], $res))
+			return false;
+		
+		$object_id = Db::getInstance()->Insert_ID();
+		
+		if ($definition['multilang'])
+		{
+			$res = Db::getInstance()->executeS('
+						SELECT * 
+						FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+						WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
+					);
+
+			if (!$res)
+				return false;
+			
+			foreach ($res as $row)
+			{
+				$row[$definition['primary']] = (int)$object_id;	
+				if (!Db::getInstance()->insert($definition['table'].'_lang', $row))
+					return false;
+				}
+		}
+	
+		$object_duplicated = new $definition['classname']((int)$object_id);
+		$object_duplicated->duplicateShops((int)$this->id);
+		
+		return $object_duplicated;
+	}
 
 	/**
 	 * Update current object to database

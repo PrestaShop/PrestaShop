@@ -696,20 +696,19 @@ class AdminControllerCore extends Controller
 					if ($this->deleted && $this->beforeDelete($object))
 					{
 						// Create new one with old objet values
-						$object_new = new $this->className($object->id);
-						$object_new->id = null;
-						$object_new->date_add = '';
-						$object_new->date_upd = '';
-
-						// Update old object to deleted
-						$object->deleted = 1;
-						$object->update();
-
-						// Update new object with post values
-						$this->copyFromPost($object_new, $this->table);
-						$result = $object_new->add();
+						$object_new = $object->duplicateObject();
 						if (Validate::isLoadedObject($object_new))
-							$this->afterDelete($object_new, $object->id);
+						{
+							// Update old object to deleted
+							$object->deleted = 1;
+							$object->update();
+
+							// Update new object with post values
+							$this->copyFromPost($object_new, $this->table);
+							$result = $object_new->update();
+							if (Validate::isLoadedObject($object_new))
+								$this->afterDelete($object_new, $object->id);
+						}
 					}
 					else
 					{

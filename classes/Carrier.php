@@ -842,6 +842,8 @@ class CarrierCore extends ObjectModel
 			SET `id_reference` = '.(int)$id_reference.'
 			WHERE `id_carrier` = '.(int)$this->id);
 
+		$this->id_reference = (int)$id_reference;
+
 		// Copy tax rules group
 		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_tax_rules_group_shop` (`id_carrier`, `id_tax_rules_group`, `id_shop`)
 												(SELECT '.(int)$this->id.', `id_tax_rules_group`, `id_shop`
