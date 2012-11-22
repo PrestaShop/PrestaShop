@@ -2069,12 +2069,18 @@ class AdminControllerCore extends Controller
 		if ($this->explicitSelect)
 		{
 			foreach ($this->fields_list as $key => $array_value)
+			{
+				// Add it only if it is not already in $this->_select
+				if (isset($this->_select) && preg_match('/'.preg_quote($key, '/').'`?\s*,/', $this->_select))
+					continue;
+			
 				if (isset($array_value['filter_key']))
 					$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
 				elseif ($key == 'id_'.$this->table)
 					$this->_listsql .= 'a.`'.bqSQL($key).'`,';
 				elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
 					$this->_listsql .= '`'.bqSQL($key).'`,';
+			}
 			$this->_listsql = rtrim($this->_listsql, ',');
 		}
 		else
