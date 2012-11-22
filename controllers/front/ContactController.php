@@ -265,24 +265,22 @@ class ContactControllerCore extends FrontController
 			$this->context->smarty->assign('isLogged', 1);
 
 			$products = array();
+			$result = Db::getInstance()->executeS('
+			SELECT id_order
+			FROM '._DB_PREFIX_.'orders
+			WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
 			$orders = array();
-			$getOrders = Db::getInstance()->executeS('
-				SELECT id_order
-				FROM '._DB_PREFIX_.'orders
-				WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
-			$order_tab = array();
-			foreach ($getOrders as $row)
+			foreach ($result as $row)
 			{
 				$order = new Order($row['id_order']);
-				$date = explode(' ', $order->date_add);
-				$orders[] = 
+				$date = explode(' ', $order->date_add);				
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
 					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
-				$order_tab[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], $this->context->language->id), 'selected' => (int)Tools::getValue('id_order') == $order->id);
+				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], $this->context->language->id), 'selected' => (int)Tools::getValue('id_order') == $order->id);
 			}
 
-			$this->context->smarty->assign('orderList', $order_tab);
+			$this->context->smarty->assign('orderList', $orders);
 			$this->context->smarty->assign('orderedProductList', $products);
 		}
 	}
