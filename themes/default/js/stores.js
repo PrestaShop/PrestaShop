@@ -110,7 +110,7 @@ function searchLocationsNear(center)
 			parseFloat(markerNodes[i].getAttribute('lng')));
 
 			createOption(name, distance, i);
-			createMarker(latlng, name, address, addressNoHtml, other, id_store, has_store_picture);
+			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
 
 			$('#stores-table tr:last').after('<tr class="node"><td class="num">'+parseInt(i + 1)+'</td><td><b>'+name+'</b>'+(has_store_picture == 1 ? '<br /><img src="'+img_store_dir+parseInt(id_store)+'-medium.jpg" alt="" />' : '')+'</td><td>'+address+(phone != '' ? '<br /><br />'+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
