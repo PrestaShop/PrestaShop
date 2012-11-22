@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -183,6 +182,13 @@ class CategoryControllerCore extends FrontController
 		else
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
+
+		foreach ($this->cat_products as &$product)
+		{
+			if ($product['id_product_attribute'])
+				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
+		}
+
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
 }

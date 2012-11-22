@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -322,10 +321,7 @@ class LinkCore
 
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang))
-		{
-			unset($params['module']);
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
-		}
 		else
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow);
 	}
@@ -413,7 +409,6 @@ class LinkCore
 				$request = urlencode($request);
 			parse_str($request, $request);
 		}
-		unset($request['controller']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request);
 		$url = ($ssl && $this->ssl_enable) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);

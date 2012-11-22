@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7521 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -325,7 +324,7 @@ class MediaCore
 				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
 				if (self::$jquery_ui_dependencies[$dependency]['theme'])
 					$dep_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$dependency.'.css');
-				if (!empty($dep_css) || $dep_css)
+				if (isset($dep_css) && (!empty($dep_css) || $dep_css))
 					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
 			}
 		}

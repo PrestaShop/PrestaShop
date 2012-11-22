@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7506 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -2528,19 +2527,19 @@ class ProductCore extends ObjectModel
 			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
-		$cache_id_2 = $id_product;
+		$cache_id_2 = $id_product.'-'.$id_shop;
 		if (!isset(self::$_pricesLevel2[$cache_id_2]))
 		{
 			$sql = new DbQuery();
 			$sql->select('product_shop.`price`, product_shop.`ecotax`');
 			$sql->from('product', 'p');
-			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop='.(int)$id_shop.')');
+			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = '.(int)$id_shop.')');
 			$sql->where('p.`id_product` = '.(int)$id_product);
 			if (Combination::isFeatureActive())
 			{
 				$sql->select('product_attribute_shop.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')');
+				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop = '.(int)$id_shop.')');
 			}
 			else
 				$sql->select('0 as id_product_attribute');
@@ -2676,11 +2675,11 @@ class ProductCore extends ObjectModel
 			WHERE `id_product` = '.(int)$id_product.' AND `id_cart` = '.(int)$context->cart->id
 		);
 		$quantity = $cart_quantity ? $cart_quantity : $quantity;
+
 		$id_currency = (int)$context->currency->id;
 		$ids = Address::getCountryAndState((int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$id_country = (int)($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-
-		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity);
+		return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
 	}
 
 	/**
@@ -3191,7 +3190,8 @@ class ProductCore extends ObjectModel
 		{
 			if (!array_key_exists($row['id_product'].'-'.$id_lang, self::$_frontFeaturesCache))
 				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang] = array();
-			self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][] = $row;
+			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']]))
+				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']] = $row;
 		}
 	}
 
@@ -3218,7 +3218,10 @@ class ProductCore extends ObjectModel
 		);
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
-		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
+		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
+		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
+		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
+		OR  p.`id_product` IN (SELECT id_product FROM '._DB_PREFIX_.'product_supplier sp WHERE `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
 		$sql->groupBy('`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
@@ -3588,8 +3591,9 @@ class ProductCore extends ObjectModel
 		$cache_key = $row['id_product'].'-'.$row['id_product_attribute'].'-'.$id_lang.'-'.(int)$usetax;
 		if (isset($row['id_product_pack']))
 			$cache_key .= '-pack'.$row['id_product_pack'];
+
 		if (isset(self::$producPropertiesCache[$cache_key]))
-			return self::$producPropertiesCache[$cache_key];
+			return array_merge($row, self::$producPropertiesCache[$cache_key]);
 
 		// Datas
 		$row['category'] = Category::getLinkRewrite((int)$row['id_category_default'], (int)$id_lang);

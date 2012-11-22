@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -62,7 +61,7 @@
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %d' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
+							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
 						{else}
 						&nbsp;
 						{/if}

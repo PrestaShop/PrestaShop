@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -109,15 +108,25 @@ Context::getContext()->country = $defaultCountry;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Instantiate cookie */
-$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
+
+
+$cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
+$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+
 if (defined('_PS_ADMIN_DIR_'))
-	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
+	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
 else
 {
 	if (Context::getContext()->shop->getGroup()->share_order)
-		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookieLifetime, Context::getContext()->shop->getUrlsSharedCart());
+		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookie_lifetime, Context::getContext()->shop->getUrlsSharedCart());
 	else
-		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookieLifetime);
+	{
+		$domains = null;
+		if(Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
+		  $domains = array(Context::getContext()->shop->domain_ssl, Context::getContext()->shop->domain);
+		
+		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookie_lifetime, $domains);
+	}
 }
 
 Context::getContext()->cookie = $cookie;

@@ -582,7 +582,7 @@ class HomeSlider extends Module
 						$errors[] = $error;
 					elseif (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type))
+					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type, null, null, $type))
 						$errors[] = $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						@unlink($temp_name);
