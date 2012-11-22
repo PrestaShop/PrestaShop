@@ -121,7 +121,7 @@
 				{assign var='feature_id' value=$feature.id_feature}
 				{if isset($product_features[$product_id])}
 					{assign var='tab' value=$product_features[$product_id]}
-					<td  width="{$width}%" class="{$classname} comparison_infos">{$tab[$feature_id]|escape:'htmlall':'UTF-8'}</td>
+					<td  width="{$width}%" class="{$classname} comparison_infos">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'htmlall':'UTF-8'}{/if}</td>
 				{else}
 					<td  width="{$width}%" class="{$classname} comparison_infos"></td>
 				{/if}
