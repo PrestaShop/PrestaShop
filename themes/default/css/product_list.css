@@ -58,8 +58,15 @@ ul#product_list {
 			-webkit-transform: rotate(45deg);
 			-o-transform:rotate(45deg);
 			-ms-transform: rotate(45deg);
-			background-color: #990000
+			background-color: #990000;
+			transform: rotate(45deg);  /* Newer browsers */
+			filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476); /* IE6,IE7 */
+			-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; /* IE8 */
 		}
+		
+		.ie8 #product_list li span.new{top:-17px;}
+		.ie7 #product_list li span.new {top:-30px;right:-25px}
+		.lt-ie6 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
 	#product_list li h3 {
 		padding:0 0 10px 0;
 		font-size:13px;

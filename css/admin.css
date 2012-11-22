@@ -1294,7 +1294,7 @@ html[xmlns] .clearfix {
 .table_info h5{
 	font-size:16px;
 	font-weight:normal;
-	color:000;
+	color:#000;
 	margin:0;
 	padding:6px;
 	text-shadow:0 1px 0 #fff;
@@ -2202,7 +2202,7 @@ div#scrollTop a:hover{
 	margin-left:10px;
 }
 .metadata-command dl dt, .metadata-command dl dd {
-	color:#color: #585A69;
+	color:#585A69;
 	float:left;
 	margin:0;
 	padding-right:10px;
