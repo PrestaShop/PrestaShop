@@ -211,9 +211,10 @@ class AdminThemesControllerCore extends AdminController
 		
 		if (!$paypal_installed && in_array($iso_code, $paypal_countries))
 		{
-			$this->warnings[] = $this->l('The mobile theme only works with the PayPal\'s payment module at this time. Please activate the module to enable payments.')
-				.'<br>'.
-				$this->l('In order to use the mobile theme you have to install and configure the PayPal module.');
+			if (!$this->isXmlHttpRequest())
+				$this->warnings[] = $this->l('The mobile theme only works with the PayPal\'s payment module at this time. Please activate the module to enable payments.')
+					.'<br>'.
+					$this->l('In order to use the mobile theme you have to install and configure the PayPal module.');
 		}
 	}
 
