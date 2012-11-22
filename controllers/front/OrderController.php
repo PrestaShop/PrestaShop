@@ -270,6 +270,10 @@ class OrderControllerCore extends ParentOrderController
 			{
 				$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
 				$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+				
+				CartRule::autoRemoveFromCart($this->context);
+				CartRule::autoAddToCart($this->context);
+				
 				if (!$this->context->cart->update())
 					$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 
