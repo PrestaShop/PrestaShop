@@ -28,7 +28,8 @@ origin
 </pre>
 
 Checkout the `development` branch of your fork, create a `topic` branch from there, 
-make changes, and push them to your remote. 
+make changes, and push them to your remote. When creating the pull request, choose 
+the `topic` branch. 
 
 <pre>
 $ git checkout --track origin/development
