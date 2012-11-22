@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 /*
 * 2007-2012 PrestaShop
@@ -1624,7 +1623,6 @@ abstract class PaymentModuleCore extends Module
 		');
 	}
 
-
 	public static function preCall($module_name)
 	{
 		if (!parent::preCall($module_name))
@@ -1636,7 +1634,4 @@ abstract class PaymentModuleCore extends Module
 
 		return false;
 	}
-
 }
-
->>>>>>> [-] FO: fixed bug #PSCFV-5779 - order_conf still not fixed propertly
