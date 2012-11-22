@@ -2527,19 +2527,19 @@ class ProductCore extends ObjectModel
 			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
-		$cache_id_2 = $id_product;
+		$cache_id_2 = $id_product.'-'.$id_shop;
 		if (!isset(self::$_pricesLevel2[$cache_id_2]))
 		{
 			$sql = new DbQuery();
 			$sql->select('product_shop.`price`, product_shop.`ecotax`');
 			$sql->from('product', 'p');
-			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop='.(int)$id_shop.')');
+			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = '.(int)$id_shop.')');
 			$sql->where('p.`id_product` = '.(int)$id_product);
 			if (Combination::isFeatureActive())
 			{
 				$sql->select('product_attribute_shop.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')');
+				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop = '.(int)$id_shop.')');
 			}
 			else
 				$sql->select('0 as id_product_attribute');
