@@ -56,15 +56,17 @@ class IdentityControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid date of birth');
 			else
 			{
+				$email = trim(Tools::getValue('email'));
 				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
-
-				if (Customer::customerExists(Tools::getValue('email'), true) && $this->customer->email != Tools::getValue('email'))
-					$this->errors[] = Tools::displayError('An account is already registered with this e-mail.');
-
 				$_POST['old_passwd'] = trim($_POST['old_passwd']);
-				if (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
+				
+				if (!Validate::isEmail($email))
+					$this->errors[] = Tools::displayError('This e-mail address is not valid');
+				elseif ($this->customer->email != $email && Customer::customerExists($email, true))
+					$this->errors[] = Tools::displayError('An account is already registered with this e-mail.');
+				elseif (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
 					$this->errors[] = Tools::displayError('Your password is incorrect.');
-				else if ($_POST['passwd'] != $_POST['confirmation'])
+				elseif ($_POST['passwd'] != $_POST['confirmation'])
 					$this->errors[] = Tools::displayError('Password and confirmation do not match');
 				else
 				{
