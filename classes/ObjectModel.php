@@ -1255,7 +1255,7 @@ abstract class ObjectModelCore
 		}
 
 		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
-				'.Shop::addSqlAssociation($def['table'], 'a').'
+				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
 				SET '.implode(', ', $update_data).'
 				WHERE '.$where;
 		return Db::getInstance()->execute($sql);

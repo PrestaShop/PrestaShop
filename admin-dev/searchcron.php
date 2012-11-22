@@ -24,7 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+define('_PS_ADMIN_DIR_', getcwd());
 include(dirname(__FILE__).'/../config/config.inc.php');
+Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
 
 if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token'))
 	die;
