@@ -1,0 +1,40 @@
+CONTRIBUTORS
+============
+
+- DamienMetzger 
+- François Gaillard 
+- Rémi Gaillard 
+- Vincent Augagneur 
+- aFolletete 
+- aKorczak 
+- aNiassy 
+- bLeveque 
+- bMancone 
+- dMetzger 
+- dSevere 
+- fBrignoli 
+- fSerny 
+- gBrunier 
+- gCharmes 
+- gPoulain 
+- hAitmansour 
+- jBreux 
+- jObregon 
+- jmCollin 
+- lBrieu 
+- lCherifi 
+- lLefevre 
+- mBertholino 
+- mDeflotte 
+- mMarinetti 
+- nPellicari 
+- rGaillard 
+- rMalie 
+- rMontagne 
+- sLorenzini 
+- sThiebaut 
+- tDidierjean 
+- vAugagneur 
+- vChabot 
+- vKham 
+- vSchoener 
