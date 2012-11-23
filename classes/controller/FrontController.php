@@ -863,10 +863,7 @@ class FrontControllerCore extends Controller
 		$this->p = abs((int)Tools::getValue('p', 1));
 
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
-		{
-			$this->redirect_after = '404';
-			$this->redirect();
-		}
+			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
 
 		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
 		//delete parameter page
@@ -880,13 +877,9 @@ class FrontControllerCore extends Controller
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
-		if ($this->p > (($nbProducts / $this->n) + 1))
-		{
-			$this->redirect_after = preg_replace('/[&?]p=\d+/', '', $_SERVER['REQUEST_URI']);
-			$this->redirect();
-		}
-
 		$pages_nb = ceil($nbProducts / (int)$this->n);
+		if ($this->p > $pages_nb)
+			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$start = (int)($this->p - $range);
 		if ($start < 1)
