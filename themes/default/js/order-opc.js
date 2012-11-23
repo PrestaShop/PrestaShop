@@ -40,13 +40,13 @@ function updateCarrierList(json)
 function updatePaymentMethods(json)
 {
 	$('#HOOK_TOP_PAYMENT').html(json.HOOK_TOP_PAYMENT);
-	$('#opc_payment_methods-content div#HOOK_PAYMENT').html(json.HOOK_PAYMENT);
+	$('#opc_payment_methods-content #HOOK_PAYMENT').html(json.HOOK_PAYMENT);
 }
 
 function updateAddressSelection()
 {
-	var idAddress_delivery = ($('input#opc_id_address_delivery').length == 1 ? $('input#opc_id_address_delivery').val() : $('#id_address_delivery').val());
-	var idAddress_invoice = ($('input#opc_id_address_invoice').length == 1 ? $('input#opc_id_address_invoice').val() : ($('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : ($('#id_address_invoice').length == 1 ? $('select#id_address_invoice').val() : idAddress_delivery)));
+	var idAddress_delivery = ($('#opc_id_address_delivery').length == 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
+	var idAddress_invoice = ($('#opc_id_address_invoice').length == 1 ? $('#opc_id_address_invoice').val() : ($('#addressesAreEquals:checked').length == 1 ? idAddress_delivery : ($('#id_address_invoice').length == 1 ? $('#id_address_invoice').val() : idAddress_delivery)));
 
 	$('#opc_account-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay').fadeIn('slow');
@@ -185,7 +185,7 @@ function updateCarrierSelectionAndGift()
 	if ($('input#gift:checked').length)
 	{
 		gift = 1;
-		giftMessage = encodeURIComponent($('textarea#gift_message').val());
+		giftMessage = encodeURIComponent($('#gift_message').val());
 	}
 	
 	$('#opc_payment_methods-overlay').fadeIn('slow');
@@ -517,7 +517,7 @@ $(function() {
 			// RESET ERROR(S) MESSAGE(S)
 			$('#opc_account_errors').html('').slideUp('slow');
 			
-			if ($('input#opc_id_customer').val() == 0)
+			if ($('#opc_id_customer').val() == 0)
 			{
 				var callingFile = authenticationUrl;
 				var params = 'submitAccount=true&';
@@ -587,18 +587,18 @@ $(function() {
 						static_token = jsonData.token;
 						
 						// update addresses id
-						$('input#opc_id_address_delivery').val(jsonData.id_address_delivery);
-						$('input#opc_id_address_invoice').val(jsonData.id_address_invoice);
+						$('#opc_id_address_delivery').val(jsonData.id_address_delivery);
+						$('#opc_id_address_invoice').val(jsonData.id_address_invoice);
 						
 						// It's not a new customer
-						if ($('input#opc_id_customer').val() != '0')
+						if ($('#opc_id_customer').val() != '0')
 						{
 							if (!saveAddress('delivery'))
 								return false;
 						}
 						
 						// update id_customer
-						$('input#opc_id_customer').val(jsonData.id_customer);
+						$('#opc_id_customer').val(jsonData.id_customer);
 						
 						if ($('#invoice_address:checked').length != 0)
 						{
@@ -607,7 +607,7 @@ $(function() {
 						}
 						
 						// update id_customer
-						$('input#opc_id_customer').val(jsonData.id_customer);
+						$('#opc_id_customer').val(jsonData.id_customer);
 						
 						// force to refresh carrier list
 						if (isGuest)
@@ -683,26 +683,26 @@ function bindInputs()
 	});
 	
 	// Recyclable checkbox
-	$('input#recyclable').click(function() {
+	$('#recyclable').click(function() {
 		updateCarrierSelectionAndGift();
 	});
 	
 	// Gift checkbox update
-	$('input#gift').click(function() {
-		if ($('input#gift').is(':checked'))
-			$('p#gift_div').show();
+	$('#gift').click(function() {
+		if ($('#gift').is(':checked'))
+			$('#gift_div').show();
 		else
-			$('p#gift_div').hide();
+			$('#gift_div').hide();
 		updateCarrierSelectionAndGift();
 	});
 	
-	if ($('input#gift').is(':checked'))
-		$('p#gift_div').show();
+	if ($('#gift').is(':checked'))
+		$('#gift_div').show();
 	else
-		$('p#gift_div').hide();
+		$('#gift_div').hide();
 
 	// Gift message update
-	$('textarea#gift_message').change(function() {
+	$('#gift_message').change(function() {
 		updateCarrierSelectionAndGift();
 	});
 	
