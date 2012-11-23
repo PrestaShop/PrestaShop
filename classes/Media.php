@@ -381,7 +381,7 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginCSSPath($name, $folder)
+	public static function getJqueryPluginCSSPath($name, $folder = null)
 	{
 		if ($folder === null)
 			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder

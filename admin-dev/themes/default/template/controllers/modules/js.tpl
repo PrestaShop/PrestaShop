@@ -18,15 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<link href="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">{$autocompleteList}</script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/autocomplete/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.js"></script>
 <script type="text/javascript">
 	var token = '{$token}';
 	var currentIndex = '{$currentIndex}';
