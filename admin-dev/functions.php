@@ -104,8 +104,8 @@ function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 	$content = "<?php\n\n";
 	foreach ($defines as $k => $value)
 		$content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
-	$content .= "\n?>";
-	if ($fd = @fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
+	copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
+	if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
 	{
 		fwrite($fd, $content);
 		fclose($fd);
