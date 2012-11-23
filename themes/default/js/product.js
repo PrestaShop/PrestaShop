@@ -76,7 +76,7 @@ function findCombination(firstTime)
 	$('#quantity_wanted').val(1);
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = new Array();
-	$('div#attributes select, div#attributes input[type=hidden], div#attributes input[type=radio]:checked').each(function(){
+	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
 		choice.push($(this).val());
 	});
 
@@ -264,20 +264,20 @@ function updateDisplay()
 			{
 				$('#availability_value').text(availableLaterValue);
 				if(stock_management == 1)
-					$('p#availability_statut:hidden').show('slow');
+					$('#availability_statut:hidden').show('slow');
 			}
 			else
-				$('p#availability_statut:visible').hide('slow');
+				$('#availability_statut:visible').hide('slow');
 		}
 		else
 		{
 			$('#add_to_cart:visible').fadeOut(600);
 			if(stock_management == 1)
-				$('p#availability_statut:hidden').show('slow');
+				$('#availability_statut:hidden').show('slow');
 		}
 
 		if (productAvailableForOrder == 0)
-			$('p#availability_statut:visible').hide();
+			$('#availability_statut:visible').hide();
 	}
 
 	if (selectedCombination['reference'] || productReference)
@@ -446,7 +446,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 //update display of the discounts table
 function displayDiscounts(combination)
 {
-	$('#quantityDiscount table tbody tr').each(function() {
+	$('#quantityDiscount tbody tr').each(function() {
 		if (($(this).attr('id') != 'quantityDiscount_0') &&
 			($(this).attr('id') != 'quantityDiscount_'+combination) &&
 			($(this).attr('id') != 'noQuantityDiscount'))
@@ -469,8 +469,8 @@ function serialScrollFixLock(event, targeted, scrolled, items, position)
 	var leftArrow = position == 0 ? true : false;
 	var rightArrow = position + serialScrollNbImagesDisplayed >= serialScrollNbImages ? true : false;
 
-	$('a#view_scroll_left').css('cursor', leftArrow ? 'default' : 'pointer').css('display', leftArrow ? 'none' : 'block').fadeTo(0, leftArrow ? 0 : 1);
-	$('a#view_scroll_right').css('cursor', rightArrow ? 'default' : 'pointer').fadeTo(0, rightArrow ? 0 : 1).css('display', rightArrow ? 'none' : 'block');
+	$('#view_scroll_left').css('cursor', leftArrow ? 'default' : 'pointer').css('display', leftArrow ? 'none' : 'block').fadeTo(0, leftArrow ? 0 : 1);
+	$('#view_scroll_right').css('cursor', rightArrow ? 'default' : 'pointer').fadeTo(0, rightArrow ? 0 : 1).css('display', rightArrow ? 'none' : 'block');
 	return true;
 }
 
@@ -506,8 +506,8 @@ $(document).ready(function()
 	//init the serialScroll for thumbs
 	$('#thumbs_list').serialScroll({
 		items:'li:visible',
-		prev:'a#view_scroll_left',
-		next:'a#view_scroll_right',
+		prev:'#view_scroll_left',
+		next:'#view_scroll_right',
 		axis:'x',
 		offset:0,
 		start:0,
@@ -541,21 +541,21 @@ $(document).ready(function()
 		});
 	}
 	//add a link on the span 'view full size' and on the big image
-	$('span#view_full_size, div#image-block img').click(function(){
-		$('#views_block li a.shown').click();
+	$('#view_full_size, #image-block img').click(function(){
+		$('#views_block .shown').click();
 	});
 
 	//catch the click on the "more infos" button at the top of the page
-	$('div#short_description_block p a.button').click(function(){
+	$('#short_description_block .button').click(function(){
 		$('#more_info_tab_more_info').click();
 		$.scrollTo( '#more_info_tabs', 1200 );
 	});
 
 	// Hide the customization submit button and display some message
-	$('p#customizedDatas input').click(function() {
-		$('p#customizedDatas input').hide();
+	$('#customizedDatas input').click(function() {
+		$('#customizedDatas input').hide();
 		$('#ajax-loader').fadeIn();
-		$('p#customizedDatas').append(uploading_in_progress);
+		$('#customizedDatas').append(uploading_in_progress);
 	});
 
 	//init the price in relation of the selected attributes
@@ -564,7 +564,7 @@ $(document).ready(function()
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes)
 		refreshProductImages(0);
 
-	$('a#resetImages').click(function() {
+	$('#resetImages').click(function() {
 		refreshProductImages(0);
 	});
 
@@ -656,7 +656,7 @@ function getProductAttribute()
 	request = '';
 	//create a temporary 'tab_attributes' array containing the choices of the customer
 	var tab_attributes = new Array();
-	$('div#attributes select, div#attributes input[type=hidden], div#attributes input[type=radio]:checked').each(function(){
+	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
 		tab_attributes.push($(this).val());
 	});
 
