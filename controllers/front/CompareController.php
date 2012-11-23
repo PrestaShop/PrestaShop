@@ -106,24 +106,21 @@ class CompareControllerCore extends FrontController
 					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
 					{
 						unset($ids[$k]);
-						if (isset($this->context->cookie->id_compare))
-							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
+						continue;
+					}
+
+					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
+					{
+						unset($ids[$k]);
 						continue;
 					}
 
 					if (!Validate::isLoadedObject($curProduct))
-					{
-						unset($ids[$k]);
-						if (isset($this->context->cookie->id_compare))
-							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
 						continue;
-					}
 
 					if (!$curProduct->active)
 					{
 						unset($ids[$k]);
-						if (isset($this->context->cookie->id_compare))
-							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
 						continue;
 					}
 
@@ -158,6 +155,5 @@ class CompareControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
-	
 }
 
