@@ -169,7 +169,7 @@ class BlockWishList extends Module
 	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
-		return $this->display(__FILE__, 'blockwishlist-header.tpl');
+		$this->context->controller->addJS(($this->_path).'js/ajax-wishlist.js');
 	}
 
 	public function hookRightColumn($params)
