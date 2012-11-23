@@ -356,7 +356,7 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginPath($name, $folder)
+	public static function getJqueryPluginPath($name, $folder = null)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
 		if ($folder === null)
@@ -371,7 +371,7 @@ class MediaCore
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
-		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name);
+		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name, $folder);
 		return $plugin_path;
 	}
 
@@ -381,9 +381,10 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginCSSPath($name)
+	public static function getJqueryPluginCSSPath($name, $folder)
 	{
-		$folder = _PS_JS_DIR_.'jquery/plugins/';
+		if ($folder === null)
+			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
