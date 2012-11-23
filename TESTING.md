@@ -18,6 +18,5 @@ To run the whole test suite, use the local PHPUnit executable
 using the phpunit.xml configuration file.  
 
 <pre>
-$ vendor/bin/phpunit -c phpunit.xml
+$ vendor/bin/phpunit
 </pre>
-
