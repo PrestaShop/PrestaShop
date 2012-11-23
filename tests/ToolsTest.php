@@ -1,29 +1,20 @@
 <?php 
 
-use PrestaShop\Test\Utils as PrestaShop;
+use PrestaShop as PrestaShop;
 
 class ToolsTest extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
-		
-		define('_DB_SERVER_', 	'');
-		define('_DB_NAME_', 	'');
-		define('_DB_USER_', 	'');
-		define('_DB_PASSWD_', 	'');
-		define('_DB_PREFIX_', 	'');
-		define('_PS_DEBUG_SQL_', 0);
-		
-		PrestaShop\MockUtils :: mockDb();
-		
+		PrestaShop\Test\Runtime :: disableDb();
 	}
 	
 	public function testConvertPriceWithOneParameterAndDefaultCurrency() {
 		
-		PrestaShop\MockUtils :: mockConfiguration(array(
+		PrestaShop\Test\Runtime :: configuration(array(
 			'PS_CURRENCY_DEFAULT' => 1
 		));
 		
-		PrestaShop\MockUtils :: mockContext(array(
+		PrestaShop\Test\Runtime :: context(array(
 			'currency' => array(
 				'id_currency' 		=> 1,
 				'conversion_rate'	=> 1.000000
@@ -31,18 +22,17 @@ class ToolsTest extends PHPUnit_Framework_TestCase {
 		));
 		
 		$actual = Tools :: convertPrice(10.00);
-		
 		$this->assertEquals(10.00, $actual);
 		
 	}
 	
 	public function testConvertPriceWithOneParameter() {
 		
-		PrestaShop\MockUtils :: mockConfiguration(array(
+		PrestaShop\Test\Runtime :: configuration(array(
 			'PS_CURRENCY_DEFAULT' => 1
 		));
 		
-		PrestaShop\MockUtils :: mockContext(array(
+		PrestaShop\Test\Runtime :: context(array(
 			'currency' => array(
 				'id_currency' 		=> 2,
 				'conversion_rate'	=> 1.500000
@@ -50,14 +40,13 @@ class ToolsTest extends PHPUnit_Framework_TestCase {
 		));
 		
 		$actual = Tools :: convertPrice(10.00);
-		
 		$this->assertEquals(15.00, $actual);
 		
 	}
 	
 	public function testConvertPriceWithCurrencyArray() {
 		
-		PrestaShop\MockUtils :: mockConfiguration(array(
+		PrestaShop\Test\Runtime :: configuration(array(
 			'PS_CURRENCY_DEFAULT' => 1
 		));
 		
@@ -67,7 +56,6 @@ class ToolsTest extends PHPUnit_Framework_TestCase {
 		);
 		
 		$actual = Tools :: convertPrice(10.00, $currency);
-		
 		$this->assertEquals(15.00, $actual);
 		
 	}
@@ -79,11 +67,11 @@ class ToolsTest extends PHPUnit_Framework_TestCase {
 			'id_shop' => 1
 		));
 		
-		PrestaShop\MockUtils :: mockContext(array(
+		PrestaShop\Test\Runtime :: context(array(
 			'shop' => $shop
 		));
 		
-		PrestaShop\MockUtils :: mockConfiguration(array(
+		PrestaShop\Test\Runtime :: configuration(array(
 			'PS_CURRENCY_DEFAULT' => 1
 		));
 		
@@ -92,7 +80,6 @@ class ToolsTest extends PHPUnit_Framework_TestCase {
 		$currency->conversion_rate = 1.500000;
 		
 		$actual = Tools :: convertPrice(10.00, $currency);
-		
 		$this->assertEquals(15.00, $actual);
 		
 	}
