@@ -462,7 +462,7 @@ class AdminMetaControllerCore extends AdminController
 		Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'));
 
 		Tools::enableCache();
-		Tools::clearCache($this->context->smarty);
+		$this->context->smarty->clearAllCache();
 		Tools::restoreCacheSettings();
 	}
 
