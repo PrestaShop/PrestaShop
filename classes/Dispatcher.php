@@ -243,7 +243,6 @@ class DispatcherCore
 		$this->getController();
 		if (!$this->controller)
 			$this->controller = $this->default_controller;
-
 		// Dispatch with right front controller
 		switch ($this->front_controller)
 		{
@@ -642,10 +641,13 @@ class DispatcherCore
 	 * @return string
 	 */
 	public function getController()
-	{
+	{		
 		if ($this->controller)
+		{
+			$_GET['controller'] = $this->controller;
 			return $this->controller;
-
+		}
+	
 		$controller = Tools::getValue('controller');
 	
 		if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
