@@ -3671,14 +3671,11 @@ class ProductCore extends ObjectModel
 		$row['specific_prices'] = $specific_prices;
 
 		if ($row['id_product_attribute'])
-		{
-			$row['quantity_all_versions'] = $row['quantity'];
-			$row['quantity'] = Product::getQuantity(
+			$row['quantity_all_versions'] = Product::getQuantity(
 				(int)$row['id_product'],
-				$row['id_product_attribute'],
+				0,
 				isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
 			);
-		}
 		else
 			$row['quantity'] = Product::getQuantity((int)$row['id_product']);
 

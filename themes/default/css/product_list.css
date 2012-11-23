@@ -117,17 +117,16 @@ ul#product_list {
 	#product_list li .content_price {
 		margin:26px 0 15px 0;
 	}
-		#product_list li .price {
-			display: block;
-			margin-bottom: 15px;
-			font-weight:bold;
-			font-size: 18px;
-			color:#990000
-		}
-		#product_list li span.availability {
-			display:none;
+	#product_list li .price {
+		display: block;
+		margin-bottom: 15px;
+		font-weight:bold;
+		font-size: 18px;
+		color:#990000
+	}
+	#product_list li span.availability {
 			color: #488C40
-		}
+	}
 	#product_list li .ajax_add_to_cart_button {
 		padding-left: 20px
 	}
