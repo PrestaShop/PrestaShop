@@ -148,7 +148,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$this->context->shop->id.')';
-				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$this->context->shop->id.')';
+				$this->_where .= 'AND (image_shop.id_image IS NULL OR image_shop.id_shop='.(int)$this->context->shop->id.')';
 			}
 			else
 			{
@@ -156,7 +156,7 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop=a.id_shop_default)';
-				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop=a.id_shop_default)';
+				$this->_where .= 'AND (image_shop.id_image IS NULL OR image_shop.id_shop=a.id_shop_default)';
 			}
 			$this->_select .= 'shop.name as shopname, ';
 		}
