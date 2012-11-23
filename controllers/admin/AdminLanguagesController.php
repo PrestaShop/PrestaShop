@@ -285,9 +285,6 @@ class AdminLanguagesControllerCore extends AdminController
 		 	{
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
-					// English is needed by the system (ex. translations)
-					if ($object->id == Language::getIdByIso('en'))
-						$this->errors[] = $this->l('You cannot delete the English language because it is a system requirement, you can only deactivate it.');
 					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
 						$this->errors[] = $this->l('You cannot delete the default language');
 					else if ($object->id == $this->context->language->id)
