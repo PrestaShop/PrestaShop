@@ -51,6 +51,8 @@ class CookieCore
 	protected $_iv;
 
 	protected $_modified = false;
+	
+	protected $_allow_writing;
 
 	/**
 	 * Get data if the cookie exists and else initialize an new one
@@ -71,11 +73,17 @@ class CookieCore
 		$this->_key = _COOKIE_KEY_;
 		$this->_iv = _COOKIE_IV_;
 		$this->_domain = $this->getDomain($shared_urls);
+		$this->_allow_writing = true;
 		if (Configuration::get('PS_CIPHER_ALGORITHM'))
 			$this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
 		else
 			$this->_cipherTool = new Blowfish($this->_key, $this->_iv);
 		$this->update();
+	}
+
+	public function disallowWriting()
+	{
+		$this->_allow_writing = false;
 	}
 
 	protected function getDomain($shared_urls = null)
@@ -325,7 +333,7 @@ class CookieCore
 	 */
 	public function write()
 	{
-		if (!$this->_modified || headers_sent())
+		if (!$this->_modified || headers_sent() || !$this->_allow_writing)
 			return;
 
 		$cookie = '';
