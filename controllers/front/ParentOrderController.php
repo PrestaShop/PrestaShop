@@ -300,22 +300,23 @@ class ParentOrderControllerCore extends FrontController
 
 			if ($cart_product_context->shop->id != $product['id_shop'])
 				$cart_product_context->shop = new Shop((int)$product['id_shop']);
-			$product['price_without_specific_price'] = Product::getPriceStatic($product['id_product'], 
-																									!Product::getTaxCalculationMethod(), 
-																									$product['id_product_attribute'], 
-																									2, 
-																									null, 
-																									false, 
-																									false,
-																									1,
-																									false,
-																									null,
-																									null,
-																									null,
-																									$null,
-																									true,
-																									true,
-																									$cart_product_context);
+			$product['price_without_specific_price'] = Product::getPriceStatic(
+				$product['id_product'], 
+				!Product::getTaxCalculationMethod(), 
+				$product['id_product_attribute'], 
+				2, 
+				null, 
+				false, 
+				false,
+				1,
+				false,
+				null,
+				null,
+				null,
+				$null,
+				true,
+				true,
+				$cart_product_context);
 
 			if (Product::getTaxCalculationMethod())
 				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price'];
@@ -323,8 +324,15 @@ class ParentOrderControllerCore extends FrontController
 				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
 		}
 		
-		$show_option_allow_separate_package = !$this->context->cart->isAllProductsInStock(true)
-			&& Configuration::get('PS_SHIP_WHEN_AVAILABLE');
+		// Get available cart rules and unset the cart rules already in the cart
+		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
+		$cart_cart_rules = $this->context->cart->getCartRules();
+		foreach ($available_cart_rules as $key => $available_cart_rule)
+			foreach ($cart_cart_rules as $cart_cart_rule)
+				if ($available_cart_rule['id_cart_rule'] == $cart_cart_rule['id_cart_rule'])
+					unset($available_cart_rules[$key]);
+
+		$show_option_allow_separate_package = (!$this->context->cart->isAllProductsInStock(true) && Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
 
 		$this->context->smarty->assign($summary);
 		$this->context->smarty->assign(array(
@@ -339,7 +347,7 @@ class ParentOrderControllerCore extends FrontController
 			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'lastProductAdded' => $this->context->cart->getLastProduct(),
-			'displayVouchers' => CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart),
+			'displayVouchers' => $available_cart_rules,
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
