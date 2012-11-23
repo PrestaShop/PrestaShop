@@ -23,8 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	var favorite_products_url_add = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], true)}';
-	var favorite_products_url_remove = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], true)}';
+	var favorite_products_url_add = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'add'], false)}';
+	var favorite_products_url_remove = '{$link->getModuleLink('favoriteproducts', 'actions', ['process' => 'remove'], false)}';
 {if isset($smarty.get.id_product)}
 	var favorite_products_id_product = '{$smarty.get.id_product|intval}';
 {/if} 
