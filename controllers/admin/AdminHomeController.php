@@ -377,8 +377,9 @@ class AdminHomeControllerCore extends AdminController
 			SELECT total_paid / conversion_rate as total_converted, left(invoice_date, 10) as invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1
-				AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+			AND total_paid > 0
+			AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 		');
 		foreach ($result as $row)
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);
