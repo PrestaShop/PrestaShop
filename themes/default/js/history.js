@@ -35,26 +35,26 @@ function showOrder(mode, var_content, file)
 			{
 				$(this).html(data);
 				/* if return is allowed*/
-				if ($('div#order-detail-content table td.order_cb').length > 0)
+				if ($('#order-detail-content .order_cb').length > 0)
 				{
 					//return slip : check or uncheck every checkboxes
-					$('form div#order-detail-content th input[type=checkbox]').click(function()
+					$('#order-detail-content th input[type=checkbox]').click(function()
 					{
-							$('form div#order-detail-content td input[type=checkbox]').each(function()
+							$('#order-detail-content td input[type=checkbox]').each(function()
 							{
-								this.checked = $('form div#order-detail-content th input[type=checkbox]').is(':checked');
+								this.checked = $('#order-detail-content th input[type=checkbox]').is(':checked');
 								updateOrderLineDisplay(this);
 							});
 					});
 					//return slip : enable or disable 'global' quantity editing
-					$('form div#order-detail-content td input[type=checkbox]').click(function()
+					$('#order-detail-content td input[type=checkbox]').click(function()
 					{
 						updateOrderLineDisplay(this);
 					});
 					//return slip : limit quantities
-					$('form div#order-detail-content td input.order_qte_input').keyup(function()
+					$('#order-detail-content td .order_qte_input').keyup(function()
 					{
-						var maxQuantity = parseInt($(this).parent().find('span.order_qte_span').text());
+						var maxQuantity = parseInt($(this).parent().find('.order_qte_span').text());
 						var quantity = parseInt($(this).val());
 						if (isNaN($(this).val()) && $(this).val() != '')
 						{
@@ -83,8 +83,8 @@ function showOrder(mode, var_content, file)
 
 function updateOrderLineDisplay(domCheckbox)
 {
-	var lineQuantitySpan = $(domCheckbox).parent().parent().find('span.order_qte_span');
-	var lineQuantityInput = $(domCheckbox).parent().parent().find('input.order_qte_input');
+	var lineQuantitySpan = $(domCheckbox).parent().parent().find('.order_qte_span');
+	var lineQuantityInput = $(domCheckbox).parent().parent().find('.order_qte_input');
 	if($(domCheckbox).is(':checked'))
 	{
 		lineQuantitySpan.hide();
@@ -102,19 +102,19 @@ function updateOrderLineDisplay(domCheckbox)
 function sendOrderMessage()
 {
 	paramString = "ajax=true";
-	$('form#sendOrderMessage').find('input, textarea').each(function(){
+	$('#sendOrderMessage').find('input, textarea').each(function(){
 		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
 	});
 
 	$.ajax({
 		type: "POST",
-		url: $('form#sendOrderMessage').attr("action"),
+		url: $('#sendOrderMessage').attr("action"),
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {
 				$(this).html(msg);
 				//catch the submit event of sendOrderMessage form
-				$('form#sendOrderMessage').submit(function(){
+				$('#sendOrderMessage').submit(function(){
 					return sendOrderMessage();
 				});
 				$(this).fadeIn('slow');
