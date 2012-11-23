@@ -110,8 +110,7 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
-			$id_current_shop_group = Shop::getContextShopGroupID();
-			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_shop_group);
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false);
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);
 
