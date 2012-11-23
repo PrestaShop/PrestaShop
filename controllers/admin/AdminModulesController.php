@@ -127,6 +127,12 @@ class AdminModulesControllerCore extends AdminController
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
 	}
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin(array('autocomplete', 'fancybox'));
+	}
 
 	public function ajaxProcessRefreshModuleList()
 	{

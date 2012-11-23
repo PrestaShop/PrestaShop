@@ -48,6 +48,12 @@ class AdminCartRulesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
+	}
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
@@ -464,13 +470,6 @@ class AdminCartRulesControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Save and Stay')
 		);
-
-		// Todo: change for "Media" version
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/jquery.typewatch.js');
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js');
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
-		$this->addCss(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.css');
-		$this->addCss(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.css');
 
 		$current_object = $this->loadObject(true);
 
