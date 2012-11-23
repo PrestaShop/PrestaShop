@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
+<phpunit bootstrap="bootstrap.php">
 	<filter>
   		<blacklist>
     		<directory suffix=".php">vendor</directory>
@@ -9,6 +9,7 @@
         <testsuite name="PrestaShop">
             <directory>.</directory>
             <exclude>vendor</exclude>
+            <exclude>src</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
