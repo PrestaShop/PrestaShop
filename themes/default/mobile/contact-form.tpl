@@ -44,7 +44,6 @@
 					<option value="{$contact.id_contact|intval}" {if isset($smarty.post.id_contact) && $smarty.post.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 				</select>
-			</p>
 			<p id="desc_contact0" class="desc_contact">&nbsp;</p>
 				{foreach from=$contacts item=contact}
 					<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact" style="display:none;">
