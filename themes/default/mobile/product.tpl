@@ -72,14 +72,14 @@
 			
 			<div id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<br />
-				<label for="product_reference">{l s='Reference:'} </label>
+				{l s='Reference:'}
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 				<br />
 			</div>
 			
 			<!-- quantity wanted -->
 			<div id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
-				<label for="qty" class="">{l s='Quantity:'}</label>
+				<label for="quantity_wanted">{l s='Quantity:'}</label>
 				<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />
 			</div><!-- #quantity_wanted_p -->
 			
