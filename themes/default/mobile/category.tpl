@@ -45,7 +45,7 @@
 					<p>{$category->description}</p>
 				{/if}
 			</div>
-			<hr width="99%" align="center" size="2" class="margin_less"/>
+			<hr class="margin_less"/>
 		{/if}
 		<div class="clearfix">
 			{include file="./category-product-sort.tpl" container_class="container-sort"}
@@ -56,7 +56,7 @@
 		{* ===================================== *}
 		{*<p><a href="layered.html" data-ajax="false">Affiner la recherche</a></p>*}
 		{* ===================================== *}
-		<hr width="99%" align="center" size="2" class="margin_less"/>
+		<hr class="margin_less"/>
 		
 		{include file="./pagination.tpl"}
 		{include file="./category-product-list.tpl" products=$products}
