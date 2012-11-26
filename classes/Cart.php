@@ -2471,7 +2471,7 @@ class CartCore extends ObjectModel
 		if (!Address::addressExists($address_id))
 			$address_id = null;
 
-		$cache_id = 'getPackageShippingCost_'.(int)$address_id.'_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
+		$cache_id = 'getPackageShippingCost_'.(int)$this->id.'_'.(int)$address_id.'_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
 		if ($products)
 			foreach ($products as $product)
 				$cache_id .= '_'.(int)$product['id_product'].'_'.(int)$product['id_product_attribute'];
