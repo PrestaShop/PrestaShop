@@ -511,7 +511,7 @@ abstract class ModuleCore
 		
 		return false;
 	}
-
+	
 	/**
 	 * This function enable module $name. If an $name is an array,
 	 * this will enable all of them
@@ -525,10 +525,12 @@ abstract class ModuleCore
 		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
-
+		$res = true;
 		// Enable each module
-		foreach ($name as $k => $v)
-			Module::getInstanceByName($name)->enable();
+		foreach ($name as $n)
+			if (Validate::isModuleName($n))
+				$res &= Module::getInstanceByName($n)->enable();
+		return $res;
 	}
 
 	/**
@@ -574,12 +576,12 @@ abstract class ModuleCore
 		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
-
+		$res = true;
 		// Disable each module
-		foreach ($name as $k => $v)
-			Module::getInstanceByName($name)->disable();
-
-		return true;
+		foreach ($name as $n)
+			if (Validate::isModuleName($n))
+				$res &= Module::getInstanceByName($n)->disable();
+		return $res;
 	}
 
 	/**
