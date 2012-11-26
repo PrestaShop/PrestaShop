@@ -105,9 +105,9 @@ class CompareControllerCore extends FrontController
 					$curProduct = new Product((int)$id, true, $this->context->language->id);
 					if (!Validate::isLoadedObject($curProduct) || !$curProduct->active || !$curProduct->isAssociatedToShop())
 					{
-						unset($ids[$k]);
 						if (isset($this->context->cookie->id_compare))
 							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
+						unset($ids[$k]);
 						continue;
 					}
 
