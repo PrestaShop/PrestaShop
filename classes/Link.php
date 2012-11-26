@@ -123,6 +123,9 @@ class LinkCore
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 		
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category'))
+			$params['category'] = Tools::str2url($product->category);
+		
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference'))
 			$params['reference'] = Tools::str2url($product->reference);
 
