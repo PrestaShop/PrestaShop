@@ -211,12 +211,13 @@ class OrderHistoryCore extends ObjectModel
 		}
 
 		$this->id_order_state = (int)$new_order_state;
-
+		
 		// changes invoice number of order ?
 		if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invalid new order state'));
 
 		// the order is valid if and only if the invoice is available and the order is not cancelled
+		$order->->current_state = $this->id_order_state;
 		$order->valid = $new_os->logable;
 		$order->update();
 
