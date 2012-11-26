@@ -2047,7 +2047,7 @@ FileETag INode MTime Size
 		if (!$tpl && $cache_id === null && $compile_id === null)
 			return $smarty->clearAllCache();
 
-		return $smarty->clearCache($template, $cache_id, $compile_id);
+		return $smarty->clearCache($tpl, $cache_id, $compile_id);
 	}
 
 	/**
