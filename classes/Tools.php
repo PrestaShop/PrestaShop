@@ -2041,7 +2041,13 @@ FileETag INode MTime Size
 	 */
 	public static function clearCache($smarty, $tpl = false, $cache_id = null, $compile_id = null)
 	{
-		return $smarty->clearAllCache();
+		if (is_null($smarty))
+			$smarty = Context::getContext()->smarty;
+		
+		if (!tpl && is_null(cache_id) && is_null(compile_id))
+			return $smarty->clearAllCache();
+		else
+			return $smarty->clearCache($template, $cache_id, $compile_id);
 	}
 
 	/**
