@@ -3087,7 +3087,7 @@ class CartCore extends ObjectModel
 		SELECT *
 		FROM '._DB_PREFIX_.'cart c
 		WHERE c.`id_customer` = '.(int)$id_customer.'
-		'.(!$with_order ? 'AND id_cart NOT IN (SELECT id_cart FROM '._DB_PREFIX_.'orders o WHERE o.`id_customer` = '.(int)$id_customer.')' : '').'
+		'.(!$with_order ? 'AND id_cart NOT IN (SELECT id_cart FROM '._DB_PREFIX_.'orders o)' : '').'
 		ORDER BY c.`date_add` DESC');
 	}
 
