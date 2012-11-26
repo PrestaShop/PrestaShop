@@ -527,7 +527,7 @@ class AdminThemesControllerCore extends AdminController
 		Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
 		if (!empty($val) && !$this->_isThemeCompatible($val)) // don't submit if errors
 			unset($_POST['submitThemes'.$this->table]);
-		Tools::clearCache($this->context->smarty);
+		$this->context->smarty->clearAllCache();
 
 		parent::postProcess();
 	}

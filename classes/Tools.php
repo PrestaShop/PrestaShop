@@ -2036,11 +2036,12 @@ FileETag INode MTime Size
 
 	/**
 	 * Clear cache for Smarty
-	 *
 	 * @param Smarty $smarty
+	 * @deprecated 1.5.2.0
 	 */
 	public static function clearCache($smarty, $tpl = false, $cache_id = null, $compile_id = null)
 	{
+		Tools::displayAsDeprecated();
 		return $smarty->clearAllCache();
 	}
 
