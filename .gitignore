@@ -4,6 +4,7 @@
 .settings
 .idea
 .svn
+.DS_Store
 robots.txt
 sitemap.xml
 cache/smarty/cache/*
