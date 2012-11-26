@@ -225,10 +225,16 @@ class AdminEmailsControllerCore extends AdminController
 			$smtpLogin = Tools::getValue('smtpLogin');
 			$smtpPassword = Tools::getValue('smtpPassword');
 			$smtpPassword = (!empty($smtpPassword)) ? urldecode($smtpPassword) : Configuration::get('PS_MAIL_PASSWD');
+			$smtpPassword = str_replace(
+				array('&lt;', '&gt;', '&quot;', '&amp;'), 
+				array('<', '>', '"', '&'), 
+				Tools::htmlentitiesUTF8($smtpPassword)
+				);
+			
 			$smtpPort = Tools::getValue('smtpPort');
 			$smtpEncryption = Tools::getValue('smtpEnc');
-
-			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), Tools::htmlentitiesUTF8($smtpPassword), Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
+			
+			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
 			die($result === true ? 'ok' : $result);
 		}
 	}
