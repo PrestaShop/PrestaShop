@@ -36,24 +36,24 @@
 			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View a top sellers products'}">{l s='Top sellers'}</a></li>
 			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='View a products with price drop'}">{l s='Price drop'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='List of a manufacturers'}">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='List of a suppliers'}">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View list of a manufacturers'}">{l s='Manufacturers'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View list of a suppliers'}">{l s='Suppliers'}</a></li>{/if}
 		</ul>
 	</div>
 	<div class="sitemap_block">
 		<h3>{l s='Your Account'}</h3>
 		<ul>
-		{if $cookie->isLogged()}
+		{if $logged}
 			<li><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my customer account'}" rel="nofollow">{l s='Your Account'}</a></li>
 			<li><a href="{$link->getPageLink('identity', true)}" title="{l s='Manage my personal information'}" rel="nofollow">{l s='Personal information'}</a></li>
-			<li><a href="{$link->getPageLink('addresses', true)}" title="{l s='List of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
-			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='List of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
-			<li><a href="{$link->getPageLink('history', true)}" title="{l s='List of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
+			<li><a href="{$link->getPageLink('addresses', true)}" title="{l s='View list of my addresses'}" rel="nofollow">{l s='Addresses'}</a></li>
+			{if $voucherAllowed}<li><a href="{$link->getPageLink('discount', true)}" title="{l s='View list of my discounts'}" rel="nofollow">{l s='Discounts'}</a></li>{/if}
+			<li><a href="{$link->getPageLink('history', true)}" title="{l s='View list of my orders'}" rel="nofollow">{l s='Order history'}</a></li>
 		{else}
 			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a></li>
 			<li><a href="{$link->getPageLink('authentication', true)}" title="{l s='Create new account'}"rel="nofollow">{l s='Create new account'}</a></li>
 		{/if}
-		{if $cookie->isLogged()}
+		{if $logged}
 			<li><a href="{$link->getPageLink('index')}?mylogout" title="{l s='Log out'}" rel="nofollow">{l s='Log out'}</a></li>
 		{/if}
 		</ul>
