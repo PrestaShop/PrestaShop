@@ -467,43 +467,47 @@ class AdminCarriersControllerCore extends AdminController
 				/* Object update */
 				if (isset($id) && !empty($id))
 				{
-					if ($this->tabAccess['edit'] === '1')
-					{
-						$current_carrier = new Carrier($id);
-						if (!Validate::isLoadedObject($current_carrier))
-							throw new PrestaShopException('Cannot load Carrier object');
-						
-						// Duplicate current Carrier
-						$new_carrier = $current_carrier->duplicateObject();
-						if (Validate::isLoadedObject($new_carrier))
+					try {
+						if ($this->tabAccess['edit'] === '1')
 						{
-							// Set flag deteled to true for historization
-							$current_carrier->deleted = true;
-							$current_carrier->update();
+							$current_carrier = new Carrier($id);
+							if (!Validate::isLoadedObject($current_carrier))
+								throw new PrestaShopException('Cannot load Carrier object');
+							
+							// Duplicate current Carrier
+							$new_carrier = $current_carrier->duplicateObject();
+							if (Validate::isLoadedObject($new_carrier))
+							{
+								// Set flag deteled to true for historization
+								$current_carrier->deleted = true;
+								$current_carrier->update();
 
-							// Fill the new carrier object
-							$this->copyFromPost($new_carrier, $this->table);
-							$new_carrier->position = $current_carrier->position;
-							$new_carrier->update();
+								// Fill the new carrier object
+								$this->copyFromPost($new_carrier, $this->table);
+								$new_carrier->position = $current_carrier->position;
+								$new_carrier->update();
 
-							$this->updateAssoShop($new_carrier->id);
-							$new_carrier->copyCarrierData((int)$current_carrier->id);
-							$this->changeGroups($new_carrier->id);
-							// Call of hooks
-							Hook::exec('actionCarrierUpdate', array(
-								'id_carrier' => (int)$current_carrier->id,
-								'carrier' => $new_carrier
-							));
-							$this->postImage($new_carrier->id);
-							$this->changeZones($new_carrier->id);
-							$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
-							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
+								$this->updateAssoShop($new_carrier->id);
+								$new_carrier->copyCarrierData((int)$current_carrier->id);
+								$this->changeGroups($new_carrier->id);
+								// Call of hooks
+								Hook::exec('actionCarrierUpdate', array(
+									'id_carrier' => (int)$current_carrier->id,
+									'carrier' => $new_carrier
+								));
+								$this->postImage($new_carrier->id);
+								$this->changeZones($new_carrier->id);
+								$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
+								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
+							}
+							else
+								$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 						}
 						else
-							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+							$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+					} catch (PrestaShopException $e) {
+						$this->errors[] = $e->getMessage();
 					}
-					else
-						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 				}
 
 				/* Object creation */
