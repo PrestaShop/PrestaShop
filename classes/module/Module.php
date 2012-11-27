@@ -395,8 +395,11 @@ abstract class ModuleCore
 	{
 		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
 		// Check the version of the module with the registered one and look if any upgrade file exist
-		return Tools::version_compare($module->version, $module->database_version, '>')
-				&& $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+		if (Tools::version_compare($module->version, $module->database_version, '>'))
+		{
+			$module = Module::getInstanceByName($module->name);
+			return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+		}
 	}
 
 	/**
