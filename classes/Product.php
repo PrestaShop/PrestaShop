@@ -2439,9 +2439,6 @@ class ProductCore extends ObjectModel
 			&& Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
-		if($usetax != false && Group::getPriceDisplayMethod($id_group))
-			$usetax = false;
-
 		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
 			$id_customer = $context->customer->id;
 
