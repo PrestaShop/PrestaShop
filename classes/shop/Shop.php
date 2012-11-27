@@ -330,10 +330,6 @@ class ShopCore extends ObjectModel
 				}
 			}
 
-			// Optimization - don't redirect and allow WS and other script to work
-			if (!$id_shop)
-				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
-
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($id_shop && !$is_main_uri)
 			{
