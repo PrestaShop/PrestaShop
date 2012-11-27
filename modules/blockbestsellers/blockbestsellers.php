@@ -100,14 +100,10 @@ class BlockBestSellers extends Module
 
 		$currency = new Currency($params['cookie']->id_currency);
 		
-		$id_group = $this->context->customer->id_default_group;
-		if(Group::getPriceDisplayMethod($id_group) == PS_TAX_EXC)
+		if (Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC)
 			$usetax = false;
 		else
-			if(Configuration::get('PS_TAX_DISPLAY') == PS_TAX_EXC)
-				$usetax = false;
-			else
-				$usetax = true;
+			$usetax = true;
 			
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5);
 		
