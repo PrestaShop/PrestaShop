@@ -42,14 +42,26 @@
 	{/if}
 
 	{if $products}
+	<div class="content_sortPagiBar">
+		{include file="$tpl_dir./pagination.tpl"}
+
 		<div class="sortPagiBar clearfix">
 			{include file="./product-sort.tpl"}
+			{include file="./product-compare.tpl"}
+			{include file="./nbr-product-page.tpl"}
 		</div>
-		{include file="./product-compare.tpl"}
-		{include file="./product-list.tpl" products=$products}
+	</div>
+
+	{include file="./product-list.tpl" products=$products}
+
+	<div class="content_sortPagiBar">
+		<div class="sortPagiBar clearfix">
+			{include file="./product-sort.tpl"} {include file="./product-compare.tpl"} {include file="./nbr-product-page.tpl"}
+
+		</div>
 		{include file="./pagination.tpl"}
-		{include file="./product-compare.tpl"}
+	</div>
 	{else}
-		<p class="warning">{l s='No products for this manufacturer.'}</p>
-	{/if}
+	<p class="warning">{l s='No products for this manufacturer.'}</p>
+	{/if} 
 {/if}
