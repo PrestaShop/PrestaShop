@@ -99,6 +99,16 @@ class BlockBestSellers extends Module
 			return;
 
 		$currency = new Currency($params['cookie']->id_currency);
+		
+		$id_group = $this->context->customer->id_default_group;
+		if(Group::getPriceDisplayMethod($id_group) == PS_TAX_EXC)
+			$usetax = false;
+		else
+			if(Configuration::get('PS_TAX_DISPLAY') == PS_TAX_EXC)
+				$usetax = false;
+			else
+				$usetax = true;
+			
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5);
 		
 		if (!$bestsellers && !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
@@ -108,7 +118,7 @@ class BlockBestSellers extends Module
 		if ($bestsellers)
 			foreach ($bestsellers as $bestseller)
 			{
-				$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product'])), $currency);
+				$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product']), $usetax), $currency);
 				$best_sellers[] = $bestseller;
 			}
 
@@ -119,7 +129,7 @@ class BlockBestSellers extends Module
 		));
 		return $this->display(__FILE__, 'blockbestsellers.tpl');
 	}
-	
+		
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
@@ -156,5 +166,3 @@ class BlockBestSellers extends Module
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl');
 	}
 }
-
-
