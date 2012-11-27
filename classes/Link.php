@@ -169,7 +169,7 @@ class LinkCore
 		$params['meta_title'] = Tools::str2url($category->meta_title);
 
 		// Selected filters is used by the module blocklayered
-		$selected_filters = is_null($selected_filters) ? Tools::getValue('selected_filters') : $selected_filters;
+		$selected_filters = is_null($selected_filters) ? '' : $selected_filters;
 
 		if (empty($selected_filters))
 			$rule = 'category_rule';
