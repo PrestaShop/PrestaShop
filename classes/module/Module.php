@@ -398,8 +398,10 @@ abstract class ModuleCore
 		if (Tools::version_compare($module->version, $module->database_version, '>'))
 		{
 			$module = Module::getInstanceByName($module->name);
-			return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+			if ($module instanceof Module)
+				return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
 		}
+		return null;
 	}
 
 	/**
