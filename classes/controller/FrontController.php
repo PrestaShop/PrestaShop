@@ -165,7 +165,7 @@ class FrontControllerCore extends Controller
 		/* Theme is missing */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\'))));
-		
+
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
@@ -298,6 +298,7 @@ class FrontControllerCore extends Controller
 		{
 			$infos = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$country = new Country((int)$infos['id_country']);
+			$this->context->country = $country;
 			if (Validate::isLoadedObject($country))
 				$display_tax_label = $country->display_tax_label;
 		}
