@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Login'}{/capture}
+{capture name=path}{if !isset($email_create)}{l s='Authentication'}{else}<a href="{$link->getPageLink('authentication', true)}" rel="nofollow" title="{l s='Authentication'}">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Create your account'}{/if}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <script type="text/javascript">
@@ -71,7 +71,7 @@ $(function(){ldelim}
 {/if}
 </script>
 
-<h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create your account'}{/if}</h1>
+<h1>{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create your account'}{/if}</h1>
 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
@@ -181,7 +181,7 @@ $(function(){ldelim}
 					<label for="passwd">{l s='Password'}</label>
 					<span><input type="password" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" class="account_input" /></span>
 				</p>
-				<p class="lost_password"><a href="{$link->getPageLink('password')}">{l s='Forgot your password?'}</a></p>
+				<p class="lost_password"><a href="{$link->getPageLink('password')}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
 					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
