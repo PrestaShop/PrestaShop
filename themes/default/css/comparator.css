@@ -8,6 +8,7 @@ table#product_comparison {
 	padding:6px;
 	border-top:1px solid #ccc;
 	border-left:1px solid #ccc;
+	border-right:1px solid #ccc;
 	vertical-align:top
 }
 #product_comparison td.td_empty{

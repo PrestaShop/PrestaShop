@@ -1,7 +1,7 @@
 /* create account ****************************************************************************** */
 #account-creation_form {}
 
-	#account-creation_form  fieldset {
+	#account-creation_form  fieldset, fieldset.account_creation {
 		padding:0 0 15px 0;
 		border:1px solid #ccc;
 		background:#f8f8f8
