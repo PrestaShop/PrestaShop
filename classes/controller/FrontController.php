@@ -606,8 +606,8 @@ class FrontControllerCore extends Controller
 				header('HTTP/1.1 503 temporarily overloaded');
 				$this->context->smarty->assign(array(
 					'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-					'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
-					'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
+					'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+					'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
 					'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
 				));
 
