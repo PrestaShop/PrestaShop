@@ -547,6 +547,14 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->updateLogo('PS_LOGO', 'logo');
 	}
+	
+	/**
+	 * Update PS_LOGO_MOBILE
+	 */
+	public function updateOptionPsLogoMobile()
+	{
+		$this->updateLogo('PS_LOGO_MOBILE', 'logo_mobile');
+	}
 
 	/**
 	 * Update PS_LOGO_MAIL
