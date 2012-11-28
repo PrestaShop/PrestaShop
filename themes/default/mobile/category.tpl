@@ -51,11 +51,6 @@
 			{include file="./category-product-sort.tpl" container_class="container-sort"}
 			<p class="nbr_result">{include file="$tpl_dir./category-count.tpl"}</p>
 		</div>
-		
-		{* layered ? *}
-		{* ===================================== *}
-		{*<p><a href="layered.html" data-ajax="false">Affiner la recherche</a></p>*}
-		{* ===================================== *}
 		<hr width="99%" align="center" size="2" class="margin_less"/>
 		
 		{include file="./pagination.tpl"}
