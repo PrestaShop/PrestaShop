@@ -129,6 +129,17 @@ a, a:active, a:visited {
 }
 	a:hover {text-decoration:underline}
 
+	
+/* HACK IOS ipad, iphone */
+input[type="text"], input[type="email"], input[type="search"], input[type="password"], input[type="submit"], input[type="image"] {
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	-webkit-border-radius:0px !important;
+	-moz-border-radius:0px !important;
+	border-radius:0px !important;
+}
+	
 /*buttons ************************************************************************************** */
 input.button_mini, input.button_small, input.button, input.button_large,
 input.button_mini_disabled, input.button_small_disabled, input.button_disabled, input.button_large_disabled,
@@ -1748,7 +1759,7 @@ ul#suppliers_list li .right_side {float:right;}
 /* ************************************************************************************************
 		addon customer privacy
 ************************************************************************************************ */
-#account-creation_form fieldset.customerprivacy label{
+#account-creation_form fieldset.customerprivacy label, fieldset.customerprivacy label{
 	padding-bottom:0;
 	font-size:14px;
 	text-align:left;
