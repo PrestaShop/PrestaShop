@@ -47,7 +47,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
-		$this->title = HTMLTemplateOrderSlip::l('Slip #').sprintf('%06d', (int)$this->order_slip->id);
+		$this->title = HTMLTemplateOrderSlip::l('Slip #').Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id).sprintf('%06d', (int)$this->order_slip->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -195,10 +195,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			} 
 			else 
 			{
+				$tax_rate = 0;
 				foreach ($tax_amount as $tax_id => $amount)
 				{
-					$tax_rate = 0;
-
 					$tax = new Tax((int)$tax_id);
 					$tax_rate = $tax->rate;
 					$infos['total_price_tax_excl'] += (float)Tools::ps_round($order_slip_details['amount_tax_excl'], 2);

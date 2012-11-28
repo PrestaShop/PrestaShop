@@ -59,6 +59,21 @@ class AdminSlipControllerCore extends AdminController
 		$this->_select = 'a.id_order_slip AS id_pdf';
 		$this->optionTitle = $this->l('Slip');
 
+		$this->fields_options = array(
+			'general' => array(
+				'title' =>	$this->l('Credit slip options'),
+				'fields' =>	array(
+					'PS_CREDIT_SLIP_PREFIX' => array(
+						'title' => $this->l('Credit slips prefix:'),
+						'desc' => $this->l('Prefix used for credit slips'),
+						'size' => 6,
+						'type' => 'textLang'
+					)
+				),
+				'submit' => array()
+			)
+		);
+
 		parent::__construct();
 	}
 
@@ -130,6 +145,7 @@ class AdminSlipControllerCore extends AdminController
 		$this->initToolbar();
 		$this->content .= $this->renderList();
 		$this->content .= $this->renderForm();
+		$this->content .= '<br>'.$this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
