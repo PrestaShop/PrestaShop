@@ -133,7 +133,17 @@ class PDFGeneratorCore extends TCPDF
 
 		$this->lastPage();
 
-		$output = $display ? 'I' : 'S';
+		if ($display === true)
+			$output = 'D';
+		elseif ($display === false)
+			$output = 'S';
+		elseif (display == 'D')
+			$output = 'D';
+		elseif (display == 'S')
+			$output = 'S';
+		else 	
+			$output = 'I';
+			
 		return $this->output($filename, $output);
 	}
 
