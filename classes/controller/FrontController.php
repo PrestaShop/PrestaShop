@@ -608,7 +608,7 @@ class FrontControllerCore extends Controller
 					'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
 					'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
 					'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
-					'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
+					'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
 				));
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
