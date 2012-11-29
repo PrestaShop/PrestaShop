@@ -228,7 +228,17 @@ class SmartyLazyRegister
 		if (is_array($item[1]))
 			return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
 		else
-			return call_user_func_array($item, array($arguments[0], &$arguments[1]));
+		{
+			$args = array();
+			
+			foreach($arguments as $a => $argument)
+				if($a == 0)
+					$args[] = $arguments[0]; 
+				else
+					$args[] = &$arguments[$a]; 
+			
+			return call_user_func_array($item, $args);
+		}
 	}
 
 	public static function getInstance()
