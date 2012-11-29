@@ -111,7 +111,7 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				if(Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+				if(isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
 					$this->mobile_device = true;
 				else
 				{
