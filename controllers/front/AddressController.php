@@ -117,9 +117,6 @@ class AddressControllerCore extends FrontController
 	 */
 	protected function processSubmitAddress()
 	{
-		/*if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=addresses');*/
-
 		$address = new Address();
 		$this->errors = $address->validateController();
 		$address->id_customer = (int)$this->context->customer->id;
@@ -241,7 +238,7 @@ class AddressControllerCore extends FrontController
 			}
 			else
 				Tools::redirect('index.php?controller=addresses');
-		}
+		}		
 		$this->errors[] = Tools::displayError('An error occurred while updating your address.');
 	}
 
@@ -252,10 +249,6 @@ class AddressControllerCore extends FrontController
 	public function initContent()
 	{
 		parent::initContent();
-
-		/* Secure restriction for guest */
-		if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=addresses');
 
 		$this->assignCountries();
 		$this->assignVatNumber();
