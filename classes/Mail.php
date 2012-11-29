@@ -214,10 +214,10 @@ class MailCore
 
 			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
 					include_once($template_path.$iso.'/lang.php');
-			else if ($module_name && file_exists($template_path.$iso.'/lang.php'))
+			else if ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
 				include_once($theme_path.'mails/'.$iso.'/lang.php');
 			else
-				include_once(dirname(__FILE__).'/../mails/'.$iso.'/lang.php');
+				include_once(_MAIL_DIR_.$iso.'/lang.php');
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
