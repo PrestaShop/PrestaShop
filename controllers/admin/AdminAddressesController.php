@@ -307,7 +307,7 @@ class AdminAddressesControllerCore extends AdminController
 		if (Validate::isEmail(Tools::getValue('email')))
 		{
 			$customer = new Customer();
-			$customer->getByEmail(Tools::getValue('email'));
+			$customer->getByEmail(Tools::getValue('email'), null, false);
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
