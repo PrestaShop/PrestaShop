@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<entity_cms>
+  <cms id="Delivery">
+	<meta_title>Portes de envio</meta_title>
+    <meta_description>Termos e condi&#231;&#245;es de envio</meta_description>
+	<meta_keywords>condi&#231;&#245;es, envio, atraso, embalagem, devolu&#231;&#227;o</meta_keywords>
+	<content>&lt;h2&gt;Envios e devolu&#231;&#245;es&lt;/h2&gt;&lt;h3&gt;O envio da sua embalagem&lt;/h3&gt;&lt;p&gt;As embalagens geralmente s&#227;o enviadas 2 dias depois de receber o pagamento e enviadas pela transportadora escolhida. Se preferir pode sempre leventar na nossa loja evitando os portes de envio, por isso contacte-nos para esclarecer qualquer d&#250;vida. Ap&#243;s o envio ser-lhe-&#225; enviado um c&#243;digo que lhe permite seguir a sua encomenda.&lt;/p&gt;</content>
+	<link_rewrite>portes-de-envio</link_rewrite>
+  </cms>
+  <cms id="Legal_Notice">
+	<meta_title>Informa&#231;&#227;o legal</meta_title>
+    <meta_description>Informa&#231;&#227;o legal</meta_description>
+    <meta_keywords>informa&#231;&#227;o, legal, cr&#233;ditos</meta_keywords>
+	<content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Cr&#233;ditos&lt;/h3&gt;&lt;p&gt;Conceito e produ&#231;&#227;o:&lt;/p&gt;&lt;p&gt;Este Website foi criado utilizando &lt;a href="http://www.prestashop.com"&gt;PrestaShop&lt;/a&gt;&amp;trade; open-source software.&lt;/p&gt;</content>
+    <link_rewrite>informacao-legal</link_rewrite>
+  </cms>
+  <cms id="Terms_and_conditions_of_use">
+	<meta_title>Termos e condi&#231;&#245;es de uso</meta_title>
+	<meta_description>Os nossos termos e condi&#231;&#245;es de uso</meta_description>
+    <meta_keywords>condi&#231;&#245;es, termos, uso</meta_keywords>
+	<content>&lt;h2&gt;Termos e condi&#231;&#245;es de uso&lt;/h2&gt;&lt;h3&gt;Regra 1&lt;/h3&gt;&lt;p&gt;Aqui est&#225; o conte&#250;do da regra 1&lt;/p&gt;&#xD;
+&lt;h3&gt;Regra 2&lt;/h3&gt;&lt;p&gt;Aqui est&#225; o conte&#250;do da regra 2&lt;/p&gt;&#xD;
+&lt;h3&gt;Regra 3&lt;/h3&gt;&lt;p&gt;Aqui est&#225; o conte&#250;do da regra 3&lt;/p&gt;</content>
+    <link_rewrite>termos-e-condi&#231;&#245;es-de-uso</link_rewrite>
+  </cms>
+  <cms id="About_us">
+    <meta_title>Sobre-nos</meta_title>
+	<meta_description>Saiba mais sobre-nos</meta_description>
+    <meta_keywords>sobre-nos, informa&#231;&#245;es</meta_keywords>
+    <content>&lt;h2&gt;Sobre-nos&lt;/h2&gt;&#xD;
+&lt;h3&gt;A nossa empresa&lt;/h3&gt;&lt;p&gt;A nossa empresa&lt;/p&gt;&#xD;
+&lt;h3&gt;A nossa equipa&lt;/h3&gt;&lt;p&gt;A nossa equipa&lt;/p&gt;&#xD;
+&lt;h3&gt;Informa&#231;&#245;es&lt;/h3&gt;&lt;p&gt;Informa&#231;&#245;es&lt;/p&gt;</content>
+    <link_rewrite>sobre-nos</link_rewrite>
+  </cms>
+  <cms id="Secure_payment">
+	<meta_title>Pagamento seguro</meta_title>
+	<meta_description>O nosso pagamento seguro quer dizer</meta_description>
+	<meta_keywords>pagamento seguro por, ssl, visa, mastercard, paypal</meta_keywords>
+    <content>&lt;h2&gt;Pagamento seguro&lt;/h2&gt;&#xD;
+&lt;h3&gt;O nosso pagamento seguro&lt;/h3&gt;&lt;p&gt;com SSL&lt;/p&gt;&#xD;
+&lt;h3&gt;Utilizando Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;Sobre este servi&#231;o&lt;/p&gt;</content>
+    <link_rewrite>pagamento-seguro</link_rewrite>
+  </cms>
+</entity_cms>
