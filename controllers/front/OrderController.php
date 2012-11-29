@@ -58,7 +58,7 @@ class OrderControllerCore extends ParentOrderController
 		{
 			$this->step = 0;
 			$this->errors[] = sprintf(
-				Tools::displayError('A minimum purchase total of %d is required in order to validate your order.'),
+				Tools::displayError('A minimum purchase total of %s is required in order to validate your order.'),
 				Tools::displayPrice($minimal_purchase, $currency)
 			);
 		}
