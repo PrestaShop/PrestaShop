@@ -1373,7 +1373,7 @@ class BlockLayered extends Module
 	public function hookCategoryUpdate($params)
 	{
 		/* The category status might (active, inactive) have changed, we have to update the layered cache table structure */
-		if (!$params['category']->active)
+		if (isset($params['category']) && !$params['category']->active)
 			$this->hookCategoryDeletion($params);
 	}
 
