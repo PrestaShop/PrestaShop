@@ -327,10 +327,7 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->cart->autosetProductAddress();
 
 		$this->context->smarty->assign('cart', $this->context->cart);
-		/*
-if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=order&step=2');
-*/
+
 	}
 
 	/**
