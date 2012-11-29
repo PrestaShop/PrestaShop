@@ -77,7 +77,7 @@
 										type="text" 
 										class="fees_{$range[$rangeIdentifier]}" 
 										onchange="this.value = this.value.replace(/,/g, \'.\');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
-										value="{$price|string_format:"%.2f"}"
+										value="{$price|string_format:"%.6f"}"
 										style="width: 45px;" 
 									/>
 									{$currency->getSign('right')} {l s='(tax excl.)'}
