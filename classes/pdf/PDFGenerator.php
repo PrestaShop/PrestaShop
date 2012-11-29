@@ -122,7 +122,7 @@ class PDFGeneratorCore extends TCPDF
 	 * Render the pdf file
 	 *
 	 * @param string $filename
-     * @param boolean $inline
+         * @param  $display :  true:display to user, false:save, 'I','D','S' as fpdf display
 	 * @throws PrestaShopException
 	 */
 	public function render($filename, $display = true)
