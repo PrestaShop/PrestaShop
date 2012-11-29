@@ -1140,4 +1140,21 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign($assign);
 		$this->template = $template;
 	}
+	
+	/**
+	 * Return an array with specific logo and favicon, 
+	 * if mobile device
+	 *
+	 * @since 1.5
+	 * @return array
+	 */
+	public function initLogoAndFavicon()
+  {
+  	return array(
+    				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+            'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+            'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
+            'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
+  				);
+  }
 }
