@@ -69,7 +69,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 			echo "<![CDATA[";
 		echo $product['description_short']."]]></description>\n";
 
-		echo "\t\t\t<link><![CDATA[".htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang))).$affiliate."]]></link>\n";
+		echo "\t\t\t<link><![CDATA[".str_replace('&amp;', '&', htmlspecialchars($link->getproductLink($product['id_product'], $product['link_rewrite'], Category::getLinkRewrite((int)($product['id_category_default']), $cookie->id_lang)))).$affiliate."]]></link>\n";
 		echo "\t\t</item>\n";
 	}
 ?>
