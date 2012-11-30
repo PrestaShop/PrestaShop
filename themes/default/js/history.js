@@ -28,7 +28,7 @@ function showOrder(mode, var_content, file)
 {
 	$.get(
 		file,
-		((mode == 1) ? {'id_order': var_content, 'ajax': true} : {'id_order_return': var_content, 'ajax': true}),
+		((mode === 1) ? {'id_order': var_content, 'ajax': true} : {'id_order_return': var_content, 'ajax': true}),
 		function(data)
 		{
 			$('#block-order-detail').fadeOut('slow', function()
@@ -56,7 +56,7 @@ function showOrder(mode, var_content, file)
 					{
 						var maxQuantity = parseInt($(this).parent().find('.order_qte_span').text());
 						var quantity = parseInt($(this).val());
-						if (isNaN($(this).val()) && $(this).val() != '')
+						if (isNaN($(this).val()) && $(this).val() !== '')
 						{
 							$(this).val(maxQuantity);
 						}
