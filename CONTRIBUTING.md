@@ -9,4 +9,4 @@ All modules files you commit in your pull request must have Academic Free Licens
 
 [1]: https://help.github.com/articles/using-pull-requests
 [2]: http://docs.prestashop.com/display/PS15/Coding+Standard
-[3]: http://docs.prestashop.com/display/PS15/Commit+norme
+[3]: http://docs.prestashop.com/display/PS15/How+to+write+a+commit+message
