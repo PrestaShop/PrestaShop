@@ -605,12 +605,8 @@ class FrontControllerCore extends Controller
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 			{
 				header('HTTP/1.1 503 temporarily overloaded');
-				$this->context->smarty->assign(array(
-					'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-					'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
-					'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
-					'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
-				));
+				
+				$this->context->smarty->assign($this->initLogoAndFavicon());
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
 				$this->smartyOutputContent($template_dir.'maintenance.tpl');
@@ -785,13 +781,11 @@ class FrontControllerCore extends Controller
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'static_token' => Tools::getToken(false),
 			'token' => Tools::getToken(),
-			'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
-			'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only'),
-			'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME'),
-			'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
 		));
+				
+		$this->context->smarty->assign($this->initLogoAndFavicon());
 	}
 
 	public function initFooter()
@@ -1141,4 +1135,21 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign($assign);
 		$this->template = $template;
 	}
+	
+	/**
+	 * Return an array with specific logo and favicon, 
+	 * if mobile device
+	 *
+	 * @since 1.5
+	 * @return array
+	 */
+	public function initLogoAndFavicon()
+  {
+  	return array(
+    				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+            'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+            'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
+            'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
+  				);
+  }
 }
