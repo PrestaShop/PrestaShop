@@ -1,15 +1,27 @@
 CONTRIBUTORS
 ============
 
+- Caleydon Media 
 - DamienMetzger 
+- Damon Skelhorn
+- doekia 
 - François Gaillard 
+- Gabriel Schwardy 
+- Jonathan Danse 
+- Krystian Podemski 
+- PrestaEdit 
 - Rémi Gaillard 
+- Sarah Lorenzini 
 - Vincent Augagneur 
+- Xavier POITAU 
 - aFolletete 
 - aKorczak 
 - aNiassy 
+- adonis karavokyros 
 - bLeveque 
 - bMancone 
+- bumbu 
+- cmouleyre 
 - dMetzger 
 - dSevere 
 - fBrignoli 
@@ -20,6 +32,7 @@ CONTRIBUTORS
 - hAitmansour 
 - jBreux 
 - jObregon 
+- jessylenne 
 - jmCollin 
 - lBrieu 
 - lCherifi 
@@ -28,13 +41,13 @@ CONTRIBUTORS
 - mDeflotte 
 - mMarinetti 
 - nPellicari 
+- oleacorner 
 - rGaillard 
 - rMalie 
 - rMontagne 
 - sLorenzini 
 - sThiebaut 
 - tDidierjean 
-- vAugagneur 
 - vChabot 
 - vKham 
 - vSchoener 
