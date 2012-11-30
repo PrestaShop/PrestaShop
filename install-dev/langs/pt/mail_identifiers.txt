@@ -1,0 +1,10 @@
+Olá {firstname} {lastname},
+
+Aqui está a sua informação pessoal para {shop_name}:
+
+Senha: {passwd}
+E-mail: {email}
+
+{shop_name} - {shop_url}
+
+{shop_url} powered by PrestaShop™

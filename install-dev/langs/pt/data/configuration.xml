@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<entity_configuration>
+  <configuration id="PS_CUSTOMER_SERVICE_SIGNATURE">
+    <value>Presado Cliente,&#xD;
+&#xD;
+Atenciosamente,&#xD;
+Serviço de Apoio ao Cliente</value>
+  </configuration>
+</entity_configuration>
