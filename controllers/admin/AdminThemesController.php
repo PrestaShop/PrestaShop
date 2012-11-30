@@ -127,6 +127,14 @@ class AdminThemesControllerCore extends AdminController
 						'type' => 'file',
 						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
 					),
+					'PS_LOGO_MOBILE' => array(
+						'title' => $this->l('Mobile Header logo'),
+						'desc' => 
+							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo defined, the header logo is used instead.').'</span><br />' : '').
+							$this->l('Will appear on mobile main page. If undefined, the Header logo will be used'),
+						'type' => 'file',
+						'thumb' => (Configuration::get('PS_LOGO_MOBILE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
 						'desc' => 
@@ -400,6 +408,12 @@ class AdminThemesControllerCore extends AdminController
 			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 		}
+		if (file_exists(_PS_IMG_DIR_.'logo_mobile.jpg'))
+		{
+			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
+			Configuration::updateValue('SHOP_LOGO_MOBILE_HEIGHT', (int)round($height));
+			Configuration::updateValue('SHOP_LOGO_MOBILE_WIDTH', (int)round($width));
+		}
 
 		$this->content .= $content;
 		return parent::initContent();
@@ -538,6 +552,14 @@ class AdminThemesControllerCore extends AdminController
 	public function updateOptionPsLogo()
 	{
 		$this->updateLogo('PS_LOGO', 'logo');
+	}
+	
+	/**
+	 * Update PS_LOGO_MOBILE
+	 */
+	public function updateOptionPsLogoMobile()
+	{
+		$this->updateLogo('PS_LOGO_MOBILE', 'logo_mobile');
 	}
 
 	/**
