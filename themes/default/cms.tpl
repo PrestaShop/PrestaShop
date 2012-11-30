@@ -22,10 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if isset($cms) && !isset($cms_category)}
 {if ($content_only == 0)}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
-{if isset($cms) && !isset($cms_category)}
 	{if !$cms->active}
 		<br />
 		<div id="admin-action-cms">
@@ -43,14 +43,20 @@
 		{$cms->content}
 	</div>
 {elseif isset($cms_category)}
+
+{if ($content_only == 0)}
+	{capture name=path}{$category->name}{/capture}
+	{include file="$tpl_dir./breadcrumb.tpl"}
+{/if}
+
 	<div class="block-cms">
-		<h1><a href="{if $cms_category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'htmlall':'UTF-8'}</a></h1>
+		<h1>{$cms_category->name|escape:'htmlall':'UTF-8'}</h1>
 		{if isset($sub_category) & !empty($sub_category)}	
 			<h4>{l s='List of sub categories in %s:' sprintf=$cms_category->name}</h4>
 			<ul class="bullet">
 				{foreach from=$sub_category item=subcategory}
 					<li>
-						<a href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}">{$subcategory.name|escape:'htmlall':'UTF-8'}</a>
+						<a href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$subcategory.name|escape:'htmlall':'UTF-8'}">{$subcategory.name|escape:'htmlall':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>
@@ -60,7 +66,7 @@
 			<ul class="bullet">
 				{foreach from=$cms_pages item=cmspages}
 					<li>
-						<a href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'htmlall':'UTF-8'}">{$cmspages.meta_title|escape:'htmlall':'UTF-8'}</a>
+						<a href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$cmspages.meta_title|escape:'htmlall':'UTF-8'}">{$cmspages.meta_title|escape:'htmlall':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>
