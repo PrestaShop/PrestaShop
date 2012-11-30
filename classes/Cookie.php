@@ -63,7 +63,7 @@ class CookieCore
 	public function __construct($name, $path = '', $expire = null, $shared_urls = null)
 	{
 		$this->_content = array();
-		$this->_expire = isset($expire) ? (int)($expire) : (time() + 1728000);
+		$this->_expire = is_null($expire) ? time() + 1728000 : (int)$expire;
 		$this->_name = md5(_PS_VERSION_.$name);
 		$this->_path = trim(Context::getContext()->shop->physical_uri.$path, '/\\').'/';
 		if ($this->_path{0} != '/') $this->_path = '/'.$this->_path;
