@@ -52,7 +52,7 @@ reloadProductComparison = function() {
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=add&id_product=' + idProduct,
 	 			async: true,
 	  			success: function(data){
-	  				if (data == '0')
+	  				if (data === '0')
 	  				{
 	  					checkbox.attr('checked', false);
 		alert(max_item);
@@ -69,7 +69,7 @@ reloadProductComparison = function() {
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 	 			async: true,
 	  			success: function(data){
-	  				if (data == '0')
+	  				if (data === '0')
 	  					checkbox.attr('checked', true);
 	    		},
 	    		error: function(){
