@@ -50,6 +50,10 @@
 			{/foreach}
 		{/foreach}
 	</select>
+	{elseif $input.type == 'password'}
+		{$smarty.block.parent}
+		<a href="#" onclick="generatePassword(); return false;" class="button">Generate password</a>
+		<span id="generated_passwd_placeholder"></span>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -101,5 +105,13 @@
 		}
 		else
 			$('.assoShop input[type=checkbox]').attr('disabled', false);
+	}
+
+	function generatePassword()
+	{
+		var generated_password = $('#generated_passwd').val();
+
+		$('#generated_passwd_placeholder').text(generated_password);
+		$('.passwd-selector').val(generated_password);
 	}
 {/block}
