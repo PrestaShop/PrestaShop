@@ -112,6 +112,6 @@
 		var generated_password = $('#generated_passwd').val();
 
 		$('#generated_passwd_placeholder').text(generated_password);
-		$('.passwd-selector').val(generated_password);
+		$('.passwd_selector').val(generated_password);
 	}
 {/block}

@@ -193,7 +193,7 @@ class AdminEmployeesControllerCore extends AdminController
 								$this->l('Leave blank if you do not want to change your password') :
 									$this->l('Min. 8 characters; use only letters, numbers or').' -_'),
 					'autocomplete' => '',
-					'class' => 'passwd-selector'
+					'class' => 'passwd_selector'
 				),
 				array(
 					'type' => 'hidden',
