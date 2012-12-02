@@ -309,9 +309,20 @@ class AdminCmsControllerCore extends AdminController
 
                     if (!$cms->active)
                     {
-                        $admin_dir = dirname($_SERVER['PHP_SELF']);
+                    	$admin_dir = dirname($_SERVER['PHP_SELF']);
                         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-                        $preview_url .= $cms->active ? '' : '&adtoken='.Tools::getAdminTokenLite('AdminCmsContent').'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
+                    	
+                    	$params = http_build_query(array(
+                    		'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
+                    		'ad' => $admin_dir,
+                    		'id_employee' => (int)$this->context->employee->id)
+                    		);
+                    	if (Configuration::get('PS_REWRITING_SETTINGS'))
+                    		$params = '?'.$params;
+                    	else
+                    		$params = '&'.$params;
+                    	
+                    	$preview_url .= $cms->active ? '' : $params;
                     }
                     Tools::redirectAdmin($preview_url);
                 }

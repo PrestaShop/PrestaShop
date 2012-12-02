@@ -67,6 +67,8 @@
 		{/if}
 	</div>
 {else}
-	{l s='This page does not exist.'}
+	<div class="error">
+		{l s='This page does not exist.'}
+	</div>
 {/if}
 <br />
