@@ -53,7 +53,6 @@ class CategoryControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
-		return ;
 		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
 		{
 			$this->redirect_after = '404';
