@@ -7,12 +7,12 @@ SET NAMES 'utf8';
 /* PHP:p15014_upgrade_sekeywords(); */;
 
 
-UPDATE `PREFIX_orders` SET `reference` = LPAD(reference, 9 , '0');
+UPDATE `PREFIX_orders` SET `reference` = LPAD(`reference`, 9 , '0');
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayMyAccountBlock', 'myAccountBlock');
 
 
-UPDATE `PREFIX_image_type` SET height = 189, width = 520 WHERE name = 'large_scene';
+UPDATE `PREFIX_image_type` SET `height` = 189, `width` = 520 WHERE name = 'large_scene';
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_invoice_tax` (
   `id_order_invoice` int(11) NOT NULL,
