@@ -46,6 +46,7 @@
 		<script type="text/javascript">
 			var baseDir = '{$content_dir}';
 			var baseUri = '{$base_uri}';
+			var baseUri_SSL = '{$base_dir_ssl}';
 			var static_token = '{$static_token}';
 			var token = '{$token}';
 			var priceDisplayPrecision = {$priceDisplayPrecision*$currency->decimals};
