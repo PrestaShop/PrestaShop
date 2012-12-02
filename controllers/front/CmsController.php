@@ -51,16 +51,28 @@ class CmsControllerCore extends FrontController
 			$this->cms = new CMS($id_cms, $this->context->language->id);
 		else if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 			$this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id);
+
 		$this->canonicalRedirection();
 
-		/* assignCase (1 = CMS page, 2 = CMS category) */
-		if (Validate::isLoadedObject($this->cms)
-			&& ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)Tools::getValue('id_employee')))))
-			$this->assignCase = 1;
+		// assignCase (1 = CMS page, 2 = CMS category)
+		if (Validate::isLoadedObject($this->cms))
+		{
+			$adtoken = Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)Tools::getValue('id_employee'));
+			if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken)
+			{
+				header('HTTP/1.1 404 Not Found');
+				header('Status: 404 Not Found');
+			}
+			else
+				$this->assignCase = 1;
+		}
 		else if (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
 		else
-			Tools::redirect('index.php?controller=404');
+		{
+			header('HTTP/1.1 404 Not Found');
+			header('Status: 404 Not Found');
+		}
 	}
 
 	public function setMedia()
@@ -87,7 +99,7 @@ class CmsControllerCore extends FrontController
 		$this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
 		if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
 			$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
-		else
+		else if (isset($this->cms_category->meta_title))
 			$path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
 		if ($this->assignCase == 1)
 		{
