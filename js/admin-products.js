@@ -763,9 +763,8 @@ product_tabs['Attachments'] = new function(){
 product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
-		$("#available_for_order").click(function(){
-
-
+		$("#available_for_order").click(function()
+		{
 			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').lenght && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
 			{
 				$('#show_price').attr('checked', true);
@@ -776,6 +775,34 @@ product_tabs['Informations'] = new function(){
 				$('#show_price').attr('disabled', false);
 			}
 		});
+				
+		if ($('#active_on').prop('checked'))
+			showRedirectProductOptions(false);
+		else
+			showRedirectProductOptions(true);
+			
+		$('#redirect_type').change(function () {
+			redirectSelectChange();
+		});
+		
+		$('#related_product_autocomplete_input')
+			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
+				minChars: 1,
+				autoFill: true,
+				max:20,
+				matchContains: true,
+				mustMatch:true,
+				scroll:false,
+				cacheLength:0,
+				formatItem: function(item) {
+						return item[0]+' - '+item[1];
+				}
+			}).result(function(e, i){  
+					if(i != undefined)
+						addRelatedProduct(i[1], i[0]);
+					$(this).val('');
+		       });
+		 addRelatedProduct(id_product_redirected, product_name_redirected);
 	};
 
 	this.bindTagImage = function (){
