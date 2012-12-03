@@ -777,7 +777,10 @@ product_tabs['Informations'] = new function(){
 		});
 				
 		if ($('#active_on').prop('checked'))
+		{
 			showRedirectProductOptions(false);
+			showRedirectProductSelectOptions(false);
+		}
 		else
 			showRedirectProductOptions(true);
 			
