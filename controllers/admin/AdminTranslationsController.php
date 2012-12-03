@@ -570,7 +570,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if (isset($tab->class_name) && !empty($tab->class_name))
 					{
 						$id_lang = Language::getIdByIso($iso_code);
-						$tab->name[(int)$id_lang] = pSQL($translations);
+						$tab->name[(int)$id_lang] = $translations;
 
 						// Update this tab
 						$tab->update();
