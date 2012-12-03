@@ -409,9 +409,8 @@ class ImageCore extends ObjectModel
 		// Delete auto-generated images
 		$image_types = ImageType::getImagesTypes();
 		foreach ($image_types as $image_type)
-		{
 			$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'.'.$this->image_format;
-		}
+
 		// Delete watermark image
 		$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
 		// delete index.php
@@ -533,11 +532,11 @@ class ImageCore extends ObjectModel
 		if (!file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder()))
 		{
 			// Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true)
-						|| @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
+			$success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true);
+			$chmod = @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
 
 			// Create an index.php file in the new folder
-			if ($success
+			if (($success || $chmod)
 				&& !file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php')
 				&& file_exists($this->source_index))
 				return @copy($this->source_index, _PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php');
