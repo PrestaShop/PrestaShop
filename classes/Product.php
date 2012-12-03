@@ -798,7 +798,7 @@ class ProductCore extends ObjectModel
 			SELECT c.`id_category`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'category` c ON (c.`id_category` = cp.`id_category`)
-			'.Shop::addSqlAssociation('category', 'c', true).'
+			'.Shop::addSqlAssociation('category', 'c', true, null, true).'
 			WHERE cp.`id_category` NOT IN ('.implode(',', array_map('intval', $categories)).')
 			AND cp.id_product = '.$this->id
 		);

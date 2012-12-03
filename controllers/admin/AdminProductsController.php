@@ -1704,7 +1704,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->updateDownloadProduct($object, 1);
 						$this->updateTags(Language::getLanguages(false), $object);
 						
-						if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'), true))
+						if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox')))
 							$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 					}
 					
