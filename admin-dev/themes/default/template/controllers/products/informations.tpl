@@ -154,14 +154,55 @@
 		<td style="padding-bottom:5px;">
 			<ul class="listForm">
 				<li>
-					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
+					<input onclick="toggleDraftWarning(false);showOptions(true);showRedirectProductOptions(false);" type="radio" name="active" id="active_on" value="1" {if $product->active || !$product->isAssociatedToShop()}checked="checked" {/if} />
 					<label for="active_on" class="radioCheck">{l s='Enabled'}</label>
 				</li>
 				<li>
-					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
+					<input onclick="toggleDraftWarning(true);showOptions(false);showRedirectProductOptions(true);"  type="radio" name="active" id="active_off" value="0" {if !$product->active && $product->isAssociatedToShop()}checked="checked"{/if} />
 					<label for="active_off" class="radioCheck">{l s='Disabled'}</label>
 				</li>
 			</ul>
+		</td>
+	</tr>
+	<tr class="redirect_product_options" style="display:none">
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			<label class="text">{l s='Redirect:'}</label>
+		</td>
+		<td style="padding-bottom:5px;">
+			<select name="redirect_type" id="redirect_type">
+				<option value="404" {if $product->redirect_type == '404'} selected="selected" {/if}>{l s='No redirect (404)'}</option>
+				<option value="301" {if $product->redirect_type == '301'} selected="selected" {/if}>{l s='Redirect permanently (301)'}</option>
+				<option value="302" {if $product->redirect_type == '302'} selected="selected" {/if}>{l s='Redirect temporarily (302)'}</option>
+			</select>
+			<span class="hint" name="help_box">
+				{l s='404 : Not Found = Product does not exist and no redirect'}<br/>
+				{l s='301 : Moved Permanently = Product Moved Permanently'}<br/>
+				{l s='302 : Moved Temporarily = Product moved temporarily'}
+			</span>
+		</td>
+	</tr>
+	<tr class="redirect_product_options redirect_product_options_product_choise" style="display:none">
+		<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+			<label class="text">{l s='Related product:'}</label>
+		</td>
+		<td style="padding-bottom:5px;">
+			<input type="hidden" value="" name="id_product_redirected" />
+			<input value="" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+			<p>
+				<script>
+					var no_related_product = '{l s='No related product'}';
+					var id_product_redirected = {$product->id_product_redirected|escape:html:'UTF-8'};
+					var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+				</script>
+				<span id="related_product_name">{l s='No related product'}</span>
+				<span id="related_product_remove" style="display:none">
+					<a hre="#" onclick="removeRelatedProduct(); return false" id="related_product_remove_link">
+						<img src="../img/admin/delete.gif" class="middle" alt="" />
+					</a>
+				</span>
+			</p>
 		</td>
 	</tr>
 	<tr>

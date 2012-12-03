@@ -104,16 +104,45 @@ class ProductControllerCore extends FrontController
 			 * allow showing the product
 			 * In all the others cases => 404 "Product is no longer available"
 			 */
-			if (!$this->product->isAssociatedToShop()
-			|| ((!$this->product->active && ((Tools::getValue('adtoken') != Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
-			|| !file_exists(_PS_ROOT_DIR_.'/'.Tools::getValue('ad').'/index.php')))))
+			if (!$this->product->isAssociatedToShop() || !$this->product->active)
 			{
-				header('HTTP/1.1 404 page not found');
-				$this->errors[] = Tools::displayError('Product is no longer available.');
+				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
+				{
+					// If the product is not active, it's the admin preview mode
+					$this->context->smarty->assign('adminActionDisplay', true);
+				}
+				else
+				{
+					$this->context->smarty->assign('adminActionDisplay', false);
+					if ($this->product->id_product_redirected == $this->product->id)
+						$this->product->redirect_type = '404';
+					
+					switch ($this->product->redirect_type)
+					{
+						case '301':
+							header('HTTP/1.1 301 Moved Permanently');
+							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+						break;
+						case '302':
+							header('HTTP/1.1 302 Moved Temporarily');
+							header('Cache-Control: no-cache');
+							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+						break;
+						case '404':
+							header('HTTP/1.1 404 Not Found');
+							header('Status: 404 Not Found');
+							$this->errors[] = Tools::displayError('Product is no longer available.');
+						break;
+					}
+				}
 			}
 			else if (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			{
+				header('HTTP/1.1 403 Forbidden');
+				header('Status: 403 Forbidden');
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
-
+			}
+			
 			// Load category
 			if (isset($_SERVER['HTTP_REFERER'])
 				&& !strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
@@ -149,10 +178,6 @@ class ProductControllerCore extends FrontController
 		{
 			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
-
-			// If the product is not active, it's the admin preview mode
-			if (!$this->product->active)
-				$this->context->smarty->assign('adminActionDisplay', true);
 
 			// Product pictures management
 			require_once('images.inc.php');
