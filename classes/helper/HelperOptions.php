@@ -90,6 +90,9 @@ class HelperOptionsCore extends Helper
 
 				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
+				if ($field['type'] == 'color')
+					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+					
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)
