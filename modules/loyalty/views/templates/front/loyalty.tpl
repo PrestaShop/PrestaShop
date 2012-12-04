@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}<a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='loyalty'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My loyalty points' mod='loyalty'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my account' mod='loyalty'}" rel="nofollow">{l s='My account' mod='loyalty'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My loyalty points' mod='loyalty'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='My loyalty points' mod='loyalty'}</h2>
@@ -68,13 +68,13 @@
 		<ul class="pagination">
 		{if $page != 1}
 			{assign var='p_previous' value=$page-1}
-			<li id="pagination_previous"><a href="{summarypaginationlink p=$p_previous n=$nbpagination}">
+			<li id="pagination_previous"><a href="{summarypaginationlink p=$p_previous n=$nbpagination}" title="{l s='Previous' mod='loyalty'}" rel="nofollow">
 			&laquo;&nbsp;{l s='Previous' mod='loyalty'}</a></li>
 		{else}
 			<li id="pagination_previous" class="disabled"><span>&laquo;&nbsp;{l s='Previous' mod='loyalty'}</span></li>
 		{/if}
 		{if $page > 2}
-			<li><a href="{summarypaginationlink p='1' n=$nbpagination}">1</a></li>
+			<li><a href="{summarypaginationlink p='1' n=$nbpagination}" rel="nofollow">1</a></li>
 			{if $page > 3}
 				<li class="truncate">...</li>
 			{/if}
@@ -83,18 +83,18 @@
 			{if $page == $smarty.section.pagination.index}
 				<li class="current"><span>{$page|escape:'htmlall':'UTF-8'}</span></li>
 			{elseif $smarty.section.pagination.index > 0 && $orders|@count+$nbpagination > ($smarty.section.pagination.index)*($nbpagination)}
-				<li><a href="{summarypaginationlink p=$smarty.section.pagination.index n=$nbpagination}">{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</a></li>
+				<li><a href="{summarypaginationlink p=$smarty.section.pagination.index n=$nbpagination}" title="{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}" rel="nofollow">{$smarty.section.pagination.index|escape:'htmlall':'UTF-8'}</a></li>
 			{/if}
 		{/section}
 		{if $max_page-$page > 1}
 			{if $max_page-$page > 2}
 				<li class="truncate">...</li>
 			{/if}
-			<li><a href="{summarypaginationlink p=$max_page n=$nbpagination}">{$max_page}</a></li>
+			<li><a href="{summarypaginationlink p=$max_page n=$nbpagination}" title="{$max_page}" rel="nofollow">{$max_page}</a></li>
 		{/if}
 		{if $orders|@count > $page * $nbpagination}
 			{assign var='p_next' value=$page+1}
-			<li id="pagination_next"><a href="{summarypaginationlink p=$p_next n=$nbpagination}">{l s='Next' mod='loyalty'}&nbsp;&raquo;</a></li>
+			<li id="pagination_next"><a href="{summarypaginationlink p=$p_next n=$nbpagination}" title="Next" rel="nofollow">{l s='Next' mod='loyalty'}&nbsp;&raquo;</a></li>
 		{else}
 			<li id="pagination_next" class="disabled"><span>{l s='Next' mod='loyalty'}&nbsp;&raquo;</span></li>
 		{/if}
@@ -168,7 +168,7 @@
 					{l s='Order #%d' sprintf=$myorder.id_order mod='loyalty'}
 					({displayPrice price=$myorder.total_paid currency=$myorder.id_currency}) :
 					{if $myorder.points > 0}{l s='%d points.' sprintf=$myorder.points mod='loyalty'}{else}{l s='Cancelled' mod='loyalty'}{/if}
-					{if !$smarty.foreach.myLoop.last}|{/if}{/foreach}">{l s='more...' mod='loyalty'}</a></td>
+					{if !$smarty.foreach.myLoop.last}|{/if}{/foreach}" rel="nofollow">{l s='more...' mod='loyalty'}</a></td>
 			</tr>
 		{/foreach}
 		</tbody>
@@ -202,6 +202,6 @@ $(document).ready(function()
 {/if}
 
 <ul class="footer_links">
-	<li><a href="{$link->getPageLink('my-account', true)}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}">{l s='Back to Your Account' mod='loyalty'}</a></li>
-	<li class="f_right"><a href="{$base_dir}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /></a><a href="{$base_dir}">{l s='Home' mod='loyalty'}</a></li>
+	<li><a href="{$link->getPageLink('my-account', true)}" title="{l s='Back to Your Account' mod='loyalty'}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a><a href="{$link->getPageLink('my-account', true)}" title="{l s='Back to Your Account' mod='loyalty'}" rel="nofollow">{l s='Back to Your Account' mod='loyalty'}</a></li>
+	<li class="f_right"><a href="{$base_dir}" title="{l s='Home' mod='loyalty'}"><img src="{$img_dir}icon/home.gif" alt="" class="icon" /></a><a href="{$base_dir}" title="{l s='Home' mod='loyalty'}">{l s='Home' mod='loyalty'}</a></li>
 </ul>
