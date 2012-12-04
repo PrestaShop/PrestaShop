@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsbestcategories</name>
-            <displayName><![CDATA[Best categories]]></displayName>
+            <displayName><![CDATA[Meilleures cat&eacute;gories]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[A list of the best categories]]></description>
+            <description><![CDATA[Liste des meilleures cat&eacute;gories]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

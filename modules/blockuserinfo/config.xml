@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockuserinfo</name>
-            <displayName><![CDATA[User info block]]></displayName>
+            <displayName><![CDATA[Bloc informations clients]]></displayName>
             <version><![CDATA[0.1]]></version>
-            <description><![CDATA[Adds a block that displays information about the customer.]]></description>
+            <description><![CDATA[Ajoute un bloc avec des liens utiles pour le client (login, d&eacute;connexion...)]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

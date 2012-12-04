@@ -79,7 +79,7 @@ h3 {
 	padding-bottom:20px;
 	font-size:16px
 }
-h4 {
+#title{
 	padding-bottom:20px;
 	font-size:14px
 }
@@ -287,15 +287,17 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block h4 {
+	.block #title {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;
 		text-shadow:0 1px 0 #000;
 		text-transform:uppercase;
-		background:#383838
+		background:#383838;
+		text-align:left;
+		font-weight: bold;
 	}
-		.block h4 a {color:#fff}
+		.block #title a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
@@ -577,12 +579,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		width:175px
 	}
 	.blockcategories_footer {margin-left:0}
-#footer h4 {
+#footer #title {
 	padding-bottom: 10px;
 	text-transform:uppercase
 }
-#footer h4,
-#footer h4 a {
+#footer #title,
+#footer #title a {
 	font-weight:normal;
 	font-size:14px;
 	color:#fff
@@ -594,7 +596,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li a {color:#fff}
 
 #footer .myaccount {padding: 15px 10px}
-#footer .myaccount h4 {
+#footer .myaccount #title {
 	padding:0 0 10px 0;
 	background:none;
 	text-shadow:none
@@ -801,9 +803,9 @@ table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
 }
 
-.cart_voucher h4,
+.cart_voucher #title,
 .cart_voucher p {float:left;}
-.cart_voucher h4 {
+.cart_voucher #title {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
@@ -874,7 +876,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	border:1px solid #999;
 	background:#fff
 }
-#order_carrier h4 {
+#order_carrier #title {
 	padding:0 15px;
 	height: 29px;
 	font-weight: bold;
@@ -933,7 +935,7 @@ table#cart_summary .gift-icon {
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#create-account_form h4 {
+#create-account_form #title {
 	padding-bottom:22px;
 	font-size:11px;
 	color:#333

@@ -56,7 +56,7 @@
 						</a>
 					</div>
 					<div class="product_infos">
-						<h5 class="product_name">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</h5>
+						<p id="s_title" class="product_name">{$product.name|truncate:30:'...'|escape:'htmlall':'UTF-8'}</p>
 						<span class="wishlist_product_detail">
 						{if isset($product.attributes_small)}
 							<a href="{$link->getProductlink($product.id_product, $product.link_rewrite, $product.category_rewrite)}" title="{l s='Product detail' mod='blockwishlist'}">{$product.attributes_small|escape:'htmlall':'UTF-8'}</a>

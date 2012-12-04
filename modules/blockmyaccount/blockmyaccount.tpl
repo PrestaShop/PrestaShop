@@ -25,7 +25,7 @@
 
 <!-- Block myaccount module -->
 <div class="block myaccount">
-	<h4><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></h4>
+	<p id="title"><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></p>
 	<div class="block_content">
 		<ul class="bullet">
 			<li><a href="{$link->getPageLink('history', true)}" title="">{l s='My orders' mod='blockmyaccount'}</a></li>
