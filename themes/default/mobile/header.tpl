@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE html>
-<html>
+<html lang="{$lang_iso}">
 	<head>
 		<title>{$meta_title|escape:'htmlall':'UTF-8'}</title>
 		{*<meta name="viewport" content="width=device-width, initial-scale=1">*}
@@ -34,7 +34,7 @@
 {if isset($meta_keywords) AND $meta_keywords}
 		<meta name="keywords" content="{$meta_keywords|escape:html:'UTF-8'}" />
 {/if}
-		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="PrestaShop" />
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
 		<link rel="icon" type="image/vnd.microsoft.icon" href="{$favicon_url}?{$img_update_time}" />
