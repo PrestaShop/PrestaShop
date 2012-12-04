@@ -72,7 +72,7 @@
 			
 			<div id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<br />
-				<label for="product_reference">{l s='Reference:'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 				<br />
 			</div>
