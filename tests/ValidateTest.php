@@ -60,4 +60,27 @@ class ValidateTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
+	public function testIsLoadedObject() {
+		
+		$object = new StdClass();
+		$object->id = 1;
+		$this->assertTrue(Validate :: isLoadedObject($object));
+		
+		$object->id = null;
+		$this->assertFalse(Validate :: isLoadedObject($object));
+		
+		$object = array('id' => 1);
+		$this->assertFalse(Validate :: isLoadedObject($object));
+		
+	}
+	
+	public function testIsModuleUrlReturnsFase() {
+		
+		$unknowArchiveType = 'http://www.prestashop.com/module.rar';
+		
+		$errors = array();
+		$this->assertFalse(Validate :: isModuleUrl($unknowArchiveType, $errors));
+		
+	}
+	
 }
