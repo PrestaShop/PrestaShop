@@ -18,12 +18,16 @@
                 },
                 "include-path": ["hamcrest"]
             }
-        }
+        }, {
+        	"type": "vcs",
+        	"url": "https://github.com/fzaninotto/Faker"
+    	}
     ],
 	
     "require": {
         "phpunit/phpunit": "3.7.*", 
         "mockery/mockery": "0.7.*", 
-        "hamcrest/hamcrest": "*"
+        "hamcrest/hamcrest": "*", 
+        "fzaninotto/faker": "1.1.*"
     }
 }
