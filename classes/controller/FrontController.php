@@ -252,12 +252,6 @@ class FrontControllerCore extends Controller
 			CartRule::autoAddToCart($this->context);
 		}
 
-		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
-		setlocale(LC_COLLATE, $locale);
-		setlocale(LC_CTYPE, $locale);
-		setlocale(LC_TIME, $locale);
-		setlocale(LC_NUMERIC, 'en_US.UTF-8');
-
 		/* get page name to display it in body id */
 
 		// Are we in a payment module
@@ -1144,12 +1138,12 @@ class FrontControllerCore extends Controller
 	 * @return array
 	 */
 	public function initLogoAndFavicon()
-  {
-  	return array(
-    				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+	{
+		return array(
+ 				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
             'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
             'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
             'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
   				);
-  }
+	}
 }
