@@ -387,7 +387,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		{
 			case 'GET':
 			case 'HEAD':
-				$this->imgToDisplay = ($path != '' && file_exists($path)) ? $path : $alternative_path;
+				$this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
 				return true;
 				break;
 			case 'PUT':
