@@ -396,10 +396,8 @@ class FrontControllerCore extends Controller
 		if ($this->restrictedCountry)
 			$this->displayRestrictedCountryPage();
 
-		//live edit
-		if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
-			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
-				die(Tools::displayError());
+		if (Tools::isSubmit('live_edit') && !$this->checkLiveEditAccess())
+			die(Tools::displayError());
 
 		$this->iso = $iso;
 		$this->setMedia();
@@ -407,7 +405,7 @@ class FrontControllerCore extends Controller
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 	}
-
+	
 	public function postProcess()
 	{
 		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
@@ -543,23 +541,24 @@ class FrontControllerCore extends Controller
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-
+		
+		$live_edit_content = '';
 		// Don't use live edit if on mobile device
-		if ($this->context->getMobileDevice() == false && Tools::isSubmit('live_edit'))
-			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
-
+		if (!$this->context->getMobileDevice() && $this->checkLiveEditAccess())
+			$live_edit_content = $this->getLiveEditFooter();
+		
 		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
+				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template).$live_edit_content);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
 				$this->displayContent();
 				$template = ob_get_contents();
 				ob_clean();
-				$this->context->smarty->assign('template', $template);
+				$this->context->smarty->assign('template', $template.$live_edit_content);
 			}
 			$this->smartyOutputContent($layout);
 		}
@@ -577,16 +576,9 @@ class FrontControllerCore extends Controller
 
 			if ($this->display_footer)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-
-			// live edit
-			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
-			{
-				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-				$this->smartyOutputContent(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
-			}
 			// END - 1.4 retrocompatibility - will be removed in 1.6
 		}
-
+				
 		return true;
 	}
 
@@ -793,16 +785,21 @@ class FrontControllerCore extends Controller
 		));
 
 	}
-
+	
+	public function checkLiveEditAccess()
+	{
+		$live_token = Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'));
+		$ad = Tools::getValue('ad');
+		return Tools::isSubmit('live_edit') && $ad && Tools::getValue('liveToken') == $live_token && is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad);
+	}
+	
 	public function getLiveEditFooter()
 	{
-		if (Tools::isSubmit('live_edit')
-			&& ($ad = Tools::getValue('ad'))
-			&& Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+		if ($this->checkLiveEditAccess())
 		{
 			$data = $this->context->smarty->createData();
 			$data->assign(array(
-				'ad' => $ad,
+				'ad' => Tools::getValue('ad'),
 				'live_edit' => true,
 				'hook_list' => Hook::$executed_hooks,
 				'id_shop' => $this->context->shop->id
