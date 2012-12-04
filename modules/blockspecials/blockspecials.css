@@ -9,9 +9,10 @@
 	width: 130px;
 	border:none;
 }
-#special_block_right li h5 {
+#special_block_right li #s_title {
 	padding:0 0 3px 0;
-	font-size:12px
+	font-size:12px;
+	text-align:left;
 }
 #special_block_right .products li a {
 	padding:0;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockcurrencies</name>
-            <displayName><![CDATA[Currency block]]></displayName>
+            <displayName><![CDATA[Bloc devises]]></displayName>
             <version><![CDATA[0.1]]></version>
-            <description><![CDATA[Adds a block for selecting a currency.]]></description>
+            <description><![CDATA[Ajoute un bloc permettant au client de choisir sa devise]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

@@ -23,10 +23,12 @@ table#product_comparison {
 	text-align:center
 }
 #product_comparison .product_image img {border:1px solid #ccc}
-#product_comparison h5 {
+#product_comparison #s_title {
 	margin-bottom:10px;
 	font-size:12px;
-	color:#000
+	color:#000;
+	font-weight:bold;
+	 padding-bottom: 0;
 }
 #product_comparison .product_desc {
 	padding-bottom:5px;

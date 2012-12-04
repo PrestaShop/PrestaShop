@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockcategories</name>
-            <displayName><![CDATA[Categories block]]></displayName>
+            <displayName><![CDATA[Bloc cat&eacute;gories]]></displayName>
             <version><![CDATA[2.0]]></version>
-            <description><![CDATA[Adds a block featuring product categories.]]></description>
+            <description><![CDATA[Ajoute un bloc proposant une navigation au sein de vos cat&eacute;gories de produits]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

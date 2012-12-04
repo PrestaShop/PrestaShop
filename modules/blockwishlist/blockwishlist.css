@@ -222,7 +222,7 @@ ul.wlp_bought_list li .product_infos {
 	margin-left:10px;
 	width:126px
 }
-ul.wlp_bought_list li .product_infos h5.product_name {
+ul.wlp_bought_list li .product_infos #s_title.product_name {
    padding:5px 0;
    font-size:12px;
    color:#222

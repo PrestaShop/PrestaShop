@@ -50,7 +50,7 @@
 								</div><!-- .col-left -->
 								<div class="col-right">
 									<div class="inner">
-										<h5>{$accessory.name|escape:'htmlall':'UTF-8'}</h5>
+										<p id="s_title">{$accessory.name|escape:'htmlall':'UTF-8'}</p>
 										<p>{$accessory.description_short|strip_tags|truncate:70:'...'}</p>
 									</div>
 								</div>

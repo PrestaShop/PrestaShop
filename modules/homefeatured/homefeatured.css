@@ -5,11 +5,13 @@
 	height:240px
 }
 #featured-products_block_center li.last_item_of_line  {margin-right:0;}
-#featured-products_block_center h5 {
+#featured-products_block_center #s_title {
 	padding-top:5px;
 	height:30px;
 	font-size:12px;
-	color:#222
+	color:#222;
+	padding-bottom: 0;
+	font-weight:bold;
 }
 
 #featured-products_block_center .product_image {

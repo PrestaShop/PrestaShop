@@ -56,7 +56,7 @@ $(function () {ldelim}
 					</div>
 					{/if}
 					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
-					<h4><span class="product_name">{$product.details->name}</span></h4>
+					<p id="title"><span class="product_name">{$product.details->name}</span></p>
 					<p class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</p>
 				</div>
 			{/foreach}

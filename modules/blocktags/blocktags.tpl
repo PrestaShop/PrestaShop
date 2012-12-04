@@ -25,7 +25,7 @@
 
 <!-- Block tags module -->
 <div id="tags_block_left" class="block tags_block">
-	<h4>{l s='Tags' mod='blocktags'}</h4>
+	<p id="title">{l s='Tags' mod='blocktags'}</p>
 	<p class="block_content">
 {if $tags}
 	{foreach from=$tags item=tag name=myLoop}

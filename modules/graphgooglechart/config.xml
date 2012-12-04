@@ -3,7 +3,7 @@
             <name>graphgooglechart</name>
             <displayName><![CDATA[Google Chart]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[The Google Chart API lets you dynamically generate charts.]]></description>
+            <description><![CDATA[L&#039;API Google Chart permet de g&eacute;n&eacute;rer dynamiquement des graphiques.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
             <is_configurable>0</is_configurable>
