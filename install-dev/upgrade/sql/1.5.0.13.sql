@@ -19,7 +19,7 @@ CREATE TABLE `PREFIX_order_invoice_payment` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_order_invoice_payment`
-	(SELECT id_order_invoice, id_order_payment, id_order FROM `PREFIX_order_payment` WHERE id_order_invoice > 0);
+	(SELECT `id_order_invoice`, `id_order_payment`, `id_order` FROM `PREFIX_order_payment` WHERE `id_order_invoice` > 0);
 
 -- Step 2: Add the collumn id_order_reference
 ALTER TABLE `PREFIX_order_payment`
