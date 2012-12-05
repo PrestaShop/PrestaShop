@@ -2077,3 +2077,5 @@ tr.subitem > td:first-child + td {
 	padding:0;
 	text-align:center
 }
+
+.ie7 #featured-products_block_center .product_image span.new {top:-20px;right:-19px}
