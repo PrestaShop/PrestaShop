@@ -147,7 +147,7 @@ function findCombination(firstTime)
 //update display of the availability of the product AND the prices of the product
 function updateDisplay()
 {
-	if (!selectedCombination['unavailable'] && quantityAvailable > 0 && productAvailableForOrder === 1)
+	if (!selectedCombination['unavailable'] && quantityAvailable > 0 && parseInt(productAvailableForOrder) === 1)
 	{
 		//show the choice of quantities
 		$('#quantity_wanted_p:hidden').show('slow');
@@ -165,6 +165,7 @@ function updateDisplay()
 		//availability value management
 		if (availableNowValue !== '')
 		{
+			
 			//update the availability statut of the product
 			$('#availability_value').removeClass('warning_inline');
 			$('#availability_value').text(availableNowValue);
@@ -689,7 +690,7 @@ function initLocationChange(time)
 
 function checkUrl()
 {
-	if (original_url !== window.location || first_url_check)
+	if (original_url != window.url || first_url_check)
 	{
 		first_url_check = false;
 		url = window.location+'';

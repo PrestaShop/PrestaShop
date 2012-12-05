@@ -186,7 +186,7 @@ abstract class PaymentModuleCore extends Module
 					foreach ($data['package_list'] as $id_package)
 					{
 						// Rewrite the id_warehouse
-						$package_list[$id_address][$id_package]['id_warehouse'] = $this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int)$id_carrier);
+						$package_list[$id_address][$id_package]['id_warehouse'] = (int)$this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int)$id_carrier);
 						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
 					}
 			// Make sure CarRule caches are empty

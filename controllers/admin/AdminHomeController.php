@@ -95,7 +95,6 @@ class AdminHomeControllerCore extends AdminController
 		$opti_list = array();
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
-			$this->context->smarty->assign('hide_tips', Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
 			$opti_list[] = array(
 				'title' => $this->l('URL rewriting'),
 				'href' => $link->getAdminLink('AdminMeta'),
@@ -145,8 +144,12 @@ class AdminHomeControllerCore extends AdminController
 				'image' => $lights[$htaccessAfterUpdate]['image'],
 			);
 		}
-		$this->context->smarty->assign('opti_list', $opti_list);
-		$this->context->smarty->assign('content', $content);
+		$this->context->smarty->assign(array(
+			'opti_list' => $opti_list,
+			'content' => $content,
+			'hide_tips' => Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'))
+		);
+
 		$template = $this->createTemplate('optimizationTips.tpl');
 		return $template->fetch();
 	}

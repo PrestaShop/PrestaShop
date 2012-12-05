@@ -418,7 +418,7 @@ class HookCore extends ObjectModel
 				else if ($hook_retro_callable)
 					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
 				// Live edit
-				if ($array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+				if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 				{
 					$live_edit = true;
 					$output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
