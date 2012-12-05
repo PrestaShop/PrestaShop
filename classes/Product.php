@@ -163,7 +163,13 @@ class ProductCore extends ObjectModel
 
 	/** @var boolean Product statuts */
 	public $active = true;
-
+	
+	/** @var boolean Product statuts */
+	public $redirect_type = '';
+	
+	/** @var boolean Product statuts */
+	public $id_product_redirected = 0;
+		
 	/** @var boolean Product available for order */
 	public $available_for_order = true;
 
@@ -272,6 +278,8 @@ class ProductCore extends ObjectModel
 			'text_fields' => 				array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 			'uploadable_files' => 			array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 			'active' => 					array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+			'redirect_type' => 				array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
+			'id_product_redirected' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
 			'available_for_order' => 		array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'available_date' => 			array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 			'condition' => 					array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
@@ -650,7 +658,26 @@ class ProductCore extends ObjectModel
 
 		return parent::validateFieldsLang($die, $error_return);
 	}
-
+	
+	public function toggleStatus()
+	{
+		//test if the product is active and if redirect_type is empty string and set default value to id_product_redirected & redirect_type
+		//  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
+		if ($this->active)
+		{
+			//case where active will be false after parent::toggleStatus()
+			$this->id_product_redirected = 0;
+			$this->redirect_type = '404';
+		}
+		else
+		{	
+			//case where active will be true after parent::toggleStatus()
+			$this->id_product_redirected = 0;
+			$this->redirect_type = '';
+		}
+		return parent::toggleStatus();
+	}
+	
 	public function delete()
 	{
 		/*
@@ -798,7 +825,7 @@ class ProductCore extends ObjectModel
 			SELECT c.`id_category`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'category` c ON (c.`id_category` = cp.`id_category`)
-			'.Shop::addSqlAssociation('category', 'c', true).'
+			'.Shop::addSqlAssociation('category', 'c', true, null, true).'
 			WHERE cp.`id_category` NOT IN ('.implode(',', array_map('intval', $categories)).')
 			AND cp.id_product = '.$this->id
 		);

@@ -323,7 +323,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// Set the image path on display in relation to the header image
 			case 'header':
 				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
-					$path = _PS_IMG_DIR_.'logo.jpg';
+					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				else
 					throw new WebserviceException('This method is not allowed with general image resources.', array(49, 405));
 				break;
@@ -387,7 +387,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		{
 			case 'GET':
 			case 'HEAD':
-				$this->imgToDisplay = ($path != '' && file_exists($path)) ? $path : $alternative_path;
+				$this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
 				return true;
 				break;
 			case 'PUT':

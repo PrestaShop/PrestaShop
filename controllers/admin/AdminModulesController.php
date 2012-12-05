@@ -462,6 +462,7 @@ class AdminModulesControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('Cannot load module object');
+			$this->errors = array_merge($this->errors, $module->getErrors());
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to add here.');
@@ -688,6 +689,7 @@ class AdminModulesControllerCore extends AdminController
 						}
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
+
 						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
 							Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
