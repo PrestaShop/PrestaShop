@@ -41,9 +41,7 @@
 }
 
 .ie9 #featured-products_block_center .product_image span.new{top:-18px;right:-38px}
-.ie8 #featured-products_block_center .product_image span.new{top:-18px;right:-38px}
-.ie8 #featured-products_block_center .product_image span.new {top:-17px;}
-.ie7 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
+.ie8 #featured-products_block_center .product_image span.new{top:-21px;right:-38px}
 .lt-ie6 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
 
 #featured-products_block_center .product_desc {height:45px;}

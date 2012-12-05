@@ -107,6 +107,13 @@ Context::getContext()->country = $defaultCountry;
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
+/* Set locales */
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
+setlocale(LC_COLLATE, $locale);
+setlocale(LC_CTYPE, $locale);
+setlocale(LC_TIME, $locale);
+setlocale(LC_NUMERIC, 'en_US.UTF-8');
+
 /* Instantiate cookie */
 
 
@@ -122,7 +129,7 @@ else
 	else
 	{
 		$domains = null;
-		if(Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
+		if (Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
 		  $domains = array(Context::getContext()->shop->domain_ssl, Context::getContext()->shop->domain);
 		
 		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookie_lifetime, $domains);
@@ -153,7 +160,7 @@ else
 	{
 		$customer = new Customer();
 		
-		// Change the default group 
+		// Change the default group
 		if (Group::isFeatureActive())
 			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
 	}

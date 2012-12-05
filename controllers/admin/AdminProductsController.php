@@ -536,13 +536,17 @@ class AdminProductsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You cannot delete the product because there is physical stock left or supply orders in progress.');
 				}
 
-				if ($object->delete())
+				if (!count($this->errors))
 				{
-					$id_category = (int)Tools::getValue('id_category');
-					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+					if ($object->delete())
+					{
+						$id_category = (int)Tools::getValue('id_category');
+						$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+					}
+					else
+						$this->errors[] = Tools::displayError('An error occurred during deletion.');
 				}
-				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}
 		else
@@ -632,10 +636,8 @@ class AdminProductsControllerCore extends AdminController
 								$real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
 								if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
 									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left or supply orders in progress.'), $product->id);
-								else
-									$success &= $product->delete();
 							}
-							else
+							if (!count($this->errors))
 								$success &= $product->delete();
 						}
 					}
