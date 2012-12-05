@@ -1226,6 +1226,8 @@ product_tabs['Quantities'] = new function(){
 			self.refreshQtyAvailabilityForm();
 			self.ajaxCall({actionQty: 'out_of_stock', value: $(this).val()});
 		});
+		if (display_multishop_checkboxes)
+			ProductMultishop.checkAllQuantities();
 
 		self.refreshQtyAvailabilityForm();
 	};
@@ -1572,6 +1574,15 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').prop('checked'), 'meta_description_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').prop('checked'), 'meta_keywords_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang);
+		});
+	};
+	
+	this.checkAllQuantities = function()
+	{
+		$.each(languages, function(k, v)
+		{
+			ProductMultishop.checkField($('input[name=\'multishop_check[available_later]['+v.id_lang+']\']').prop('checked'), 'available_later_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[available_now]['+v.id_lang+']\']').prop('checked'), 'available_now_'+v.id_lang);
 		});
 	};
 

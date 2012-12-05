@@ -1509,9 +1509,8 @@ class CartCore extends ObjectModel
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
-				{
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), 2);
-				}
+
 			}
 			
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
@@ -2600,7 +2599,10 @@ class CartCore extends ObjectModel
 
 		// Select carrier tax
 		if ($use_tax && !Tax::excludeTaxeOption())
-			$carrier_tax = $carrier->getTaxesRate(new Address((int)$address_id));
+		{
+			$address = Address::initialize((int)$address_id);
+			$carrier_tax = $carrier->getTaxesRate($address);
+		}
 
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHIPPING_FREE_PRICE',
