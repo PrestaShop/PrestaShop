@@ -112,10 +112,10 @@ $(function(){ldelim}
 		{else}
 			<div style="display: none;">
 		{/if}
-			<div id="vat_number">
+			<div>
 				<p class="text">
 					<label for="vat_number">{l s='VAT number'}</label>
-					<input type="text" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
+					<input type="text" id="vat_number" class="text" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number}{/if}{/if}" />
 				</p>
 			</div>
 		</div>

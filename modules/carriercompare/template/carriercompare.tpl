@@ -77,7 +77,7 @@
 		</p>
 		
 		<div id="SE_AjaxDisplay">
-			<img src="{$new_base_dir}loader.gif" /><br />
+			<img src="{$new_base_dir}loader.gif" alt="Loading data" /><br />
 			<p></p>
 		</div>
 		
