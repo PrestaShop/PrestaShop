@@ -1060,7 +1060,8 @@ abstract class ModuleCore
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
-
+					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? $tmp_module->confirmUninstall : null;
+					
 					// Method pointer to get dynamically the onclick content
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
 
