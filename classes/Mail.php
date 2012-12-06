@@ -204,9 +204,14 @@ class MailCore
 				$template_path = $theme_path.'mails/';
 				$override_mail  = true;
 			}
-			else if (!file_exists($template_path.$template.'.txt') || !file_exists($template_path.$template.'.html'))
+			else if (!file_exists($template_path.$template.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT))
 			{
 				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$template.'.txt', $die);
+				return false;
+			}
+			else if (!file_exists($template_path.$template.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML))
+			{
+				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$template.'.html', $die);
 				return false;
 			}
 			$template_html = file_get_contents($template_path.$template.'.html');
