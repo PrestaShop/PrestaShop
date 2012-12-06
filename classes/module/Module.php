@@ -1062,9 +1062,17 @@ abstract class ModuleCore
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
 					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? $tmp_module->confirmUninstall : null;
 					
-					// Method pointer to get dynamically the onclick content
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
-
+					if ($item->onclick_option)
+					{
+						$href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;
+						$item->onclick_option_content = array();
+						$option_tab = array('desactive', 'reset', 'configure', 'delete');
+						foreach ($option_tab as $opt)
+							$item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);					
+					}
+					
+					
 					$module_list[] = $item;
 					if (!$xml_exist || $needNewConfigFile)
 					{
