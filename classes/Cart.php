@@ -154,7 +154,6 @@ class CartCore extends ObjectModel
 				$customer = Context::getContext()->customer;
 			else
 				$customer = new Customer((int)$this->id_customer);
-			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
 			if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key)
 			{
@@ -162,8 +161,7 @@ class CartCore extends ObjectModel
 				$this->save();
 			}
 		}
-		else
-			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+		$this->_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
 
 	}
 
