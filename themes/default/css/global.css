@@ -79,7 +79,7 @@ h3 {
 	padding-bottom:20px;
 	font-size:16px
 }
-#title{
+.title_block {
 	padding-bottom:20px;
 	font-size:14px
 }
@@ -287,7 +287,7 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block #title {
+	.block .title_block  {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;
@@ -297,7 +297,7 @@ table.table_block  td {
 		text-align:left;
 		font-weight: bold;
 	}
-		.block #title a {color:#fff}
+		.block .title_block  a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
@@ -579,12 +579,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		width:175px
 	}
 	.blockcategories_footer {margin-left:0}
-#footer #title {
+#footer .title_block  {
 	padding-bottom: 10px;
 	text-transform:uppercase
 }
-#footer #title,
-#footer #title a {
+#footer .title_block ,
+#footer .title_block  a {
 	font-weight:normal;
 	font-size:14px;
 	color:#fff
@@ -596,7 +596,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li a {color:#fff}
 
 #footer .myaccount {padding: 15px 10px}
-#footer .myaccount #title {
+#footer .myaccount .title_block  {
 	padding:0 0 10px 0;
 	background:none;
 	text-shadow:none
@@ -803,9 +803,9 @@ table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
 }
 
-.cart_voucher #title,
+.cart_voucher .title_block ,
 .cart_voucher p {float:left;}
-.cart_voucher #title {
+.cart_voucher .title_block  {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
@@ -876,7 +876,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	border:1px solid #999;
 	background:#fff
 }
-#order_carrier #title {
+#order_carrier .title_block  {
 	padding:0 15px;
 	height: 29px;
 	font-weight: bold;
@@ -935,7 +935,7 @@ table#cart_summary .gift-icon {
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#create-account_form #title {
+#create-account_form .title_block  {
 	padding-bottom:22px;
 	font-size:11px;
 	color:#333

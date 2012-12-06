@@ -195,7 +195,7 @@
 					{if $voucherAllowed}
 					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 						<fieldset>
-							<p id="title">><label for="discount_name">{l s='Vouchers'}</label></p>
+							<p class="title_block"><label for="discount_name">{l s='Vouchers'}</label></p>
 							<p>
 								<input type="text" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 							</p>

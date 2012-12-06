@@ -949,12 +949,12 @@ h2.site_map {
 	margin:0 0 0 78px;
 }
 
-.accessories_block li .col-right .inner p,.accessories_block li .col-right .inner #s_title {
+.accessories_block li .col-right .inner p,.accessories_block li .col-right .inner .s_title_block {
 	margin:0;
 	color:#fff;
 }
 
-.accessories_block li .col-right .inner #s_title {
+.accessories_block li .col-right .inner .s_title_block {
 	font-size:10pt;
 }
 

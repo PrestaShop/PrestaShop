@@ -25,7 +25,7 @@
 
 <!-- Block links module -->
 <div id="links_block_left" class="block">
-	<p id="title">
+	<p class="title_block">
 	{if $url}
 		<a href="{$url|escape}">{$title|escape}</a>
 	{else}

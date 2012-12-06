@@ -43,7 +43,7 @@ var delete_txt = '{l s='Delete' mod='blockcart'}';
 
 <!-- MODULE Block cart -->
 <div id="cart_block" class="block exclusive">
-	<p id="title">
+	<p class="title_block">
 		<a href="{$link->getPageLink("$order_process", true)}" title="{l s='View my shopping cart' mod='blockcart'}" rel="nofollow">{l s='Cart' mod='blockcart'}</a>
 		{if $ajax_allowed}
 		<span id="block_cart_expand" {if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !isset($colapseExpandStatus)}class="hidden"{/if}>&nbsp;</span>

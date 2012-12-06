@@ -25,7 +25,7 @@
 
 <!-- Block myaccount module -->
 <div class="block myaccount">
-	<p id="title"><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my customer account' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My account' mod='blockmyaccountfooter'}</a></p>
+	<p class="title_block"><a href="{$link->getPageLink('my-account', true)}" title="{l s='Manage my customer account' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My account' mod='blockmyaccountfooter'}</a></p>
 	<div class="block_content">
 		<ul class="bullet">
 			<li><a href="{$link->getPageLink('history', true)}" title="{l s='List of my orders' mod='blockmyaccountfooter'}" rel="nofollow">{l s='My orders' mod='blockmyaccountfooter'}</a></li>

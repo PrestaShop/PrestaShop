@@ -5,7 +5,7 @@
 	height:240px
 }
 #featured-products_block_center li.last_item_of_line  {margin-right:0;}
-#featured-products_block_center #s_title {
+#featured-products_block_center .s_title_block {
 	padding-top:5px;
 	height:30px;
 	font-size:12px;
