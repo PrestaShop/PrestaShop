@@ -39,7 +39,7 @@
 				{foreach from=$multipleAddresses item=address name=myLoop}
 				<li>
 					<a href="{$link->getPageLink('address', true, null, "id_address={$address.object.id|intval}")}" title="{l s='Update'}" data-ajax="false">
-						<h4>{$address.object.alias}</h4>
+						<p class="title_block">{$address.object.alias}</p>
 						{foreach from=$address.ordered name=adr_loop item=pattern}
 							{assign var=addressKey value=" "|explode:$pattern}
 							{foreach from=$addressKey item=key name="word_loop"}

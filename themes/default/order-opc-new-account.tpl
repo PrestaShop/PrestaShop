@@ -30,14 +30,14 @@
 			<h3 id="new_account_title">{l s='New Customer'}</h3>
 			<div id="opc_account_choice">
 				<div class="opc_float">
-					<h4>{l s='Instant Checkout'}</h4>
+					<p class="title_block">{l s='Instant Checkout'}</p>
 					<p>
 						<input type="button" class="exclusive_large" id="opc_guestCheckout" value="{l s='Checkout as guest'}" />
 					</p>
 				</div>
 
 				<div class="opc_float">
-					<h4>{l s='Create your account today and enjoy:'}</h4>
+					<p class="title_block">{l s='Create your account today and enjoy:'}</p>
 					<ul class="bullet">
 						<li>{l s='Personalized and secure access'}</li>
 						<li>{l s='Fast and easy check out'}</li>

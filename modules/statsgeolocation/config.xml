@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsgeolocation</name>
-            <displayName><![CDATA[Geolocation]]></displayName>
+            <displayName><![CDATA[G&eacute;olocalisation]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display your customers&#039; origin]]></description>
+            <description><![CDATA[Affiche la provenance de vos clients.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>1</is_configurable>

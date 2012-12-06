@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsbestsuppliers</name>
-            <displayName><![CDATA[Best suppliers]]></displayName>
+            <displayName><![CDATA[Meilleurs fournisseurs]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[A list of the best suppliers]]></description>
+            <description><![CDATA[Liste des meilleurs fournisseurs]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

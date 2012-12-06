@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>pagesnotfound</name>
-            <displayName><![CDATA[Pages not found]]></displayName>
+            <displayName><![CDATA[Pages introuvables]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the pages requested by your visitors but not found.]]></description>
+            <description><![CDATA[Affiche les pages demand&eacute;es mais qui n&#039;existent pas]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>
