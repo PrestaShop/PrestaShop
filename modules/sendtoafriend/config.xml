@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>sendtoafriend</name>
-            <displayName><![CDATA[Module envoyer &agrave; un ami]]></displayName>
+            <displayName><![CDATA[Send to a Friend module]]></displayName>
             <version><![CDATA[1.2]]></version>
-            <description><![CDATA[Permet &agrave; vos clients d&#039;envoyer des liens &agrave; leurs amis.]]></description>
+            <description><![CDATA[Allows customers to send a product link to a friend.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>0</is_configurable>

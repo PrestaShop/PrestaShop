@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockstore</name>
-            <displayName><![CDATA[Bloc magasins]]></displayName>
+            <displayName><![CDATA[Stores block]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Affiche un bloc avec un lien vers la liste des magasins]]></description>
+            <description><![CDATA[Displays a block with a link to the store locator.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

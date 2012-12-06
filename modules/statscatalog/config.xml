@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statscatalog</name>
-            <displayName><![CDATA[Statistiques du catalogue]]></displayName>
+            <displayName><![CDATA[Catalog statistics]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Statistiques g&eacute;n&eacute;rales sur le catalogue]]></description>
+            <description><![CDATA[General statistics about your catalog.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>
