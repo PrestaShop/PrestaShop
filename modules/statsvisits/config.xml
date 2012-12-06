@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>statsvisits</name>
-            <displayName><![CDATA[Visites et visiteurs]]></displayName>
+            <displayName><![CDATA[Visits and Visitors]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Propose des graphiques montrant l&#039;&eacute;volution de vos visites et visiteurs.]]></description>
+            <description><![CDATA[Display statistics about your visits and visitors.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>gridhtml</name>
-            <displayName><![CDATA[Affichage HTML simple]]></displayName>
+            <displayName><![CDATA[Simple HTML table display]]></displayName>
             <version><![CDATA[1]]></version>
             <description><![CDATA[]]></description>
             <author><![CDATA[PrestaShop]]></author>

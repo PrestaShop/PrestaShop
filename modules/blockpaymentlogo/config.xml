@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockpaymentlogo</name>
-            <displayName><![CDATA[Bloc logo de paiement]]></displayName>
+            <displayName><![CDATA[Block payment logo]]></displayName>
             <version><![CDATA[0.2]]></version>
-            <description><![CDATA[Ajoute un bloc affichant tous les logos des modes de paiement.]]></description>
+            <description><![CDATA[Adds a block to display all payment logos.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>
