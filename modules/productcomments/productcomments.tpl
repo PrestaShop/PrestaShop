@@ -52,7 +52,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					</div>
 				</div>
 				<div class="comment_details">
-					<p id="title">{$comment.title}</p>
+					<p class="title_block">{$comment.title}</p>
 					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}

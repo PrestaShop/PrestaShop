@@ -26,7 +26,7 @@
 <form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<div>
 		<input type="hidden" value="{$order->id}" name="id_order"/>
-		<p id="title">
+		<p class="title_block">
 			<input type="submit" value="{l s='Reorder'}" name="submitReorder" class="button exclusive" />
 			{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}
 		</p>

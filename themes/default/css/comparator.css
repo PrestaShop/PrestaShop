@@ -23,7 +23,7 @@ table#product_comparison {
 	text-align:center
 }
 #product_comparison .product_image img {border:1px solid #ccc}
-#product_comparison #s_title {
+#product_comparison .s_title_block {
 	margin-bottom:10px;
 	font-size:12px;
 	color:#000;

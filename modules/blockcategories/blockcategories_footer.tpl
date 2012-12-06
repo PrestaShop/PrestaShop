@@ -25,7 +25,7 @@
 
 <!-- Block categories module -->
 <div class="blockcategories_footer">
-	<p id="title">{l s='Categories' mod='blockcategories'}</p>
+	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
 <div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
 	<div style="float:left" class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">

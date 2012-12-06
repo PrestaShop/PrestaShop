@@ -4,12 +4,17 @@
 	font-weight:bold;
 	text-align:right
 }
+
+#special_block_right p.title_block  {
+	padding:6px 11px;
+	text-align:left
+}
 #special_block_right .products li {
 	padding:15px 0;
 	width: 130px;
 	border:none;
 }
-#special_block_right li #s_title {
+#special_block_right li .s_title_block {
 	padding:0 0 3px 0;
 	font-size:12px;
 	text-align:left;

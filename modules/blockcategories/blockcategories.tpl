@@ -25,7 +25,7 @@
 
 <!-- Block categories module -->
 <div id="categories_block_left" class="block">
-	<p id="title">{l s='Categories' mod='blockcategories'}</p>
+	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
 	<div class="block_content">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 		{foreach from=$blockCategTree.children item=child name=blockCategTree}

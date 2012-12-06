@@ -25,7 +25,7 @@
 
 <!-- Block suppliers module -->
 <div id="suppliers_block_left" class="block blocksupplier">
-	<p id="title">{if $display_link_supplier}<a href="{$link->getPageLink('supplier')}" title="{l s='Suppliers' mod='blocksupplier'}">{/if}{l s='Suppliers' mod='blocksupplier'}{if $display_link_supplier}</a>{/if}</p>
+	<p class="title_block">{if $display_link_supplier}<a href="{$link->getPageLink('supplier')}" title="{l s='Suppliers' mod='blocksupplier'}">{/if}{l s='Suppliers' mod='blocksupplier'}{if $display_link_supplier}</a>{/if}</p>
 	<div class="block_content">
 {if $suppliers}
 	{if $text_list}

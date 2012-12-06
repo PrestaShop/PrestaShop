@@ -507,6 +507,6 @@ ul#uploadable_files,ul#text_fields {
 	display:inline-block;
 }
 
-.accessories_block div ul li #s_title a, .accessories_block div ul li #s_title span  {
+.accessories_block div ul li .s_title_block a, .accessories_block div ul li .s_title_block span  {
 	font-weight:bold;
 }
