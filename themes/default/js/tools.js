@@ -86,15 +86,15 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 	price = ps_round(price, priceDisplayPrecision);
 	if (currencyBlank > 0)
 		blank = ' ';
-	if (currencyFormat === 1)
+	if (currencyFormat == 1)
 		return currencySign + blank + formatNumber(price, priceDisplayPrecision, ',', '.');
-	if (currencyFormat === 2)
+	if (currencyFormat == 2)
 		return (formatNumber(price, priceDisplayPrecision, ' ', ',') + blank + currencySign);
-	if (currencyFormat === 3)
+	if (currencyFormat == 3)
 		return (currencySign + blank + formatNumber(price, priceDisplayPrecision, '.', ','));
-	if (currencyFormat === 4)
+	if (currencyFormat == 4)
 		return (formatNumber(price, priceDisplayPrecision, ',', '.') + blank + currencySign);
-	if (currencyFormat === 5)
+	if (currencyFormat == 5)
 		return (formatNumber(price, priceDisplayPrecision, ' ', '.') + blank + currencySign);
 	return price;
 }
