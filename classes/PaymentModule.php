@@ -797,8 +797,8 @@ abstract class PaymentModuleCore extends Module
 			FROM `'._DB_PREFIX_.'module` m
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
 			WHERE h.`name` = \''.pSQL($hook_payment).'\'
-			AND m.`active` = 1
 		');
 	}
 
