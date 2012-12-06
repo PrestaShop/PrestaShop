@@ -53,13 +53,7 @@ class BlockCart extends Module
 		else
 			$currency = $this->context->currency;
 
-		if ($params['cart']->id_customer)
-		{
-			$customer = new Customer((int)$params['cart']->id_customer);
-			$taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
-		}
-		else
-			$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+		$taxCalculationMethod = Group::getPriceDisplayMethod((int)Group::getCurrent()->id);
 
 		$useTax = !($taxCalculationMethod == PS_TAX_EXC);
 
