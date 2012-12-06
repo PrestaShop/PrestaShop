@@ -12,5 +12,5 @@ ALTER TABLE  `PREFIX_product_shop` ADD `id_product_redirected` int(10) unsigned 
 
 ALTER TABLE  `PREFIX_product` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` , ADD `available_for_order` tinyint(1) NOT NULL default '1' AFTER `id_product_redirected`;
 
-ALTER TABLE  `ps_stock_available` DROP INDEX  `id_product_2` ,
+ALTER TABLE  `prestashop15`.`ps_stock_available` DROP INDEX  `id_product_2` ,
 ADD UNIQUE  `id_product_2` (  `id_product` ,  `id_product_attribute` ,  `id_shop` ,  `id_shop_group` );
