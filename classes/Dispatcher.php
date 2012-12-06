@@ -578,7 +578,7 @@ class DispatcherCore
 		$route = $this->routes[$id_lang][$route_id];
 
 		// Check required fields
-		$query_params = isset($route['params']) ? $route['params'] : array();
+		$query_params = isset($route['params']) ? $route['params'] + $params : $params;
 		foreach ($route['keywords'] as $key => $data)
 		{
 			if (!$data['required'])
