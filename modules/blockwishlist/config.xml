@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockwishlist</name>
-            <displayName><![CDATA[Wishlist block]]></displayName>
+            <displayName><![CDATA[Bloc liste de cadeaux]]></displayName>
             <version><![CDATA[0.2]]></version>
-            <description><![CDATA[Adds a block containing the customer&#039;s wishlists.]]></description>
+            <description><![CDATA[Ajoute un bloc g&eacute;rant les listes de cadeaux]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

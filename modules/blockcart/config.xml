@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockcart</name>
-            <displayName><![CDATA[Cart block]]></displayName>
+            <displayName><![CDATA[Bloc panier]]></displayName>
             <version><![CDATA[1.2]]></version>
-            <description><![CDATA[Adds a block containing the customer&#039;s shopping cart.]]></description>
+            <description><![CDATA[Ajoute un bloc avec le contenu du panier du client]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

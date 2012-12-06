@@ -506,3 +506,7 @@ ul#uploadable_files,ul#text_fields {
 .accessories_block div ul li a {
 	display:inline-block;
 }
+
+.accessories_block div ul li .s_title_block a, .accessories_block div ul li .s_title_block span  {
+	font-weight:bold;
+}

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>editorial</name>
-            <displayName><![CDATA[Home text editor]]></displayName>
+            <displayName><![CDATA[&Eacute;diteur de page d&#039;accueil]]></displayName>
             <version><![CDATA[2.0]]></version>
-            <description><![CDATA[A text editor module for your homepage.]]></description>
+            <description><![CDATA[Un &eacute;diteur de texte pour votre page d&#039;accueil.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
             <is_configurable>1</is_configurable>

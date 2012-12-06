@@ -157,7 +157,7 @@ $(function(){ldelim}
 		<fieldset>
 			<h3>{l s='Create your account'}</h3>
 			<div class="form_content clearfix">
-				<h4>{l s='Enter your e-mail address to create an account'}.</h4>
+				<p class="title_block">{l s='Enter your e-mail address to create an account'}.</p>
 				<div class="error" id="create_account_error" style="display:none"></div>
 				<p class="text">
 					<label for="email_create">{l s='E-mail address'}</label>
