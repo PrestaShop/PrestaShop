@@ -23,11 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if !$opc}
-	<div id="carrier_area">
-{else}
-	<div id="carrier_area" class="opc-main-block">
-{/if}
-{if !$opc}
 	<script type="text/javascript">
 	//<![CDATA[
 	var orderProcess = 'order';
@@ -83,7 +78,11 @@
 {else}
 	<h2><span>2</span> {l s='Delivery methods'}</h2>
 {/if}
-
+{if !$opc}
+	<div id="carrier_area">
+{else}
+	<div id="carrier_area" class="opc-main-block">
+{/if}
 {if !$opc}
 	{assign var='current_step' value='shipping'}
 	{include file="$tpl_dir./order-steps.tpl"}
