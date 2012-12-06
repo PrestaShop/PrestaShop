@@ -225,7 +225,7 @@ class ProductCore extends ObjectModel
 	 */
 	public $category;
 
-	public static $_taxCalculationMethod = PS_TAX_EXC;
+	public static $_taxCalculationMethod = null;
 	protected static $_prices = array();
 	protected static $_pricesLevel2 = array();
 	protected static $_incat = array();
@@ -510,8 +510,9 @@ class ProductCore extends ObjectModel
 
 	public static function getTaxCalculationMethod($id_customer = null)
 	{
-		if ($id_customer)
-			Product::initPricesComputation((int)$id_customer);
+		if (self::$_taxCalculationMethod === null || $id_customer !== null)
+			Product::initPricesComputation($id_customer);
+
 		return (int)self::$_taxCalculationMethod;
 	}
 
