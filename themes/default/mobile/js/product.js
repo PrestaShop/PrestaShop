@@ -64,7 +64,7 @@ var ProductFn = (function()
 		productShowPrice: '0',
 		productUnitPriceRatio: '',
 		
-		productPriceWithoutRedution: '',
+		productPriceWithoutReduction: '',
 		productPrice: '',
 		
 		// Customizable field
