@@ -390,8 +390,12 @@ class DispatcherCore
 		  foreach($module_route as $route => $route_details)
 		    if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
 		      && array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
-		      $this->addRoute($route, $route_details['rule'], $route_details['controller'], null, $route_details['keywords'], $route_details['params']);
-		
+		      {
+			      if (!isset($this->default_routes[$route]))
+			      	$this->default_routes[$route] = array();
+			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
+				}
+
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
 			foreach ($this->default_routes as $id => $route)
@@ -578,7 +582,7 @@ class DispatcherCore
 		$route = $this->routes[$id_lang][$route_id];
 
 		// Check required fields
-		$query_params = isset($route['params']) ? $route['params'] + $params : $params;
+		$query_params = isset($route['params']) ? $route['params'] : array();
 		foreach ($route['keywords'] as $key => $data)
 		{
 			if (!$data['required'])
