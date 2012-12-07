@@ -52,7 +52,7 @@ function str2url(str,encoding,ucfirst)
 
 function copy2friendlyURL()
 {
-	if (!$('#link_rewrite_' + id_language).val().length)//check if user didn't type anything in rewrite field, to prevent overwriting
+	if (!$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
