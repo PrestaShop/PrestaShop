@@ -116,7 +116,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source, $sprintf = null)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = null, $js = false)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -126,7 +126,6 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
-		
 		if (!isset($translations_merged[$name]))
 		{
 			$filesByPriority = array(
@@ -174,6 +173,9 @@ class TranslateCore
 
 			if ($sprintf !== null)
 				$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
+
+			if ($js)
+				$ret = addslashes($ret);
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}
