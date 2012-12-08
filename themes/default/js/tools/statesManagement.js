@@ -42,10 +42,13 @@ function updateState(suffix)
 		});
 		
 		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')+':hidden').slideDown('slow');
+		$('div.id_state'+(suffix !== undefined ? '_'+suffix : '')+':hidden').slideDown('slow');
 	}
 	else
+	{
+		$('div.id_state'+(suffix !== undefined ? '_'+suffix : '')).hide();
 		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')).hide();
-		
+	}	
 }
 
 function updateNeedIDNumber(suffix)
