@@ -62,6 +62,6 @@ function smartyTranslate($params, &$smarty)
 	if ($params['sprintf'] !== null)
 		$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
 
-	return $params['js'] ? $msg : addslashes($msg);
+	return $params['js'] ? addslashes($msg) : $msg;
 }
 
