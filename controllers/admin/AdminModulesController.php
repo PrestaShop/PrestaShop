@@ -340,6 +340,7 @@ class AdminModulesControllerCore extends AdminController
 
 	protected function extractArchive($file, $redirect = true)
 	{
+		$pathinfo = pathinfo($file);
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
@@ -356,9 +357,13 @@ class AdminModulesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
 		}
+		//check if it's a real module 		
+		if (!Module::getInstanceByName($pathinfo['filename']))
+			$this->errors[] = Tools::displayError('The Zip file you uploaded is not a module');
+			
 
 		@unlink($file);
-		if ($success && $redirect)
+		if (!count($this->errors) && $success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
