@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
