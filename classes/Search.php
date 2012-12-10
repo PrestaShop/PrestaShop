@@ -431,7 +431,10 @@ class SearchCore
 				foreach ($products as $product)
 					$ids[] = (int)$product['id_product'];
 			if (count($ids))
+			{
 				$db->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
+				ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $ids).')');
+			}
 		}
 
 		// Every fields are weighted according to the configuration in the backend
