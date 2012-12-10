@@ -557,6 +557,10 @@ class AdminManufacturersControllerCore extends AdminController
 
 			default:
 				parent::initToolbar();
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+					'desc' => $this->l('Import')
+				);
 		}
 	}
 
