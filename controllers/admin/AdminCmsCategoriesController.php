@@ -302,7 +302,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
+		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		return parent::renderForm();
 	}
 }
