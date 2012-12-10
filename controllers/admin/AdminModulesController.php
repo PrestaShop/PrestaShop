@@ -340,27 +340,36 @@ class AdminModulesControllerCore extends AdminController
 
 	protected function extractArchive($file, $redirect = true)
 	{
-		$pathinfo = pathinfo($file);
+		$zip_folders = array();
+		$tmp_folder = _PS_MODULE_DIR_.md5(time());
+
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
-			if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if (Tools::ZipExtract($file, $tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
 		else
 		{
 			$archive = new Archive_Tar($file);
-			if ($archive->extract(_PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if ($archive->extract($tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if ($archive->extract(_PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
-		//check if it's a real module 		
-		if (!Module::getInstanceByName($pathinfo['filename']))
-			$this->errors[] = Tools::displayError('The Zip file you uploaded is not a module');
-			
+		if (!$success)
+				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+		
+		//check if it's a real module
+		foreach($zip_folders as $folder)
+			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
+				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
 
 		@unlink($file);
 		if (!count($this->errors) && $success && $redirect)
