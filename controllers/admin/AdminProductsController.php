@@ -2214,6 +2214,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		parent::initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if ($product = $this->loadObject(true))
@@ -2281,8 +2282,12 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 		}
-
-		parent::initToolbar();
+		else
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+					'desc' => $this->l('Import')
+				);
+		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
