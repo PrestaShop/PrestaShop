@@ -62,7 +62,16 @@ class AdminAddressesControllerCore extends AdminController
 
 		parent::__construct();
 	}
-
+	
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		$this->toolbar_btn['import'] = array(
+			'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+			'desc' => $this->l('Import')
+		);
+	}
+	
 	public function renderList()
 	{
 		$this->_select = 'cl.`name` as country';
