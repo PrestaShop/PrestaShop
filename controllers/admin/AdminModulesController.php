@@ -372,6 +372,7 @@ class AdminModulesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
 
 		@unlink($file);
+		@unlink($tmp_folder);
 		if (!count($this->errors) && $success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
