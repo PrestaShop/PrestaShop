@@ -226,6 +226,10 @@ class MailCore
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
+
+			/* Set Message-ID - getmypid() is blocked on some hosting */
+			$message->setId(Mail::generateId());
+
 			$message->headers->setEncoding('Q');
 
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
@@ -339,4 +343,17 @@ class MailCore
 
 		return str_replace('"', '&quot;', stripslashes($str));
 	}
+
+	/* Rewrite of Swift_Message::generateId() without getmypid() */
+	protected static function generateId($idstring = null)
+	{
+		$midparams =  array(
+			"utctime" => gmstrftime("%Y%m%d%H%M%S"),
+			"randint" => mt_rand(),
+			"customstr" => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
+			"hostname" => (isset($_SERVER["SERVER_NAME"]) ? $_SERVER["SERVER_NAME"] : php_uname("n")),
+		);
+		return vsprintf("<%s.%d.%s@%s>", $midparams);
+	}
+	
 }
