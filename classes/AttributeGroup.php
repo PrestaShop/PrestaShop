@@ -68,6 +68,11 @@ class AttributeGroupCore extends ObjectModel
 		),
 	);
 
+	/**
+	 * @todo Add comments and descriptions
+	 * @param boolean $autodate
+	 * @param boolean $nullValues
+	 */
 	public function add($autodate = true, $nullValues = false)
 	{
 		if ($this->position <= 0)
