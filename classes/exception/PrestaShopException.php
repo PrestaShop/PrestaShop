@@ -19,7 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +35,7 @@ class PrestaShopExceptionCore extends Exception
 	 */
 	public function displayMessage()
 	{
-		if (_PS_MODE_DEV_)
+		if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_'))
 		{
 			// Display error message
 			echo '<style>
