@@ -185,7 +185,7 @@ class AdminSearchControllerCore extends AdminController
 		$this->_list['modules'] = array();
 		$all_modules = Module::getModulesOnDisk(true, true, Context::getContext()->employee->id);
 		foreach ($all_modules as $module)
-			if (stripos($module->name, $this->query) || stripos($module->displayName, $this->query) || stripos($module->description, $this->query))
+			if (stripos($module->name, $this->query) !== false || stripos($module->displayName, $this->query) !== false || stripos($module->description, $this->query) !== false)
 			{
 				$module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
 				$this->_list['modules'][] = $module;
