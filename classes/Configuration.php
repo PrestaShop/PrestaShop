@@ -323,7 +323,7 @@ class ConfigurationCore extends ObjectModel
 					$result &= Db::getInstance()->update('configuration', array(
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
-					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), true, true);
+					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), 1, true);
 				}
 				else
 				{
@@ -504,7 +504,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if ($id_shop)
 			return ' AND id_shop = '.(int)$id_shop;
-		else if ($id_shop_group)
+		elseif ($id_shop_group)
 			return ' AND id_shop_group = '.(int)$id_shop_group.' AND id_shop IS NULL';
 		else
 			return ' AND id_shop_group IS NULL AND id_shop IS NULL';
