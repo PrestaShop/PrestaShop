@@ -717,13 +717,13 @@ class FrontControllerCore extends Controller
 	public function setMobileMedia()
 	{
 		$this->addjquery();
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.1.1.min.js');
+		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.2.0.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
 			$this->addjqueryPlugin('fancybox');
 
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.1.1.min.css', 'all');
+		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.2.0.min.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
 	}
