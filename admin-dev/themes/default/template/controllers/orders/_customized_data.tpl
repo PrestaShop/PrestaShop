@@ -45,8 +45,8 @@
 		</td>
 		<td align="center" class="productQuantity">{$product['customizationQuantityTotal']}</td>
 		{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
-		{if ($order->hasBeenDelivered())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
-		<td align="center" class=""> - </td>
+		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td align="center" class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
+		{if $stock_management}<td align="center" class=""> - </td>{/if}
 		<td align="center" class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id}

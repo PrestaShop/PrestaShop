@@ -88,7 +88,7 @@
 			{/if}
 		</td>
 	{/if}
-	<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>
+	{if $stock_management}<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
 	<td align="center" class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>

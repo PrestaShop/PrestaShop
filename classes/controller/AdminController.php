@@ -1122,8 +1122,11 @@ class AdminControllerCore extends Controller
 	}
 	public function display()
 	{
-		$this->context->smarty->assign('display_header', $this->display_header);
-		$this->context->smarty->assign('display_footer', $this->display_footer);
+		$this->context->smarty->assign(array(
+				'display_header' => $this->display_header,
+				'display_footer' => $this->display_footer,
+				)
+			);
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
@@ -1702,6 +1705,7 @@ class AdminControllerCore extends Controller
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
+			'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
 		));
 		
 		if ($this->display_header)
