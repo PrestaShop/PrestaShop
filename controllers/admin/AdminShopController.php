@@ -265,9 +265,10 @@ class AdminShopControllerCore extends AdminController
 
 	protected function afterAdd($new_shop)
 	{
-		$import_data = Tools::getValue('importData');
-		if (Tools::getValue('useImportData') && is_array($import_data))
-			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
+		$import_data = Tools::getValue('importData', array());
+
+		// The root category should be at least imported
+		$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 
 		// copy default data
 		if (!Tools::getValue('useImportData') || (is_array($import_data) && !isset($import_data['group'])))
