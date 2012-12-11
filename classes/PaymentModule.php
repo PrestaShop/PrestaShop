@@ -671,14 +671,7 @@ abstract class PaymentModuleCore extends Module
 
 	public function formatProductAndVoucherForEmail($content)
 	{
-		return '<table style="width: 100%; font-family: Verdana,sans-serif; font-size: 11px; color: #374953;">
-						<colgroup>
-							<col width="15%"/>
-							<col width="30%"/>
-							<col width="20%"/>
-							<col width="15%"/>
-							<col width="20%"/>
-						</colgroup>'.$content.'</table>';
+		return $content;
 	}
 
 	/**
