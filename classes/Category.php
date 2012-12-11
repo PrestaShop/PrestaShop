@@ -210,7 +210,7 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 		{
 			Category::regenerateEntireNtree();
-			$this->recalculateLevelDepth($this->id_category);
+			$this->recalculateLevelDepth($this->id);
 		}
 		Hook::exec('actionCategoryUpdate', array('category' => $this));
 		return $ret;
@@ -264,7 +264,7 @@ class CategoryCore extends ObjectModel
 			$this->description = Category::getDescriptionClean($this->description);
 			
 		return array(
-			'id' => (int)$this->id_category,
+			'id' => (int)$this->id,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
@@ -964,8 +964,8 @@ class CategoryCore extends ObjectModel
 			$root_category = Category::getRootCategory();
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP &&
 				(!Tools::isSubmit('id_category') ||
-					(int)Tools::getValue('id_category') == (int)$root_category->id_category ||
-					(int)$root_category->id_category == (int)$context->shop->id_category))
+					(int)Tools::getValue('id_category') == (int)$root_category->id ||
+					(int)$root_category->id == (int)$context->shop->id_category))
 				$sql .= '
 					AND c.`id_parent` != 0';
 
