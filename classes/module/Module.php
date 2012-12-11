@@ -31,6 +31,7 @@ abstract class ModuleCore
 
 	/** @var float Version */
 	public $version;
+	public $database_version;
 
 	/**
 	 * @since 1.5.0.1
@@ -175,6 +176,8 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
+		
+		$this->database_version = $this->version;
 	}
 
 	/**
