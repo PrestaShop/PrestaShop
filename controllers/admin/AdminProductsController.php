@@ -1938,76 +1938,159 @@ class AdminProductsControllerCore extends AdminController
 	public function updateDownloadProduct($product, $edit = 0)
 	{
 		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
-		$product->setDefaultAttribute(0);//reset cache_default_attribute
-		// add or update a virtual product
-		if (Tools::getValue('is_virtual_good') == 'true')
+
+		$combinations = $product->getAttributeCombinations($this->context->language->id);
+		
+		if(!count($combinations))
 		{
-			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file)))
+			// add or update a virtual product
+			if (Tools::getValue('is_virtual_good') == 'true')
 			{
-				if (!Tools::getValue('virtual_product_expiration_date'))
+				if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file)))
 				{
-					$this->errors[] = Tools::displayError('This field expiration date attribute is required.');
-					return false;
+					if (!Tools::getValue('virtual_product_expiration_date'))
+					{
+						$this->errors[] = Tools::displayError('This field expiration date attribute is required.');
+						return false;
+					}
+				}
+	
+				// Trick's
+				if ($edit == 1)
+				{
+					$id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
+					if (!$id_product_download)
+						$id_product_download = (int)Tools::getValue('virtual_product_id');
+				}
+				else
+					$id_product_download = Tools::getValue('virtual_product_id');
+	
+				$is_shareable = Tools::getValue('virtual_product_is_shareable');
+				$virtual_product_name = Tools::getValue('virtual_product_name');
+				$virtual_product_filename = Tools::getValue('virtual_product_filename');
+				$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
+				$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
+				$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
+	
+				if ($virtual_product_filename)
+					$filename = $virtual_product_filename;
+				else
+					$filename = ProductDownload::getNewFilename();
+	
+				$download = new ProductDownload((int)$id_product_download);
+				$download->id_product = (int)$product->id;
+				$download->display_filename = $virtual_product_name;
+				$download->filename = $filename;
+				$download->date_add = date('Y-m-d H:i:s');
+				$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
+				$download->nb_days_accessible = (int)$virtual_product_nb_days;
+				$download->nb_downloadable = (int)$virtual_product_nb_downloable;
+				$download->active = 1;
+				$download->is_shareable = (int)$is_shareable;
+	
+				if ($download->save())
+					return true;
+			}
+			else
+			{
+				/* unactive download product if checkbox not checked */
+				if ($edit == 1)
+				{
+					$id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
+					if (!$id_product_download)
+						$id_product_download = (int)Tools::getValue('virtual_product_id');
+				}
+				else
+					$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
+	
+				if (!empty($id_product_download))
+				{
+					$product_download = new ProductDownload((int)$id_product_download);
+					$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
+					$product_download->active = 0;
+					return $product_download->save();
 				}
 			}
-
-			// Trick's
-			if ($edit == 1)
-			{
-				$id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
-				if (!$id_product_download)
-					$id_product_download = (int)Tools::getValue('virtual_product_id');
-			}
-			else
-				$id_product_download = Tools::getValue('virtual_product_id');
-
-			$is_shareable = Tools::getValue('virtual_product_is_shareable');
-			$virtual_product_name = Tools::getValue('virtual_product_name');
-			$virtual_product_filename = Tools::getValue('virtual_product_filename');
-			$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
-			$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
-			$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date');
-
-			if ($virtual_product_filename)
-				$filename = $virtual_product_filename;
-			else
-				$filename = ProductDownload::getNewFilename();
-
-			$download = new ProductDownload((int)$id_product_download);
-			$download->id_product = (int)$product->id;
-			$download->display_filename = $virtual_product_name;
-			$download->filename = $filename;
-			$download->date_add = date('Y-m-d H:i:s');
-			$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
-			$download->nb_days_accessible = (int)$virtual_product_nb_days;
-			$download->nb_downloadable = (int)$virtual_product_nb_downloable;
-			$download->active = 1;
-			$download->is_shareable = (int)$is_shareable;
-
-			if ($download->save())
-				return true;
+			return false;
 		}
 		else
 		{
-			/* unactive download product if checkbox not checked */
-			if ($edit == 1)
+			$product_downloaded = false;
+			foreach($combinations as $combination)
 			{
-				$id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
-				if (!$id_product_download)
-					$id_product_download = (int)Tools::getValue('virtual_product_id');
+				// add or update a virtual product
+				if (Tools::getValue('is_virtual_good') == 'true')
+				{
+					if (Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']) && !Validate::isDate(Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']) && !empty($is_virtual_file)))
+					{
+						if (!Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']))
+						{
+							$this->errors[] = Tools::displayError('This field expiration date attribute is required.');
+							return false;
+						}
+					}
+		
+					// Trick's
+					if ($edit == 1)
+					{
+						$id_product_download = (int)ProductDownload::getIdFromCombination((int)$combination['id_product'], (int)$combination['id_product_attribute']);
+						if (!$id_product_download)
+							$id_product_download = (int)Tools::getValue('virtual_product_id_'.$combination['id_product_attribute']);
+					}
+					else
+						$id_product_download = Tools::getValue('virtual_product_id_'.$combination['id_product_attribute']);
+		
+		
+					$is_shareable = Tools::getValue('virtual_product_is_shareable_'.$combination['id_product_attribute']);
+					$virtual_product_name = Tools::getValue('virtual_product_name_'.$combination['id_product_attribute']);
+					$virtual_product_filename = Tools::getValue('virtual_product_filename_'.$combination['id_product_attribute']);
+					$virtual_product_nb_days = Tools::getValue('virtual_product_nb_days_'.$combination['id_product_attribute']);
+					$virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable_'.$combination['id_product_attribute']);
+					$virtual_product_expiration_date = Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']);
+		
+					if ($virtual_product_filename)
+						$filename = $virtual_product_filename;
+					else
+						$filename = ProductDownload::getNewFilename();
+		
+					$download = new ProductDownload((int)$id_product_download);
+					$download->id_product = (int)$product->id;
+					$download->id_product_attribute = (int)$combination['id_product_attribute'];
+					$download->display_filename = $virtual_product_name;
+					$download->filename = $filename;
+					$download->date_add = date('Y-m-d H:i:s');
+					$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
+					$download->nb_days_accessible = (int)$virtual_product_nb_days;
+					$download->nb_downloadable = (int)$virtual_product_nb_downloable;
+					$download->active = 1;
+					$download->is_shareable = (int)$is_shareable;
+		
+					if (!$download->save())
+						return false;
+				}
+				else
+				{
+					/* unactive download product if checkbox not checked */
+					if ($edit == 1)
+					{
+						$id_product_download = (int)ProductDownload::getIdFromCombination((int)$combination['id_product'], (int)$combination['id_product_attribute']);
+						if (!$id_product_download)
+							$id_product_download = (int)Tools::getValue('virtual_product_id_'.$combination['id_product_attribute']);
+					}
+					else
+						$id_product_download = ProductDownload::getIdFromCombination((int)$combination['id_product'], (int)$combination['id_product_attribute']);
+		
+					if (!empty($id_product_download))
+					{
+						$product_download = new ProductDownload((int)$id_product_download);
+						$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
+						$product_download->active = 0;
+						return $product_download->save();
+					}
+				}
 			}
-			else
-				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
-
-			if (!empty($id_product_download))
-			{
-				$product_download = new ProductDownload((int)$id_product_download);
-				$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
-				$product_download->active = 0;
-				return $product_download->save();
-			}
-		}
-		return false;
+			return true;
+		}		
 	}
 
 	/**
@@ -2934,45 +3017,87 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 
 		$currency = $this->context->currency;
-
-		/*
-		* Form for adding a virtual product like software, mp3, etc...
-		*/
-		$product_download = new ProductDownload();
-		if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
-			$product_download = new ProductDownload($id_product_download);
-		$product->{'productDownload'} = $product_download;
-
-		// @todo handle is_virtual with the value of the product
-		$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-		$data->assign('product_downloaded', $product->productDownload->id && !empty($product->productDownload->display_filename));
-
-		if (!file_exists($exists_file)
-			&& !empty($product->productDownload->display_filename)
-			&& empty($product->cache_default_attribute))
-			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
+		
+		$combinations = $product->getAttributeCombinations($this->context->language->id);
+		$data->assign('combinations', $combinations);
+		
+		$is_file = array();
+		$up_filename = array();
+		
+		if(count($combinations) > 0)
+		{
+			$product_downloaded = false;
+			foreach($combinations as $combination)
+			{
+				$product_download = new ProductDownload();
+				if ($id_product_download = $product_download->getIdFromCombination($combination['id_product'], $combination['id_product_attribute']))
+					$product_download = new ProductDownload($id_product_download);
+				$product->productsDownload[$combination['id_product_attribute']] = $product_download;
+				$product->productsDownload[$combination['id_product_attribute']]->date_expiration = ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']), ENT_COMPAT, 'UTF-8');
+			
+				if($product_download->id && !empty($product_download->display_filename))
+					$product_downloaded = true;
+				
+				$up_filename[$combination['id_product_attribute']] = strval(Tools::getValue('virtual_product_filename_'.$combination['id_product_attribute']));
+				$is_file[$combination['id_product_attribute']] = $product_download->checkFile();
+			}			
+						
+			$data->assign('product_downloaded', $product_downloaded);
+			$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
+			$data->assign('ad', dirname($_SERVER['PHP_SELF']));
+			$data->assign('product', $product);
+			$data->assign('token', $this->token);
+			$data->assign('currency', $currency);
+			$data->assign($this->tpl_form_vars);
+			$data->assign('link', $this->context->link);
+			$data->assign('is_file', $is_file);			
+			$data->assign('up_filename', $up_filename);
+			$this->tpl_form_vars['product'] = $product;
+			$this->tpl_form_vars['custom_form'] = $data->fetch();
+		}
 		else
-			$msg = '';
+		{
+			/*
+			* Form for adding a virtual product like software, mp3, etc...
+			*/
+			$product_download = new ProductDownload();
+			if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
+				$product_download = new ProductDownload($id_product_download);
+			$product->{'productDownload'} = $product_download;
 
-		$data->assign('download_product_file_missing', $msg);
-		$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
-
-		$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
-
-		$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
-		$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
-		$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
-		$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
-
-		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
-		$data->assign('product', $product);
-		$data->assign('token', $this->token);
-		$data->assign('currency', $currency);
-		$data->assign($this->tpl_form_vars);
-		$data->assign('link', $this->context->link);
-		$data->assign('is_file', $product->productDownload->checkFile());
-		$this->tpl_form_vars['product'] = $product;
-		$this->tpl_form_vars['custom_form'] = $data->fetch();
+			// @todo handle is_virtual with the value of the product
+			$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
+			$data->assign('product_downloaded', $product->productDownload->id && !empty($product->productDownload->display_filename));
+	
+			if (!file_exists($exists_file)
+				&& !empty($product->productDownload->display_filename)
+				&& empty($product->cache_default_attribute))
+				$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
+			else
+				$msg = '';
+	
+			$data->assign('download_product_file_missing', $msg);
+			$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
+	
+			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
+	
+			$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
+	
+			
+	
+			$data->assign('ad', dirname($_SERVER['PHP_SELF']));
+			$data->assign('product', $product);
+			$data->assign('token', $this->token);
+			$data->assign('currency', $currency);
+			$data->assign($this->tpl_form_vars);
+			$data->assign('link', $this->context->link);
+			$data->assign('is_file', $product->productDownload->checkFile());
+			$this->tpl_form_vars['product'] = $product;
+			$this->tpl_form_vars['custom_form'] = $data->fetch();
+		}
 	}
 
 	protected function _getFinalPrice($specific_price, $product_price, $tax_rate)
@@ -3494,55 +3619,47 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($this->product_exists_in_shop)
 			{
-				if ($product->is_virtual)
+				$attribute_js = array();
+				$attributes = Attribute::getAttributes($this->context->language->id, true);
+				foreach ($attributes as $k => $attribute)
+					$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
+				$currency = $this->context->currency;
+				$data->assign('attributeJs', $attribute_js);
+				$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
+
+				$data->assign('currency', $currency);
+
+				$images = Image::getImages($this->context->language->id, $product->id);
+
+				$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
+				$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
+
+				$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+				$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
+
+				$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
+				$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
+				$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
+				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
+
+				$i = 0;
+				$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
+				$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
+				foreach ($images as $k => $image)
 				{
-					$data->assign('product', $product);
-					$this->displayWarning($this->l('A virtual product cannot have combinations.'));
+					$images[$k]['obj'] = new Image($image['id_image']);
+					++$i;
 				}
-				else
-				{
-					$attribute_js = array();
-					$attributes = Attribute::getAttributes($this->context->language->id, true);
-					foreach ($attributes as $k => $attribute)
-						$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-					$currency = $this->context->currency;
-					$data->assign('attributeJs', $attribute_js);
-					$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
+				$data->assign('images', $images);
 
-					$data->assign('currency', $currency);
-
-					$images = Image::getImages($this->context->language->id, $product->id);
-
-					$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
-					$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
-
-					$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-					$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
-
-					$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
-					$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-					$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
-
-					$i = 0;
-					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
-					$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
-					foreach ($images as $k => $image)
-					{
-						$images[$k]['obj'] = new Image($image['id_image']);
-						++$i;
-					}
-					$data->assign('images', $images);
-
-					$data->assign($this->tpl_form_vars);
-					$data->assign(array(
-						'list' => $this->renderListAttributes($product, $currency),
-						'product' => $product,
-						'id_category' => $product->getDefaultCategory(),
-						'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
-						'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0 && $product->hasAttributes())
-					));
-				}
+				$data->assign($this->tpl_form_vars);
+				$data->assign(array(
+					'list' => $this->renderListAttributes($product, $currency),
+					'product' => $product,
+					'id_category' => $product->getDefaultCategory(),
+					'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
+					'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0 && $product->hasAttributes())
+				));
 			}
 			else
 				$this->displayWarning($this->l('You must save this product in this shop before adding combinations.'));	
