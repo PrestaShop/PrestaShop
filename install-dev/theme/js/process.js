@@ -156,11 +156,15 @@ function install_error(step, errors)
 		var display = '<ol>';
 		$.each(list_errors, function(k, v)
 		{
+			if (typeof psuser_assistance != 'undefined')
+				psuser_assistance.setStep('install_process_error', {'error':v});
 			display += '<li>'+v+'</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();
 	}
+	if (typeof psuser_assistance != 'undefined')
+		psuser_assistance.setStep('install_process_error');
 }
 
 function install_success()
@@ -171,4 +175,6 @@ function install_success()
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
 	$('.stepList li:last-child').addClass('ok');
+	if (typeof psuser_assistance != 'undefined')
+		psuser_assistance.setStep('install_process_success');
 }
