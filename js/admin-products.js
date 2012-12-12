@@ -214,10 +214,7 @@ product_tabs['Combinations'] = new function(){
 			if ($('.process-icon-newCombination').hasClass('toolbar-new'))
 				self.removeButtonCombination('add');
 			else
-			{
 				self.addButtonCombination('add');
-				$('#id_product_attribute').val(0);
-			}
 		});
 	};
 
@@ -1324,24 +1321,15 @@ product_tabs['VirtualProduct'] = new function(){
 		// Bind file deletion
 		$(('#product-tab-content-VirtualProduct')).delegate('a.delete_virtual_product', 'click', function(e){
 			e.preventDefault();
-			if (!$('#virtual_product_id').val())
-			{
+			
+			var object = this;
+			ajaxAction(this.href, 'deleteVirtualProduct', function(){
+				$(object).closest('tr').remove();
 				$('#upload_input').show();
 				$('#virtual_product_name').val('');
 				$('#virtual_product_file').val('');
-				$('#upload-confirmation').hide().find('span').remove();
-			}
-			else
-			{
-				var object = this;
-				ajaxAction(this.href, 'deleteVirtualProduct', function(){
-					$(object).closest('tr').remove();
-					$('#upload_input').show();
-					$('#virtual_product_name').val('');
-					$('#virtual_product_file').val('');
-					$('#virtual_product_id').remove();
-				});
-			}
+				$('#virtual_product_id').remove();
+			});
 		});
 	}
 }
