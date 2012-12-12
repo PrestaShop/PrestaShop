@@ -17,3 +17,5 @@ UPDATE `PREFIX_order_state` SET `send_email` = 1 WHERE `id_order_state` = (SELEC
 UPDATE `PREFIX_order_state_lang` SET `template` = 'payment' WHERE `id_order_state` = (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_OS_WS_PAYMENT' LIMIT 1);
 
 DELETE FROM `PREFIX_configuration` WHERE `name`= 'PS_HIGH_HTML_THEME_COMPRESSION';
+
+INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_MAIL_COLOR', '#db3484', NOW(), NOW());
