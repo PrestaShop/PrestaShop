@@ -41,11 +41,10 @@ function updateState(suffix)
 			$('select#id_state'+(suffix !== undefined ? '_'+suffix : '')).append('<option value="'+item.id+'"'+ (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>'+item.name+'</option>');
 		});
 		
-		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')+':hidden').slideDown('slow');
+		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')+':hidden, div.id_state'+(suffix !== undefined ? '_'+suffix : '')).slideDown('slow');
 	}
 	else
-		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')).hide();
-		
+		$('p.id_state'+(suffix !== undefined ? '_'+suffix : '')+', div.id_state'+(suffix !== undefined ? '_'+suffix : '')).hide();
 }
 
 function updateNeedIDNumber(suffix)
