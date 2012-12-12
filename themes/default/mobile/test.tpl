@@ -35,7 +35,7 @@
 			<li><a href="category.html" data-ajax="false">Category 4</a></li>
 		</ul>--><!-- /category -->
 	
-		<hr width="99%" align="center" size="2" />
+		<hr/>
 		<div id="newsletter">
 			<p>Newsletter</p>
 			<form action="form.php" method="post">
@@ -49,7 +49,7 @@
 			</form>
 		</div><!-- /newsletter -->
 		
-		<hr width="99%" align="center" size="2" />
+		<hr/>
 		<ul data-role="listview" data-inset="true" id="category">
 			<li><a href="index.html" data-ajax="false">Accueil</a></li>
 			<li><a href="category.html" data-ajax="false">IPod</a></li>
