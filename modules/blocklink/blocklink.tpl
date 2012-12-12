@@ -25,14 +25,14 @@
 *}
 
 <!-- Block links module -->
-<div id="links_block_left" class="block">
-	<h4>
+<section id="links_block_left" class="block">
+	<h1>
 	{if $url}
 		<a href="{$url|escape}">{$title|escape}</a>
 	{else}
 		{$title|escape}
 	{/if}
-	</h4>
+	</h1>
 	<ul class="block_content bullet">
 	{foreach from=$blocklink_links item=blocklink_link}
 		{if isset($blocklink_link.$lang)} 
@@ -40,5 +40,5 @@
 		{/if}
 	{/foreach}
 	</ul>
-</div>
+</section>
 <!-- /Block links module -->

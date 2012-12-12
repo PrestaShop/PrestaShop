@@ -25,8 +25,8 @@
 *}
 
 <!-- Block search module -->
-<div id="search_block_left" class="block exclusive">
-	<h4>{l s='Search' mod='blocksearch'}</h4>
+<section id="search_block_left" class="block exclusive">
+	<h1>{l s='Search' mod='blocksearch'}</h1>
 	<form method="get" action="{$link->getPageLink('search', true)}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name' mod='blocksearch'}</label>
@@ -37,6 +37,6 @@
 			<input type="submit" id="search_button" class="button_mini" value="{l s='go' mod='blocksearch'}" />
 		</p>
 	</form>
-</div>
+</section>
 {include file="$self/blocksearch-instantsearch.tpl"}
 <!-- /Block search module -->

@@ -27,8 +27,8 @@
 {if $block == 1}
 	<!-- Block CMS module -->
 	{foreach from=$cms_titles key=cms_key item=cms_title}
-		<div id="informations_block_left_{$cms_key}" class="block informations_block_left">
-			<h4><a href="{$cms_title.category_link}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></h4>
+		<section id="informations_block_left_{$cms_key}" class="block informations_block_left">
+			<h1><a href="{$cms_title.category_link}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></h1>
 			<ul class="block_content">
 				{foreach from=$cms_title.categories item=cms_page}
 					{if isset($cms_page.link)}<li class="bullet"><b style="margin-left:2em;">
@@ -40,7 +40,7 @@
 				{/foreach}
 				{if $cms_title.display_store}<li><a href="{$link->getPageLink('stores')}" title="{l s='Our stores' mod='blockcms'}">{l s='Our stores' mod='blockcms'}</a></li>{/if}
 			</ul>
-		</div>
+		</section>
 	{/foreach}
 	<!-- /Block CMS module -->
 {else}

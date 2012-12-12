@@ -24,11 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="contact_block" class="block">
-	<h4>{l s='Contact us' mod='blockcontact'}</h4>
+<section id="contact_block" class="block">
+	<h1>{l s='Contact us' mod='blockcontact'}</h1>
 	<div class="block_content clearfix">
 			<p>{l s='Our hotline is available 24/7' mod='blockcontact'}</p>
 			{if $telnumber != ''}<p class="tel"><span class="label">{l s='Phone:' mod='blockcontact'}</span>{$telnumber|escape:'htmlall':'UTF-8'}</p>{/if}
 			{if $email != ''}<a href="mailto:{$email|escape:'htmlall':'UTF-8'}">{l s='Contact our hotline' mod='blockcontact'}</a>{/if}
 	</div>
-</div>
+</section>

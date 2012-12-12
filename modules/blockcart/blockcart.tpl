@@ -43,14 +43,14 @@ var delete_txt = '{l s='Delete' mod='blockcart'}';
 
 
 <!-- MODULE Block cart -->
-<div id="cart_block" class="block exclusive">
-	<h4>
+<section id="cart_block" class="block exclusive">
+	<h1>
 		<a href="{$link->getPageLink("$order_process", true)}">{l s='Cart' mod='blockcart'}</a>
 		{if $ajax_allowed}
 		<span id="block_cart_expand" {if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !isset($colapseExpandStatus)}class="hidden"{/if}>&nbsp;</span>
 		<span id="block_cart_collapse" {if isset($colapseExpandStatus) && $colapseExpandStatus eq 'collapsed'}class="hidden"{/if}>&nbsp;</span>
 		{/if}
-	</h4>
+	</h1>
 	<div class="block_content">
 	<!-- block summary -->
 	<div id="cart_block_summary" class="{if isset($colapseExpandStatus) && $colapseExpandStatus eq 'expanded' || !$ajax_allowed || !isset($colapseExpandStatus)}collapsed{else}expanded{/if}">
@@ -174,6 +174,6 @@ var delete_txt = '{l s='Delete' mod='blockcart'}';
 		</p>
 	</div>
 	</div>
-</div>
+</section>
 <!-- /MODULE Block cart -->
 

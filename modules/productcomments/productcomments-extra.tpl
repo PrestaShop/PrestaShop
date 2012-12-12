@@ -39,7 +39,9 @@ $(function(){
 	{if $nbComments != 0}
 	<div class="comments_note">
 		<span>{l s='Average grade' mod='productcomments'}&nbsp</span>
-		<div class="star_content clearfix">
+		<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="star_content clearfix">
+                <span class="hidden" itemprop="reviewCount">{$nbComments}</span>
+                <span class="hidden" itemprop="ratingValue">{$averageTotal|round}</span>
 		{section name="i" start=0 loop=5 step=1}
 			{if $averageTotal le $smarty.section.i.index}
 				<div class="star"></div>

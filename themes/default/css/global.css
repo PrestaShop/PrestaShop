@@ -276,7 +276,7 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block h4 {
+	.block h4, .block h1 {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;

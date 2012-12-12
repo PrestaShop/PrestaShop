@@ -25,8 +25,8 @@
 *}
 
 <!-- MODULE Home Block best sellers -->
-<div id="best-sellers_block_center" class="block products_block">
-	<h4>{l s='Top sellers' mod='blockbestsellers'}</h4>
+<section id="best-sellers_block_center" class="block products_block">
+	<h1>{l s='Top sellers' mod='blockbestsellers'}</h1>
 	{if isset($best_sellers) AND $best_sellers}
 		<div class="block_content">
 			{assign var='liHeight' value=320}
@@ -53,5 +53,5 @@
 		<p>{l s='No best sellers at this time' mod='blockbestsellers'}</p>
 	{/if}
 	<br class="clear"/>
-</div>
+</section>
 <!-- /MODULE Home Block best sellers -->

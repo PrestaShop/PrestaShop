@@ -25,8 +25,8 @@
 *}
 
 <!-- Block tags module -->
-<div id="tags_block_left" class="block tags_block">
-	<h4>{l s='Tags' mod='blocktags'}</h4>
+<section id="tags_block_left" class="block tags_block">
+	<h1>{l s='Tags' mod='blocktags'}</h1>
 	<p class="block_content">
 {if $tags}
 	{foreach from=$tags item=tag name=myLoop}
@@ -36,5 +36,5 @@
 	{l s='No tags specified yet' mod='blocktags'}
 {/if}
 	</p>
-</div>
+</section>
 <!-- /Block tags module -->

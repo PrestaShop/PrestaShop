@@ -25,8 +25,8 @@
 *}
 
 <!-- Block RSS module-->
-<div id="rss_block_left" class="block">
-	<h4>{$title}</h4>
+<section id="rss_block_left" class="block">
+	<h1>{$title}</h1>
 	<div class="block_content">
 		{if $rss_links}
 			<ul>
@@ -38,5 +38,5 @@
 			<p>{l s='No RSS feed added' mod='blockrss'}</p>
 		{/if}
 	</div>
-</div>
+</section>
 <!-- /Block RSS module-->

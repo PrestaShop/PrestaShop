@@ -25,13 +25,13 @@
 *}
 
 <!-- MODULE Block contact infos -->
-<div id="block_contact_infos">
-	<h4>{l s='Contact us' mod='blockcontactinfos'}</h4>
+<section id="block_contact_infos">
+	<h1>{l s='Contact us' mod='blockcontactinfos'}</h1>
 	<ul>
 		{if $blockcontactinfos_company != ''}<li><strong>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}</strong></li>{/if}
 		{if $blockcontactinfos_address != ''}<li><pre>{$blockcontactinfos_address|escape:'htmlall':'UTF-8'}</pre></li>{/if}
 		{if $blockcontactinfos_phone != ''}<li>{l s='Tel:' mod='blockcontactinfos'} {$blockcontactinfos_phone|escape:'htmlall':'UTF-8'}</li>{/if}
 		{if $blockcontactinfos_email != ''}<li>{l s='Email:' mod='blockcontactinfos'} {mailto address=$blockcontactinfos_email|escape:'htmlall':'UTF-8' encode="hex"}</li>{/if}
 	</ul>
-</div>
+</section>
 <!-- /MODULE Block contact infos -->

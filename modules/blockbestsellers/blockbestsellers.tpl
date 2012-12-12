@@ -25,8 +25,8 @@
 *}
 
 <!-- MODULE Block best sellers -->
-<div id="best-sellers_block_right" class="block products_block">
-	<h4><a href="{$link->getPageLink('best-sales')}">{l s='Top sellers' mod='blockbestsellers'}</a></h4>
+<section id="best-sellers_block_right" class="block products_block">
+	<h1><a href="{$link->getPageLink('best-sales')}">{l s='Top sellers' mod='blockbestsellers'}</a></h1>
 	<div class="block_content">
 	{if $best_sellers|@count > 0}
 		<ul class="product_images">
@@ -49,5 +49,5 @@
 		<p>{l s='No best sellers at this time' mod='blockbestsellers'}</p>
 	{/if}
 	</div>
-</div>
+</section>
 <!-- /MODULE Block best sellers -->

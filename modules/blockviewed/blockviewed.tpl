@@ -25,8 +25,8 @@
 *}
 
 <!-- Block Viewed products -->
-<div id="viewed-products_block_left" class="block products_block">
-	<h4>{l s='Viewed products' mod='blockviewed'}</h4>
+<section id="viewed-products_block_left" class="block products_block">
+	<h1>{l s='Viewed products' mod='blockviewed'}</h1>
 	<div class="block_content">
 		<ul class="products clearfix">
 			{foreach from=$productsViewedObj item=viewedProduct name=myLoop}
@@ -42,4 +42,4 @@
 			{/foreach}
 		</ul>
 	</div>
-</div>
+</section>
