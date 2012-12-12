@@ -34,8 +34,8 @@ param_product_url = '#{$param_product_url}';
 param_product_url = '';
 {/if}
 </script>
-<div id="layered_block_left" class="block">
-	<h4>{l s='Catalog' mod='blocklayered'}</h4>
+<section id="layered_block_left" class="block">
+	<h1>{l s='Catalog' mod='blocklayered'}</h1>
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<div>
@@ -242,9 +242,9 @@ param_product_url = '';
 	<div id="layered_ajax_loader" style="display: none;">
 		<p><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
-</div>
+</section>
 {else}
-<div id="layered_block_left" class="block">
+<section id="layered_block_left" class="block">
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<input type="hidden" name="id_category_layered" value="{$id_category_layered}" />
@@ -253,6 +253,6 @@ param_product_url = '';
 	<div style="display: none;">
 		<p style=""><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
-</div>
+</section>
 {/if}
 <!-- /Block layered navigation module -->

@@ -25,8 +25,8 @@
 *}
 
 <!-- MODULE Block specials -->
-<div id="special_block_right" class="block products_block exclusive blockspecials">
-	<h4><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></h4>
+<section id="special_block_right" class="block products_block exclusive blockspecials">
+	<h1><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></h1>
 	<div class="block_content">
 
 {if $special}
@@ -58,5 +58,5 @@
 		<p>{l s='No specials at this time' mod='blockspecials'}</p>
 {/if}
 	</div>
-</div>
+</section>
 <!-- /MODULE Block specials -->

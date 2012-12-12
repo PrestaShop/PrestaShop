@@ -35,11 +35,12 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 	{if $comments}
 		{foreach from=$comments item=comment}
 			{if $comment.content}
-			<div class="comment clearfix">
+			<article itemprop="review" itemscope itemtype="http://schema.org/Review" class="comment clearfix">
 				<div class="comment_author">
 					<span>{l s='Grade' mod='productcomments'}&nbsp</span>
-					<div class="star_content clearfix">
-					{section name="i" start=0 loop=5 step=1}
+					<div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" class="star_content clearfix">
+					<span class="hidden" itemprop="ratingValue">{$comment.grade}</span>
+                                        {section name="i" start=0 loop=5 step=1}
 						{if $comment.grade le $smarty.section.i.index}
 							<div class="star"></div>
 						{else}
@@ -48,13 +49,13 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					{/section}
 					</div>
 					<div class="comment_author_infos">
-						<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong><br/>
-						<em>{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
+						<strong itemprop="author">{$comment.customer_name|escape:'html':'UTF-8'}</strong><br/>
+						<em><meta itemprop="datePublished" content="{$comment.date_add|date_format:"%Y-%m-%d"}">{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
 					</div>
 				</div>
 				<div class="comment_details">
-					<h4>{$comment.title}</h4>
-					<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
+					<h4 itemprop="name">{$comment.title}</h4>
+					<p itemprop="description">{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}
 							<li>{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}</li>
@@ -69,7 +70,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 						{/if}
 					</ul>
 				</div>
-			</div>
+			</article>
 			{/if}
 		{/foreach}
 	{else}

@@ -24,10 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div id="wishlist_block" class="block account">
-	<h4>
+<section id="wishlist_block" class="block account">
+	<h1>
 		<a href="{$wishlist_link}">{l s='Wishlist' mod='blockwishlist'}</a>
-	</h4>
+	</h1>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
 		{if $wishlist_products}
@@ -63,4 +63,4 @@
 			<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
 		</p>
 	</div>
-</div>
+</section>

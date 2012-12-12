@@ -25,8 +25,8 @@
 *}
 
 <!-- Block myaccount module -->
-<div class="block myaccount">
-	<h4><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></h4>
+<section class="block myaccount">
+	<h1><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></h1>
 	<div class="block_content">
 		<ul class="bullet">
 			<li><a href="{$link->getPageLink('history', true)}" title="">{l s='My orders' mod='blockmyaccount'}</a></li>
@@ -39,5 +39,5 @@
 		</ul>
 		<p class="logout"><a href="{$link->getPageLink('index', true, NULL, "mylogout")}" title="{l s='Sign out' mod='blockmyaccount'}">{l s='Sign out' mod='blockmyaccount'}</a></p>
 	</div>
-</div>
+</section>
 <!-- /Block myaccount module -->
