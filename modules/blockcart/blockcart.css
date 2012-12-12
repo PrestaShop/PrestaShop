@@ -1,7 +1,7 @@
 /* Special style for block cart*/
 #left_column #cart_block, #right_column #cart_block {
 }
-#header  #cart_block h4 {
+#header  #cart_block .title_block {
 	display: none;
 }
 #header #cart_block {
@@ -22,7 +22,7 @@
 	background:#eee
 }
 #cart_block.cart_block_hover {display:block}
-#cart_block h4 span {
+#cart_block .title_block  span {
 	float: right;
 	padding-left: 10px;
 	text-transform: none;

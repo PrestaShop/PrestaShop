@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -187,7 +186,7 @@ abstract class PaymentModuleCore extends Module
 					foreach ($data['package_list'] as $id_package)
 					{
 						// Rewrite the id_warehouse
-						$package_list[$id_address][$id_package]['id_warehouse'] = $this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int)$id_carrier);
+						$package_list[$id_address][$id_package]['id_warehouse'] = (int)$this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int)$id_carrier);
 						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
 					}
 			// Make sure CarRule caches are empty
@@ -379,22 +378,22 @@ abstract class PaymentModuleCore extends Module
 							$customization_quantity = (int)$product['customizationQuantityTotal'];
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: center;">'.$customization_quantity.'</td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
+								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
+								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
+								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
+								<td style="padding: 0.6em 0.4em; width: 15%;">'.$customization_quantity.'</td>
+								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
 							</tr>';
 						}
 
 						if (!$customization_quantity || (int)$product['cart_quantity'] > $customization_quantity)
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: center;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
+								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
+								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
+								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
+								<td style="padding: 0.6em 0.4em; width: 15%;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
+								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
 							</tr>';
 
 						// Check if is not a virutal product for the displaying of shipping
@@ -481,7 +480,7 @@ abstract class PaymentModuleCore extends Module
 						}
 
 						$cart_rules_list .= '
-						<tr style="background-color:#EBECEE;">
+						<tr>
 							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</td>
 							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false).'</td>
 						</tr>';
@@ -534,7 +533,7 @@ abstract class PaymentModuleCore extends Module
 					{
 						$history = new OrderHistory();
 						$history->id_order = (int)$order->id;
-						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order);
+						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
 						$history->addWithemail();
 					}
 
@@ -565,12 +564,12 @@ abstract class PaymentModuleCore extends Module
 						'{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
 						'{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
 						'{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
-							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+							'firstname'	=> '<span style="font-weight:bold;">%s</span>',
+							'lastname'	=> '<span style="font-weight:bold;">%s</span>'
 						)),
 						'{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
-								'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-								'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+								'firstname'	=> '<span style="font-weight:bold;">%s</span>',
+								'lastname'	=> '<span style="font-weight:bold;">%s</span>'
 						)),
 						'{delivery_company}' => $delivery->company,
 						'{delivery_firstname}' => $delivery->firstname,
@@ -672,14 +671,7 @@ abstract class PaymentModuleCore extends Module
 
 	public function formatProductAndVoucherForEmail($content)
 	{
-		return '<table style="width: 100%; font-family: Verdana,sans-serif; font-size: 11px; color: #374953;">
-						<colgroup>
-							<col width="15%"/>
-							<col width="30%"/>
-							<col width="20%"/>
-							<col width="15%"/>
-							<col width="20%"/>
-						</colgroup>'.$content.'</table>';
+		return $content;
 	}
 
 	/**
@@ -798,8 +790,8 @@ abstract class PaymentModuleCore extends Module
 			FROM `'._DB_PREFIX_.'module` m
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
 			WHERE h.`name` = \''.pSQL($hook_payment).'\'
-			AND m.`active` = 1
 		');
 	}
 
@@ -817,4 +809,3 @@ abstract class PaymentModuleCore extends Module
 	}
 
 }
-

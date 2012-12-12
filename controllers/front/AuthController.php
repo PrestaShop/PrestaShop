@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7499 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -167,7 +166,7 @@ class AuthControllerCore extends FrontController
 		$days = Tools::dateDays();
 
 		$this->context->smarty->assign(array(
-				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 				'years' => $years,
 				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 				'months' => $months,

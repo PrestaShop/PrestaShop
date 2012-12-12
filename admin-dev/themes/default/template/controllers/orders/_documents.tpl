@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 9856 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -74,7 +73,7 @@
 					{$document->getInvoiceNumberFormatted($current_id_lang)}
 				{/if}
 			{elseif get_class($document) eq 'OrderSlip'}
-				{l s='#%d' sprintf=$document->id}
+				#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 			{/if} <img src="../img/admin/details.gif" alt="{l s='See the document'}" /></a></td>
 		<td class="document_amount">
 		{if get_class($document) eq 'OrderInvoice'}

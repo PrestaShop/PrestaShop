@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7077 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block manufacturers module -->
-<section id="manufacturers_block_left" class="block blockmanufacturer">
-	<h1>{if $display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers' mod='blockmanufacturer'}">{/if}{l s='Manufacturers' mod='blockmanufacturer'}{if $display_link_manufacturer}</a>{/if}</h1>
+<div id="manufacturers_block_left" class="block blockmanufacturer">
+	<p class="title_block">{if $display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers' mod='blockmanufacturer'}">{/if}{l s='Manufacturers' mod='blockmanufacturer'}{if $display_link_manufacturer}</a>{/if}</p>
 	<div class="block_content">
 {if $manufacturers}
 	{if $text_list}
@@ -54,5 +53,5 @@
 	<p>{l s='No manufacturer' mod='blockmanufacturer'}</p>
 {/if}
 	</div>
-</section>
+</div>
 <!-- /Block manufacturers module -->

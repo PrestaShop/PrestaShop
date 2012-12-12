@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block categories module -->
-<section id="categories_block_left" class="block">
-	<h1>{l s='Categories' mod='blockcategories'}</h1>
+<div id="categories_block_left" class="block">
+	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
 	<div class="block_content">
 		<ul class="tree {if $isDhtml}dhtml{/if}">
 		{foreach from=$blockCategTree.children item=child name=blockCategTree}
@@ -45,5 +44,5 @@
 		// ]]>
 		</script>
 	</div>
-</section>
+</div>
 <!-- /Block categories module -->

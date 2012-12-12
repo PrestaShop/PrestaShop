@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7227 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -324,7 +323,7 @@ class ConfigurationCore extends ObjectModel
 					$result &= Db::getInstance()->update('configuration', array(
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
-					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), true, true);
+					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), 1, true);
 				}
 				else
 				{
@@ -369,12 +368,9 @@ class ConfigurationCore extends ObjectModel
 					));
 				}
 			}
-			if (!$is_i18n)
-				Configuration::set($key, $value, $id_shop_group, $id_shop);
 		}
 
-		if ($is_i18n)
-			Configuration::set($key, $values, $id_shop_group, $id_shop);
+		Configuration::set($key, $values, $id_shop_group, $id_shop);
 
 		return $result;
 	}
@@ -505,7 +501,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if ($id_shop)
 			return ' AND id_shop = '.(int)$id_shop;
-		else if ($id_shop_group)
+		elseif ($id_shop_group)
 			return ' AND id_shop_group = '.(int)$id_shop_group.' AND id_shop IS NULL';
 		else
 			return ' AND id_shop_group IS NULL AND id_shop IS NULL';

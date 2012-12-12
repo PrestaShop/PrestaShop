@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7499 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -299,7 +298,7 @@ class CustomerCore extends ObjectModel
 	 * @param string $passwd Password is also checked if specified
 	 * @return Customer instance
 	 */
-	public function getByEmail($email, $passwd = null)
+	public function getByEmail($email, $passwd = null, $ignore_guest = true)
 	{
 		if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
 			die (Tools::displayError());
@@ -309,8 +308,9 @@ class CustomerCore extends ObjectModel
 				WHERE `email` = \''.pSQL($email).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					'.(isset($passwd) ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : '').'
-					AND `deleted` = 0
-					AND `is_guest` = 0';
+					AND `deleted` = 0'.
+					($ignore_guest ? ' AND `is_guest` = 0' : '');
+
 		$result = Db::getInstance()->getRow($sql);
 
 		if (!$result)
@@ -372,8 +372,13 @@ class CustomerCore extends ObjectModel
 	public static function customerExists($email, $return_id = false, $ignore_guest = true)
 	{
 		if (!Validate::isEmail($email))
-			die (Tools::displayError());
-
+		{
+			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
+				die (Tools::displayError('Invalid email'));
+			else
+				return false;
+		}
+		
 		$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
@@ -426,6 +431,7 @@ class CustomerCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+				'.(Context::getContext()->shop->getGroup()->share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
 				WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}

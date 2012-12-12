@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -89,7 +88,7 @@
 			{/if}
 		</td>
 	{/if}
-	<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>
+	{if $stock_management}<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>{/if}
 	<td align="center" class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>

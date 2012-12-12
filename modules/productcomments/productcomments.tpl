@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -54,7 +53,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					</div>
 				</div>
 				<div class="comment_details">
-					<h4 itemprop="name">{$comment.title}</h4>
+					<p itemprop="name" class="title_block">{$comment.title}</p>
 					<p itemprop="description">{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 					<ul>
 						{if $comment.total_advice > 0}

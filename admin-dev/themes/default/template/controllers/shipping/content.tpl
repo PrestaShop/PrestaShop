@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -78,7 +77,7 @@
 										type="text" 
 										class="fees_{$range[$rangeIdentifier]}" 
 										onchange="this.value = this.value.replace(/,/g, \'.\');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
-										value="{$price|string_format:"%.2f"}"
+										value="{$price|string_format:"%.6f"}"
 										style="width: 45px;" 
 									/>
 									{$currency->getSign('right')} {l s='(tax excl.)'}

@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE Block specials -->
-<section id="special_block_right" class="block products_block exclusive blockspecials">
-	<h1><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></h1>
+<div id="special_block_right" class="block products_block exclusive blockspecials">
+	<p class="title_block"><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockspecials'}">{l s='Specials' mod='blockspecials'}</a></p>
 	<div class="block_content">
 
 {if $special}
@@ -44,7 +43,7 @@
 					{/if}
 				{/if}
 
-					<h5><a href="{$special.link}" title="{$special.name|escape:html:'UTF-8'}">{$special.name|escape:html:'UTF-8'}</a></h5>
+					<p class="s_title_block"><a href="{$special.link}" title="{$special.name|escape:html:'UTF-8'}">{$special.name|escape:html:'UTF-8'}</a></p>
 				{if !$PS_CATALOG_MODE}
 					<span class="price-discount">{if !$priceDisplay}{displayWtPrice p=$special.price_without_reduction}{else}{displayWtPrice p=$priceWithoutReduction_tax_excl}{/if}</span>
 					<span class="price">{if !$priceDisplay}{displayWtPrice p=$special.price}{else}{displayWtPrice p=$special.price_tax_exc}{/if}</span>
@@ -58,5 +57,5 @@
 		<p>{l s='No specials at this time' mod='blockspecials'}</p>
 {/if}
 	</div>
-</section>
+</div>
 <!-- /MODULE Block specials -->

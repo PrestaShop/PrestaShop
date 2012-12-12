@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7515 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -211,7 +210,7 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 		{
 			Category::regenerateEntireNtree();
-			$this->recalculateLevelDepth($this->id_category);
+			$this->recalculateLevelDepth($this->id);
 		}
 		Hook::exec('actionCategoryUpdate', array('category' => $this));
 		return $ret;
@@ -265,7 +264,7 @@ class CategoryCore extends ObjectModel
 			$this->description = Category::getDescriptionClean($this->description);
 			
 		return array(
-			'id' => (int)$this->id_category,
+			'id' => (int)$this->id,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
@@ -608,7 +607,7 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
@@ -965,8 +964,8 @@ class CategoryCore extends ObjectModel
 			$root_category = Category::getRootCategory();
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP &&
 				(!Tools::isSubmit('id_category') ||
-					(int)Tools::getValue('id_category') == (int)$root_category->id_category ||
-					(int)$root_category->id_category == (int)$context->shop->id_category))
+					(int)Tools::getValue('id_category') == (int)$root_category->id ||
+					(int)$root_category->id == (int)$context->shop->id_category))
 				$sql .= '
 					AND c.`id_parent` != 0';
 

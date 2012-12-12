@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6625 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -75,13 +74,13 @@ function initProductPage()
 	
 	{if !$priceDisplay || $priceDisplay == 2}
 		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 2)}
-		{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 	{elseif $priceDisplay == 1}
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 2)}
-		{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
 	
-	ProductFn.productPriceWithoutRedution = '{$productPriceWithoutRedution}';
+	ProductFn.productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 	ProductFn.productPrice = '{$productPrice}';
 	
 	// Customizable field

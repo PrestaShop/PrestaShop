@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7300 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -181,9 +180,9 @@ class AdminCmsControllerCore extends AdminController
 		}
 
 		$this->tpl_form_vars = array(
-			'active' => $this->object->active
+			'active' => $this->object->active,
+			'PS_ALLOW_ACCENTED_CHARS_URL', (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')
 		);
-
 		return parent::renderForm();
 	}
 
@@ -310,9 +309,20 @@ class AdminCmsControllerCore extends AdminController
 
                     if (!$cms->active)
                     {
-                        $admin_dir = dirname($_SERVER['PHP_SELF']);
+                    	$admin_dir = dirname($_SERVER['PHP_SELF']);
                         $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-                        $preview_url .= $cms->active ? '' : '&adtoken='.Tools::getAdminTokenLite('AdminCmsContent').'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
+                    	
+                    	$params = http_build_query(array(
+                    		'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
+                    		'ad' => $admin_dir,
+                    		'id_employee' => (int)$this->context->employee->id)
+                    		);
+                    	if (Configuration::get('PS_REWRITING_SETTINGS'))
+                    		$params = '?'.$params;
+                    	else
+                    		$params = '&'.$params;
+                    	
+                    	$preview_url .= $cms->active ? '' : $params;
                     }
                     Tools::redirectAdmin($preview_url);
                 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,19 +19,19 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE Block contact infos -->
-<section id="block_contact_infos">
-	<h1>{l s='Contact us' mod='blockcontactinfos'}</h1>
+<div id="block_contact_infos">
+	<p class="title_block">{l s='Contact us' mod='blockcontactinfos'}</p>
 	<ul>
 		{if $blockcontactinfos_company != ''}<li><strong>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}</strong></li>{/if}
 		{if $blockcontactinfos_address != ''}<li><pre>{$blockcontactinfos_address|escape:'htmlall':'UTF-8'}</pre></li>{/if}
 		{if $blockcontactinfos_phone != ''}<li>{l s='Tel:' mod='blockcontactinfos'} {$blockcontactinfos_phone|escape:'htmlall':'UTF-8'}</li>{/if}
 		{if $blockcontactinfos_email != ''}<li>{l s='Email:' mod='blockcontactinfos'} {mailto address=$blockcontactinfos_email|escape:'htmlall':'UTF-8' encode="hex"}</li>{/if}
 	</ul>
-</section>
+</div>
 <!-- /MODULE Block contact infos -->

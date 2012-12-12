@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -100,6 +99,12 @@ class BlockBestSellers extends Module
 			return;
 
 		$currency = new Currency($params['cookie']->id_currency);
+		
+		if (Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC)
+			$usetax = false;
+		else
+			$usetax = true;
+			
 		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 5);
 		
 		if (!$bestsellers && !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
@@ -109,7 +114,7 @@ class BlockBestSellers extends Module
 		if ($bestsellers)
 			foreach ($bestsellers as $bestseller)
 			{
-				$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product'])), $currency);
+				$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product']), $usetax), $currency);
 				$best_sellers[] = $bestseller;
 			}
 
@@ -120,7 +125,7 @@ class BlockBestSellers extends Module
 		));
 		return $this->display(__FILE__, 'blockbestsellers.tpl');
 	}
-	
+		
 	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
@@ -157,5 +162,3 @@ class BlockBestSellers extends Module
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl');
 	}
 }
-
-

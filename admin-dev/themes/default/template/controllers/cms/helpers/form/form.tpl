@@ -19,13 +19,25 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helpers/form/form.tpl"}
-
+{block name="input"}
+	{if $input.name == "link_rewrite"}
+		<script type="text/javascript">
+		{if isset($PS_ALLOW_ACCENTED_CHARS_URL) && $PS_ALLOW_ACCENTED_CHARS_URL}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 1;
+		{else}
+			var PS_ALLOW_ACCENTED_CHARS_URL = 0;
+		{/if}
+		</script>
+		{$smarty.block.parent}
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
 {block name="script"}
 	$(document).ready(function() {
 		if (btn_submit.length > 0)

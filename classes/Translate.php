@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -117,7 +116,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source, $sprintf = null)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = null, $js = false)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -138,16 +137,14 @@ class TranslateCore
 				// PrestaShop 1.4 translations
 				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
 			);
-
 			foreach ($filesByPriority as $file)
 				if (Tools::file_exists_cache($file))
 				{
 					include_once($file);
-					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
+					$_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
 					$translations_merged[$name] = true;
 				}
 		}
-
 		$key = md5(str_replace('\'', '\\\'', $string));
 
 		$cache_key = $name.'|'.$string.'|'.$source;
@@ -176,6 +173,9 @@ class TranslateCore
 
 			if ($sprintf !== null)
 				$ret = Translate::checkAndReplaceArgs($ret, $sprintf);
+
+			if ($js)
+				$ret = addslashes($ret);
 
 			$lang_cache[$cache_key] = str_replace('"', '&quot;', $ret);
 		}

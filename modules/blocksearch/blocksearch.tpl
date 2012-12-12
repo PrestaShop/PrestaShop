@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block search module -->
-<section id="search_block_left" class="block exclusive">
-	<h1>{l s='Search' mod='blocksearch'}</h1>
+<div id="search_block_left" class="block exclusive">
+	<p class="title_block">{l s='Search' mod='blocksearch'}</p>
 	<form method="get" action="{$link->getPageLink('search', true)}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name' mod='blocksearch'}</label>
@@ -37,6 +36,6 @@
 			<input type="submit" id="search_button" class="button_mini" value="{l s='go' mod='blocksearch'}" />
 		</p>
 	</form>
-</section>
+</div>
 {include file="$self/blocksearch-instantsearch.tpl"}
 <!-- /Block search module -->

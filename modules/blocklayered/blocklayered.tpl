@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 12542 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 *}
@@ -34,8 +33,8 @@ param_product_url = '#{$param_product_url}';
 param_product_url = '';
 {/if}
 </script>
-<section id="layered_block_left" class="block">
-	<h1>{l s='Catalog' mod='blocklayered'}</h1>
+<div id="layered_block_left" class="block">
+	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<div>
@@ -242,9 +241,9 @@ param_product_url = '';
 	<div id="layered_ajax_loader" style="display: none;">
 		<p><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
-</section>
+</div>
 {else}
-<section id="layered_block_left" class="block">
+<div id="layered_block_left" class="block">
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<input type="hidden" name="id_category_layered" value="{$id_category_layered}" />
@@ -253,6 +252,6 @@ param_product_url = '';
 	<div style="display: none;">
 		<p style=""><img src="{$img_ps_dir}loader.gif" alt="" /><br />{l s='Loading...' mod='blocklayered'}</p>
 	</div>
-</section>
+</div>
 {/if}
 <!-- /Block layered navigation module -->

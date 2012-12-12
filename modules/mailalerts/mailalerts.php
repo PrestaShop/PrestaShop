@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 12460 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -432,7 +431,7 @@ class MailAlerts extends Module
 		$product = new Product($id_product, true, $id_lang, $id_shop, Context::getContext());
 		$ma_last_qties = (int)Configuration::get('MA_LAST_QTIES');
 
-		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)))
+		if ($product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && Configuration::get('PS_STOCK_MANAGEMENT'))
 		{
 			$iso = Language::getIsoById($id_lang);
 			$product_name = Product::getProductName($id_product, $id_product_attribute, $id_lang);

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -180,7 +179,7 @@ class ShopCore extends ObjectModel
 			'supplier' => array('type' => 'shop'),
 		);
 		
-		foreach($asso_tables as $table_name => $table_details)
+		foreach ($asso_tables as $table_name => $table_details)
 			Shop::addTableAssociation($table_name, $table_details);
 
 		Shop::$initialized = true;
@@ -330,10 +329,6 @@ class ShopCore extends ObjectModel
 					}
 				}
 			}
-
-			// Optimization - don't redirect and allow WS and other script to work
-			if (!$id_shop)
-				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
 
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($id_shop && !$is_main_uri)
@@ -917,7 +912,7 @@ class ShopCore extends ObjectModel
 	 * @param string $on
 	 * @return string
 	 */
-	public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null)
+	public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null, $force_not_default = false)
 	{
 		$table_alias = $table.'_shop';
 		if (strpos($table, '.') !== false)
@@ -930,7 +925,7 @@ class ShopCore extends ObjectModel
 		ON ('.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table;
 		if ((int)self::$context_id_shop)
 			$sql .= ' AND '.$table_alias.'.id_shop = '.(int)self::$context_id_shop;
-		elseif (Shop::checkIdShopDefault($table))
+		elseif (Shop::checkIdShopDefault($table) && !$force_not_default)
 			$sql .= ' AND '.$table_alias.'.id_shop = '.$alias.'.id_shop_default';
 		else
 			$sql .= ' AND '.$table_alias.'.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')';
@@ -980,6 +975,10 @@ class ShopCore extends ObjectModel
 	{
 		// If we duplicate some specific data, automatically duplicate other data linked to the first
 		// E.g. if carriers are duplicated for the shop, duplicate carriers langs too
+
+		if (!$old_id)
+			$old_id = Configuration::get('PS_SHOP_DEFAULT');
+
 		if (isset($tables_import['carrier']))
 		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;

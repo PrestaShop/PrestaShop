@@ -19,15 +19,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<section id="wishlist_block" class="block account">
-	<h1>
+<div id="wishlist_block" class="block account">
+	<p class="title_block">
 		<a href="{$wishlist_link}">{l s='Wishlist' mod='blockwishlist'}</a>
-	</h1>
+	</p>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
 		{if $wishlist_products}
@@ -63,4 +62,4 @@
 			<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
 		</p>
 	</div>
-</section>
+</div>

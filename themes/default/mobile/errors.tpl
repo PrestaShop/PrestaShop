@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -43,7 +42,7 @@
 		}
 		$(function()
 		{
-			var errorTitle = '{/literal}{if $errors|@count > 1}{l s='There are %d errors:' sprintf=$errors|@count}{else}{l s='There is %d error:' sprintf=$errors|@count}{/if}{literal}';
+			var errorTitle = '{/literal}{if $errors|@count > 1}{l s='There are %d errors:' js=1 sprintf=$errors|@count}{else}{l s='There is %d error:' js=1 sprintf=$errors|@count}{/if}{literal}';
 			var errorMessage = '<ol>';
 			{/literal}
 			{foreach from=$errors key=k item=error}

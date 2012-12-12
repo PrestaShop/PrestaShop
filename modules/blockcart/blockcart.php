@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,13 +53,7 @@ class BlockCart extends Module
 		else
 			$currency = $this->context->currency;
 
-		if ($params['cart']->id_customer)
-		{
-			$customer = new Customer((int)$params['cart']->id_customer);
-			$taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
-		}
-		else
-			$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+		$taxCalculationMethod = Group::getPriceDisplayMethod((int)Group::getCurrent()->id);
 
 		$useTax = !($taxCalculationMethod == PS_TAX_EXC);
 
