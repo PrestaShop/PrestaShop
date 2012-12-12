@@ -1673,8 +1673,9 @@ class AdminControllerCore extends Controller
 			$this->ajax = '1';
 
 		/* Server Params */
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+
 		$this->context->link = new Link($protocol_link, $protocol_content);
 
 		if (isset($_GET['logout']))
