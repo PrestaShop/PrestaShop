@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div id="carrier_area">
 {if !$opc}
 	<script type="text/javascript">
 	//<![CDATA[
@@ -79,7 +78,11 @@
 {else}
 	<h2><span>2</span> {l s='Delivery methods'}</h2>
 {/if}
-
+{if !$opc}
+	<div id="carrier_area">
+{else}
+	<div id="carrier_area" class="opc-main-block">
+{/if}
 {if !$opc}
 	{assign var='current_step' value='shipping'}
 	{include file="$tpl_dir./order-steps.tpl"}
