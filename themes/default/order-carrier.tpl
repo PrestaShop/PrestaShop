@@ -74,15 +74,17 @@
 {/if}
 
 {if !$opc}
-	<h1>{l s='Shipping'}</h1>
-{else}
-	<h2><span>2</span> {l s='Delivery methods'}</h2>
-{/if}
-{if !$opc}
 	<div id="carrier_area">
 {else}
 	<div id="carrier_area" class="opc-main-block">
 {/if}
+
+{if !$opc}
+	<h1>{l s='Shipping'}</h1>
+{else}
+	<h2><span>2</span> {l s='Delivery methods'}</h2>
+{/if}
+
 {if !$opc}
 	{assign var='current_step' value='shipping'}
 	{include file="$tpl_dir./order-steps.tpl"}
