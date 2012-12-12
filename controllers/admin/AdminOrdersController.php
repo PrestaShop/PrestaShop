@@ -1522,7 +1522,6 @@ class AdminOrdersControllerCore extends AdminController
 		$cart->id_currency = $order->id_currency;
 		$cart->id_customer = $order->id_customer;
 		$cart->id_lang = $order->id_lang;
-		$cart->id_carrier = $order->id_carrier;
 		$cart->secure_key = $order->secure_key;
 
 		// Save new cart
