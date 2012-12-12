@@ -1295,27 +1295,15 @@ product_tabs['VirtualProduct'] = new function(){
 		$('.is_virtual_good').hide();
 
 		if ( $('input[name=is_virtual_file]:checked').val() == 1)
-		{
 			$('#virtual_good_more').show();
-			$('#is_virtual_file_product').show();
-		}
 		else
-		{
 			$('#virtual_good_more').hide();
-			$('#is_virtual_file_product').hide();
-		}
 
 		$('input[name=is_virtual_file]').live('change', function(e) {
 			if($(this).val() == '1')
-			{
 				$('#virtual_good_more').show();
-				$('#is_virtual_file_product').show();
-			}
 			else
-			{
 				$('#virtual_good_more').hide();
-				$('#is_virtual_file_product').hide();
-			}
 		});
 
 		// Bind file deletion
