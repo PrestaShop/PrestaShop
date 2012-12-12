@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
 function image_shop1510()
 {
 	include_once(_PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php');

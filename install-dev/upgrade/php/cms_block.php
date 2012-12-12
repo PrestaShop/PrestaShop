@@ -23,6 +23,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 function cms_block()
 {
 	if (!Db::getInstance()->execute('SELECT `display_store` FROM `'._DB_PREFIX_.'cms_block` LIMIT 1'))
