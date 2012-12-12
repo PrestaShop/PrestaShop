@@ -843,6 +843,7 @@ class AdminTranslationsControllerCore extends AdminController
 			case 'front':
 				$directories['tpl'] = array(_PS_ALL_THEMES_DIR_.'/' => scandir(_PS_ALL_THEMES_DIR_));
 				self::$ignore_folder[] = 'modules';
+				self::$ignore_folder[] = 'pdf';
 				$directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_SELECTED_DIR_));
 
 				if (Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_))
