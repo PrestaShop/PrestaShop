@@ -86,10 +86,10 @@
 
 			<div id="columns" class="grid_9 alpha omega clearfix">
 				<!-- Left -->
-				<div id="left_column" class="column grid_2 alpha">
+				<aside id="left_column" class="column grid_2 alpha">
 					{$HOOK_LEFT_COLUMN}
-				</div>
+				</aside>
 
 				<!-- Center -->
-				<div id="center_column" class=" grid_5">
+				<div role="main" id="center_column" class="grid_5">
 	{/if}

@@ -28,9 +28,9 @@
 				</div>
 
 <!-- Right -->
-				<div id="right_column" class="column grid_2 omega">
+				<aside id="right_column" class="column grid_2 omega">
 					{$HOOK_RIGHT_COLUMN}
-				</div>
+				</aside>
 			</div>
 
 <!-- Footer -->
