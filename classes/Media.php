@@ -74,25 +74,6 @@ class MediaCore
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
 			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
 
-			if (Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION'))
-			{
-				//$html_content = preg_replace('/"([^\>\s"]*)"/i', '$1', $html_content);//FIXME create a js bug
-				$html_content = preg_replace('/<!DOCTYPE \w[^\>]*dtd\">/is', '', $html_content);
-				$html_content = preg_replace('/\s\>/is', '>', $html_content);
-				$html_content = str_replace('</li>', '', $html_content);
-				$html_content = str_replace('</dt>', '', $html_content);
-				$html_content = str_replace('</dd>', '', $html_content);
-				$html_content = str_replace('</head>', '', $html_content);
-				$html_content = str_replace('<head>', '', $html_content);
-				$html_content = str_replace('</html>', '', $html_content);
-				$html_content = str_replace('</body>', '', $html_content);
-				//$html_content = str_replace('</p>', '', $html_content);//FIXME doesnt work...
-				$html_content = str_replace("</option>\n", '', $html_content);//TODO with bellow
-				$html_content = str_replace('</option>', '', $html_content);
-				$html_content = str_replace('<script type=text/javascript>', '<script>', $html_content);//Do a better expreg
-				$html_content = str_replace("<script>\n", '<script>', $html_content);//Do a better expreg
-			}
-
 			return $html_content;
 		}
 		return false;
