@@ -50,7 +50,6 @@ class AdminThemesControllerCore extends AdminController
 						'PS_JS_THEME_CACHE' => 0,
 						'PS_HTML_THEME_COMPRESSION' => 0,
 						'PS_JS_HTML_THEME_COMPRESSION' => 0,
-						'PS_HIGH_HTML_THEME_COMPRESSION' => 0,
 					),
 				),
 			),
