@@ -3033,7 +3033,7 @@ class AdminProductsControllerCore extends AdminController
 				if ($id_product_download = $product_download->getIdFromCombination($combination['id_product'], $combination['id_product_attribute']))
 					$product_download = new ProductDownload($id_product_download);
 				$product->productsDownload[$combination['id_product_attribute']] = $product_download;
-				$product->productsDownload[$combination['id_product_attribute']]->date_expiration = ($productDownload->id > 0) ? ((!empty($productDownload->date_expiration) && $productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']), ENT_COMPAT, 'UTF-8');
+				$product->productsDownload[$combination['id_product_attribute']]->date_expiration = ($product_download->id > 0) ? ((!empty($product_download->date_expiration) && $product_download->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product_download->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date_'.$combination['id_product_attribute']), ENT_COMPAT, 'UTF-8');
 			
 				if($product_download->id && !empty($product_download->display_filename))
 					$product_downloaded = true;
