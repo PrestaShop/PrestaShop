@@ -1520,7 +1520,6 @@ class AdminOrdersControllerCore extends AdminController
 		$cart->id_address_delivery = $order->id_address_delivery;
 		$cart->id_address_invoice = $order->id_address_invoice;
 		$cart->id_currency = $order->id_currency;
-		$cart->id_customer = $order->id_customer;
 		$cart->id_lang = $order->id_lang;
 		$cart->secure_key = $order->secure_key;
 
