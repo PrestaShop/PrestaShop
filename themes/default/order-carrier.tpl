@@ -30,8 +30,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product'}";
-	var txtProducts = "{l s='products'}";
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
 	var orderUrl = '{$link->getPageLink("order", true)}';
 
 	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";

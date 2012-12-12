@@ -28,7 +28,7 @@
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.serialScroll.js"></script>
 <script type="text/javascript">// <![CDATA[
-i18n_scene_close = '{l s='Close'}';
+i18n_scene_close = '{l s='Close' js=1}';
 $(function () {ldelim}
 	li_width = parseInt({$thumbSceneImageType.width} + 10);
 {rdelim});

@@ -42,7 +42,7 @@
 		}
 		$(function()
 		{
-			var errorTitle = '{/literal}{if $errors|@count > 1}{l s='There are %d errors:' sprintf=$errors|@count}{else}{l s='There is %d error:' sprintf=$errors|@count}{/if}{literal}';
+			var errorTitle = '{/literal}{if $errors|@count > 1}{l s='There are %d errors:' js=1 sprintf=$errors|@count}{else}{l s='There is %d error:' js=1 sprintf=$errors|@count}{/if}{literal}';
 			var errorMessage = '<ol>';
 			{/literal}
 			{foreach from=$errors key=k item=error}
