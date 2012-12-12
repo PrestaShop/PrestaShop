@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 17056 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,14 +26,14 @@
 {capture assign='page_title'}{l s='Shipping'}{/capture}
 {include file='./page-title.tpl'}
 
-<div data-role="content">
-	<h3 class="bg">{l s='Choose your delivery method'}</h3>
+<div data-role="content" id="delivery_choose">
+	<h3  class="bg">{l s='Choose your delivery method'}</h3>
 	<fieldset data-role="controlgroup">
 	{if isset($delivery_option_list)}
 		{foreach $delivery_option_list as $id_address => $option_list}
 			{foreach $option_list as $key => $option}
 				{foreach $option.carrier_list as $carrier}
-					<input type="radio" name="delivery_option[{$id_address}]" class="delivery_option_radio" id="opc_carrier_{$carrier.instance->id}" value="{$carrier.instance->id}" {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}checked="checked"{/if} />
+					<input type="radio" name="delivery_option[{$id_address}]" class="delivery_option_radio delivery_option_radio_carrier" id="opc_carrier_{$carrier.instance->id}" value="{$carrier.instance->id}" {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}checked="checked"{/if} />
 					<label for="opc_carrier_{$carrier.instance->id}">{$carrier.instance->name}</label>
 				{/foreach}
 			{/foreach}
@@ -57,7 +56,7 @@
 	</p>
 	
 	<h3 class="bg">{l s='Terms of service'}</h3>
-	<fieldset data-role="fieldcontain">
+	<fieldset data-role="fieldcontain" id="cgv_checkbox">
 		<input type="checkbox" value="1" id="cgv" name="cgv" {if $checkedTOS}checked="checked"{/if} />
 		<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label>
 	</fieldset>

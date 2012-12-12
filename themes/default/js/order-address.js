@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 $(document).ready(function()
 {
-	if (typeof(formatedAddressFieldsValuesList) != 'undefined')
+	if (typeof(formatedAddressFieldsValuesList) !== 'undefined')
 		updateAddressesDisplay(true);
 	resizeAddressesBox();
 });
@@ -50,9 +49,9 @@ function updateAddressesDisplay(first_view)
 
 	// update content of invoice address
 	//if addresses have to be equals...
-	if ($('input[type=checkbox]#addressesAreEquals:checked').length == 1 && ($('#multishipping_mode_checkbox:checked').length == 0))
+	if ($('input[type=checkbox]#addressesAreEquals:checked').length === 1 && ($('#multishipping_mode_checkbox:checked').length === 0))
 	{
-		if ($('#multishipping_mode_checkbox:checked').length == 0) {
+		if ($('#multishipping_mode_checkbox:checked').length === 0) {
 			$('#address_invoice_form:visible').hide('fast');
 		}
 		$('ul#address_invoice').html($('ul#address_delivery').html());
@@ -72,7 +71,7 @@ function updateAddressesDisplay(first_view)
 
 	if(!first_view)
 	{
-		if (orderProcess == 'order')
+		if (orderProcess === 'order')
 			updateAddresses();
 	}
 	return true;
@@ -100,7 +99,7 @@ function updateAddressDisplay(addressType)
 function updateAddresses()
 {
 	var idAddress_delivery = $('#id_address_delivery').val();
-	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : $('#id_address_invoice').val();
+	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length === 1 ? idAddress_delivery : $('#id_address_invoice').val();
 	$.ajax({
 		type: 'POST',
 		url: baseUri,
@@ -122,15 +121,15 @@ function updateAddresses()
 			if (jsonData.hasError)
 			{
 				var errors = '';
-				for(error in jsonData.errors)
+				for(var error in jsonData.errors)
 					//IE6 bug fix
-					if(error != 'indexOf')
+					if(error !== 'indexOf')
 						errors += jsonData.errors[error] + "\n";
 				alert(errors);
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			if (textStatus != 'abort')
+			if (textStatus !== 'abort')
 				alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});

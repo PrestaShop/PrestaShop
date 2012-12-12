@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -44,7 +43,7 @@
 				<a href="{$product->getLink()}" title="{$product->name|escape:html:'UTF-8'}" class="product_image" >
 					<img src="{$link->getImageLink($product->link_rewrite, $product->id_image, 'home_default')}" alt="{$product->name|escape:html:'UTF-8'}" width="{$homeSize.width}" height="{$homeSize.height}" />
 				</a>
-				<h5><a href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></h5>
+				<p class="s_title_block"><a href="{$product->getLink()}" title="{$product->name|truncate:32:'...'|escape:'htmlall':'UTF-8'}">{$product->name|truncate:27:'...'|escape:'htmlall':'UTF-8'}</a></p>
 				<div class="product_desc"><a href="{$product->getLink()}">{$product->description_short|strip_tags|truncate:60:'...'}</a></div>
 				<a class="lnk_more" href="{$product->getLink()}" title="{l s='View'}">{l s='View'}</a>
 				
@@ -62,7 +61,7 @@
 
 						{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
-							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %d' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
+							<p class="comparison_unit_price">{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'htmlall':'UTF-8'}</p>
 						{else}
 						&nbsp;
 						{/if}
@@ -122,7 +121,7 @@
 				{assign var='feature_id' value=$feature.id_feature}
 				{if isset($product_features[$product_id])}
 					{assign var='tab' value=$product_features[$product_id]}
-					<td  width="{$width}%" class="{$classname} comparison_infos">{$tab[$feature_id]|escape:'htmlall':'UTF-8'}</td>
+					<td  width="{$width}%" class="{$classname} comparison_infos">{if (isset($tab[$feature_id]))}{$tab[$feature_id]|escape:'htmlall':'UTF-8'}{/if}</td>
 				{else}
 					<td  width="{$width}%" class="{$classname} comparison_infos"></td>
 				{/if}

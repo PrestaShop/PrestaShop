@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 10575 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -285,7 +284,8 @@ function closeAddProduct()
 	$('#add_product_product_quantity').val('1');
 	$('#add_product_product_attribute_id option').remove();
 	$('#add_product_product_attribute_area').hide();
-	$('#add_product_product_stock').html('0');
+	if (stock_management)
+		$('#add_product_product_stock').html('0');
 	current_product = null;
 }
 
@@ -357,7 +357,8 @@ function init()
 			$('#add_product_product_price_tax_incl').val(data.price_tax_incl);
 			$('#add_product_product_price_tax_excl').val(data.price_tax_excl);
 			addProductRefreshTotal();
-			$('#add_product_product_stock').html(data.stock[0]);
+			if (stock_management)
+				$('#add_product_product_stock').html(data.stock[0]);
 
 			if (current_product.combinations.length !== 0)
 			{
@@ -368,7 +369,8 @@ function init()
 					$('select#add_product_product_attribute_id').append('<option value="'+this.id_product_attribute+'"'+(this.default_on == 1 ? ' selected="selected"' : '')+'>'+this.attributes+'</option>');
 					if (this.default_on == 1)
 					{
-						$('#add_product_product_stock').html(this.qty_in_stock);
+						if (stock_management)
+							$('#add_product_product_stock').html(this.qty_in_stock);
 						defaultAttribute = this.id_product_attribute;
 					}
 				});
@@ -397,24 +399,26 @@ function init()
 		populateWarehouseList(current_product.warehouse_list[$(this).val()]);
 
 		addProductRefreshTotal();
-
-		$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
+		if (stock_management)
+			$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
 	});
 
 	$('input#add_product_product_quantity').unbind('keyup');
 	$('input#add_product_product_quantity').keyup(function() {
-		var quantity = parseInt($(this).val());
-		if (quantity < 1 || isNaN(quantity))
-			quantity = 1;
-		var stock_available = parseInt($('#add_product_product_stock').html());
+		if (stock_management)
+		{
+			var quantity = parseInt($(this).val());
+			if (quantity < 1 || isNaN(quantity))
+				quantity = 1;
+			var stock_available = parseInt($('#add_product_product_stock').html());
+			// stock status update
+			if (quantity > stock_available)
+				$('#add_product_product_stock').css('font-weight', 'bold').css('color', 'red').css('font-size', '1.2em');
+			else
+				$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');
+		}
 		// total update
 		addProductRefreshTotal();
-
-		// stock status update
-		if (quantity > stock_available)
-			$('#add_product_product_stock').css('font-weight', 'bold').css('color', 'red').css('font-size', '1.2em');
-		else
-			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');
 	});
 
 	$('#submitAddProduct').unbind('click');

@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6625 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -75,13 +74,13 @@ var stock_management = {$stock_management|intval};
 {/if}
 {if !$priceDisplay || $priceDisplay == 2}
 	{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 {elseif $priceDisplay == 1}
 	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 {/if}
 
-var productPriceWithoutRedution = '{$productPriceWithoutRedution}';
+var productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 var productPrice = '{$productPrice}';
 
 // Customizable field
@@ -371,10 +370,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<div class="price">
 				{if !$priceDisplay || $priceDisplay == 2}
 					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 				{elseif $priceDisplay == 1}
 					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 				{/if}
 
 				<p class="our_price_display">
@@ -389,7 +388,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{if $product->on_sale}
 					<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
 					<span class="on_sale">{l s='On sale!'}</span>
-				{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
+				{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
 					<span class="discount">{l s='Reduced price!'}</span>
 				{/if}
 				{if $priceDisplay == 2}
@@ -402,8 +401,8 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{if $product->specificPrice AND $product->specificPrice.reduction}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					{if $productPriceWithoutRedution > $productPrice}
-						<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
+					{if $productPriceWithoutReduction > $productPrice}
+						<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
 						<!-- {if $tax_enabled && $display_tax_label == 1}
 							{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 						{/if} -->
@@ -533,10 +532,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 						{if ($accessory.allow_oosp || $accessory.quantity > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
 							<li class="ajax_block_product {if $smarty.foreach.accessories_list.first}first_item{elseif $smarty.foreach.accessories_list.last}last_item{else}item{/if} product_accessories_description">
-								<h5>
+								<p class="s_title_block">
 									<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}">{$accessory.name|escape:'htmlall':'UTF-8'}</a>
 									{if $accessory.show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE} - <span class="price">{if $priceDisplay != 1}{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}{/if}</span>{/if}
-								</h5>
+								</p>
 								<div class="product_desc">
 									<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{$accessory.legend|escape:'htmlall':'UTF-8'}" class="product_image"><img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" /></a>
 									<div class="block_description">

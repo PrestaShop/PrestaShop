@@ -19,12 +19,11 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Forgot your password?'}{/capture}
+{capture name=path}<a href="{$link->getPageLink('authentication', true)}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Forgot your password'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h1>{l s='Forgot your password?'}</h1>
@@ -50,5 +49,5 @@
 </form>
 {/if}
 <p class="clear">
-	<a href="{$link->getPageLink('authentication', true)}" title="{l s='Return to Login'}"><img src="{$img_dir}icon/my-account.gif" alt="{l s='Return to Login'}" class="icon" /></a><a href="{$link->getPageLink('authentication')}" title="{l s='Back to Login'}">{l s='Back to Login'}</a>
+	<a href="{$link->getPageLink('authentication', true)}" title="{l s='Return to Login'}" rel="nofollow"><img src="{$img_dir}icon/my-account.gif" alt="{l s='Return to Login'}" class="icon" /></a><a href="{$link->getPageLink('authentication')}" title="{l s='Back to Login'}" rel="nofollow">{l s='Back to Login'}</a>
 </p>

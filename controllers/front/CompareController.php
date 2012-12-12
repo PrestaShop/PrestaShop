@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7507 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -104,23 +103,10 @@ class CompareControllerCore extends FrontController
 				foreach ($ids as $k => &$id)
 				{
 					$curProduct = new Product((int)$id, true, $this->context->language->id);
-					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
+					if (!Validate::isLoadedObject($curProduct) || !$curProduct->active || !$curProduct->isAssociatedToShop())
 					{
-						unset($ids[$k]);
-						continue;
-					}
-
-					if (!$curProduct->active || !$curProduct->isAssociatedToShop())
-					{
-						unset($ids[$k]);
-						continue;
-					}
-
-					if (!Validate::isLoadedObject($curProduct))
-						continue;
-
-					if (!$curProduct->active)
-					{
+						if (isset($this->context->cookie->id_compare))
+							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
 						unset($ids[$k]);
 						continue;
 					}
@@ -150,11 +136,17 @@ class CompareControllerCore extends FrontController
 					));
 					$this->context->smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Hook::exec('displayProductComparison', array('list_ids_product' => $ids)));
 				}
+				else if (isset($this->context->cookie->id_compare))
+				{
+					$object = new CompareProduct((int)$this->context->cookie->id_compare);
+					if (Validate::isLoadedObject($object))
+					  $object->delete();
+				}
 			}
 		}
 		$this->context->smarty->assign('hasProduct', $hasProduct);
 
 		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
+	
 }
-

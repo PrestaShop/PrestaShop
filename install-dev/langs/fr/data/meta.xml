@@ -54,7 +54,7 @@
     <keywords>plan, site</keywords>
     <url_rewrite>plan-du-site</url_rewrite>
   </meta>
-  <meta id="supply" id_shop="1">
+  <meta id="supplier" id_shop="1">
     <title>Fournisseurs</title>
     <description>Liste de nos fournisseurs</description>
     <keywords>fournisseurs</keywords>

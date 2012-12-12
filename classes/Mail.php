@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -205,9 +204,14 @@ class MailCore
 				$template_path = $theme_path.'mails/';
 				$override_mail  = true;
 			}
-			else if (!file_exists($template_path.$template.'.txt') || !file_exists($template_path.$template.'.html'))
+			else if (!file_exists($template_path.$template.'.txt') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT))
 			{
 				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$template.'.txt', $die);
+				return false;
+			}
+			else if (!file_exists($template_path.$template.'.html') && ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML))
+			{
+				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$template.'.html', $die);
 				return false;
 			}
 			$template_html = file_get_contents($template_path.$template.'.html');
@@ -215,13 +219,17 @@ class MailCore
 
 			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
 					include_once($template_path.$iso.'/lang.php');
-			else if ($module_name && file_exists($template_path.$iso.'/lang.php'))
+			else if ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
 				include_once($theme_path.'mails/'.$iso.'/lang.php');
 			else
-				include_once(dirname(__FILE__).'/../mails/'.$iso.'/lang.php');
+				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
+
+			/* Set Message-ID - getmypid() is blocked on some hosting */
+			$message->setId(Mail::generateId());
+
 			$message->headers->setEncoding('Q');
 
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
@@ -335,4 +343,17 @@ class MailCore
 
 		return str_replace('"', '&quot;', stripslashes($str));
 	}
+
+	/* Rewrite of Swift_Message::generateId() without getmypid() */
+	protected static function generateId($idstring = null)
+	{
+		$midparams =  array(
+			"utctime" => gmstrftime("%Y%m%d%H%M%S"),
+			"randint" => mt_rand(),
+			"customstr" => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
+			"hostname" => (isset($_SERVER["SERVER_NAME"]) ? $_SERVER["SERVER_NAME"] : php_uname("n")),
+		);
+		return vsprintf("<%s.%d.%s@%s>", $midparams);
+	}
+	
 }

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7095 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -118,9 +117,6 @@ class AddressControllerCore extends FrontController
 	 */
 	protected function processSubmitAddress()
 	{
-		/*if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=addresses');*/
-
 		$address = new Address();
 		$this->errors = $address->validateController();
 		$address->id_customer = (int)$this->context->customer->id;
@@ -242,7 +238,7 @@ class AddressControllerCore extends FrontController
 			}
 			else
 				Tools::redirect('index.php?controller=addresses');
-		}
+		}		
 		$this->errors[] = Tools::displayError('An error occurred while updating your address.');
 	}
 
@@ -254,17 +250,13 @@ class AddressControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		/* Secure restriction for guest */
-		if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=addresses');
-
 		$this->assignCountries();
 		$this->assignVatNumber();
 		$this->assignAddressFormat();
 
 		// Assign common vars
 		$this->context->smarty->assign(array(
-			'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 			'ajaxurl' => _MODULE_DIR_,
 			'errors' => $this->errors,
 			'token' => Tools::getToken(false),

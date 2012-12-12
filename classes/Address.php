@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -338,12 +337,6 @@ class AddressCore extends ObjectModel
 	*/
 	public static function initialize($id_address = null)
 	{
-		// set the default address
-		$address = new Address();
-		$address->id_country = (int)Context::getContext()->country->id;
-		$address->id_state = 0;
-		$address->postcode = 0;
-
 		// if an id_address has been specified retrieve the address
 		if ($id_address)
 		{
@@ -351,6 +344,14 @@ class AddressCore extends ObjectModel
 
 			if (!Validate::isLoadedObject($address))
 				throw new PrestaShopException('Invalid address');
+		}
+		else
+		{
+			// set the default address
+			$address = new Address();
+			$address->id_country = (int)Context::getContext()->country->id;
+			$address->id_state = 0;
+			$address->postcode = 0;
 		}
 
 		return $address;
