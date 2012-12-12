@@ -67,9 +67,9 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product'}";
-	var txtProducts = "{l s='products'}";
-	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address'}";
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
+	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address' js=1}";
 	{/if}
 
 	var formatedAddressFieldsValuesList = new Array();
@@ -112,7 +112,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">{l s='Update' js=1}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}

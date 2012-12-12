@@ -71,8 +71,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product'}";
-	var txtProducts = "{l s='products'}";
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
 	{/if}
 	
 	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")}";
@@ -99,8 +99,8 @@
 	function getAddressesTitles()
 	{
 		return {
-						'invoice': "{l s='Your billing address'}",
-						'delivery': "{l s='Your delivery address'}"
+						'invoice': "{l s='Your billing address' js=1}",
+						'delivery': "{l s='Your delivery address' js=1}"
 			};
 
 	}
@@ -118,7 +118,7 @@
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">&raquo; {l s='Update'}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update' js=1}">&raquo; {l s='Update' js=1}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	}
