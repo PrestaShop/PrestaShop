@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -324,7 +323,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// Set the image path on display in relation to the header image
 			case 'header':
 				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
-					$path = _PS_IMG_DIR_.'logo.jpg';
+					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				else
 					throw new WebserviceException('This method is not allowed with general image resources.', array(49, 405));
 				break;
@@ -388,7 +387,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		{
 			case 'GET':
 			case 'HEAD':
-				$this->imgToDisplay = ($path != '' && file_exists($path)) ? $path : $alternative_path;
+				$this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
 				return true;
 				break;
 			case 'PUT':
@@ -693,8 +692,13 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						$image = new Image((int)$this->wsObject->urlSegment[3]);
 						return $image->delete();
 					}
+					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
+					{
+						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[3]);
+						return $object->deleteImage(true);
+					}
 					else
-					return $this->deleteImageOnDisk($filename, $imageSizes, $directory);
+						return $this->deleteImageOnDisk($filename, $imageSizes, $directory);
 				}
 				else
 					throw new WebserviceException('This image does not exist on disk', array(64, 500));

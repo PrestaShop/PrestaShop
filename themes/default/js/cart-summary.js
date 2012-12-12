@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +31,7 @@ $(document).ready(function()
 		$('.cart_quantity_up').unbind('click').live('click', function(){ upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;	});
 		$('.cart_quantity_down').unbind('click').live('click', function(){ downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false; });
 		$('.cart_quantity_delete' ).unbind('click').live('click', function(){ deleteProductFromSummary($(this).attr('id')); return false; });
-		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el) } });
+		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el); } });
 	}
 	
 	$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
@@ -57,16 +56,17 @@ function cleanSelectAddressDelivery()
 			
 			$.each(options, function(i) {
 				if ($(options[i]).val() > 0
-					&& ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0 // Check the address is not already used for a similare products
-						|| id_address_delivery == $(options[i]).val()
+					&& ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length === 0 // Check the address is not already used for a similare products
+						|| id_address_delivery === $(options[i]).val()
 					)
 				)
 					address_count++;
 			});
 			
-			if (address_count < 2) // Need at least two address to allow skipping products to multiple address
+			// Need at least two address to allow skipping products to multiple address
+			if (address_count < 2)
 				$($(item).find('option[value=-2]')).remove();
-			else if($($(item).find('option[value=-2]')).length == 0)
+			else if($($(item).find('option[value=-2]')).length === 0)
 				$(item).append($('<option value="-2">' + ShipToAnOtherAddress + '</option>'));
 		});
 	}
@@ -80,7 +80,7 @@ function changeAddressDelivery(obj)
 	var old_id_address_delivery = ids[5];
 	var new_id_address_delivery = obj.val();
 	
-	if (new_id_address_delivery == old_id_address_delivery)
+	if (new_id_address_delivery === old_id_address_delivery)
 		return;
 	
 	if (new_id_address_delivery > 0) // Change the delivery address
@@ -99,7 +99,7 @@ function changeAddressDelivery(obj)
 				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
+				if (typeof(jsonData.hasErrors) !== 'undefined' && jsonData.hasErrors)
 				{
 					alert(jsonData.error);
 					// Reset the old address
@@ -114,7 +114,7 @@ function changeAddressDelivery(obj)
 						updateCustomizedDatas(jsonData.customizedDatas);
 						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-						if (typeof(getCarrierListAndUpdate) != 'undefined')
+						if (typeof(getCarrierListAndUpdate) !== 'undefined')
 							getCarrierListAndUpdate();
 	
 						// @todo reverse the remove order
@@ -133,12 +133,12 @@ function changeAddressDelivery(obj)
 			}
 		});
 	}
-	else if (new_id_address_delivery == -1) // Adding a new address
+	else if (new_id_address_delivery === -1) // Adding a new address
 			window.location = $($('.address_add a')[0]).attr('href');
-	else if (new_id_address_delivery == -2) // Add a new line for this product
+	else if (new_id_address_delivery === -2) // Add a new line for this product
 	{
 		// This test is will not usefull in the future
-		if (old_id_address_delivery == 0)
+		if (old_id_address_delivery === 0)
 		{
 			alert(txtSelectAnAddressFirst);
 			return false;
@@ -148,8 +148,8 @@ function changeAddressDelivery(obj)
 		var id_address_delivery = 0;
 		var options = $('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery+' option');
 		$.each(options, function(i) {
-			if ($(options[i]).val() > 0 && $(options[i]).val() != old_id_address_delivery
-				&& $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0 // Check the address is not already used for a similare products
+			if ($(options[i]).val() > 0 && $(options[i]).val() !== old_id_address_delivery
+				&& $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length === 0 // Check the address is not already used for a similare products
 			)
 			{
 				id_address_delivery = $(options[i]).val();
@@ -206,8 +206,8 @@ function changeAddressDelivery(obj)
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
 {
-	if (typeof(line) == 'undefined')
-		var line = $('#product_' + id_product+'_' + id_product_attribute + '_0_' + old_id_address_delivery);
+	if (typeof(line) === 'undefined')
+		line = $('#product_' + id_product+'_' + id_product_attribute + '_0_' + old_id_address_delivery);
 	
 	line.attr('id', 'product_' + id_product+'_' + id_product_attribute + '_0_' + id_address_delivery);
 	line.find('.cart_quantity_input')
@@ -226,15 +226,17 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 
 function updateQty(val, cart, el)
 {
-	if (typeof(cart) == 'undefined' || cart)
-		var prefix = '#order-detail-content ';
+	var prefix = "";
+
+	if (typeof(cart) === 'undefined' || cart)
+		prefix = '#order-detail-content ';
 	else
-		var prefix = '#fancybox-content ';
+		prefix = '#fancybox-content ';
 
 	var id = $(el).attr('name');
 	var exp = new RegExp("^[0-9]+$");
 
-	if (exp.test(val) == true)
+	if (exp.test(val) === true)
 	{
 		var hidden = $(prefix+'input[name='+ id +'_hidden]').val();
 		var input = $(prefix+'input[name='+ id +']').val();
@@ -248,7 +250,7 @@ function updateQty(val, cart, el)
 	else
 		$(prefix+'input[name='+ id +']').val($(prefix+'input[name='+ id +'_hidden]').val());
 	
-	if (typeof(getCarrierListAndUpdate) != 'undefined')
+	if (typeof(getCarrierListAndUpdate) !== 'undefined')
 		getCarrierListAndUpdate();
 }
 
@@ -261,11 +263,11 @@ function deleteProductFromSummary(id)
 	var ids = 0;
 	ids = id.split('_');
 	productId = parseInt(ids[0]);
-	if (typeof(ids[1]) != 'undefined')
+	if (typeof(ids[1]) !== 'undefined')
 		productAttributeId = parseInt(ids[1]);
-	if (typeof(ids[2]) != 'undefined')
+	if (typeof(ids[2]) !== 'undefined')
 		customizationId = parseInt(ids[2]);
-	if (typeof(ids[3]) != 'undefined')
+	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
 		type: 'GET',
@@ -277,7 +279,7 @@ function deleteProductFromSummary(id)
 			+'&ajax=true&delete&summary'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
-			+'&id_address_delivery='+id_address_delivery+ ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+			+'&id_address_delivery='+id_address_delivery+ ( (customizationId !== 0) ? '&id_customization='+customizationId : '')
 			+'&token=' + static_token
 			+'&allow_refresh=1',
 		success: function(jsonData)
@@ -285,23 +287,23 @@ function deleteProductFromSummary(id)
 			if (jsonData.hasError)
 			{
 				var errors = '';
-				for(error in jsonData.errors)
+				for(var error in jsonData.errors)
 				//IE6 bug fix
-				if (error != 'indexOf')
+				if (error !== 'indexOf')
 					errors += jsonData.errors[error] + "\n";
 			}
 			else
 			{
 				if (jsonData.refresh)
 					location.reload();
-				if (parseInt(jsonData.summary.products.length) == 0)
+				if (parseInt(jsonData.summary.products.length) === 0)
 				{
-					if (typeof(orderProcess) == 'undefined' || orderProcess != 'order-opc')
+					if (typeof(orderProcess) === 'undefined' || orderProcess !== 'order-opc')
 						document.location.href = document.location.href; // redirection
 					else
 					{
 						$('#center_column').children().each(function() {
-							if ($(this).attr('id') != 'emptyCartWarning' && $(this).attr('class') != 'breadcrumb' && $(this).attr('id') != 'cart_title')
+							if ($(this).attr('id') !== 'emptyCartWarning' && $(this).attr('class') !== 'breadcrumb' && $(this).attr('id') !== 'cart_title')
 							{
 								$(this).fadeOut('slow', function () {
 									$(this).remove();
@@ -323,9 +325,9 @@ function deleteProductFromSummary(id)
 
 					var exist = false;
 					for (i=0;i<jsonData.summary.products.length;i++)
-						if (jsonData.summary.products[i].id_product == productId
-							&& jsonData.summary.products[i].id_product_attribute == productAttributeId
-							&& jsonData.summary.products[i].id_address_delivery == id_address_delivery)
+						if (jsonData.summary.products[i].id_product === productId
+							&& jsonData.summary.products[i].id_product_attribute === productAttributeId
+							&& jsonData.summary.products[i].id_address_delivery === id_address_delivery)
 							exist = true;
 
 					// if all customization removed => delete product line
@@ -339,12 +341,12 @@ function deleteProductFromSummary(id)
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-				if (typeof(getCarrierListAndUpdate) != 'undefined')
+				if (typeof(getCarrierListAndUpdate) !== 'undefined')
 					getCarrierListAndUpdate();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			if (textStatus != 'abort')
+			if (textStatus !== 'abort')
 				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
@@ -356,7 +358,7 @@ function refreshOddRow()
 	var even_class = 'even';
 	$.each($('.cart_item'), function(i, it)
 	{
-		if (i == 0) // First item
+		if (i === 0) // First item
 		{
 			if ($(this).hasClass('even'))
 			{
@@ -375,7 +377,7 @@ function refreshOddRow()
 
 function upQuantity(id, qty)
 {
-	if (typeof(qty) == 'undefined' || !qty)
+	if (typeof(qty) === 'undefined' || !qty)
 		qty = 1;
 	var customizationId = 0;
 	var productId = 0;
@@ -384,11 +386,11 @@ function upQuantity(id, qty)
 	var ids = 0;
 	ids = id.split('_');
 	productId = parseInt(ids[0]);
-	if (typeof(ids[1]) != 'undefined')
+	if (typeof(ids[1]) !== 'undefined')
 		productAttributeId = parseInt(ids[1]);
-	if (typeof(ids[2]) != 'undefined')
+	if (typeof(ids[2]) !== 'undefined')
 		customizationId = parseInt(ids[2]);
-	if (typeof(ids[3]) != 'undefined')
+	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
 		type: 'GET',
@@ -404,7 +406,7 @@ function upQuantity(id, qty)
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
 			+'&id_address_delivery='+id_address_delivery
-			+ ( (customizationId != 0) ? '&id_customization='+customizationId : '')
+			+ ( (customizationId !== 0) ? '&id_customization='+customizationId : '')
 			+'&qty='+qty
 			+'&token='+static_token
 			+'&allow_refresh=1',
@@ -413,9 +415,9 @@ function upQuantity(id, qty)
 			if (jsonData.hasError)
 			{
 				var errors = '';
-				for(error in jsonData.errors)
+				for(var error in jsonData.errors)
 					//IE6 bug fix
-					if(error != 'indexOf')
+					if(error !== 'indexOf')
 						errors += jsonData.errors[error] + "\n";
 				alert(errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
@@ -428,12 +430,12 @@ function upQuantity(id, qty)
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-				if (typeof(getCarrierListAndUpdate) != 'undefined')
+				if (typeof(getCarrierListAndUpdate) !== 'undefined')
 					getCarrierListAndUpdate();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			if (textStatus != 'abort')
+			if (textStatus !== 'abort')
 				alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
@@ -443,7 +445,7 @@ function downQuantity(id, qty)
 {
 	var val = $('input[name=quantity_'+id+']').val();
 	var newVal = val;
-	if(typeof(qty)=='undefined' || !qty)
+	if(typeof(qty) === 'undefined' || !qty)
 	{
 		qty = 1;
 		newVal = val - 1;
@@ -459,11 +461,11 @@ function downQuantity(id, qty)
 	
 	ids = id.split('_');
 	productId = parseInt(ids[0]);
-	if (typeof(ids[1]) != 'undefined')
+	if (typeof(ids[1]) !== 'undefined')
 		productAttributeId = parseInt(ids[1]);
-	if (typeof(ids[2]) != 'undefined')
+	if (typeof(ids[2]) !== 'undefined')
 		customizationId = parseInt(ids[2]);
-	if (typeof(ids[3]) != 'undefined')
+	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 
 	if (newVal > 0 || $('#product_'+id+'_gift').length)
@@ -483,7 +485,7 @@ function downQuantity(id, qty)
 				+'&ipa='+productAttributeId
 				+'&id_address_delivery='+id_address_delivery
 				+'&op=down'
-				+ ((customizationId != 0) ? '&id_customization='+customizationId : '')
+				+ ((customizationId !== 0) ? '&id_customization='+customizationId : '')
 				+'&qty='+qty
 				+'&token='+static_token
 				+'&allow_refresh=1',
@@ -492,9 +494,9 @@ function downQuantity(id, qty)
 				if (jsonData.hasError)
 				{
 					var errors = '';
-					for(error in jsonData.errors)
+					for(var error in jsonData.errors)
 						//IE6 bug fix
-						if(error != 'indexOf')
+						if(error !== 'indexOf')
 							errors += jsonData.errors[error] + "\n";
 					alert(errors);
 					$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
@@ -508,15 +510,15 @@ function downQuantity(id, qty)
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 					
-					if (newVal == 0)
+					if (newVal === 0)
 						$('#product_'+id).hide();
 					
-					if (typeof(getCarrierListAndUpdate) != 'undefined')
+					if (typeof(getCarrierListAndUpdate) !== 'undefined')
 						getCarrierListAndUpdate();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				if (textStatus != 'abort')
+				if (textStatus !== 'abort')
 					alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			}
 		});
@@ -534,7 +536,7 @@ function updateCartSummary(json)
 	var i;
 	var nbrProducts = 0;
 
-	if (typeof json == 'undefined')
+	if (typeof json === 'undefined')
 		return;
 
 	$('.cart_quantity_input').val(0);
@@ -547,7 +549,7 @@ function updateCartSummary(json)
 	{
 		for (i=0;i<json.gift_products.length;i++)
 		{
-			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) != 'undefined')
+			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) !== 'undefined')
 				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery].quantity -= json.gift_products[i].cart_quantity;
 		}
 	}
@@ -555,7 +557,7 @@ function updateCartSummary(json)
 	{
 		for (i=0;i<json.gift_products.length;i++)
 		{
-			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) == 'undefined')
+			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) === 'undefined')
 				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery] = json.gift_products[i];
 		}
 	}
@@ -566,16 +568,16 @@ function updateCartSummary(json)
 		var reduction = product_list[i].reduction_applies;
 		var initial_price_text = '';
 		initial_price = '';
-		if (typeof(product_list[i].price_without_quantity_discount) != 'undefined')
+		if (typeof(product_list[i].price_without_quantity_discount) !== 'undefined')
 			initial_price = formatCurrency(product_list[i].price_without_quantity_discount, currencyFormat, currencySign, currencyBlank);
 		var current_price = '';
-		if (priceDisplayMethod != 0)
+		if (priceDisplayMethod !== 0)
 			current_price = formatCurrency(product_list[i].price, currencyFormat, currencySign, currencyBlank);
 		else
 			current_price = formatCurrency(product_list[i].price_wt, currencyFormat, currencySign, currencyBlank);
-		if (reduction && typeof(initial_price) != 'undefined')
+		if (reduction && typeof(initial_price) !== 'undefined')
 		{
-			if (initial_price != '' && initial_price > current_price)
+			if (initial_price !== '' && initial_price > current_price)
 				initial_price_text = '<span style="text-decoration:line-through;">'+initial_price+'</span><br />';
 		}
 
@@ -583,7 +585,7 @@ function updateCartSummary(json)
 
 		$('#cart_block_product_'+key_for_blockcart+' span.quantity').html(product_list[i].quantity);
 
-		if (priceDisplayMethod != 0)
+		if (priceDisplayMethod !== 0)
 		{
 			$('#cart_block_product_'+key_for_blockcart+' span.price').html(formatCurrency(product_list[i].total, currencyFormat, currencySign, currencyBlank));
 			$('#product_price_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+product_list[i].id_address_delivery).html(initial_price_text+current_price);
@@ -600,7 +602,7 @@ function updateCartSummary(json)
 		$('input[name=quantity_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_0_'+product_list[i].id_address_delivery+']').val(product_list[i].quantity_without_customization);
 		$('input[name=quantity_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_0_'+product_list[i].id_address_delivery+'_hidden]').val(product_list[i].quantity_without_customization);
 		
-		if (typeof(product_list[i].customizationQuantityTotal) != 'undefined')
+		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined')
 		{
 			$('#cart_quantity_custom_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+product_list[i].id_address_delivery)
 					.html(product_list[i].customizationQuantityTotal);
@@ -608,24 +610,24 @@ function updateCartSummary(json)
 					.val(product_list[i].customizationQuantityTotal);
 		}
 		// Show / hide quantity button if minimal quantity
-		if (parseInt(product_list[i].minimal_quantity) == parseInt(product_list[i].quantity) && product_list[i].minimal_quantity != 1)
+		if (parseInt(product_list[i].minimal_quantity) === parseInt(product_list[i].quantity) && product_list[i].minimal_quantity !== 1)
 			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',0.3);
 		else
 			$('#cart_quantity_down_'+product_list[i].id_product+'_'+product_list[i].id_product_attribute+'_'+Number(product_list[i].id_customization)+'_'+product_list[i].id_address_delivery).fadeTo('slow',1);
 	}
 
 	// Update discounts
-	if (json.discounts.length == 0)
+	if (json.discounts.length === 0)
 	{
-		$('.cart_discount').each(function(){$(this).remove()});
+		$('.cart_discount').each(function(){$(this).remove();});
 		$('.cart_total_voucher').remove();
 	}
 	else
 	{
-		if ($('.cart_discount').length == 0)
+		if ($('.cart_discount').length === 0)
 			location.reload();
 
-		if (priceDisplayMethod != 0)
+		if (priceDisplayMethod !== 0)
 			$('#total_discount').html(formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
 		else
 			$('#total_discount').html(formatCurrency(json.total_discounts, currencyFormat, currencySign, currencyBlank));
@@ -636,11 +638,11 @@ function updateCartSummary(json)
 
 			for (i=0;i<json.discounts.length;i++)
 			{
-				if (json.discounts[i].id_discount == idElmt)
+				if (json.discounts[i].id_discount === idElmt)
 				{
-					if (json.discounts[i].value_real != '!')
+					if (json.discounts[i].value_real !== '!')
 					{
-						if (priceDisplayMethod != 0)
+						if (priceDisplayMethod !== 0)
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_tax_exc * -1, currencyFormat, currencySign, currencyBlank));
 						else
 							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_real * -1, currencyFormat, currencySign, currencyBlank));
@@ -655,7 +657,7 @@ function updateCartSummary(json)
 	}
 
 	// Block cart
-	if (priceDisplayMethod != 0)
+	if (priceDisplayMethod !== 0)
 	{
 		$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
 		$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping_tax_exc, currencyFormat, currencySign, currencyBlank));
@@ -671,7 +673,7 @@ function updateCartSummary(json)
 
 	// Cart summary
 	$('#summary_products_quantity').html(nbrProducts+' '+(nbrProducts > 1 ? txtProducts : txtProduct));
-	if (priceDisplayMethod != 0)
+	if (priceDisplayMethod !== 0)
 		$('#total_product').html(formatCurrency(json.total_products, currencyFormat, currencySign, currencyBlank));
 	else
 		$('#total_product').html(formatCurrency(json.total_products_wt, currencyFormat, currencySign, currencyBlank));
@@ -681,7 +683,7 @@ function updateCartSummary(json)
 
 	if (json.total_shipping > 0)
 	{
-		if (priceDisplayMethod != 0)
+		if (priceDisplayMethod !== 0)
 		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
 		}
@@ -719,10 +721,10 @@ function updateCartSummary(json)
 
 function updateCustomizedDatas(json)
 {
-	for(i in json)
-		for(j in json[i])
-			for(k in json[i][j])
-				for(l in json[i][j][k])
+	for(var i in json)
+		for(var j in json[i])
+			for(var k in json[i][j])
+				for(var l in json[i][j][k])
 				{
 					var quantity = json[i][j][k][l]['quantity'];
 					$('input[name=quantity_'+i+'_'+j+'_'+l+'_'+k+'_hidden]').val(quantity);
@@ -745,7 +747,7 @@ function refreshDeliveryOptions()
 	$.each($('.delivery_option_radio'), function() {
 		if ($(this).prop('checked'))
 		{
-			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length == 0)
+			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length === 0)
 				$(this).parent().find('.delivery_option_carrier').show();
 			var carrier_id_list = $(this).val().split(',');
 			carrier_id_list.pop();
@@ -778,7 +780,7 @@ $(document).ready(function() {
 				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (typeof(getCarrierListAndUpdate) != 'undefined')
+				if (typeof(getCarrierListAndUpdate) !== 'undefined')
 					getCarrierListAndUpdate();
 			}
 		});
@@ -800,10 +802,12 @@ $(document).ready(function() {
 
 function updateExtraCarrier(id_delivery_option, id_address)
 {
-	if(typeof(orderOpcUrl) != 'undefined')
-		var url = orderOpcUrl;
+	var url = "";
+
+	if(typeof(orderOpcUrl) !== 'undefined')
+		url = orderOpcUrl;
 	else
-		var url = orderUrl;
+		url = orderUrl;
 	
 	$.ajax({
 		type: 'POST',

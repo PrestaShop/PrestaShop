@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6664 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -40,7 +39,7 @@
 				{foreach from=$multipleAddresses item=address name=myLoop}
 				<li>
 					<a href="{$link->getPageLink('address', true, null, "id_address={$address.object.id|intval}")}" title="{l s='Update'}" data-ajax="false">
-						<h4>{$address.object.alias}</h4>
+						<p class="title_block">{$address.object.alias}</p>
 						{foreach from=$address.ordered name=adr_loop item=pattern}
 							{assign var=addressKey value=" "|explode:$pattern}
 							{foreach from=$addressKey item=key name="word_loop"}

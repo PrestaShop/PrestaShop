@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7383 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -105,8 +104,8 @@ function	rewriteSettingsFile($baseUrls = NULL, $theme = NULL, $arrayDB = NULL)
 	$content = "<?php\n\n";
 	foreach ($defines as $k => $value)
 		$content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
-	$content .= "\n?>";
-	if ($fd = @fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
+	copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
+	if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
 	{
 		fwrite($fd, $content);
 		fclose($fd);

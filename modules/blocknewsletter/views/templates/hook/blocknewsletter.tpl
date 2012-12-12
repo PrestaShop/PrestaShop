@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +26,7 @@
 <!-- Block Newsletter module-->
 
 <div id="newsletter_block_left" class="block">
-	<h4>{l s='Newsletter' mod='blocknewsletter'}</h4>
+	<p class="title_block">{l s='Newsletter' mod='blocknewsletter'}</p>
 	<div class="block_content">
 	{if isset($msg) && $msg}
 		<p class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</p>

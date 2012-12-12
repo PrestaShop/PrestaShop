@@ -1,12 +1,12 @@
 #history #left_column {display:none}
 #history #center_column{width:757px}
 #history #center_column h1{margin-top:20px}
-#history #center_column h4{
+#history #center_column .title_block {
 	margin:20px 0;
 	padding:15px 20px;
 	background:#ccc
 }
-#history #center_column h4 input {
+#history #center_column .title_block  input {
 	position: relative;
    top: -8px;
 	float:right;

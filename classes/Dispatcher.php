@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -244,7 +243,6 @@ class DispatcherCore
 		$this->getController();
 		if (!$this->controller)
 			$this->controller = $this->default_controller;
-
 		// Dispatch with right front controller
 		switch ($this->front_controller)
 		{
@@ -385,6 +383,19 @@ class DispatcherCore
 	{
 		$context = Context::getContext();
 		
+		// Load custom routes from modules
+		$modules_routes = Hook::exec('moduleRoutes', array(), null, true, false);
+		if (is_array($modules_routes) && count($modules_routes))
+		foreach($modules_routes as $module_route)
+		  foreach($module_route as $route => $route_details)
+		    if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
+		      && array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
+		      {
+			      if (!isset($this->default_routes[$route]))
+			      	$this->default_routes[$route] = array();
+			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
+				}
+
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
 			foreach ($this->default_routes as $id => $route)
@@ -579,7 +590,8 @@ class DispatcherCore
 
 			if (!array_key_exists($key, $params))
 				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
-			$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
+			if (isset($this->default_routes[$route_id]))
+				$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}
 
 		// Build an url which match a route
@@ -633,10 +645,13 @@ class DispatcherCore
 	 * @return string
 	 */
 	public function getController()
-	{
+	{		
 		if ($this->controller)
+		{
+			$_GET['controller'] = $this->controller;
 			return $this->controller;
-
+		}
+	
 		$controller = Tools::getValue('controller');
 	
 		if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))

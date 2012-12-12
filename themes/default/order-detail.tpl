@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,10 +26,10 @@
 <form action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 	<div>
 		<input type="hidden" value="{$order->id}" name="id_order"/>
-		<h4>
+		<p class="title_block">
 			<input type="submit" value="{l s='Reorder'}" name="submitReorder" class="button exclusive" />
 			{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}
-		</h4>
+		</p>
 	</div>
 </form>
 
@@ -40,7 +39,7 @@
 {if $invoice AND $invoiceAllowed}
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
-	<a href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file'}</a>
+	<a target="_blank" href="{$link->getPageLink('pdf-invoice', true)}?id_order={$order->id|intval}{if $is_guest}&secure_key={$order->secure_key}{/if}">{l s='Download your invoice as a PDF file'}</a>
 </p>
 {/if}
 {if $order->recyclable}

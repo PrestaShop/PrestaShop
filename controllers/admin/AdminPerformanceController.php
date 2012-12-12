@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -688,38 +687,43 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
-				$settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$prev_settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$new_settings = $prev_settings;
 				if ($algo)
 				{
 					if (!function_exists('mcrypt_encrypt'))
 						$this->errors[] = Tools::displayError('PHP "Mcrypt" extension is not activated on this server.');
 					else
 					{
-						if (!strstr($settings, '_RIJNDAEL_KEY_'))
+						if (!strstr($new_settings, '_RIJNDAEL_KEY_'))
 						{
 							$key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
 							$key = Tools::passwdGen($key_size);
-							$settings = preg_replace(
+							$new_settings = preg_replace(
 								'/define\(\'_COOKIE_KEY_\', \'([a-z0-9=\/+-_]+)\'\);/i',
 								'define(\'_COOKIE_KEY_\', \'\1\');'."\n".'define(\'_RIJNDAEL_KEY_\', \''.$key.'\');',
-								$settings
+								$new_settings
 							);
 						}
-						if (!strstr($settings, '_RIJNDAEL_IV_'))
+						if (!strstr($new_settings, '_RIJNDAEL_IV_'))
 						{
 							$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
 							$iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
-							$settings = preg_replace(
+							$new_settings = preg_replace(
 								'/define\(\'_COOKIE_IV_\', \'([a-z0-9=\/+-_]+)\'\);/i',
 								'define(\'_COOKIE_IV_\', \'\1\');'."\n".'define(\'_RIJNDAEL_IV_\', \''.$iv.'\');',
-								$settings
+								$new_settings
 							);
 						}
 					}
 				}
 				if (!count($this->errors))
 				{
-					if (file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $settings))
+					// If there is not settings file modification or if the backup and replacement of the settings file worked
+					if ($new_settings == $prev_settings || (
+						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
+						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+					))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
 						$redirecAdmin = true;
@@ -736,7 +740,8 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$prev_settings = file_get_contents(dirname(__FILE__).'/../../config/settings.inc.php');
+				$new_settings = $prev_settings;
 				if (!Tools::getValue('active'))
 					$cache_active = 0;
 				else
@@ -744,10 +749,10 @@ class AdminPerformanceControllerCore extends AdminController
 				if (!$caching_system = Tools::getValue('caching_system'))
 					$this->errors[] = Tools::displayError('Caching system is missing');
 				else
-					$settings = preg_replace(
+					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]+)\'\);/Ui',
 						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
-						$settings
+						$new_settings
 					);
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
@@ -780,8 +785,12 @@ class AdminPerformanceControllerCore extends AdminController
 
 				if (!count($this->errors))
 				{
-					$settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([0-9])\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $settings);
-					if (file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $settings))
+					$new_settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([0-9])\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $new_settings);
+					// If there is not settings file modification or if the backup and replacement of the settings file worked
+					if ($new_settings == $prev_settings || (
+						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
+						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+					))
 						$redirecAdmin = true;
 					else
 						$this->errors[] = Tools::displayError('Cannot overwrite settings file.');

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7499 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -518,6 +517,54 @@ abstract class ObjectModelCore
 		Hook::exec('actionObject'.get_class($this).'AddAfter', array('object' => $this));
 
 		return $result;
+	}
+	
+	/**
+	 * Duplicate current object to database
+	 *
+	 * @return new object
+	 */
+	public function duplicateObject()
+	{
+		$definition = ObjectModel::getDefinition($this);
+
+		$res = Db::getInstance()->getRow('
+					SELECT * 
+					FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
+					WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
+				);
+		if (!$res)
+			return false;
+		unset($res[$definition['primary']]);
+
+		if (!Db::getInstance()->insert($definition['table'], $res))
+			return false;
+		
+		$object_id = Db::getInstance()->Insert_ID();
+		
+		if ($definition['multilang'])
+		{
+			$res = Db::getInstance()->executeS('
+						SELECT * 
+						FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+						WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
+					);
+
+			if (!$res)
+				return false;
+			
+			foreach ($res as $row)
+			{
+				$row[$definition['primary']] = (int)$object_id;	
+				if (!Db::getInstance()->insert($definition['table'].'_lang', $row))
+					return false;
+				}
+		}
+	
+		$object_duplicated = new $definition['classname']((int)$object_id);
+		$object_duplicated->duplicateShops((int)$this->id);
+		
+		return $object_duplicated;
 	}
 
 	/**
@@ -1256,7 +1303,7 @@ abstract class ObjectModelCore
 		}
 
 		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
-				'.Shop::addSqlAssociation($def['table'], 'a').'
+				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
 				SET '.implode(', ', $update_data).'
 				WHERE '.$where;
 		return Db::getInstance()->execute($sql);

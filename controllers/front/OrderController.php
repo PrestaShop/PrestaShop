@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7095 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +58,7 @@ class OrderControllerCore extends ParentOrderController
 		{
 			$this->step = 0;
 			$this->errors[] = sprintf(
-				Tools::displayError('A minimum purchase total of %d is required in order to validate your order.'),
+				Tools::displayError('A minimum purchase total of %s is required in order to validate your order.'),
 				Tools::displayPrice($minimal_purchase, $currency)
 			);
 		}
@@ -271,6 +270,10 @@ class OrderControllerCore extends ParentOrderController
 			{
 				$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
 				$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+				
+				CartRule::autoRemoveFromCart($this->context);
+				CartRule::autoAddToCart($this->context);
+				
 				if (!$this->context->cart->update())
 					$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
 
@@ -324,8 +327,7 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->cart->autosetProductAddress();
 
 		$this->context->smarty->assign('cart', $this->context->cart);
-		if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=order&step=2');
+
 	}
 
 	/**

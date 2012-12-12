@@ -18,7 +18,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -53,7 +52,7 @@ function str2url(str,encoding,ucfirst)
 
 function copy2friendlyURL()
 {
-	if (!$('#link_rewrite_' + id_language).val().length)//check if user didn't type anything in rewrite field, to prevent overwriting
+	if (!$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
@@ -570,6 +569,56 @@ function toggleDraftWarning(show)
 		$('.draft').hide();
 	else
 		$('.draft').show();
+}
+
+function showRedirectProductOptions(show)
+{
+	if (show)
+		$('.redirect_product_options').fadeIn();
+	else
+		$('.redirect_product_options').fadeOut();
+	
+	redirectSelectChange();
+}
+
+function redirectSelectChange()
+{
+	if ($('#redirect_type :selected').val() == '404')
+		showRedirectProductSelectOptions(false);
+	else
+		showRedirectProductSelectOptions(true);
+}
+
+function addRelatedProduct(id_product_to_add, product_name)
+{
+	if (!id_product_to_add || id_product == id_product_to_add)
+		return;
+	$('#related_product_name').html(product_name);
+	$('#related_product_name').parent('p').css('margin-top', 0);
+	$('input[name=id_product_redirected]').val(id_product_to_add);
+	$('#related_product_autocomplete_input').hide();
+	$('#related_product_remove').show();
+}
+
+function removeRelatedProduct()
+{
+	$('#related_product_name').html(no_related_product);
+	$('#related_product_name').parent('p').css('margin-top', '0.5em');
+	$('input[name=id_product_redirected]').val(0);
+	$('#related_product_remove').hide();
+	$('#related_product_autocomplete_input').fadeIn();
+}
+
+function showRedirectProductSelectOptions(show)
+{
+	if (show)
+		$('.redirect_product_options_product_choise').show();
+	else
+	{
+		$('.redirect_product_options_product_choise').hide();
+		removeRelatedProduct();
+	}
+		
 }
 
 function showOptions(show)

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7483 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -166,7 +165,7 @@ class FrontControllerCore extends Controller
 		/* Theme is missing */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\'))));
-		
+
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
@@ -253,12 +252,6 @@ class FrontControllerCore extends Controller
 			CartRule::autoAddToCart($this->context);
 		}
 
-		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
-		setlocale(LC_COLLATE, $locale);
-		setlocale(LC_CTYPE, $locale);
-		setlocale(LC_TIME, $locale);
-		setlocale(LC_NUMERIC, 'en_US.UTF-8');
-
 		/* get page name to display it in body id */
 
 		// Are we in a payment module
@@ -270,7 +263,7 @@ class FrontControllerCore extends Controller
 			$page_name = $this->page_name;
 		elseif (!empty($this->php_self))
 			$page_name = $this->php_self;
-		elseif (Tools::getValue('fc') == 'module' && $module_name != '' && is_a($module_name, 'PaymentModule'))
+		elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule))
 			$page_name = 'module-payment-submit';
 		// @retrocompatibility Are we in a module ?
 		elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
@@ -299,6 +292,7 @@ class FrontControllerCore extends Controller
 		{
 			$infos = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 			$country = new Country((int)$infos['id_country']);
+			$this->context->country = $country;
 			if (Validate::isLoadedObject($country))
 				$display_tax_label = $country->display_tax_label;
 		}
@@ -402,10 +396,8 @@ class FrontControllerCore extends Controller
 		if ($this->restrictedCountry)
 			$this->displayRestrictedCountryPage();
 
-		//live edit
-		if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
-			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
-				die(Tools::displayError());
+		if (Tools::isSubmit('live_edit') && !$this->checkLiveEditAccess())
+			die(Tools::displayError());
 
 		$this->iso = $iso;
 		$this->setMedia();
@@ -413,7 +405,7 @@ class FrontControllerCore extends Controller
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 	}
-
+	
 	public function postProcess()
 	{
 		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
@@ -549,23 +541,24 @@ class FrontControllerCore extends Controller
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-
+		
+		$live_edit_content = '';
 		// Don't use live edit if on mobile device
-		if ($this->context->getMobileDevice() == false && Tools::isSubmit('live_edit'))
-			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
-
+		if (!$this->context->getMobileDevice() && $this->checkLiveEditAccess())
+			$live_edit_content = $this->getLiveEditFooter();
+		
 		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
+				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template).$live_edit_content);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
 				$this->displayContent();
 				$template = ob_get_contents();
 				ob_clean();
-				$this->context->smarty->assign('template', $template);
+				$this->context->smarty->assign('template', $template.$live_edit_content);
 			}
 			$this->smartyOutputContent($layout);
 		}
@@ -583,16 +576,9 @@ class FrontControllerCore extends Controller
 
 			if ($this->display_footer)
 				$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-
-			// live edit
-			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
-			{
-				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-				$this->smartyOutputContent(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
-			}
 			// END - 1.4 retrocompatibility - will be removed in 1.6
 		}
-
+				
 		return true;
 	}
 
@@ -605,12 +591,8 @@ class FrontControllerCore extends Controller
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 			{
 				header('HTTP/1.1 503 temporarily overloaded');
-				$this->context->smarty->assign(array(
-					'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-					'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
-					'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
-					'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
-				));
+				
+				$this->context->smarty->assign($this->initLogoAndFavicon());
 
 				$template_dir = ($this->context->getMobileDevice() == true ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_);
 				$this->smartyOutputContent($template_dir.'maintenance.tpl');
@@ -657,6 +639,9 @@ class FrontControllerCore extends Controller
 				$final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url).'?'.$str_params;
 			else
 				$final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
+
+			// Don't send any cookie
+			Context::getContext()->cookie->disallowWriting();
 
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$final_url.'">'.$final_url.'</a>');
@@ -782,13 +767,11 @@ class FrontControllerCore extends Controller
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'static_token' => Tools::getToken(false),
 			'token' => Tools::getToken(),
-			'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
-			'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only'),
-			'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME'),
-			'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
 		));
+				
+		$this->context->smarty->assign($this->initLogoAndFavicon());
 	}
 
 	public function initFooter()
@@ -802,16 +785,21 @@ class FrontControllerCore extends Controller
 		));
 
 	}
-
+	
+	public function checkLiveEditAccess()
+	{
+		$live_token = Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'));
+		$ad = Tools::getValue('ad');
+		return Tools::isSubmit('live_edit') && $ad && Tools::getValue('liveToken') == $live_token && is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad);
+	}
+	
 	public function getLiveEditFooter()
 	{
-		if (Tools::isSubmit('live_edit')
-			&& ($ad = Tools::getValue('ad'))
-			&& Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+		if ($this->checkLiveEditAccess())
 		{
 			$data = $this->context->smarty->createData();
 			$data->assign(array(
-				'ad' => $ad,
+				'ad' => Tools::getValue('ad'),
 				'live_edit' => true,
 				'hook_list' => Hook::$executed_hooks,
 				'id_shop' => $this->context->shop->id
@@ -864,10 +852,7 @@ class FrontControllerCore extends Controller
 		$this->p = abs((int)Tools::getValue('p', 1));
 
 		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
-		{
-			$this->redirect_after = '404';
-			$this->redirect();
-		}
+			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
 
 		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
 		//delete parameter page
@@ -881,13 +866,9 @@ class FrontControllerCore extends Controller
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
-		if ($this->p > (($nbProducts / $this->n) + 1))
-		{
-			$this->redirect_after = preg_replace('/[&?]p=\d+/', '', $_SERVER['REQUEST_URI']);
-			$this->redirect();
-		}
-
 		$pages_nb = ceil($nbProducts / (int)$this->n);
+		if ($this->p > $pages_nb)
+			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$start = (int)($this->p - $range);
 		if ($start < 1)
@@ -1144,5 +1125,22 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign($assign);
 		$this->template = $template;
+	}
+	
+	/**
+	 * Return an array with specific logo and favicon, 
+	 * if mobile device
+	 *
+	 * @since 1.5
+	 * @return array
+	 */
+	public function initLogoAndFavicon()
+	{
+		return array(
+ 				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
+            'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+            'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
+            'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
+  				);
 	}
 }

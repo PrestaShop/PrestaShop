@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -111,8 +110,7 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
-			$id_current_shop_group = Shop::getContextShopGroupID();
-			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_shop_group);
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false);
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);
 

@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -57,7 +56,7 @@ $(function () {ldelim}
 					</div>
 					{/if}
 					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
-					<h4><span class="product_name">{$product.details->name}</span></h4>
+					<p class="title_block"><span class="product_name">{$product.details->name}</span></p>
 					<p class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</p>
 				</div>
 			{/foreach}

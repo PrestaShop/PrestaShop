@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -120,7 +119,7 @@ class ImageManagerCore
 	 */
 	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
-		if (!file_exists($src_file))
+		if (!file_exists($src_file) || !filesize($src_file))
 			return false;
 		list($src_width, $src_height, $type) = getimagesize($src_file);
 

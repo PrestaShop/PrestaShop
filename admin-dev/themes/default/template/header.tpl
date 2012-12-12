@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -169,6 +168,7 @@
 						<option value="3" {if {$search_type} == 3} selected="selected" {/if}>{l s='orders'}</option>
 						<option value="4" {if {$search_type} == 4} selected="selected" {/if}>{l s='invoices'}</option>
 						<option value="5" {if {$search_type} == 5} selected="selected" {/if}>{l s='carts'}</option>
+						<option value="7" {if {$search_type} == 7} selected="selected" {/if}>{l s='modules'}</option>
 					</select>
 					<input type="submit" id="bo_search_submit" class="button" value="{l s='Search'}"/>
 				</form>

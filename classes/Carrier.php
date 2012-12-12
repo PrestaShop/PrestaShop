@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -842,6 +841,8 @@ class CarrierCore extends ObjectModel
 			UPDATE `'._DB_PREFIX_.$this->def['table'].'`
 			SET `id_reference` = '.(int)$id_reference.'
 			WHERE `id_carrier` = '.(int)$this->id);
+
+		$this->id_reference = (int)$id_reference;
 
 		// Copy tax rules group
 		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_tax_rules_group_shop` (`id_carrier`, `id_tax_rules_group`, `id_shop`)

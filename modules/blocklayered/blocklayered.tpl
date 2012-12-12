@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 12542 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 *}
@@ -35,7 +34,7 @@ param_product_url = '';
 {/if}
 </script>
 <div id="layered_block_left" class="block">
-	<h4>{l s='Catalog' mod='blocklayered'}</h4>
+	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>
 	<div class="block_content">
 		<form action="#" id="layered_form">
 			<div>
