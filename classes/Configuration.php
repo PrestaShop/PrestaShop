@@ -368,12 +368,9 @@ class ConfigurationCore extends ObjectModel
 					));
 				}
 			}
-			if (!$is_i18n)
-				Configuration::set($key, $value, $id_shop_group, $id_shop);
 		}
 
-		if ($is_i18n)
-			Configuration::set($key, $values, $id_shop_group, $id_shop);
+		Configuration::set($key, $values, $id_shop_group, $id_shop);
 
 		return $result;
 	}
