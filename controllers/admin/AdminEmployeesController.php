@@ -190,7 +190,14 @@ class AdminEmployeesControllerCore extends AdminController
 					'size' => 33,
 					'desc' => ($obj->id ?
 								$this->l('Leave blank if you do not want to change your password') :
-									$this->l('Min. 8 characters; use only letters, numbers or').' -_')
+									$this->l('Min. 8 characters; use only letters, numbers or').' -_'),
+					'autocomplete' => '',
+					'class' => 'passwd_selector'
+				),
+				array(
+					'type' => 'hidden',
+					'id' => 'generated_passwd',
+					'name' => 'generated_passwd'
 				),
 				array(
 					'type' => 'text',
@@ -329,6 +336,7 @@ class AdminEmployeesControllerCore extends AdminController
 		);
 
 		$this->fields_value['passwd'] = false;
+		$this->fields_value['generated_passwd'] = Tools::passwdGen();
 
 		if (empty($obj->id))
 			$this->fields_value['id_lang'] = $this->context->language->id;
