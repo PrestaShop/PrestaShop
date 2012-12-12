@@ -1490,6 +1490,7 @@ CREATE TABLE `PREFIX_product_attribute_image` (
 CREATE TABLE `PREFIX_product_download` (
   `id_product_download` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_product` int(10) unsigned NOT NULL,
+  `id_product_attribute` INT( 10 ) NOT NULL,
   `display_filename` varchar(255) DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `date_add` datetime NOT NULL,

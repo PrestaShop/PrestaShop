@@ -28,6 +28,9 @@ class ProductDownloadCore extends ObjectModel
 {
 	/** @var integer Product id which download belongs */
 	public $id_product;
+	
+	/** @var integer Product attribute id which download belongs */
+	public $id_product_attribute;
 
 	/** @var string DisplayFilename the name which appear */
 	public $display_filename;
@@ -54,6 +57,7 @@ class ProductDownloadCore extends ObjectModel
 	public $is_shareable = 0;
 
 	protected static $_productIds = array();
+	protected static $_productIdAttributes = array();
 
 	/**
 	 * @see ObjectModel::$definition
@@ -63,6 +67,7 @@ class ProductDownloadCore extends ObjectModel
 		'primary' => 'id_product_download',
 		'fields' => array(
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'display_filename' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
 			'filename' => 				array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -313,5 +318,28 @@ class ProductDownloadCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		return Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE');
+	}
+	
+	/**
+	 * Return the id_product_download from an id_product
+	 *
+	 * @param int $id_product Product the id
+	 * @return integer Product the id for this virtual product
+	 */
+	public static function getIdFromCombination($id_product, $id_product_attribute)
+	{
+		if (!ProductDownload::isFeatureActive())
+			return false;
+		if (array_key_exists($id_product_attribute, self::$_productIdAttributes))
+			return self::$_productIdAttributes[$id_product_attribute];
+		self::$_productIdAttributes[$id_product_attribute] = (int)Db::getInstance()->getValue('
+		SELECT `id_product_download`
+		FROM `'._DB_PREFIX_.'product_download`
+		WHERE `id_product` = '.(int)$id_product.' 
+		AND `id_product_attribute` = '.(int)$id_product_attribute.' 
+		AND `active` = 1
+		ORDER BY `id_product_download` DESC');
+
+		return self::$_productIdAttributes[$id_product_attribute];
 	}
 }
