@@ -68,7 +68,7 @@
 	var txtThereis = "{l s='There is' js=1}";
 	var txtErrors = "{l s='error(s)' js=1}";
 	var txtDeliveryAddress = "{l s='Delivery address' js=1}";
-	var txtInvoiceAddress = "{l s='Invoice address'}" js=1;
+	var txtInvoiceAddress = "{l s='Invoice address' js=1}";
 	var txtModifyMyAddress = "{l s='Modify my address' js=1}";
 	var txtInstantCheckout = "{l s='Instant checkout' js=1}";
 	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address' js=1}";
