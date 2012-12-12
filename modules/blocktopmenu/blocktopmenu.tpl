@@ -3,6 +3,7 @@
 
 	<!-- Menu -->
 	<div class="sf-contener clearfix">
+		<nav role="navigation">
 		<ul class="sf-menu clearfix">
 			{$MENU}
 			{if $MENU_SEARCH}
@@ -18,6 +19,7 @@
 				</li>
 			{/if}
 		</ul>
+                </nav>
 		<div class="sf-right">&nbsp;</div>
 
 	<!--/ Menu -->

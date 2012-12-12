@@ -149,6 +149,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 </script>
 
 {include file="$tpl_dir./breadcrumb.tpl"}
+<article itemscope itemtype="http://schema.org/Product">
 <div id="primary_block" class="clearfix">
 
 	{if isset($adminActionDisplay) && $adminActionDisplay}
@@ -175,7 +176,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		<div id="image-block">
 		{if $have_image}
 			<span id="view_full_size">
-				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
 				<span class="span_link">{l s='View full size'}</span>
 			</span>
 		{else}
@@ -218,12 +219,12 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 	<!-- left infos-->
 	<div id="pb-left-column">
-		<h1>{$product->name|escape:'htmlall':'UTF-8'}</h1>
+		<h1 itemprop="name">{$product->name|escape:'htmlall':'UTF-8'}</h1>
 
 		{if $product->description_short OR $packItems|@count > 0}
 		<div id="short_description_block">
 			{if $product->description_short}
-				<div id="short_description_content" class="rte align_justify">{$product->description_short}</div>
+				<div itemprop="description" id="short_description_content" class="rte align_justify">{$product->description_short}</div>
 			{/if}
 			{if $product->description}
 			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
@@ -258,7 +259,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 		{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference OR (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 		<!-- add to cart form-->
-		<form id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')}" method="post">
+		<form itemprop="offers" itemscope itemtype="http://schema.org/Offer" id="buy_block" {if $PS_CATALOG_MODE AND !isset($groups) AND $product->quantity > 0}class="hidden"{/if} action="{$link->getPageLink('cart')}" method="post">
 
 			<!-- hidden datas -->
 			<p class="hidden">
@@ -315,7 +316,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 			<p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<label for="product_reference">{l s='Reference:'} </label>
-				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
+				<span itemprop="sku" class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
 
 			<!-- quantity wanted -->
@@ -337,7 +338,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>
+				<span itemprop="availability" href="http://schema.org/{if $product->quantity <= 0}{if $allow_oosp}PreOrder{else}OutOfStock{/if}{else}{if $product->online_only}OnlineOnly{else}InStock{/if}{/if}" id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>
 				{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}
 				</span>
 			</p>
@@ -378,7 +379,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 				<p class="our_price_display">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					<span id="our_price_display">{convertPrice price=$productPrice}</span>
+					<span itemprop="price" id="our_price_display">{convertPrice price=$productPrice}</span>
 					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
 						{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 					{/if}-->
@@ -630,6 +631,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
 	</div>
 {/if}
-
+</article>
 {/if}
 
