@@ -74,13 +74,13 @@ var stock_management = {$stock_management|intval};
 {/if}
 {if !$priceDisplay || $priceDisplay == 2}
 	{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 {elseif $priceDisplay == 1}
 	{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-	{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 {/if}
 
-var productPriceWithoutRedution = '{$productPriceWithoutRedution}';
+var productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 var productPrice = '{$productPrice}';
 
 // Customizable field
@@ -370,10 +370,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<div class="price">
 				{if !$priceDisplay || $priceDisplay == 2}
 					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
+					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 				{elseif $priceDisplay == 1}
 					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
+					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 				{/if}
 
 				<p class="our_price_display">
@@ -388,7 +388,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{if $product->on_sale}
 					<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
 					<span class="on_sale">{l s='On sale!'}</span>
-				{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
+				{elseif $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutReduction > $productPrice}
 					<span class="discount">{l s='Reduced price!'}</span>
 				{/if}
 				{if $priceDisplay == 2}
@@ -401,8 +401,8 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{if $product->specificPrice AND $product->specificPrice.reduction}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
-					{if $productPriceWithoutRedution > $productPrice}
-						<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
+					{if $productPriceWithoutReduction > $productPrice}
+						<span id="old_price_display">{convertPrice price=$productPriceWithoutReduction}</span>
 						<!-- {if $tax_enabled && $display_tax_label == 1}
 							{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 						{/if} -->
