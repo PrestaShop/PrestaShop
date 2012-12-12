@@ -36,7 +36,7 @@
 	<!-- Bookmark -->
 	<div class="add_bookmark" style="height:30px;">
 		<script type="text/javascript">
-		writeBookmarkLink('{$come_from}', '{$shop_name|addslashes|addslashes}', '{l s='bookmark this page' mod='blockpermanentlinks'}');</script>&nbsp;
+		writeBookmarkLink('{$come_from}', '{$shop_name|addslashes|addslashes}', '{l s='bookmark this page' mod='blockpermanentlinks' js=1}');</script>&nbsp;
 	</div>
 </div>
 <!-- /Block permanent links module -->

@@ -126,7 +126,7 @@ class MetaCore extends ObjectModel
 		$sql = 'SELECT *
 				FROM '._DB_PREFIX_.'meta m
 				LEFT JOIN '._DB_PREFIX_.'meta_lang ml on (m.id_meta = ml.id_meta)
-				WHERE (m.page = \''.pSQL($page).'\' OR m.page=\''.str_replace('-', '', strtolower($page)).'\')
+				WHERE (m.page = \''.pSQL($page).'\' OR m.page=\''.pSQL(str_replace('-', '', strtolower($page))).'\')
 					AND ml.id_lang = '.(int)$id_lang
 					.Shop::addSqlRestrictionOnLang('ml');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);

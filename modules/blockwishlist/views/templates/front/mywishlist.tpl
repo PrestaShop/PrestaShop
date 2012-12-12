@@ -81,7 +81,7 @@
 						<td>{$wishlists[i].date_add|date_format:"%Y-%m-%d"}</td>
 						<td><a href="javascript:;" onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">{l s='View' mod='blockwishlist'}</a></td>
 						<td class="wishlist_delete">
-							<a href="javascript:;"onclick="return (WishlistDelete('wishlist_{$wishlists[i].id_wishlist|intval}', '{$wishlists[i].id_wishlist|intval}', '{l s='Do you really want to delete this wishlist ?' mod='blockwishlist'}'));">{l s='Delete' mod='blockwishlist'}</a>
+							<a href="javascript:;"onclick="return (WishlistDelete('wishlist_{$wishlists[i].id_wishlist|intval}', '{$wishlists[i].id_wishlist|intval}', '{l s='Do you really want to delete this wishlist ?' mod='blockwishlist' js=1}'));">{l s='Delete' mod='blockwishlist'}</a>
 						</td>
 					</tr>
 				{/section}
