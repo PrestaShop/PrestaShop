@@ -83,32 +83,18 @@
 <div class="separation"></div>
 <div>
 	<div class="is_virtual_good">
-		<input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
+		<input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {if $product->is_virtual}checked="checked"{/if} />
 			<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
 	</div>
 	{* [begin] virtual product *}
-	<div id="virtual_good" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
-		<div>
-			<label>{l s='Does this product have an associated file?'}</label>
-			<label style="width:50px"><input type="radio" value="1"  name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
-			<label style="width:50px;"><input type="radio" value="0" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}</label>
-		</div><br />
-		<div class="separation"></div>
-		{if $download_product_file_missing}
-			<p class="alert" id="file_missing">
-				<b>{$download_product_file_missing} :<br/>
-				{$smarty.const._PS_DOWNLOAD_DIR_}/{$product->productDownload->filename}</b>
-			</p>
-		{/if}
-
-		<div id="is_virtual_file_product" style="display:none;">
+		<div id="is_virtual_file_product">
 			{if !$download_dir_writable}
 				<p class="alert">
 					{l s='Your download repository is not writable.'}<br/>
 					{$smarty.const._PS_DOWNLOAD_DIR_}
 				</p>
 			{/if}
-				{if $product->productDownload->id}
+				{if isset($product->productDownload->id)}
 					<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="{$product->productDownload->id}" />
 				{/if}
 				<table cellpadding="5" style="float: left; margin-left: 10px;">					
