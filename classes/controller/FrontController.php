@@ -1136,11 +1136,19 @@ class FrontControllerCore extends Controller
 	 */
 	public function initLogoAndFavicon()
 	{
+		$mobile_device = $this->context->getMobileDevice();
+		$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		
+		if ($mobile_device && Configuration::get('PS_LOGO_MOBILE'))
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		else
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		
 		return array(
  				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-            'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
-            'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
-            'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
+	            'logo_image_width' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+	            'logo_image_height' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
+	            'logo_url' => $logo
   				);
 	}
 }
