@@ -17,6 +17,7 @@ $_MODULE['<{blockcart}prestashop>blockcart_ed6e9a09a111035684bb23682561e12d'] = 
 $_MODULE['<{blockcart}prestashop>blockcart_c6995d6cc084c192bc2e742f052a5c74'] = 'Livraison gratuite !';
 $_MODULE['<{blockcart}prestashop>blockcart_e7a6ca4e744870d455a57b644f696457'] = 'Gratuit !';
 $_MODULE['<{blockcart}prestashop>blockcart_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
+$_MODULE['<{blockcart}prestashop>blockcart_0c3bf3014aafb90201805e45b5e62881'] = 'Voir mon panier';
 $_MODULE['<{blockcart}prestashop>blockcart_a85eba4c6c699122b2bb1387ea4813ad'] = 'Panier';
 $_MODULE['<{blockcart}prestashop>blockcart_86024cad1e83101d97359d7351051156'] = 'articles';
 $_MODULE['<{blockcart}prestashop>blockcart_f5bf48aa40cad7891eb709fcf1fde128'] = 'article';
