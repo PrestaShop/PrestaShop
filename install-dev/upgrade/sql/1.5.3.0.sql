@@ -8,9 +8,9 @@ ALTER TABLE `PREFIX_address` CHANGE  `outstanding_allow_amount` `outstanding_all
 
 UPDATE `PREFIX_order_state` SET `delivery` = 0 WHERE `id_order_state` = 3;
 
-ALTER TABLE  `PREFIX_product_shop` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` , ADD `available_for_order` tinyint(1) NOT NULL default '1' AFTER `id_product_redirected`;
+ALTER TABLE  `PREFIX_product_shop` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` ;
 
-ALTER TABLE  `PREFIX_product` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` , ADD `available_for_order` tinyint(1) NOT NULL default '1' AFTER `id_product_redirected`;
+ALTER TABLE  `PREFIX_product` ADD `id_product_redirected` int(10) unsigned NOT NULL default '0' AFTER `active` ;
 
 UPDATE `PREFIX_order_state` SET `send_email` = 1 WHERE `id_order_state` = (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_OS_WS_PAYMENT' LIMIT 1);
 
