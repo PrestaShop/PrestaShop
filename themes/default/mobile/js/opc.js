@@ -51,17 +51,15 @@ function initEvent()
 	$("#addressesAreEquals").bind("change", function(event, ui) {
 		$("#address_invoice_form").toggle();
 	});
-	// paquet cadeau
-	$("#gift").bind("change", function(event, ui) {
-		$("#gift_div").toggle();
-	});
 
 	$('.delivery_option_radio').click(function() {
 		updateCarrierSection($(this));
 	});
 
 	$('#gift').click(function() {
+		// Gift checkbox update
 		giftShowDiv();
+		updateCarrierSection($(this));
 	});
 
 	$('#gift_div').change(function() {
