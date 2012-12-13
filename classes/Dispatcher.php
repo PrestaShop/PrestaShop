@@ -388,14 +388,21 @@ class DispatcherCore
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
 			foreach ($this->default_routes as $id => $route)
+			{
+				$rule = $route['rule'];
+				
+				if ($custom_rule = Configuration::get('PS_ROUTE_'.$id))
+					$rule = $custom_rule;
+				
 				$this->addRoute(
 					$id,
-					$route['rule'],
+					$rule,
 					$route['controller'],
 					$lang['id_lang'],
 					$route['keywords'],
 					isset($route['params']) ? $route['params'] : array()
 				);
+			}
 
 		if ($this->use_routes)
 		{
@@ -425,18 +432,6 @@ class DispatcherCore
 					'controller' =>	'index',
 				);
 
-			// Load custom routes
-			foreach ($this->default_routes as $route_id => $route_data)
-				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
-					foreach (Language::getLanguages() as $lang)
-						$this->addRoute(
-							$route_id,
-							$custom_route,
-							$route_data['controller'],
-							$lang['id_lang'],
-							$route_data['keywords'],
-							isset($route_data['params']) ? $route_data['params'] : array()
-						);
 		}
 	}
 
