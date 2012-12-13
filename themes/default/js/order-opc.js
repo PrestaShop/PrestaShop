@@ -520,7 +520,7 @@ $(function() {
 			var callingFile = '';
 			var params = '';
 
-			if ($('#opc_id_customer').val() === 0)
+			if (parseInt($('#opc_id_customer').val()) === 0)
 			{
 				callingFile = authenticationUrl;
 				params = 'submitAccount=true&';
