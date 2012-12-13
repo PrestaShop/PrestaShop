@@ -262,66 +262,13 @@ class AdminModulesControllerCore extends AdminController
 		}
 		die('OK');
 	}
-
-
-	private function sendStatisticRequest($object_key)
-	{
-		$post_data = http_build_query(array(
-			'key' => urlencode($object_key),
-			'url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL')),
-			'version' => urlencode(_PS_VERSION_),
-			'method' => 'product_key'
-		));
-
-		$opts = array(
-			'http' => array(
-				'method' => 'POST',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'content' => $post_data
-			)
-		);
-
-		$context = stream_context_create($opts);
-		file_get_contents('http://api.addons.prestashop.com/', false, $context);
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsModuleCall()
-	{
-		if (($list = Tools::getValue('modules_list')) && is_array($list))
-			foreach ($list as $id)
-				if (($obj = Module::getInstanceById($id)) && (isset($obj->module_key)))
-						$this->sendStatisticRequest($obj->module_key);
-		die();
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsThemeCall()
-	{
-		// Theme list contains just the key for each theme
-		if (($list = Tools::getValue('theme_list')) && is_array($list))
-			foreach ($list as $theme_key)
-				if (!empty($theme_key))
-					$this->sendStatisticRequest($theme_key);
-		die();
-	}
-
+	
 	/*
 	** Get current URL
 	**
 	** @param array $remove List of keys to remove from URL
 	** @return string
 	*/
-
 	protected function getCurrentUrl($remove = array())
 	{
 		$url = $_SERVER['REQUEST_URI'];
@@ -605,6 +552,7 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 					}
+
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('module not found');

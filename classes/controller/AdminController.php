@@ -2733,30 +2733,42 @@ class AdminControllerCore extends Controller
 
 	public function addonsRequest($request, $params = array())
 	{
+		$postData = '';
+		$postDataArray = array(
+			'version' => _PS_VERSION_,
+			'iso_lang' => strtolower(Context::getContext()->language->iso_code),
+			'iso_code' => strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+			'shop_url' => urlencode(Tools::getShopDomain()),
+			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL'))
+		);
+		foreach ($postDataArray as $postDataKey => $postDataValue)
+			$postData .= '&'.$postDataKey.'='.$postDataValue;
+		$postData = ltrim($postData, '&');
+		
 		// Config for each request
 		if ($request == 'native')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=native';
 		}
 		if ($request == 'must-have')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=must-have';
 		}
 		if ($request == 'customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons)).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=customer&username='.urlencode(trim($this->context->cookie->username_addons)).'&password='.urlencode(trim($this->context->cookie->password_addons));
 		}
 		if ($request == 'check_customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version='._PS_VERSION_.'&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 		}
 		if ($request == 'module')
 		{
@@ -2764,12 +2776,12 @@ class AdminControllerCore extends Controller
 			if (isset($params['username_addons']) && isset($params['password_addons']))
 			{
 				$protocolsList = array('https://' => 443);
-				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 			}
 			else
 			{
 				$protocolsList = array('https://' => 443, 'http://' => 80);
-				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']);
+				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
 			}
 		}
 
