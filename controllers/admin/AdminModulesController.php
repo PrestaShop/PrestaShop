@@ -68,6 +68,8 @@ class AdminModulesControllerCore extends AdminController
 	{
 		parent::__construct();
 
+		register_shutdown_function('displayFatalError');
+
 		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 		// Set the modules categories
