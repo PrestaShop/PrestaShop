@@ -99,8 +99,8 @@ class ManufacturerControllerCore extends FrontController
 			'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer,
-			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			);
+			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
+		));
 	}
 
 	/**
