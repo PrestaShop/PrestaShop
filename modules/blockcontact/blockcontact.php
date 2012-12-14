@@ -64,7 +64,7 @@ class Blockcontact extends Module
 		{				
 			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('telnumber'));
 			Configuration::updateValue('blockcontact_email', Tools::getValue('email'));
-			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 
 		$html .= '

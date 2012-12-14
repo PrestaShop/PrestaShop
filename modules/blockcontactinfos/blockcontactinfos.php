@@ -72,7 +72,7 @@ class Blockcontactinfos extends Module
 			Configuration::updateValue('blockcontactinfos_phone', ((isset($_POST['phone']) && $_POST['phone'] != '') ? $_POST['phone'] : ''));
 			Configuration::updateValue('blockcontactinfos_email', ((isset($_POST['email']) && $_POST['email'] != '') ? $_POST['email'] : Configuration::get('PS_SHOP_EMAIL')));
 			
-			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 
 		$html .= '
