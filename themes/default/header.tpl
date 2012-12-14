@@ -53,12 +53,12 @@
 		</script>
 {if isset($css_files)}
 	{foreach from=$css_files key=css_uri item=media}
-	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+	<link href="{$css_uri}" rel="stylesheet" media="{$media}" />
 	{/foreach}
 {/if}
 {if isset($js_files)}
 	{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri}"></script>
+	<script src="{$js_uri}"></script>
 	{/foreach}
 {/if}
 		{$HOOK_HEADER}
