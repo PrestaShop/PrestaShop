@@ -27,13 +27,13 @@
 				</div>
 
 <!-- Right -->
-				<aside id="right_column" class="column grid_2 omega">
+				<aside role="complementary" id="right_column" class="column grid_2 omega">
 					{$HOOK_RIGHT_COLUMN}
 				</aside>
 			</div>
 
 <!-- Footer -->
-			<footer id="footer" class="grid_9 alpha omega clearfix">
+			<footer role="contentinfo" id="footer" class="grid_9 alpha omega clearfix">
 				{$HOOK_FOOTER}
 				{if $PS_ALLOW_MOBILE_DEVICE}
 					<p class="center clearBoth"><a href="{$link->getPageLink('index', true)}?mobile_theme_ok">{l s='Browse the mobile site'}</a></p>

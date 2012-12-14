@@ -85,7 +85,7 @@
 
 			<div id="columns" class="grid_9 alpha omega clearfix">
 				<!-- Left -->
-				<aside id="left_column" class="column grid_2 alpha">
+				<aside role="complementary" id="left_column" class="column grid_2 alpha">
 					{$HOOK_LEFT_COLUMN}
 				</aside>
 
