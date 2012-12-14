@@ -28,7 +28,7 @@
 <!--[if IE 7]>    <html class="no-js ie7 lt-ie9 lt-ie8 ie7" lang="{$lang_iso}"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="{$lang_iso}"> <![endif]-->
 <!--[if gt IE 8]> <html lang="fr" class="no-js ie9" lang="{$lang_iso}"> <!<![endif]-->
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{$lang_iso}">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{$lang_iso}" class="no-js">
 	<head>
 		<meta charset="utf-8" />
 		<title>{$meta_title|escape:'htmlall':'UTF-8'}</title>
@@ -56,6 +56,7 @@
 	<link href="{$css_uri}" rel="stylesheet" media="{$media}" />
 	{/foreach}
 {/if}
+        <script src="{$js_dir}modernizr/modernizr.custom.82225.js"></script>
 {if isset($js_files)}
 	{foreach from=$js_files item=js_uri}
 	<script src="{$js_uri}"></script>
