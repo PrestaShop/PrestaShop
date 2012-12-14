@@ -1891,7 +1891,7 @@ abstract class ModuleCore
 		
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
-		if (!is_writable($override_path))
+		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 			
 		// Make a reflection of the override class and the module override class
