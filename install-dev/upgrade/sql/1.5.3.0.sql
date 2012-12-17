@@ -19,3 +19,5 @@ UPDATE `PREFIX_order_state_lang` SET `template` = 'payment' WHERE `id_order_stat
 DELETE FROM `PREFIX_configuration` WHERE `name`= 'PS_HIGH_HTML_THEME_COMPRESSION';
 
 INSERT INTO `PREFIX_configuration`(`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_MAIL_COLOR', '#db3484', NOW(), NOW());
+
+ALTER TABLE `PREFIX_cart` CHANGE `delivery_option` `delivery_option` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
