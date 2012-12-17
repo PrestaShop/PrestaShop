@@ -3219,8 +3219,8 @@ class ProductCore extends ObjectModel
 		{
 			if (!array_key_exists($row['id_product'].'-'.$id_lang, self::$_frontFeaturesCache))
 				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang] = array();
-			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']]))
-				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']] = $row;
+			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']]))
+				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']] = $row;
 		}
 	}
 
