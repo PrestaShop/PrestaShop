@@ -7,7 +7,7 @@
 * This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
+* htpt://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -352,6 +352,9 @@ abstract class PaymentModuleCore extends Module
 					// Construct order detail table for the email
 					$products_list = '';
 					$virtual_product = true;
+					
+					$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
+					
 					foreach ($products as $key => $product)
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -363,19 +366,19 @@ abstract class PaymentModuleCore extends Module
 							$customization_text = '';
 							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']] as $customization)
 							{
-								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
-									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
+								if (isset($customization[$product['id_customization']]['datas'][Product::CUSTOMIZE_TEXTFIELD]))
+									foreach ($customization[$product['id_customization']]['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
 										$customization_text .= $text['name'].': '.$text['value'].'<br />';
 
-								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
-									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
+								if (isset($customization[$product['id_customization']]['datas'][Product::CUSTOMIZE_FILE]))
+									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization[$product['id_customization']]['datas'][Product::CUSTOMIZE_FILE])).'<br />';
 
 								$customization_text .= '---<br />';
 							}
 
 							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customizationQuantityTotal'];
+							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
