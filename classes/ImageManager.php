@@ -422,7 +422,7 @@ class ImageManagerCore
 		$types = array(
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
-						'image/png' => array('jpg', 'png')
+						'image/png' => array('png')
 					);	
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
