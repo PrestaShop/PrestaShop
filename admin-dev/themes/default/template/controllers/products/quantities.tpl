@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 11069 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,6 +26,7 @@
 {if isset($product->id)}
 	<input type="hidden" name="submitted_tabs[]" value="Quantities" />
 	<h4>{l s='Available quantities for sale'}</h4>
+	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Quantities"}
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
@@ -207,8 +207,11 @@
 			</tr>
 			{/if}
 		<tr>
-			<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
-			<td style="padding-bottom:5px;">
+			<td class="col-left">
+			{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
+				<label>{l s='Displayed text when in-stock:'}</label>
+			</td>
+			<td style="padding-bottom:5px;" class="col-right">
 					{include file="controllers/products/input_text_lang.tpl"
 						languages=$languages
 						input_value=$product->available_now
@@ -217,8 +220,11 @@
 		</td>
 		</tr>
 		<tr>
-			<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
-			<td style="padding-bottom:5px;">
+			<td class="col-left">
+				{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
+				<label>{l s='Displayed text when allowed to be back-ordered:'}</label>
+			</td>
+			<td style="padding-bottom:5px;" class="col-right">
 					{include file="controllers/products/input_text_lang.tpl"
 						languages=$languages
 						input_value=$product->available_later

@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -43,14 +42,26 @@
 	{/if}
 
 	{if $products}
+	<div class="content_sortPagiBar">
+		{include file="$tpl_dir./pagination.tpl"}
+
 		<div class="sortPagiBar clearfix">
 			{include file="./product-sort.tpl"}
+			{include file="./product-compare.tpl"}
+			{include file="./nbr-product-page.tpl"}
 		</div>
-		{include file="./product-compare.tpl"}
-		{include file="./product-list.tpl" products=$products}
+	</div>
+
+	{include file="./product-list.tpl" products=$products}
+
+	<div class="content_sortPagiBar">
+		<div class="sortPagiBar clearfix">
+			{include file="./product-sort.tpl"} {include file="./product-compare.tpl"} {include file="./nbr-product-page.tpl"}
+
+		</div>
 		{include file="./pagination.tpl"}
-		{include file="./product-compare.tpl"}
+	</div>
 	{else}
-		<p class="warning">{l s='No products for this manufacturer.'}</p>
-	{/if}
+	<p class="warning">{l s='No products for this manufacturer.'}</p>
+	{/if} 
 {/if}

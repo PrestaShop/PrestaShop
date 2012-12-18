@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -278,6 +277,9 @@ class AdminControllerCore extends Controller
 			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template'))
+			$this->bo_theme = 'default';
+		
 		$this->context->smarty->setTemplateDir(array(
 			_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
 			_PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
@@ -697,20 +699,19 @@ class AdminControllerCore extends Controller
 					if ($this->deleted && $this->beforeDelete($object))
 					{
 						// Create new one with old objet values
-						$object_new = new $this->className($object->id);
-						$object_new->id = null;
-						$object_new->date_add = '';
-						$object_new->date_upd = '';
-
-						// Update old object to deleted
-						$object->deleted = 1;
-						$object->update();
-
-						// Update new object with post values
-						$this->copyFromPost($object_new, $this->table);
-						$result = $object_new->add();
+						$object_new = $object->duplicateObject();
 						if (Validate::isLoadedObject($object_new))
-							$this->afterDelete($object_new, $object->id);
+						{
+							// Update old object to deleted
+							$object->deleted = 1;
+							$object->update();
+
+							// Update new object with post values
+							$this->copyFromPost($object_new, $this->table);
+							$result = $object_new->update();
+							if (Validate::isLoadedObject($object_new))
+								$this->afterDelete($object_new, $object->id);
+						}
 					}
 					else
 					{
@@ -2070,12 +2071,18 @@ class AdminControllerCore extends Controller
 		if ($this->explicitSelect)
 		{
 			foreach ($this->fields_list as $key => $array_value)
+			{
+				// Add it only if it is not already in $this->_select
+				if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
+					continue;
+			
 				if (isset($array_value['filter_key']))
 					$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
 				elseif ($key == 'id_'.$this->table)
 					$this->_listsql .= 'a.`'.bqSQL($key).'`,';
 				elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
 					$this->_listsql .= '`'.bqSQL($key).'`,';
+			}
 			$this->_listsql = rtrim($this->_listsql, ',');
 		}
 		else
@@ -2784,4 +2791,3 @@ class AdminControllerCore extends Controller
 		return false;
 	}
 }
-

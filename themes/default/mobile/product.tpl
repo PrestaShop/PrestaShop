@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6625 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -73,7 +72,7 @@
 			
 			<div id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
 				<br />
-				<label for="product_reference">{l s='Reference:'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 				<br />
 			</div>

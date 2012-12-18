@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -133,6 +132,17 @@ class AdminSearchControllerCore extends AdminController
 			}
 			/* IP */
 			// 6 - but it is included in the customer block
+
+			/* Module search */
+			if (!$searchType || $searchType == 7)
+			{
+				/* Handle module name */
+				if ($searchType == 7 && Validate::isModuleName($this->query) AND ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module))
+					Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
+				
+				/* Normal catalog search */
+				$this->searchModule();
+			}
 		}
 		$this->display = 'view';
 	}
@@ -168,6 +178,18 @@ class AdminSearchControllerCore extends AdminController
 	public function searchCustomer()
 	{
 		$this->_list['customers'] = Customer::searchByName($this->query);
+	}
+	
+	public function searchModule()
+	{
+		$this->_list['modules'] = array();
+		$all_modules = Module::getModulesOnDisk(true, true, Context::getContext()->employee->id);
+		foreach ($all_modules as $module)
+			if (stripos($module->name, $this->query) || stripos($module->displayName, $this->query) || stripos($module->description, $this->query))
+			{
+				$module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
+				$this->_list['modules'][] = $module;
+			}
 	}
 
 	/**
@@ -361,6 +383,10 @@ class AdminSearchControllerCore extends AdminController
 					$view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
 				$this->tpl_view_vars['orders'] = $view;
 			}
+
+			if (isset($this->_list['modules']))
+				$this->tpl_view_vars['modules'] = $this->_list['modules'];
+
 			return parent::renderView();
 		}
 	}

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -308,7 +307,7 @@ class AdminAddressesControllerCore extends AdminController
 		if (Validate::isEmail(Tools::getValue('email')))
 		{
 			$customer = new Customer();
-			$customer->getByEmail(Tools::getValue('email'));
+			$customer->getByEmail(Tools::getValue('email'), null, false);
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else

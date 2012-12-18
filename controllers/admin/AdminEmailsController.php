@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -203,7 +202,7 @@ class AdminEmailsControllerCore extends AdminController
 		if (isset($_POST['PS_SHOP_EMAIL']))
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
-		if ($_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
+		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
 
@@ -226,10 +225,16 @@ class AdminEmailsControllerCore extends AdminController
 			$smtpLogin = Tools::getValue('smtpLogin');
 			$smtpPassword = Tools::getValue('smtpPassword');
 			$smtpPassword = (!empty($smtpPassword)) ? urldecode($smtpPassword) : Configuration::get('PS_MAIL_PASSWD');
+			$smtpPassword = str_replace(
+				array('&lt;', '&gt;', '&quot;', '&amp;'), 
+				array('<', '>', '"', '&'), 
+				Tools::htmlentitiesUTF8($smtpPassword)
+				);
+			
 			$smtpPort = Tools::getValue('smtpPort');
 			$smtpEncryption = Tools::getValue('smtpEnc');
-
-			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), Tools::htmlentitiesUTF8($smtpPassword), Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
+			
+			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
 			die($result === true ? 'ok' : $result);
 		}
 	}

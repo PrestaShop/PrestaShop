@@ -18,7 +18,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -764,9 +763,8 @@ product_tabs['Attachments'] = new function(){
 product_tabs['Informations'] = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
-		$("#available_for_order").click(function(){
-
-
+		$("#available_for_order").click(function()
+		{
 			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').lenght && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
 			{
 				$('#show_price').attr('checked', true);
@@ -777,6 +775,37 @@ product_tabs['Informations'] = new function(){
 				$('#show_price').attr('disabled', false);
 			}
 		});
+				
+		if ($('#active_on').prop('checked'))
+		{
+			showRedirectProductOptions(false);
+			showRedirectProductSelectOptions(false);
+		}
+		else
+			showRedirectProductOptions(true);
+			
+		$('#redirect_type').change(function () {
+			redirectSelectChange();
+		});
+		
+		$('#related_product_autocomplete_input')
+			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
+				minChars: 1,
+				autoFill: true,
+				max:20,
+				matchContains: true,
+				mustMatch:true,
+				scroll:false,
+				cacheLength:0,
+				formatItem: function(item) {
+						return item[0]+' - '+item[1];
+				}
+			}).result(function(e, i){  
+					if(i != undefined)
+						addRelatedProduct(i[1], i[0]);
+					$(this).val('');
+		       });
+		 addRelatedProduct(id_product_redirected, product_name_redirected);
 	};
 
 	this.bindTagImage = function (){
@@ -1197,6 +1226,8 @@ product_tabs['Quantities'] = new function(){
 			self.refreshQtyAvailabilityForm();
 			self.ajaxCall({actionQty: 'out_of_stock', value: $(this).val()});
 		});
+		if (display_multishop_checkboxes)
+			ProductMultishop.checkAllQuantities();
 
 		self.refreshQtyAvailabilityForm();
 	};
@@ -1543,6 +1574,15 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_description]['+v.id_lang+']\']').prop('checked'), 'meta_description_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[meta_keywords]['+v.id_lang+']\']').prop('checked'), 'meta_keywords_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang);
+		});
+	};
+	
+	this.checkAllQuantities = function()
+	{
+		$.each(languages, function(k, v)
+		{
+			ProductMultishop.checkField($('input[name=\'multishop_check[available_later]['+v.id_lang+']\']').prop('checked'), 'available_later_'+v.id_lang);
+			ProductMultishop.checkField($('input[name=\'multishop_check[available_now]['+v.id_lang+']\']').prop('checked'), 'available_now_'+v.id_lang);
 		});
 	};
 

@@ -24,7 +24,6 @@ require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8797 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -123,7 +122,7 @@ class PDFGeneratorCore extends TCPDF
 	 * Render the pdf file
 	 *
 	 * @param string $filename
-     * @param boolean $inline
+         * @param  $display :  true:display to user, false:save, 'I','D','S' as fpdf display
 	 * @throws PrestaShopException
 	 */
 	public function render($filename, $display = true)
@@ -133,7 +132,17 @@ class PDFGeneratorCore extends TCPDF
 
 		$this->lastPage();
 
-		$output = $display ? 'I' : 'S';
+		if ($display === true)
+			$output = 'D';
+		elseif ($display === false)
+			$output = 'S';
+		elseif (display == 'D')
+			$output = 'D';
+		elseif (display == 'S')
+			$output = 'S';
+		else 	
+			$output = 'I';
+			
 		return $this->output($filename, $output);
 	}
 

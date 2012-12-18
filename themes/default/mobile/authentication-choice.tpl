@@ -3,7 +3,7 @@
 	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std login_form">
 		<h2>{l s='Create your account'}</h2>
 		<div class="form_content clearfix">
-			<h4>{l s='Enter your e-mail address to create an account'}.</h4>
+			<p class="title_block">{l s='Enter your e-mail address to create an account'}.</p>
 			<fieldset>
 				<span><input type="email" id="email_create" placeholder="{l s='E-mail address'}" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|escape:'htmlall':'UTF-8'|stripslashes}{/if}" class="account_input" /></span>
 			</fieldset>

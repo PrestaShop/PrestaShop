@@ -82,7 +82,7 @@ function initEvent()
 			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
 			success: function(json)
 			{
-				window.location.href = orderOpcUrl;
+				window.location.href = orderOpcUrl+'#cgv_checkbox';
 			}
 		});
 	});
@@ -102,7 +102,7 @@ function updateCarrierSection(elm)
 	var gift = 0;
 	var giftMessage = '';
 
-	var delivery_option_radio = $('.delivery_option_radio');
+	var delivery_option_radio = $('.delivery_option_radio_carrier');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
 		if ($(this).prop('checked'))
@@ -129,7 +129,7 @@ function updateCarrierSection(elm)
 		success: function(jsonData)
 		{
 			if (!elm.is('#gift'))
-				window.location.href = orderOpcUrl;
+				window.location.href = orderOpcUrl+'#delivery_choose';
 		}
 	});
 }
