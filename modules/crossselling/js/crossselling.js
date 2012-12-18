@@ -60,5 +60,5 @@ $(document).ready(function(){
 		force:false,
 		cycle:false
 	});
-	$('#crossselling_list').trigger( 'goto', [middle-3] );
+	$('#crossselling_list').trigger( 'goto', [cs_middle-3] );
 });
