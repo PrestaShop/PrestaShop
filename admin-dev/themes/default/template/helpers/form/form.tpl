@@ -167,6 +167,8 @@
 																{/if}
 															{/if}
 														>{$option->$input.options.name}</option>
+													{elseif $option == "-"}
+														<option value="">--</option>
 													{else}
 														<option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
