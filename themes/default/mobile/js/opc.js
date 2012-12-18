@@ -81,6 +81,7 @@ function initEvent()
 			success: function(json)
 			{
 				window.location.href = orderOpcUrl+'#cgv_checkbox';
+				window.location.reload(true);
 			}
 		});
 	});
