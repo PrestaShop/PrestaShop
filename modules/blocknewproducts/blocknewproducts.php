@@ -101,7 +101,7 @@ class BlockNewProducts extends Module
 
 		$this->smarty->assign(array(
 			'new_products' => $newProducts,
-			'mediumSize' => Image::getSize('medium_default'),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 		));
 
 		return $this->display(__FILE__, 'blocknewproducts.tpl');
