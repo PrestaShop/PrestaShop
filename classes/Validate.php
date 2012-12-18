@@ -802,12 +802,12 @@ class ValidateCore
 
 	public static function isWeightUnit($unit)
 	{
-		return (Tools::isGenericName($unit) & (Tools::strlen($unit) < 5));
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isDistanceUnit($unit)
 	{
-		return (Tools::isGenericName($unit) & (Tools::strlen($unit) < 5));
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isSubDomainName($domain)
