@@ -112,7 +112,7 @@ class StatsForecast extends Module
 		SELECT
 			'.$dateFromGInvoice.' as fix_date,
 			COUNT(*) as countOrders,
-			(SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order) as countProducts,
+			SUM((SELECT SUM(od.product_quantity) FROM '._DB_PREFIX_.'order_detail od WHERE o.id_order = od.id_order)) as countProducts,
 			SUM(o.total_paid_tax_excl / o.conversion_rate) as totalSales
 		FROM '._DB_PREFIX_.'orders o
 		WHERE o.valid = 1
