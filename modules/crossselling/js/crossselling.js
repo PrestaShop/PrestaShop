@@ -41,24 +41,27 @@ function cs_serialScrollFixLock(event, targeted, scrolled, items, position)
 }
 
 $(document).ready(function(){
-	//init the serialScroll for thumbs
-	cs_serialScrollNbImages = $('#crossselling_list li').length;
-	cs_serialScrollNbImagesDisplayed = 5;
-	cs_serialScrollActualImagesIndex = 0;
-	$('#crossselling_list').serialScroll({
-		items:'li',
-		prev:'a#crossselling_scroll_left',
-		next:'a#crossselling_scroll_right',
-		axis:'x',
-		offset:0,
-		stop:true,
-		onBefore:cs_serialScrollFixLock,
-		duration:300,
-		step: 1,
-		lazy:true,
-		lock: false,
-		force:false,
-		cycle:false
-	});
-	$('#crossselling_list').trigger( 'goto', [cs_middle-3] );
+	if($('#crossselling_list').length > 0)
+	{
+		//init the serialScroll for thumbs
+		cs_serialScrollNbImages = $('#crossselling_list li').length;
+		cs_serialScrollNbImagesDisplayed = 5;
+		cs_serialScrollActualImagesIndex = 0;
+		$('#crossselling_list').serialScroll({
+			items:'li',
+			prev:'a#crossselling_scroll_left',
+			next:'a#crossselling_scroll_right',
+			axis:'x',
+			offset:0,
+			stop:true,
+			onBefore:cs_serialScrollFixLock,
+			duration:300,
+			step: 1,
+			lazy:true,
+			lock: false,
+			force:false,
+			cycle:false
+		});
+		$('#crossselling_list').trigger( 'goto', [cs_middle-3] );
+	}
 });
