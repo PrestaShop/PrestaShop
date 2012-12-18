@@ -855,7 +855,12 @@ abstract class ModuleCore
 	public static function getInstanceByName($module_name)
 	{
 		if (!Validate::isModuleName($module_name))
-			die(Tools::displayError());
+		{
+			if (_PS_MODE_DEV_)
+				die(Tools::displayError());
+			return false;
+		}
+
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
 			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
