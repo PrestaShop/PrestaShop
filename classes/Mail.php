@@ -233,12 +233,18 @@ class MailCore
 			$message->headers->setEncoding('Q');
 
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
-				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))));
+				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL');
 			else
-				if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-					$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO'))));
+			{
+				if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+					$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				else
 					$template_vars['{shop_logo}'] = '';
+			}
+
+			/* don't attach the logo as */
+			if (isset($logo))
+				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_EmbeddedFile(new Swift_File($logo), null, ImageManager::getMimeTypeByExtension($logo)));
 
 			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
 			$template_vars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
