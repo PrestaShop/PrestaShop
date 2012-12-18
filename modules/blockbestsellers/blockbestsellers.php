@@ -120,8 +120,8 @@ class BlockBestSellers extends Module
 
 		$this->smarty->assign(array(
 			'best_sellers' => $best_sellers,
-			'mediumSize' => Image::getSize('medium_default'),
-			'smallSize' => Image::getSize('small_default')
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			'smallSize' => Image::getSize(ImageType::getFormatedName('small'))
 		));
 		return $this->display(__FILE__, 'blockbestsellers.tpl');
 	}
@@ -158,7 +158,7 @@ class BlockBestSellers extends Module
 
 		$this->smarty->assign(array(
 			'best_sellers' => $best_sellers,
-			'homeSize' => Image::getSize('home_default')));
+			'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl');
 	}
 }
