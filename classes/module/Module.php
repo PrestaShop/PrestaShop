@@ -1636,7 +1636,7 @@ abstract class ModuleCore
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
-		Tools::clearCache(Context::getContext()->smarty, $template, $cache_id, $compile_id);
+		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}
 
