@@ -88,7 +88,7 @@
 			<div class="ui-block-a">
 				<div class="ui-bar ui-bar-c">
 					<h3>{l s='Voucher'}</h3>
-					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post">
+					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" data-ajax="false">
 						<input type="text" name="discount_name" id="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}"  placeholder="{l s='Voucher code'}" />
 						<div class='btn-row'>
 							<input type="hidden" name="submitDiscount" />
