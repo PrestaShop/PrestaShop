@@ -192,6 +192,9 @@ span.view_scroll_spacer {
 	display:inline-block;
 }
 
+#attributes .attribute_list input.attribute_radio{float: left;margin-left: 3px;}
+#attributes .attribute_list span{float: left;margin-bottom: 5px;margin-left: 3px;}
+
 .attribute_list #color_to_pick_list {
 	list-style-type:none;
 	width:125px;
