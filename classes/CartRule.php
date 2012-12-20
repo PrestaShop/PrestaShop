@@ -414,8 +414,10 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the customer delivery address is usable with the cart rule
-		if ($this->country_restriction && $context->cart->id_address_delivery)
+		if ($this->country_restriction)
 		{
+			if (!$context->cart->id_address_delivery)
+				return (!$display_error) ? false : Tools::displayError('You must choose a delivery address before applying this voucher to your order');
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_country crc
@@ -426,8 +428,10 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the carrier chosen by the customer is usable with the cart rule
-		if ($this->carrier_restriction && $context->cart->id_carrier)
+		if ($this->carrier_restriction)
 		{
+			if (!$context->cart->id_carrier)
+				return (!$display_error) ? false : Tools::displayError('You must choose a carrier before applying this voucher to your order');
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_carrier crc
