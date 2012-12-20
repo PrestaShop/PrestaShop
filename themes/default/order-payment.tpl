@@ -137,6 +137,12 @@
 				{/if}
 				</td>
 			</tr>
+                       {if $use_taxes}
+                          <tr class="cart_summery_tax">
+                          <td colspan="5">{l s='Total tax:'}</td>
+                          <td colspan="2" class="price" id="total_tax">{displayPrice price=$total_tax}</td>
+                        </tr>
+                       {/if}
 			{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
 				<tr class="cart_total_delivery">
 					<td colspan="5">{l s='Shipping:'}</td>
