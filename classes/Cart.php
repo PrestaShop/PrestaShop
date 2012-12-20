@@ -830,6 +830,13 @@ class CartCore extends ObjectModel
 		$id_product_attribute = (int)$id_product_attribute;
 		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
+		if ($id_product_attribute)
+		{
+			$combination = new Combination((int)$id_product_attribute);
+			if ($combination->id_product != $id_product)
+				return false;
+		}
+
 		/* If we have a product combination, the minimal quantity is set with the one of this combination */
 		if (!empty($id_product_attribute))
 			$minimal_quantity = (int)Attribute::getAttributeMinimalQty($id_product_attribute);

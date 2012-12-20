@@ -323,6 +323,10 @@ class AdminLocalizationControllerCore extends AdminController
 	public function updateOptionPsCurrencyDefault($value)
 	{
 		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+
+		/* Set conversion rate of default currency to 1 */
+		ObjectModel::updateMultishopTable('Currency', array('conversion_rate' => 1), 'a.id_currency');
+
 		Currency::refreshCurrencies();
 	}
 }

@@ -31,7 +31,6 @@ class AdminCurrenciesControllerCore extends AdminController
 		$this->table = 'currency';
 		$this->className = 'Currency';
 		$this->lang = false;
-		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fields_list = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -69,6 +68,9 @@ class AdminCurrenciesControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->_select .= 'currency_shop.conversion_rate conversion_rate';
+		$this->_join .= Shop::addSqlAssociation('currency', 'a');
 	}
 
 	public function renderList()
