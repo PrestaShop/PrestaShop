@@ -2023,6 +2023,7 @@ CREATE TABLE `PREFIX_lang_shop` (
 CREATE TABLE `PREFIX_currency_shop` (
 `id_currency` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`conversion_rate` decimal(13,6) NOT NULL,
   PRIMARY KEY (`id_currency`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
