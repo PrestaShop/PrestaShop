@@ -2419,9 +2419,9 @@ class CartCore extends ObjectModel
 			if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]))
 			{
 				if ($useTax)
-					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['total_price_with_tax'];
+					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_with_tax'];
 				else
-					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['total_price_without_tax'];
+					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_without_tax'];
 			}
 		}
 
