@@ -144,7 +144,7 @@ abstract class CacheCore
 	 */
 	public function set($key, $value, $ttl = 0)
 	{
-		if ($this->_set($key, $value))
+		if ($this->_set($key, $value, $ttl))
 		{
 			if ($ttl < 0)
 				$ttl = 0;
