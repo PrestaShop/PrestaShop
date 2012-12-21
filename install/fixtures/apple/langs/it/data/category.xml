@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="iPods" id_shop="1">
+    <name>iPods</name>
+    <description>Adesso che puoi acquistare film dall'iTunes Store e inserirli nel tuo iPod, il tuo mondo &#xE8; un palcoscenico.</description>
+    <link_rewrite>musica-ipods</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessori</name>
+    <description>Fantastici accessori per il tuo iPod</description>
+    <link_rewrite>accessori-ipod</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Laptops" id_shop="1">
+    <name>Laptop</name>
+    <description>L'ultimissimo processore Intel, hard drive pi&#xF9; ampio, moltissima memoria, e ancora pi&#xF9; funzioni tutte inserite in 2,54 centimetri. I nuovi laptop Mac offrono le prestazioni, la potenza e la connettivit&#xE0; di un computer da tavolo. Senza bisogno del tavolo.</description>
+    <link_rewrite>laptop</link_rewrite>
+    <meta_title>laptop Apple</meta_title>
+    <meta_keywords>laptot Apple MacBook Air</meta_keywords>
+    <meta_description>Laptop Apple potenti ed eleganti</meta_description>
+  </category>
+</entity_category>

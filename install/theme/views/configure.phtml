@@ -1,0 +1,166 @@
+<?php $this->displayTemplate('header') ?>
+
+<script type="text/javascript">
+<!--
+var default_iso = '<?php echo $this->session->shop_country ?>';
+-->
+</script>
+
+<!-- Configuration form -->
+<div id="infosShopBlock">
+	<h2><?php echo $this->l('Shop settings and merchant account information') ?></h2>
+
+	<!-- Shop name -->
+	<div class="field clearfix">
+		<label for="infosShop" class="aligned"><?php echo $this->l('Shop name:') ?> </label>
+		<div class="contentinput">
+			<input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name) ?>" /> <sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('shop_name') ?>
+	</div>
+
+	<!-- Activity -->
+	<div class="field clearfix">
+		<label for="infosActivity" class="aligned"><?php echo $this->l('Main activity:') ?></label>
+		<div class="contentinput">
+			<select id="infosActivity" name="shop_activity" class="chosen">
+				<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity): ?>selected="selected"<?php endif; ?>><?php echo $this->l('Please choose your main activity') ?></option>
+				<?php foreach ($this->list_activities as $i => $activity): ?>
+					<option value="<?php echo $activity ?>" <?php if ($this->session->shop_activity == $activity): ?>selected="selected"<?php endif; ?>><?php echo $activity ?></option>
+				<?php endforeach; ?>
+				<option value="0"><?php echo $this->l('Other activity...') ?></option>
+			</select>
+		</div>
+		<p class="userInfos aligned"><?php echo $this->l('This information is not required, it will only be used for statistical purposes. This information does not change anything in your store.') ?></p>
+	</div>
+
+	<!-- Install type (with fixtures or not) -->
+	<div class="field clearfix">
+		<label class="aligned"><?php echo $this->l('Install demo products:') ?></label>
+		<div class="contentinput">
+			<label>
+				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> />
+				<?php echo $this->l('Yes') ?>
+			</label>
+			<label>
+				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> />
+				<?php echo $this->l('No'); ?>
+			</label>
+		</div>
+		<p class="userInfos aligned"><?php echo $this->l('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.') ?></p>
+	</div>
+
+	<!-- Country list -->
+	<div class="field clearfix">
+		<label for="infosCountry" class="aligned"><?php echo $this->l('Default country:') ?></label>
+		<div class="contentinput">
+			<select name="shop_country" id="infosCountry" class="chosen">
+				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your country') ?></option>
+				<?php foreach ($this->list_countries as $country): ?>
+					<option value="<?php echo (isset($country['iso'])) ? $country['iso'] : '' ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']): ?>selected="selected"<?php endif; ?>><?php echo $country['name'] ?></option>
+				<?php endforeach; ?>
+			</select>
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('shop_country') ?>
+	</div>
+
+	<!-- Timezone list -->
+	<div class="field clearfix">
+		<label for="infosTimezone" class="aligned"><?php echo $this->l('Shop timezone:') ?></label>
+		<div class="contentinput">
+			<select name="shop_timezone" id="infosTimezone" class="chosen">
+				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your timezone') ?></option>
+				<?php foreach ($this->getTimezones() as $timezone): ?>
+					<option value="<?php echo $timezone ?>" <?php if ($this->session->shop_timezone == $timezone): ?>selected="selected"<?php endif; ?>><?php echo $timezone ?></option>
+				<?php endforeach; ?>
+			</select>
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('shop_timezone') ?>
+	</div>
+
+	<!-- Shop logo -->
+	<div class="field clearfix">
+		<label for="uploadedImage" class="aligned logo"><?php echo $this->l('Shop logo:') ?></label>
+		<div class="contentinput">
+			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
+		</div>
+		<p class="userInfos aligned"><?php echo $this->l('Recommended dimensions:') ?><br />209px x 52px</p>
+
+		<div id="inputFileLogo" class="contentinput">
+			<input type="file" name="fileToUpload" id="fileToUpload"/>
+		</div>
+		<span id="resultInfosLogo" class="result"></span>
+	</div>
+
+	<!-- Admin firstname -->
+	<div class="field clearfix">
+		<label for="infosFirstname" class="aligned"><?php echo $this->l('First name:') ?> </label>
+		<div class="contentinput">
+			<input class="text required" type="text" id="infosFirstname" name="admin_firstname" value="<?php echo htmlspecialchars($this->session->admin_firstname) ?>" />
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('admin_firstname') ?>
+	</div>
+
+	<!-- Admin lastname -->
+	<div class="field clearfix">
+		<label for="infosName" class="aligned"><?php echo $this->l('Last name:') ?> </label>
+		<div class="contentinput">
+			<input class="text required" type="text" id="infosName" name="admin_lastname" value="<?php echo htmlspecialchars($this->session->admin_lastname) ?>" />
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('admin_lastname') ?>
+	</div>
+
+	<!-- Admin email -->
+	<div class="field clearfix">
+		<label for="infosEmail" class="aligned"><?php echo $this->l('E-mail address:') ?> </label>
+		<div class="contentinput">
+			<input type="text" class="text required" id="infosEmail" name="admin_email" value="<?php echo htmlspecialchars($this->session->admin_email) ?>" />
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('admin_email') ?>
+	</div>
+
+	<!-- Admin password -->
+	<div class="field clearfix">
+		<label for="infosPassword" class="aligned"><?php echo $this->l('Shop password:') ?> </label>
+		<div class="contentinput">
+			<input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password) ?>" />
+			<sup class="required">*</sup>
+		</div>
+		<?php if ($this->displayError('admin_password')): ?>
+			<?php echo $this->displayError('admin_password') ?>
+		<?php else: ?>
+			<p class="userInfos aligned"><?php echo $this->l('Must be alphanumeric string with at least 8 characters') ?></p>
+		<?php endif; ?>
+	</div>
+
+	<!-- Admin password confirm -->
+	<div class="field clearfix">
+		<label class="aligned" for="infosPasswordRepeat"><?php echo $this->l('Re-type to confirm:') ?> </label>
+		<div class="contentinput">
+			<input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" value="<?php echo htmlspecialchars($this->session->admin_password_confirm) ?>" />
+			<sup class="required">*</sup>
+		</div>
+		<?php echo $this->displayError('admin_password_confirm') ?>
+	</div>
+
+	<!-- Recieve by email -->
+	<div class="field clearfix" id="contentInfosNotification">
+		<div class="contentinput">
+			<input type="checkbox" name="send_informations" id="infosNotification" class="aligned" style="vertical-align: middle;" <?php if ($this->session->send_informations): ?>checked="checked"<?php endif; ?> />
+			<label for="infosNotification"><?php echo $this->l('Receive this information by e-mail') ?></label>
+			<br/>
+			<span id="resultInfosNotification" class="result aligned"></span>
+		</div>
+		<p class="userInfos aligned"><?php echo $this->l('Warning: You will receive this information only if your e-mail configuration is correct.') ?></p>
+	</div>
+</div>
+
+<!-- Partners form -->
+<div id="benefitsBlock" style="display: none;"></div>
+
+<?php $this->displayTemplate('footer') ?>

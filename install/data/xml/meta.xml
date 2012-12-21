@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_meta>
+  <fields id="page">
+    <field name="page"/>
+  </fields>
+  <entities>
+    <meta id="404">
+      <page>404</page>
+    </meta>
+    <meta id="best-sales">
+      <page>best-sales</page>
+    </meta>
+    <meta id="contact">
+      <page>contact</page>
+    </meta>
+    <meta id="index">
+      <page>index</page>
+    </meta>
+    <meta id="manufacturer">
+      <page>manufacturer</page>
+    </meta>
+    <meta id="new-products">
+      <page>new-products</page>
+    </meta>
+    <meta id="password">
+      <page>password</page>
+    </meta>
+    <meta id="prices-drop">
+      <page>prices-drop</page>
+    </meta>
+    <meta id="sitemap">
+      <page>sitemap</page>
+    </meta>
+    <meta id="supply">
+      <page>supply</page>
+    </meta>
+    <meta id="address">
+      <page>address</page>
+    </meta>
+    <meta id="addresses">
+      <page>addresses</page>
+    </meta>
+    <meta id="authentication">
+      <page>authentication</page>
+    </meta>
+    <meta id="cart">
+      <page>cart</page>
+    </meta>
+    <meta id="discount">
+      <page>discount</page>
+    </meta>
+    <meta id="history">
+      <page>history</page>
+    </meta>
+    <meta id="identity">
+      <page>identity</page>
+    </meta>
+    <meta id="my-account">
+      <page>my-account</page>
+    </meta>
+    <meta id="order-follow">
+      <page>order-follow</page>
+    </meta>
+    <meta id="order-slip">
+      <page>order-slip</page>
+    </meta>
+    <meta id="order">
+      <page>order</page>
+    </meta>
+    <meta id="search">
+      <page>search</page>
+    </meta>
+    <meta id="stores">
+      <page>stores</page>
+    </meta>
+    <meta id="order-opc">
+      <page>order-opc</page>
+    </meta>
+    <meta id="guest-tracking">
+      <page>guest-tracking</page>
+    </meta>
+  </entities>
+</entity_meta>

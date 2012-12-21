@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<entity_attribute>
+  <attribute id="2GB">
+    <name>2GB</name>
+  </attribute>
+  <attribute id="4GB">
+    <name>4GB</name>
+  </attribute>
+  <attribute id="Metal">
+    <name>Metal</name>
+  </attribute>
+  <attribute id="Blue">
+    <name>Blue</name>
+  </attribute>
+  <attribute id="Pink">
+    <name>Pink</name>
+  </attribute>
+  <attribute id="Green">
+    <name>Green</name>
+  </attribute>
+  <attribute id="Orange">
+    <name>Orange</name>
+  </attribute>
+  <attribute id="Optional_64GB_solid-state_drive">
+    <name>Optional 64GB solid-state drive</name>
+  </attribute>
+  <attribute id="80GB_Parallel_ATA_Drive_4200_rpm">
+    <name>80GB Parallel ATA Drive @ 4200 rpm</name>
+  </attribute>
+  <attribute id="1_60GHz_Intel_Core_2_Duo">
+    <name>1.60GHz Intel Core 2 Duo</name>
+  </attribute>
+  <attribute id="1_80GHz_Intel_Core_2_Duo">
+    <name>1.80GHz Intel Core 2 Duo</name>
+  </attribute>
+  <attribute id="80GB_20_000_Songs">
+    <name>80GB: 20,000 Songs</name>
+  </attribute>
+  <attribute id="160GB_40_000_Songs">
+    <name>160GB: 40,000 Songs</name>
+  </attribute>
+  <attribute id="Black">
+    <name>Black</name>
+  </attribute>
+  <attribute id="8Go">
+    <name>8Go</name>
+  </attribute>
+  <attribute id="16Go">
+    <name>16Go</name>
+  </attribute>
+  <attribute id="32Go">
+    <name>32Go</name>
+  </attribute>
+  <attribute id="Purple">
+    <name>Purple</name>
+  </attribute>
+  <attribute id="Yellow">
+    <name>Yellow</name>
+  </attribute>
+  <attribute id="Red">
+    <name>Red</name>
+  </attribute>
+</entity_attribute>

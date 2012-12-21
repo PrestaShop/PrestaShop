@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_ordermessage>
+	<ordermessage id="delay">
+		<name><![CDATA[Plazo]]></name>
+		<message><![CDATA[Hola,Uno de los elementos de su solicitud se encuentra actualmente la reposición, el cual poco puede retrasar el envío.Gracias por su comprensión.Saludos cordiales,]]></message>
+	</ordermessage>
+</list_ordermessage>

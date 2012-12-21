@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="iPods" id_shop="1">
+    <name>iPods</name>
+    <description>Now that you can buy movies from the iTunes Store and sync them to your iPod, the whole world is your theater.</description>
+    <link_rewrite>musik-iPods</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Zubeh&#xF6;r</name>
+    <description>Wonderful accessories for your iPod</description>
+    <link_rewrite>zubehor-ipod</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Laptops" id_shop="1">
+    <name>Laptops</name>
+    <description>The latest Intel processor, a bigger hard drive, plenty of memory, and even more new features all fit inside just one liberating inch. The new Mac laptops have the performance, power, and connectivity of a desktop computer. Without the desk part.</description>
+    <link_rewrite>laptops</link_rewrite>
+    <meta_title>Apple laptops</meta_title>
+    <meta_keywords>Apple MacBook Air-Laptops</meta_keywords>
+    <meta_description>Powerful and chic Apple laptops</meta_description>
+  </category>
+</entity_category>

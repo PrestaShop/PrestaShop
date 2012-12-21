@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<entity_order_state>
+  <order_state id="Awaiting_cheque_payment">
+    <name>Scheckzahlung wird erwartet</name>
+    <template>cheque</template>
+  </order_state>
+  <order_state id="Payment_accepted">
+    <name>Zahlung eingegangen</name>
+    <template>payment</template>
+  </order_state>
+  <order_state id="Preparation_in_progress">
+    <name>Bestellung eingegangen</name>
+    <template>preparation</template>
+  </order_state>
+  <order_state id="Shipped">
+    <name>Versendet</name>
+    <template>shipped</template>
+  </order_state>
+  <order_state id="Delivered">
+    <name>Erfolgreich abgeschlossen</name>
+    <template/>
+  </order_state>
+  <order_state id="Canceled">
+    <name>Storniert</name>
+    <template>order_canceled</template>
+  </order_state>
+  <order_state id="Refund">
+    <name>Erstattet</name>
+    <template>refund</template>
+  </order_state>
+  <order_state id="Payment_error">
+    <name>Fehler bei der Bezahlung</name>
+    <template>payment_error</template>
+  </order_state>
+  <order_state id="On_backorder">
+    <name>Artikel erwartet</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="Awaiting_bank_wire_payment">
+    <name>Warten auf Zahlungseingang</name>
+    <template>bankwire</template>
+  </order_state>
+  <order_state id="Awaiting_PayPal_payment">
+    <name>Warten auf Zahlungseingang von PayPal</name>
+    <template/>
+  </order_state>
+  <order_state id="Payment_remotely_accepted">
+    <name>Payment Anmeldung erfolgreich</name>
+    <template/>
+  </order_state>
+</entity_order_state>

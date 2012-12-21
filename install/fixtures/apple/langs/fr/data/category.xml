@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="iPods" id_shop="1">
+    <name>iPods</name>
+    <description>Il est temps, pour le meilleur lecteur de musique, de remonter sur sc&#xE8;ne pour un rappel. Avec le nouvel iPod, le monde est votre sc&#xE8;ne.</description>
+    <link_rewrite>musique-ipods</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>Accessoires</name>
+    <description>Tous les accessoires &#xE0; la mode pour votre iPod</description>
+    <link_rewrite>accessoires-ipod</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Laptops" id_shop="1">
+    <name>Portables</name>
+    <description>Le tout dernier processeur Intel, un disque dur plus spacieux, de la m&#xE9;moire &#xE0; profusion et d'autres nouveaut&#xE9;s. Le tout, dans &#xE0; peine 2,59 cm qui vous lib&#xE8;rent de toute entrave. Les nouveaux portables Mac r&#xE9;unissent les performances, la puissance et la connectivit&#xE9; d'un ordinateur de bureau. Sans la partie bureau.</description>
+    <link_rewrite>portables-apple</link_rewrite>
+    <meta_title>Portables Apple</meta_title>
+    <meta_keywords>portables apple macbook air</meta_keywords>
+    <meta_description>portables apple puissants et design</meta_description>
+  </category>
+</entity_category>

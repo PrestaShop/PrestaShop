@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_product_attribute_combination>
+  <fields primary="id_attribute, id_product_attribute">
+    <field name="id_attribute" relation="attribute"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+  </fields>
+  <entities>
+    <product_attribute_combination id="product_attribute_combination_4_7" id_attribute="Blue" id_product_attribute="product_attribute_7"/>
+    <product_attribute_combination id="product_attribute_combination_6_8" id_attribute="Green" id_product_attribute="product_attribute_8"/>
+    <product_attribute_combination id="product_attribute_combination_3_9" id_attribute="Metal" id_product_attribute="product_attribute_9"/>
+    <product_attribute_combination id="product_attribute_combination_5_10" id_attribute="Pink" id_product_attribute="product_attribute_10"/>
+    <product_attribute_combination id="product_attribute_combination_3_12" id_attribute="Metal" id_product_attribute="product_attribute_12"/>
+    <product_attribute_combination id="product_attribute_combination_9_12" id_attribute="80GB_Parallel_ATA_Drive_4200_rpm" id_product_attribute="product_attribute_12"/>
+    <product_attribute_combination id="product_attribute_combination_10_12" id_attribute="1_60GHz_Intel_Core_2_Duo" id_product_attribute="product_attribute_12"/>
+    <product_attribute_combination id="product_attribute_combination_3_13" id_attribute="Metal" id_product_attribute="product_attribute_13"/>
+    <product_attribute_combination id="product_attribute_combination_8_13" id_attribute="Optional_64GB_solid-state_drive" id_product_attribute="product_attribute_13"/>
+    <product_attribute_combination id="product_attribute_combination_10_13" id_attribute="1_60GHz_Intel_Core_2_Duo" id_product_attribute="product_attribute_13"/>
+    <product_attribute_combination id="product_attribute_combination_3_14" id_attribute="Metal" id_product_attribute="product_attribute_14"/>
+    <product_attribute_combination id="product_attribute_combination_9_14" id_attribute="80GB_Parallel_ATA_Drive_4200_rpm" id_product_attribute="product_attribute_14"/>
+    <product_attribute_combination id="product_attribute_combination_11_14" id_attribute="1_80GHz_Intel_Core_2_Duo" id_product_attribute="product_attribute_14"/>
+    <product_attribute_combination id="product_attribute_combination_3_15" id_attribute="Metal" id_product_attribute="product_attribute_15"/>
+    <product_attribute_combination id="product_attribute_combination_8_15" id_attribute="Optional_64GB_solid-state_drive" id_product_attribute="product_attribute_15"/>
+    <product_attribute_combination id="product_attribute_combination_11_15" id_attribute="1_80GHz_Intel_Core_2_Duo" id_product_attribute="product_attribute_15"/>
+    <product_attribute_combination id="product_attribute_combination_15_19" id_attribute="8GB" id_product_attribute="product_attribute_19"/>
+    <product_attribute_combination id="product_attribute_combination_16_22" id_attribute="16GB" id_product_attribute="product_attribute_22"/>
+    <product_attribute_combination id="product_attribute_combination_17_23" id_attribute="32GB" id_product_attribute="product_attribute_23"/>
+    <product_attribute_combination id="product_attribute_combination_4_25" id_attribute="Blue" id_product_attribute="product_attribute_25"/>
+    <product_attribute_combination id="product_attribute_combination_16_25" id_attribute="16GB" id_product_attribute="product_attribute_25"/>
+    <product_attribute_combination id="product_attribute_combination_4_26" id_attribute="Blue" id_product_attribute="product_attribute_26"/>
+    <product_attribute_combination id="product_attribute_combination_15_26" id_attribute="8GB" id_product_attribute="product_attribute_26"/>
+    <product_attribute_combination id="product_attribute_combination_16_27" id_attribute="16GB" id_product_attribute="product_attribute_27"/>
+    <product_attribute_combination id="product_attribute_combination_19_27" id_attribute="Yellow" id_product_attribute="product_attribute_27"/>
+    <product_attribute_combination id="product_attribute_combination_15_28" id_attribute="8GB" id_product_attribute="product_attribute_28"/>
+    <product_attribute_combination id="product_attribute_combination_19_28" id_attribute="Yellow" id_product_attribute="product_attribute_28"/>
+    <product_attribute_combination id="product_attribute_combination_3_29" id_attribute="Metal" id_product_attribute="product_attribute_29"/>
+    <product_attribute_combination id="product_attribute_combination_16_29" id_attribute="16GB" id_product_attribute="product_attribute_29"/>
+    <product_attribute_combination id="product_attribute_combination_3_30" id_attribute="Metal" id_product_attribute="product_attribute_30"/>
+    <product_attribute_combination id="product_attribute_combination_15_30" id_attribute="8GB" id_product_attribute="product_attribute_30"/>
+    <product_attribute_combination id="product_attribute_combination_14_31" id_attribute="Black" id_product_attribute="product_attribute_31"/>
+    <product_attribute_combination id="product_attribute_combination_16_31" id_attribute="16GB" id_product_attribute="product_attribute_31"/>
+    <product_attribute_combination id="product_attribute_combination_14_32" id_attribute="Black" id_product_attribute="product_attribute_32"/>
+    <product_attribute_combination id="product_attribute_combination_15_32" id_attribute="8GB" id_product_attribute="product_attribute_32"/>
+    <product_attribute_combination id="product_attribute_combination_7_33" id_attribute="Orange" id_product_attribute="product_attribute_33"/>
+    <product_attribute_combination id="product_attribute_combination_16_33" id_attribute="16GB" id_product_attribute="product_attribute_33"/>
+    <product_attribute_combination id="product_attribute_combination_7_34" id_attribute="Orange" id_product_attribute="product_attribute_34"/>
+    <product_attribute_combination id="product_attribute_combination_15_34" id_attribute="8GB" id_product_attribute="product_attribute_34"/>
+    <product_attribute_combination id="product_attribute_combination_5_35" id_attribute="Pink" id_product_attribute="product_attribute_35"/>
+    <product_attribute_combination id="product_attribute_combination_16_35" id_attribute="16GB" id_product_attribute="product_attribute_35"/>
+    <product_attribute_combination id="product_attribute_combination_5_36" id_attribute="Pink" id_product_attribute="product_attribute_36"/>
+    <product_attribute_combination id="product_attribute_combination_15_36" id_attribute="8GB" id_product_attribute="product_attribute_36"/>
+    <product_attribute_combination id="product_attribute_combination_6_39" id_attribute="Green" id_product_attribute="product_attribute_39"/>
+    <product_attribute_combination id="product_attribute_combination_16_39" id_attribute="16GB" id_product_attribute="product_attribute_39"/>
+    <product_attribute_combination id="product_attribute_combination_6_40" id_attribute="Green" id_product_attribute="product_attribute_40"/>
+    <product_attribute_combination id="product_attribute_combination_15_40" id_attribute="8GB" id_product_attribute="product_attribute_40"/>
+    <product_attribute_combination id="product_attribute_combination_16_41" id_attribute="16GB" id_product_attribute="product_attribute_41"/>
+    <product_attribute_combination id="product_attribute_combination_18_41" id_attribute="Purple" id_product_attribute="product_attribute_41"/>
+    <product_attribute_combination id="product_attribute_combination_15_42" id_attribute="8GB" id_product_attribute="product_attribute_42"/>
+    <product_attribute_combination id="product_attribute_combination_18_42" id_attribute="Purple" id_product_attribute="product_attribute_42"/>
+  </entities>
+</entity_product_attribute_combination>

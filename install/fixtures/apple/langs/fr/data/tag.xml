@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<entity_tag>
+  <tag id="tag_26" name="casque" products="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone"/>
+  <tag id="tag_25" name="&#xE9;couteurs" products="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone"/>
+  <tag id="tag_35" name="superdrive" products="MacBook"/>
+  <tag id="tag_27" name="marche" products="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone"/>
+  <tag id="tag_24" name="ipod touch tactile" products="iPod_touch"/>
+  <tag id="tag_21" name="air" products="MacBook_Air"/>
+  <tag id="tag_20" name="macbookair" products="MacBook_Air"/>
+  <tag id="tag_19" name="macbook" products="MacBook_Air"/>
+  <tag id="tag_18" name="shuffle" products="iPod_shuffle"/>
+  <tag id="tag_8" name="apple" products="iPod_Nano,MacBook_Air,MacBook"/>
+  <tag id="tag_6" name="ipod" products="iPod_Nano,iPod_shuffle"/>
+  <tag id="tag_7" name="nano" products="iPod_Nano"/>
+</entity_tag>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_orders>
+  <fields primary="id_order" class="Order">
+    <field name="reference"/>
+    <field name="id_shop_group"/>
+    <field name="id_shop"/>
+    <field name="id_carrier" relation="carrier"/>
+    <field name="id_customer" relation="customer"/>
+    <field name="id_cart" relation="cart"/>
+    <field name="id_currency"/>
+    <field name="id_address_delivery" relation="address"/>
+    <field name="id_address_invoice" relation="address"/>
+    <field name="current_state"/>
+    <field name="secure_key"/>
+    <field name="payment"/>
+    <field name="conversion_rate"/>
+    <field name="module"/>
+    <field name="recyclable"/>
+    <field name="gift"/>
+    <field name="gift_message"/>
+    <field name="shipping_number"/>
+    <field name="total_discounts"/>
+    <field name="total_discounts_tax_incl"/>
+    <field name="total_paid"/>
+    <field name="total_paid_tax_incl"/>
+    <field name="total_paid_tax_excl"/>
+    <field name="total_paid_real"/>
+    <field name="total_products"/>
+    <field name="total_products_wt"/>
+    <field name="total_shipping"/>
+    <field name="total_shipping_tax_incl"/>
+    <field name="total_shipping_tax_excl"/>
+    <field name="carrier_tax_rate"/>
+    <field name="total_wrapping"/>
+    <field name="total_wrapping_tax_incl"/>
+    <field name="total_wrapping_tax_excl"/>
+    <field name="invoice_number"/>
+    <field name="delivery_number"/>
+    <field name="invoice_date"/>
+    <field name="delivery_date"/>
+    <field name="valid"/>
+  </fields>
+  <entities>
+    <orders id="orders_1" reference="XKBKNABJK" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_1" id_currency="1" id_address_delivery="Mon_adresse" id_address_invoice="Mon_adresse" current_state="1" secure_key="47ce86627c1f3c792a80773c5d2deaf8" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="626.37" total_paid_tax_incl="626.37" total_paid_tax_excl="523.72" total_paid_real="626.37" total_products="516.72" total_products_wt="618.00" total_shipping="7.98" total_shipping_tax_incl="8.37" total_shipping_tax_excl="7.00" carrier_tax_rate="19.600" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
+      <payment>Chèque</payment>
+      <module>cheque</module>
+      <gift_message/>
+    </orders>
+  </entities>
+</entity_orders>

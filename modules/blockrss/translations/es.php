@@ -8,6 +8,7 @@ $_MODULE['<{blockrss}prestashop>blockrss_9680162225162baf2a085dfdc2814deb'] = 'f
 $_MODULE['<{blockrss}prestashop>blockrss_6706b6d8ba45cc4f0eda0506ba1dc3c8'] = 'URL de fuente incorrecta';
 $_MODULE['<{blockrss}prestashop>blockrss_36ed65ce17306e812fd68d9f634c0c57'] = 'Título incorrecto';
 $_MODULE['<{blockrss}prestashop>blockrss_1b3d34e25aef32a3c8daddfff856577f'] = 'Número de fuentes incorrecto';
+$_MODULE['<{blockrss}prestashop>blockrss_33fdb8cdd27081e688163b935e31fb1b'] = 'Vida de cache no válido';
 $_MODULE['<{blockrss}prestashop>blockrss_e423bd72f5aa1be13216c5abbd3deb45'] = 'Ha seleccionado su propio feed a su sitio en al url. Por favor seleccione otro';
 $_MODULE['<{blockrss}prestashop>blockrss_bef637cd0e222a8b56676cb64ce75258'] = 'El feed es inalcanzable. Seleccione otro';
 $_MODULE['<{blockrss}prestashop>blockrss_1844ef1bfaa030dc8423c4645a43525c'] = 'Feed inválido';
@@ -19,6 +20,8 @@ $_MODULE['<{blockrss}prestashop>blockrss_402d00ca8e4f0fff26fc24ee9ab8e82b'] = 'A
 $_MODULE['<{blockrss}prestashop>blockrss_695d0986205c1ce17d03b026feb78c97'] = 'Añada la url del feed a utilizar (ejemplo: http://news.google.com/?output=rss)';
 $_MODULE['<{blockrss}prestashop>blockrss_ff9aa540e20285875ac8b190a3cb7ccf'] = 'Número de hilos mostrados';
 $_MODULE['<{blockrss}prestashop>blockrss_f33725e23a017705ad35897e849a4db4'] = 'Número de hilos mostrados en cada bloque (por defecto 5)';
+$_MODULE['<{blockrss}prestashop>blockrss_5f00c519230bb042f8b9a4b0c291fba3'] = 'Caché de vida';
+$_MODULE['<{blockrss}prestashop>blockrss_4563aef93399495962053b3dce2455fd'] = 'Caché de vida en minutos (valor predeterminado: 60)';
 $_MODULE['<{blockrss}prestashop>blockrss_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{blockrss}prestashop>blockrss_0a1c629f0e86804a9e165f4b1ee399b7'] = 'Error: RSS feed en \"blockrss\" módulo: %s';
 $_MODULE['<{blockrss}prestashop>blockrss_10fd25dcd3353c0ba3731d4a23657f2e'] = 'No se han añadido fuentes RSS';

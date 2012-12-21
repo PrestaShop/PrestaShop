@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<entity_order_message>
+  <order_message id="Delay">
+    <name>Plazo</name>
+    <message>Hola,
+
+Uno de los elementos de su solicitud se encuentra actualmente la reposici&#xF3;n, el cual poco puede retrasar el env&#xED;o.
+
+Gracias por su comprensi&#xF3;n.
+
+Saludos cordiales,</message>
+  </order_message>
+</entity_order_message>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<entity_order_message>
+  <order_message id="Delay">
+    <name>D&#xE9;lai</name>
+    <message>Bonjour,
+
+Un des &#xE9;l&#xE9;ments de votre commande est actuellement en r&#xE9;approvisionnement, ce qui peut l&#xE9;g&#xE8;rement retarder son envoi.
+
+Merci de votre compr&#xE9;hension.
+
+Cordialement,</message>
+  </order_message>
+</entity_order_message>

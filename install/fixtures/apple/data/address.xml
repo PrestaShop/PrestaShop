@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_address>
+  <fields id="alias" class="Address">
+    <field name="id_country" relation="country"/>
+    <field name="id_state" relation="state"/>
+    <field name="id_customer" relation="customer"/>
+    <field name="id_manufacturer" relation="manufacturer"/>
+    <field name="id_supplier" relation="supplier"/>
+    <field name="id_warehouse"/>
+    <field name="alias"/>
+    <field name="company"/>
+    <field name="lastname"/>
+    <field name="firstname"/>
+    <field name="address1"/>
+    <field name="address2"/>
+    <field name="postcode"/>
+    <field name="city"/>
+    <field name="other"/>
+    <field name="phone"/>
+    <field name="phone_mobile"/>
+    <field name="vat_number"/>
+    <field name="dni"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <address id="manufacturer" id_country="US" id_state="" id_customer="" id_manufacturer="Apple_Computer_Inc" id_supplier="" id_warehouse="0" alias="manufacturer" company="" lastname="JOBS" firstname="STEVE" postcode="95014" phone="(800) 275-2273" phone_mobile="" vat_number="" dni="" active="1">
+      <address1>1 Infinite Loop</address1>
+      <address2/>
+      <city>Cupertino</city>
+      <other/>
+    </address>
+	  <address id="Mon_adresse" id_country="FR" id_state="" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="Mon adresse" company="My Company" lastname="DOE" firstname="John" postcode="75002" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
+		  <address1>16, Main street</address1>
+		  <address2>2nd floor</address2>
+		  <city>Paris </city>
+		  <other/>
+	  </address>
+	  <address id="supplier" id_country="US" id_state="NY" id_customer="" id_manufacturer="" id_supplier="AppleStore" id_warehouse="0" alias="supplier" company="Apple" lastname="supplier" firstname="supplier" postcode="10153" phone="(212) 336-1440" phone_mobile="" vat_number="" dni="" active="1">
+		  <address1>767 Fifth Ave.</address1>
+		  <address2/>
+		  <city>New York</city>
+		  <other/>
+	  </address>
+	  <address id="supplier" id_country="US" id_state="IL" id_customer="" id_manufacturer="" id_supplier="Shure_Online_Store" id_warehouse="0" alias="supplier" company="Shure" lastname="supplier" firstname="supplier" postcode="60714" phone="800-434-3350" phone_mobile="" vat_number="" dni="" active="1">
+		  <address1>5800 W. Touhy Ave</address1>
+		  <address2/>
+		  <city>Niles</city>
+		  <other/>
+	  </address>
+  </entities>
+</entity_address>

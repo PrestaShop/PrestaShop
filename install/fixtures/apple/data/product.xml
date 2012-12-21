@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_product>
+  <fields id="name" class="Product">
+    <field name="id_supplier" relation="supplier"/>
+    <field name="id_manufacturer" relation="manufacturer"/>
+    <field name="id_category_default" relation="category"/>
+    <field name="on_sale"/>
+    <field name="online_only"/>
+    <field name="ean13"/>
+    <field name="upc"/>
+    <field name="ecotax"/>
+    <field name="quantity"/>
+    <field name="minimal_quantity"/>
+    <field name="price"/>
+    <field name="wholesale_price"/>
+    <field name="unity"/>
+    <field name="unit_price_ratio"/>
+    <field name="additional_shipping_cost"/>
+    <field name="reference"/>
+    <field name="supplier_reference"/>
+    <field name="location"/>
+    <field name="width"/>
+    <field name="height"/>
+    <field name="depth"/>
+    <field name="weight"/>
+    <field name="out_of_stock"/>
+    <field name="quantity_discount"/>
+    <field name="customizable"/>
+    <field name="uploadable_files"/>
+    <field name="text_fields"/>
+    <field name="active"/>
+    <field name="available_for_order"/>
+    <field name="available_date"/>
+    <field name="condition"/>
+    <field name="show_price"/>
+    <field name="indexed"/>
+    <field name="cache_is_pack"/>
+    <field name="cache_has_attachments"/>
+    <field name="is_virtual"/>
+    <field name="cache_default_attribute"/>
+    <field name="advanced_stock_management"/>
+  </fields>
+  <entities>
+    <product id="iPod_Nano" id_supplier="AppleStore" id_manufacturer="Apple_Computer_Inc" id_category_default="iPods" on_sale="0" online_only="0" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="124.581940" wholesale_price="70.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0.5" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="iPod_shuffle" id_supplier="AppleStore" id_manufacturer="Apple_Computer_Inc" id_category_default="iPods" on_sale="0" online_only="0" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="66.053500" wholesale_price="33.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="MacBook_Air" id_supplier="AppleStore" id_manufacturer="Apple_Computer_Inc" id_category_default="Laptops" on_sale="0" online_only="0" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="1504.180602" wholesale_price="1000.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="1.36" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="MacBook" id_supplier="AppleStore" id_manufacturer="Apple_Computer_Inc" id_category_default="Laptops" on_sale="0" online_only="0" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="1170.568561" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0.75" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="iPod_touch" id_supplier="" id_manufacturer="" id_category_default="iPods" on_sale="0" online_only="0" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="241.638796" wholesale_price="200.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" id_supplier="" id_manufacturer="" id_category_default="Accessories" on_sale="0" online_only="1" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="25.041806" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+    <product id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_supplier="Shure_Online_Store" id_manufacturer="Shure_Incorporated" id_category_default="Accessories" on_sale="0" online_only="1" ean13="0" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="124.581940" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="" supplier_reference="" width="0" height="0" depth="0" weight="0" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="0" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+      <unity/>
+      <location/>
+    </product>
+  </entities>
+</entity_product>
