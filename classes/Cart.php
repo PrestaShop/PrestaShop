@@ -1454,15 +1454,7 @@ class CartCore extends ObjectModel
 		// Wrapping Fees
 		$wrapping_fees = 0;
 		if ($this->gift)
-		{
-			$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
-			if ($with_taxes)
-			{
-				$wrapping_fees_tax = new Tax(Configuration::get('PS_GIFT_WRAPPING_TAX'));
-				$wrapping_fees *= 1 + ((float)$wrapping_fees_tax->rate / 100);
-			}
-			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)$this->id_currency));
-		}
+			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), 2), Currency::getCurrencyInstance((int)$this->id_currency));
 
 		$order_total_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
@@ -1538,6 +1530,32 @@ class CartCore extends ObjectModel
 			return $order_total_discount;
 
 		return Tools::ps_round((float)$order_total, 2);
+	}
+
+	/**
+	* Get the gift wrapping price
+	* @param boolean $with_taxes With or without taxes
+	* @return gift wrapping price
+	*/
+	public function getGiftWrappingPrice($with_taxes = true, $id_address = null)
+	{
+		static $address = null;
+
+		if ($id_address === null)
+			$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+
+		if ($address === null)
+			$address = Address::initialize($id_address);
+
+		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
+		if ($with_taxes && $wrapping_fees > 0)
+		{
+			$tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+			$tax_calculator = $tax_manager->getTaxCalculator();
+			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+		}
+
+		return $wrapping_fees;
 	}
 	
 	/**
