@@ -116,7 +116,7 @@ class TranslateCore
 	 * @param string $source
 	 * @return string
 	 */
-	public static function getModuleTranslation($module, $string, $source, $sprintf = null)
+	public static function getModuleTranslation($module, $string, $source, $sprintf = null, $id_lang = null)
 	{
 		global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -127,16 +127,21 @@ class TranslateCore
 
 		$name = $module instanceof Module ? $module->name : $module;
 		
+		if($id_lang)
+			$iso_code = Language::getIsoById((int)$id_lang);
+		else
+			$iso_code = Context::getContext()->language->iso_code;
+		
 		if (!isset($translations_merged[$name]))
 		{
 			$filesByPriority = array(
 				// Translations in theme
-				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php', 
-				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.$iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/'.$iso_code.'.php', 
 				// PrestaShop 1.5 translations
-				_PS_MODULE_DIR_.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
+				_PS_MODULE_DIR_.$name.'/translations/'.$iso_code.'.php',
 				// PrestaShop 1.4 translations
-				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
+				_PS_MODULE_DIR_.$name.'/'.$iso_code.'.php'
 			);
 			foreach ($filesByPriority as $file)
 				if (Tools::file_exists_cache($file))
