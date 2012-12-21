@@ -53,11 +53,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			)
 		);
 
-		// Tax list
-		$taxes[] = array('id' => 0, 'name' => $this->l('None'));
-		foreach (Tax::getTaxes($this->context->language->id) as $tax)
-			$taxes[] = array('id' => $tax['id_tax'], 'name' => $tax['name']);
-
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('General'),
@@ -140,14 +135,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
-					'PS_GIFT_WRAPPING_TAX' => array(
+					'PS_GIFT_WRAPPING_TAX_RULES_GROUP' => array(
 						'title' => $this->l('Gift-wrapping tax'),
 						'desc' => $this->l('Set a tax for gift-wrapping'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
-						'list' => $taxes,
-						'identifier' => 'id'
+						'list' => array_merge(array(array('id_tax_rules_group' => 0, 'name' => $this->l('None'))), TaxRulesGroup::getTaxRulesGroups(true)),
+						'identifier' => 'id_tax_rules_group'
 					),
 					'PS_RECYCLABLE_PACK' => array(
 						'title' => $this->l('Offer recycled packaging'),
