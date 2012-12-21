@@ -1353,7 +1353,7 @@ abstract class ModuleCore
 		if (self::$_generate_config_xml_mode)
 			return $string;
 
-		return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, (int)$id_lang);
+		return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, $id_lang);
 	}
 
 	/*

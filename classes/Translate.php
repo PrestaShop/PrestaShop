@@ -127,9 +127,10 @@ class TranslateCore
 
 		$name = $module instanceof Module ? $module->name : $module;
 		
+		$iso_code = null;
 		if($id_lang)
 			$iso_code = Language::getIsoById((int)$id_lang);
-		else
+		if(!$iso_code)
 			$iso_code = Context::getContext()->language->iso_code;
 		
 		if (!isset($translations_merged[$name]))
