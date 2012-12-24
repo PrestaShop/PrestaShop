@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7307 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +35,7 @@ class Pagesnotfound extends Module
 	{
 		$this->name = 'pagesnotfound';
 		$this->tab = 'analytics_stats';
-		$this->version = 1.0;
+		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -168,14 +167,17 @@ class Pagesnotfound extends Module
 			$_SERVER['REQUEST_URI'] = $_SERVER['REDIRECT_URL'];
 		if (!Validate::isUrl($request_uri = $_SERVER['REQUEST_URI']) || strstr($_SERVER['REQUEST_URI'], '-admin404'))
 			return;
-		if (strstr($_SERVER['PHP_SELF'], '404.php') && !strstr($_SERVER['REQUEST_URI'], '404.php'))
+
+		if (get_class(Context::getContext()->controller) == 'PageNotFoundController')
 		{
 			$http_referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 			if (empty($http_referer) || Validate::isAbsoluteUrl($http_referer))
+			{
 				Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_shop_group`)
 					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.')
 				');
+			}
 		}
 	}
 }

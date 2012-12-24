@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 9790 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -127,6 +126,12 @@ class AdminModulesControllerCore extends AdminController
 		// Check if logged on Addons
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
+	}
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin(array('autocomplete', 'fancybox'));
 	}
 
 	public function ajaxProcessRefreshModuleList()
@@ -257,66 +262,13 @@ class AdminModulesControllerCore extends AdminController
 		}
 		die('OK');
 	}
-
-
-	private function sendStatisticRequest($object_key)
-	{
-		$post_data = http_build_query(array(
-			'key' => urlencode($object_key),
-			'url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL')),
-			'version' => urlencode(_PS_VERSION_),
-			'method' => 'product_key'
-		));
-
-		$opts = array(
-			'http' => array(
-				'method' => 'POST',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'content' => $post_data
-			)
-		);
-
-		$context = stream_context_create($opts);
-		file_get_contents('http://api.addons.prestashop.com/', false, $context);
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsModuleCall()
-	{
-		if (($list = Tools::getValue('modules_list')) && is_array($list))
-			foreach ($list as $id)
-				if (($obj = Module::getInstanceById($id)) && (isset($obj->module_key)))
-						$this->sendStatisticRequest($obj->module_key);
-		die();
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsThemeCall()
-	{
-		// Theme list contains just the key for each theme
-		if (($list = Tools::getValue('theme_list')) && is_array($list))
-			foreach ($list as $theme_key)
-				if (!empty($theme_key))
-					$this->sendStatisticRequest($theme_key);
-		die();
-	}
-
+	
 	/*
 	** Get current URL
 	**
 	** @param array $remove List of keys to remove from URL
 	** @return string
 	*/
-
 	protected function getCurrentUrl($remove = array())
 	{
 		$url = $_SERVER['REQUEST_URI'];
@@ -335,25 +287,40 @@ class AdminModulesControllerCore extends AdminController
 
 	protected function extractArchive($file, $redirect = true)
 	{
+		$zip_folders = array();
+		$tmp_folder = _PS_MODULE_DIR_.md5(time());
+
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
-			if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if (Tools::ZipExtract($file, $tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
 		else
 		{
 			$archive = new Archive_Tar($file);
-			if ($archive->extract(_PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if ($archive->extract($tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if ($archive->extract(_PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
+		if (!$success)
+				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+		
+		//check if it's a real module
+		foreach($zip_folders as $folder)
+			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
+				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
 
 		@unlink($file);
-		if ($success && $redirect)
+		@unlink($tmp_folder);
+		if (!count($this->errors) && $success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
@@ -457,6 +424,7 @@ class AdminModulesControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('Cannot load module object');
+			$this->errors = array_merge($this->errors, $module->getErrors());
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to add here.');
@@ -524,6 +492,8 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
 					{
+						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
+						$module->uninstall();
 						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
 						$this->recursiveDeleteOnDisk($moduleDir);
 						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
@@ -582,6 +552,7 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 					}
+
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('module not found');
@@ -681,6 +652,7 @@ class AdminModulesControllerCore extends AdminController
 						}
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
+
 						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
 							Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
@@ -786,18 +758,18 @@ class AdminModulesControllerCore extends AdminController
 		}	
 			
 		$return = '';
-		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&tab_module='.$module->tab;
 		if ($module->id)
-			$return .= ' <span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
+			$return .= ' <span class="desactive-module"><a class="action_module" '.($module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? 'onclick="'.$module->onclick_option_content['desactive'].'"' : '').' 
+					href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
 
 		if ($module->id && $module->active)
-			$return .= (!empty($result) ? '|' : '').' <span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
+			$return .= (!empty($result) ? '|' : '').' <span class="reset-module"><a class="action_module" '.($module->onclick_option && isset($module->onclick_option_content['reset']) ? 'onclick="'.$module->onclick_option_content['reset'].'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
 
 		if ($module->id && isset($module->is_configurable) && $module->is_configurable)
-			$return .= (!empty($result) ? '|' : '').' <span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
+			$return .= (!empty($result) ? '|' : '').' <span class="configure-module"><a class="action_module" '.($module->onclick_option && isset($module->onclick_option_content['configure']) ? 'onclick="'.$module->onclick_option_content['configure'].'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
 
 		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
-		$return .= (!empty($result) ? '|' : '').' <span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');" href="'.$hrefDelete.'">'.$this->translationsTab['Delete'].'</a></span>';
+		$return .= (!empty($result) ? '|' : '').' <span class="delete-module"><a class="action_module" '.($module->onclick_option && isset($module->onclick_option_content['delete']) ? 'onclick="'.$module->onclick_option_content['delete'].'"' : '').' onclick="return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');" href="'.$hrefDelete.'">'.$this->translationsTab['Delete'].'</a></span>';
 
 		return $return;
 	}

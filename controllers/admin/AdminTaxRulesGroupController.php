@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -417,7 +416,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
 
 				// Construct Object Country
-				$country = new Country((int)$id_country);
+				$country = new Country((int)$id_country, (int)$this->context->language->id);
 
 				if ($zip_code && $country->need_zip_code)
 				{
@@ -428,8 +427,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 								if (!$country->checkZipCode($zip_code))
 								{
 									$this->errors[] = sprintf(
-										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
-										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s for %s'),
+										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
 									);
 								}
 					}

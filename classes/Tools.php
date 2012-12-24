@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7521 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -644,7 +643,6 @@ class ToolsCore
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
 	{
 		if (is_array($string))
-
 			return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
 		return htmlentities($string, $type, 'utf-8');
 	}
@@ -2043,7 +2041,13 @@ FileETag INode MTime Size
 	 */
 	public static function clearCache($smarty, $tpl = false, $cache_id = null, $compile_id = null)
 	{
-		return $smarty->clearAllCache();
+		if (is_null($smarty))
+			$smarty = Context::getContext()->smarty;
+		
+		if (!$tpl && $cache_id === null && $compile_id === null)
+			return $smarty->clearAllCache();
+
+		return $smarty->clearCache($tpl, $cache_id, $compile_id);
 	}
 
 	/**

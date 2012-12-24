@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -344,16 +343,18 @@ class AdminImagesControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}elseif (Tools::getValue('submitMoveImages'.$this->table))
+		}
+		elseif (Tools::getValue('submitMoveImages'.$this->table))
 		{
 			if ($this->tabAccess['edit'] === '1')
 		 	{
 				if ($this->_moveImagesToNewFileSystem())
 					Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 		 	}
-		else
+			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}elseif (Tools::getValue('submitImagePreferences'))
+		}
+		elseif (Tools::getValue('submitImagePreferences'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -460,11 +461,11 @@ class AdminImagesControllerCore extends AdminController
 	{
 		if (!is_dir($dir))
 			return false;
+
 		$errors = false;
-		$toRegen = scandir($dir);
 		if (!$productsImages)
 		{
-			foreach ($toRegen as $image)
+			foreach (scandir($dir) as $image)
 				if (preg_match('/^[0-9]*\.jpg$/', $image))
 					foreach ($type as $k => $imageType)
 					{
@@ -475,41 +476,39 @@ class AdminImagesControllerCore extends AdminController
 						if (!file_exists($newDir))
 							continue;
 						if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg'))
-							if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+						{
+							if (!file_exists($dir.$image) || !filesize($dir.$image))
+							{
 								$errors = true;
+								$this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)', $dir.$image));
+							}
+							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+								$errors = true;
+						}
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
 					}
 		}
 		else
 		{
-			$productsImages = Image::getAllImages();
-			foreach ($productsImages as $image)
+			foreach (Image::getAllImages() as $image)
 			{
 				$imageObj = new Image($image['id_image']);
-				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
+				$existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
+				if (file_exists($existing_img) && filesize($existing_img))
 				{
-					foreach ($type as $imageType)
-					{
-						$existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
-						
-						if (!file_exists($existing_img)) //test if original file exist
-						{
-							$errors = true;
-							$this->errors[] = Tools::displayError('Can\'t find original image '.$dir.$imageObj->getExistingImgPath().'.jpg');
-						}
-						else
-						{
-							if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
+					foreach ($type as $imageType)				
+						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
+							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 							{
-								if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
-								{
-									$errors = true;
-									$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) or bad permission on folder'), $existing_img);
-								}
-							}	
-						}
-					}
+								$errors = true;
+								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) or bad permission on folder', $existing_img));
+							}
+				}
+				else
+				{
+					$errors = true;
+					$this->errors[] = Tools::displayError(sprintf('Original image is missing or empty (%s)', $existing_img));
 				}
 			}
 		}
@@ -609,7 +608,10 @@ class AdminImagesControllerCore extends AdminController
 			if ($deleteOldImages)
 				$this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
 			if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true)
-				$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions %s.'), $proc['type'], $proc['dir']);
+			{
+				if (!count($this->errors))
+					$this->errors[] = sprintf(Tools::displayError('Cannot write %s images. Please check the folder\'s writing permissions %s.'), $proc['type'], $proc['dir']);
+			}
 			elseif ($return == 'timeout')
 				$this->errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
 			else

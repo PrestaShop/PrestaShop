@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6599 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +32,7 @@
 		{l s='Your account has been created.'}
 	</p>
 {/if}
-<h4>{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</h4>
+<p class="title_block">{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</p>
 <ul class="myaccount_lnk_list">
 	{if $has_customer_an_address}
 	<li><a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}"><img src="{$img_dir}icon/addrbook.gif" alt="{l s='Add my first address'}" class="icon" /> {l s='Add my first address'}</a></li>

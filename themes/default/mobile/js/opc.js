@@ -51,17 +51,15 @@ function initEvent()
 	$("#addressesAreEquals").bind("change", function(event, ui) {
 		$("#address_invoice_form").toggle();
 	});
-	// paquet cadeau
-	$("#gift").bind("change", function(event, ui) {
-		$("#gift_div").toggle();
-	});
 
 	$('.delivery_option_radio').click(function() {
 		updateCarrierSection($(this));
 	});
 
 	$('#gift').click(function() {
+		// Gift checkbox update
 		giftShowDiv();
+		updateCarrierSection($(this));
 	});
 
 	$('#gift_div').change(function() {
@@ -82,7 +80,8 @@ function initEvent()
 			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
 			success: function(json)
 			{
-				window.location.href = orderOpcUrl;
+				window.location.href = orderOpcUrl+'#cgv_checkbox';
+				window.location.reload(true);
 			}
 		});
 	});
@@ -102,7 +101,7 @@ function updateCarrierSection(elm)
 	var gift = 0;
 	var giftMessage = '';
 
-	var delivery_option_radio = $('.delivery_option_radio');
+	var delivery_option_radio = $('.delivery_option_radio_carrier');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
 		if ($(this).prop('checked'))
@@ -129,7 +128,7 @@ function updateCarrierSection(elm)
 		success: function(jsonData)
 		{
 			if (!elm.is('#gift'))
-				window.location.href = orderOpcUrl;
+				window.location.href = orderOpcUrl+'#delivery_choose';
 		}
 	});
 }

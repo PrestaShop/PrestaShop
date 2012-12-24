@@ -20,12 +20,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 12518 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-// backward compatibility vouchers should be available in all categories
+/**
+* backward compatibility vouchers should be available in all categories
+*/
 function update_module_loyalty()
 {
 	$ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value 

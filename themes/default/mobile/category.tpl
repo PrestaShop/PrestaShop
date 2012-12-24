@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -52,11 +51,6 @@
 			{include file="./category-product-sort.tpl" container_class="container-sort"}
 			<p class="nbr_result">{include file="$tpl_dir./category-count.tpl"}</p>
 		</div>
-		
-		{* layered ? *}
-		{* ===================================== *}
-		{*<p><a href="layered.html" data-ajax="false">Affiner la recherche</a></p>*}
-		{* ===================================== *}
 		<hr width="99%" align="center" size="2" class="margin_less"/>
 		
 		{include file="./pagination.tpl"}

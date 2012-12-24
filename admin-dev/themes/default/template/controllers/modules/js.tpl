@@ -19,15 +19,12 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 9771 $
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<link href="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">{$autocompleteList}</script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/autocomplete/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.js"></script>
 <script type="text/javascript">
 	var token = '{$token}';
 	var currentIndex = '{$currentIndex}';
@@ -68,10 +65,6 @@
 		// ScrollTo
 		if (anchor != '')
 			$.scrollTo('#'+anchor, 1200, {offset: -100});
-
-		// If a list of modules is set, install request has been called
-		if (installed_modules !== false)
-			wsModuleCall(installed_modules);
 
 		// AutoComplete Search
 		$('input[name="filtername"]').autocomplete(moduleList, {
@@ -342,29 +335,6 @@
 			return false;
 		});
 	});
-
-	function wsModuleCall(modules_list)
-	{
-		$.ajax({
-			type : 'POST',
-			url : ajaxCurrentIndex,
-			data :	{
-				'modules_list' : modules_list,
-				'controller' : 'AdminModules',
-				'action' : 'wsModuleCall',
-				'token' : token
-			},
-			dataType: 'json',
-			success: function(json)
-			{
-				//console.log(json);
- 			},
-			error: function(xhr, ajaxOptions, thrownError)
-			{
-				//jAlert("TECHNICAL ERROR"+xhr);
-			}
-		});
-	}
 
 	{/literal}
 </script>

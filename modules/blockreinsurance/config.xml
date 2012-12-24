@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>blockreinsurance</name>
-            <displayName><![CDATA[Bloc reinsurance]]></displayName>
+            <displayName><![CDATA[Block reinsurance]]></displayName>
             <version><![CDATA[2.0]]></version>
             <description><![CDATA[Add a block to display more infos to reassure your customers]]></description>
             <author><![CDATA[]]></author>

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 1.4 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -197,7 +196,7 @@ class AdminShopControllerCore extends AdminController
 		{
 			$root_category = new Category((int)Tools::getValue('id_category'));
 			$root_category = array(
-				'id_category' => $root_category->id_category,
+				'id_category' => $root_category->id,
 				'name' => $root_category->name[$this->context->language->id]
 			);
 			$selected_cat = array($root_category['id_category']);
@@ -266,9 +265,10 @@ class AdminShopControllerCore extends AdminController
 
 	protected function afterAdd($new_shop)
 	{
-		$import_data = Tools::getValue('importData');
-		if (Tools::getValue('useImportData') && is_array($import_data))
-			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
+		$import_data = Tools::getValue('importData', array());
+
+		// The root category should be at least imported
+		$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 
 		// copy default data
 		if (!Tools::getValue('useImportData') || (is_array($import_data) && !isset($import_data['group'])))
@@ -630,7 +630,7 @@ class AdminShopControllerCore extends AdminController
 			$selected_cat[] = $root_categories[0]['id_category'];
 			
 			foreach ($children as $child)
-				$selected_cat[] = $child->id_category;
+				$selected_cat[] = $child->id;
 		}
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);

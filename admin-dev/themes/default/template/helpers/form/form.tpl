@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -60,7 +59,7 @@
 								<div class="margin-form">
 								{block name="input"}
 								{if $input.type == 'text' || $input.type == 'tags'}
-									{if isset($input.lang)}
+									{if isset($input.lang) AND $input.lang}
 										<div class="translatable">
 											{foreach $languages as $language}
 												<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
@@ -168,6 +167,8 @@
 																{/if}
 															{/if}
 														>{$option->$input.options.name}</option>
+													{elseif $option == "-"}
+														<option value="">--</option>
 													{else}
 														<option value="{$option[$input.options.id]}"
 															{if isset($input.multiple)}
@@ -209,7 +210,7 @@
 										{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
 									{/foreach}
 								{elseif $input.type == 'textarea'}
-									{if isset($input.lang)}
+									{if isset($input.lang) AND $input.lang}
 										<div class="translatable">
 											{foreach $languages as $language}
 												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">

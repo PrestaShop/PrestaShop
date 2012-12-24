@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 9548 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -124,6 +123,15 @@
 								<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" /><br />
 							{/if}
 							<input type="file" name="{$key}" />
+             {elseif $field['type'] == 'color'}
+              <input type="color"
+                size="{$field['size']}"
+                data-hex="true"
+                {if isset($input.class)}class="{$field['class']}"
+                {else}class="color mColorPickerInput"{/if}
+                name="{$field['name']}"
+                class="{if isset($field['class'])}{$field['class']}{/if}"
+                value="{$field['value']|escape:'htmlall':'UTF-8'}" />
 						{elseif $field['type'] == 'price'}
 							{$currency_left_sign}<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />{$currency_right_sign} {l s='(tax excl.)'}
 						{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}

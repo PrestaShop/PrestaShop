@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8673 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,17 +50,18 @@ class GuestTrackingControllerCore extends FrontController
 		if (Tools::isSubmit('submitGuestTracking') || Tools::isSubmit('submitTransformGuestToCustomer'))
 		{
 			// These lines are here for retrocompatibility with old theme
-			$id_order = (int)Tools::getValue('id_order');
+			$id_order = Tools::getValue('id_order');
 			$order_collection = array();
 			if ($id_order)
 			{
 				if (is_numeric($id_order))
+				{
 					$order = new Order((int)$id_order);
+					if (Validate::isLoadedObject($order))
+						$order_collection[] = $order;
+				}
 				else
-					$order = Order::getByReference($id_order);
-
-				if (Validate::isLoadedObject($order))
-					$order_collection[] = $order;
+					$order_collection = Order::getByReference($id_order);
 			}
 
 			// Get order reference, ignore package reference (after the #, on the order reference)
@@ -98,11 +98,11 @@ class GuestTrackingControllerCore extends FrontController
 					$customer = new Customer((int)$order->id_customer);
 					if (!Validate::isLoadedObject($customer))
 						$this->errors[] = Tools::displayError('Invalid customer');
+					else if (!Tools::getValue('password'))
+						$this->errors[] = Tools::displayError('Invalid password');
 					else if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
 						// @todo clarify error message
 						$this->errors[] = Tools::displayError('An error occurred while transforming guest to customer.');
-					else if (!Tools::getValue('password'))
-						$this->errors[] = Tools::displayError('Invalid password');
 					else
 						$this->context->smarty->assign('transformSuccess', true);
 				}

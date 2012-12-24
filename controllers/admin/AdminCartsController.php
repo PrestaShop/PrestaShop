@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -536,7 +535,7 @@ class AdminCartsControllerCore extends AdminController
 			{
 				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
 				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 				$product['customized_datas'] = Product::getAllCustomizedDatas((int)$this->context->cart->id, null, true);

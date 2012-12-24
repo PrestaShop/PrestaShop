@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,10 +28,10 @@
 
 <script type="text/javascript">
 // <![CDATA[
-idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
-countries = new Array();
-countriesNeedIDNumber = new Array();
-countriesNeedZipCode = new Array();
+var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
+var countries = new Array();
+var countriesNeedIDNumber = new Array();
+var countriesNeedZipCode = new Array(); 
 {if isset($countries)}
 	{foreach from=$countries item='country'}
 		{if isset($country.states) && $country.contains_states}
@@ -80,6 +79,9 @@ $(function(){ldelim}
 	<script type="text/javascript">
 	{literal}
 	$(document).ready(function(){
+		// Retrocompatibility with 1.4
+		if (typeof baseUri === "undefined" && typeof baseDir !== "undefined")
+		baseUri = baseDir;
 		$('#create-account_form').submit(function(){
 			submitFunction();
 			return false;
@@ -155,7 +157,7 @@ $(function(){ldelim}
 		<fieldset>
 			<h3>{l s='Create your account'}</h3>
 			<div class="form_content clearfix">
-				<h4>{l s='Enter your e-mail address to create an account'}.</h4>
+				<p class="title_block">{l s='Enter your e-mail address to create an account'}.</p>
 				<div class="error" id="create_account_error" style="display:none"></div>
 				<p class="text">
 					<label for="email_create">{l s='E-mail address'}</label>
@@ -546,7 +548,7 @@ $(function(){ldelim}
 			<label for="other">{l s='Additional information'}</label>
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 		</p>
-		{if $onr_phone_at_least}
+		{if $one_phone_at_least}
 			<p class="inline-infos">{l s='You must register at least one phone number'}</p>
 		{/if}
 		<p class="text">
@@ -554,7 +556,7 @@ $(function(){ldelim}
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
 		<p class="text">
-			<label for="phone_mobile">{l s='Mobile phone'} {if $onr_phone_at_least}<sup>*</sup>{/if}</label>
+			<label for="phone_mobile">{l s='Mobile phone'} {if $one_phone_at_least}<sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">

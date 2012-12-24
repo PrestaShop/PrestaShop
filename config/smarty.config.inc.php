@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -229,7 +228,17 @@ class SmartyLazyRegister
 		if (is_array($item[1]))
 			return call_user_func_array($item[1].'::'.$item[0], array($arguments[0], &$arguments[1]));
 		else
-			return call_user_func_array($item, array($arguments[0], &$arguments[1]));
+		{
+			$args = array();
+			
+			foreach($arguments as $a => $argument)
+				if($a == 0)
+					$args[] = $arguments[0]; 
+				else
+					$args[] = &$arguments[$a]; 
+			
+			return call_user_func_array($item, $args);
+		}
 	}
 
 	public static function getInstance()

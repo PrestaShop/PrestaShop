@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -240,10 +239,16 @@ class SupplierCore extends ObjectModel
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 		$alias = '';
-		if ($order_by == 'price')
+		if (in_array($order_by, array('price', 'date_add', 'date_upd')))
 			$alias = 'product_shop.';
 		elseif ($order_by == 'id_product')
 			$alias = 'p.';
+		elseif ($order_by == 'manufacturer_name')
+		{
+			$order_by = 'name';
+			$alias = 'm.';
+		}
+
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
 					IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`,
