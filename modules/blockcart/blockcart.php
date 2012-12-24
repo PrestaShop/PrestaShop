@@ -62,7 +62,7 @@ class BlockCart extends Module
 		else
 			$taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
 
-		$useTax = !($taxCalculationMethod == PS_TAX_EXC);
+		$useTax = true; /*!($taxCalculationMethod == PS_TAX_EXC)*/;
 
 		$products = $params['cart']->getProducts(true);
 		$nbTotalProducts = 0;
