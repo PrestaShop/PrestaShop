@@ -36,7 +36,7 @@ var img_dir = '{$img_dir}';
 <script type="text/javascript">
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
 var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
-var freeShippingTranslation = '{l s='Free shipping!' mod='blockcart' js=1}';
+var freeShippingTranslation = '{l s='$0.00' mod='blockcart' js=1}';
 var freeProductTranslation = '{l s='Free!' mod='blockcart' js=1}';
 var delete_txt = '{l s='Delete' mod='blockcart'}';
 </script>
