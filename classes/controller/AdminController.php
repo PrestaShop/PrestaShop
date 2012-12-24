@@ -1460,11 +1460,14 @@ class AdminControllerCore extends Controller
 			return false;
 		$this->getList($this->context->language->id);
 
+		$helper = new HelperList();
+		
 		// Empty list is ok
 		if (!is_array($this->_list))
+		{
+			$this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
 			return false;
-
-		$helper = new HelperList();
+		}
 
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_list_vars;
@@ -2107,8 +2110,10 @@ class AdminControllerCore extends Controller
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-		$this->_list = Db::getInstance()->executeS($this->_listsql);
-		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+		if (!($this->_list = Db::getInstance()->executeS($this->_listsql)))
+			$this->_list_error = Db::getInstance()->getMsgError();
+		else
+			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 
 	public function getLanguages()
