@@ -82,6 +82,27 @@
 			</tr>
 		</thead>
 		<tfoot>
+			{if $use_taxes}
+	<tr class="cart_total_price">
+				<td colspan="6">
+					{if $display_tax_label}
+						{l s='Total (tax excl.):'}
+					{else}
+						{l s='Subtotal:'}
+					{/if}
+				</td>
+				<td class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
+			</tr>
+	<tr class="cart_total_tax">
+				<td colspan="6">
+					{if $display_tax_label}
+						{l s='Total tax:'}
+					{else}
+						{l s='Sales Tax:'}
+					{/if}
+				</td>
+				<td class="price" id="total_tax">{displayPrice price=$total_tax}</td>
+			</tr>
 		{if $use_taxes}
 			{if $priceDisplay}
 				<tr class="cart_total_price">
