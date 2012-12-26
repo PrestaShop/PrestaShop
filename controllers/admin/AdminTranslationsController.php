@@ -567,6 +567,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public static function addNewTabs($iso_code, $files)
 	{
+		$errors = array();
 		foreach ($files as $file)
 		{
 			// Check if file is a file theme
@@ -586,12 +587,15 @@ class AdminTranslationsControllerCore extends AdminController
 						$id_lang = Language::getIdByIso($iso_code);
 						$tab->name[(int)$id_lang] = $translations;
 
-						// Update this tab
-						$tab->update();
+						if (!Validate::isGenericName($tab->name[(int)$id_lang]))
+							$errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
+						else
+							$tab->update();
 					}
 				}
 			}
 		}
+		return $errors;
 	}
 	
 	public static function checkTranslationFile($content)
@@ -662,7 +666,12 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
 					$this->checkAndAddThemesFiles($files_list, $themes_selected);
-					AdminTranslationsController::addNewTabs($iso_code, $files_list);
+					$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+					if (count($tab_errors))
+					{
+						$this->errors += $tab_errors;
+						return false;
+					}
 					if (Validate::isLanguageFileName($filename))
 					{
 						if (!Language::checkAndAddLanguage($iso_code))
@@ -694,9 +703,14 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 					{
 						AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-						AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
-						if (!Language::checkAndAddLanguage($arr_import_lang[0]))
-							$conf = 20;
+						$tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
+						if (count($tab_errors))
+							$this->errors += $tab_errors;
+						else
+						{
+							if (!Language::checkAndAddLanguage($arr_import_lang[0]))
+								$conf = 20;
+						}
 						if (!unlink($file))
 							$this->errors[] = Tools::displayError('Cannot delete archive');
 
