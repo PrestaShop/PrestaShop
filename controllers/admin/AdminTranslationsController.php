@@ -593,6 +593,35 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 	}
+	
+	public static function checkTranslationFile($content)
+	{
+		$lines = array_map('trim', explode("\n", $content));
+		$global = false;
+		foreach ($lines as $line)
+		{
+			if (in_array($line, array('<?php', '?>', '')))
+				continue;
+			if (!$global && preg_match('/^global\s+\$([a-z0-9-_]+)\s*;$/i', $line, $matches))
+			{
+				$global = $matches[1];
+				continue;
+			}
+			if ($global != false && preg_match('/^\$'.preg_quote($global, '/').'\s*=\s*array\(\s*\)\s*;$/i', $line))
+				continue;
+			if (!$global && preg_match('/^\$([a-z0-9-_]+)\s*=\s*array\(\s*\)\s*;$/i', $line, $matches))
+			{
+				$global = $matches[1];
+				continue;
+			}
+			if (preg_match('/^\$'.preg_quote($global, '/').'\[\''._PS_TRANS_PATTERN_.'\'\]\s*=\s*\''._PS_TRANS_PATTERN_.'\'\s*;$/i', $line))
+				continue;
+			if (preg_match('/^return\s+\$'.preg_quote($global, '/').'\s*;$/i', $line, $matches))
+				continue;
+			return false;
+		}
+		return true;
+	}
 
 	public function submitImportLang()
 	{
@@ -607,6 +636,28 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
 				$files_list = $gz->listContent();
+				
+				$uniqid = uniqid();
+				$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+				if ($gz->extract($sandbox, false))
+				{
+					foreach ($files_list as $file2check)
+					{
+						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
+						{
+							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
+								$this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
+						}
+						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
+							$this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
+					}
+					
+				}
+				Tools::deleteDirectory($sandbox, true);
+				
+				if (count($this->errors))
+					return false;
+
 				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				{
 					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
