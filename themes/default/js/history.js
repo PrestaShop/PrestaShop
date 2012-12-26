@@ -103,7 +103,7 @@ function sendOrderMessage()
 {
 	paramString = "ajax=true";
 	$('#sendOrderMessage').find('input, textarea').each(function(){
-		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
+		paramString += '&' + $(this).attr('name') + '=' + escape($(this).val());
 	});
 
 	$.ajax({
