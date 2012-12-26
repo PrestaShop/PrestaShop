@@ -633,7 +633,7 @@
       <value>http://www.twitter.com/prestashop</value>
     </configuration>
     <configuration id="blocksocial_rss" name="blocksocial_rss">
-      <value>RSS</value>
+      <value>http://www.prestashop.com/blog/en/feed/</value>
     </configuration>
     <configuration id="blockcontactinfos_company" name="blockcontactinfos_company">
       <value>Your company</value>
