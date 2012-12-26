@@ -249,7 +249,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$path = dirname($dest);
 
 		// If folder wasn't already added
-		if (!Tools::file_exists_cache($path))
+		// Do not use Tools::file_exists_cache because it changes over time!
+		if (!file_exists($path))
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
@@ -328,14 +329,27 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function submitCopyLang()
 	{
-		if (!($from_lang = strval(Tools::getValue('fromLang'))) || !($to_lang = strval(Tools::getValue('toLang'))))
+		if (!($from_lang = Tools::getValue('fromLang')) || !($to_lang = Tools::getValue('toLang')))
 			$this->errors[] = $this->l('You must select 2 languages in order to copy data from one to another');
-		else if (!($from_theme = strval(Tools::getValue('fromTheme'))) || !($to_theme = strval(Tools::getValue('toTheme'))))
+		else if (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme')))
 			$this->errors[] = $this->l('You must select 2 themes in order to copy data from one to another');
 		else if (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
 			$this->errors[] = $this->l('An error occurred while copying data');
 		else if ($from_lang == $to_lang && $from_theme == $to_theme)
 			$this->errors[] = $this->l('Nothing to copy! (same language and theme)');
+		else
+		{
+			$theme_exists = array('from_theme' => false, 'to_theme' => false);
+			foreach ($this->themes as $theme)
+			{
+				if ($theme->directory == $from_theme)
+					$theme_exists['from_theme'] = true;
+				if ($theme->directory == $to_theme)
+					$theme_exists['to_theme'] = true;
+			}
+			if ($theme_exists['from_theme'] == false || $theme_exists['to_theme'] == false)
+				$this->errors[] = $this->l('Theme(s) not found');
+		}
 		if (count($this->errors))
 			return;
 
@@ -1080,7 +1094,16 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// Get folder name of theme
 		if (($theme = Tools::getValue('theme')) && !is_array($theme))
-			$this->theme_selected = Tools::safeOutput($theme);
+		{
+			$theme_exists = false;
+			foreach ($this->themes as $existing_theme)
+				if ($existing_theme->directory == $theme)
+					$theme_exists = true;
+			if ($theme_exists)
+				$this->theme_selected = Tools::safeOutput($theme);
+			else
+				throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), $theme));
+		}
 		else
 			$this->theme_selected = self::DEFAULT_THEME_NAME;
 
