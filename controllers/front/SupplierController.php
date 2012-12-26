@@ -94,6 +94,7 @@ class SupplierControllerCore extends FrontController
 	 */
 	protected function assignOne()
 	{
+		$this->supplier->description = Tools::nl2br(trim($this->supplier->description));
 		$nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
 		$this->context->smarty->assign(array(
