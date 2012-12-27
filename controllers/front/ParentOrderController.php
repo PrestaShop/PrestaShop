@@ -182,13 +182,13 @@ class ParentOrderControllerCore extends FrontController
 			else if ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
 			{
 				$message = new Message((int)($oldMessage['id_message']));
-				$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
+				$message->message = $messageContent;
 				$message->update();
 			}
 			else
 			{
 				$message = new Message();
-				$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
+				$message->message = $messageContent;
 				$message->id_cart = (int)($this->context->cart->id);
 				$message->id_customer = (int)($this->context->cart->id_customer);
 				$message->add();
