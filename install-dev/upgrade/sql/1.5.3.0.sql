@@ -36,3 +36,5 @@ INSERT INTO `PREFIX_configuration`(`name`, `value`, `id_shop`, `id_shop_group`, 
 	);
 
 DELETE FROM `PREFIX_configuration` WHERE name='PS_GIFT_WRAPPING_TAX';
+
+ALTER TABLE  `PREFIX_cart_rule` ADD `highlight` tinyint(1) unsigned NOT NULL default 0 AFTER `gift_product_attribute`;
