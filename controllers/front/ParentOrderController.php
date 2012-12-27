@@ -328,9 +328,19 @@ class ParentOrderControllerCore extends FrontController
 		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
 		$cart_cart_rules = $this->context->cart->getCartRules();
 		foreach ($available_cart_rules as $key => $available_cart_rule)
+		{
+			if (strpos($available_cart_rule['code'], 'BO_ORDER_') === 0)
+			{
+				unset($available_cart_rules[$key]);
+				continue;
+			}
 			foreach ($cart_cart_rules as $cart_cart_rule)
 				if ($available_cart_rule['id_cart_rule'] == $cart_cart_rule['id_cart_rule'])
+				{
 					unset($available_cart_rules[$key]);
+					continue 2;
+				}
+		}
 
 		$show_option_allow_separate_package = (!$this->context->cart->isAllProductsInStock(true) && Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
 
