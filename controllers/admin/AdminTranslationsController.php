@@ -647,6 +647,10 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					foreach ($files_list as $file2check)
 					{
+						//don't validate index.php, will be overwrite when extract in translation directory
+						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php')
+							continue;
+						
 						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
 						{
 							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
@@ -655,7 +659,6 @@ class AdminTranslationsControllerCore extends AdminController
 						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
 							$this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
 					}
-					
 				}
 				Tools::deleteDirectory($sandbox, true);
 				
@@ -664,6 +667,10 @@ class AdminTranslationsControllerCore extends AdminController
 
 				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				{
+					foreach ($files_list as $file2check)
+						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
+							continue;
+
 					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
 					$this->checkAndAddThemesFiles($files_list, $themes_selected);
 					$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
