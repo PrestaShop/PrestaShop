@@ -53,7 +53,6 @@ class PricesDropControllerCore extends FrontController
 			'products' => Product::getPricesDrop($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'nbProducts' => $nbProducts,
-			'homeSize' => Image::getSize('home_default'),
 			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
 		));
 

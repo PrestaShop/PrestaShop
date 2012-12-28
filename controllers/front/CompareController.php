@@ -144,8 +144,7 @@ class CompareControllerCore extends FrontController
 						'ordered_features' => $ordered_features,
 						'product_features' => $listFeatures,
 						'products' => $listProducts,
-						'width' => $width,
-						'homeSize' => Image::getSize('home_default')
+						'width' => $width
 					));
 					$this->context->smarty->assign('HOOK_EXTRA_PRODUCT_COMPARISON', Hook::exec('displayProductComparison', array('list_ids_product' => $ids)));
 				}
