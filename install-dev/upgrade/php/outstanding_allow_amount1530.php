@@ -24,9 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function generic_add_missing_column($table, $column_to_add)
+function outstanding_allow_amount1530()
 {
-	$column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
+	$column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
 	$column_formated = array();
 	$res = true;
 	if ($column_exist)
@@ -34,9 +34,8 @@ function generic_add_missing_column($table, $column_to_add)
 		foreach($column_exist as $c)
 			$column_formated[] = $c['Field'] ;
 		
-		foreach($column_to_add as $name => $details)
-			if (!in_array($name, $column_formated))
-				$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.$table.'` ADD COLUMN `'.$name.'` '.$details);
+		if (in_array('outstanding_allow_amount' , $column_formated))
+			Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
 	}
 	return $res;
 }
