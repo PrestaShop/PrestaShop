@@ -18,7 +18,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +34,7 @@
 			<li class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} clearfix">
 				<a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}" class="content_img clearfix">
 					<span class="number">{$smarty.foreach.myLoop.iteration}</span>
-					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" height="{$smallSize.height}" width="{$smallSize.width}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
+					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" height="{getHeightSize type='small_default'}" width="{getWidthSize type='small_default'}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
 				
 				</a>
 				<p><a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}">

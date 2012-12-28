@@ -31,7 +31,7 @@
 		<ul class="product_images clearfix">
 		{foreach from=$new_products item='product' name='newProducts'}
 			{if $smarty.foreach.newProducts.index < 2}
-				<li{if $smarty.foreach.newProducts.first} class="first"{/if}><a href="{$product.link}" title="{$product.legend|escape:html:'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium_default')}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product.legend|escape:html:'UTF-8'}" /></a></li>
+				<li{if $smarty.foreach.newProducts.first} class="first"{/if}><a href="{$product.link}" title="{$product.legend|escape:html:'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium_default')}" height="{getHeightSize type='medium_default'}" width="{getWidthSize type='medium_default'}" alt="{$product.legend|escape:html:'UTF-8'}" /></a></li>
 			{/if}
 		{/foreach}
 		</ul>
