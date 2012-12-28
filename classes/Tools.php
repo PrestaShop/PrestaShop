@@ -669,8 +669,7 @@ class ToolsCore
 	public static function deleteDirectory($dirname, $delete_self = true)
 	{
 		$dirname = rtrim($dirname, '/').'/';
-		$files = scandir($dirname);
-		if (is_dir($dirname))
+		if ($files = scandir($dirname))
 		{
 			foreach ($files as $file)
 			if ($file != '.' && $file != '..' && $file != '.svn')
