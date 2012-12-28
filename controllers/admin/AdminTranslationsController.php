@@ -659,8 +659,8 @@ class AdminTranslationsControllerCore extends AdminController
 						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
 							$this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
 					}
+					Tools::deleteDirectory($sandbox, true);
 				}
-				Tools::deleteDirectory($sandbox, true);
 				
 				if (count($this->errors))
 					return false;
