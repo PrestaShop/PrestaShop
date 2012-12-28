@@ -1345,15 +1345,23 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
-				$res = Db::getInstance()->execute(
-					'INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`)
-					VALUES('.(int)$id_image.', '.(int)$id_shop.')
-				');
+				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
 			else
-				$res = Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'image_shop
-					WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop
-				);
+				$res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
+		
+		// Clean covers in image table
+		$count_cover_image = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image i INNER JOIN '._DB_PREFIX_.'image_shop is ON (i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.') WHERE i.cover = 1');
+		if ($count_cover_image < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 1 WHERE i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 0 WHERE cover = 1 AND i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image - 1));
+	
+		// Clean covers in image_shop table
+		$count_cover_image_shop = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image_shop is WHERE is.id_shop = '.(int)$id_shop.' AND is.cover = 1');
+		if ($count_cover_image_shop < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 1 WHERE is.id_shop =  '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image_shop > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 0 WHERE is.cover = 1 AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[27]);
