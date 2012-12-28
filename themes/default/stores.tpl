@@ -33,7 +33,7 @@
 	<p>{l s='Here are our store locations, please feel free to contact us:'}</p>
 	{foreach $stores as $store}
 		<div class="store-small grid_2">
-			{if $store.has_picture}<p><img src="{$img_store_dir}{$store.id_store}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" /></p>{/if}
+			{if $store.has_picture}<p><img src="{$img_store_dir}{$store.id_store}-medium_default.jpg" alt="" width="{getWidthSize type='medium_default'}" height="{getHeightSize type='medium_default'}" /></p>{/if}
 			<p>
 				<b>{$store.name|escape:'htmlall':'UTF-8'}</b><br />
 				{$store.address1|escape:'htmlall':'UTF-8'}<br />

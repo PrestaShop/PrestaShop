@@ -55,7 +55,7 @@ $(function () {ldelim}
 						{/if}
 					</div>
 					{/if}
-					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')}" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+					<img src="{$link->getImageLink($product.id_product, $imageIds, 'medium_default')}" alt="" width="{getWidthSize type='medium_default'}" height="{getHeightSize type='medium_default'}" />
 					<h4><span class="product_name">{$product.details->name}</span></h4>
 					<p class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</p>
 				</div>
@@ -73,7 +73,7 @@ $(function () {ldelim}
 			{foreach $scenes as $scene}
 				<li id="scene_thumb_{$scene->id}" style="{if !$scene@last} padding-right:10px;{/if}">
 					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'htmlall':'UTF-8'}" href="#" rel="{$scene->id}" onclick="{ldelim}loadScene({$scene->id});return false;{rdelim}">
-						<img alt="{$scene->name|escape:'htmlall':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{$thumbSceneSize.width}" height="{$thumbSceneSize.height}" />
+						<img alt="{$scene->name|escape:'htmlall':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{getWidthSize type='m_scene_default'}" height="{getHeightSize type='m_scene_default'}" />
 					</a>
 				</li>
 		 	{/foreach}

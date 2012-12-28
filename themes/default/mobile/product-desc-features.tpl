@@ -46,7 +46,7 @@
 						<a href="{$accessoryLink|escape:'htmlall':'UTF-8'}" data-ajax="false">
 							<div class="clearfix" >
 								<div class="col-left" style="width:{$mediumSize.width+10}px;">
-									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+									<img src="{$link->getImageLink($accessory.link_rewrite, $accessory.id_image, 'medium_default')}" alt="{$accessory.legend|escape:'htmlall':'UTF-8'}" width="{getWidthSize type='medium_default'}" height="{getHeightSize type='medium_default'}" />
 								</div><!-- .col-left -->
 								<div class="col-right">
 									<div class="inner">

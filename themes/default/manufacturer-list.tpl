@@ -52,7 +52,7 @@
 					<!-- logo -->
 					<div class="logo">
 					{if $manufacturer.nb_products > 0}<a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'htmlall':'UTF-8'}" title="{$manufacturer.name|escape:'htmlall':'UTF-8'}" class="lnk_img">{/if}
-						<img src="{$img_manu_dir}{$manufacturer.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" />
+						<img src="{$img_manu_dir}{$manufacturer.image|escape:'htmlall':'UTF-8'}-medium_default.jpg" alt="" width="{getWidthSize type='medium_default'}" height="{getHeightSize type='medium_default'}" />
 					{if $manufacturer.nb_products > 0}</a>{/if}
 					</div>
 					<!-- name -->
