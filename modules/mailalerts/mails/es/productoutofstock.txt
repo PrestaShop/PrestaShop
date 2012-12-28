@@ -1,10 +1,10 @@
 Hola,
 
-El producto {product} es pronto fuera de stock.
-De hecho, la ruptura de stock de {last_qty} ha sido superado.
+El producto {product} está a punto de quedarse sin existencias.
+De hecho, las existencias actuales son inferiores a las mínimas especificadas de {last_qty}.
 Existencias restantes: {qty}
 
-Se aconseja abrir administrador del producto Producto a fin de reponer el inventario.
+Se aconseja abrir la página de administración del producto a fin de reponer el inventario.
 
 
-{shop_url} desarrollado por PrestaShop�
+{shop_url} desarrollado por PrestaShop
