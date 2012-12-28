@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -111,18 +110,17 @@ class ManufacturerControllerCore extends FrontController
 	{
 		if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
 		{
-			$id_current_shop_group = Shop::getContextShopGroupID();
-			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false, $id_current_shop_group);
+			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, false, false, false);
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);
 
 			foreach ($data as &$item)
-				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium_default.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
+				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 			$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbManufacturers' => $nbProducts,
-				'mediumSize' => Image::getSize('medium_default'),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'manufacturers' => $data,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			));

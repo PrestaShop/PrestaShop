@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7521 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,25 +73,6 @@ class MediaCore
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
 			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
-
-			if (Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION'))
-			{
-				//$html_content = preg_replace('/"([^\>\s"]*)"/i', '$1', $html_content);//FIXME create a js bug
-				$html_content = preg_replace('/<!DOCTYPE \w[^\>]*dtd\">/is', '', $html_content);
-				$html_content = preg_replace('/\s\>/is', '>', $html_content);
-				$html_content = str_replace('</li>', '', $html_content);
-				$html_content = str_replace('</dt>', '', $html_content);
-				$html_content = str_replace('</dd>', '', $html_content);
-				$html_content = str_replace('</head>', '', $html_content);
-				$html_content = str_replace('<head>', '', $html_content);
-				$html_content = str_replace('</html>', '', $html_content);
-				$html_content = str_replace('</body>', '', $html_content);
-				//$html_content = str_replace('</p>', '', $html_content);//FIXME doesnt work...
-				$html_content = str_replace("</option>\n", '', $html_content);//TODO with bellow
-				$html_content = str_replace('</option>', '', $html_content);
-				$html_content = str_replace('<script type=text/javascript>', '<script>', $html_content);//Do a better expreg
-				$html_content = str_replace("<script>\n", '<script>', $html_content);//Do a better expreg
-			}
 
 			return $html_content;
 		}
@@ -325,7 +305,7 @@ class MediaCore
 				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
 				if (self::$jquery_ui_dependencies[$dependency]['theme'])
 					$dep_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$dependency.'.css');
-				if (!empty($dep_css) || $dep_css)
+				if (isset($dep_css) && (!empty($dep_css) || $dep_css))
 					$ui_path['css'] = array_merge($ui_path['css'], $dep_css);
 			}
 		}
@@ -357,7 +337,7 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginPath($name, $folder)
+	public static function getJqueryPluginPath($name, $folder = null)
 	{
 		$plugin_path = array('js' => array(), 'css' => array());
 		if ($folder === null)
@@ -366,13 +346,13 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
-		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name);
+		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name, $folder);
 		return $plugin_path;
 	}
 
@@ -382,15 +362,16 @@ class MediaCore
 	 * @param mixed $name
 	 * @return void
 	 */
-	public static function getJqueryPluginCSSPath($name)
+	public static function getJqueryPluginCSSPath($name, $folder = null)
 	{
-		$folder = _PS_JS_DIR_.'jquery/plugins/';
+		if ($folder === null)
+			$folder = _PS_JS_DIR_.'jquery/plugins/'; //set default folder
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			return Media::getCSSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;

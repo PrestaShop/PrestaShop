@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -286,9 +285,6 @@ class AdminLanguagesControllerCore extends AdminController
 		 	{
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
-					// English is needed by the system (ex. translations)
-					if ($object->id == Language::getIdByIso('en'))
-						$this->errors[] = $this->l('You cannot delete the English language because it is a system requirement, you can only deactivate it.');
 					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
 						$this->errors[] = $this->l('You cannot delete the default language');
 					else if ($object->id == $this->context->language->id)

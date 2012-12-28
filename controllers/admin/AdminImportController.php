@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -639,20 +638,20 @@ class AdminImportControllerCore extends AdminController
 		if (empty($field))
 			return array();
 
-		if (is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '')
+		$separator = Tools::getValue('multiple_value_separator');
+		if (is_null($separator) || trim($separator) == '')
 			$separator = ',';
-		else
-			$separator = Tools::getValue('multiple_value_separator');
 
-		$temp = tmpfile();
-		fwrite($temp, $field);
-		rewind($temp);
-		$tab = fgetcsv($temp, MAX_LINE_SIZE, $separator);
-		fclose($temp);
+		do $uniqid = uniqid(); while (file_exists(_PS_UPLOAD_DIR_.$uniqid));
+		$tmp_file = file_put_contents(_PS_UPLOAD_DIR_.$uniqid, $field);
+		$fd = fopen($temp, 'r');
+		$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
+		fclose($fd);
+		unlink($tmp_file);
+
 		if (empty($tab) || (!is_array($tab)))
 			return array();
 		return $tab;
-
 	}
 
 	protected static function createMultiLangField($field)

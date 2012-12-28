@@ -24,6 +24,18 @@
 				<a href="javascript:gencode(8);" class="button">{l s='(Click to generate random code)'}</a>
 				<p class="preference_description">{l s='Caution! The rule will automatically be applied if you leave this field blank.'}</p>
 			</div>
+			<label>{l s='Highlight'}</label>
+			<div class="margin-form">
+				&nbsp;&nbsp;
+				<input type="radio" name="highlight" id="highlight_on" value="1" {if $currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
+				<label class="t" for="highlight_on"> <img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" style="cursor:pointer" /></label>
+				&nbsp;&nbsp;
+				<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
+				<label class="t" for="highlight_off"> <img src="../img/admin/disabled.gif" alt="{l s='No'}" title="{l s='No'}" style="cursor:pointer" /></label>
+				<p class="preference_description">
+					{l s='If the voucher is not yet in the cart, it will be displayed under the cart in the cart summary.'}
+				</p>
+			</div>
 			<label>{l s='Partial use'}</label>
 			<div class="margin-form">
 				&nbsp;&nbsp;

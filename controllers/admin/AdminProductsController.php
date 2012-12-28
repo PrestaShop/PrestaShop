@@ -1,8 +1,8 @@
 <?php
 /*
 * 2007-2012 PrestaShop
-* NOTICE OF LICENSE
 *
+* NOTICE OF LICENSE
 *
 * This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -537,13 +536,17 @@ class AdminProductsControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You cannot delete the product because there is physical stock left or supply orders in progress.');
 				}
 
-				if ($object->delete())
+				if (!count($this->errors))
 				{
-					$id_category = (int)Tools::getValue('id_category');
-					$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
-					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+					if ($object->delete())
+					{
+						$id_category = (int)Tools::getValue('id_category');
+						$category_url = empty($id_category) ? '' : '&id_category='.(int)$id_category;
+						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token.$category_url;
+					}
+					else
+						$this->errors[] = Tools::displayError('An error occurred during deletion.');
 				}
-				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}
 		else
@@ -633,10 +636,8 @@ class AdminProductsControllerCore extends AdminController
 								$real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
 								if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
 									$this->errors[] = sprintf(Tools::displayError('You cannot delete the product #%d because there is physical stock left or supply orders in progress.'), $product->id);
-								else
-									$success &= $product->delete();
 							}
-							else
+							if (!count($this->errors))
 								$success &= $product->delete();
 						}
 					}
@@ -1344,15 +1345,23 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
-				$res = Db::getInstance()->execute(
-					'INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`)
-					VALUES('.(int)$id_image.', '.(int)$id_shop.')
-				');
+				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
 			else
-				$res = Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'image_shop
-					WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop
-				);
+				$res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
+		
+		// Clean covers in image table
+		$count_cover_image = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image i INNER JOIN '._DB_PREFIX_.'image_shop is ON (i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.') WHERE i.cover = 1');
+		if ($count_cover_image < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 1 WHERE i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 0 WHERE cover = 1 AND i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image - 1));
+	
+		// Clean covers in image_shop table
+		$count_cover_image_shop = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image_shop is WHERE is.id_shop = '.(int)$id_shop.' AND is.cover = 1');
+		if ($count_cover_image_shop < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 1 WHERE is.id_shop =  '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image_shop > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 0 WHERE is.cover = 1 AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[27]);
@@ -1705,7 +1714,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->updateDownloadProduct($object, 1);
 						$this->updateTags(Language::getLanguages(false), $object);
 						
-						if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'), true))
+						if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox')))
 							$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 					}
 					
@@ -2213,6 +2222,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		parent::initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if ($product = $this->loadObject(true))
@@ -2280,8 +2290,12 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 		}
-
-		parent::initToolbar();
+		else
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+					'desc' => $this->l('Import')
+				);
+		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
@@ -3300,8 +3314,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
-
-
+		$data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
 		/*
 		* Form for adding a virtual product like software, mp3, etc...
 		*/

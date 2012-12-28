@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -47,7 +46,7 @@
 	<div class="block-cms">
 		<h1><a href="{if $cms_category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'htmlall':'UTF-8'}</a></h1>
 		{if isset($sub_category) & !empty($sub_category)}	
-			<h4>{l s='List of sub categories in %s:' sprintf=$cms_category->name}</h4>
+			<p class="title_block">{l s='List of sub categories in %s:' sprintf=$cms_category->name}</p>
 			<ul class="bullet">
 				{foreach from=$sub_category item=subcategory}
 					<li>
@@ -57,7 +56,7 @@
 			</ul>
 		{/if}
 		{if isset($cms_pages) & !empty($cms_pages)}
-		<h4>{l s='List of pages in %s:' sprintf=$cms_category->name}</h4>
+		<p class="title_block">{l s='List of pages in %s:' sprintf=$cms_category->name}</p>
 			<ul class="bullet">
 				{foreach from=$cms_pages item=cmspages}
 					<li>
@@ -68,6 +67,8 @@
 		{/if}
 	</div>
 {else}
-	{l s='This page does not exist.'}
+	<div class="error">
+		{l s='This page does not exist.'}
+	</div>
 {/if}
 <br />

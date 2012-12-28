@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -91,6 +90,9 @@ class HelperOptionsCore extends Helper
 
 				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
+				if ($field['type'] == 'color')
+					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+					
 				// Cast options values if specified
 				if ($field['type'] == 'select' && isset($field['cast']))
 					foreach ($field['list'] as $option_key => $option)

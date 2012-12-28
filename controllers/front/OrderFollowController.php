@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7095 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -114,7 +113,7 @@ class OrderFollowControllerCore extends FrontController
 		parent::setMedia();
 		$this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
 		$this->addJqueryPlugin('scrollTo');
-		$this->addJS(_THEME_JS_DIR_.'history.js', _THEME_JS_DIR_.'tools.js');
+		$this->addJS(array(_THEME_JS_DIR_.'history.js', _THEME_JS_DIR_.'tools.js'));
 	}
 }
 

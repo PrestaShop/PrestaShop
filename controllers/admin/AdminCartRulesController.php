@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7060 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,6 +46,12 @@ class AdminCartRulesControllerCore extends AdminController
 		);
 
 		parent::__construct();
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
 	}
 
 	public function postProcess()
@@ -121,6 +126,8 @@ class AdminCartRulesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('Reduction percent must be between 0% and 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
+			if (Tools::getValue('code') && ($same_code = (int)CartRule::getIdByCode(Tools::getValue('code'))) && $same_code != Tools::getValue('id_cart_rule'))
+				$this->errors[] = sprintf(Tools::displayError('This cart rule code is already used (conflict with cart rule %d)'), $same_code);
 		}
 
 		return parent::postProcess();
@@ -463,13 +470,6 @@ class AdminCartRulesControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Save and Stay')
 		);
-
-		// Todo: change for "Media" version
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/jquery.typewatch.js');
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js');
-		$this->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
-		$this->addCss(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.css');
-		$this->addCss(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.css');
 
 		$current_object = $this->loadObject(true);
 

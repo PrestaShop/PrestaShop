@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -178,7 +177,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 		$categories_tree = $this->_category->getParentsCategories();
 		if (empty($categories_tree)
-			&& ($this->_category->id_category != 1 || Tools::isSubmit('id_category'))
+			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
 			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !$is_multishop && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
@@ -234,6 +233,10 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')
+			);
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'desc' => $this->l('Import')
 			);
 		}
 		// be able to edit the Home category
@@ -319,7 +322,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
 		$default_group_information = sprintf($this->l('%s - All people who have created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 		$root_category = Category::getRootCategory();
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+		$root_category = array('id_category' => $root_category->id, 'name' => $root_category->name);
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(

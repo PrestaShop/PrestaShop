@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block categories module -->
 <div class="blockcategories_footer">
-	<h4>{l s='Categories' mod='blockcategories'}</h4>
+	<p class="title_block">{l s='Categories' mod='blockcategories'}</p>
 <div class="category_footer" style="float:left;clear:none;width:{$widthColumn}%">
 	<div style="float:left" class="list">
 		<ul class="tree {if $isDhtml}dhtml{/if}">

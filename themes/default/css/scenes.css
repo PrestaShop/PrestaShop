@@ -95,7 +95,7 @@
 	margin-right:10px;
 	border:1px solid #ccc
 }
-.cluetip-product_scene h4{
+.cluetip-product_scene .title_block {
 	display:inline-block;
 	margin-bottom:5px;
 	padding:0 !important;

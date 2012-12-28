@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -299,7 +298,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id_tax',
 						'name' => 'name',
 						'default' => array(
-							'value' => 'name',
+							'value' => 0,
 							'label' => $this->l('No Tax')
 						)
 					),

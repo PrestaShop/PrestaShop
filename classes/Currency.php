@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7503 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,7 +73,7 @@ class CurrencyCore extends ObjectModel
 			'sign' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
 			'format' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'decimals' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true, 'shop' => true),
 			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 14437 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -1374,7 +1373,7 @@ class BlockLayered extends Module
 	public function hookCategoryUpdate($params)
 	{
 		/* The category status might (active, inactive) have changed, we have to update the layered cache table structure */
-		if (!$params['category']->active)
+		if (isset($params['category']) && !$params['category']->active)
 			$this->hookCategoryDeletion($params);
 	}
 
@@ -3869,7 +3868,7 @@ class BlockLayered extends Module
 		
 		$smarty->assign(
 			array(
-				'homeSize' => Image::getSize('home_default'),
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 				'nb_products' => $nb_products,
 				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
 				'pages_nb' => (int)($pages_nb),

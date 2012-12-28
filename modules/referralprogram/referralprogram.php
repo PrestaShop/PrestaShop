@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7048 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -123,8 +122,8 @@ class ReferralProgram extends Module
 	{
 		$langs = Language::getLanguages(false);
 		foreach ($langs AS $lang)
-			foreach ($this->_mails['name'] AS $name)
-				foreach ($this->_mails['ext'] AS $ext)
+			foreach (array('referralprogram-congratulations', 'referralprogram-invitation', 'referralprogram-voucher') AS $name)
+				foreach (array('txt', 'html') AS $ext)
 				{
 					$file = _PS_MAIL_DIR_.$lang['iso_code'].'/'.$name.'.'.$ext;
 					if (file_exists($file) AND !@unlink($file))

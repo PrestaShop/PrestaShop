@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,7 +42,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -218,25 +217,25 @@ class HomeSlider extends Module
 		$this->_html .= '
 			<label>'.$this->l('Height:').'</label>
 			<div class="margin-form">
-				<input type="text" name="HOMESLIDER_HEIGHT" id="speed" size="3" value="'.Configuration::get('HOMESLIDER_HEIGHT').'" /> px
+				<input type="text" name="HOMESLIDER_HEIGHT" id="speed" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_HEIGHT')).'" /> px
 			</div>';
 		/* Width field */
 		$this->_html .= '
 		<label>'.$this->l('Width:').'</label>
 		<div class="margin-form">
-			<input type="text" name="HOMESLIDER_WIDTH" id="pause" size="3" value="'.Configuration::get('HOMESLIDER_WIDTH').'" /> px
+			<input type="text" name="HOMESLIDER_WIDTH" id="pause" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_WIDTH')).'" /> px
 		</div>';
 		/* Speed field */
 		$this->_html .= '
 			<label>'.$this->l('Speed:').'</label>
 			<div class="margin-form">
-				<input type="text" name="HOMESLIDER_SPEED" id="speed" size="3" value="'.Configuration::get('HOMESLIDER_SPEED').'" /> ms
+				<input type="text" name="HOMESLIDER_SPEED" id="speed" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_SPEED')).'" /> ms
 			</div>';
 		/* Pause field */
 		$this->_html .= '
 		<label>'.$this->l('Pause:').'</label>
 		<div class="margin-form">
-			<input type="text" name="HOMESLIDER_PAUSE" id="pause" size="3" value="'.Configuration::get('HOMESLIDER_PAUSE').'" /> ms
+			<input type="text" name="HOMESLIDER_PAUSE" id="pause" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_PAUSE')).'" /> ms
 		</div>';
 		/* Loop field */
 		$this->_html .= '
@@ -558,13 +557,13 @@ class HomeSlider extends Module
 			foreach ($languages as $language)
 			{
 				if (Tools::getValue('title_'.$language['id_lang']) != '')
-					$slide->title[$language['id_lang']] = pSQL(Tools::getValue('title_'.$language['id_lang']));
+					$slide->title[$language['id_lang']] = Tools::getValue('title_'.$language['id_lang']);
 				if (Tools::getValue('url_'.$language['id_lang']) != '')
-					$slide->url[$language['id_lang']] = pSQL(Tools::getValue('url_'.$language['id_lang']));
+					$slide->url[$language['id_lang']] = Tools::getValue('url_'.$language['id_lang']);
 				if (Tools::getValue('legend_'.$language['id_lang']) != '')
-					$slide->legend[$language['id_lang']] = pSQL(Tools::getValue('legend_'.$language['id_lang']));
+					$slide->legend[$language['id_lang']] = Tools::getValue('legend_'.$language['id_lang']);
 				if (Tools::getValue('description_'.$language['id_lang']) != '')
-					$slide->description[$language['id_lang']] = pSQL(Tools::getValue('description_'.$language['id_lang']));
+					$slide->description[$language['id_lang']] = Tools::getValue('description_'.$language['id_lang']);
 				/* Uploads image and sets slide */
 				$type = strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['name'], '.'), 1));
 				$imagesize = array();
@@ -582,14 +581,14 @@ class HomeSlider extends Module
 						$errors[] = $error;
 					elseif (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type))
+					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type, null, null, $type))
 						$errors[] = $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						@unlink($temp_name);
-					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).'.'.$type);
+					$slide->image[$language['id_lang']] = Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).'.'.$type;
 				}
 				elseif (Tools::getValue('image_old_'.$language['id_lang']) != '')
-					$slide->image[$language['id_lang']] = pSQL(Tools::getValue('image_old_'.$language['id_lang']));
+					$slide->image[$language['id_lang']] = Tools::getValue('image_old_'.$language['id_lang']);
 			}
 
 			/* Processes if no errors  */

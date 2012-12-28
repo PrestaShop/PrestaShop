@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1521,9 +1520,7 @@ class AdminOrdersControllerCore extends AdminController
 		$cart->id_address_delivery = $order->id_address_delivery;
 		$cart->id_address_invoice = $order->id_address_invoice;
 		$cart->id_currency = $order->id_currency;
-		$cart->id_customer = $order->id_customer;
 		$cart->id_lang = $order->id_lang;
-		$cart->id_carrier = $order->id_carrier;
 		$cart->secure_key = $order->secure_key;
 
 		// Save new cart

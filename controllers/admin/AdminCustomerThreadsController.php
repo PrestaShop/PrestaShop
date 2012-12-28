@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7471 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -371,7 +370,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->message = Tools::nl2br(Tools::htmlentitiesutf8(Tools::getValue('reply_message')));
+				
+				$cm->message = Tools::htmlentitiesutf8(Tools::getValue('reply_message'));
 				$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 				if (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0)
 					$this->errors[] = Tools::displayError('An error occurred with the file upload.');
@@ -572,7 +572,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (!empty($message['id_product']) && empty($message['employee_name']))
 				$id_order_product = Order::getIdOrderProduct((int)$message['id_customer'], (int)$message['id_product']);
 		}
-
 		$message['date_add'] = Tools::displayDate($message['date_add'], $this->context->language->id, true);
 		$message['user_agent'] = strip_tags($message['user_agent']);
 		$message['message'] = preg_replace(

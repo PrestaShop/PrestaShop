@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -301,22 +300,23 @@ class ParentOrderControllerCore extends FrontController
 
 			if ($cart_product_context->shop->id != $product['id_shop'])
 				$cart_product_context->shop = new Shop((int)$product['id_shop']);
-			$product['price_without_specific_price'] = Product::getPriceStatic($product['id_product'], 
-																									!Product::getTaxCalculationMethod(), 
-																									$product['id_product_attribute'], 
-																									2, 
-																									null, 
-																									false, 
-																									false,
-																									1,
-																									false,
-																									null,
-																									null,
-																									null,
-																									$null,
-																									true,
-																									true,
-																									$cart_product_context);
+			$product['price_without_specific_price'] = Product::getPriceStatic(
+				$product['id_product'], 
+				!Product::getTaxCalculationMethod(), 
+				$product['id_product_attribute'], 
+				2, 
+				null, 
+				false, 
+				false,
+				1,
+				false,
+				null,
+				null,
+				null,
+				$null,
+				true,
+				true,
+				$cart_product_context);
 
 			if (Product::getTaxCalculationMethod())
 				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price'];
@@ -324,8 +324,25 @@ class ParentOrderControllerCore extends FrontController
 				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
 		}
 		
-		$show_option_allow_separate_package = !$this->context->cart->isAllProductsInStock(true)
-			&& Configuration::get('PS_SHIP_WHEN_AVAILABLE');
+		// Get available cart rules and unset the cart rules already in the cart
+		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
+		$cart_cart_rules = $this->context->cart->getCartRules();
+		foreach ($available_cart_rules as $key => $available_cart_rule)
+		{
+			if (strpos($available_cart_rule['code'], 'BO_ORDER_') === 0)
+			{
+				unset($available_cart_rules[$key]);
+				continue;
+			}
+			foreach ($cart_cart_rules as $cart_cart_rule)
+				if ($available_cart_rule['id_cart_rule'] == $cart_cart_rule['id_cart_rule'])
+				{
+					unset($available_cart_rules[$key]);
+					continue 2;
+				}
+		}
+
+		$show_option_allow_separate_package = (!$this->context->cart->isAllProductsInStock(true) && Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
 
 		$this->context->smarty->assign($summary);
 		$this->context->smarty->assign(array(
@@ -340,7 +357,7 @@ class ParentOrderControllerCore extends FrontController
 			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'lastProductAdded' => $this->context->cart->getLastProduct(),
-			'displayVouchers' => CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart),
+			'displayVouchers' => $available_cart_rules,
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
@@ -463,9 +480,8 @@ class ParentOrderControllerCore extends FrontController
 	protected function _assignWrappingAndTOS()
 	{
 		// Wrapping fees
-		$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
-		$wrapping_fees_tax = new Tax(Configuration::get('PS_GIFT_WRAPPING_TAX'));
-		$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
+		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
@@ -488,7 +504,7 @@ class ParentOrderControllerCore extends FrontController
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'delivery_option' => $this->context->cart->getDeliveryOption(null, false),
-			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
+			'gift_wrapping_price' => (float)$wrapping_fees,
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
 	}

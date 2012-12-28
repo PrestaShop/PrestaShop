@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,14 +72,20 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		// Check shop name
 		if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name))
 			$this->errors['shop_name'] = $this->l('Invalid shop name');
-
+		else if (strlen($this->session->shop_name) > 64)
+			$this->errors['shop_name'] = $this->l('The field %s is limited to %d characters', $this->l('shop name'), 64);
+			
 		// Check admin name
 		if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname))
 			$this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
-
+		else if (strlen($this->session->admin_firstname) > 32)
+			$this->errors['admin_firstname'] = $this->l('The field %s is limited to %d characters', $this->l('firstname'), 32);
+		
 		if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname))
 			$this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
-
+		else if (strlen($this->session->admin_lastname) > 32)
+			$this->errors['admin_lastname'] = $this->l('The field %s is limited to %d characters', $this->l('lastname'), 32);
+		
 		// Check passwords
 		if ($this->session->admin_password)
 		{

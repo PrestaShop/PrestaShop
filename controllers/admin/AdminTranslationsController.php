@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -250,7 +249,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$path = dirname($dest);
 
 		// If folder wasn't already added
-		if (!Tools::file_exists_cache($path))
+		// Do not use Tools::file_exists_cache because it changes over time!
+		if (!file_exists($path))
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
@@ -277,7 +277,12 @@ class AdminTranslationsControllerCore extends AdminController
 			$file_path = $translation_informations['dir'].$translation_informations['file'];
 
 		if (!file_exists($file_path))
-			throw new PrestaShopException(sprintf(Tools::displayError('This file doesn\'t exists: "%s". Please create this file.'), $file_path));
+		{
+			if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true))
+				throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
+			elseif (!touch($file_path))
+				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
+		}
 
 		if ($fd = fopen($file_path, 'w'))
 		{
@@ -324,14 +329,27 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function submitCopyLang()
 	{
-		if (!($from_lang = strval(Tools::getValue('fromLang'))) || !($to_lang = strval(Tools::getValue('toLang'))))
+		if (!($from_lang = Tools::getValue('fromLang')) || !($to_lang = Tools::getValue('toLang')))
 			$this->errors[] = $this->l('You must select 2 languages in order to copy data from one to another');
-		else if (!($from_theme = strval(Tools::getValue('fromTheme'))) || !($to_theme = strval(Tools::getValue('toTheme'))))
+		else if (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme')))
 			$this->errors[] = $this->l('You must select 2 themes in order to copy data from one to another');
 		else if (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
 			$this->errors[] = $this->l('An error occurred while copying data');
 		else if ($from_lang == $to_lang && $from_theme == $to_theme)
 			$this->errors[] = $this->l('Nothing to copy! (same language and theme)');
+		else
+		{
+			$theme_exists = array('from_theme' => false, 'to_theme' => false);
+			foreach ($this->themes as $theme)
+			{
+				if ($theme->directory == $from_theme)
+					$theme_exists['from_theme'] = true;
+				if ($theme->directory == $to_theme)
+					$theme_exists['to_theme'] = true;
+			}
+			if ($theme_exists['from_theme'] == false || $theme_exists['to_theme'] == false)
+				$this->errors[] = $this->l('Theme(s) not found');
+		}
 		if (count($this->errors))
 			return;
 
@@ -549,6 +567,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public static function addNewTabs($iso_code, $files)
 	{
+		$errors = array();
 		foreach ($files as $file)
 		{
 			// Check if file is a file theme
@@ -566,14 +585,46 @@ class AdminTranslationsControllerCore extends AdminController
 					if (isset($tab->class_name) && !empty($tab->class_name))
 					{
 						$id_lang = Language::getIdByIso($iso_code);
-						$tab->name[(int)$id_lang] = pSQL($translations);
+						$tab->name[(int)$id_lang] = $translations;
 
-						// Update this tab
-						$tab->update();
+						if (!Validate::isGenericName($tab->name[(int)$id_lang]))
+							$errors[] = sprintf(Tools::displayError('Tab "%s" is not valid'), $tab->name[(int)$id_lang]);
+						else
+							$tab->update();
 					}
 				}
 			}
 		}
+		return $errors;
+	}
+	
+	public static function checkTranslationFile($content)
+	{
+		$lines = array_map('trim', explode("\n", $content));
+		$global = false;
+		foreach ($lines as $line)
+		{
+			if (in_array($line, array('<?php', '?>', '')))
+				continue;
+			if (!$global && preg_match('/^global\s+\$([a-z0-9-_]+)\s*;$/i', $line, $matches))
+			{
+				$global = $matches[1];
+				continue;
+			}
+			if ($global != false && preg_match('/^\$'.preg_quote($global, '/').'\s*=\s*array\(\s*\)\s*;$/i', $line))
+				continue;
+			if (!$global && preg_match('/^\$([a-z0-9-_]+)\s*=\s*array\(\s*\)\s*;$/i', $line, $matches))
+			{
+				$global = $matches[1];
+				continue;
+			}
+			if (preg_match('/^\$'.preg_quote($global, '/').'\[\''._PS_TRANS_PATTERN_.'\'\]\s*=\s*\''._PS_TRANS_PATTERN_.'\'\s*;$/i', $line))
+				continue;
+			if (preg_match('/^return\s+\$'.preg_quote($global, '/').'\s*;$/i', $line, $matches))
+				continue;
+			return false;
+		}
+		return true;
 	}
 
 	public function submitImportLang()
@@ -589,11 +640,45 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				$themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
 				$files_list = $gz->listContent();
+				
+				$uniqid = uniqid();
+				$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+				if ($gz->extract($sandbox, false))
+				{
+					foreach ($files_list as $file2check)
+					{
+						//don't validate index.php, will be overwrite when extract in translation directory
+						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php')
+							continue;
+						
+						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
+						{
+							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
+								$this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
+						}
+						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
+							$this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
+					}
+					Tools::deleteDirectory($sandbox, true);
+				}
+				
+				if (count($this->errors))
+					return false;
+
 				if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				{
+					foreach ($files_list as $file2check)
+						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
+							continue;
+
 					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
 					$this->checkAndAddThemesFiles($files_list, $themes_selected);
-					AdminTranslationsController::addNewTabs($iso_code, $files_list);
+					$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+					if (count($tab_errors))
+					{
+						$this->errors += $tab_errors;
+						return false;
+					}
 					if (Validate::isLanguageFileName($filename))
 					{
 						if (!Language::checkAndAddLanguage($iso_code))
@@ -625,9 +710,14 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 					{
 						AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-						AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
-						if (!Language::checkAndAddLanguage($arr_import_lang[0]))
-							$conf = 20;
+						$tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
+						if (count($tab_errors))
+							$this->errors += $tab_errors;
+						else
+						{
+							if (!Language::checkAndAddLanguage($arr_import_lang[0]))
+								$conf = 20;
+						}
 						if (!unlink($file))
 							$this->errors[] = Tools::displayError('Cannot delete archive');
 
@@ -1076,7 +1166,16 @@ class AdminTranslationsControllerCore extends AdminController
 
 		// Get folder name of theme
 		if (($theme = Tools::getValue('theme')) && !is_array($theme))
-			$this->theme_selected = Tools::safeOutput($theme);
+		{
+			$theme_exists = false;
+			foreach ($this->themes as $existing_theme)
+				if ($existing_theme->directory == $theme)
+					$theme_exists = true;
+			if ($theme_exists)
+				$this->theme_selected = Tools::safeOutput($theme);
+			else
+				throw new PrestaShopException(sprintf(Tools::displayError('Invalid theme "%s"'), $theme));
+		}
 		else
 			$this->theme_selected = self::DEFAULT_THEME_NAME;
 
@@ -1121,110 +1220,115 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		/* PrestaShop demo mode */
 
-		if (Tools::isSubmit('submitCopyLang'))
-		{
-		 	if ($this->tabAccess['add'] === '1')
-				$this->submitCopyLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitExport'))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->submitExportLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitImport'))
-		{
-		 	if ($this->tabAccess['add'] === '1')
-				$this->submitImportLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitAddLanguage'))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->submitAddLang();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsFront'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsPdf'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
-				if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+		try {
+		
+			if (Tools::isSubmit('submitCopyLang'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitCopyLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitExport'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitExportLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitImport'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitImportLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitAddLanguage'))
+			{
+				if ($this->tabAccess['add'] === '1')
+					$this->submitAddLang();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsFront'))
+			{
+				if ($this->tabAccess['edit'] === '1')
 					$this->writeTranslationFile();
 				else
-					$this->writeTranslationFile(true);
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsBack'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsErrors'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsFields'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-				$this->writeTranslationFile();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-
-		}
-		else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-		 		$this->submitTranslationsMails();
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitTranslationsModules'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				// Get a good path for module directory
-				if ($this->theme_selected == self::DEFAULT_THEME_NAME)
-					$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
-				else
-					$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
-
-				// Get list of modules
-				if ($modules = $this->getListModules())
-				{
-					// Get files of all modules
-					$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
-
-					// Find and write all translation modules files
-					foreach ($arr_files as $value)
-						$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
-
-					// Redirect
-					if (Tools::getValue('submitTranslationsModulesAndStay'))
-						$this->redirect(true);
-					else
-						$this->redirect();
-				}
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			else if (Tools::isSubmit('submitTranslationsPdf'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					// Only the PrestaShop team should write the translations into the _PS_TRANSLATIONS_DIR_
+					if (($this->theme_selected == self::DEFAULT_THEME_NAME) && _PS_MODE_DEV_)
+						$this->writeTranslationFile();
+					else
+						$this->writeTranslationFile(true);
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsBack'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsErrors'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsFields'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->writeTranslationFile();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+
+			}
+			else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+					$this->submitTranslationsMails();
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else if (Tools::isSubmit('submitTranslationsModules'))
+			{
+				if ($this->tabAccess['edit'] === '1')
+				{
+					// Get a good path for module directory
+					if ($this->theme_selected == self::DEFAULT_THEME_NAME)
+						$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
+					else
+						$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
+
+					// Get list of modules
+					if ($modules = $this->getListModules())
+					{
+						// Get files of all modules
+						$arr_files = $this->getAllModuleFiles($modules, $i18n_dir, $this->lang_selected->iso_code, true);
+
+						// Find and write all translation modules files
+						foreach ($arr_files as $value)
+							$this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
+
+						// Redirect
+						if (Tools::getValue('submitTranslationsModulesAndStay'))
+							$this->redirect(true);
+						else
+							$this->redirect();
+					}
+				}
+				else
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+		} catch (PrestaShopException $e) {
+			$this->errors[] = $e->getMessage();
 		}
 	}
 

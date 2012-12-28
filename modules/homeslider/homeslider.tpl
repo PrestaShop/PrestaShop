@@ -44,7 +44,7 @@ var homeslider_pause = {$homeslider.pause};
 <ul id="homeslider">
 {foreach from=$homeslider_slides item=slide}
 	{if $slide.active}
-		<li><a href="{$slide.url}" title="{$slide.description}"><img src="{$smarty.const._MODULE_DIR_}/homeslider/images/{$slide.image}" alt="{$slide.legend}" title="{$slide.description}" height="{$homeslider.height}" width="{$homeslider.width}" /></a></li>
+		<li><a href="{$slide.url|escape:'htmlall':'UTF-8'}" title="{$slide.description|escape:'htmlall':'UTF-8'}"><img src="{$smarty.const._MODULE_DIR_}/homeslider/images/{$slide.image|escape:'htmlall':'UTF-8'}" alt="{$slide.legend|escape:'htmlall':'UTF-8'}" legend="{$slide.description|escape:'htmlall':'UTF-8'}" height="{$homeslider.height|intval}" width="{$homeslider.width|intval}" /></a></li>
 	{/if}
 {/foreach}
 </ul>

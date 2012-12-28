@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7300 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +31,6 @@ class AdminCurrenciesControllerCore extends AdminController
 		$this->table = 'currency';
 		$this->className = 'Currency';
 		$this->lang = false;
-		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->fields_list = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -70,6 +68,9 @@ class AdminCurrenciesControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->_select .= 'currency_shop.conversion_rate conversion_rate';
+		$this->_join .= Shop::addSqlAssociation('currency', 'a');
 	}
 
 	public function renderList()

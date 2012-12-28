@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 16965 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -53,20 +52,20 @@
 	var countriesNeedZipCode = new Array();
 	var vat_management = {$vat_management|intval};
 	
-	var txtWithTax = "{l s='(tax incl.)'}";
-	var txtWithoutTax = "{l s='(tax excl.)'}";
-	var txtHasBeenSelected = "{l s='has been selected'}";
-	var txtNoCarrierIsSelected = "{l s='No carrier has been selected'}";
-	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order'}";
-	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted'}";
-	var txtTOSIsAccepted = "{l s='Terms of Service have been accepted'}";
-	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted'}";
-	var txtThereis = "{l s='There is'}";
-	var txtErrors = "{l s='error(s)'}";
-	var txtDeliveryAddress = "{l s='Delivery address'}";
-	var txtInvoiceAddress = "{l s='Invoice address'}";
-	var txtModifyMyAddress = "{l s='Modify my address'}";
-	var txtInstantCheckout = "{l s='Instant checkout'}";
+	var txtWithTax = "{l s='(tax incl.)' js=1}";
+	var txtWithoutTax = "{l s='(tax excl.)' js=1}";
+	var txtHasBeenSelected = "{l s='has been selected' js=1}";
+	var txtNoCarrierIsSelected = "{l s='No carrier has been selected' js=1}";
+	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order' js=1}";
+	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted' js=1}";
+	var txtTOSIsAccepted = "{l s='Terms of Service have been accepted' js=1}";
+	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted' js=1}";
+	var txtThereis = "{l s='There is' js=1}";
+	var txtErrors = "{l s='error(s)' js=1}";
+	var txtDeliveryAddress = "{l s='Delivery address' js=1}";
+	var txtInvoiceAddress = "{l s='Invoice address' js=1}";
+	var txtModifyMyAddress = "{l s='Modify my address' js=1}";
+	var txtInstantCheckout = "{l s='Instant checkout' js=1}";
 	var errorCarrier = "{$errorCarrier}";
 	var errorTOS = "{$errorTOS}";
 	var checkedCarrier = "{if isset($checked)}{$checked}{else}0{/if}";
