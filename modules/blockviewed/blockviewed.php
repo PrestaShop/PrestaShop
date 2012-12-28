@@ -172,8 +172,7 @@ class BlockViewed extends Module
 				return ;
 
 			$this->smarty->assign(array(
-				'productsViewedObj' => $productsViewedObj,
-				'mediumSize' => Image::getSize('medium')));
+				'productsViewedObj' => $productsViewedObj));
 
 			return $this->display(__FILE__, 'blockviewed.tpl');
 		}

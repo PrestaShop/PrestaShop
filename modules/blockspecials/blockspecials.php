@@ -91,8 +91,7 @@ class BlockSpecials extends Module
 
 		$this->smarty->assign(array(
 			'special' => $special,
-			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
-			'mediumSize' => Image::getSize('medium_default'),
+			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2)
 		));
 
 		return $this->display(__FILE__, 'blockspecials.tpl');
