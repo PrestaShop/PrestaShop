@@ -647,6 +647,8 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					foreach ($files_list as $file2check)
 					{
+						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php')
+							continue;
 						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
 						{
 							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
