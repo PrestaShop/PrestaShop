@@ -70,6 +70,8 @@ class ImageCore extends ObjectModel
 	);
 
 	protected static $_cacheGetSize = array();
+	protected static $_cacheGetWidthSize = array();
+	protected static $_cacheGetHeightSize = array();
 
 	public function __construct($id = null, $id_lang = null)
 	{
@@ -367,7 +369,29 @@ class ImageCore extends ObjectModel
 			');
 	 	return self::$_cacheGetSize[$type];
 	}
-
+	
+	public static function getWidth($params, &$smarty)
+	{
+		if (!isset(self::$_cacheGetWidthSize[$params['type']]) || self::$_cacheGetWidthSize[$params['type']] === null)
+			self::$_cacheGetWidthSize[$params['type']] = Db::getInstance()->getValue('
+				SELECT `width`
+				FROM '._DB_PREFIX_.'image_type
+				WHERE `name` = \''.pSQL($params['type']).'\'
+			');
+	 	return self::$_cacheGetWidthSize[$params['type']];
+	}
+	
+	public static function getHeight($params, &$smarty)
+	{
+		if (!isset(self::$_cacheGetHeightSize[$params['type']]) || self::$_cacheGetHeightSize[$params['type']] === null)
+			self::$_cacheGetHeightSize[$params['type']] = Db::getInstance()->getValue('
+				SELECT `height`
+				FROM '._DB_PREFIX_.'image_type
+				WHERE `name` = \''.pSQL($params['type']).'\'
+			');
+	 	return self::$_cacheGetHeightSize[$params['type']];
+	}
+		
 	/**
 	 * Clear all images in tmp dir
 	 */
