@@ -98,7 +98,7 @@
 							</tr>
 						{/foreach}
 					</table>
-					<h3 style="color:green;font-weight:700;margin-top:10px">
+					<h3 style="color:green;font-weight:700;margin-top:10px; clear:both">
 						{l s='Validated Orders:'} {$count_ok} {l s='for'} {$total_ok}
 					</h3>
 				</div>
