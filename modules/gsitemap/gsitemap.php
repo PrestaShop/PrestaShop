@@ -284,7 +284,7 @@ XML;
 			'new-products' => false,
 			'prices-drop' => false,
 			'stores' => false,
-			'authentication' => true,
+			'authentication' => false,
 			'best-sales' => false,
 			'contact-form' => true);
 
