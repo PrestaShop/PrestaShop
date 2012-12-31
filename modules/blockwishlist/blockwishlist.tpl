@@ -24,9 +24,9 @@
 *}
 
 <div id="wishlist_block" class="block account">
-	<p class="title_block">
+	<h4 class="title_block">
 		<a href="{$wishlist_link}">{l s='Wishlist' mod='blockwishlist'}</a>
-	</p>
+	</h4>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
 		{if $wishlist_products}

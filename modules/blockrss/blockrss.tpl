@@ -25,7 +25,7 @@
 
 <!-- Block RSS module-->
 <div id="rss_block_left" class="block">
-	<p class="title_block">{$title}</p>
+	<h4 class="title_block">{$title}</h4>
 	<div class="block_content">
 		{if $rss_links}
 			<ul>
