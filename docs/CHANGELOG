@@ -24,6 +24,19 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.3.1 - (2012-12-31)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Project: Fix bug when you want to upload (and resize) an image
+	[-] Installer: Fix #PSCFV-6392 redirect_type was missing on upgrade
+	[-] FO: Fix retrocompatibility for modules and old themes
+	[-] FO: Fix PHP warning on category controller
+	[-] BO : fixed accentuated URLs in products
+
+
+####################################
 #   v1.5.3.0 - (2012-12-28)  #
 ####################################
 
