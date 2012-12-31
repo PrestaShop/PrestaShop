@@ -25,7 +25,7 @@
 
 <!-- Block search module -->
 <div id="search_block_left" class="block exclusive">
-	<p class="title_block">{l s='Search' mod='blocksearch'}</p>
+	<h4 class="title_block">{l s='Search' mod='blocksearch'}</h4>
 	<form method="get" action="{$link->getPageLink('search', true)}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name' mod='blocksearch'}</label>

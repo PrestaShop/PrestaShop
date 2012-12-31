@@ -26,7 +26,7 @@
 <!-- Block Newsletter module-->
 
 <div id="newsletter_block_left" class="block">
-	<p class="title_block">{l s='Newsletter' mod='blocknewsletter'}</p>
+	<h4 class="title_block">{l s='Newsletter' mod='blocknewsletter'}</h4>
 	<div class="block_content">
 	{if isset($msg) && $msg}
 		<p class="{if $nw_error}warning_inline{else}success_inline{/if}">{$msg}</p>
