@@ -25,13 +25,13 @@
 
 <!-- Block links module -->
 <div id="links_block_left" class="block">
-	<p class="title_block">
+	<h4 class="title_block">
 	{if $url}
 		<a href="{$url|escape}">{$title|escape}</a>
 	{else}
 		{$title|escape}
 	{/if}
-	</p>
+	</h4>
 	<ul class="block_content bullet">
 	{foreach from=$blocklink_links item=blocklink_link}
 		{if isset($blocklink_link.$lang)} 
