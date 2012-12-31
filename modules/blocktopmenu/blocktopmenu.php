@@ -725,7 +725,6 @@ class Blocktopmenu extends Module
 			$this->makeMenu();
 			$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
 			$this->smarty->assign('MENU', $this->_menu);
-			$this->smarty->assign('this_path', $this->_path);
 		}
 
 		$this->context->controller->addJS($this->_path.'js/hoverIntent.js');
