@@ -351,6 +351,10 @@ class DispatcherCore
 		{
 			$e->displayMessage();
 		}
+		catch (SmartyException $e)
+		{
+			$e->displayMessage();
+		}
 	}
 	
 	/**
