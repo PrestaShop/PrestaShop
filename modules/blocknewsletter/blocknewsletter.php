@@ -503,7 +503,6 @@ class Blocknewsletter extends Module
 				);
 			}
 		}
-		$this->smarty->assign('this_path', $this->_path);
 	}
 
 	public function hookDisplayLeftColumn($params)
