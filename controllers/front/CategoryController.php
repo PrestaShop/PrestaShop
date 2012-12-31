@@ -199,7 +199,7 @@ class CategoryControllerCore extends FrontController
 
 		foreach ($this->cat_products as &$product)
 		{
-			if ($product['id_product_attribute'])
+			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
 				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
 		}
 
