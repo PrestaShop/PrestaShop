@@ -297,7 +297,7 @@ table.table_block  td {
 		text-align:left;
 		font-weight: bold;
 	}
-		.block .title_block  a,  .block .title_block  a {color:#fff}
+		.block .title_block a, .block h4 a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
