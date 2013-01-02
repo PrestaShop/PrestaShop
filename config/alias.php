@@ -71,6 +71,13 @@ function bqSQL($string)
 	return str_replace('`', '\`', pSQL($string));
 }
 
+function displayFatalError()
+{
+	$error = error_get_last();
+	if ($error !== NULL)
+		echo '[PrestaShop] Fatal error in module '.substr(basename($error['file']), 0, -4).':<br />'.$error['message'];
+}
+
 /**
  * @deprecated
  */

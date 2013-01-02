@@ -516,11 +516,11 @@ class LanguageCore extends ObjectModel
 			// delete images
 			$files_copy = array(
 				'/en.jpg',
-				'/en-default-thickbox_default.jpg',
-				'/en-default-home_default.jpg',
-				'/en-default-large_default.jpg',
-				'/en-default-medium_default.jpg',
-				'/en-default-small_default.jpg'
+				'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+				'/en-default-'.ImageType::getFormatedName('home').'.jpg',
+				'/en-default-'.ImageType::getFormatedName('large').'.jpg',
+				'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
+				'/en-default-'.ImageType::getFormatedName('small').'.jpg'
 			);
 			$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
 			foreach ($tos as $to)
@@ -726,12 +726,12 @@ class LanguageCore extends ObjectModel
 
 				$files_copy = array(
 					'/en.jpg',
-					'/en-default-thickbox_default.jpg',
-					'/en-default-home_default.jpg',
-					'/en-default-large_default.jpg',
-					'/en-default-medium_default.jpg',
-					'/en-default-small_default.jpg',
-					'/en-default-scene_default.jpg'
+					'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+					'/en-default-'.ImageType::getFormatedName('home').'.jpg',
+					'/en-default-'.ImageType::getFormatedName('large').'.jpg',
+					'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
+					'/en-default-'.ImageType::getFormatedName('small').'.jpg',
+					'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
 				);
 				foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
 					foreach ($files_copy as $file)

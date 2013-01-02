@@ -187,7 +187,7 @@ abstract class ControllerCore
 		else
 		{
 			$this->initCursedPage();
-			$this->display();
+			$this->smartyOutputContent($this->layout);
 		}
 	}
 

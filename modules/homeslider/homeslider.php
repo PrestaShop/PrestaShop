@@ -217,25 +217,25 @@ class HomeSlider extends Module
 		$this->_html .= '
 			<label>'.$this->l('Height:').'</label>
 			<div class="margin-form">
-				<input type="text" name="HOMESLIDER_HEIGHT" id="speed" size="3" value="'.Configuration::get('HOMESLIDER_HEIGHT').'" /> px
+				<input type="text" name="HOMESLIDER_HEIGHT" id="speed" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_HEIGHT')).'" /> px
 			</div>';
 		/* Width field */
 		$this->_html .= '
 		<label>'.$this->l('Width:').'</label>
 		<div class="margin-form">
-			<input type="text" name="HOMESLIDER_WIDTH" id="pause" size="3" value="'.Configuration::get('HOMESLIDER_WIDTH').'" /> px
+			<input type="text" name="HOMESLIDER_WIDTH" id="pause" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_WIDTH')).'" /> px
 		</div>';
 		/* Speed field */
 		$this->_html .= '
 			<label>'.$this->l('Speed:').'</label>
 			<div class="margin-form">
-				<input type="text" name="HOMESLIDER_SPEED" id="speed" size="3" value="'.Configuration::get('HOMESLIDER_SPEED').'" /> ms
+				<input type="text" name="HOMESLIDER_SPEED" id="speed" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_SPEED')).'" /> ms
 			</div>';
 		/* Pause field */
 		$this->_html .= '
 		<label>'.$this->l('Pause:').'</label>
 		<div class="margin-form">
-			<input type="text" name="HOMESLIDER_PAUSE" id="pause" size="3" value="'.Configuration::get('HOMESLIDER_PAUSE').'" /> ms
+			<input type="text" name="HOMESLIDER_PAUSE" id="pause" size="3" value="'.Tools::safeOutput(Configuration::get('HOMESLIDER_PAUSE')).'" /> ms
 		</div>';
 		/* Loop field */
 		$this->_html .= '

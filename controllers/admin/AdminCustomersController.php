@@ -184,11 +184,13 @@ class AdminCustomersControllerCore extends AdminController
 		parent::initToolbar();
 		if (!$this->can_add_customer)
 			unset($this->toolbar_btn['new']);
-		else
+		else if (!$this->display) //display import button only on listing
+		{
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
 				'desc' => $this->l('Import')
 			);
+		}
 	}
 
 	public function initProcess()

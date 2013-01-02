@@ -51,7 +51,12 @@ class PrestaShopExceptionCore extends Exception
 			</style>';
 			echo '<div id="psException">';
 			echo '<h2>['.get_class($this).']</h2>';
-			echo $this->getExentedMessage();
+			printf(
+				'<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>',
+				Tools::safeOutput($this->getMessage()),
+				$this->getLine(),
+				ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
+			);
 
 			$this->displayFileDebug($this->getFile(), $this->getLine());
 

@@ -1,11 +1,11 @@
-Hi {firstname} {lastname},
+Hola {firstname} {lastname},
 
-Your order with the reference {order_name} from {shop_name} has been changed by the merchant.
+Su pedido con la referencia {order_name} de {shop_name} ha sido modificado por el comerciante.
 
-You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
+Puede revisar su pedido y descargar su factura desde la sección "Historial de pedidos" de su cuenta de cliente haciendo clic en "Mi cuenta" en nuestra web.
 
-If you have guest account, you can follow your order using this link: {guest_tracking_url}
+Si tiene una cuenta de invitado, puede revisar su pedido en esta página: {guest_tracking_url}
 
 {shop_name} - {shop_url}
 
-{shop_url} powered by PrestaShop™
+{shop_url} desarrollado por PrestaShop™

@@ -346,9 +346,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
@@ -369,9 +369,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			return Media::getCSSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;

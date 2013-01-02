@@ -298,7 +298,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id_tax',
 						'name' => 'name',
 						'default' => array(
-							'value' => 'name',
+							'value' => 0,
 							'label' => $this->l('No Tax')
 						)
 					),

@@ -867,7 +867,7 @@ class FrontControllerCore extends Controller
 			$this->context->cookie->nb_item_per_page = $this->n;
 
 		$pages_nb = ceil($nbProducts / (int)$this->n);
-		if ($this->p > $pages_nb)
+		if ($this->p > $pages_nb && $nbProducts <> 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$start = (int)($this->p - $range);
