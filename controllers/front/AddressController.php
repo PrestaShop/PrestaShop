@@ -257,6 +257,7 @@ class AddressControllerCore extends FrontController
 		// Assign common vars
 		$this->context->smarty->assign(array(
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+			'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 			'ajaxurl' => _MODULE_DIR_,
 			'errors' => $this->errors,
 			'token' => Tools::getToken(false),
