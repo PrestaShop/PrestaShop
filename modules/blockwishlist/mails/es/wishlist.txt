@@ -5,4 +5,4 @@ Hola,
 
 
 
-{shop_url} desarrollado por PrestaShop™
+{shop_url} desarrollado por PrestaShop

@@ -657,7 +657,7 @@ class CategoryCore extends ObjectModel
 			Tools::orderbyPrice($result, $order_way);
 
 		if (!$result)
-			return false;
+			return array();
 
 		/* Modify SQL result */
 		return Product::getProductsProperties($id_lang, $result);

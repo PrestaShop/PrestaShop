@@ -529,7 +529,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<div class="block_content">
 					<ul>
 					{foreach from=$accessories item=accessory name=accessories_list}
-						{if ($accessory.allow_oosp || $accessory.quantity > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
+						{if ($accessory.allow_oosp || $accessory.quantity > 0) AND $accessory.available_for_order AND !isset($restricted_country_mode)}
 							{assign var='accessoryLink' value=$link->getProductLink($accessory.id_product, $accessory.link_rewrite, $accessory.category)}
 							<li class="ajax_block_product {if $smarty.foreach.accessories_list.first}first_item{elseif $smarty.foreach.accessories_list.last}last_item{else}item{/if} product_accessories_description">
 								<p class="s_title_block">
@@ -543,10 +543,14 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 									</div>
 									<div class="clear_product_desc">&nbsp;</div>
 								</div>
+								
 								<p class="clearfix" style="margin-top:5px">
 									<a class="button" href="{$accessoryLink|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>
+									{if !$PS_CATALOG_MODE}
 									<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$accessory.id_product|intval}&amp;token={$static_token}&amp;add")}" rel="ajax_id_product_{$accessory.id_product|intval}" title="{l s='Add to cart'}">{l s='Add to cart'}</a>
+									{/if}
 								</p>
+								
 							</li>
 						{/if}
 					{/foreach}

@@ -119,12 +119,12 @@ class SupplierControllerCore extends FrontController
 
 			$suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
 			foreach ($suppliers as &$row)
-				$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-medium_default.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
+				$row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
 
 			$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)$this->n),
 				'nbSuppliers' => $nbProducts,
-				'mediumSize' => Image::getSize('medium_default'),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'suppliers_list' => $suppliers,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			));

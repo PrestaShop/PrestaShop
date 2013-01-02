@@ -68,6 +68,8 @@ class AdminModulesControllerCore extends AdminController
 	{
 		parent::__construct();
 
+		register_shutdown_function('displayFatalError');
+
 		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 		// Set the modules categories
@@ -316,10 +318,13 @@ class AdminModulesControllerCore extends AdminController
 		//check if it's a real module
 		foreach($zip_folders as $folder)
 			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
+			{
 				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
-
+				$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
+			}
+			
 		@unlink($file);
-		@unlink($tmp_folder);
+		$this->recursiveDeleteOnDisk($tmp_folder);
 		if (!count($this->errors) && $success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}

@@ -115,7 +115,7 @@ class AdminImagesControllerCore extends AdminController
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
 						'title' => $this->l('Maximum size of product pictures'),
 						'desc' => $this->l('The maximum size of pictures uploadable by customers (in Bytes)'),
-						'validation' => 'isUnsignedId',
+						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
@@ -125,7 +125,7 @@ class AdminImagesControllerCore extends AdminController
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
 						'title' => $this->l('Product picture width'),
 						'desc' => $this->l('The maximum width of pictures uploadable by customers'),
-						'validation' => 'isUnsignedId',
+						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
@@ -135,7 +135,7 @@ class AdminImagesControllerCore extends AdminController
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
 						'title' => $this->l('Product picture height'),
 						'desc' => $this->l('The maximum height of pictures uploadable by customers'),
-						'validation' => 'isUnsignedId',
+						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text',
@@ -369,14 +369,14 @@ class AdminImagesControllerCore extends AdminController
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
-					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+					return parent::postProcess();
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		else
-			parent::postProcess();
+			return parent::postProcess();
 	}
 
 	public static function printEntityActiveIcon($value, $object)

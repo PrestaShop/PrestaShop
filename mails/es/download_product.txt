@@ -1,13 +1,15 @@
-{firstname} {lastname}, gracias por comprar en {shop_name}!
+Hola {firstname} {lastname}, 
 
-Tienes {nbProducts} producto(s) para descargar.
+Gracias por su pedido en {shop_name}!
+
+Tiene {nbProducts} producto(s) para descargar.
 
 Este es el acceso directo:
 {virtualProducts}
 
+Puede revisar este pedido y descargar su factura desde la sección "Seguimiento de Pedido" de su cuenta pulsando en "Mi cuenta" en nuestra web.
 
-Puedes revisar este pedido y descargar la factura desde la sección "Seguimiento de Pedido" de tu cuenta pulsando en "Mi cuenta" en nuestra web.
-Si tienes una cuenta invitado, puedes seguir tu pedido en esta página: {guest_tracking_url}?id_order={id_order}
+Si tiene una cuenta de invitado, puede ver su pedido en esta página: {guest_tracking_url}
 
 
 {shop_url} desarrollado por PrestaShop®
