@@ -535,7 +535,11 @@ class LinkCore
 		}
 
 		if (!$array)
-			return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+			if (count($vars))
+				return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+			else
+				return $url;
+		
 		$vars['requestUrl'] = $url;
 
 		if ($type && $id_object)
