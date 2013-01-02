@@ -5147,5 +5147,27 @@ class ProductCore extends ObjectModel
 			WHERE pa.`id_product` = '.(int)$this->id
 		);
 	}
+	
+	/**
+	 * For a given ean13 reference, returns the corresponding id
+	 *
+	 * @param string $ean13
+	 * @return int id
+	 */
+	public static function getIdByEan13($ean13)
+	{
+		if (empty($ean13))
+			return 0;
+		
+		if(!Validate::isEan13($ean13))
+			return 0;
+
+		$query = new DbQuery();
+		$query->select('p.id_product');
+		$query->from('product', 'p');
+		$query->where('p.ean13 = \''.pSQL($ean13).'\'');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
 }
 
