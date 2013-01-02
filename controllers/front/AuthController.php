@@ -167,6 +167,7 @@ class AuthControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 				'years' => $years,
 				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 				'months' => $months,
