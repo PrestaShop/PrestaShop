@@ -570,7 +570,7 @@ class AdminCartsControllerCore extends AdminController
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
 			{
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}
