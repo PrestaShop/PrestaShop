@@ -6,7 +6,7 @@ SET NAMES 'utf8';
 
 /* PHP:block_category_1521(); */;
 
-/* PHP:updateordermessages(); */;
+/* PHP:update_order_messages(); */;
 
 UPDATE `PREFIX_order_state` SET `delivery` = 0 WHERE `id_order_state` = 3;
 
