@@ -386,9 +386,10 @@ class AuthControllerCore extends FrontController
 				if (!Tools::getValue('phone'))
 					$error_phone = true;
 			}
-			elseif (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE') && (!Tools::getValue('phone') || !Tools::getValue('phone_mobile')))
+			elseif ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) && (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
 				$error_phone = true;
 		}
+
 		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		
