@@ -353,7 +353,7 @@ class AdminModulesControllerCore extends AdminController
 
 		@unlink($file);
 		if ($success && $redirect)
-			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=8&anchor=anchor'.ucfirst($folder).'&token='.$this->token);
 	}
 
 	protected function recursiveDeleteOnDisk($dir)
