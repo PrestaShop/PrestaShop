@@ -86,9 +86,6 @@ $(function(){ldelim}
 			submitFunction();
 			return false;
 		});
-		$('#SubmitCreate').click(function(){
-			submitFunction();
-		});
 	});
 	function submitFunction()
 	{
@@ -124,11 +121,12 @@ $(function(){ldelim}
 					$('#center_column').html('<div id="noSlide">'+$('#center_column').html()+'</div>');
 					$('#noSlide').fadeOut('slow', function(){
 						$('#noSlide').html(jsonData.page);
-						// update the state (when this file is called from AJAX you still need to update the state)
+						// update the state (when this file is called from AJAX you still need to update the state)									
 						bindStateInputAndUpdate();
+						$(this).fadeIn('slow', function(){
+							document.location = '#account-creation';
+						});
 					});
-					$('#noSlide').fadeIn('slow');
-					document.location = '#account-creation';
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -339,7 +337,6 @@ $(function(){ldelim}
 		</fieldset>
 		<fieldset class="account_creation dni">
 			<h3>{l s='Tax identification'}</h3>
-
 			<p class="required text">
 				<label for="dni">{l s='Identification number'}</label>
 				<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />

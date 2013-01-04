@@ -61,6 +61,7 @@ body.content_only {
 
 /* positionnement ****************************************************************************** */
 .hidden {display:none}
+.f_left {float:left}
 .f_right {float:right}
 p.center {text-align:center}
 .clearBoth {clear:both}
