@@ -31,6 +31,8 @@ class CartRuleCore extends ObjectModel
 	const FILTER_ACTION_SHIPPING = 2;
 	const FILTER_ACTION_REDUCTION = 3;
 	const FILTER_ACTION_GIFT = 4;
+
+	const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 	
 	/* This variable controls that a free gift is offered only once, even when multi-shippping is activated and the same product is delivered in both addresses */
 	protected static $only_one_gift = array();
