@@ -187,7 +187,7 @@ class AdminStockMvtControllerCore extends AdminController
 				die;
 			}
 			else
-				$this->displayWarning($this->l('There is nothing to export as CSV.'));
+				$this->displayWarning($this->l('There is nothing to export as a CSV.'));
 		}
 
 		return $list;
@@ -297,7 +297,7 @@ class AdminStockMvtControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initContent();
@@ -307,7 +307,7 @@ class AdminStockMvtControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initProcess();	

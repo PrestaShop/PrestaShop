@@ -76,7 +76,7 @@
 								{if $allow_oosp}
 									{$product->available_later|escape:'htmlall':'UTF-8'}
 								{else}
-									{l s='This product is no longer in stock'}
+									{l s='This product is no longer in stock.'}
 								{/if}
 							{else}
 								{$product->available_now|escape:'htmlall':'UTF-8'}
@@ -101,7 +101,7 @@
 
 		<tr class="comparison_header">
 			<td>
-				{l s='Features'}
+				{l s='Features:'}
 			</td>
 			{section loop=$products|count step=1 start=0 name=td}
 			<td></td>
@@ -139,6 +139,6 @@
 	</table>
 </div>
 {else}
-	<p class="warning">{l s='There are no products selected for comparison'}</p>
+	<p class="warning">{l s='There are no products selected for comparison.'}</p>
 {/if}
 

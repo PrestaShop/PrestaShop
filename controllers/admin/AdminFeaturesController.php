@@ -77,12 +77,12 @@ class AdminFeaturesControllerCore extends AdminController
 	 	// Added specific button in toolbar
 	 	$this->toolbar_btn['newAttributes'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature value')
+			'desc' => $this->l('Add new feature values')
 		);
 
 	 	$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature')
+			'desc' => $this->l('Add a new feature')
 		);
 
 		return parent::renderList();
@@ -239,7 +239,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 				$this->toolbar_btn['back'] = array(
 					'href' => $back,
-					'desc' => $this->l('Back to list')
+					'desc' => $this->l('Back to the list')
 				);
 			break;
 
@@ -353,7 +353,7 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 		}
 		else
-			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

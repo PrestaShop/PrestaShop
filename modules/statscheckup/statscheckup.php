@@ -149,7 +149,7 @@ class StatsCheckUp extends Module
 
 		$arrayConf = array(
 			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
-			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
+			'IMAGES' => array('name' => $this->l('images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
 			'STOCK' => array('name' => $this->l('Available quantities for sale'), 'text' => $this->l('items'))
 		);
@@ -205,7 +205,7 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('Images').'</th>
+				<th>'.$this->l('images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>
@@ -278,7 +278,7 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('Images').'</th>
+				<th>'.$this->l('images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>

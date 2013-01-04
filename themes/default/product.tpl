@@ -116,11 +116,11 @@ combinationImages[0] = new Array();
 {/if}
 
 // Translations
-var doesntExist = '{l s='This combination does not exist for this product. Please choose another.' js=1}';
+var doesntExist = '{l s='This combination does not exist for this product. Please select another combination.' js=1}';
 var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
-var doesntExistNoMoreBut = '{l s='with those attributes but is available with others' js=1}';
-var uploading_in_progress = '{l s='Uploading in progress, please wait...' js=1}';
-var fieldRequired = '{l s='Please fill in all required fields, then save the customization.' js=1}';
+var doesntExistNoMoreBut = '{l s='with those attributes but is available with others.' js=1}';
+var uploading_in_progress = '{l s='Uploading in progress, please be patient.' js=1}';
+var fieldRequired = '{l s='Please fill in all the required fields before saving your customization.' js=1}';
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
@@ -176,12 +176,12 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		{if $have_image}
 			<span id="view_full_size">
 				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
-				<span class="span_link">{l s='View full size'}</span>
+				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{else}
 			<span id="view_full_size">
 				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
-				<span class="span_link">{l s='View full size'}</span>
+				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{/if}
 		</div>
@@ -346,8 +346,8 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $product->available_for_order)}
 			<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
 				<span id="quantityAvailable">{$product->quantity|intval}</span>
-				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='item in stock'}</span>
-				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='items in stock'}</span>
+				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='Item in stock'}</span>
+				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='Items in stock'}</span>
 			</p>
 			{/if}
 
@@ -412,11 +412,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				</p>
 			{/if}
 			{if $packItems|@count && $productPrice < $product->getNoPackPrice()}
-				<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
+				<p class="pack_price">{l s='Instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 				<br class="clear" />
 			{/if}
 			{if $product->ecotax != 0}
-				<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
+				<p class="price-ecotax">{l s='Include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='For green tax'}
 					{if $product->specificPrice AND $product->specificPrice.reduction}
 					<br />{l s='(not impacted by the discount)'}
 					{/if}
@@ -452,15 +452,15 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 {if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 <!-- quantity discount -->
 <ul class="idTabs clearfix">
-	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
+	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Sliding scale pricing'}</a></li>
 </ul>
 <div id="quantityDiscount">
 	<table class="std">
         <thead>
             <tr>
-                <th>{l s='product'}</th>
-                <th>{l s='from (qty)'}</th>
-                <th>{l s='discount'}</th>
+                <th>{l s='Product'}</th>
+                <th>{l s='From (qty)'}</th>
+                <th>{l s='Discount'}</th>
             </tr>
         </thead>
 		<tbody>
@@ -585,7 +585,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 									</div>
 									{/if}
 									<div class="customizationUploadBrowse">
-										<label class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your hard drive'}{/if}{if $field.required}<sup>*</sup>{/if}</label>
+										<label class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your computer'}{/if}{if $field.required}<sup>*</sup>{/if}</label>
 										<input type="file" name="file{$field.id_customization_field}" id="img{$customizationField}" class="customization_block_input {if isset($pictures.$key)}filled{/if}" />
 									</div>
 								</li>

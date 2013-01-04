@@ -149,7 +149,7 @@ class AdminTrackingControllerCore extends AdminController
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes and without available quantities for sale:'));
+		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes but without available quantities for sale:'));
 
 
 

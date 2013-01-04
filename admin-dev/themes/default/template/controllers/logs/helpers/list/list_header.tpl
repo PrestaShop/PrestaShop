@@ -34,7 +34,7 @@
 			<li style="color: green;">{l s='Informative only'}</li>
 			<li style="color: orange;">{l s='Warning'}</li>
 			<li style="color: orange;">{l s='Error'}</li>
-			<li style="color: red;">{l s='Major issue (crash)'}</li>
+			<li style="color: red;">{l s='Major issue (crash)!'}</li>
 		</ol>
 	</fieldset><br />
 

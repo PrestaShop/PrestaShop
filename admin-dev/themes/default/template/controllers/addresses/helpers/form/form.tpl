@@ -37,7 +37,7 @@
 	{/if}
 
 	{if $input.type == 'text_customer' && !isset($customer)}
-		<label>{l s='Customer e-mail'}</label>
+		<label>{l s='Customer email'}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}

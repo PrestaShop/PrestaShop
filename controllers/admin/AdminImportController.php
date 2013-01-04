@@ -81,13 +81,13 @@ class AdminImportControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->entities = array(
-			$this->l('Categories'),
-			$this->l('Products'),
+			$this->l('Categories:'),
+			$this->l('Products:'),
 			$this->l('Combinations'),
 			$this->l('Customers'),
 			$this->l('Addresses'),
-			$this->l('Manufacturers'),
-			$this->l('Suppliers'),
+			$this->l('Manufacturers:'),
+			$this->l('Suppliers:'),
 		);
 
 		// @since 1.5.0
@@ -142,7 +142,7 @@ class AdminImportControllerCore extends AdminController
 					),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
 					)
 				);
 
@@ -161,7 +161,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Categories')]:
+			case $this->entities[$this->l('Categories:')]:
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
@@ -170,7 +170,7 @@ class AdminImportControllerCore extends AdminController
 					'parent' => array('label' => $this->l('Parent category')),
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
-						'help' => $this->l('A category root is where a category tree can begin. This is used with multistore')
+						'help' => $this->l('A category root is where a category tree can begin. This is used with multistore.')
 						),
 					'description' => array('label' => $this->l('Description')),
 					'meta_title' => array('label' => $this->l('Meta-title')),
@@ -180,7 +180,7 @@ class AdminImportControllerCore extends AdminController
 					'image' => array('label' => $this->l('Image URL')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
 					),
 				);
 
@@ -191,7 +191,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Products')]:
+			case $this->entities[$this->l('Products:')]:
 				self::$validators['image'] = array(
 					'AdminImportController',
 					'split'
@@ -203,8 +203,8 @@ class AdminImportControllerCore extends AdminController
 					'active' => array('label' => $this->l('Active (0/1)')),
 					'name' => array('label' => $this->l('Name *')),
 					'category' => array('label' => $this->l('Categories (x,y,z...)')),
-					'price_tex' => array('label' => $this->l('Price tax excl.')),
-					'price_tin' => array('label' => $this->l('Price tax incl.')),
+					'price_tex' => array('label' => $this->l('Price tax excluded')),
+					'price_tin' => array('label' => $this->l('Price tax included')),
 					'id_tax_rules_group' => array('label' => $this->l('Tax rules ID')),
 					'wholesale_price' => array('label' => $this->l('Wholesale price')),
 					'on_sale' => array('label' => $this->l('On sale (0/1)')),
@@ -242,7 +242,7 @@ class AdminImportControllerCore extends AdminController
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
 					)
 				);
 
@@ -271,16 +271,16 @@ class AdminImportControllerCore extends AdminController
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
 					'id_gender' => array('label' => $this->l('Titles ID (Mr = 1, Ms = 2, else 0)')),
-					'email' => array('label' => $this->l('E-mail *')),
+					'email' => array('label' => $this->l('Email *')),
 					'passwd' => array('label' => $this->l('Password *')),
 					'birthday' => array('label' => $this->l('Birthday (yyyy-mm-dd)')),
-					'lastname' => array('label' => $this->l('Lastname *')),
-					'firstname' => array('label' => $this->l('Firstname *')),
+					'lastname' => array('label' => $this->l('Last Name *')),
+					'firstname' => array('label' => $this->l('First Name *')),
 					'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
 					),
 				);
 
@@ -307,13 +307,13 @@ class AdminImportControllerCore extends AdminController
 					'id' => array('label' => $this->l('ID')),
 					'alias' => array('label' => $this->l('Alias *')),
 					'active' => array('label' => $this->l('Active  (0/1)')),
-					'customer_email' => array('label' => $this->l('Customer e-mail')),
-					'id_customer' => array('label' => $this->l('Customer ID')),
+					'customer_email' => array('label' => $this->l('Customer email')),
+					'id_customer' => array('label' => $this->l('Customer ID:')),
 					'manufacturer' => array('label' => $this->l('Manufacturer')),
 					'supplier' => array('label' => $this->l('Supplier')),
 					'company' => array('label' => $this->l('Company')),
-					'lastname' => array('label' => $this->l('Lastname *')),
-					'firstname' => array('label' => $this->l('Firstname *')),
+					'lastname' => array('label' => $this->l('Last Name *')),
+					'firstname' => array('label' => $this->l('First Name *')),
 					'address1' => array('label' => $this->l('Address 1 *')),
 					'address2' => array('label' => $this->l('Address 2')),
 					'postcode' => array('label' => $this->l('Postcode*/ Zipcode*')),
@@ -332,8 +332,8 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 
-			case $this->entities[$this->l('Manufacturers')]:
-			case $this->entities[$this->l('Suppliers')]:
+			case $this->entities[$this->l('Manufacturers:')]:
+			case $this->entities[$this->l('Suppliers:')]:
 				//Overwrite validators AS name is not MultiLangField
 				self::$validators = array(
 					'description' => array('AdminImportController', 'createMultiLangField'),
@@ -355,7 +355,7 @@ class AdminImportControllerCore extends AdminController
 					'meta_description' => array('label' => $this->l('Meta-description')),
 					'shop' => array(
 						'label' => $this->l('ID / Name of group shop'),
-						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, default shop will be used'),
+						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
 					),
 				);
 
@@ -439,7 +439,7 @@ class AdminImportControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (!is_writable(_PS_ADMIN_DIR_.'/import/'))
-			$this->displayWarning($this->l('directory import on admin directory must be writable (CHMOD 755 / 777)'));
+			$this->displayWarning($this->l('Directory import on admin directory must be writable (CHMOD 755 / 777)'));
 
 		if (isset($this->warnings) && count($this->warnings))
 		{
@@ -2537,7 +2537,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		switch ((int)$case)
 		{
-			case $this->entities[$this->l('Categories')]:
+			case $this->entities[$this->l('Categories:')]:
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'category`
 					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
@@ -2555,7 +2555,7 @@ class AdminImportControllerCore extends AdminController
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_CAT_IMG_DIR_.$d);
 				break;
-			case $this->entities[$this->l('Products')]:
+			case $this->entities[$this->l('Products:')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product');
@@ -2615,7 +2615,7 @@ class AdminImportControllerCore extends AdminController
 			case $this->entities[$this->l('Addresses')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address');
 				break;
-			case $this->entities[$this->l('Manufacturers')]:
+			case $this->entities[$this->l('Manufacturers:')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop');
@@ -2623,7 +2623,7 @@ class AdminImportControllerCore extends AdminController
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
 						unlink(_PS_MANU_IMG_DIR_.$d);
 				break;
-			case $this->entities[$this->l('Suppliers')]:
+			case $this->entities[$this->l('Suppliers:')]:
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop');
@@ -2690,10 +2690,10 @@ class AdminImportControllerCore extends AdminController
 
 				switch ((int)Tools::getValue('entity'))
 				{
-					case $this->entities[$this->l('Categories')]:
+					case $this->entities[$this->l('Categories:')]:
 						$this->categoryImport();
 						break;
-					case $this->entities[$this->l('Products')]:
+					case $this->entities[$this->l('Products:')]:
 						$this->productImport();
 						break;
 					case $this->entities[$this->l('Customers')]:
@@ -2705,10 +2705,10 @@ class AdminImportControllerCore extends AdminController
 					case $this->entities[$this->l('Combinations')]:
 						$this->attributeImport();
 						break;
-					case $this->entities[$this->l('Manufacturers')]:
+					case $this->entities[$this->l('Manufacturers:')]:
 						$this->manufacturerImport();
 						break;
-					case $this->entities[$this->l('Suppliers')]:
+					case $this->entities[$this->l('Suppliers:')]:
 						$this->supplierImport();
 						break;
 					// @since 1.5.0

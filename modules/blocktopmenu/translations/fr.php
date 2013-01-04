@@ -21,7 +21,7 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_15772d25000bce9fc3a2a2fd7d41a71
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_fb9ddcf8de4f32e4db61221d5cebb108'] = 'boutique :';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_ec136b444eede3bc85639fac0dd06229'] = 'Fournisseur';
-$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_af1b98adf7f686b84cd0b443e022b7a0'] = 'Catégorie';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_8c38776925f7cf41c090646a43157024'] = 'Catégorie';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_ac3b3f2d1984171e48eaa3d0bc56d75f'] = 'Choisissez un ID de produit';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_ec211f7c20af43e742bf2570c3cb84f9'] = 'Ajouter';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_1063e38cb53d94d386f21227fcd84717'] = 'Supprimer';
@@ -35,7 +35,7 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_4443702c8a13a65ac66d074b7a82af9
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_d1156d9314813566c02aedc3852bdcab'] = 'le lien a été modifié';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_540c8f06b80b4ec911505764eb455f4d'] = 'toutes les boutiques';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_e5b7525b4214a759876af4448bd6b87d'] = 'Menu Haut horizontal';
-$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_068f80c7519d0528fb08e82137a72131'] = 'Produit';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b52b44c9d23e141b067d7e83b44bb556'] = 'Produit';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_dbd7201170abec94907af0cc1680d22d'] = 'Enregistrer';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_7710e9fcaec3369276557496da24640a'] = 'Veuillez remplir le champs \\"Lien\\"';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_b2385ac89327dbaeb21d35fa016a3e3e'] = 'Veuillez ajouter un label pour le langage par défaut';
@@ -43,4 +43,4 @@ $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_11ad009c1b7c0615be18fe91185c179
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_242e9577826290307cd3e45a259172cc'] = 'les modifications seront appliquées à';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_9dea4016dbcc290b773ab2fae678aaa8'] = 'Éléments';
 $_MODULE['<{blocktopmenu}prestashop>blocktopmenu_c0bd7654d5b278e65f21cf4e9153fdb4'] = 'Fabricant';
-$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_12a521af593422cd508f7707662c9eb2'] = 'Boutiques';
+$_MODULE['<{blocktopmenu}prestashop>blocktopmenu_d1d433c894e39db4be426be58a9a3c70'] = 'Boutiques';

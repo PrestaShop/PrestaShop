@@ -291,25 +291,25 @@ class AdminControllerCore extends Controller
 		$token = $this->token;
 
 		$this->_conf = array(
-			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
+			1 => $this->l('Deletion successful'), 2 => $this->l('The selection has been successfully deleted.'),
 			3 => $this->l('Creation successful'), 4 => $this->l('Update successful'),
-			5 => $this->l('Status update successful'), 6 => $this->l('Settings update successful'),
-			7 => $this->l('Image successfully deleted'), 8 => $this->l('Module downloaded successfully'),
-			9 => $this->l('Thumbnails successfully regenerated'), 10 => $this->l('Message sent to the customer'),
-			11 => $this->l('Comment added'), 12 => $this->l('Module(s) installed successfully'),
-			13 => $this->l('Module(s) uninstalled successfully'), 14 => $this->l('Language successfully copied'),
-			15 => $this->l('Translations successfully added'), 16 => $this->l('Module transplanted successfully to hook'),
-			17 => $this->l('Module removed successfully from hook'), 18 => $this->l('Upload successful'),
-			19 => $this->l('Duplication completed successfully'), 20 => $this->l('Translation added successfully but the language has not been created'),
-			21 => $this->l('Module reset successfully'), 22 => $this->l('Module deleted successfully'),
-			23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Localization pack imported successfully'),
-			25 => $this->l('Images successfully moved'),
-			26 => $this->l('Cover selection saved'),
-			27 => $this->l('Image shop association modified'),
-			28 => $this->l('Zone assigned to the selection successfully'),
+			5 => $this->l('The status has been updated successfully.'), 6 => $this->l('The settings have been updated successfully.'),
+			7 => $this->l('The image was successfully deleted.'), 8 => $this->l('The module was downloaded successfully.'),
+			9 => $this->l('The thumbnails were successfully regenerated.'), 10 => $this->l('Message sent to the customer.'),
+			11 => $this->l('Comment added'), 12 => $this->l('Module(s) installed successfully.'),
+			13 => $this->l('Module(s) uninstalled successfully.'), 14 => $this->l('The translation was successfully copied.'),
+			15 => $this->l('The translations have been successfully added.'), 16 => $this->l('The module transplanted successfully to the hook.'),
+			17 => $this->l('The module was successfully removed from the hook.'), 18 => $this->l('Upload successful'),
+			19 => $this->l('Duplication was completed successfully.'), 20 => $this->l('The translation was added successfully, but the language has not been created.'),
+			21 => $this->l('Module reset successfully.'), 22 => $this->l('Module deleted successfully.'),
+			23 => $this->l('Localization pack imported successfully.'), 24 => $this->l('Localization pack imported successfully.'),
+			25 => $this->l('The selcted images have successfully been moved.'),
+			26 => $this->l('Your cover selection has been saved.'),
+			27 => $this->l('The image shop association has been modified.'),
+			28 => $this->l('A zone has been assigned to the selection successfully.'),
 			29 => $this->l('Upgrade successful'),
-			30 => $this->l('Partial refund successfully created'),
-			31 => $this->l('The discount successfully generated')
+			30 => $this->l('A partial refund was successfully created.'),
+			31 => $this->l('The discount was successfully generated.')
 		);
 
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;

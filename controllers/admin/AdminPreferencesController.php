@@ -54,7 +54,7 @@ class AdminPreferencesControllerCore extends AdminController
 			$fields = array(
 				'PS_SSL_ENABLED' => array(
 					'title' => $this->l('Enable SSL'),
-					'desc' => $this->l('If your hosting provider allows SSL, you can activate SSL encryption (https://) for customer account identification and order processing'),
+					'desc' => $this->l('If your hosting provider allows SSL, you can activate SSL encryption (https://) for customer account identification and order processing.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -62,7 +62,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_TOKEN_ENABLE' => array(
 					'title' => $this->l('Increase Front Office security'),
-					'desc' => $this->l('Enable or disable token on the Front Office in order to improve PrestaShop security'),
+					'desc' => $this->l('Enable or disable token in the Front Office to improve PrestaShop\'s security.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -71,7 +71,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
-					'desc' => $this->l('You can choose how to round prices: always round superior; always round inferior, or classic rounding'),
+					'desc' => $this->l('You can choose how to round prices: Always round superior, always round inferior or classic rounding.'),
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'select',
@@ -80,14 +80,14 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Display suppliers and manufacturers lists even if corresponding blocks are disabled'),
+					'desc' => $this->l('Display the suppliers and manufacturers lists even if corresponding blocks are disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'
 				),
 				'PS_MULTISHOP_FEATURE_ACTIVE' => array(
 					'title' => $this->l('Enable Multistore'),
-					'desc' => $this->l('Multistore feature allows you to manage several shops with one back-office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'),
+					'desc' => $this->l('The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -108,7 +108,7 @@ class AdminPreferencesControllerCore extends AdminController
 					'title' =>	$this->l('General'),
 					'icon' =>	'tab-preferences',
 					'fields' =>	$fields,
-					'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+					'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
 				),
 			);
 		}

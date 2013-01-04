@@ -224,7 +224,7 @@ class AdminLoginControllerCore extends AdminController
 				else
 					die(Tools::jsonEncode(array(
 						'hasErrors' => false,
-						'confirm' => $this->l('Your password has been e-mailed to you', 'AdminTab', false, false)
+						'confirm' => $this->l('Your password has been emailed to you.', 'AdminTab', false, false)
 					)));
 			}
 			else

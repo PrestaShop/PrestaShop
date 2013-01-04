@@ -67,15 +67,15 @@
 		});
 
 		$('#useLastDefaultLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your last registered address format'}");
+			switchExplanationText("{l s='This will restore your last registered address format.'}");
 		});
 
 		$('#useDefaultLayoutSystem').mouseover(function() {
-			switchExplanationText("{l s='This will restore the default address format for this country'}");
+			switchExplanationText("{l s='This will restore the default address format for this country.'}");
 		});
 
 		$('#useCurrentLastModifiedLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your current address format'}");
+			switchExplanationText("{l s='This will restore your current address format.'}");
 		});
 
 		$('#eraseCurrentLayout').mouseover(function() {

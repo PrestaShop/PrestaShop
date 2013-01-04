@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 {if !$shop_context}
-	<div class="warn">{l s='You have more than one shop. You need to select one to configure payment.'}</div>
+	<div class="warn">{l s='You have more than one shop and must select one to configure payment.'}</div>
 {else}
 		<h2 class="space">{l s='Payment modules list'}</h2>
 		{if isset($url_modules)}

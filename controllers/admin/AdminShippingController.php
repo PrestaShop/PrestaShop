@@ -64,7 +64,7 @@ class AdminShippingControllerCore extends AdminController
 				),
 				'description' =>
 					'<ul>
-						<li>'.$this->l('If you set these parameters to 0, they will be disabled').'</li>
+						<li>'.$this->l('If you set these parameters to 0, they will be disabled.').'</li>
 						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
 					</ul>',
 				'submit' => array()

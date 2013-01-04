@@ -120,9 +120,9 @@
 			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display: none;"{/if}>
 				<td colspan="5">
 				{if $use_taxes}
-					{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift-wrapping:'}{/if}
+					{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
 				{else}
-					{l s='Total gift-wrapping:'}
+					{l s='Total gift-wrapping cost:'}
 				{/if}
 				</td>
 				<td colspan="2" class="price-discount price" id="total_wrapping">
@@ -192,7 +192,7 @@
 						</fieldset>
 					</form>
 					{if $displayVouchers}
-						<p id="title" class="title_offers">{l s='Take advantage of our offers:'}</p>
+						<p id="title" class="title_offers">{l s='Take advantage of our exclusive offers:'}</p>
 						<div id="display_cart_vouchers">
 						{foreach $displayVouchers as $voucher}
 							{if $voucher.code != ''}<span onclick="$('#discount_name').val('{$voucher.code}');return false;" class="voucher_name">{$voucher.code}</span> - {/if}{$voucher.name}<br />
@@ -328,14 +328,14 @@
 {if $show_option_allow_separate_package}
 <p>
 	<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} />
-	<label for="allow_seperated_package">{l s='Send the available products first'}</label>
+	<label for="allow_seperated_package">{l s='Send available products first'}</label>
 </p>
 {/if}
 {if !$opc}
 	{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
 		<p>
 			<input type="checkbox" {if $multi_shipping}checked="checked"{/if} id="enable-multishipping" />
-			<label for="enable-multishipping">{l s='I want to specify a delivery address for each individual product.'}</label>
+			<label for="enable-multishipping">{l s='I would like to specify a delivery address for each individual product.'}</label>
 		</p>
 	{/if}
 {/if}

@@ -27,21 +27,21 @@
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
-		<p>{l s='Welcome to your account. Here, you can manage your addresses and orders.'}</p>
+		<p>{l s='Welcome to your account. Here you can manage al of your personal information and orders. '}</p>
 		
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			{if $has_customer_an_address}
 			<li>
-				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}" data-ajax="false">
+				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address.'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/addrbook.png" alt="{l s='Addresses'}" class="ui-li-icon ui-li-thumb" />
-					{l s='Add my first address'}
+					{l s='Add my first address.'}
 				</a>
 			</li>
 			{/if}
 			<li>
 				<a href="{$link->getPageLink('history', true)}" title="{l s='Orders'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/order.png" alt="{l s='Orders'}" class="ui-li-icon ui-li-thumb" />
-					{l s='History and details of my orders'}
+					{l s='Order history and details '}
 				</a>
 			</li>
 			{if $returnAllowed}

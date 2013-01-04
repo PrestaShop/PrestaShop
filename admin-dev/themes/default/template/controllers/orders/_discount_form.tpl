@@ -49,7 +49,7 @@
 			{/if}
 			<span id="discount_percent_symbol">%</span>
 			<p class="preference_description" id="discount_value_help" style="width: 95%;display: none;">
-				{l s='This value must be taxes included.'}
+				{l s='This value must include taxes.'}
 			</p>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 		</select><br />
 		<input type="checkbox" name="discount_all_invoices" id="discount_all_invoices" value="1" /> <label class="t" for="discount_all_invoices">{l s='Apply on all invoices'}</label>
 		<p class="preference_description" style="width: 95%">
-			{l s='If you select to create this discount for all invoices, one discount will be created per order invoice.'}
+			{l s='If you chooses to create this discount for all invoices, only one discount will be created per order invoice.'}
 		</p>
 	</div>
 	{/if}
