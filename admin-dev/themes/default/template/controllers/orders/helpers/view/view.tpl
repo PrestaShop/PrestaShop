@@ -39,6 +39,7 @@
 	var priceDisplayPrecision = 2;
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
 	var token = "{$smarty.get.token|escape:'htmlall':'UTF-8'}";
+	var stock_management = {$stock_management|intval};
 
 	var txt_add_product_stock_issue = "{l s='You want to add more product than are available in stock, are you sure you want to add this quantity?' js=1}";
 	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?' js=1}";
@@ -594,7 +595,7 @@
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>
 						{if ($order->hasBeenPaid())}<th style="width: 3%; text-align: center">{l s='Refunded'}</th>{/if}
 						{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
-						<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>
+						{if $stock_management}<th style="width: 10%; text-align: center">{l s='Available quantity'}</th>{/if}
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
 						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
 						<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
@@ -777,9 +778,9 @@
 				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}&messageReaded={$message['id_message']}"><img src="../img/admin/enabled.gif" alt="" /></a>
 			{/if}
 			{l s='At'} <i>{dateFormat date=$message['date_add']}
-			</i> {l s='from'} <b>{if ($message['elastname'])}{$message['efirstname']} {$message['elastname']}{else}{$message['cfirstname']} {$message['clastname']}{/if}</b>
+			</i> {l s='from'} <b>{if ($message['elastname']|escape:'htmlall':'UTF-8')}{$message['efirstname']|escape:'htmlall':'UTF-8'} {$message['elastname']|escape:'htmlall':'UTF-8'}{else}{$message['cfirstname']|escape:'htmlall':'UTF-8'} {$message['clastname']|escape:'htmlall':'UTF-8'}{/if}</b>
 			{if ($message['private'] == 1)}<span style="color:red; font-weight:bold;">{l s='Private:'}</span>{/if}
-			<p>{$message['message']|nl2br}</p>
+			<p>{$message['message']|escape:'htmlall':'UTF-8'|nl2br}</p>
 			</div>
 			<br />
 		{/foreach}

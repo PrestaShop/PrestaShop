@@ -167,6 +167,7 @@ class AuthControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 				'years' => $years,
 				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 				'months' => $months,
@@ -377,8 +378,19 @@ class AuthControllerCore extends FrontController
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
 		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		
-		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile') &&
-			 (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_GUEST_CHECKOUT_ENABLED')))
+		$error_phone = false;
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST'))
+		{
+			if (Tools::isSubmit('submitGuestAccount') || !Tools::getValue('is_new_customer'))
+			{
+				if (!Tools::getValue('phone'))
+					$error_phone = true;
+			}
+			elseif ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) && (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
+				$error_phone = true;
+		}
+
+		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));

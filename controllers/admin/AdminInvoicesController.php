@@ -273,10 +273,13 @@ class AdminInvoicesControllerCore extends AdminController
 
 	protected function getInvoicesModelsFromDir($directory)
 	{
-		$templates = array();
+		$templates = false;
 
 		if (is_dir($directory))
 			$templates = glob($directory.'invoice-*.tpl');
+
+		if (!$templates)
+			$templates = array();
 
 		return $templates;
 	}

@@ -298,7 +298,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id_tax',
 						'name' => 'name',
 						'default' => array(
-							'value' => 'name',
+							'value' => 0,
 							'label' => $this->l('No Tax')
 						)
 					),
@@ -416,7 +416,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
 
 				// Construct Object Country
-				$country = new Country((int)$id_country);
+				$country = new Country((int)$id_country, (int)$this->context->language->id);
 
 				if ($zip_code && $country->need_zip_code)
 				{
@@ -427,8 +427,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 								if (!$country->checkZipCode($zip_code))
 								{
 									$this->errors[] = sprintf(
-										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
-										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
+										Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s for %s'),
+										str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
 									);
 								}
 					}

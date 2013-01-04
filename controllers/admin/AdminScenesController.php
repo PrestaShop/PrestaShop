@@ -247,12 +247,12 @@ class AdminScenesControllerCore extends AdminController
 					$selected_cat[] = $row['id_category'];
 
 			$root_category = Category::getRootCategory();
-			if (!$root_category->id_category)
+			if (!$root_category->id)
 			{
-				$root_category->id_category = 0;
+				$root_category->id = 0;
 				$root_category->name = $this->l('Root');
 			}
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+			$root_category = array('id_category' => (int)$root_category->id, 'name' => $root_category->name);
 			$trads = array(
 							'Root' => $root_category,
 							'selected' => $this->l('selected'),

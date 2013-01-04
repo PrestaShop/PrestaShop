@@ -50,7 +50,6 @@ class AdminThemesControllerCore extends AdminController
 						'PS_JS_THEME_CACHE' => 0,
 						'PS_HTML_THEME_COMPRESSION' => 0,
 						'PS_JS_HTML_THEME_COMPRESSION' => 0,
-						'PS_HIGH_HTML_THEME_COMPRESSION' => 0,
 					),
 				),
 			),
@@ -184,6 +183,14 @@ class AdminThemesControllerCore extends AdminController
 							2 => $this->l('I want to enable it only on touchpads'),
 							3 => $this->l('I want to enable it on mobile and touchpad devices')
 						)
+					),
+					'PS_MAIL_COLOR' => array(
+						'title' => $this->l('Mail color'),
+						'desc' => $this->l('Mail will be highlighted in this color. HTML colors only (e.g.').' "lightblue", "#CC6600")',
+						'type' => 'color',
+						'name' => 'PS_MAIL_COLOR',
+						'size' => 30,					
+						'value' => Configuration::get('PS_MAIL_COLOR')
 					)
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button')

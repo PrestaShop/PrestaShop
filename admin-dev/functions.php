@@ -431,7 +431,7 @@ function runAdminTab($tab, $ajaxMode = false)
 			$bread = '';
 			foreach ($tabs AS $key => $item)
 			{
-				$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />';
+				$bread .= ' <img src="../img/admin/separator_breadcrumb.png" style="margin-right:5px" alt="&gt;" />';
 				if (count($tabs) - 1 > $key)
 					$bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">';
 

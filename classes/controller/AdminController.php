@@ -1122,8 +1122,11 @@ class AdminControllerCore extends Controller
 	}
 	public function display()
 	{
-		$this->context->smarty->assign('display_header', $this->display_header);
-		$this->context->smarty->assign('display_footer', $this->display_footer);
+		$this->context->smarty->assign(array(
+				'display_header' => $this->display_header,
+				'display_footer' => $this->display_footer,
+				)
+			);
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
@@ -1457,11 +1460,14 @@ class AdminControllerCore extends Controller
 			return false;
 		$this->getList($this->context->language->id);
 
+		$helper = new HelperList();
+		
 		// Empty list is ok
 		if (!is_array($this->_list))
+		{
+			$this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
 			return false;
-
-		$helper = new HelperList();
+		}
 
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_list_vars;
@@ -1670,8 +1676,9 @@ class AdminControllerCore extends Controller
 			$this->ajax = '1';
 
 		/* Server Params */
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+
 		$this->context->link = new Link($protocol_link, $protocol_content);
 
 		if (isset($_GET['logout']))
@@ -1702,6 +1709,7 @@ class AdminControllerCore extends Controller
 			'table' => $this->table,
 			'current' => self::$currentIndex,
 			'token' => $this->token,
+			'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT')
 		));
 		
 		if ($this->display_header)
@@ -2102,8 +2110,10 @@ class AdminControllerCore extends Controller
 		($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 		(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-		$this->_list = Db::getInstance()->executeS($this->_listsql);
-		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
+		if (!($this->_list = Db::getInstance()->executeS($this->_listsql)))
+			$this->_list_error = Db::getInstance()->getMsgError();
+		else
+			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 
 	public function getLanguages()
@@ -2728,30 +2738,42 @@ class AdminControllerCore extends Controller
 
 	public function addonsRequest($request, $params = array())
 	{
+		$postData = '';
+		$postDataArray = array(
+			'version' => _PS_VERSION_,
+			'iso_lang' => strtolower(Context::getContext()->language->iso_code),
+			'iso_code' => strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
+			'shop_url' => urlencode(Tools::getShopDomain()),
+			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL'))
+		);
+		foreach ($postDataArray as $postDataKey => $postDataValue)
+			$postData .= '&'.$postDataKey.'='.$postDataValue;
+		$postData = ltrim($postData, '&');
+		
 		// Config for each request
 		if ($request == 'native')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=native&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=native';
 		}
 		if ($request == 'must-have')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=must-have&iso_code='.strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=must-have';
 		}
 		if ($request == 'customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version='._PS_VERSION_.'&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons)).'&iso_lang='.strtolower(Context::getContext()->language->iso_code);
+			$postData .= '&method=listing&action=customer&username='.urlencode(trim($this->context->cookie->username_addons)).'&password='.urlencode(trim($this->context->cookie->password_addons));
 		}
 		if ($request == 'check_customer')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443);
-			$postData = 'version='._PS_VERSION_.'&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 		}
 		if ($request == 'module')
 		{
@@ -2759,12 +2781,12 @@ class AdminControllerCore extends Controller
 			if (isset($params['username_addons']) && isset($params['password_addons']))
 			{
 				$protocolsList = array('https://' => 443);
-				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
 			}
 			else
 			{
 				$protocolsList = array('https://' => 443, 'http://' => 80);
-				$postData = 'version='._PS_VERSION_.'&method=module&id_module='.pSQL($params['id_module']);
+				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
 			}
 		}
 

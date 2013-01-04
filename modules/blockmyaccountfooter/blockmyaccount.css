@@ -15,9 +15,9 @@
 
 
 /* block myaccount in footer */
-#footer .myaccount .title_block  {background: none;}
+#footer .myaccount .title_block, #footer .myaccount h4  {background: none;}
 #footer .myaccount .logout {display:none;}
-#footer .myaccount .title_block  {
+#footer .myaccount .title_block, #footer .myaccount h4  {
 	padding:0 0 10px 0;
 	background:none
 }

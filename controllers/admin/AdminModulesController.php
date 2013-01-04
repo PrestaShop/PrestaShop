@@ -68,6 +68,8 @@ class AdminModulesControllerCore extends AdminController
 	{
 		parent::__construct();
 
+		register_shutdown_function('displayFatalError');
+
 		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 		// Set the modules categories
@@ -262,66 +264,13 @@ class AdminModulesControllerCore extends AdminController
 		}
 		die('OK');
 	}
-
-
-	private function sendStatisticRequest($object_key)
-	{
-		$post_data = http_build_query(array(
-			'key' => urlencode($object_key),
-			'url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL')),
-			'version' => urlencode(_PS_VERSION_),
-			'method' => 'product_key'
-		));
-
-		$opts = array(
-			'http' => array(
-				'method' => 'POST',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'content' => $post_data
-			)
-		);
-
-		$context = stream_context_create($opts);
-		file_get_contents('http://api.addons.prestashop.com/', false, $context);
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsModuleCall()
-	{
-		if (($list = Tools::getValue('modules_list')) && is_array($list))
-			foreach ($list as $id)
-				if (($obj = Module::getInstanceById($id)) && (isset($obj->module_key)))
-						$this->sendStatisticRequest($obj->module_key);
-		die();
-	}
-
-	/**
-	 * Ajax call for statistic
-	 *
-	 * @result : die the request
-	 */
-	public function ajaxProcessWsThemeCall()
-	{
-		// Theme list contains just the key for each theme
-		if (($list = Tools::getValue('theme_list')) && is_array($list))
-			foreach ($list as $theme_key)
-				if (!empty($theme_key))
-					$this->sendStatisticRequest($theme_key);
-		die();
-	}
-
+	
 	/*
 	** Get current URL
 	**
 	** @param array $remove List of keys to remove from URL
 	** @return string
 	*/
-
 	protected function getCurrentUrl($remove = array())
 	{
 		$url = $_SERVER['REQUEST_URI'];
@@ -340,25 +289,43 @@ class AdminModulesControllerCore extends AdminController
 
 	protected function extractArchive($file, $redirect = true)
 	{
+		$zip_folders = array();
+		$tmp_folder = _PS_MODULE_DIR_.md5(time());
+
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
-			if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if (Tools::ZipExtract($file, $tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
 		else
 		{
 			$archive = new Archive_Tar($file);
-			if ($archive->extract(_PS_MODULE_DIR_))
-				$success = true;
-			else
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+			if ($archive->extract($tmp_folder))
+			{
+				$zip_folders = scandir($tmp_folder);
+				if ($archive->extract(_PS_MODULE_DIR_))
+					$success = true;
+			}
 		}
-
+		if (!$success)
+				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+		
+		//check if it's a real module
+		foreach($zip_folders as $folder)
+			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
+			{
+				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
+				$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
+			}
+			
 		@unlink($file);
-		if ($success && $redirect)
+		$this->recursiveDeleteOnDisk($tmp_folder);
+		if (!count($this->errors) && $success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
@@ -590,6 +557,7 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 					}
+
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('module not found');

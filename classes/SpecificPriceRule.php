@@ -96,7 +96,6 @@ class SpecificPriceRuleCore extends ObjectModel
 			return;
 
 		$result = Db::getInstance()->insert('specific_price_rule_condition_group', array(
-			'id_specific_price_rule_condition_group' =>	'',
 			'id_specific_price_rule' =>	(int)$this->id
 		));
 		if (!$result)
@@ -105,7 +104,6 @@ class SpecificPriceRuleCore extends ObjectModel
 		foreach ($conditions as $condition)
 		{
 			$result = Db::getInstance()->insert('specific_price_rule_condition', array(
-				'id_specific_price_rule_condition' => '',
 				'id_specific_price_rule_condition_group' => (int)$id_specific_price_rule_condition_group,
 				'type' => pSQL($condition['type']),
 				'value' => (float)$condition['value'],

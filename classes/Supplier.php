@@ -243,6 +243,12 @@ class SupplierCore extends ObjectModel
 			$alias = 'product_shop.';
 		elseif ($order_by == 'id_product')
 			$alias = 'p.';
+		elseif ($order_by == 'manufacturer_name')
+		{
+			$order_by = 'name';
+			$alias = 'm.';
+		}
+
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
 					IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`,

@@ -1,5 +1,4 @@
 <?php
-
 /*
 * 2007-2012 PrestaShop
 *
@@ -24,6 +23,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 function upgrade_cms_15_rename()
 {
 	$res = true;

@@ -119,10 +119,16 @@
 	{/foreach}
 	$(document).ready(function() {
 		$('input[name=useImportData]').click(function()	{
-		if ($(this).attr('id') == 'useImportData_on')
-			$('#shop_list, #data_list').slideDown('slow');
-		else
-			$('#shop_list, #data_list').slideUp('slow');
+			if ($(this).attr('id') == 'useImportData_on')
+			{
+				$('input[name^="importData["]').prop('checked', true);
+				$('#shop_list, #data_list').slideDown('slow');
+			}	
+			else
+			{
+				$('input[name^="importData["]').prop('checked', false);
+				$('#shop_list, #data_list').slideUp('slow');
+			}
 		});
 		$('#id_category, #importFromShop').change(function(){
 			shop_id = $('#importFromShop').val();

@@ -31,6 +31,7 @@ abstract class ModuleCore
 
 	/** @var float Version */
 	public $version;
+	public $database_version;
 
 	/**
 	 * @since 1.5.0.1
@@ -175,6 +176,8 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
+		
+		$this->database_version = $this->version;
 	}
 
 	/**
@@ -852,7 +855,12 @@ abstract class ModuleCore
 	public static function getInstanceByName($module_name)
 	{
 		if (!Validate::isModuleName($module_name))
-			die(Tools::displayError());
+		{
+			if (_PS_MODE_DEV_)
+				die(Tools::displayError());
+			return false;
+		}
+
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
 			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
@@ -1633,7 +1641,7 @@ abstract class ModuleCore
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
-		Tools::clearCache(Context::getContext()->smarty, $template, $cache_id, $compile_id);
+		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}
 
@@ -1888,7 +1896,7 @@ abstract class ModuleCore
 		
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
-		if (!is_writable($override_path))
+		if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 			throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 			
 		// Make a reflection of the override class and the module override class

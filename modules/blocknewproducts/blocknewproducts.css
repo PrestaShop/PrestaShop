@@ -38,7 +38,7 @@
 	text-align:right;
 }
 
-#new-products_block_right p.title_block  {
+#new-products_block_right p.title_block, #new-products_block_right h4  {
 	padding:6px 11px;
 	text-align:left;
 }

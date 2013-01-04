@@ -258,7 +258,7 @@ class MailAlerts extends Module
 
 	public function hookActionValidateOrder($params)
 	{
-		if (!$this->_merchant_order || empty($this->_merchant_mails) || !Configuration::get('PS_STOCK_MANAGEMENT'))
+		if (!$this->_merchant_order || empty($this->_merchant_mails))
 			return;
 
 		// Getting differents vars

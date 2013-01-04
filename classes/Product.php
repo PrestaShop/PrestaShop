@@ -244,7 +244,7 @@ class ProductCore extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => array(
-			// Classic fields
+			/* Classic fields */
 			'id_shop_default' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -2604,7 +2604,8 @@ class ProductCore extends ObjectModel
 		if (is_array($result) && (!$specific_price || !$specific_price['id_product_attribute'] || $specific_price['price'] < 0))
 		{
 			$attribute_price = Tools::convertPrice($result['attribute_price'] !== null ? (float)$result['attribute_price'] : 0, $id_currency);
-			if ($id_product_attribute !== false && !is_null($id_product_attribute)) // If you want the default combination, please use NULL value instead
+			// If you want the default combination, please use NULL value instead
+			if ($id_product_attribute !== false)
 				$price += $attribute_price;
 		}
 
@@ -3218,8 +3219,8 @@ class ProductCore extends ObjectModel
 		{
 			if (!array_key_exists($row['id_product'].'-'.$id_lang, self::$_frontFeaturesCache))
 				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang] = array();
-			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']]))
-				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']] = $row;
+			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']]))
+				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']] = $row;
 		}
 	}
 

@@ -69,7 +69,7 @@ class Blockrss extends Module
 			$title = Tools::getValue('title');
 			$nbr = (int)Tools::getValue('nbr');
 
-			if ($urlfeed AND !Validate::isUrl($urlfeed))
+			if ($urlfeed AND !Validate::isAbsoluteUrl($urlfeed))
 				$errors[] = $this->l('Invalid feed URL');
 			elseif (!$title OR empty($title) OR !Validate::isGenericName($title))
 				$errors[] = $this->l('Invalid title');
@@ -77,7 +77,7 @@ class Blockrss extends Module
 				$errors[] = $this->l('Invalid number of feeds');				
 			elseif (stristr($urlfeed, $_SERVER['HTTP_HOST'].__PS_BASE_URI__))
 				$errors[] = $this->l('You have selected a feed URL on your own website. Please choose another URL');
-			elseif (!($contents = @file_get_contents($urlfeed)))
+			elseif (!($contents = Tools::file_get_contents($urlfeed)))
 				$errors[] = $this->l('Feed is unreachable, check your URL');
 			/* Even if the feed was reachable, We need to make sure that the feed is well formated */
 			else

@@ -462,7 +462,7 @@ class AdminCartsControllerCore extends AdminController
 			{
 				$cart_rule = new CartRule();
 				$cart_rule->code = 'BO_ORDER_'.(int)$this->context->cart->id;
-				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping'));
+				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping', 'AdminTab', false, false));
 				$cart_rule->id_customer = (int)$this->context->cart->id_customer;
 				$cart_rule->free_shipping = true;
 				$cart_rule->quantity = 1;
@@ -570,7 +570,7 @@ class AdminCartsControllerCore extends AdminController
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
 			{
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}

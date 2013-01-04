@@ -64,6 +64,7 @@ class CartRuleCore extends ObjectModel
 	public $reduction_product;
 	public $gift_product;
 	public $gift_product_attribute;
+	public $highlight;
 	public $active = 1;
 	public $date_add;
 	public $date_upd;
@@ -103,6 +104,7 @@ class CartRuleCore extends ObjectModel
 			'reduction_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'gift_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'gift_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'highlight' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -215,6 +217,7 @@ class CartRuleCore extends ObjectModel
 			cr.`id_customer` = '.(int)$id_customer.'
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
+		AND highlight = 1
 		'.($active ? 'AND cr.`active` = 1' : '').'
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 
@@ -414,8 +417,10 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the customer delivery address is usable with the cart rule
-		if ($this->country_restriction && $context->cart->id_address_delivery)
+		if ($this->country_restriction)
 		{
+			if (!$context->cart->id_address_delivery)
+				return (!$display_error) ? false : Tools::displayError('You must choose a delivery address before applying this voucher to your order');
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_country crc
@@ -426,8 +431,10 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the carrier chosen by the customer is usable with the cart rule
-		if ($this->carrier_restriction && $context->cart->id_carrier)
+		if ($this->carrier_restriction)
 		{
+			if (!$context->cart->id_carrier)
+				return (!$display_error) ? false : Tools::displayError('You must choose a carrier before applying this voucher to your order');
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_carrier crc

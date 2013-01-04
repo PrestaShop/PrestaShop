@@ -120,10 +120,10 @@ class CategoryControllerCore extends FrontController
 			'return_category_name' => Tools::safeOutput($this->category->name),
 			'path' => Tools::getPath($this->category->id),
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-			'categorySize' => Image::getSize('category_default'),
-			'mediumSize' => Image::getSize('medium_default'),
-			'thumbSceneSize' => Image::getSize('m_scene_default'),
-			'homeSize' => Image::getSize('home_default'),
+			'categorySize' => Image::getSize(ImageType::getFormatedName('category')),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			'thumbSceneSize' => Image::getSize(ImageType::getFormatedName('m_scene')),
+			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 			'allow_oosp' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 			'suppliers' => Supplier::getSuppliers()
@@ -144,9 +144,9 @@ class CategoryControllerCore extends FrontController
 		{
 			foreach ($sceneImageTypes as $sceneImageType)
 			{
-				if ($sceneImageType['name'] == 'm_scene_default')
+				if ($sceneImageType['name'] == ImageType::getFormatedName('m_scene'))
 					$thumbSceneImageType = $sceneImageType;
-				elseif ($sceneImageType['name'] == 'scene_default')
+				elseif ($sceneImageType['name'] == ImageType::getFormatedName('scene'))
 					$largeSceneImageType = $sceneImageType;
 			}
 
@@ -199,7 +199,7 @@ class CategoryControllerCore extends FrontController
 
 		foreach ($this->cat_products as &$product)
 		{
-			if ($product['id_product_attribute'])
+			if ($product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
 				$product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
 		}
 

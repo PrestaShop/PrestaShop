@@ -23,6 +23,7 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
 global $smarty;
 $smarty->setTemplateDir(_PS_THEME_DIR_.'tpl');
 
@@ -62,6 +63,6 @@ function smartyTranslate($params, &$smarty)
 	if ($params['sprintf'] !== null)
 		$msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
 
-	return $params['js'] ? $msg : addslashes($msg);
+	return $params['js'] ? addslashes($msg) : $msg;
 }
 

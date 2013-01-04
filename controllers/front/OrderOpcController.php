@@ -141,9 +141,8 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->_processAddressFormat();
 								$this->_assignAddress();
 								// Wrapping fees
-								$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
-								$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
-								$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
+								$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookTop(array()) : ''),
@@ -203,9 +202,8 @@ class OrderOpcControllerCore extends ParentOrderController
 									{
 										$result = $this->_getCarrierList();
 										// Wrapping fees
-										$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
-										$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
-										$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+										$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
+										$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 										$result = array_merge($result, array(
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
@@ -493,9 +491,10 @@ class OrderOpcControllerCore extends ParentOrderController
 		
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false, false);
-		$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
-		$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
-		$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+
+		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
+		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+
 		$vars = array(
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
@@ -505,7 +504,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'conditions' => (int)(Configuration::get('PS_CONDITIONS')),
 			'link_conditions' => $link_conditions,
 			'recyclable' => (int)($this->context->cart->recyclable),
-			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
+			'gift_wrapping_price' => (float)$wrapping_fees,
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency),
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),

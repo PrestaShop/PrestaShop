@@ -119,6 +119,8 @@ class ImageManagerCore
 	 */
 	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
+		clearstatcache(true, $src_file);
+		
 		if (!file_exists($src_file) || !filesize($src_file))
 			return false;
 		list($src_width, $src_height, $type) = getimagesize($src_file);
@@ -409,5 +411,34 @@ class ImageManagerCore
 		imagedestroy($resource);
 		@chmod($filename, 0664);
 		return $success;
+	}
+
+	/**
+	 * Return the mime type by the file extension
+	 *
+	 * @param string $file_name
+	 * @return string
+	 */
+	public static function getMimeTypeByExtension($file_name)
+	{
+		$types = array(
+						'image/gif' => array('gif'),
+						'image/jpeg' => array('jpg', 'jpeg'),
+						'image/png' => array('png')
+					);	
+		$extension = substr($file_name, strrpos($file_name, '.') + 1);
+
+		$mime_type = null;
+		foreach ($types as $mime => $exts)
+			if (in_array($extension, $exts))
+			{
+				$mime_type = $mime;
+				break;
+			}
+
+		if ($mime_type === null)
+			$mime_type = 'image/jpeg';
+
+		return $mime_type;
 	}
 }

@@ -102,8 +102,8 @@ function updateOrderLineDisplay(domCheckbox)
 function sendOrderMessage()
 {
 	paramString = "ajax=true";
-	$('#sendOrderMessage').find('input, textarea').each(function(){
-		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
+	$('#sendOrderMessage').find('input, textarea, select').each(function(){
+		paramString += '&' + $(this).attr('name') + '=' + encodeURIComponent($(this).val());
 	});
 
 	$.ajax({

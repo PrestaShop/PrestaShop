@@ -45,24 +45,6 @@ class DispatcherCore
 	 * @var array List of default routes
 	 */
 	public $default_routes = array(
-		'product_rule' => array(
-			'controller' =>	'product',
-			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
-			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_product'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'ean13' =>			array('regexp' => '[0-9\pL]*'),
-				'category' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
-				'reference' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'manufacturer' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'supplier' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'price' =>			array('regexp' => '[0-9\.,]*'),
-				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
-			),
-		),
 		'layered_rule' => array(
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
@@ -134,6 +116,24 @@ class DispatcherCore
 			),
 			'params' => array(
 				'fc' => 'module',
+			),
+		),
+		'product_rule' => array(
+			'controller' =>	'product',
+			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_product'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'ean13' =>			array('regexp' => '[0-9\pL]*'),
+				'category' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
+				'reference' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'manufacturer' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'supplier' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'price' =>			array('regexp' => '[0-9\.,]*'),
+				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
 			),
 		),
 	);
@@ -396,18 +396,7 @@ class DispatcherCore
 			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
 				}
 
-		// Set default routes
-		foreach (Language::getLanguages() as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array()
-				);
-
+		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
 			// Get iso lang
@@ -449,6 +438,18 @@ class DispatcherCore
 							isset($route_data['params']) ? $route_data['params'] : array()
 						);
 		}
+
+		// Set default routes
+		foreach (Language::getLanguages() as $lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$lang['id_lang'],
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array()
+				);
 	}
 
 	/**

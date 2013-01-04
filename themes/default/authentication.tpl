@@ -28,10 +28,10 @@
 
 <script type="text/javascript">
 // <![CDATA[
-idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
-countries = new Array();
-countriesNeedIDNumber = new Array();
-countriesNeedZipCode = new Array();
+var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}false{/if};
+var countries = new Array();
+var countriesNeedIDNumber = new Array();
+var countriesNeedZipCode = new Array(); 
 {if isset($countries)}
 	{foreach from=$countries item='country'}
 		{if isset($country.states) && $country.contains_states}
@@ -165,7 +165,7 @@ $(function(){ldelim}
 				</p>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-					<input type="button" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create your account'}" />
+					<input type="submit" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create your account'}" />
 					<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create your account'}" />
 				</p>
 			</div>

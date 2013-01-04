@@ -48,8 +48,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product'}";
-	var txtProducts = "{l s='products'}";
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
 	var deliveryAddress = {$cart->id_address_delivery|intval};
 	// ]]>
 	</script>

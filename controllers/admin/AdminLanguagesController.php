@@ -512,6 +512,21 @@ class AdminLanguagesControllerCore extends AdminController
 		//update employee lang if current id lang is disabled
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
 	}
+	
+	protected function processBulkStatusSelection($status)
+	{
+		if (!$status)//only check if status == 0 (disable)
+		{
+			if (is_array($this->boxes) && !empty($this->boxes))
+				foreach ($this->boxes as $id)
+					if (Configuration::get('PS_LANG_DEFAULT') == $id)
+						$this->errors[] = $this->l('You cannot change the status of the default language.');
+			if (!count($this->errors))
+				parent::processBulkStatusSelection($status);
+		}
+		else
+			parent::processBulkStatusSelection($status);
+	}
 }
 
 

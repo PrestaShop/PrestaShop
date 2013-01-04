@@ -219,6 +219,12 @@ class AddressControllerCore extends FrontController
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
+            if (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+            { 
+                $this->context->cart->id_address_invoice = (int)$address->id;
+                $this->context->cart->update();                
+            }
+            
 			if ($this->ajax)
 			{
 				$return = array(
@@ -257,6 +263,7 @@ class AddressControllerCore extends FrontController
 		// Assign common vars
 		$this->context->smarty->assign(array(
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+			'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 			'ajaxurl' => _MODULE_DIR_,
 			'errors' => $this->errors,
 			'token' => Tools::getToken(false),

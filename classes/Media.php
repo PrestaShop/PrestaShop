@@ -74,25 +74,6 @@ class MediaCore
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
 			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
 
-			if (Configuration::get('PS_HIGH_HTML_THEME_COMPRESSION'))
-			{
-				//$html_content = preg_replace('/"([^\>\s"]*)"/i', '$1', $html_content);//FIXME create a js bug
-				$html_content = preg_replace('/<!DOCTYPE \w[^\>]*dtd\">/is', '', $html_content);
-				$html_content = preg_replace('/\s\>/is', '>', $html_content);
-				$html_content = str_replace('</li>', '', $html_content);
-				$html_content = str_replace('</dt>', '', $html_content);
-				$html_content = str_replace('</dd>', '', $html_content);
-				$html_content = str_replace('</head>', '', $html_content);
-				$html_content = str_replace('<head>', '', $html_content);
-				$html_content = str_replace('</html>', '', $html_content);
-				$html_content = str_replace('</body>', '', $html_content);
-				//$html_content = str_replace('</p>', '', $html_content);//FIXME doesnt work...
-				$html_content = str_replace("</option>\n", '', $html_content);//TODO with bellow
-				$html_content = str_replace('</option>', '', $html_content);
-				$html_content = str_replace('<script type=text/javascript>', '<script>', $html_content);//Do a better expreg
-				$html_content = str_replace("<script>\n", '<script>', $html_content);//Do a better expreg
-			}
-
 			return $html_content;
 		}
 		return false;
@@ -163,7 +144,7 @@ class MediaCore
 		if (strlen($css_content) > 0)
 		{
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content);
-			$css_content = preg_replace_callback('#url\((?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+			$css_content = preg_replace_callback('#url\((?!data:)(?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content); 
 
 			$css_content = preg_replace('#\s+#', ' ', $css_content);
 			$css_content = str_replace("\t", '', $css_content);
@@ -365,9 +346,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.js';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
@@ -388,9 +369,9 @@ class MediaCore
 		$file = 'jquery.'.$name.'.css';
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		if (@filemtime($file_uri.$file))
+		if (@file_exists($file_uri.$file))
 			return Media::getCSSPath($folder.$file);
-		elseif (@filemtime($file_uri.$name.'/'.$file))
+		elseif (@file_exists($file_uri.$name.'/'.$file))
 			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;

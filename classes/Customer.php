@@ -372,8 +372,13 @@ class CustomerCore extends ObjectModel
 	public static function customerExists($email, $return_id = false, $ignore_guest = true)
 	{
 		if (!Validate::isEmail($email))
-			die (Tools::displayError());
-
+		{
+			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
+				die (Tools::displayError('Invalid email'));
+			else
+				return false;
+		}
+		
 		$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'

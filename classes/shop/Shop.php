@@ -179,7 +179,7 @@ class ShopCore extends ObjectModel
 			'supplier' => array('type' => 'shop'),
 		);
 		
-		foreach($asso_tables as $table_name => $table_details)
+		foreach ($asso_tables as $table_name => $table_details)
 			Shop::addTableAssociation($table_name, $table_details);
 
 		Shop::$initialized = true;
@@ -975,6 +975,10 @@ class ShopCore extends ObjectModel
 	{
 		// If we duplicate some specific data, automatically duplicate other data linked to the first
 		// E.g. if carriers are duplicated for the shop, duplicate carriers langs too
+
+		if (!$old_id)
+			$old_id = Configuration::get('PS_SHOP_DEFAULT');
+
 		if (isset($tables_import['carrier']))
 		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;

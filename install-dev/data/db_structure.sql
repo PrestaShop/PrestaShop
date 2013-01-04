@@ -170,7 +170,7 @@ CREATE TABLE `PREFIX_cart` (
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
-  `delivery_option` varchar(100),
+  `delivery_option` TEXT NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) unsigned NOT NULL,
   `id_address_invoice` int(10) unsigned NOT NULL,
@@ -225,6 +225,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`reduction_product` int(10) NOT NULL default 0,
 	`gift_product` int(10) unsigned NOT NULL default 0,
 	`gift_product_attribute` int(10) unsigned NOT NULL default 0,
+	`highlight` tinyint(1) unsigned NOT NULL default 0,
 	`active` tinyint(1) unsigned NOT NULL default 0,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
@@ -1177,7 +1178,7 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order` int(10) unsigned NOT NULL,
   `id_cart_rule` int(10) unsigned NOT NULL,
   `id_order_invoice` int(10) unsigned DEFAULT 0,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(254) NOT NULL,
   `value` decimal(17,2) NOT NULL default '0.00',
   `value_tax_excl` decimal(17,2) NOT NULL default '0.00',
   PRIMARY KEY (`id_order_cart_rule`),
@@ -2023,6 +2024,7 @@ CREATE TABLE `PREFIX_lang_shop` (
 CREATE TABLE `PREFIX_currency_shop` (
 `id_currency` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL,
+`conversion_rate` decimal(13,6) NOT NULL,
   PRIMARY KEY (`id_currency`, `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

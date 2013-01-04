@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -176,8 +176,9 @@ class SEKeywords extends ModuleGraph
 					preg_match('/[^a-z]'.$varname.'=.+$'.'/', $parsedUrl['query'], $kArray);
 				if (!isset($kArray[0]) || empty($kArray[0]))
 					return false;
-				$kString = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
-				return $kString;
+				if ($kArray[0][0] == '&')
+					return false;
+				return urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
 			}
 		}
 	}

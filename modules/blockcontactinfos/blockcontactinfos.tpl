@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop 
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE Block contact infos -->
 <div id="block_contact_infos">
-	<p class="title_block">{l s='Contact us' mod='blockcontactinfos'}</p>
+	<h4 class="title_block">{l s='Contact us' mod='blockcontactinfos'}</h4>
 	<ul>
 		{if $blockcontactinfos_company != ''}<li><strong>{$blockcontactinfos_company|escape:'htmlall':'UTF-8'}</strong></li>{/if}
 		{if $blockcontactinfos_address != ''}<li><pre>{$blockcontactinfos_address|escape:'htmlall':'UTF-8'}</pre></li>{/if}

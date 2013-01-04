@@ -1,8 +1,8 @@
 <?php
 /*
 * 2007-2012 PrestaShop
-* NOTICE OF LICENSE
 *
+* NOTICE OF LICENSE
 *
 * This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
@@ -1345,15 +1345,23 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
-				$res = Db::getInstance()->execute(
-					'INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`)
-					VALUES('.(int)$id_image.', '.(int)$id_shop.')
-				');
+				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
 			else
-				$res = Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'image_shop
-					WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop
-				);
+				$res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
+		
+		// Clean covers in image table
+		$count_cover_image = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image i INNER JOIN '._DB_PREFIX_.'image_shop is ON (i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.') WHERE i.cover = 1');
+		if ($count_cover_image < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 1 WHERE i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 0 WHERE cover = 1 AND i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image - 1));
+	
+		// Clean covers in image_shop table
+		$count_cover_image_shop = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image_shop is WHERE is.id_shop = '.(int)$id_shop.' AND is.cover = 1');
+		if ($count_cover_image_shop < 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 1 WHERE is.id_shop =  '.(int)$id_shop.' LIMIT 1');
+		if ($count_cover_image_shop > 1)
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 0 WHERE is.cover = 1 AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[27]);
@@ -2214,6 +2222,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		parent::initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if ($product = $this->loadObject(true))
@@ -2281,8 +2290,12 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 		}
-
-		parent::initToolbar();
+		else
+			$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+					'desc' => $this->l('Import')
+				);
+		
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
@@ -3071,7 +3084,7 @@ class AdminProductsControllerCore extends AdminController
 						<td class="cell border">'.($id_shop_sp ? $shops[$id_shop_sp]['name'] : $this->l('All shops')).'</td>';
 					}
 					$price = Tools::ps_round($specific_price['price'], 2);
-					$fixed_price = ($price == Tools::ps_round($obj->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price);
+					$fixed_price = ($price == Tools::ps_round($obj->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 					$content .= '
 						<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 						<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>

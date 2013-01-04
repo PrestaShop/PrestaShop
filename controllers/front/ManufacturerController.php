@@ -92,6 +92,7 @@ class ManufacturerControllerCore extends FrontController
 	 */
 	protected function assignOne()
 	{
+		$this->manufacturer->description = Tools::nl2br(trim($this->manufacturer->description));
 		$nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
 		$this->pagination((int)$nbProducts);
 		$this->context->smarty->assign(array(
@@ -99,8 +100,8 @@ class ManufacturerControllerCore extends FrontController
 			'products' => $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay),
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer,
-			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			);
+			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
+		));
 	}
 
 	/**
@@ -115,12 +116,12 @@ class ManufacturerControllerCore extends FrontController
 			$this->pagination($nbProducts);
 
 			foreach ($data as &$item)
-				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium_default.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
+				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 			$this->context->smarty->assign(array(
 				'pages_nb' => ceil($nbProducts / (int)($this->n)),
 				'nbManufacturers' => $nbProducts,
-				'mediumSize' => Image::getSize('medium_default'),
+				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'manufacturers' => $data,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			));

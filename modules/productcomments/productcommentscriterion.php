@@ -24,9 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(dirname(__FILE__).'/../../classes/Validate.php');
-require_once(dirname(__FILE__).'/../../classes/Db.php');
-require_once(dirname(__FILE__).'/../../classes/Tools.php');
+require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
 
 if (empty($_GET['id_lang']) === false &&

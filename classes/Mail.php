@@ -226,21 +226,32 @@ class MailCore
 
 			/* Create mail and attach differents parts */
 			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
+
+			/* Set Message-ID - getmypid() is blocked on some hosting */
+			$message->setId(Mail::generateId());
+
 			$message->headers->setEncoding('Q');
 
 			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
-				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))));
+				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL');
 			else
-				if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-					$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_Image(new Swift_File(_PS_IMG_DIR_.Configuration::get('PS_LOGO'))));
+			{
+				if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+					$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				else
 					$template_vars['{shop_logo}'] = '';
+			}
+
+			/* don't attach the logo as */
+			if (isset($logo))
+				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_EmbeddedFile(new Swift_File($logo), null, ImageManager::getMimeTypeByExtension($logo)));
 
 			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
 			$template_vars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
 			$template_vars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, Context::getContext()->language->id);
 			$template_vars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, Context::getContext()->language->id);
 			$template_vars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, Context::getContext()->language->id);
+			$template_vars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR'));
 			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $template_vars)), 'decorator');
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
 				$message->attach(new Swift_Message_Part($template_txt, 'text/plain', '8bit', 'utf-8'));
@@ -339,4 +350,17 @@ class MailCore
 
 		return str_replace('"', '&quot;', stripslashes($str));
 	}
+
+	/* Rewrite of Swift_Message::generateId() without getmypid() */
+	protected static function generateId($idstring = null)
+	{
+		$midparams =  array(
+			"utctime" => gmstrftime("%Y%m%d%H%M%S"),
+			"randint" => mt_rand(),
+			"customstr" => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
+			"hostname" => (isset($_SERVER["SERVER_NAME"]) ? $_SERVER["SERVER_NAME"] : php_uname("n")),
+		);
+		return vsprintf("<%s.%d.%s@%s>", $midparams);
+	}
+	
 }

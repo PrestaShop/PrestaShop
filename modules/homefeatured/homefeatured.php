@@ -96,7 +96,7 @@ class HomeFeatured extends Module
 
 	public function hookHeader($params)
 	{
-		$this->context->controller->addCss($this->_path.'homefeatured.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'homefeatured.css', 'all');
 	}
 
 	public function hookDisplayHome($params)
@@ -108,7 +108,7 @@ class HomeFeatured extends Module
 		$this->smarty->assign(array(
 			'products' => $products,
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-			'homeSize' => Image::getSize('home_default'),
+			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 		));
 
 		return $this->display(__FILE__, 'homefeatured.tpl');

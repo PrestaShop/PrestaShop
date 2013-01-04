@@ -717,13 +717,13 @@ class FrontControllerCore extends Controller
 	public function setMobileMedia()
 	{
 		$this->addjquery();
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.1.1.min.js');
+		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.2.0.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
 			$this->addjqueryPlugin('fancybox');
 
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.1.1.min.css', 'all');
+		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.2.0.min.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
 	}
@@ -867,7 +867,7 @@ class FrontControllerCore extends Controller
 			$this->context->cookie->nb_item_per_page = $this->n;
 
 		$pages_nb = ceil($nbProducts / (int)$this->n);
-		if ($this->p > $pages_nb)
+		if ($this->p > $pages_nb && $nbProducts <> 0)
 			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$start = (int)($this->p - $range);
@@ -1136,11 +1136,19 @@ class FrontControllerCore extends Controller
 	 */
 	public function initLogoAndFavicon()
 	{
+		$mobile_device = $this->context->getMobileDevice();
+		$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		
+		if ($mobile_device && Configuration::get('PS_LOGO_MOBILE'))
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		else
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
+		
 		return array(
  				'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-            'logo_image_width' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
-            'logo_image_height' => ($this->context->getMobileDevice() == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
-            'logo_url' => ($this->context->getMobileDevice() == false ? _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME') : _PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'))
+	            'logo_image_width' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_WIDTH') : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
+	            'logo_image_height' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
+	            'logo_url' => $logo
   				);
 	}
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
 * 2007-2012 PrestaShop
 *
@@ -84,7 +83,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 			WHERE `id_country` = '.(int)$this->address->id_country.'
 			AND `id_tax_rules_group` = '.(int)$this->type.'
 			AND `id_state` IN (0, '.(int)$this->address->id_state.')
-			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR `zipcode_from` = 0 OR `zipcode_from` = \''.pSQL($postcode).'\')
+			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR (`zipcode_to` = 0 AND `zipcode_from` IN(0, \''.pSQL($postcode).'\')))
 			ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
 
 			$behavior = 0;

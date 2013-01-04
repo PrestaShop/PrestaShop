@@ -1,10 +1,9 @@
 Hola {firstname} {lastname},
 
-Has recibido un mensaje sobre el pedido n°{id_order} :
+Ha recibido un mensaje de {shop_name} sobre su pedido con referencia {order_name}.
+
+Mensaje:
 {message}
-
-Puedes, en cualquier momento, consultar tus antiguos mensajes en Seguimiento de pedido.
-
 
 
 {shop_url} desarrollado por PrestaShop™

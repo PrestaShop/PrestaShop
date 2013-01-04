@@ -98,7 +98,7 @@ class AdminShippingControllerCore extends AdminController
 			else
 				$array_carrier[] = $carrier['id_carrier'];
 
-		$id_carrier = Tools::getValue('id_carrier');
+		$id_carrier = (int)Tools::getValue('id_carrier');
 
 		if (count($carriers) && isset($array_carrier[0]))
 		{

@@ -63,9 +63,9 @@ product_tabs['Combinations'] = new function(){
 					self.removeButtonCombination('update');
 					$.scrollTo('#add_new_combination', 1200, { offset: -100 });
 					var wholesale_price = Math.abs(data[0]['wholesale_price']);
-					var price = Math.abs(data[0]['price']);
-					var weight = Math.abs(data[0]['weight']);
-					var unit_impact = Math.abs(data[0]['unit_price_impact']);
+					var price = data[0]['price'];
+					var weight = data[0]['weight'];
+					var unit_impact = data[0]['unit_price_impact'];
 					var reference = data[0]['reference'];
 					var ean = data[0]['ean13'];
 					var quantity = data[0]['quantity'];
