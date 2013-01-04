@@ -105,7 +105,7 @@ class AdminGroupsControllerCore extends AdminController
 			$this->toolbar_btn['save-and-stay'] = array(
 				'short' => 'SaveAndStay',
 				'href' => '#',
-				'desc' => $this->l('Save then add a category reduction'),
+				'desc' => $this->l('Save, then add a category reduction'),
 				'force_desc' => true,
 			);
 		parent::initToolbar();
@@ -151,7 +151,7 @@ class AdminGroupsControllerCore extends AdminController
 				'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
 				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
 				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'email' => array('title' => $this->l('E-mail address'), 'width' => 150, 'align' => 'center'),
+				'email' => array('title' => $this->l('Email address'), 'width' => 150, 'align' => 'center'),
 				'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
 				'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
 				'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
@@ -183,7 +183,7 @@ class AdminGroupsControllerCore extends AdminController
 				'image' => '../img/admin/tab-groups.gif'
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			),
 			'input' => array(
@@ -201,7 +201,7 @@ class AdminGroupsControllerCore extends AdminController
 					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
 					'size' => 33,
-					'desc' => $this->l('Will automatically apply this value as a discount on all products for members of this customer group.')
+					'desc' => $this->l('Automatically apply this value as a discount on all products for members of this customer group.')
 				),
 				array(
 					'type' => 'select',
@@ -242,7 +242,7 @@ class AdminGroupsControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customers in this group can view price')
+					'desc' => $this->l('Customers in this group can view prices')
 				),
 				array(
 					'type' => 'group_discount_category',
@@ -492,7 +492,7 @@ class AdminGroupsControllerCore extends AdminController
 			'<b>'.$unidentified->name[$this->context->language->id].'</b>'
 		);
 		$guest_group_information = sprintf(
-			$this->l('%s - Customer who placed an order with the Guest Checkout.'),
+			$this->l('%s - Customer who placed an order through Guest Checkout.'),
 			'<b>'.$guest->name[$this->context->language->id].'</b>'
 		);
 		$default_group_information = sprintf(
@@ -500,7 +500,7 @@ class AdminGroupsControllerCore extends AdminController
 			'<b>'.$default->name[$this->context->language->id].'</b>'
 		);
 
-		$this->displayInformation($this->l('You have now three default customer groups.'));
+		$this->displayInformation($this->l('You now have three default customer groups.'));
 		$this->displayInformation($unidentified_group_information);
 		$this->displayInformation($guest_group_information);
 		$this->displayInformation($default_group_information);

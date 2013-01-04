@@ -5,7 +5,7 @@ $_MODULE = array();
 
 $_MODULE['<{blocktags}prestashop>blocktags_a332910d45d955dad6c84817fe478e95'] = 'Ajoute un bloc contenant les tags et un lien vers la recherche correspondante';
 $_MODULE['<{blocktags}prestashop>blocktags_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
-$_MODULE['<{blocktags}prestashop>blocktags_189f63f277cd73395561651753563065'] = 'Tags';
+$_MODULE['<{blocktags}prestashop>blocktags_32b502f33a535f75dcbf63f6753c631e'] = 'Tags';
 $_MODULE['<{blocktags}prestashop>blocktags_73293a024e644165e9bf48f270af63a0'] = 'Nombre non valable.';
 $_MODULE['<{blocktags}prestashop>blocktags_49fa2426b7903b3d4c89e2c1874d9346'] = 'En savoir plus sur';
 $_MODULE['<{blocktags}prestashop>blocktags_f2568a62d4ac8d1d5b532556379772ba'] = 'Bloc tags';

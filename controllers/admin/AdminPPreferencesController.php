@@ -39,15 +39,15 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_CATALOG_MODE' => array(
 						'title' => $this->l('Catalog mode'),
-						'desc' => $this->l('When active, all shopping features will be disabled'),
+						'desc' => $this->l('When active, all shopping features will be disabled.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool'
 					),
 					'PS_COMPARATOR_MAX_ITEM' => array(
-						'title' => $this->l('Products comparison'),
-						'desc' => $this->l('Set the maximum number of products that can be selected for comparison.').' '.$this->l('Set to 0 to disable this feature'),
+						'title' => $this->l('Product comparison'),
+						'desc' => $this->l('Set the maximum number of products that can be selected for comparison.').' '.$this->l('Set to "0" to disable this feature.'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
@@ -60,8 +60,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_CART_REDIRECT' => array(
-						'title' => $this->l('Redirection after adding product to cart'),
-						'desc' => $this->l('Only for non-AJAX version of the cart'),
+						'title' => $this->l('Redirect after adding product to cart.'),
+						'desc' => $this->l('Only for non-AJAX versions of the cart.'),
 						'cast' => 'intval',
 						'show' => true,
 						'required' => false,
@@ -73,8 +73,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
-						'title' => $this->l('Short description max size'),
-						'desc' => $this->l('Set the maximum size of product short description (in characters)'),
+						'title' => $this->l('Max size of short description'),
+						'desc' => $this->l('Set the maximum size of product short description (in characters).'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -89,7 +89,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('Products'),
+							0 => $this->l('Products:'),
 							1 => $this->l('Combinations')
 						)
 					)
@@ -107,12 +107,12 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_PRODUCTS_ORDER_BY' => array(
 						'title' => $this->l('Default order by'),
-						'desc' => $this->l('The order in which products are displayed in the product list'),
+						'desc' => $this->l('The order in which products are displayed in the product list.'),
 						'type' => 'select',
 						'list' => array(
 							array('id' => '0', 'name' => $this->l('Product name')),
 							array('id' => '1', 'name' => $this->l('Product price')),
-							array('id' => '2', 'name' => $this->l('Product added date')),
+							array('id' => '2', 'name' => $this->l('Product add date')),
 							array('id' => '3', 'name' => $this->l('Product modified date')),
 							array('id' => '4', 'name' => $this->l('Position inside category')),
 							array('id' => '5', 'name' => $this->l('Manufacturer')),
@@ -142,7 +142,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Product page'),
 				'fields' =>	array(
 					'PS_DISPLAY_QTIES' => array(
-						'title' => $this->l('Display available quantities on product page'),
+						'title' => $this->l('Display available quantities on the product page.'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -150,15 +150,15 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_LAST_QTIES' => array(
-						'title' => $this->l('Display remaining quantities when qty is lower than'),
-						'desc' => $this->l('Set to 0 to disable this feature'),
+						'title' => $this->l('Display remaining quantities when the qty is lower than'),
+						'desc' => $this->l('Set to "0" to disable this feature.'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on product page'),
+						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page.'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -166,7 +166,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_DISP_UNAVAILABLE_ATTR' => array(
-						'title' => $this->l('Display unavailable product attributes on product page'),
+						'title' => $this->l('Display unavailable product attributes on the product page.'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -174,8 +174,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
-						'title' => $this->l('Display "add to cart" button when product has attributes'),
-						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes to force customers to see the product detail'),
+						'title' => $this->l('Display the "add to cart" button when a product has attributes.'),
+						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -187,7 +187,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
 		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'desc' => $this->l('Add to cart button is hidden when product is unavailable'),
+		 				'desc' => $this->l('Add to cart button is hidden when a product is unavailable'),
 		 				'validation' => 'isBool',
 		 				'cast' => 'intval',
 		 				'required' => false,

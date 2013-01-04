@@ -369,7 +369,7 @@
 					
 					{if !count($modules)}
 						<tr>
-							<td colspan="3">{l s='No modules installed'}</td>
+							<td colspan="3">{l s='No modules are installed'}</td>
 						</tr>
 					{else}
 						{foreach $modules[$profile.id_profile] AS $module}

@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<input type="button" class="button" id="translate_all" value="{l s='Translate with Google (experimental)'}" />
+<input type="button" class="button" id="translate_all" value="{l s='Translate with Google (experimental).'}" />
 <script type="text/javascript">
 	var gg_translate = {
 		language_code : '{$language_code}',

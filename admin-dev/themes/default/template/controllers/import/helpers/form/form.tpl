@@ -57,7 +57,7 @@
 				}
 				else
 				{
-					jAlert('{l s='You do not have permission to delete here. When the multi-store is enable, only a SuperAdmin can delete all items before import.'}');
+					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.'}');
 					return false;
 				}
 			}
@@ -111,7 +111,7 @@
 	class="clear">
 	
 	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
-		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
+		<legend><img src="../img/admin/import.gif" />{l s='Import   '}</legend>
 
 			<label class="clear">{if count($files_to_import) > 1}{l s='Your CSV file (%d files):' sprintf=count($files_to_import)}{else}{l s='Your CSV file (%d file):' sprintf=count($files_to_import)}{/if}</label>
 			<div class="margin-form">
@@ -142,7 +142,7 @@
 				</ul>
 				<div class="clear">&nbsp;</div>
 			</div>
-			<label class="clear">{l s='What kind of Entity would you like to import?'} </label>
+			<label class="clear">{l s='What kind of entity would you like to import?'} </label>
 			<div class="margin-form">
 				<select name="entity" id="entity">
 					{foreach $entities AS $entity => $i}
@@ -184,9 +184,9 @@
 			<div class="margin-form">
 				<input name="match_ref" id="match_ref" type="checkbox" style="margin-top: 6px; display:none"/>
 			</div>
-			<label for="forceIDs" class="clear">{l s='Force all ids during import?'} </label>
+			<label for="forceIDs" class="clear">{l s='Force all ID\'s during import?'} </label>
 			<div class="margin-form">
-				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all IDs will be auto-incremented.'}
+				<input name="forceIDs" id="forceIDs" type="checkbox"/> {l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}
 			</div>
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
@@ -201,9 +201,9 @@
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
-				<p>{l s='There is no CSV file available, please upload one using the \'Upload\' button above.'}</p>
+				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
 				<ul>
-					<li>{l s='You can read informations on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
+					<li>{l s='You can read information on CSV import at:'} <a href="http://doc.prestashop.com/display/PS14/Troubleshooting#Troubleshooting-HowtocorrectlyimportaccentuatedcontentusingaCSVfile%3F" target="_blank">http://doc.prestashop.com/display/PS14/Troubleshooting</a></li>
 					<li>{l s='Read more about CSV format at:'} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
 				</ul>
 			</div>

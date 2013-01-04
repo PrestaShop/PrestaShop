@@ -46,7 +46,7 @@
 					};
 
 					if (json.missing.length || json.updated.length)
-						$('#changedFiles').html('<div class="warn">{l s='Changed/missing files have been detected'}</div>');
+						$('#changedFiles').html('<div class="warn">{l s='Changed/missing files have been detected.'}</div>');
 					else
 						$('#changedFiles').html('<div class="conf">{l s='No change has been detected in your files'}</div>');
 
@@ -75,7 +75,7 @@
 	</fieldset>
 	<br />
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration'}</legend>
+		<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Information about your configuration.'}</legend>
 		<h3>{l s='Server information'}</h3>	
 		{if count($uname)}
 		<p>
@@ -127,7 +127,7 @@
 			<b>{l s='Mail method'}:</b>
 	
 	{if $mail}
-		{l s='You are using the PHP mail() function.'}</p>
+		{l s='You are using the PHP mail function.'}</p>
 	{else}
 		{l s='You are using your own SMTP parameters.'}</p>
 		<p>

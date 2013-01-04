@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{l s='Shipping'}{/capture}
+{capture assign='page_title'}{l s='Shipping:'}{/capture}
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="delivery_choose">
@@ -51,7 +51,7 @@
 		<label for="gift">{l s='I would like my order to be gift-wrapped.'}</label>
 	</fieldset>
 	<p class="textarea" id="gift_div" style="display: none;">
-		<label for="gift_message">{l s='If you wish, you can add a note to the gift:'}</label>
+		<label for="gift_message">{l s='If you would like, feel free to add a personalized message.'}</label>
 		<textarea name="gift_message" id="gift_message" cols="35" rows="5">{$cart->gift_message|escape:'htmlall':'UTF-8'}</textarea>
 	</p>
 	

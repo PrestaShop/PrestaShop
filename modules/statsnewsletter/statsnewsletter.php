@@ -97,7 +97,7 @@ class StatsNewsletter extends ModuleGraph
 	protected function getData($layers)
 	{
 		$this->_titles['main'][0] = $this->l('Newsletter statistics');
-		$this->_titles['main'][1] = $this->l('Customers');
+		$this->_titles['main'][1] = $this->l('customers');
 		$this->_titles['main'][2] = $this->l('Visitors');
 		$this->_titles['main'][3] = $this->l('Both');
 

@@ -5,7 +5,7 @@ $_MODULE = array();
 
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_6e7be6d836003f069c00cd217660913b'] = 'Werbeblock-Konfiguration';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_83b5a65e518c21ed0a5f2b383dd9b617'] = 'Bild löschen';
-$_MODULE['<{blockadvertising}prestashop>blockadvertising_936823d20c5582b055bccdc6fd03b9d1'] = 'Bild wird mit 155x163 gezeigt';
+$_MODULE['<{blockadvertising}prestashop>blockadvertising_56d9dfa26d7848a3fbcd2ae3091d38d9'] = 'Bild wird mit 155x163 gezeigt';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_b78a3223503896721cca1303f776159b'] = 'Titel';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_226ed577d0eff50725be6447bcd5a2f0'] = 'Fehler bewegt hochgeladene Datei';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_a21056e22c4d62b400b5dd96dafe22a3'] = 'Sie können das Standardbild nicht entfernen (sondern Sie können es ändern)';

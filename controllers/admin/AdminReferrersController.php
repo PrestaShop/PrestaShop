@@ -204,7 +204,7 @@ class AdminReferrersControllerCore extends AdminController
 				)
 			),
 			'desc' => array(
-				$this->l('Affiliates can access their own data with this name and password.'),
+				$this->l('Affiliates can access their data with this name and password.'),
 				$this->l('Front access:').' <a href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;">'.$uri.'modules/trackingfront/stats.php</a>'
 			)
 		));
@@ -250,7 +250,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[2] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information - Simple mode'),
+				'title' => $this->l('Technical information -- Simple mode.'),
 				'image' => '../img/admin/affiliation.png'
 			),
 			'help' => true,
@@ -296,7 +296,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->fields_form[3] = array('form' => array(
 			'legend' => array(
-				'title' => $this->l('Technical information - Expert mode'),
+				'title' => $this->l('Technical information -- Expert mode'),
 				'image' => '../img/admin/affiliation.png'
 			),
 			'input' => array(

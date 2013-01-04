@@ -29,12 +29,12 @@
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Quantities"}
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
-		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
+		<p>{l s='This interface allows you to manage available quantities for sale for products. It also allows you to manage product combinations in the current shop.'}</p>
 		<p>{l s='You can choose whether or not to use the advanced stock management system for this product.'}</p>
-		<p>{l s='You can manually specify the quantities for the product/each product combination, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
-		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
+		<p>{l s='You can manually specify the quantities for the product/each product combination, or you can choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
+		<p>{l s='In this case, quantities correspond to the real-stock quantities in the warehouses connected with the current shop, or current group of shops.'}</p>
 		<br/>
-		<p>{l s='For packs, if it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
+		<p>{l s='For packs: If it has products that use advanced stock management, you have to specify a common warehouse for these products in the pack.'}</p>
 		<p>{l s='Also, please note that when a product has combinations, its default combination will be used in stock movements.'}</p>
 	</div>
 	<br />
@@ -60,7 +60,7 @@
 							{/if} 
 							type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
 						<label style="float:none;font-weight:normal" for="advanced_stock_management">
-							{l s='I want to use the advanced stock management system for this product'} 
+							{l s='I want to use the advanced stock management system for this product.'} 
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management.'}</b>
 							{else if $product->cache_is_pack}
@@ -81,7 +81,7 @@
 							{/if} 
 							type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
 						<label style="float:none;font-weight:normal" for="depends_on_stock_1">
-							{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} 
+							{l s='Available quantities for current product and its combinations are based on warehouse stock. '} 
 							{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This requires you to enable advanced stock management globally or for this product.'}</b>
 							{else if $product->cache_is_pack}
@@ -100,7 +100,7 @@
 							{/if} 
 							type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
 						<label style="float:none;font-weight:normal" for="depends_on_stock_0">
-							{l s='I want to specify available quantities manually'}
+							{l s='I want to specify available quantities manually.'}
 						</label>
 						<br /><br />
 					</td>
@@ -183,9 +183,9 @@
 		<div class="warn">
 			<p>{l s='It is not possible to manage quantities when:'}</p>
 			<ul>
-				<li>{l s='You are managing all shops.'}</li>
-				<li>{l s='You are managing a group of shops where quantities are not shared between all shops of this group.'}</li>
-				<li>{l s='You are managing a shop which is in a group where quantities are shared between all shops of this group.'}</li>
+				<li>{l s='You are currently managing all of your shops.'}</li>
+				<li>{l s='You are currently managing a group of shops where quantities are not shared between every shop in this group.'}</li>
+				<li>{l s='You are currently managing a shop that is in a group where quantities are shared between every shop in this group.'}</li>
 			</ul>
 		</div>
 	{/if}
@@ -222,7 +222,7 @@
 		<tr>
 			<td class="col-left">
 				{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
-				<label>{l s='Displayed text when allowed to be back-ordered:'}</label>
+				<label>{l s='Displayed text when back-ordereding is allowed:'}</label>
 			</td>
 			<td style="padding-bottom:5px;" class="col-right">
 					{include file="controllers/products/input_text_lang.tpl"
@@ -238,7 +238,7 @@
 				<td style="padding-bottom:5px;">
 					<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
 						style="text-align: center;" type="text" />
-					<p>{l s='The available date when this product is out of stock'}</p>
+					<p>{l s='The available date when this product is out of stock.'}</p>
 				</td>
 			</tr>
 		{/if}

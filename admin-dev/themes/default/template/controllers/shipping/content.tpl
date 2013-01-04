@@ -25,12 +25,12 @@
 
 {$content}
 <br /><br />
-<h2>{l s='Fees by carrier, geographical zone, and ranges'}</h2>
+<h2>{l s='Fees by carrier, geographical zone and ranges'}</h2>
 <form action="{$action_fees}" id="fees" name="fees" method="post">
 	<fieldset>
 		<legend><img src="../img/admin/delivery.gif" />{l s='Fees'}</legend>
 		{if empty($carriers)}
-			{l s='You only have free carriers, there is no need to configure your delivery prices.'}
+			{l s='If you only have free carriers, there\'s no need to configure delivery prices.'}
 		{else}
 			<b>{l s='Carrier:'} </b>
 			<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
@@ -94,7 +94,7 @@
 					{else if $carrierSelected->is_free}
 						{l s='This is a free carrier'}
 					{else}
-						{l s='No ranges set for this carrier'}
+						{l s='No ranges is set for this carrier'}
 					{/if}
 					</td>
 				</tr>

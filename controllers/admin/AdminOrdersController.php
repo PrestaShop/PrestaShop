@@ -100,7 +100,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currency' => true
 		),
 		'payment' => array(
-			'title' => $this->l('Payment'),
+			'title' => $this->l('Payment: '),
 			'width' => 100
 		),
 		'osname' => array(
@@ -148,7 +148,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive())
-			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
+			$this->errors[] = $this->l('You have to select a shop before creating new orders.');
 
 		$id_cart = (int)Tools::getValue('id_cart');
 		$cart = new Cart((int)$id_cart);
@@ -183,7 +183,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => array($this->l('Orders'), $this->l('create order'))
+			'title' => array($this->l('Orders'), $this->l('Create order'))
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
@@ -496,7 +496,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
 							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cart_rule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							$languages = Language::getLanguages(false);
 							foreach ($languages as $language)
 								// Define a temporary name
@@ -703,7 +703,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cartrule = new CartRule();
 							$languages = Language::getLanguages($order);
-							$cartrule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							foreach ($languages as $language)
 							{
 								// Define a temporary name
@@ -840,7 +840,7 @@ class AdminOrdersControllerCore extends AdminController
 				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
 				$payment_module->validateOrder(
 					(int)$cart->id, (int)$id_order_state,
-					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order - Employee:').
+					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').
 					Tools::safeOutput(substr($employee->firstname, 0, 1).'. '.$employee->lastname), array(), null, false, $cart->secure_key
 				);
 				if ($payment_module->currentOrder)
@@ -1463,10 +1463,10 @@ class AdminOrdersControllerCore extends AdminController
 					);
 					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
 							$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop))
-						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
 				}
 			}
-			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the e-mail to your customer.')));
+			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 		}
 	}
 

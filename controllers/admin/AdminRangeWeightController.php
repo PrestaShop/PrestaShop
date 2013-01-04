@@ -82,7 +82,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('Range start (included)'),
+					'desc' => $this->l('Start range (included)'),
 				),
 				array(
 					'type' => 'text',
@@ -91,7 +91,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'desc' => $this->l('Range end (excluded)'),
+					'desc' => $this->l('End range (excluded)'),
 				),
 			),
 			'submit' => array(

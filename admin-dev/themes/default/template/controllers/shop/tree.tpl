@@ -69,7 +69,7 @@ function customMenu(node)
 			"add_shop_group" : {
 				"separator_before"	: false,
 				"separator_after"	: false,
-				"label"				: "{l s='Add new shop group'}",
+				"label"				: "{l s='Add a new shop group'}",
 				"icon"				: "../img/admin/add.gif",
 				"action"			: function (obj){
 					location.href = '{$link->getAdminLink('AdminShopGroup')}&addshop_group';
@@ -154,7 +154,7 @@ function customMenu(node)
 			"add_shop_group" : {
 				"separator_before"	: false,
 				"separator_after"	: false,
-				"label"				: "{l s='Add new shop group'}",
+				"label"				: "{l s='Add a new shop group'}",
 				"icon"				: "../img/admin/add.gif",
 				"action"			: function (obj){
 					location.href = '{$link->getAdminLink('AdminShopGroup')}&addshop_group';

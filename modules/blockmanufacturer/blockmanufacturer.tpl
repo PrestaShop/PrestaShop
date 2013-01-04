@@ -25,7 +25,7 @@
 
 <!-- Block manufacturers module -->
 <div id="manufacturers_block_left" class="block blockmanufacturer">
-	<h4 class="title_block">{if $display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers' mod='blockmanufacturer'}">{/if}{l s='Manufacturers' mod='blockmanufacturer'}{if $display_link_manufacturer}</a>{/if}</h4>
+	<h4 class="title_block">{if $display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers:' mod='blockmanufacturer'}">{/if}{l s='Manufacturers:' mod='blockmanufacturer'}{if $display_link_manufacturer}</a>{/if}</h4>
 	<div class="block_content">
 {if $manufacturers}
 	{if $text_list}
