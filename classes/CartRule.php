@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,8 @@ class CartRuleCore extends ObjectModel
 	const FILTER_ACTION_SHIPPING = 2;
 	const FILTER_ACTION_REDUCTION = 3;
 	const FILTER_ACTION_GIFT = 4;
+
+	const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 	
 	/* This variable controls that a free gift is offered only once, even when multi-shippping is activated and the same product is delivered in both addresses */
 	protected static $only_one_gift = array();

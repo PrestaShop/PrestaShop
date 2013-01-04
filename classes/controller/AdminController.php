@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1159,33 +1159,19 @@ class AdminControllerCore extends Controller
 				$this->context->smarty->assign('conf', Tools::jsonEncode($this->_conf[(int)$conf]));
 			else
 				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
-
-
-		if ($this->json)
-			$this->context->smarty->assign('errors', Tools::jsonEncode($this->errors));
-		else
-			$this->context->smarty->assign('errors', $this->errors);
-
-		if ($this->json)
-			$this->context->smarty->assign('warnings', Tools::jsonEncode($this->warnings));
-		else
-			$this->context->smarty->assign('warnings', $this->warnings);
-
-
-		if ($this->json)
-			$this->context->smarty->assign('informations', Tools::jsonEncode($this->informations));
-		else
-			$this->context->smarty->assign('informations', $this->informations);
-
-		if ($this->json)
-			$this->context->smarty->assign('confirmations', Tools::jsonEncode($this->confirmations));
-		else
-			$this->context->smarty->assign('confirmations', $this->confirmations);
+		
+		$notifications_type = array('errors', 'warnings', 'informations', 'confirmations');
+		foreach($notifications_type as $type)		
+			if ($this->json)
+				$this->context->smarty->assign($type, Tools::jsonEncode($this->$type));
+			else
+				$this->context->smarty->assign($type, $this->$type);
 
 		if ($this->json)
 			$this->context->smarty->assign('page', Tools::jsonEncode($page));
 		else
 			$this->context->smarty->assign('page', $page);
+		
 		$this->smartyOutputContent($this->layout);
 	}
 

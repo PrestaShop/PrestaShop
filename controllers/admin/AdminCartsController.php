@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -189,6 +189,13 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart)
 				$id_cart = $customer->getLastCart(false);
 			$this->context->cart = new Cart((int)$id_cart);
+
+			if (!$this->context->cart->id)
+			{
+				$this->context->cart->recyclable = 0;
+				$this->context->cart->gift = 0;
+			}
+
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
 			if ($this->context->cart->OrderExists())
@@ -461,7 +468,7 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
 			{
 				$cart_rule = new CartRule();
-				$cart_rule->code = 'BO_ORDER_'.(int)$this->context->cart->id;
+				$cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
 				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping', 'AdminTab', false, false));
 				$cart_rule->id_customer = (int)$this->context->cart->id_customer;
 				$cart_rule->free_shipping = true;
