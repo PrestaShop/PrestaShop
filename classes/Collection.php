@@ -287,7 +287,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function sqlGroupBy($sql)
 	{
-		$this->query->orderBy($this->parseFields($sql));
+		$this->query->groupBy($this->parseFields($sql));
 		return $this;
 	}
 
