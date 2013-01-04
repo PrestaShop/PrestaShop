@@ -189,6 +189,13 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart)
 				$id_cart = $customer->getLastCart(false);
 			$this->context->cart = new Cart((int)$id_cart);
+
+			if (!$this->context->cart->id)
+			{
+				$this->context->cart->recyclable = 0;
+				$this->context->cart->gift = 0;
+			}
+
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
 			if ($this->context->cart->OrderExists())
