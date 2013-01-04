@@ -29,13 +29,13 @@
 	<h4>{l s='Product location in warehouses'}</h4>
 				<div class="separation"></div>
 				<div class="hint" style="display:block; position:'auto';">
-		<p>{l s='This interface allows you to specify in which warehouses the product is stocked.'}</p>
-		<p>{l s='It is also possible to specify for each product/product combination its location in each warehouse.'}</p>
+		<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
+		<p>{l s='You can also specify product/product combinations as it relates to warehouse location. '}</p>
 	</div>
-	<p>{l s='Please choose the warehouses associated with this product, and the default one.'}</p>
+	<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
 
 	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'htmlall':'UTF-8'}&addwarehouse">
-		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
+		<img src="../img/admin/add.gif" alt="{l s='Create a new warehouse'}" title="{l s='Create a new warehouse'}" /><span>{l s='Create a new warehouse'}</span>
 	</a>
 
 	<div id="warehouse_accordion" style="margin-top:10px; display:block;">

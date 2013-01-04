@@ -24,7 +24,7 @@
 *}
 
 {capture assign='page_title'}
-	{l s='Search'}
+	{l s='Search:'}
 	{if $nbProducts > 0}
 		"{if isset($search_query) && $search_query}{$search_query|escape:'htmlall':'UTF-8'}{elseif $search_tag}{$search_tag|escape:'htmlall':'UTF-8'}{elseif $ref}{$ref|escape:'htmlall':'UTF-8'}{/if}"
 	{/if}
@@ -57,11 +57,11 @@
 {else}
 	<p class="warning">
 		{if isset($search_query) && $search_query}
-			{l s='No results found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
+			{l s='No results were found for your search'}&nbsp;"{if isset($search_query)}{$search_query|escape:'htmlall':'UTF-8'}{/if}"
 		{elseif isset($search_tag) && $search_tag}
-			{l s='No results found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
+			{l s='No results were found for your search'}&nbsp;"{$search_tag|escape:'htmlall':'UTF-8'}"
 		{else}
-			{l s='Please type a search keyword'}
+			{l s='Please enter a search keyword'}
 		{/if}
 	</p>
 {/if}

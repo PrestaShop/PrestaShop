@@ -58,7 +58,7 @@ class AdminShopControllerCore extends AdminController
 				'filter_key' => 'cl!name'
 			),
 			'url' => array(
-				'title' => $this->l('Shop main URL'),
+				'title' => $this->l('The shop\'s main URL'),
 				'havingFilter' => 'url',
 			),
 			/*'active' => array(
@@ -324,7 +324,7 @@ class AdminShopControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Shop name:'),
-					'desc' => $this->l('This field do not refer to the shop name visible on the front office.').' '.
+					'desc' => $this->l('This field does not refer to the shop name visible in the front office.').' '.
 						sprintf($this->l('Follow %sthis link%s to edit the shop name used on the front office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'">', '</a>'),
 					'name' => 'name',
 					'required' => true,
@@ -355,7 +355,7 @@ class AdminShopControllerCore extends AdminController
 			}
 
 			if ($this->display == 'add')
-				$group_desc = $this->l('Warning: you won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders');
+				$group_desc = $this->l('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.');
 			else
 				$group_desc = $this->l('You can only move your shop to a shop group with all "share" options disabled or to a shop group with no customers/orders.');
 
@@ -381,7 +381,7 @@ class AdminShopControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'textShopGroup',
 				'label' => $this->l('Shop group:'),
-				'desc' => $this->l('You can\'t edit the shop group because the current shop belongs to a group with a "share" option enabled.'),
+				'desc' => $this->l('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.'),
 				'name' => 'id_shop_group',
 				'value' => $group->name
 			);
@@ -412,7 +412,7 @@ class AdminShopControllerCore extends AdminController
 			'name' => 'categoryBox',
 			'label' => $this->l('Associated categories:'),
 			'category_tree' => $this->initCategoriesAssociation($parent),
-			'desc' => $this->l('By selecting categories associated, you choose to share the categories between different shops. Once associated between the shops, any alteration of an associated category will impact all the shops for which those categories will be associated.')
+			'desc' => $this->l('By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.')
 		);
 		/*$this->fields_form['input'][] = array(
 			'type' => 'radio',
@@ -433,7 +433,7 @@ class AdminShopControllerCore extends AdminController
 					'label' => $this->l('Disabled')
 				)
 			),
-			'desc' => $this->l('Enable or disable shop')
+			'desc' => $this->l('Enable or disable your store?')
 		);*/
 
 		$themes = Theme::getThemes();
@@ -463,20 +463,20 @@ class AdminShopControllerCore extends AdminController
 			$disabled = false;
 
 		$import_data = array(
-			'carrier' => $this->l('Carriers'),
+			'carrier' => $this->l('Carriers:'),
 			'cms' => $this->l('CMS page'),
 			'contact' => $this->l('Contact'),
 			'country' => $this->l('Countries'),
-			'currency' => $this->l('Currencies'),
+			'currency' => $this->l('Currencies:'),
 			'discount' => $this->l('Discounts'),
 			'employee' => $this->l('Employees'),
 			'image' => $this->l('Images'),
 			'lang' => $this->l('Langs'),
-			'manufacturer' => $this->l('Manufacturers'),
-			'module' => $this->l('Modules'),
+			'manufacturer' => $this->l('Manufacturers:'),
+			'module' => $this->l('modules'),
 			'hook_module' => $this->l('Module hooks'),
 			'meta_lang' => $this->l('Meta'),
-			'product' => $this->l('Products'),
+			'product' => $this->l('Products:'),
 			'product_attribute' => $this->l('Combinations'),
 			'scene' => $this->l('Scenes'),
 			'stock_available' => $this->l('Available quantities for sale'),
@@ -484,10 +484,10 @@ class AdminShopControllerCore extends AdminController
 			'warehouse' => $this->l('Warehouse'),
 			'webservice_account' => $this->l('Webservice accounts'),
 			'attribute_group' => $this->l('Attribute groups'),
-			'feature' => $this->l('Features'),
+			'feature' => $this->l('Features:'),
 			'group' => $this->l('Customer groups'),
 			'tax_rules_group' => $this->l('Tax rules groups'),
-			'supplier' => $this->l('Suppliers'),
+			'supplier' => $this->l('Suppliers:'),
 			'referrer' => $this->l('Referrers'),
 			'zone' => $this->l('Zones'),
 			'cart_rule' => $this->l('Cart rules'),
@@ -523,7 +523,7 @@ class AdminShopControllerCore extends AdminController
 					'label' => $this->l('Choose data to import'),
 					'values' => $import_data
 				),
-				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way for the selected shop')
+				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way for each selected shop.')
 			);
 
 		$this->fields_value = array(
@@ -665,7 +665,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,
-							'title' => sprintf($this->l('Click here to display shops of group %s'), $row['group_name']),
+							'title' => sprintf($this->l('Click here to display the shops in group %s'), $row['group_name']),
 						)
 					),
 					'attr' => array(
@@ -685,7 +685,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-shop.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&id_shop='.$id_shop,
-							'title' => sprintf($this->l('Click here to display URLs of shop %s'), $row['shop_name']),
+							'title' => sprintf($this->l('Click here to display the URLs of shops %s'), $row['shop_name']),
 						)
 					),
 					'attr' => array(

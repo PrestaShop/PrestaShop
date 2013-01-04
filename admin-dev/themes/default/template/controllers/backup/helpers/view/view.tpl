@@ -27,9 +27,9 @@
 
 {block name="override_tpl"}
 
-	<div class="conf">{l s='Beginning download ...'}</div>
+	<div class="conf">{l s='Beginning the download ...'}</div>
 
-	<p>{l s='Backup file should automatically download.'}</p>
+	<p>{l s='Backup files should automatically download.'}</p>
 
 	<p>{l s='If not,'} <b><a href="{$url_backup}">{l s='please click here!'}</a></b></p>
 

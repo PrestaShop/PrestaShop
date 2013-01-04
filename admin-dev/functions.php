@@ -265,7 +265,7 @@ function checkingTab($tab)
 	$adminObj = new $tab;
 	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR Context::getContext()->employee->id != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
 	{
-		$adminObj->_errors = array(Tools::displayError('Access denied'));
+		$adminObj->_errors = array(Tools::displayError('Access denied.'));
 		echo $adminObj->displayErrors();
 		return false;
 	}

@@ -43,7 +43,7 @@
 	</div>
 </div>
 <div id="apply_discount_to_div">
-	<label>{l s='Apply discount to'}</label>
+	<label>{l s='Apply a discount to'}</label>
 	<div class="margin-form">
 		&nbsp;&nbsp;
 		<input type="radio" name="apply_discount_to" id="apply_discount_to_order" value="order" {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == 0}checked="checked"{/if} />

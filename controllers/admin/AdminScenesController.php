@@ -153,13 +153,13 @@ class AdminScenesControllerCore extends AdminController
 					'type' => 'description',
 					'name' => 'description',
 					'label' => $this->l('How to map products in the image:'),
-					'text' => $this->l('When a customer hovers over the image with the mouse, a pop-up appears displaying a brief description of the product.').
-						$this->l('The customer can then click to open the product\'s full product page.').
+					'text' => $this->l('When a customer hovers over the image, a pop-up appears displaying a brief description of the product.').
+						$this->l('The customer can then click to open the full product page.').
 						$this->l('To achieve this, please define the \'mapping zone\' that, when hovered over, will display the pop-up.').
-						$this->l('Left-click with your mouse to draw the four-sided mapping zone, then release.').
-						$this->l('Then, begin typing the name of the associated product. A list of products appears.').
-						$this->l('Click the appropriate product, then click OK. Repeat these steps for each mapping zone you wish to create.').
-						$this->l('When you have finished mapping zones, click Save Image Map.')
+						$this->l('Left click with your mouse to draw the four-sided mapping zone, then release.').
+						$this->l('Then begin typing the name of the associated product, and  a list of products will appear.').
+						$this->l('Click the appropriate product and then click OK. Repeat these steps for each mapping zone you wish to create.').
+						$this->l('When you have finished mapping zones, click "Save Image Map."')
 				),
 				array(
 					'type' => 'text',

@@ -27,7 +27,7 @@
 						<th>{l s='Module Name'}</th>
 						<th>{l s='Description'}</th>
 						<th>{l s='Status'}</th>
-						<th>{l s='Categories'}</th>
+						<th>{l s='Categories:'}</th>
 						<th>{l s='Interest'}</th>
 						<th>{l s='Favorite'}</th>
 						<th>&nbsp;</th>

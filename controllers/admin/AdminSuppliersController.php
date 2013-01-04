@@ -68,7 +68,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Suppliers'),
+				'title' => $this->l('Suppliers:'),
 				'image' => '../img/admin/suppliers.gif'
 			),
 			'input' => array(
@@ -92,7 +92,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'rows' => 10,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Will appear in supplier list')
+					'desc' => $this->l('Will appear in the supplier list')
 				),
 				array(
 					'type' => 'text',
@@ -100,7 +100,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'phone',
 					'size' => 15,
 					'maxlength' => 16,
-					'desc' => $this->l('Phone number of this supplier')
+					'desc' => $this->l('Phone number for this supplier')
 				),
 				array(
 					'type' => 'text',
@@ -161,7 +161,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'desc' => $this->l('Upload supplier logo from your computer')
+					'desc' => $this->l('Upload a supplier logo from your computer')
 				),
 				array(
 					'type' => 'text',
@@ -183,7 +183,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
+					'desc' => $this->l('To add "tags" click in the field, write something and then press "Enter"')
 				),
 				array(
 					'type' => 'radio',
@@ -399,7 +399,7 @@ class AdminSuppliersControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
-				$this->errors[] = $this->l('It is not possible to delete a supplier if there are any pending supplier orders.');
+				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{
 				//delete all product_supplier linked to this supplier

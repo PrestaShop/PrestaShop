@@ -41,13 +41,13 @@
 					$('#note_feedback').html('').hide();
 					if (r == 'ok')
 					{
-						$('#note_feedback').html("<b style='color:green'>{l s='Your note has been saved'}</b>").fadeIn(400);
+						$('#note_feedback').html("<b style='color:green'>{l s='Your note has been saved.'}</b>").fadeIn(400);
 						$('#submitCustomerNote').attr('disabled', true);
 					}
 					else if (r == 'error:validation')
-						$('#note_feedback').html("<b style='color:red'>({l s='Error: your note is not valid'}</b>").fadeIn(400);
+						$('#note_feedback').html("<b style='color:red'>({l s='Error: Your note is not valid.'}</b>").fadeIn(400);
 					else if (r == 'error:update')
-						$('#note_feedback').html("<b style='color:red'>{l s='Error: cannot save your note'}</b>").fadeIn(400);
+						$('#note_feedback').html("<b style='color:red'>{l s='Error: Your note cannot be saved.'}</b>").fadeIn(400);
 					$('#note_feedback').fadeOut(3000);
 				}
 			});
@@ -82,22 +82,22 @@
 			</a>
 		</div>
 		{l s='Newsletter:'} {if $customer->newsletter}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
-		{l s='Opt-in:'} {if $customer->optin}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
+		{l s='Opt in:'} {if $customer->optin}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
 		{l s='Age:'} {$customer_stats['age']} {if isset($customer->birthday['age'])}({$customer_birthday}){else}{l s='unknown'}{/if}<br /><br />
 		{l s='Last update:'} {$last_update}<br />
 		{l s='Status:'} {if $customer->active}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}
 	
 		{if $customer->isGuest()}
 			<div>
-				{l s='This customer is registered as'} <b>{l s='guest'}</b>
+				{l s='This customer is registered as.'} <b>{l s='guest'}</b>
 				{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
 						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer account'}" /></p>
-						{l s='This feature generates a random password and sends an e-mail to the customer'}
+						{l s='This feature generates a random password before sending an email to your customer.'}
 					</form>
 				{else}
-					</div><div><b style="color:red;">{l s='A registered customer account already exists with this e-mail address'}</b>
+					</div><div><b style="color:red;">{l s='A registered customer account using the defined email address already exists. '}</b>
 				{/if}
 			</div>
 		{/if}
@@ -110,10 +110,10 @@
 		<h2>
 			<img src="../img/admin/cms.gif" /> {l s='Add a private note'}
 		</h2>
-		<p>{l s='This note will be displayed to all employees but not to the customer.'}</p>
+		<p>{l s='This note will be displayed to all employees but not to customers.'}</p>
 		<form action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" id="customer_note">
 			<textarea name="note" id="noteContent" style="width:600px;height:100px" onkeydown="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea><br />
-			<input type="submit" id="submitCustomerNote" class="button" value="{l s='   Save   '}" style="float:left;margin-top:5px" disabled="disabled" />
+			<input type="submit" id="submitCustomerNote" class="button" value="{l s='Save   '}" style="float:left;margin-top:5px" disabled="disabled" />
 			<span id="note_feedback" style="position:relative; top:10px; left:10px;"></span>
 		</form>
 	</div>
@@ -202,9 +202,9 @@
 					<tr>
 						<th height="39px" class="center">{l s='ID'}</th>
 						<th class="left">{l s='Date'}</th>
-						<th class="left">{l s='Payment'}</th>
+						<th class="left">{l s='Payment: '}</th>
 						<th class="left">{l s='State'}</th>
-						<th class="left">{l s='Products'}</th>
+						<th class="left">{l s='Products:'}</th>
 						<th class="left">{l s='Total spent'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
@@ -239,9 +239,9 @@
 					<tr>
 						<th height="39px" class="center">{l s='ID'}</th>
 						<th class="center">{l s='Date'}</th>
-						<th class="center">{l s='Payment'}</th>
+						<th class="center">{l s='Payment: '}</th>
 						<th class="center">{l s='State'}</th>
-						<th class="center">{l s='Products'}</th>
+						<th class="center">{l s='Products:'}</th>
 						<th class="center">{l s='Total spent'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
@@ -266,7 +266,7 @@
 	
 	{if $products AND count($products)}
 	<div class="clear">&nbsp;</div>
-		<h2>{l s='Products'} ({count($products)})</h2>
+		<h2>{l s='Products:'} ({count($products)})</h2>
 		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 					<colgroup>
 						<col width="50px">
@@ -394,13 +394,13 @@
 				{/foreach}
 			</table>
 		{else}
-			{l s='No cart available'}.
+			{l s='No cart is available'}.
 		{/if}
 	</div>
 	
 	{if count($interested)}
 		<div>
-		<h2>{l s='Products'} ({count($interested)})</h2>
+		<h2>{l s='Products:'} ({count($interested)})</h2>
 			<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 				<colgroup>
 					<col width="10px">

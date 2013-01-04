@@ -106,7 +106,7 @@
 				if ($(this).attr('name') == 'category_reduction['+$('[name="id_category"]:checked').val()+']')
 				{
 					exist = true;
-					jAlert('{l s='This category already exist for this group'}');
+					jAlert('{l s='This category already exists for this group.'}');
 					return false;
 				}
 				
@@ -182,10 +182,10 @@
 		<div style="display:none" id="group_discount_category_fancybox">
 			<fieldset style="text-align:left"><legend><img src="../img/admin/tab-groups.gif" />{l s='New group category discount'}</legend>
 				<div class="hintGroup" style="font-size: 13px;">
-					{l s='Caution: the discount applied to a category does not stack with the overall reduction but instead replaces it.'}
+					{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}
 				</div>
 				{$categoryTreeView}
-				<div class="warn">{l s='Only products that have this category as the default category will be affected'}</div>
+				<div class="warn">{l s='Only products that have this category as the default category will be affected.'}</div>
 				<div class="clear">&nbsp;</div>
 				<label>{l s='Discount (%):'}</label>
 				<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" size="33">

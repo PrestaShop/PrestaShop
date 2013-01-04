@@ -39,5 +39,5 @@
 		{include file='./sitemap.tpl'}
 	</div><!-- #content -->
 {else}
-	<p class="warning">{l s='No price drop.'}</p>
+	<p class="warning">{l s='No price drop'}</p>
 {/if}

@@ -53,16 +53,16 @@ class AdminGeolocationControllerCore extends AdminController
 						'title' => $this->l('Geolocation behavior for restricted countries'),
 						'type' => 'select',
 						'identifier' => 'key',
-						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order'))),
+						'list' => array(array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog.')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order.'))),
 					),
 		 			'PS_GEOLOCATION_NA_BEHAVIOR' => array(
 						'title' => $this->l('Geolocation behavior for other countries'),
 						'type' => 'select',
 						'identifier' => 'key',
 						'list' => array(array('key' => '-1', 'name' => $this->l('All features are available')),
-										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog')),
-										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order')))
+										array('key' => _PS_GEOLOCATION_NO_CATALOG_, 'name' => $this->l('Visitors cannot see your catalog.')),
+										array('key' => _PS_GEOLOCATION_NO_ORDER_, 'name' => $this->l('Visitors can see your catalog but cannot place an order.')))
 					),
 				),
 			),
@@ -139,7 +139,7 @@ class AdminGeolocationControllerCore extends AdminController
 		if (!$this->isGeoLiteCityAvailable())
 			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
-				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory'));
+				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory.'));
 
 		parent::initContent();
 	}

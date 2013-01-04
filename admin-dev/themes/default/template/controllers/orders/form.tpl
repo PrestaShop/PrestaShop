@@ -33,7 +33,7 @@
 	var currencies = new Array();
 	var id_currency = '';
 	var id_lang = '';
-	var txt_show_carts = '{l s='Show carts and orders for this customer'}';
+	var txt_show_carts = '{l s='Show carts and orders for this customer.'}';
 	var txt_hide_carts = '{l s='Hide carts and orders for this customer'}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
@@ -111,7 +111,7 @@
 					},
 					parse: function(data) {
 						if (!data.found)
-							$('#vouchers_err').html('{l s='No voucher found'}').show();
+							$('#vouchers_err').html('{l s='No voucher was found'}').show();
 						else
 							$('#vouchers_err').hide();
 						var mytab = new Array();
@@ -680,7 +680,7 @@
 
 		$.each(gifts, function() {
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td>';
-			cart_content += '<td>{l s='Gift !'}</td><td>'+this.cart_quantity+'</td><td>{l s='Gift !'}</td></tr>';
+			cart_content += '<td>{l s='Gift'}</td><td>'+this.cart_quantity+'</td><td>{l s='Gift'}</td></tr>';
 		});
 		$('#customer_cart tbody').html(cart_content);
 	}
@@ -981,7 +981,7 @@
 	<label>{l s='Search customers:'}</label>
 	<div class="margin-form">
 		<input type="text" id="customer" value="" />
-		<p>{l s='Search a customer by tapping the first letters of his name'}</p>
+		<p>{l s='Search a customer by tapping the first letters of his/her name'}</p>
 		<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')|escape:'htmlall':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
 			<img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span>
 		</a>
@@ -996,7 +996,7 @@
 		<div class="margin-form">
 			<input type="hidden" value="" id="id_cart" name="id_cart" />
 			<input type="text" id="product" value="" />
-			<p>{l s='Search a product by tapping the first letters of his name'}</p>
+			<p>{l s='Search a product by tapping the first letters of his/her name.'}</p>
 		</div>
 		<div id="products_found">
 			<div id="product_list">
@@ -1111,9 +1111,9 @@
 						<tr>
 							<th height=39px" class="left">{l s='ID'}</th>
 							<th class="left">{l s='Date'}</th>
-							<th class="left">{l s='Products'}</th>
+							<th class="left">{l s='Products:'}</th>
 							<th class="left">{l s='Total paid'}</th>
-							<th class="left">{l s='Payment'}</th>
+							<th class="left">{l s='Payment: '}</th>
 							<th class="left">{l s='Status'}</th>
 							<th class="left">{l s='Action'}</th>
 						</tr>
@@ -1129,7 +1129,7 @@
 <fieldset id="vouchers_part" style="display:none;">
 	<legend><img src="../img/t/AdminCartRules.gif" />{l s='Vouchers'}</legend>
 	<p>
-		<label>{l s='Search a voucher:'} </label>
+		<label>{l s='Search for a voucher:'} </label>
 		<input type="text" id="voucher" value="" />
 		<a class="fancybox button" href="{$link->getAdminLink('AdminCartRules')|escape:'htmlall':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
 	</p>
@@ -1167,11 +1167,11 @@
 		<div id="address_invoice_detail">
 		</div>
 	</div>
-<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a>
+<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'htmlall':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add a new address'}</a>
 </fieldset>
 <br />
 <fieldset id="carriers_part" style="display:none;">
-	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
+	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping:'}</legend>
 	<div id="carriers_err" style="display:none;" class="warn"></div>
 	<div id="carrier_form">
 		<div>
@@ -1219,7 +1219,7 @@
 			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 		</div>
 		<div class="margin-form">
-			<a href="#" id="send_email_to_customer" class="button">{l s='Send an e-mail to the customer with the link to process the payment.'}</a>
+			<a href="#" id="send_email_to_customer" class="button">{l s='Send an email to the customer with the link to process the payment.'}</a>
 		</div>
 		<div class="margin-form">
 			<a target="_blank" id="go_order_process" href="" class="button">{l s='Go on payment page to process the payment.'}</a>

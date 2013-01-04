@@ -93,7 +93,7 @@ class AdminLanguagesControllerCore extends AdminController
 			'enableSelection' => array('text' => $this->l('Enable selection')),
 			'disableSelection' => array('text' => $this->l('Disable selection'))
 			);
-		$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to delete this language?');
+		$this->specificConfirmDelete = $this->l('When you delete a language, all related translations in the database will be deleted. Are you sure you want to proceed?');
 
 		parent::__construct();
 	}
@@ -135,7 +135,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 2,
-					'desc' => $this->l('2-letter ISO code (e.g. fr, en, de)')
+					'desc' => $this->l('Two-letter ISO code (e.g. FR, EN, DE)')
 				),
 				array(
 					'type' => 'text',
@@ -144,7 +144,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 2,
 					'maxlength' => 5,
-					'desc' => $this->l('Full language code (e.g. en-us, pt-br)')
+					'desc' => $this->l('Full language code (e.g. EN-US, PT-BR)')
 				),
 				array(
 					'type' => 'text',
@@ -152,7 +152,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_lite',
 					'required' => true,
 					'size' => 15,
-					'desc' => $this->l('Short date format (e.g. Y-m-d, d/m/Y)')
+					'desc' => $this->l('Short date format (e.g. YY-MM-DD)')
 				),
 				array(
 					'type' => 'text',
@@ -160,20 +160,20 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_full',
 					'required' => true,
 					'size' => 25,
-					'desc' => $this->l('Full date format (e.g., Y-m-d H:i:s, d/m/Y H:i)')
+					'desc' => $this->l('Full date format (e.g., YYYY-MM-DD)')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Flag:'),
 					'name' => 'flag',
 					'required' => true,
-					'desc' => $this->l('Upload country flag from your computer')
+					'desc' => $this->l('Upload the country flag from your computer')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('"No-picture" image:'),
 					'name' => 'no-picture',
-					'desc' => $this->l('Image displayed when "no picture found"')
+					'desc' => $this->l('Image is displayed when "no picture is found"')
 				),
 				array(
 					'type' => 'radio',
@@ -216,12 +216,12 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Allow or disallow this language to be selected by the customer')
+					'desc' => $this->l('Activate this language')
 				),
 				array(
 					'type' => 'special',
 					'name' => 'resultCheckLangPack',
-					'text' => $this->l('Check if a language pack is available for this ISO code...'),
+					'text' => $this->l('Check to see if a language pack is available for this ISO code.'),
 					'img' => 'ajax-loader.gif'
 				)
 			)
@@ -237,7 +237,7 @@ class AdminLanguagesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -286,7 +286,7 @@ class AdminLanguagesControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
 					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
-						$this->errors[] = $this->l('You cannot delete the default language');
+						$this->errors[] = $this->l('You cannot delete the default language.');
 					else if ($object->id == $this->context->language->id)
 						$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 					else if ($this->deleteNoPictureImages((int)Tools::getValue('id_lang')) && $object->delete())
@@ -308,9 +308,9 @@ class AdminLanguagesControllerCore extends AdminController
 		 	if ($this->tabAccess['delete'] === '1')
 			{
 				if (in_array(Configuration::get('PS_LANG_DEFAULT'), $_POST[$this->table.'Box']))
-					$this->errors[] = $this->l('You cannot delete the default language');
+					$this->errors[] = $this->l('You cannot delete the default language.');
 				else if (in_array($this->context->language->id, $_POST[$this->table.'Box']))
-					$this->errors[] = $this->l('you cannot delete the language currently in use, please change languages before deleting');
+					$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
 				else
 				{
 				 	foreach ($_POST[$this->table.'Box'] as $language)
@@ -497,7 +497,7 @@ class AdminLanguagesControllerCore extends AdminController
 			else
 			{
 				$this->status = 'error';
-				$this->errors[] = $this->l('wrong ISO code or language pack unavailable');
+				$this->errors[] = $this->l('Wrong ISO code, or the selectec language pack is unavailable.');
 			}
 		}
 		else

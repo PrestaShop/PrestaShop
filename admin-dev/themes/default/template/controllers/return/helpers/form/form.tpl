@@ -29,12 +29,12 @@
 	{if $input.type == 'text_customer'}
 		<span class="normal-text">{$customer->firstname} {$customer->lastname}</span>
 		<p style="clear: both">
-			<a href="{$url_customer}">{l s='View details on customer page'}</a>
+			<a href="{$url_customer}">{l s='View details on the customer page'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
 		<span class="normal-text">{$text_order}</span>
 		<p style="clear: both">
-			<a href="{$url_order}">{l s='View details on order page'}</a>
+			<a href="{$url_order}">{l s='View details on the order page'}</a>
 		</p>
 	{elseif $input.type == 'list_products'}
 		<table cellpadding="0" cellspacing="0">

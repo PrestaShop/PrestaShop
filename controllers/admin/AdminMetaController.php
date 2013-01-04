@@ -58,15 +58,15 @@ class AdminMetaControllerCore extends AdminController
 		$general_fields = array(
 			'PS_REWRITING_SETTINGS' => array(
 				'title' => $this->l('Friendly URL'),
-				'desc' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended)') : ''),
+				'desc' => ($mod_rewrite ? $this->l('Enable only if your server allows URL rewriting (recommended).') : ''),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'rewriting_settings',
 				'mod_rewrite' => $mod_rewrite
 			),
 			'PS_CANONICAL_REDIRECT' => array(
-				'title' => $this->l('Automatically redirect to Canonical URL'),
-				'desc' => $this->l('Recommended, but your theme must be compliant'),
+				'title' => $this->l('Automatically redirect to the canonical URL.'),
+				'desc' => $this->l('Recommended, but your theme must be compliant.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool'
@@ -77,7 +77,7 @@ class AdminMetaControllerCore extends AdminController
 		if ($this->checkConfiguration($this->ht_file))
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
 				'title' => $this->l('Disable apache multiviews'),
-				'desc' => $this->l('Enable this option only if you have problems with URL rewriting on some pages.'),
+				'desc' => $this->l('Enable this option only if you have problems with URL rewriting.'),
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
@@ -85,22 +85,22 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$url_description = $this->l('Before being able to use this tool, you need to:');
-			$url_description .= '<br />- '.$this->l('create a blank .htaccess in your root directory');
-			$url_description .= '<br />- '.$this->l('give it write permissions (CHMOD 666 on Unix system)');
+			$url_description .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+			$url_description .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		// Options to generate robot.txt
 		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
-			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase your old robots.txt file):');
+			$robots_description .= '<br />'.$this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
 			$robots_submit = array('name' => 'submitRobots', 'title' => $this->l('Generate robots.txt file'));
 		}
 		else
 		{
 			$robots_description .= '<br />'.$this->l('Before being able to use this tool, you need to:');
-			$robots_description .= '<br />- '.$this->l('create a blank robots.txt file in your root directory');
-			$robots_description .= '<br />- '.$this->l('give it write permissions (CHMOD 666 on Unix system)');
+			$robots_description .= '<br />- '.$this->l('Create a blank robots.txt file in your root directory.');
+			$robots_description .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system)');
 		}
 
 		$robots_options = array(
@@ -122,7 +122,7 @@ class AdminMetaControllerCore extends AdminController
 			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
 			if ($this->url)
 			{
-				$shop_url_options['description'] = $this->l('You can set here the URL for your shop. If you migrate your shop to a new URL, remember to change the values bellow.');
+				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values bellow.');
 				$shop_url_options['fields'] = array(
 					'domain' => array(
 						'title' =>	$this->l('Shop domain'),
@@ -149,7 +149,7 @@ class AdminMetaControllerCore extends AdminController
 			}
 		}
 		else
-			$shop_url_options['description'] = $this->l('Multistore option is enabled, if you want to change the URL of your shop you have to go to "Multistore" page under the "Advanced Parameters"  menu.');
+			$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 
 		// List of options
 		$this->fields_options = array(
@@ -167,7 +167,7 @@ class AdminMetaControllerCore extends AdminController
 		{
 			$this->fields_options['routes'] = array(
 				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add some text before or after the keyword IF the keyword is not empty with syntax {prepend:keyword:append}, for example {-hey-:meta_title} will add "-hey-my-title" in URL if meta title is set, or nothing. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add text before or after the keyword if the keyword is not empty with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
 				'fields' => array()
 			);
 			$this->addAllRouteFields();
@@ -284,7 +284,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('List of keywords for search engines').' '.$this->l('To add "tags" click in the field, write something, then press "Enter"'), 
+					'desc' => $this->l('List of keywords for search engines').' '.$this->l('To add "tags," click in the field, write something, and then press "Enter."'), 
 					'size' => 50
 				),
 				array(

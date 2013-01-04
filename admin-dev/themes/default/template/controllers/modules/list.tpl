@@ -68,7 +68,7 @@
 										<dl class="">
 											<dt>{l s='Version'} :</dt>
 											<dd>{$module->version} 
-												{if isset($module->version_addons)}({l s='Update'} {$module->version_addons} {l s='available on PrestaShop Addons'}){/if}
+												{if isset($module->version_addons)}({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'}){/if}
 											</dd>|
 										</dl>
 										<dl class="">

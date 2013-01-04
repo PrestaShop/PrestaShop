@@ -192,7 +192,7 @@ class BlockAdvertising extends Module
 				<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label>
 				<div class="margin-form">
 					<input id="adv_img" type="file" name="adv_img" />
-					<p>'.$this->l('Image will be displayed as 155x163.').'</p>
+					<p>'.$this->l('Image will be displayed as 155x163').'</p>
 				</div>
 				<br class="clear"/>
 				<label for="adv_link">'.$this->l('Image link').'</label>

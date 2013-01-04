@@ -4,13 +4,13 @@ global $_MODULE;
 $_MODULE = array();
 
 $_MODULE['<{statsforecast}prestashop>statsforecast_03727ac48595a24daed975559c944a44'] = 'Jour';
-$_MODULE['<{statsforecast}prestashop>statsforecast_7442e29d7d53e549b78d93c46b8cdcfc'] = 'Com.';
+$_MODULE['<{statsforecast}prestashop>statsforecast_12c500ed0b7879105fb46af0f246be87'] = 'Com.';
 $_MODULE['<{statsforecast}prestashop>statsforecast_11ff9f68afb6b8b5b8eda218d7c83a65'] = 'CA';
 $_MODULE['<{statsforecast}prestashop>statsforecast_b1897515d548a960afe49ecf66a29021'] = 'Moyenne';
 $_MODULE['<{statsforecast}prestashop>statsforecast_5a9e532b24379dca2ab0e973172a78e1'] = 'Visiteurs inscrits';
 $_MODULE['<{statsforecast}prestashop>statsforecast_e55f75a29310d7b60f7ac1d390c8ae42'] = 'Module';
 $_MODULE['<{statsforecast}prestashop>statsforecast_3adbdb3ac060038aa0e6e6c138ef9873'] = 'Catégorie';
-$_MODULE['<{statsforecast}prestashop>statsforecast_e6d0e1c8fc6a4fcf47869df87e04cd88'] = 'Clients';
+$_MODULE['<{statsforecast}prestashop>statsforecast_4b6f7d34a58ba399f077685951d06738'] = 'Clients';
 $_MODULE['<{statsforecast}prestashop>statsforecast_699aed86dada6ca01ef74013a4464066'] = 'Évolution';
 $_MODULE['<{statsforecast}prestashop>statsforecast_28e81c8343702f6c813cc31a7f90616a'] = 'Répartition par devises';
 $_MODULE['<{statsforecast}prestashop>statsforecast_61569923d8075889a162c4e603258e6e'] = 'CA (converti)';

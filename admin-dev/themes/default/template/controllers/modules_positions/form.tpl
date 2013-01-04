@@ -88,8 +88,8 @@
 					{$value}
 				{/foreach}
 			{/if}
-			{l s='Please specify the files for which you do not want the module to be displayed'}.<br />
-			{l s='Please type each filename separated by a comma'}.
+			{l s='Please specify the files for which you do not want the module to be displayed.'}.<br />
+			{l s='Please input each filename, separated by a comma.'}.
 			<br /><br />
 		</div>
 	

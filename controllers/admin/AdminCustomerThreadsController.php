@@ -66,7 +66,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'tmpTableFilter' => true,
 			),
 			'email' => array(
-				'title' => $this->l('E-mail'),
+				'title' => $this->l('Email:'),
 				'width' => 100,
 				'filter_key' => 'a!email',
 			),
@@ -130,13 +130,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'title' =>	$this->l('Contact options'),
 				'fields' =>	array(
 					'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-							'title' => $this->l('Allow file upload'),
-							'desc' => $this->l('Allow customers to upload file using contact page'),
+							'title' => $this->l('Allow file uploading'),
+							'desc' => $this->l('Allow customers to upload files using the contact page.'),
 							'type' => 'bool'
 						),
 					'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
 							'title' => $this->l('Default message'),
-							'desc' => $this->l('Please fill the message that appears by default when you answer a thread on the customer service page'),
+							'desc' => $this->l('Please fill out the message fields that appear by default when you answer a thread on the customer service page.'),
 							'type' => 'textareaLang',
 							'lang' => true,
 							'rows' => 10,
@@ -167,44 +167,44 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					),
 					'PS_SAV_IMAP_PWD' => array(
 						'title' => $this->l('IMAP password'),
-						'desc' => $this->l('Password to use to connect IMAP server'),
+						'desc' => $this->l('Password used to connect IMAP server'),
 						'type' => 'text',
 						'size' => 40,
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Delete messages'),
-						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will be longer'),
+						'desc' => $this->l('Delete messages after sync. If you do not active this option, the sync will take more time.'),
 						'type' => 'bool',
 					),
 					'PS_SAV_IMAP_OPT_NORSH' => array(
 						'title' => $this->l('IMAP options').' (/norsh)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP session'),
+						'desc' => $this->l('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.'),
 					),
 					'PS_SAV_IMAP_OPT_SSL' => array(
 						'title' => $this->l('IMAP options').' (/ssl)',
 						'type' => 'bool',
-						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session'),
+						'desc' => $this->l('Use the Secure Socket Layer to encrypt the session.'),
 					),
 					'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/validate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Validate certificates from TLS/SSL server'),
+						'desc' => $this->l('Validate certificates from the TLS/SSL server'),
 					),
 					'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
 						'title' => $this->l('IMAP options').' (/novalidate-cert)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not validate certificates from TLS/SSL server, needed if server uses self-signed certificates'),
+						'desc' => $this->l('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates'),
 					),
 					'PS_SAV_IMAP_OPT_TLS' => array(
 						'title' => $this->l('IMAP options').' (/tls)',
 						'type' => 'bool',
-						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it'),
+						'desc' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.'),
 					),
 					'PS_SAV_IMAP_OPT_NOTLS' => array(
 						'title' => $this->l('IMAP options').' (/notls)',
 						'type' => 'bool',
-						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it'),
+						'desc' => $this->l('Do not use start-TLS to encrypt the session, even with servers that support it.'),
 					),
 				),
 				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
@@ -478,40 +478,40 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($next_thread)
 			$actions['next_thread'] = array(
 				'href' => self::$currentIndex.'&id_customer_thread='.(int)$next_thread.'&viewcustomer_thread&token='.$this->token,
-				'name' => $this->l('Reply to the next unanswered message in this category')
+				'name' => $this->l('Reply to the next unanswered message in this category.')
 			);
 		else
 			$actions['next_thread'] = array(
 				'href' => false,
-				'name' => $this->l('All other messages in this category have been answered')
+				'name' => $this->l('All other messages in this category have been answered.')
 			);
 
 		if ($thread->status != 'closed')
 			$actions['closed'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=2&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as handled')
+				'name' => $this->l('Mark this message as handled.')
 			);
 
 		if ($thread->status != 'pending1')
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=3&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as "pending 1" (will be answered later)')
+				'name' => $this->l('Mark this message as "pending 1" (will be answered later).')
 			);
 		else
 			$actions['pending1'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Disable pending status')
+				'name' => $this->l('Disable pending status.')
 			);
 
 		if ($thread->status != 'pending2')
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=4&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Mark this message as "pending 2" (will be answered later)')
+				'name' => $this->l('Mark this message as "pending 2" (will be answered later).')
 			);
 		else
 			$actions['pending2'] = array(
 				'href' => self::$currentIndex.'&viewcustomer_thread&setstatus=1&id_customer_thread='.(int)Tools::getValue('id_customer_thread').'&viewmsg&token='.$this->token,
-				'name' => $this->l('Disable pending status')
+				'name' => $this->l('Disable pending status.')
 			);
 
 		if ($thread->id_customer)

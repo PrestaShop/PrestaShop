@@ -186,10 +186,10 @@
 			<div class="button_multishipping_mode" id="multishipping_mode_box">
 				<div class="title">{l s='Multi-shipping'}</div>
 				<div class="description">
-					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I want to specify a delivery address for each product I order.'}</label>
+					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I\'d like to specify a delivery address for each product ordered.'}</label>
 				</div>
 				<div class="description_off">
-					<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}">
+					<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery address(es)'}">
 						{l s='Specify a delivery address for each product.'}
 					</a>
 				</div>
@@ -247,7 +247,7 @@
 		</p>
 		{if !$opc}
 		<div id="ordermsg" class="clearfix">
-			<p class="txt">{l s='If you would like to add a comment about your order, please write it below.'}</p>
+			<p class="txt">{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 			<p class="textarea"><textarea cols="60" rows="3" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea></p>
 		</div>
 		{/if}

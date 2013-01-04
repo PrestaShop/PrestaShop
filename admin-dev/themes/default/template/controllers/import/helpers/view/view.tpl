@@ -33,7 +33,7 @@
 	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
 	<div>
-		<b>{l s='Save and load your matching configuration'} : </b><br><br>
+		<b>{l s='Save and load your configuration for importing files'} : </b><br><br>
 		<input type="text" name="newImportMatchs" id="newImportMatchs">
 		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br><br>
 		<div id="selectDivImportMatchs" {if !$import_matchs}style="display:none"{/if}>

@@ -33,7 +33,7 @@
 	<hr />
 
 	{if !count($addresses)}
-		{l s='No address for this manufacturer'}
+		{l s='No address has been found for this manufacturer.'}
 	{else}
 		{foreach $addresses AS $addresse}
 			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width: 600px;">

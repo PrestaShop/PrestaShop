@@ -67,8 +67,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product' js=1}";
-	var txtProducts = "{l s='products' js=1}";
+	var txtProduct = "{l s='Product' js=1}";
+	var txtProducts = "{l s='Products' js=1}";
 	var txtSelectAnAddressFirst = "{l s='Please start by selecting an address' js=1}";
 	{/if}
 
@@ -191,7 +191,7 @@
 		</p>
 		{if !$opc}
 		<div id="ordermsg" class="clearfix">
-			<p class="txt">{l s='If you would like to add a comment about your order, please write it below.'}</p>
+			<p class="txt">{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 			<p class="textarea"><textarea cols="60" rows="3" name="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea></p>
 		</div>
 		{/if}

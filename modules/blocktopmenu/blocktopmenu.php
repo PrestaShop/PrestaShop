@@ -233,14 +233,14 @@ class Blocktopmenu extends Module
 		$this->_html .= '</optgroup>';
 
 		// BEGIN Categories
-		$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
+		$this->_html .= '<optgroup label="'.$this->l('Categories:').'">';
 		$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
 		$this->_html .= '</optgroup>';
 		
 		// BEGIN Shops
 		if (Shop::isFeatureActive())
 		{
-			$this->_html .= '<optgroup label="'.$this->l('Shops').'">';
+			$this->_html .= '<optgroup label="'.$this->l('Shops:').'">';
 			$shops = Shop::getShopsCollection();
 			foreach ($shops as $shop)
 			{
@@ -252,7 +252,7 @@ class Blocktopmenu extends Module
 		}
 		
 		// BEGIN Products
-		$this->_html .= '<optgroup label="'.$this->l('Products').'">';
+		$this->_html .= '<optgroup label="'.$this->l('Products:').'">';
 		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose ID product').'</option>';
 		$this->_html .= '</optgroup>';
 
