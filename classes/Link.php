@@ -35,6 +35,8 @@ class LinkCore
 	public $protocol_content;
 
 	protected $ssl_enable;
+	
+	protected static $category_disable_rewrite = null;
 
 	/**
 	  * Constructor (initialization only)
@@ -50,6 +52,9 @@ class LinkCore
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+		
+		if (Link::$category_disable_rewrite === null)
+			Link::$category_disable_rewrite = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
 
 		$this->ssl_enable = Configuration::get('PS_SSL_ENABLED');
 	}
@@ -134,7 +139,7 @@ class LinkCore
 			$params['category'] = (!$category) ? $product->category : $category;
 			$cats = array();
 			foreach ($product->getParentCategories() as $cat)
-				if (!in_array($cat['id_category'], array(1, 2)))//remove root and home category from the URL
+				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
 					$cats[] = $cat['link_rewrite'];
 			$params['categories'] = implode('/', $cats);
 		}
