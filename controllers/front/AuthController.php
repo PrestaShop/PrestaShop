@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -386,9 +386,10 @@ class AuthControllerCore extends FrontController
 				if (!Tools::getValue('phone'))
 					$error_phone = true;
 			}
-			elseif (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE') && (!Tools::getValue('phone') || !Tools::getValue('phone_mobile')))
+			elseif ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) && (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
 				$error_phone = true;
 		}
+
 		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		
