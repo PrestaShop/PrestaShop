@@ -215,7 +215,7 @@ $(function(){ldelim}
 			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other}{/if}{/if}</textarea>
 		</p>
 		{if $one_phone_at_least}
-			<p class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
+			<p class="inline-infos required">{l s='You must register at least one phone number.'} <sup class="required">*</sup></p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
@@ -226,7 +226,7 @@ $(function(){ldelim}
 			<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile}{/if}{/if}" />
 		</p>
 		<p class="required text" id="adress_alias">
-			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
 			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias}{else if isset($select_address)}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

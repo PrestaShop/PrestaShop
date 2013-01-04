@@ -40,7 +40,7 @@ class Blockcontactinfos extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block contact infos');
+		$this->displayName = $this->l('Block contact info');
 		$this->description = $this->l('Add a block to add some information about contacting the shop');
 	}
 	

@@ -51,12 +51,12 @@
 			</p>
 
 			<div id="message_forward_email" style="display:none">
-				<b>{l s='E-mail'}</b> <input type="text" name="email" />
+				<b>{l s='Email:'}</b> <input type="text" name="email" />
 			</div>
 
 			<div id="message_forward" style="display:none;margin-bottom:10px">
 				<textarea name="message_forward" style="width:500px;height:80px;margin-top:15px;">{l s='You can add a comment here.'}</textarea><br />
-				<input type="Submit" name="submitForward" class="button" value="{l s='Forward this discussion'}" style="margin-top: 10px;" />
+				<input type="Submit" name="submitForward" class="button" value="{l s='Forward this discussion.'}" style="margin-top: 10px;" />
 			</div>
 
 		</fieldset>
@@ -74,9 +74,9 @@
 						<tr>
 							<th class="center">{l s='ID'}</th>
 							<th class="center">{l s='Date'}</th>
-							<th class="center">{l s='Products'}</th>
+							<th class="center">{l s='Products:'}</th>
 							<th class="center">{l s='Total paid'}</th>
-							<th class="center">{l s='Payment'}</th>
+							<th class="center">{l s='Payment: '}</th>
 							<th class="center">{l s='State'}</th>
 							<th class="center">{l s='Actions'}</th>
 						</tr>
@@ -106,7 +106,7 @@
 		{/if}
 		{if $products && count($products)}
 			<div>
-				<h2>{l s='Products'}</h2>
+				<h2>{l s='Products:'}</h2>
 				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
 						<th class="center">{l s='Date'}</th>

@@ -123,7 +123,7 @@ class AdminCmsControllerCore extends AdminController
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'size' => 70,
-					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
+					'desc' => $this->l('To add "tags" click in the field, write something, and then press "Enter."')
 				),
 				array(
 					'type' => 'text',

@@ -100,7 +100,7 @@
 		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
 		<label class="radioCheck" for="pack_product">{l s='Pack'}</label>
 		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking and downloadable products)'}</label>
+		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking or downloadable products)'}</label>
 	</div>
 
 	<div class="separation"></div>
@@ -237,7 +237,7 @@
 			<ul class="listForm">
 				<li>
 					<input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-					<label for="available_for_order" class="t">{l s='available for order'}</label>
+					<label for="available_for_order" class="t">{l s='Available for order'}</label>
 				</li>
 			<li>
 				<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
@@ -245,7 +245,7 @@
 			</li>
 			<li>
 				<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-				<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
+				<label for="online_only" class="t">{l s='Online only (not sold in store)'}</label>
 			</li>
 			</ul>
 		</td>
@@ -271,7 +271,7 @@
 				<td class="col-left">
 					{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
 					<label>{l s='Short description:'}<br /></label>
-					<p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p>
+					<p class="product_description">({l s='Appears in the product list(s), and on the top of the product page.'})</p>
 				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl"
@@ -286,7 +286,7 @@
 				<td class="col-left">
 					{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
 					<label>{l s='Description:'}<br /></label>
-					<p class="product_description">({l s='appears in the body of the product page'})</p>
+					<p class="product_description">({l s='Appears in the body of the product page'})</p>
 				</td>
 				<td style="padding-bottom:5px;">
 						{include file="controllers/products/textarea_lang.tpl" languages=$languages

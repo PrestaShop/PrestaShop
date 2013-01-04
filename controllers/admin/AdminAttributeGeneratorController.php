@@ -222,7 +222,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		$this->toolbar_btn['back'] = array(
 			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
-			'desc' => $this->l('Back to product')
+			'desc' => $this->l('Back to the product')
 		);
 	}
 
@@ -230,7 +230,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'
+			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'
 				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
 					$this->l('Performance').'</a>');
 			return;

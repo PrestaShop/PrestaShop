@@ -62,11 +62,11 @@
 	var txtHasBeenSelected = "{l s='has been selected' js=1}";
 	var txtNoCarrierIsSelected = "{l s='No carrier has been selected' js=1}";
 	var txtNoCarrierIsNeeded = "{l s='No carrier is needed for this order' js=1}";
-	var txtConditionsIsNotNeeded = "{l s='No terms of service must be accepted' js=1}";
-	var txtTOSIsAccepted = "{l s='Terms of Service have been accepted' js=1}";
-	var txtTOSIsNotAccepted = "{l s='Terms of service have not been accepted' js=1}";
+	var txtConditionsIsNotNeeded = "{l s='You do not need to accept the Terms of Service for this order.' js=1}";
+	var txtTOSIsAccepted = "{l s='The service terms have been accepted' js=1}";
+	var txtTOSIsNotAccepted = "{l s='The service terms have not been accepted' js=1}";
 	var txtThereis = "{l s='There is' js=1}";
-	var txtErrors = "{l s='error(s)' js=1}";
+	var txtErrors = "{l s='Error(s)' js=1}";
 	var txtDeliveryAddress = "{l s='Delivery address' js=1}";
 	var txtInvoiceAddress = "{l s='Invoice address' js=1}";
 	var txtModifyMyAddress = "{l s='Modify my address' js=1}";

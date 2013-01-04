@@ -14,7 +14,7 @@ $_MODULE['<{blocksupplier}prestashop>blocksupplier_00d23a76e43b46dae9ec7aa9dcbeb
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_6a7f245843454cf4f28ad7c5e2572aa2'] = 'éléments';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_e7968f07cac2995b0dd917475a04b8be'] = 'Afficher les fournisseurs sous forme de liste';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_b0fa976774d2acf72f9c62e9ab73de38'] = 'Utiliser un menu déroulant';
-$_MODULE['<{blocksupplier}prestashop>blocksupplier_1814d65a76028fdfbadab64a5a8076df'] = 'Fournisseurs';
+$_MODULE['<{blocksupplier}prestashop>blocksupplier_a00e46e856e637f8fd077b4fd710c9e2'] = 'Fournisseurs';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_ecf253735ac0cba84a9d2eeff1f1b87c'] = 'Tous les fournisseurs';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{blocksupplier}prestashop>blocksupplier_efc027d2b1bb88bea7bd7eff273ca4c0'] = 'Ajoute un bloc affichant les fournisseurs.';

@@ -62,7 +62,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'cron' => array(
 				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
-				'info' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. Place this URL in crontab or access it manually daily').':<br />
+				'info' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually.').':<br />
 					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
 			)
 		);
@@ -98,7 +98,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus character are allowed')
+					'hint' => $this->l('Only letters and the minus character are allowed.')
 				),
 				array(
 					'type' => 'text',
@@ -138,7 +138,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Formatting:'),
+					'label' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1 Euro) to this currency. For example, if the default currency is Euros and this currency is Dollars, type \'1.20\''),
 					'name' => 'format',
 					'size' => 3,
 					'maxlength' => 11,
@@ -231,7 +231,7 @@ class AdminCurrenciesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 

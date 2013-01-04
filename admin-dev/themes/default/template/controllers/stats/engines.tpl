@@ -38,7 +38,7 @@
 				</select>
 
 			{else}
-				{l s='No graph engine module installed'}
+				{l s='No graph engine module has been installed.'}
 			{/if}
 		</div>
 
@@ -51,7 +51,7 @@
 					{/foreach}
 				</select>
 			{else}
-				{l s='No grid engine module installed'}
+				{l s='No grid engine module has been installed.'}
 			{/if}
 		</div>
 

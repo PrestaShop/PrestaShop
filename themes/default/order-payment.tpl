@@ -39,7 +39,7 @@
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 
-{if !$opc}<h1>{l s='Choose your payment method'}</h1>{else}<h2><span>3</span> {l s='Choose your payment method'}</h2>{/if}
+{if !$opc}<h1>{l s='Please choose your payment method'}</h1>{else}<h2><span>3</span> {l s='Please choose your payment method'}</h2>{/if}
 
 {if !$opc}
 	{assign var='current_step' value='payment'}
@@ -116,12 +116,12 @@
 				<td colspan="5">
 				{if $use_taxes}
 					{if $priceDisplay}
-						{if $display_tax_label}{l s='Total gift-wrapping (tax excl.):'}{else}{l s='Total gift-wrapping:'}{/if}
+						{if $display_tax_label}{l s='Total gift wrapping (tax excl.):'}{else}{l s='Total gift wrapping cost:'}{/if}
 					{else}
-						{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift-wrapping:'}{/if}
+						{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift wrapping cost:'}{/if}
 					{/if}
 				{else}
-					{l s='Total gift-wrapping:'}
+					{l s='Total gift wrapping cost:'}
 				{/if}
 				</td>
 				<td class="price-discount price" id="total_wrapping">

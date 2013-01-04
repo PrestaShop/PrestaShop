@@ -27,7 +27,7 @@
 {block name="description"}
 	{$smarty.block.parent}
 	{if $input.type == 'text' && $input.name == 'key'}
-		<input type="button" value="{l s='   Generate!   '}" class="button" onclick="gencode(32)" />
+		<input type="button" value="{l s='Generate!   '}" class="button" onclick="gencode(32)" />
 	{/if}
 {/block}
 

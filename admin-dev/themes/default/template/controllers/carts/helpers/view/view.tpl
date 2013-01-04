@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 	
 	<div id="container-customer">
-		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='on'} {$cart->date_upd}</span></h2>
+		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='On'} {$cart->date_upd}</span></h2>
 				<div class="separation"></div>
 	
 	<div class="info-customer-left">
@@ -54,15 +54,15 @@
 			<br /><br />
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
-			{l s='No order created from this cart'}</span>
-			{if $customer->id}<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order with from cart'}</a></p>{/if}
+			{l s='No order was created from this cart.'}</span>
+			{if $customer->id}<p><a class="button" href="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&id_cart={$cart->id}&addorder">{l s='Create an order from this cart.'}</a></p>{/if}
 		{/if}
 	</div>
 	<br style="clear:both;" />
 				<div class="separation"></div>
 				
 
-	<h2><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Cart summary'}</h2>
+	<h2><img src="../img/admin/cart.gif" alt="{l s='Products:'}" />{l s='Cart summary'}</h2>
 	<br/>
 		<table style="width:100%;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
 		<thead>
@@ -150,7 +150,7 @@
 		{/if}
 		{if $total_wrapping > 0}
 			<tr class="cart_total_voucher">
-				<td colspan="5">{l s='Total gift-wrapping:'}</td>
+				<td colspan="5">{l s='Total cost of gift wrapping:'}</td>
 				<td class="price-discount bold right">{displayWtPriceWithCurrency price=$total_wrapping currency=$currency}</td>
 			</tr>
 		{/if}
@@ -181,7 +181,7 @@
 	</table>
 	{/if}
 	<div style="float:left; margin-top:15px;">
-	{l s='For this customer\'s group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='tax excluded'}{else}{l s='tax included'}{/if}</b>
+	{l s='For this particular customer group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='Tax excluded'}{else}{l s='Tax included'}{/if}</b>
 </div>
 	
 	<div class="clear" style="height:20px;">&nbsp;</div>

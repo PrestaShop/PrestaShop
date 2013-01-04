@@ -53,10 +53,10 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
-			'lastname' => array('title' => $this->l('Last name'), 'width' => 140, 'filter_key' => 'a!lastname'),
+			'firstname' => array('title' => $this->l('First Name'), 'width' => 120, 'filter_key' => 'a!firstname'),
+			'lastname' => array('title' => $this->l('Last Name'), 'width' => 140, 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),
-			'postcode' => array('title' => $this->l('Postal Code/Zip Code'), 'align' => 'right', 'width' => 80),
+			'postcode' => array('title' => $this->l('Zip/Postal Code'), 'align' => 'right', 'width' => 80),
 			'city' => array('title' => $this->l('City'), 'width' => 150),
 			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
@@ -141,7 +141,7 @@ class AdminAddressesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -208,7 +208,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Last name'),
+					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true,
@@ -228,7 +228,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('First name'),
+					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
@@ -260,7 +260,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code'),
+					'label' => $this->l('Zip/Postal Code'),
 					'name' => 'postcode',
 					'size' => 33,
 					'required' => true,

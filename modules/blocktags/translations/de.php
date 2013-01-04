@@ -5,7 +5,7 @@ $_MODULE = array();
 
 $_MODULE['<{blocktags}prestashop>blocktags_a332910d45d955dad6c84817fe478e95'] = 'Fügt einen Block mit einer Tag-Cloud hinzu';
 $_MODULE['<{blocktags}prestashop>blocktags_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
-$_MODULE['<{blocktags}prestashop>blocktags_189f63f277cd73395561651753563065'] = 'Tags';
+$_MODULE['<{blocktags}prestashop>blocktags_32b502f33a535f75dcbf63f6753c631e'] = 'Tags';
 $_MODULE['<{blocktags}prestashop>blocktags_73293a024e644165e9bf48f270af63a0'] = 'Ungültige Anzahl.';
 $_MODULE['<{blocktags}prestashop>blocktags_49fa2426b7903b3d4c89e2c1874d9346'] = 'Mehr darüber';
 $_MODULE['<{blocktags}prestashop>blocktags_f2568a62d4ac8d1d5b532556379772ba'] = 'Tags Block';

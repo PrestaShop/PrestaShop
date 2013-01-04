@@ -76,7 +76,7 @@ class AdminStockCoverControllerCore extends AdminController
 				'width' => 160,
 				'orderby' => false,
 				'search' => false,
-				'hint' => $this->l('Days left before you run out of stock.'),
+				'hint' => $this->l('Days left before your stock runs out.'),
 			),
 			'stock' => array(
 				'title' => $this->l('Quantity'),
@@ -213,7 +213,7 @@ class AdminStockCoverControllerCore extends AdminController
 			'warn_days' => $this->getCurrentWarning()
 		);
 
-		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,'));
+		$this->displayInformation($this->l('Considering the coverage period chosen and the quantity of products/combinations that you sold.'));
 		$this->displayInformation($this->l('this interface gives you an idea of when a product will run out of stock.'));
 
 		return parent::renderList();
@@ -356,7 +356,7 @@ class AdminStockCoverControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initContent();
@@ -366,7 +366,7 @@ class AdminStockCoverControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initProcess();	

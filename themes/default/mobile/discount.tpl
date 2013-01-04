@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{l s='My Vouchers'}{/capture}
+{capture assign='page_title'}{l s='My vouchers'}{/capture}
 {include file='./page-title.tpl'}
 
 <div data-role="content" id="content">
@@ -59,7 +59,7 @@
 				</td>
 				<td class="discount_minimum">
 					{if $discountDetail.minimal == 0}
-						{l s='none'}
+						{l s='None'}
 					{else}
 						{convertPrice price=$discountDetail.minimal}
 					{/if}
@@ -80,7 +80,7 @@
 		*{l s='Tax included'}
 	</p>
 	{else}
-		<p class="warning">{l s='You do not possess any vouchers.'}</p>
+		<p class="warning">{l s='You do not have any vouchers.'}</p>
 	{/if}
 	
 </div><!-- /content -->

@@ -170,10 +170,10 @@ class AdminHomeControllerCore extends AdminController
 
 		$shop = Context::getContext()->shop;
 		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
-			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This is different from the main shop domain name set in "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
+			$this->displayWarning($this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
+			$this->l('This is different from the main shop domain name set in the "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
-			$this->l('Click here if you want to modify the main shop domain name').'</a>');
+			$this->l('Click here if you want to modify your main shop\'s domain name.').'</a>');
 	}
 
 	protected function getQuickLinks()
@@ -184,7 +184,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminStats')]['view'])
 			$quick_links['first'] = array(
 				'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
-				'title' => $this->l('Products sold recently'),
+				'title' => $this->l('Recently sold products.'),
 				'description' => $this->l('Create a new category and organize your catalog.'),
 			);
 		
@@ -219,7 +219,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCartRules')]['add'])
 			$quick_links['sixth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-				'title' => $this->l('New Price Rule for cart'),
+				'title' => $this->l('New price rule for cart'),
 				'description' => $this->l('Add new cart rule.'),
 			);
 			
@@ -234,7 +234,7 @@ class AdminHomeControllerCore extends AdminController
 			$quick_links['eighth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
 				'title' => $this->l('Abandoned Carts'),
-				'description' => $this->l('View your customer carts.'),
+				'description' => $this->l('View your customer\'s carts.'),
 			);
 		return $quick_links;
 	}
@@ -457,7 +457,7 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
 		{
 			$result['result'] = 'ok';
-			$result['msg'] = $this->l('Optimization Tips will be hidden by default');
+			$result['msg'] = $this->l('Optimization Tips will be hidden by default.');
 		}
 		else
 		{

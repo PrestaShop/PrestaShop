@@ -28,7 +28,7 @@
 {include file="$tpl_dir./errors.tpl"}
 
 <h1>{l s='Order history'}</h1>
-<p>{l s='Here are the orders you have placed since the creation of your account'}.</p>
+<p>{l s='Here are the orders you\'ve placed since your account was created.'}.</p>
 
 {if $slowValidation}<p class="warning">{l s='If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.'}</p>{/if}
 
@@ -37,10 +37,10 @@
 	<table id="order-list" class="std">
 		<thead>
 			<tr>
-				<th class="first_item">{l s='Order Reference'}</th>
+				<th class="first_item">{l s='Order reference'}</th>
 				<th class="item">{l s='Date'}</th>
 				<th class="item">{l s='Total price'}</th>
-				<th class="item">{l s='Payment'}</th>
+				<th class="item">{l s='Payment: '}</th>
 				<th class="item">{l s='Status'}</th>
 				<th class="item">{l s='Invoice'}</th>
 				<th class="last_item" style="width:65px">&nbsp;</th>

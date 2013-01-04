@@ -294,7 +294,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					'name' => 'link_rewrite',
 					'required' => true,
 					'lang' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed')
+					'hint' => $this->l('Only letters and the minus (-) character are allowed.')
 				),
 			),
 			'submit' => array(

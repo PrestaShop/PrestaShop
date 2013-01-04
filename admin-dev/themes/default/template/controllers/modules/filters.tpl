@@ -29,12 +29,12 @@
 			<!--start addons login-->
 			<div class="filter-module" id="addons_login_div">
 		
-				<p>{l s='You are logged into PrestaShop Addons'}</p>
+				<p>{l s='You are logged into PrestaShop Addons.'}</p>
 				
 				<div style="float:right">				
 					<label><img src="themes/default/img/module-profile.png" /> {l s='Welcome'} {$username_addons}</label>
 					<label>|</label>
-					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Log out from PrestaShop Addons'}</a></label>
+					<label><a href="#" id="addons_logout_button"><img src="themes/default/img/module-logout.png" /> {l s='Log out from PrestaShop Addons.'}</a></label>
 				</div>
 
 			</div>
@@ -76,7 +76,7 @@
 	<div class="filter-module">
 		<form id="filternameForm" method="post">
 			<input type="text" value="" name="filtername" autocomplete="off" class="ac_input">
-			<input type="submit" class="button" value="{l s='Search'}">
+			<input type="submit" class="button" value="{l s='Search:'}">
 		</form>
 
 		<form method="post">
@@ -101,7 +101,7 @@
 					<select name="module_install" id="module_install_filter" {if $showInstalledModules ne 'installedUninstalled' && $showInstalledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Not Installed'}</option>
 						<option value="installed" {if $showInstalledModules eq 'installed'}selected="selected"{/if}>{l s='Installed Modules'}</option>
-						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Not Installed Modules'}</option>
+						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Modules Not Installed '}</option>
 					</select>
 					&nbsp;
 					<select name="module_status" id="module_status_filter" {if $showEnabledModules ne 'enabledDisabled' && $showEnabledModules ne ''}style="background-color:#49B2FF;color:white;"{/if}>

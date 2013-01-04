@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture assign='page_title'}{l s='Payment'}{/capture}
+{capture assign='page_title'}{l s='Payment: '}{/capture}
 {include file='./page-title.tpl'}
 
 <div data-role="content">

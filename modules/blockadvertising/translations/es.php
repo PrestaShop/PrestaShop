@@ -5,7 +5,7 @@ $_MODULE = array();
 
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_6e7be6d836003f069c00cd217660913b'] = 'Configuración del bloque de publicidad';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_83b5a65e518c21ed0a5f2b383dd9b617'] = 'Eliminar la imagen';
-$_MODULE['<{blockadvertising}prestashop>blockadvertising_936823d20c5582b055bccdc6fd03b9d1'] = 'La imagen se mostrará como 155x163.';
+$_MODULE['<{blockadvertising}prestashop>blockadvertising_56d9dfa26d7848a3fbcd2ae3091d38d9'] = 'La imagen se mostrará como 155x163.';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_b78a3223503896721cca1303f776159b'] = 'Título';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_226ed577d0eff50725be6447bcd5a2f0'] = 'error al desplazar el fichero uploado';
 $_MODULE['<{blockadvertising}prestashop>blockadvertising_a21056e22c4d62b400b5dd96dafe22a3'] = 'No puede suprimir la imagen por defecto (pero puede cambiarla abajo) ';
