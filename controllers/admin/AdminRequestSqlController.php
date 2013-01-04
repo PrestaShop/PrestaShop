@@ -104,14 +104,14 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->display = null;
 		$this->initToolbar();
 
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
+		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" is allowed.'));
 		$this->displayInformation('
-		<strong>'.$this->l('How to create a new sql query?').'</strong><br />
+		<strong>'.$this->l('How do I create a new sql query?').'</strong><br />
 		<ul>
-			<li>'.$this->l('Click "Add new".').'</li>
+			<li>'.$this->l('Click "Add New".').'</li>
 			<li>'.$this->l('Fill in the fields and click "Save".').'</li>
 			<li>'.$this->l('You can then view the query results by clicking on the tab:').' <img src="../img/admin/details.gif" /></li>
-			<li>'.$this->l('You can then export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
+			<li>'.$this->l('You can also export the query results as CSV file by clicking on the tab:').' <img src="../img/admin/export.gif" /></li>
 		</ul>');
 
 		$this->addRowAction('export');

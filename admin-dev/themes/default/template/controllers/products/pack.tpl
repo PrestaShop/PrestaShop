@@ -43,7 +43,7 @@
 			<div id="ppackdiv" {if !($product_type == Product::PTYPE_PACK)}style="display: none;"{/if}>
 
 				<label for="curPackItemName" style="width:560px;text-align:left;">
-					{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
+					{l s='Begin typing the first letters of the product name. Then select the product from the drop-down list:'}
 				</label><br /><br />
 
 				<input type="text" size="25" id="curPackItemName" />

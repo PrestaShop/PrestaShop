@@ -32,13 +32,13 @@
 	{if !empty($limit_warning)}
 	<div class="warn">
 		{if $limit_warning['error_type'] == 'suhosin'}
-			{l s='Warning, your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields to post in a form:'}
+			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
 
 			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
 		{else}
-			{l s='Warning, your PHP configuration limits the maximum number of fields to post in a form:'}<br/>
+			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}<br/>
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
 			{l s='Please ask your hosting provider to increase the this limit to'}
 		{/if}
@@ -87,12 +87,12 @@
 				</div>
 			</div>
 
-			<h2>{l s='Core e-mails:'}</h2>
-			<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
+			<h2>{l s='Core emails:'}</h2>
+			<p class="preference_description">{l s='List of emails in the folder'} <strong>"mails/{$lang|strtolower}/"</strong></p>
 			{$mail_content}
 
-			<h2>{l s='Module e-mails:'}</h2>
-			<p class="preference_description">{l s='List of emails which are in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
+			<h2>{l s='Module emails:'}</h2>
+			<p class="preference_description">{l s='List of emails in the folder'} <strong>"modules/name_of_module/mails/{$lang|strtolower}/"</strong></p>
 			{foreach $module_mails as $module_name => $mails}
 				{$mails['display']}
 			{/foreach}

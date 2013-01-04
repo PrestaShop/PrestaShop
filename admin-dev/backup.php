@@ -39,7 +39,7 @@ if ($tabAccess['view'] !== '1')
 $backupdir = realpath(_PS_ADMIN_DIR_ . '/backups/');
 
 if ($backupdir === false)
-	die (Tools::displayError('Backups directory does not exist.'));
+	die (Tools::displayError('"Backup" directory does not exist.'));
 
 if (!$backupfile = Tools::getValue('filename'))
 	die (Tools::displayError('No file specified'));

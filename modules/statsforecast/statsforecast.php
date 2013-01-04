@@ -140,7 +140,7 @@ class StatsForecast extends Module
 					<th style="width:70px;text-align:center"></th>
 					<th style="text-align:center">'.$this->l('Visits').'</th>
 					<th style="text-align:center">'.$this->l('Reg.').'</th>
-					<th style="text-align:center">'.$this->l('Orders').'</th>
+					<th style="text-align:center">'.$this->l('orders').'</th>
 					<th style="text-align:center">'.$this->l('Items').'</th>
 					<th style="text-align:center">'.$this->l('% Reg.').'</th>
 					<th style="text-align:center">'.$this->l('% Orders').'</th>
@@ -195,7 +195,7 @@ class StatsForecast extends Module
 					<th style="width:70px;text-align:center"></th>
 					<th style="text-align:center">'.$this->l('Visits').'</th>
 					<th style="text-align:center">'.$this->l('Reg.').'</th>
-					<th style="text-align:center">'.$this->l('Orders').'</th>
+					<th style="text-align:center">'.$this->l('orders').'</th>
 					<th style="text-align:center">'.$this->l('Items').'</th>
 					<th style="text-align:center">'.$this->l('% Reg.').'</th>
 					<th style="text-align:center">'.$this->l('% Orders').'</th>
@@ -296,7 +296,7 @@ class StatsForecast extends Module
 			</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Full carts').'<br />'.$fullcarts.'</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px"><img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $orders / max(1, $fullcarts)).' %</span>
-			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Orders').'<br />'.$orders.'</span>
+			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('orders').'<br />'.$orders.'</span>
 			</div>
 			
 			<div class="separation"></div>
@@ -305,7 +305,7 @@ class StatsForecast extends Module
 			<span style="float:left;text-align:center;margin-right:10px">
 				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $customers), 2).' % <img src="../modules/'.$this->name.'/next.png">
 			</span>
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
+			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('orders').'</span>
 			</div>
 			
 						<div class="separation"></div>
@@ -315,7 +315,7 @@ class StatsForecast extends Module
 			<span style="float:left;text-align:center;margin-right:10px">
 				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $visitors), 2).' % <img src="../modules/'.$this->name.'/next.png">
 			</span>
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
+			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('orders').'</span>
 			
 			</div>
 					<div class="separation"></div>
@@ -382,7 +382,7 @@ class StatsForecast extends Module
 		<br />
 		<div class="blocStats"><h2 class="icon-language"><span></span>'.$this->l('Language distribution').'</h2>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
-				<tr><th>'.$this->l('Customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
+				<tr><th>'.$this->l('customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
 		foreach ($ca['lang'] as $ophone => $amount)
 		{
 			$percent = (int)($ca['langprev'][$ophone]) ? number_format((100 * $amount / $ca['langprev'][$ophone]) - 100, 1, '.', ' ') : '&#x221e;';

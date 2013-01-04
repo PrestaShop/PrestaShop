@@ -32,7 +32,7 @@
 	<div>
 		{if isset($multipleAddresses) && $multipleAddresses}
 		<h3>{l s='Your addresses are listed below.'}</h3>
-		<p>{l s='Be sure to update them if they have changed.'}</p>
+		<p>{l s='Be sure to update your personal information if it has changed.'}</p>
 		{assign var="adrs_style" value=$addresses_style}
 		<form action="opc.html" method="post">
 			<ul data-role="listview" data-theme="g">
@@ -53,9 +53,9 @@
 			</ul>
 		</form>
 		{else}
-		<p class="warning">{l s='No addresses available.'}</p>
+		<p class="warning">{l s='No addresses are available.'}</p>
 	{/if}
-		<a href="{$link->getPageLink('address', true)}" data-role="button" data-theme="a" data-ajax="false">{l s='Add new address'}</a>
+		<a href="{$link->getPageLink('address', true)}" data-role="button" data-theme="a" data-ajax="false">{l s='Add a new address'}</a>
 	</div>
 	
 	{include file='./sitemap.tpl'}

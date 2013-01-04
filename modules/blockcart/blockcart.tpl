@@ -139,7 +139,7 @@ var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
 		
 		<p id="cart-prices">
 			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
-			<span>{l s='Shipping' mod='blockcart'}</span>
+			<span>{l s='Shipping:' mod='blockcart'}</span>
 			<br/>
 			{if $show_wrapping}
 				{assign var='cart_flag' value='Cart::ONLY_WRAPPING'|constant}

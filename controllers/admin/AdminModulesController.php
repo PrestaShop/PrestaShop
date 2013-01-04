@@ -74,24 +74,24 @@ class AdminModulesControllerCore extends AdminController
 
 		// Set the modules categories
 		$this->list_modules_categories['administration']['name'] = $this->l('Administration');
-		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising & Marketing');
-		$this->list_modules_categories['analytics_stats']['name'] = $this->l('Analytics & Stats');
-		$this->list_modules_categories['billing_invoicing']['name'] = $this->l('Billing & Invoicing');
+		$this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
+		$this->list_modules_categories['analytics_stats']['name'] = $this->l('Analytics and Stats');
+		$this->list_modules_categories['billing_invoicing']['name'] = $this->l('Billing and Invoicing');
 		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
 		$this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
 		$this->list_modules_categories['emailing']['name'] = $this->l('E-mailing');
 		$this->list_modules_categories['front_office_features']['name'] = $this->l('Front Office Features');
-		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization & Localization');
+		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
 		$this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandizing');
 		$this->list_modules_categories['migration_tools']['name'] = $this->l('Migration Tools');
-		$this->list_modules_categories['payments_gateways']['name'] = $this->l('Payments & Gateways');
+		$this->list_modules_categories['payments_gateways']['name'] = $this->l('Payments and Gateways');
 		$this->list_modules_categories['payment_security']['name'] = $this->l('Payment Security');
-		$this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing & Promotion');
+		$this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing and Promotion');
 		$this->list_modules_categories['quick_bulk_update']['name'] = $this->l('Quick / Bulk update');
-		$this->list_modules_categories['search_filter']['name'] = $this->l('Search & Filter');
+		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter');
 		$this->list_modules_categories['seo']['name'] = $this->l('SEO');
-		$this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping & Logistics');
+		$this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping and Logistics');
 		$this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
 		$this->list_modules_categories['smart_shopping']['name'] = $this->l('Smart Shopping');
 		$this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
@@ -448,7 +448,7 @@ class AdminModulesControllerCore extends AdminController
 	 	if ($this->tabAccess['add'] === '1')
 		{
 			if (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name']))
-				$this->errors[] = $this->l('no file selected');
+				$this->errors[] = $this->l('No file has been selected');
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
 				$this->errors[] = Tools::displayError('Unknown archive type');
@@ -560,7 +560,7 @@ class AdminModulesControllerCore extends AdminController
 
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
-						$this->errors[] = $this->l('module not found');
+						$this->errors[] = $this->l('Module not found');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install a module.');
 					elseif ($key == 'uninstall' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
@@ -988,7 +988,7 @@ class AdminModulesControllerCore extends AdminController
 						$object = new $module->name();
 						$module_success[] = array('name' => $module->name, 'message' => array(
 							0 => $this->l('Current version:').$object->version,
-							1 => $this->l('No file upgrades applied (none exist)'))
+							1 => $this->l('No file upgrades applied (none exist).'))
 						);
 					}
 					else

@@ -23,10 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Suppliers'}{/capture}
+{capture name=path}{l s='Suppliers:'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
-<h1>{l s='Suppliers'}</h1>
+<h1>{l s='Suppliers:'}</h1>
 
 {if isset($errors) AND $errors}
 	{include file="$tpl_dir./errors.tpl"}

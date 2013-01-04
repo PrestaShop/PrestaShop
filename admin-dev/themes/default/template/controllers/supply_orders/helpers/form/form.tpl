@@ -35,10 +35,10 @@
 	<fieldset>
 		<legend>
 			<img alt="Supply Order Management" src="../img/admin/edit.gif">
-			{l s='Manage the products you want to order from your supplier'}
+			{l s='Manage the products you want to order from the supplier.'}
 		</legend>
 
-		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list:'}</p>
+		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select it from the drop-down list.'}</p>
 		<input type="text" size="100" id="cur_product_name" />
 		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supply order'}" title="{l s='Add a product to the supply order'}" /></span>
 
@@ -106,7 +106,7 @@
 									</td>
 									<td class="center">
 										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplyOrderLink">
-											<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />
+											<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order.'}" title="{l s='Remove this product from the order.'}" />
 										</a>
 									</td>
 								</tr>
@@ -158,7 +158,7 @@
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><a href="#" class="removeProductFromSupplyOrderLink" id="deletelink|'+product_infos.id+'">'+
-				'<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />'+
+				'<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order.'}" title="{l s='Remove this product from the order.'}" />'+
 				'</a></td></tr>'
 			);
 

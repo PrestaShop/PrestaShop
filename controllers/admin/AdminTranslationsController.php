@@ -254,7 +254,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
-				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Check directory writing permisions.'), $path);
+				$this->errors[] = sprintf($this->l('Cannot create the folder "%s". Please check your directory writing permisions.'), $path);
 			}
 
 		return $bool;
@@ -330,13 +330,13 @@ class AdminTranslationsControllerCore extends AdminController
 	public function submitCopyLang()
 	{
 		if (!($from_lang = Tools::getValue('fromLang')) || !($to_lang = Tools::getValue('toLang')))
-			$this->errors[] = $this->l('You must select 2 languages in order to copy data from one to another');
+			$this->errors[] = $this->l('You must select two languages in order to copy data from one to another.');
 		else if (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme')))
-			$this->errors[] = $this->l('You must select 2 themes in order to copy data from one to another');
+			$this->errors[] = $this->l('You must select two themes in order to copy data from one to another.');
 		else if (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
-			$this->errors[] = $this->l('An error occurred while copying data');
+			$this->errors[] = $this->l('An error occurred while copying data.');
 		else if ($from_lang == $to_lang && $from_theme == $to_theme)
-			$this->errors[] = $this->l('Nothing to copy! (same language and theme)');
+			$this->errors[] = $this->l('There is nothing to copy (same language and theme).');
 		else
 		{
 			$theme_exists = array('from_theme' => false, 'to_theme' => false);
@@ -365,7 +365,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		if ($bool)
 			$this->redirect(false, 14);
-		$this->errors[] = $this->l('A part of the data has been copied but some language files could not be found or copied');
+		$this->errors[] = $this->l('A part of the data has been copied but some of the language files could not be found.');
 	}
 
 	/**
@@ -1137,7 +1137,7 @@ class AdminTranslationsControllerCore extends AdminController
 				)
 			),
 			'mails' => array(
-				'name' => $this->l('E-mail template translations'),
+				'name' => $this->l('Email template translations'),
 				'var' => '_LANGMAIL',
 				'dir' => _PS_MAIL_DIR_.$this->lang_selected->iso_code.'/',
 				'file' => 'lang.php',
@@ -1529,8 +1529,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$language_code = Tools::htmlentitiesUTF8(Language::getLanguageCodeByIso(Tools::getValue('lang')));
 		return array('language_code' => $language_code,
-					 'not_available' => addslashes(html_entity_decode($this->l('this language is not available in Google Translate\'s API'), ENT_QUOTES, 'utf-8')),
-					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests:'), ENT_QUOTES, 'utf-8'))
+					 'not_available' => addslashes(html_entity_decode($this->l('This language is not available in Google Translate\'s API'), ENT_QUOTES, 'utf-8')),
+					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google Translate suggests :'), ENT_QUOTES, 'utf-8'))
 					);
 	}
 
@@ -1783,7 +1783,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						if (empty($english_string))
 						{
-							$this->errors[] = sprintf($this->l('Error in template - Empty string found, please edit: "%s"'), $file_path);
+							$this->errors[] = sprintf($this->l('There\'s an error in template,  an empty string  has been found. Please edit: "%s"'), $file_path);
 							$new_lang[$english_string] = '';
 						}
 						else
@@ -2154,7 +2154,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						$str_return .= '
 						<div class="label-subject">
-							<b>'.sprintf($this->l('No Subject was found for %s, or subject is generated in database.'), '<em>'.$mail_name.'</em>').'</b>
+							<b>'.sprintf($this->l('No Subject was found for %s in the database.'), '<em>'.$mail_name.'</em>').'</b>
 						</div>';
 					}
 					if (array_key_exists('html', $mail_files))
@@ -2172,7 +2172,7 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 		{
 			$str_return .= '
-				<p class="error">'.$this->l('There is a problem getting the Mail files.').'<br />'
+				<p class="error">'.$this->l('There was a problem getting the mail files.').'<br />'
 				.sprintf($this->l('Please ensure that English files exist in %s folder'), '<em>'.$mails['directory'].'en</em>')
 				.'</p>';
 		}
@@ -2251,7 +2251,7 @@ class AdminTranslationsControllerCore extends AdminController
 				</div><!-- .label-subject -->';
 		$str_return .= '
 				<iframe style="background:white;border:1px solid #DFD5C3;" border="0" src ="'.$url.'?'.(rand(0, 1000000000)).'" width="565" height="497"></iframe>
-					<a style="display:block;margin-top:5px;width:130px;" href="#" onclick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="button">'.$this->l('Edit this e-mail template').'</a>
+					<a style="display:block;margin-top:5px;width:130px;" href="#" onclick="$(this).parent().hide(); displayTiny($(this).parent().next()); return false;" class="button">'.$this->l('Edit this email template.').'</a>
 				</div>
 				<textarea style="display:none;" class="rte mailrte" cols="80" rows="30" name="'.$group_name.'[html]['.$name_for_module.$mail_name.']">'.$content[$lang].'</textarea>
 			</div><!-- .mail-form -->
@@ -2339,7 +2339,7 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			$module_mails[$module_name] = $this->getMailFiles($module_path.'mails/'.$this->lang_selected->iso_code.'/', 'module_mail');
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
-			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), sprintf($this->l('E-mails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
+			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), sprintf($this->l('Emails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
 		}
 
 		if ($no_display)
@@ -2359,7 +2359,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
 			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
 			'tinyMCE' => $this->getTinyMCEForMails($this->lang_selected->iso_code),
-			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $this->lang_selected, 'core', $this->l('Core e-mails')),
+			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $this->lang_selected, 'core', $this->l('Core emails')),
 			'module_mails' => $module_mails,
 			'theme_name' => $this->theme_selected
 		));

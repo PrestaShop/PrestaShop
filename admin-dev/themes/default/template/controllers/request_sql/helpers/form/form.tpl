@@ -76,7 +76,7 @@
 							html += "<tr>";
 								html += "<td>"+data[i].Field+"</td>";
 								html += "<td>"+data[i].Type+"</td>";
-								html += "<td><input type=\"button\" class=\"add_attribute\" value=\"{l s='add attribute'}\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\"/></td>";
+								html += "<td><input type=\"button\" class=\"add_attribute\" value=\"{l s='Add attribute'}\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\"/></td>";
 							html += "</tr>";
 						}
 						html += "</tbody>";
@@ -90,7 +90,7 @@
 			var table = $('#selectTables select').val();
 
 			if (!table)
-				jAlert("{l s='Please choose table.'}");
+				jAlert("{l s='Please choose a table.'}");
 			else
 				AddRequestSql(table);
 		});

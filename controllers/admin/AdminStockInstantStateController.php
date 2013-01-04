@@ -94,7 +94,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'width' => 80,
 				'orderby' => true,
 				'search' => false,
-				'hint' => $this->l('Pysical qty (usable) - Clients orders + Supply Orders'),
+				'hint' => $this->l('Pysical quantity (usable) - Client orders + Supply Orders'),
 			),
 		);
 
@@ -152,7 +152,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->ajax_params = array('id_warehouse' => $this->getCurrentCoverageWarehouse());
 
 		// displays help information
-		$this->displayInformation($this->l('This interface allows you to display detailed information on your stock per warehouse.'));
+		$this->displayInformation($this->l('This interface allows you to display detailed information about your stock per warehouse.'));
 
 		// sets toolbar
 		$this->initToolbar();
@@ -446,7 +446,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initContent();
@@ -456,7 +456,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
 		parent::initProcess();	

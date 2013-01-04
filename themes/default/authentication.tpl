@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Login'}{/capture}
+{capture name=path}{l s='Login:'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <script type="text/javascript">
@@ -71,7 +71,7 @@ $(function(){ldelim}
 {/if}
 </script>
 
-<h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create your account'}{/if}</h1>
+<h1>{if !isset($email_create)}{l s='Log in'}{else}{l s='Create an account'}{/if}</h1>
 
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
@@ -142,7 +142,7 @@ $(function(){ldelim}
 	<!--{if isset($authentification_error)}
 	<div class="error">
 		{if {$authentification_error|@count} == 1}
-			<p>{l s='There is one error'} :</p>
+			<p>{l s='There\'s at least one error'} :</p>
 			{else}
 			<p>{l s='There are %s errors' sprintf=[$account_error|@count]} :</p>
 		{/if}
@@ -155,18 +155,18 @@ $(function(){ldelim}
 	{/if}-->
 	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std">
 		<fieldset>
-			<h3>{l s='Create your account'}</h3>
+			<h3>{l s='Create an account'}</h3>
 			<div class="form_content clearfix">
-				<p class="title_block">{l s='Enter your e-mail address to create an account'}.</p>
+				<p class="title_block">{l s='Please enter your email address to create an account.'}.</p>
 				<div class="error" id="create_account_error" style="display:none"></div>
 				<p class="text">
-					<label for="email_create">{l s='E-mail address'}</label>
+					<label for="email_create">{l s='Email address'}</label>
 					<span><input type="text" id="email_create" name="email_create" value="{if isset($smarty.post.email_create)}{$smarty.post.email_create|stripslashes}{/if}" class="account_input" /></span>
 				</p>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-					<input type="submit" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create your account'}" />
-					<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create your account'}" />
+					<input type="submit" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create an account'}" />
+					<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create an account'}" />
 				</p>
 			</div>
 		</fieldset>
@@ -177,7 +177,7 @@ $(function(){ldelim}
 			<h3>{l s='Already registered?'}</h3>
 			<div class="form_content clearfix">
 				<p class="text">
-					<label for="email">{l s='E-mail address'}</label>
+					<label for="email">{l s='Email address'}</label>
 					<span><input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" class="account_input" /></span>
 				</p>
 				<p class="text">
@@ -200,7 +200,7 @@ $(function(){ldelim}
 			<div id="opc_account_form" style="display: block; ">
 				<!-- Account -->
 				<p class="required text">
-					<label for="guest_email">{l s='E-mail address'} <sup>*</sup></label>
+					<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
 					<input type="text" class="text" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}">
 				</p>
 				<p class="radio required">
@@ -258,11 +258,11 @@ $(function(){ldelim}
 				{if isset($newsletter) && $newsletter}
 					<p class="checkbox">
 						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if}>
-						<label for="newsletter">{l s='Sign up for our newsletter'}</label>
+						<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 					</p>
 					<p class="checkbox">
 						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if}>
-						<label for="optin">{l s='Receive special offers from our partners'}</label>
+						<label for="optin">{l s='Receive special offers from our partners!'}</label>
 					</p>
 				{/if}
 				<h3>{l s='Delivery address'}</h3>
@@ -358,7 +358,7 @@ $(function(){ldelim}
 	<!--{if isset($account_error)}
 	<div class="error">
 		{if {$account_error|@count} == 1}
-			<p>{l s='There is one error'} :</p>
+			<p>{l s='There\'s at least one error'} :</p>
 			{else}
 			<p>{l s='There are %s errors' sprintf=[$account_error|@count]} :</p>
 		{/if}
@@ -389,13 +389,13 @@ $(function(){ldelim}
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
 		<p class="required text">
-			<label for="email">{l s='E-mail'} <sup>*</sup></label>
+			<label for="email">{l s='Email:'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
 		<p class="required password">
 			<label for="passwd">{l s='Password'} <sup>*</sup></label>
 			<input type="password" class="text" name="passwd" id="passwd" />
-			<span class="form_info">{l s='(5 characters min.)'}</span>
+			<span class="form_info">{l s='(Five characters minimum)'}</span>
 		</p>
 		<p class="select">
 			<span>{l s='Date of Birth'}</span>
@@ -435,11 +435,11 @@ $(function(){ldelim}
 		{if $newsletter}
 		<p class="checkbox" >
 			<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
-			<label for="newsletter">{l s='Sign up for our newsletter'}</label>
+			<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 		</p>
 		<p class="checkbox" >
 			<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
-			<label for="optin">{l s='Receive special offers from our partners'}</label>
+			<label for="optin">{l s='Receive special offers from our partners!'}</label>
 		</p>
 		{/if}
 	</fieldset>
@@ -500,7 +500,7 @@ $(function(){ldelim}
 				<p class="text">
 					<label for="address2">{l s='Address (Line 2)'}</label>
 					<input type="text" class="text" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
-					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc.'}</span>
+					<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 				</p>
 			{elseif $field_name eq "postcode"}
 				<p class="required postcode text">
@@ -549,7 +549,7 @@ $(function(){ldelim}
 			<textarea name="other" id="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{/if}</textarea>
 		</p>
 		{if $one_phone_at_least}
-			<p class="inline-infos">{l s='You must register at least one phone number'}</p>
+			<p class="inline-infos">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
@@ -560,7 +560,7 @@ $(function(){ldelim}
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">
-			<label for="alias">{l s='Assign an address alias for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Assign an address alias for future reference.'} <sup>*</sup></label>
 			<input type="text" class="text" name="alias" id="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

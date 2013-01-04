@@ -24,7 +24,7 @@
 						</div>
 						<div class="fl width-70 padding-left-5px">
 							<h3>{$product.name}</h3>
-							{if $product.reference}<p>{l s='Ref.:'} {$product.reference}</p>{/if}
+							{if $product.reference}<p>{l s='Ref:'} {$product.reference}</p>{/if}
 							<p>{$product.description_short}</p>
 						</div>
 						<div class="clear"></div>
@@ -87,9 +87,9 @@
 		<div class="ui-grid-a cart_total_bar same-height">
 			<div class="ui-block-a">
 				<div class="ui-bar ui-bar-c">
-					<h3>{l s='Voucher'}</h3>
+					<h3>{l s='Voucher:'}</h3>
 					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" data-ajax="false">
-						<input type="text" name="discount_name" id="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}"  placeholder="{l s='Voucher code'}" />
+						<input type="text" name="discount_name" id="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}"  placeholder="{l s='Voucher code:'}" />
 						<div class='btn-row'>
 							<input type="hidden" name="submitDiscount" />
 							<button type="submit" data-theme="a" name="submitAddDiscount" value="submit-value">{l s='Send'}</button>
@@ -130,9 +130,9 @@
 					<div {if $total_wrapping == 0}class="hide"{/if}>
 						<h3>
 						{if $use_taxes}
-							{if $display_tax_label}{l s='Total gift-wrapping (tax incl.):'}{else}{l s='Total gift-wrapping:'}{/if}
+							{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
 						{else}
-							{l s='Total gift-wrapping:'}
+							{l s='Total gift-wrapping cost:'}
 						{/if}
 						</h3>
 						<p><span class="price" id="total_wrapping">

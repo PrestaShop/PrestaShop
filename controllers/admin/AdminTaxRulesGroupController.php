@@ -95,7 +95,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'width' => 140
 			),
 			'zipcode' => array(
-				'title' => $this->l('Zip Codes'),
+				'title' => $this->l('Zip Code'),
 				'width' => 25,
 			),
 			'behavior' => array(
@@ -191,7 +191,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			$this->no_back = true;
 			$this->toolbar_btn['new'] = array(
 				'href' => '#',
-				'desc' => $this->l('Add new tax rule')
+				'desc' => $this->l('Add a new tax rule')
 			);
 			$content = parent::renderForm();
 			$this->tpl_folder = 'tax_rules/';
@@ -257,7 +257,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'label' => $this->l('Zip Code range:'),
 					'name' => 'zipcode',
 					'required' => false,
-					'hint' => $this->l('You can define a range (eg: 75000-75015) or a simple zipcode')
+					'hint' => $this->l('You can define a range of zipcodes (eg: 75000-75015) or simply use one zipcode.')
 				),
 				array(
 					'type' => 'select',
@@ -276,7 +276,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 							),
 							array(
 								'id' => 2,
-								'name' => $this->l('One After Another')
+								'name' => $this->l('One after another')
 							)
 						),
 						'id' => 'id',
@@ -285,8 +285,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'hint' =>
 						$this->l('Define the behavior if an address matches multiple rules:').'<br />
 						<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax').'<br />
-						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% => 15%)').'<br />
-						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)')
+						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% = 15%)').'<br />
+						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 0 + 10% = 0 + 5% = 5.5)')
 				),
 				array(
 					'type' => 'select',

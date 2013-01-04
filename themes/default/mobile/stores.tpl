@@ -36,7 +36,7 @@
 		var defaultLat = '{$defaultLat}';
 		var defaultLong = '{$defaultLong}';
 		
-		var translation_1 = '{l s='No stores found, try selecting a wider radius' js=1}';
+		var translation_1 = '{l s='No stores were found. Please try selecting a wider radius.' js=1}';
 		var translation_2 = '{l s='store found - see details:' js=1}';
 		var translation_3 = '{l s='stores found - see all results:' js=1}';
 		var translation_4 = '{l s='Phone:' js=1}';
@@ -68,7 +68,7 @@
 	
 	<div id="stores_search_block">
 		<button type="submit" data-theme="a" name="submit" value="submit-value" class="ui-btn-hidden" aria-disabled="false">
-			{l s='Search'}
+			{l s='Search:'}
 		</button>
 	</div>
 	

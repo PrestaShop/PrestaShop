@@ -49,5 +49,5 @@
 		{include file="./pagination.tpl"}
 	</div>
 	{else}
-	<p class="warning">{l s='No top sellers.'}</p>
+	<p class="warning">{l s='No top sellers for the moment.'}</p>
 {/if}

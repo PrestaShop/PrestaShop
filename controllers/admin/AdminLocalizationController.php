@@ -221,12 +221,12 @@ class AdminLocalizationControllerCore extends AdminController
 			array(
 				'id' => 'taxes',
 				'val' => 'taxes',
-				'name' => $this->l('Taxes')
+				'name' => $this->l('Taxes:')
 			),
 			array(
 				'id' => 'currencies',
 				'val' => 'currencies',
-				'name' => $this->l('Currencies')
+				'name' => $this->l('Currencies:')
 			),
 			array(
 				'id' => 'languages',
@@ -243,7 +243,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Import localization pack'),
+				'title' => $this->l('Import a localization pack'),
 				'image' => '../img/admin/localization.gif'
 			),
 			'input' => array(
@@ -270,7 +270,7 @@ class AdminLocalizationControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Import   '),
+				'title' => $this->l('Import   '),
 				'class' => 'button',
 				'name' => 'submitLocalizationPack'
 			)

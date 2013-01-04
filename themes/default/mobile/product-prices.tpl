@@ -47,7 +47,7 @@
 			<span class="on_sale">{l s='On sale!'}</span>
 		{/if}
 		{if $priceDisplay == 2}
-			<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}</span>
+			<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='Tax excl.'}</span>
 		{/if}
 		
 

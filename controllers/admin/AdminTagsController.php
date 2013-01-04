@@ -47,7 +47,7 @@ class AdminTagsControllerCore extends AdminController
 				'filter_key' => 'a!name'
 			),
 			'products' => array(
-				'title' => $this->l('Products'),
+				'title' => $this->l('Products:'),
 				'align' => 'right',
 				'havingFilter' => true
 			)

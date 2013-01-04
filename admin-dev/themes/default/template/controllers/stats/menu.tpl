@@ -35,7 +35,7 @@
 				{/if}
 			{/foreach}
 		{else}
-			{l s='No module installed'}
+			{l s='No module has been installed.'}
 		{/if}
 		</ul>
 

@@ -143,7 +143,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment');
+		$this->toolbar_title = $this->l('Payment: ');
 		unset($this->toolbar_btn['back']);
 		
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -168,21 +168,21 @@ class AdminPaymentControllerCore extends AdminController
 		$lists = array(
 					array('items' => Currency::getCurrencies(),
 						  'title' => $this->l('Currency restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the currency or currencies for which you want the payment module(s) to be available.'),
+						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'currency',
 						  'identifier' => 'id_currency',
 						  'icon' => 'dollar',
 					),
 					array('items' => Group::getGroups($this->context->language->id),
 						  'title' => $this->l('Group restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the groups for which you want the payment module(s) available.'),
+						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'group',
 						  'identifier' => 'id_group',
 						  'icon' => 'group',
 					),
 					array('items' =>Country::getCountries($this->context->language->id),
 						  'title' => $this->l('Country restrictions'),
-						  'desc' => $this->l('Please mark the checkbox(es) for the country or countries for which you want the payment module(s) to be available.'),
+						  'desc' => $this->l('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'country',
 						  'identifier' => 'id_country',
 						  'icon' => 'world',
