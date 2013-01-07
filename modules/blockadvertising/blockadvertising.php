@@ -157,6 +157,7 @@ class BlockAdvertising extends Module
 			
 			// Reset the module properties
 			$this->initialize();
+			$this->_clearCache('blockadvertising.tpl');
 		}
 		if ($errors)
 			echo $this->displayError($errors);
@@ -216,13 +217,14 @@ class BlockAdvertising extends Module
 
 	public function hookRightColumn($params)
 	{
-		$this->smarty->assign(array(
-			'image' => $this->context->link->protocol_content.$this->adv_img,
-			'adv_link' => $this->adv_link,
-			'adv_title' => $this->adv_title,
-		));
+		if (!$this->isCached('blockadvertising.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'image' => $this->context->link->protocol_content.$this->adv_img,
+				'adv_link' => $this->adv_link,
+				'adv_title' => $this->adv_title,
+			));
 
-		return $this->display(__FILE__, 'blockadvertising.tpl');
+		return $this->display(__FILE__, 'blockadvertising.tpl', $this->getCacheId());
 	}
 
 	public function hookLeftColumn($params)

@@ -1582,11 +1582,18 @@ abstract class ModuleCore
 	{
 		return Module::_isTemplateOverloadedStatic($this->name, $template);
 	}
+	
+	protected function getCacheId($name = null)
+	{
+		if ($name === null)
+			$name = $this->name;
+		return $name.'|'.(int)$this->context->shop->id.'_'.(int)Group::getCurrent()->id.'_'.(int)$this->context->language->id;
+	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
 	{
 		if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null)
-			$result = Tools::displayError('No template found for module').' '.basename($file, '.php');
+			return Tools::displayError('No template found for module').' '.basename($file, '.php');
 		else
 		{
 			$this->smarty->assign(array(
@@ -1594,16 +1601,22 @@ abstract class ModuleCore
 				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/'
 			));
 
+			if ($cacheId !== null)
+				Tools::enableCache();
+
 			$smarty_subtemplate = $this->context->smarty->createTemplate(
 				$this->getTemplatePath($template),
 				$cacheId,
 				$compileId,
 				$this->smarty
 			);
-
 			$result = $smarty_subtemplate->fetch();
+
+			if ($cacheId !== null)
+				Tools::restoreCacheSettings();
+
+			return $result;
 		}
-		return $result;
 	}
 
 	/**
@@ -1635,7 +1648,11 @@ abstract class ModuleCore
 	{
 		$context = Context::getContext();
 
-		return $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		Tools::enableCache();
+		$is_cached =  $context->smarty->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		Tools::restoreCacheSettings();
+
+		return $is_cached;
 	}
 
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)

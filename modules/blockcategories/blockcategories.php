@@ -156,31 +156,23 @@ class BlockCategories extends Module
 	}
 
 	public function hookLeftColumn($params)
-	{
-		$id_customer = (int)$params['cookie']->id_customer;
-		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
-		// It is necessary to keep the group query separate from the main select query because it is used for the cache
-		$groups = $id_customer ? implode(', ', Customer::getGroupsStatic($id_customer)) : Configuration::get('PS_UNIDENTIFIED_GROUP');
-		$id_product = (int)Tools::getValue('id_product', 0);
-		$id_category = (int)Tools::getValue('id_category', 0);
-		$id_lang = (int)$params['cookie']->id_lang;
-		$smartyCacheId = 'blockcategories|'.$this->context->shop->id.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
-		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
-		Tools::enableCache();
-		if (!$this->isCached('blockcategories.tpl', $smartyCacheId))
+	{	
+		if (!$this->isCached('blockcategories.tpl', $this->getCacheId()))
 		{
+			// Get all groups for this customer and concatenate them as a string: "1,2,3..."
+			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
-				INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.Shop::addSqlRestrictionOnLang('cl').')
+				INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				INNER JOIN `'._DB_PREFIX_.'category_shop` cs ON (cs.`id_category` = c.`id_category` AND cs.`id_shop` = '.(int)$this->context->shop->id.')
 				WHERE (c.`active` = 1 OR c.`id_category` = '.(int)Configuration::get('PS_HOME_CATEGORY').')
 				AND c.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY').'
 				'.((int)$maxdepth != 0 ? ' AND `level_depth` <= '.(int)$maxdepth : '').'
 				AND c.id_category IN (SELECT id_category FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` IN ('.pSQL($groups).'))
 				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'cs.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
-				return Tools::restoreCacheSettings();
+				return;
 
 			$resultParents = array();
 			$resultIds = array();
@@ -203,7 +195,7 @@ class BlockCategories extends Module
 			if (Tools::isSubmit('id_product'))
 			{
 				if (!isset($this->context->cookie->last_visited_category)
-					|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
+					|| !Product::idIsOnCategoryId((int)Tools::getValue('id_product'), array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
 					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
 				{
 					$product = new Product($id_product);
@@ -220,31 +212,33 @@ class BlockCategories extends Module
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
 		}
-		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
-		Tools::restoreCacheSettings();
+		$display = $this->display(__FILE__, 'blockcategories.tpl', $this->getCacheId());
 		return $display;
+	}
+
+	protected function getCacheId($name = null)
+	{
+		parent::getCacheId($name);
+
+		$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
+		$id_product = (int)Tools::getValue('id_product', 0);
+		$id_category = (int)Tools::getValue('id_category', 0);
+		$id_lang = (int)$this->context->language->id;
+		return 'blockcategories|'.$this->context->shop->id.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
 	}
 
 	public function hookFooter($params)
 	{
-		$id_customer = (int)($params['cookie']->id_customer);
 		// Get all groups for this customer and concatenate them as a string: "1,2,3..."
-		$groups = $id_customer ? implode(', ', Customer::getGroupsStatic($id_customer)) : _PS_DEFAULT_CUSTOMER_GROUP_;
-		$id_product = (int)(Tools::getValue('id_product', 0));
-		$id_category = (int)(Tools::getValue('id_category', 0));
-		$id_lang = (int)($params['cookie']->id_lang);
-		$smartyCacheId = 'blockcategories|'.$this->context->shop->id.'_'.$groups.'_'.$id_lang.'_'.$id_product.'_'.$id_category;
-		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
-		Tools::enableCache();
-		if (!$this->isCached('blockcategories_footer.tpl', $smartyCacheId))
+		if (!$this->isCached('blockcategories_footer.tpl', $this->getCacheId()))
 		{
 			$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
-
+			$groups = implode(', ', Customer::getGroupsStatic((int)$this->context->customer->id));
 			if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT c.id_parent, c.id_category, cl.name, cl.description, cl.link_rewrite
 				FROM `'._DB_PREFIX_.'category` c
 				'.Shop::addSqlAssociation('category', 'c').'
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.$id_lang.Shop::addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
 				WHERE (c.`active` = 1 OR c.`id_category` = 1)
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
@@ -296,8 +290,8 @@ class BlockCategories extends Module
 				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
 			$this->smarty->assign('isDhtml', $isDhtml);
 		}
-		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);
-		Tools::restoreCacheSettings();
+		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $this->getCacheId());
+
 		return $display;
 	}
 
