@@ -62,14 +62,19 @@ class BlockStore extends Module
 
 	public function hookRightColumn($params)
 	{
-		$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
-		$sql = 'SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'store s'
-				.Shop::addSqlAssociation('store', 's');
-		$total = Db::getInstance()->getValue($sql);
+		if (!$this->isCached('blockstore.tpl', $this->getCacheId()))
+		{
+			$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+			$sql = 'SELECT COUNT(*)
+					FROM '._DB_PREFIX_.'store s'
+					.Shop::addSqlAssociation('store', 's');
+			$total = Db::getInstance()->getValue($sql);
+			
+			if ($total <= 0)
+				return;
+		}
+		return $this->display(__FILE__, 'blockstore.tpl', $this->getCacheId());
 
-		if ($total > 0)
-			return $this->display(__FILE__, 'blockstore.tpl');
 	}
 
 	public function hookHeader($params)
@@ -94,6 +99,7 @@ class BlockStore extends Module
 						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
 							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
 						Configuration::updateValue('BLOCKSTORE_IMG', $_FILES['store_img']['name']);
+						$this->_clearCache('blockstore.tpl');
 						return $this->displayConfirmation($this->l('Settings are updated'));
 					}
 				}

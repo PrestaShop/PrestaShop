@@ -19,7 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -71,7 +72,7 @@ class Blockcontactinfos extends Module
 			Configuration::updateValue('blockcontactinfos_address', ((isset($_POST['address']) && $_POST['address'] != '') ? $_POST['address'] : ''));
 			Configuration::updateValue('blockcontactinfos_phone', ((isset($_POST['phone']) && $_POST['phone'] != '') ? $_POST['phone'] : ''));
 			Configuration::updateValue('blockcontactinfos_email', ((isset($_POST['email']) && $_POST['email'] != '') ? $_POST['email'] : Configuration::get('PS_SHOP_EMAIL')));
-			
+			$this->_clearCache('blockcontactinfos.tpl');
 			$html .= '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 
@@ -104,15 +105,14 @@ class Blockcontactinfos extends Module
 	
 	public function hookFooter($params)
 	{	
-		global $smarty;
-		
-		$smarty->assign(array(
-			'blockcontactinfos_company' => Configuration::get('blockcontactinfos_company'),
-			'blockcontactinfos_address' => Configuration::get('blockcontactinfos_address'),
-			'blockcontactinfos_phone' => Configuration::get('blockcontactinfos_phone'),
-			'blockcontactinfos_email' => Configuration::get('blockcontactinfos_email')
-		));
-		return $this->display(__FILE__, 'blockcontactinfos.tpl');
+		if (!$this->isCached('blockcontactinfos.tpl', $this->getCacheId()))
+			$this->smarty->assign(array(
+				'blockcontactinfos_company' => Configuration::get('blockcontactinfos_company'),
+				'blockcontactinfos_address' => Configuration::get('blockcontactinfos_address'),
+				'blockcontactinfos_phone' => Configuration::get('blockcontactinfos_phone'),
+				'blockcontactinfos_email' => Configuration::get('blockcontactinfos_email')
+			));
+		return $this->display(__FILE__, 'blockcontactinfos.tpl', $this->getCacheId());
 	}
 }
 ?>

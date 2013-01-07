@@ -47,5 +47,7 @@ if (Tools::getValue('action') == 'updateSlidesPosition' && Tools::getValue('slid
 		);
 
 	}
+
+	$home_slider->clearCache();
 }
 
