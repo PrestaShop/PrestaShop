@@ -325,8 +325,8 @@ class AdminModulesControllerCore extends AdminController
 			
 		@unlink($file);
 		$this->recursiveDeleteOnDisk($tmp_folder);
-		if (!count($this->errors) && $success && $redirect)
-			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
+		if ($success && $redirect)
+			Tools::redirectAdmin(self::$currentIndex.'&conf=8&anchor=anchor'.ucfirst($folder).'&token='.$this->token);
 	}
 
 	protected function recursiveDeleteOnDisk($dir)
