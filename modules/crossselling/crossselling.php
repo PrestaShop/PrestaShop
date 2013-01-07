@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,7 +54,8 @@ class CrossSelling extends Module
 			!$this->registerHook('productFooter') OR
 			!$this->registerHook('header') OR
 			!$this->registerHook('shoppingCart') OR
-			!Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', 0))
+			!Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', 0) OR
+			!Configuration::updateValue('CROSSSELLING_NBR', 10))
 			return false;
 		return true;
 	}
@@ -65,7 +66,8 @@ class CrossSelling extends Module
 			!$this->unregisterHook('productFooter') OR
 			!$this->unregisterHook('header') OR
 			!$this->unregisterHook('shoppingCart') OR
-			!Configuration::deleteByName('CROSSSELLING_DISPLAY_PRICE'))
+			!Configuration::deleteByName('CROSSSELLING_DISPLAY_PRICE') OR
+			!Configuration::deleteByName('CROSSSELLING_NBR'))
 			return false;
 		return true;
 	}
@@ -73,12 +75,21 @@ class CrossSelling extends Module
 	public function getContent()
 	{
 		$this->_html = '';
-		if (Tools::isSubmit('submitCross') AND Tools::getValue('displayPrice') != 0 AND Tools::getValue('displayPrice') != 1)
-			$this->_html .= $this->displayError('Invalid displayPrice');
-		elseif (Tools::isSubmit('submitCross'))
+		
+		if (Tools::isSubmit('submitCross'))
 		{
-			Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('displayPrice'));
-			$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
+			if (Tools::getValue('displayPrice') != 0 AND Tools::getValue('displayPrice') != 1)
+				$this->_html .= $this->displayError('Invalid displayPrice');
+			else if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
+				$this->_html .= $this->displayError('You must fill in the \'Products displayed\' field.');
+			elseif ((int)($productNbr) == 0)
+				$this->_html .= $this->displayError('Invalid number.');
+			else
+			{			
+				Configuration::updateValue('CROSSSELLING_DISPLAY_PRICE', (int)Tools::getValue('displayPrice'));
+				Configuration::updateValue('CROSSSELLING_NBR', (int)Tools::getValue('productNbr'));
+				$this->_html .= $this->displayConfirmation($this->l('Settings updated successfully'));
+			}
 		}
 		$this->_html .= '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
@@ -90,6 +101,10 @@ class CrossSelling extends Module
 				<input type="radio" name="displayPrice" id="display_off" value="0" '.(!Configuration::get('CROSSSELLING_DISPLAY_PRICE') ? 'checked="checked" ' : '').'/>
 				<label class="t" for="display_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
 				<p class="clear">'.$this->l('Show the price on the products in the block.').'</p>
+			</div>	
+			<div class="margin-form">
+				<input type="text" name="productNbr" value="'.(int)Configuration::get('CROSSSELLING_NBR').'" />
+				<p class="clear">'.$this->l('Define the number of products displayed in this block').'</p>
 			</div>
 			<center><input type="submit" name="submitCross" value="'.$this->l('Save').'" class="button" /></center>
 		</fieldset>
@@ -152,7 +167,7 @@ class CrossSelling extends Module
 					AND i.cover = 1
 					AND product_shop.active = 1
 				ORDER BY RAND()
-				LIMIT 10
+				LIMIT '.(int)Configuration::get('CROSSSELLING_NBR').'
 			');
 
 			$taxCalc = Product::getTaxCalculationMethod();
@@ -206,7 +221,7 @@ class CrossSelling extends Module
 					AND i.cover = 1
 					AND product_shop.active = 1
 				ORDER BY RAND()
-				LIMIT 10
+				LIMIT '.(int)Configuration::get('CROSSSELLING_NBR').'
 			');
 
 			$taxCalc = Product::getTaxCalculationMethod();
