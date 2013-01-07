@@ -174,16 +174,21 @@ class AddressControllerCore extends FrontController
 				$address->dni = null;
 		}
 		// Check if the alias exists
-		if (!$this->context->customer->is_guest && !empty($_POST['alias'])
-			&& (int)$this->context->customer->id > 0
-			&& Db::getInstance()->getValue('
+		if (!$this->context->customer->is_guest && !empty($_POST['alias']) && (int)$this->context->customer->id > 0)
+		{
+			$id_address = Tools::getValue('id_address');
+			if(Configuration::get('PS_ORDER_PROCESS_TYPE') && (int)Tools::getValue('opc_id_address_'.Tools::getValue('type')) > 0)
+				$id_address = Tools::getValue('opc_id_address_'.Tools::getValue('type'));
+ 	
+			if (Db::getInstance()->getValue('
 				SELECT count(*)
 				FROM '._DB_PREFIX_.'address
 				WHERE `alias` = \''.pSql($_POST['alias']).'\'
-				AND id_address != '.(int)Tools::getValue('id_address').'
+				AND id_address != '.(int)$id_address.'
 				AND id_customer = '.(int)$this->context->customer->id.'
 				AND deleted = 0') > 0)
-			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+				$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+		}
 
 		// Check the requires fields which are settings in the BO
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
