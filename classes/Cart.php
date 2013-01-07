@@ -424,7 +424,7 @@ class CartCore extends ObjectModel
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, product_shop.`active`, p.`date_add`,
 						p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, IFNULL(cp.`id_product_attribute`, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
-						product_shop.`wholesale_price`, product_shop.advanced_stock_management');
+						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -436,12 +436,13 @@ class CartCore extends ObjectModel
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
 		);
-		
 
 		$sql->leftJoin('category_lang', 'cl', '
 			product_shop.`id_category_default` = cl.`id_category`
 			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
 		);
+
+		$sql->leftJoin('product_supplier', 'ps', 'ps.id_product=cp.id_product AND ps.id_product_attribute=cp.id_product_attribute AND ps.id_supplier=p.id_supplier');
 
 		// @todo test if everything is ok, then refactorise call of this method
 		$sql->join(Product::sqlStock('cp', 'cp'));
@@ -472,7 +473,6 @@ class CartCore extends ObjectModel
 			$sql->select('
 				product_attribute_shop.`price` AS price_attribute, product_attribute_shop.`ecotax` AS ecotax_attr,
 				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-				IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
 				(p.`weight`+ pa.`weight`) weight_attribute,
 				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
 				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
@@ -487,7 +487,7 @@ class CartCore extends ObjectModel
 		}
 		else
 			$sql->select(
-				'p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`,
+				'p.`reference` AS reference, p.`ean13`,
 				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity'
 			);
 		$result = Db::getInstance()->executeS($sql);
