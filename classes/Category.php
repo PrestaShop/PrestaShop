@@ -240,9 +240,6 @@ class CategoryCore extends ObjectModel
 	{
 		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
 
-		if (!(int)$id_lang)
-			$id_lang = _USER_ID_LANG_;
-
 		$children = array();
 		$subcats = $this->getSubCategories($id_lang, true);
 		if (($max_depth == 0 || $current_depth < $max_depth) && $subcats && count($subcats))
