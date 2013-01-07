@@ -150,9 +150,9 @@ class PackCore extends Product
 			return $result;
 
 		$array_result = array();
-		foreach ($result as $row)
-			if (!Pack::isPack($row['id_product']))
-				$array_result[] = Product::getProductProperties($id_lang, $row);
+		foreach ($result as $prow)
+			if (!Pack::isPack($prow['id_product']))
+				$array_result[] = Product::getProductProperties($id_lang, $prow);
 		return $array_result;
 	}
 
