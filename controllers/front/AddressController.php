@@ -214,10 +214,23 @@ class AddressControllerCore extends FrontController
 				}
 			}
 		}
-
+		
+		if ($this->ajax && Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+		{
+			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));			
+			if (count($this->errors))
+			{
+				$return = array(
+					'hasError' => (bool)$this->errors,
+					'errors' => $this->errors
+				);
+				die(Tools::jsonEncode($return));
+			}
+		}
+		
 		// Save address
 		if ($result = $address->save())
-		{
+		{			
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
 				$this->context->cart->updateAddressId($address_old->id, $address->id);
