@@ -35,6 +35,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		$contact_array = array();
 		$contacts = Contact::getContacts($this->context->language->id);
+
 		foreach ($contacts as $contact)
 			$contact_array[$contact['id_contact']] = $contact['name'];
 
@@ -566,7 +567,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$tpl = $this->createTemplate('message.tpl');
 
 		$contacts = Contact::getContacts($this->context->language->id);
-
+		foreach ($contacts as $contact)
+			$contact_array[$contact['id_contact']] = array('id_contact' => $contact['id_contact'], 'name' => $contact['name']);
+		$contacts = $contact_array;
+		
 		if (!$email)
 		{
 			if (!empty($message['id_product']) && empty($message['employee_name']))
