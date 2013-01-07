@@ -64,13 +64,18 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	*/
 	public function getTaxCalculator()
 	{
+		static $tax_enabled = null;
+
 		if (isset($this->tax_calculator))
 			return $this->tax_calculator;
 
+		if ($tax_enabled === null)
+			$tax_enabled = Configuration::get('PS_TAX');
+		
+		if (!$tax_enabled)
+			return new TaxCalculator(array());
+	
 		$taxes = array();
-		if (!Configuration::get('PS_TAX'))
-			return new TaxCalculator($taxes);
-
 		$postcode = 0;
 		if (!empty($this->address->postcode))
 			$postcode = $this->address->postcode;
