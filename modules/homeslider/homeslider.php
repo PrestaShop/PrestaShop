@@ -518,6 +518,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', (int)Tools::getValue('HOMESLIDER_SPEED'));
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', (int)Tools::getValue('HOMESLIDER_PAUSE'));
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', (int)Tools::getValue('HOMESLIDER_LOOP'));
+			$this->clearCache();			
 			if (!$res)
 				$errors[] = $this->displayError($this->l('Configuration could not be updated'));
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
@@ -530,6 +531,7 @@ class HomeSlider extends Module
 			else
 				$slide->active = 0;
 			$res = $slide->update();
+			$this->clearCache();
 			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayError($this->l('Configuration could not be updated')));
 		}
 		/* Processes Slide */
@@ -602,12 +604,14 @@ class HomeSlider extends Module
 				} /* Update */
 				elseif (!$slide->update())
 					$errors[] = $this->displayError($this->l('Slide could not be updated'));
+				$this->clearCache();
 			}
 		} /* Deletes */
 		elseif (Tools::isSubmit('delete_id_slide'))
 		{
 			$slide = new HomeSlide((int)Tools::getValue('delete_id_slide'));
 			$res = $slide->delete();
+			$this->clearCache();
 			if (!$res)
 				$this->_html .= $this->displayError('Could not delete');
 			else
@@ -625,20 +629,24 @@ class HomeSlider extends Module
 
 	private function _prepareHook()
 	{
-		$slider = array(
-			'width' => Configuration::get('HOMESLIDER_WIDTH'),
-			'height' => Configuration::get('HOMESLIDER_HEIGHT'),
-			'speed' => Configuration::get('HOMESLIDER_SPEED'),
-			'pause' => Configuration::get('HOMESLIDER_PAUSE'),
-			'loop' => Configuration::get('HOMESLIDER_LOOP'),
-		);
+		if (!$this->isCached('homeslider.tpl', $this->getCacheId()))
+		{
+			$slider = array(
+				'width' => Configuration::get('HOMESLIDER_WIDTH'),
+				'height' => Configuration::get('HOMESLIDER_HEIGHT'),
+				'speed' => Configuration::get('HOMESLIDER_SPEED'),
+				'pause' => Configuration::get('HOMESLIDER_PAUSE'),
+				'loop' => Configuration::get('HOMESLIDER_LOOP'),
+			);
 
-		$slides = $this->getSlides(true);
-		if (!$slides)
-			return false;
+			$slides = $this->getSlides(true);
+			if (!$slides)
+				return false;
 
-		$this->smarty->assign('homeslider_slides', $slides);
-		$this->smarty->assign('homeslider', $slider);
+			$this->smarty->assign('homeslider_slides', $slides);
+			$this->smarty->assign('homeslider', $slider);
+		}
+
 		return true;
 	}
 
@@ -654,7 +662,12 @@ class HomeSlider extends Module
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
-		return $this->display(__FILE__, 'homeslider.tpl');
+		return $this->display(__FILE__, 'homeslider.tpl', $this->getCacheId());
+	}
+
+	public function clearCache()
+	{
+		$this->_clearCache('homeslider.tpl');
 	}
 
 	public function hookActionShopDataDuplication($params)
@@ -664,6 +677,7 @@ class HomeSlider extends Module
 		SELECT id_homeslider_slides, '.(int)$params['new_id_shop'].'
 		FROM '._DB_PREFIX_.'homeslider
 		WHERE id_shop = '.(int)$params['old_id_shop']);
+		$this->clearCache();
 	}
 
 	public function headerHTML()
