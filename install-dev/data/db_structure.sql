@@ -894,7 +894,7 @@ CREATE TABLE `PREFIX_image_lang` (
 
 CREATE TABLE `PREFIX_image_type` (
   `id_image_type` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(16) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `width` int(10) unsigned NOT NULL,
   `height` int(10) unsigned NOT NULL,
   `products` tinyint(1) NOT NULL default '1',
