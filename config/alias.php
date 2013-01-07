@@ -74,8 +74,17 @@ function bqSQL($string)
 function displayFatalError()
 {
 	$error = error_get_last();
-	if ($error !== NULL)
+	if (
+		($error !== NULL)
+		&& (
+			($error['type'] == E_ERROR)
+			|| ($error['type'] == E_CORE_ERROR)
+			|| ($error['type'] == E_COMPILE_ERROR)
+			|| ($error['type'] == E_USER_ERROR)
+		)
+	) {
 		echo '[PrestaShop] Fatal error in module '.substr(basename($error['file']), 0, -4).':<br />'.$error['message'];
+	}
 }
 
 /**
