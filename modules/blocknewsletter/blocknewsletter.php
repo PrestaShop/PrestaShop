@@ -511,6 +511,12 @@ class Blocknewsletter extends Module
 		$this->_prepareHook($params);
 		return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
+	
+	public function hookFooter($params)
+	{
+		$this->_prepareHook($params);
+		return $this->display(__FILE__, 'blocknewsletter.tpl');
+	}
 
 	public function hookDisplayHeader($params)
 	{
