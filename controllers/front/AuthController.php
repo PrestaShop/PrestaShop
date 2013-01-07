@@ -400,7 +400,6 @@ class AuthControllerCore extends FrontController
 
 		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{
-			
 			if (!count($this->errors))
 			{
 				if (Tools::isSubmit('newsletter'))
