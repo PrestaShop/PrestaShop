@@ -1830,6 +1830,7 @@ exit;
 		self::$_caching = (int)$smarty->caching;
 		$smarty->force_compile = 0;
 		$smarty->caching = (int)$level;
+		$smarty->cache_lifetime = 31536000; // 1 Year
 	}
 
 	public static function restoreCacheSettings(Context $context = null)

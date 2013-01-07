@@ -56,7 +56,7 @@ class BlockPermanentLinks extends Module
 	*/
 	public function hookTop($params)
 	{
-		return $this->display(__FILE__, 'blockpermanentlinks-header.tpl');
+		return $this->display(__FILE__, 'blockpermanentlinks-header.tpl', $this->getCacheId('blockpermanentlinks-header'));
 	}
 
 	/**
@@ -67,7 +67,7 @@ class BlockPermanentLinks extends Module
 	*/
 	public function hookLeftColumn($params)
 	{
-		return $this->display(__FILE__, 'blockpermanentlinks.tpl');
+		return $this->display(__FILE__, 'blockpermanentlinks.tpl', $this->getCacheId());
 	}
 
 	public function hookRightColumn($params)
@@ -77,7 +77,7 @@ class BlockPermanentLinks extends Module
 
 	public function hookFooter($params)
 	{
-		return $this->display(__FILE__, 'blockpermanentlinks-footer.tpl');
+		return $this->display(__FILE__, 'blockpermanentlinks-footer.tpl', $this->getCacheId('blockpermanentlinks-footer'));
 	}
 
 	public function hookHeader($params)

@@ -712,15 +712,19 @@ class Blocktopmenu extends Module
 		foreach ($pages as $page)
 			$this->_html .= '<option value="CMS'.$page['id_cms'].'">'.$spacer.$page['meta_title'].'</option>';
 	}
+	
+	protected function getCacheId($name = null)
+	{
+		parent::getCacheId($name);
+		$page_name = in_array($this->page_name, array('category', 'supplier', 'manufacturer', 'cms', 'product')) ? $this->page_name : 'index';
+		return 'blocktopmenu|'.$page_name.'-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
+	}
 
 	public function hookDisplayTop($param)
 	{
 		$this->user_groups =  ($this->context->customer->isLogged() ? $this->context->customer->getGroups() : array(Configuration::get('PS_UNIDENTIFIED_GROUP')));
 		$this->page_name = Dispatcher::getInstance()->getController();
-		$smarty_cache_id = 'blocktopmenu-'.$this->page_name.'-'.(int)$this->context->shop->id.'-'.implode(', ',$this->user_groups).'-'.(int)$this->context->language->id.'-'.(int)Tools::getValue('id_category').'-'.(int)Tools::getValue('id_manufacturer').'-'.(int)Tools::getValue('id_supplier').'-'.(int)Tools::getValue('id_cms').'-'.(int)Tools::getValue('id_product');
-		$this->context->smarty->cache_lifetime = 31536000;
-		Tools::enableCache();
-		if (!$this->isCached('blocktopmenu.tpl', $smarty_cache_id))
+		if (!$this->isCached('blocktopmenu.tpl', $this->getCacheId()))
 		{
 			$this->makeMenu();
 			$this->smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
@@ -732,8 +736,7 @@ class Blocktopmenu extends Module
 		$this->context->controller->addJS($this->_path.'js/superfish-modified.js');
 		$this->context->controller->addCSS($this->_path.'css/superfish-modified.css');
 
-		$html = $this->display(__FILE__, 'blocktopmenu.tpl', $smarty_cache_id);
-		Tools::restoreCacheSettings();
+		$html = $this->display(__FILE__, 'blocktopmenu.tpl', $this->getCacheId());
 		return $html;
 	}
 
