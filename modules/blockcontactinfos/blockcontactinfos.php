@@ -106,7 +106,7 @@ class Blockcontactinfos extends Module
 	public function hookFooter($params)
 	{	
 		if (!$this->isCached('blockcontactinfos.tpl', $this->getCacheId()))
-			$smarty->assign(array(
+			$this->smarty->assign(array(
 				'blockcontactinfos_company' => Configuration::get('blockcontactinfos_company'),
 				'blockcontactinfos_address' => Configuration::get('blockcontactinfos_address'),
 				'blockcontactinfos_phone' => Configuration::get('blockcontactinfos_phone'),
