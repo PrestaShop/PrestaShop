@@ -360,10 +360,10 @@
 
 {if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
 <div class="order_delivery clearfix">
-	{if !isset($formattedAddresses)}
+	{if !isset($formattedAddresses) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 	{if $delivery->id}
 	<ul id="delivery_address" class="address item">
-		<li class="address_title">{l s='Delivery address'}</li>
+		<li class="address_title">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></li>
 		{if $delivery->company}<li class="address_company">{$delivery->company|escape:'htmlall':'UTF-8'}</li>{/if}
 		<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
 		<li class="address_address1">{$delivery->address1|escape:'htmlall':'UTF-8'}</li>
@@ -374,7 +374,7 @@
 	{/if}
 	{if $invoice->id}
 	<ul id="invoice_address" class="address alternate_item">
-		<li class="address_title">{l s='Invoice address'}</li>
+		<li class="address_title">{l s='Invoice address'}&nbsp;<span class="address_alias">({$invoice->alias})</span></li>
 		{if $invoice->company}<li class="address_company">{$invoice->company|escape:'htmlall':'UTF-8'}</li>{/if}
 		<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
 		<li class="address_address1">{$invoice->address1|escape:'htmlall':'UTF-8'}</li>
@@ -384,9 +384,9 @@
 	</ul>
 	{/if}
 	{else}
-		{foreach $formattedAddresses as $address}
+		{foreach from=$formattedAddresses key=k item=address}
 			<ul class="address {if $address@last}last_item{elseif $address@first}first_item{/if} {if $address@index % 2}alternate_item{else}item{/if}">
-				<li class="address_title">{$address.object.alias}</li>
+				<li class="address_title">{if $k eq 'invoice'}{l s='Invoice address'}{elseif $k eq 'delivery'}{l s='Delivery address'}{/if}&nbsp;<span class="address_alias">({$address.object.alias})</span></li>
 				{foreach $address.ordered as $pattern}
 					{assign var=addressKey value=" "|explode:$pattern}
 					<li>
