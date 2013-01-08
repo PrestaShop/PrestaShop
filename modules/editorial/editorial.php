@@ -214,7 +214,7 @@ class Editorial extends Module
 		if (!$editorial) //if editorial ddo not exist for this shop => create a new example one
 			$this->createExampleEditorial($id_shop);
 		
-		foreach($this->fields_form[0]['form']['input'] as $input) //fill all form fields
+		foreach ($this->fields_form[0]['form']['input'] as $input) //fill all form fields
 			if ($input['name'] != 'body_homepage_logo')
 				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
 		
@@ -239,6 +239,7 @@ class Editorial extends Module
 			{
 				unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
+				$this->_clearCache('editorial.tpl');
 				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id));
 			}
 			$this->_html .= $errors;
@@ -274,26 +275,30 @@ class Editorial extends Module
 				Configuration::updateValue('EDITORIAL_IMAGE_HEIGHT', (int)round($height));
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 0);
 			}
+			$this->_clearCache('editorial.tpl');
 		}
 	}
 
 	public function hookDisplayHome($params)
 	{
-		$id_shop = (int)$this->context->shop->id;
-		$editorial = EditorialClass::getByIdShop($id_shop);
-		$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
-		if (!$editorial)
-			return;
-		$this->smarty->assign(array(
-				'editorial' => $editorial,
-				'default_lang' => (int)$this->context->language->id,
-				'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
-				'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-				'id_lang' => $this->context->language->id,
-				'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
-				'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
-			));
-		return $this->display(__FILE__, 'editorial.tpl');
+		if (!$this->isCached('editorial.tpl', $this->getCacheId()))
+		{
+			$id_shop = (int)$this->context->shop->id;
+			$editorial = EditorialClass::getByIdShop($id_shop);
+			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
+			if (!$editorial)
+				return;
+			$this->smarty->assign(array(
+					'editorial' => $editorial,
+					'default_lang' => (int)$this->context->language->id,
+					'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
+					'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
+					'id_lang' => $this->context->language->id,
+					'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
+					'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
+				));
+		}
+		return $this->display(__FILE__, 'editorial.tpl', $this->getCacheId());
 	}
 
 	public function hookDisplayHeader()
