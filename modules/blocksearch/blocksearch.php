@@ -80,16 +80,23 @@ public function hookDisplayMobileHeader($params)
 
 	public function hookRightColumn($params)
 	{
-		$this->calculHookCommon($params);
-		$this->smarty->assign('blocksearch_type', 'block');
-		return $this->display(__FILE__, 'blocksearch.tpl');
+		if (!$this->isCached('blocksearch.tpl', $this->getCacheId()))
+		{
+			$this->calculHookCommon($params);
+			$this->smarty->assign('blocksearch_type', 'block');
+		}
+		return $this->display(__FILE__, 'blocksearch.tpl', $this->getCacheId());
 	}
 
 	public function hookTop($params)
 	{
-		$this->calculHookCommon($params);
-		$this->smarty->assign('blocksearch_type', 'top');
-		return $this->display(__FILE__, 'blocksearch-top.tpl');
+		if (!$this->isCached('blocksearch-top.tpl', $this->getCacheId('blocksearch-top')))
+		{
+			$this->calculHookCommon($params);
+			$this->smarty->assign('blocksearch_type', 'top');
+		}
+
+		return $this->display(__FILE__, 'blocksearch-top.tpl', $this->getCacheId('blocksearch-top'));
 	}
 
 	/**
@@ -109,6 +116,12 @@ public function hookDisplayMobileHeader($params)
 		));
 
 		return true;
+	}
+	
+	protected function getCacheId($name = null)
+	{
+		$cache_id = parent::getCacheId($name);
+		return $cache_id.'_'.(int)Tools::usingSecureMode();
 	}
 }
 
