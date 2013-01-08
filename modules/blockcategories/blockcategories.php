@@ -186,6 +186,9 @@ class BlockCategories extends Module
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents, $resultIds);
 
+			$id_category = (int)Tools::getValue('id_category');
+			$id_product = (int)Tools::getValue('id_product');
+			
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 			if (Tools::isSubmit('id_category'))
 			{
@@ -195,7 +198,7 @@ class BlockCategories extends Module
 			if (Tools::isSubmit('id_product'))
 			{
 				if (!isset($this->context->cookie->last_visited_category)
-					|| !Product::idIsOnCategoryId((int)Tools::getValue('id_product'), array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
+					|| !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category)))
 					|| !Category::inShopStatic($this->context->cookie->last_visited_category, $this->context->shop))
 				{
 					$product = new Product($id_product);
@@ -266,6 +269,9 @@ class BlockCategories extends Module
 			unset($resultParents, $resultIds);
 
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
+
+			$id_category = (int)Tools::getValue('id_category');
+			$id_product = (int)Tools::getValue('id_product');
 
 			if (Tools::isSubmit('id_category'))
 			{
