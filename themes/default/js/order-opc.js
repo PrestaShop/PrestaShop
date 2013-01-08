@@ -482,17 +482,7 @@ $(function() {
 		
 		// INVOICE ADDRESS
 		$('#invoice_address').click(function() {
-			if ($('#invoice_address:checked').length > 0)
-			{
-				$('#opc_invoice_address').slideDown('slow');
-				if ($('#company_invoice').val() === '')
-					$('#vat_number_block_invoice').hide();
-				updateState('invoice');
-				updateNeedIDNumber('invoice');
-				updateZipCode('invoice');
-			}
-			else
-				$('#opc_invoice_address').slideUp('slow');
+			bindCheckbox();
 		});
 		
 		// VALIDATION / CREATION AJAX
@@ -627,6 +617,7 @@ $(function() {
 		});
 	}
 	
+	bindCheckbox();
 	bindInputs();
 	
 	$('#opc_account_form input,select,textarea').change(function() {
@@ -638,6 +629,21 @@ $(function() {
 	});
 	
 });
+
+function bindCheckbox()
+{
+	if ($('#invoice_address:checked').length > 0)
+	{
+		$('#opc_invoice_address').slideDown('slow');
+		if ($('#company_invoice').val() === '')
+			$('#vat_number_block_invoice').hide();
+		updateState('invoice');
+		updateNeedIDNumber('invoice');
+		updateZipCode('invoice');
+	}
+	else
+		$('#opc_invoice_address').slideUp('slow');
+}
 
 function bindInputs()
 {
