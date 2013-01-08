@@ -146,8 +146,8 @@
 									</span>
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}"><img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}"><img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
+										<a href="{$currentIndex}{if $table == 'category'}&id_category={$id_cat}{/if}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}"><img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
+										<a href="{$currentIndex}{if $table == 'category'}&id_category={$id_cat}{/if}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}"><img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
 									{elseif !$simple_header}
 										<br />&nbsp;
 									{/if}
