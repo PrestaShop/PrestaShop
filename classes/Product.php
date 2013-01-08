@@ -454,6 +454,14 @@ class ProductCore extends ObjectModel
 
 			$this->loadStockData();
 		}
+		
+		// Fix the PS_ALLOW_ACCENTED_CHARS_URL bug of Prestashop 1.5.3.0
+		if (
+			$this->link_rewrite
+			&& !Validate::isLinkRewrite($this->link_rewrite)
+		) {
+			$this->link_rewrite = Tools::str2url($this->link_rewrite);
+		}
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
@@ -5171,3 +5179,5 @@ class ProductCore extends ObjectModel
 	}
 }
 
+= '.(int)$interval['nright']);
+		$sql-
