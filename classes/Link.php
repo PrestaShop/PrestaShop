@@ -199,6 +199,7 @@ class LinkCore
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+						
 		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($category))
@@ -225,7 +226,7 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
-		$base = (($ssl && $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
+		$base = (($ssl || $this->ssl_enable) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
