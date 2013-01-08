@@ -175,6 +175,10 @@ if (!isset($language) || !Validate::isLoadedObject($language))
 	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 Context::getContext()->language = $language;
 
+/* Link should also be initialized in the context here for retrocompatibility */
+$https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+Context::getContext()->link = new Link($https_link, $https_link);
+
 /**
  * @deprecated : these defines are going to be deleted on 1.6 version of Prestashop
  * USE : Configuration::get() method in order to getting the id of order state
