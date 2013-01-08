@@ -328,7 +328,7 @@
 						<label for="city_invoice">{l s='City'} <sup>*</sup></label>
 						<input type="text" class="text" name="city_invoice" id="city_invoice" value="" />
 					</p>
-					{elseif $field_name eq "country"}
+					{elseif $field_name eq "country" || $field_name eq "Country:name"}
 					<p class="required select">
 						<label for="id_country_invoice">{l s='Country'} <sup>*</sup></label>
 						<select name="id_country_invoice" id="id_country_invoice">
