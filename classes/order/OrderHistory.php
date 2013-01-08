@@ -70,10 +70,10 @@ class OrderHistoryCore extends ObjectModel
 	 * Sets the new state of the given order
 	 *
 	 * @param int $new_order_state
-	 * @param int $id_order
+	 * @param int/object $id_order
 	 * @param bool $use_existing_payment
 	 */
-	public function changeIdOrderState($new_order_state, &$id_order, $use_existing_payment = false)
+	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
 	{
 		if (!$new_order_state || !$id_order)
 			return;
