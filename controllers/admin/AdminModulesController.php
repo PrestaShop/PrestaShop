@@ -537,11 +537,12 @@ class AdminModulesControllerCore extends AdminController
 						{
 							$module = Module::getInstanceByName(urldecode($name));
 							$this->errors[] = $this->l(sprintf("Module %s can't be upgraded : ", $module->displayName)).$full_report;
+							continue;
 						}					
 					}
 
 					// If Addons module, download and unzip it before installing it
-					if (!is_null($full_report) && !is_dir('../modules/'.$name.'/'))
+					if (!is_dir('../modules/'.$name.'/'))
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
@@ -564,9 +565,7 @@ class AdminModulesControllerCore extends AdminController
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
 									}
 							}
-
 					}
-
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
