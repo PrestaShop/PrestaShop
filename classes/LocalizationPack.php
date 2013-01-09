@@ -432,7 +432,7 @@ class LocalizationPackCore
 			$attributes = $xml->group_default->attributes();
 			if (isset($attributes['price_display_method']) && in_array((int)$attributes['price_display_method'], array(0, 1)))
 			{
-				$group = new Group((int)_PS_DEFAULT_CUSTOMER_GROUP_);
+				$group = new Group((int)Configuration::get('PS_CUSTOMER_GROUP'));
 				$group->price_display_method = (int)$attributes['price_display_method'];
 				if (!$group->save())
 					$this->_errors[] = Tools::displayError('An error occurred during the default group update');
