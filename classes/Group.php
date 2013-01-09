@@ -301,7 +301,7 @@ class GroupCore extends ObjectModel
 		if (Validate::isLoadedObject($customer))
 			$id_group = (int)$customer->id_default_group;
 
-		return new self($id_group);
+		return new Group($id_group);
 	}
 }
 
