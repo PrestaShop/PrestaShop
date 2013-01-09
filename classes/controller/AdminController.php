@@ -1465,7 +1465,7 @@ class AdminControllerCore extends Controller
 			if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
 				$this->actions[] = $action;
 		}
-
+		$helper->is_cms = $this->is_cms;
 		$list = $helper->generateList($this->_list, $this->fields_list);
 
 		return $list;
