@@ -295,13 +295,17 @@ class GroupCore extends ObjectModel
 	 */
 	public static function getCurrent()
 	{
+		static $groups = array();
 		$customer = Context::getContext()->customer;
-		$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
-
 		if (Validate::isLoadedObject($customer))
 			$id_group = (int)$customer->id_default_group;
+		else
+			$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+		
+		if (!isset($groups[$id_group]))
+			$groups[$id_group] = new Group($id_group);
 
-		return new Group($id_group);
+		return $groups[$id_group];
 	}
 }
 
