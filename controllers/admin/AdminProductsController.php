@@ -1679,6 +1679,7 @@ class AdminProductsControllerCore extends AdminController
 			if (Validate::isLoadedObject($object))
 			{
 				$this->_removeTaxFromEcotax();
+				$product_type_before = $object->getType();
 				$this->copyFromPost($object, $this->table);
 				$object->indexed = 0;
 
@@ -1711,6 +1712,9 @@ class AdminProductsControllerCore extends AdminController
 							$this->processAttachments();
 
 						$this->updatePackItems($object);
+						// Disallow avanced stock management if the product become a pack
+						if ($product_type_before == Product::PTYPE_SIMPLE && $object->getType() == Product::PTYPE_PACK)
+							StockAvailable::setProductDependsOnStock((int)$object->id, false);
 						$this->updateDownloadProduct($object, 1);
 						$this->updateTags(Language::getLanguages(false), $object);
 						
@@ -3775,9 +3779,7 @@ class AdminProductsControllerCore extends AdminController
 					}
 
 					// gets the minimum
-					if (!count($pack_quantities))
-						$pack_quantity = 0;
-					else
+					if (count($pack_quantities))
 					{	
 						$pack_quantity = $pack_quantities[0];
 						foreach ($pack_quantities as $value)
