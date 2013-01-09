@@ -702,8 +702,7 @@ class AdminCustomersControllerCore extends AdminController
 			'connections' => $connections,
 
 			// Referrers
-			'referrers' => $referrers,
-			'show_toolbar' => true
+			'referrers' => $referrers
 		);
 
 		return parent::renderView();
