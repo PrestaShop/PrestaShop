@@ -190,7 +190,7 @@ class CustomerCore extends ObjectModel
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
 	
-	public function __contruct($id = null)
+	public function __construct($id = null)
 	{
 		$this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 		parent::__construct($id);
