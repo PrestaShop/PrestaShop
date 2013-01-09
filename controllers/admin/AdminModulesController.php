@@ -529,13 +529,16 @@ class AdminModulesControllerCore extends AdminController
 				foreach ($modules as $name)
 				{
 					$full_report = null;
-					if ($key == 'update' && !ConfigurationTest::test_dir('modules/'.$name, true, $full_report))
+					if ($key == 'update')
 					{
-						$module = Module::getInstanceByName(urldecode($name));
-						$this->errors[] = $this->l(sprintf("Module %s can't be upgraded : ", $module->displayName)).$full_report;
+						if (ConfigurationTest::test_dir('modules/'.$name, true, $full_report))
+							Tools::deleteDirectory('../modules/'.$name.'/');
+						else
+						{
+							$module = Module::getInstanceByName(urldecode($name));
+							$this->errors[] = $this->l(sprintf("Module %s can't be upgraded : ", $module->displayName)).$full_report;
+						}					
 					}
-					else
-						Tools::deleteDirectory('../modules/'.$name.'/');
 
 					// If Addons module, download and unzip it before installing it
 					if (!is_null($full_report) && !is_dir('../modules/'.$name.'/'))
