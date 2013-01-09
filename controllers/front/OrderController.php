@@ -255,6 +255,21 @@ class OrderControllerCore extends ParentOrderController
 			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
+			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+			
+			CartRule::autoRemoveFromCart($this->context);
+			CartRule::autoAddToCart($this->context);
+			
+			if (!$this->context->cart->update())
+				$this->errors[] = Tools::displayError('An error occurred while updating your cart.', !Tools::getValue('ajax'));
+
+			if (!$this->context->cart->isMultiAddressDelivery())
+				$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
+
+			if (Tools::isSubmit('message'))
+				$this->_updateMessage(Tools::getValue('message'));
+						
 			// Add checking for all addresses
 			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
 			if (count($address_without_carriers))
@@ -265,23 +280,6 @@ class OrderControllerCore extends ParentOrderController
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.', !Tools::getValue('ajax')));
 				else
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.', !Tools::getValue('ajax')));
-			}
-			else
-			{
-				$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
-				$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
-				
-				CartRule::autoRemoveFromCart($this->context);
-				CartRule::autoAddToCart($this->context);
-				
-				if (!$this->context->cart->update())
-					$this->errors[] = Tools::displayError('An error occurred while updating your cart.', !Tools::getValue('ajax'));
-
-				if (!$this->context->cart->isMultiAddressDelivery())
-					$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
-
-				if (Tools::isSubmit('message'))
-					$this->_updateMessage(Tools::getValue('message'));
 			}
 		}
 		
