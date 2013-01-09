@@ -528,11 +528,17 @@ class AdminModulesControllerCore extends AdminController
 			if ($modules)
 				foreach ($modules as $name)
 				{
-					if ($key == 'update')
+					$full_report = null;
+					if ($key == 'update' && !ConfigurationTest::test_dir('modules/'.$name, true, $full_report))
+					{
+						$module = Module::getInstanceByName(urldecode($name));
+						$this->errors[] = $this->l(sprintf("Module %s can't be upgraded : ", $module->displayName)).$full_report;
+					}
+					else
 						Tools::deleteDirectory('../modules/'.$name.'/');
 
 					// If Addons module, download and unzip it before installing it
-					if (!is_dir('../modules/'.$name.'/'))
+					if (!is_null($full_report) && !is_dir('../modules/'.$name.'/'))
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
