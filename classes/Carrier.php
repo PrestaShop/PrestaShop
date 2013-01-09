@@ -482,7 +482,8 @@ class CarrierCore extends ObjectModel
 			$countries[$country['id_country']] = $country;
 		foreach ($states as &$state)
 			if (isset($countries[$state['id_country']])) /* Does not keep the state if its country has been disabled and not selected */
-				$countries[$state['id_country']]['states'][] = $state;
+				if ($state['active'] == 1)
+					$countries[$state['id_country']]['states'][] = $state;
 
 		return $countries;
 	}
