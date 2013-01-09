@@ -358,10 +358,11 @@ abstract class PaymentModuleCore extends Module
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 						$customization_quantity = 0;
+						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
 						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
 						{
 							$customization_text = '';
-							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']] as $customization)
+							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization)
 							{
 								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
 									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
@@ -369,13 +370,11 @@ abstract class PaymentModuleCore extends Module
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
-
 								$customization_text .= '---<br />';
 							}
-
 							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customizationQuantityTotal'];
+							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
