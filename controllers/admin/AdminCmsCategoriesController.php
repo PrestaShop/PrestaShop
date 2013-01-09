@@ -33,6 +33,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->is_cms = true;
 		$this->table = 'cms_category';
 		$this->className = 'CMSCategory';
 		$this->lang = true;

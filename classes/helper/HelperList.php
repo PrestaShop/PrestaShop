@@ -60,7 +60,7 @@ class HelperListCore extends Helper
 	/** @var array $cache_lang use to cache texts in current language */
 	public static $cache_lang = array();
 
-	protected $is_cms = false;
+	public $is_cms = false;
 
 	public $position_identifier;
 
@@ -174,7 +174,7 @@ class HelperListCore extends Helper
 	public function displayListContent()
 	{
 		if ($this->position_identifier)
-			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', '1');
+			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
 		else
 			$id_category = Category::getRootCategory()->id;
 
