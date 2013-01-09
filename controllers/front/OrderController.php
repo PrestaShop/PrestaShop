@@ -252,7 +252,7 @@ class OrderControllerCore extends ParentOrderController
 			
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
 			|| (Tools::isSubmit('same') && !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
-			$this->errors[] = Tools::displayError('Invalid address');
+			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
 			// Add checking for all addresses
@@ -260,11 +260,11 @@ class OrderControllerCore extends ParentOrderController
 			if (count($address_without_carriers))
 			{
 				if (count($address_without_carriers) > 1)
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.', !Tools::getValue('ajax')));
 				elseif ($this->context->cart->isMultiAddressDelivery())
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.', !Tools::getValue('ajax')));
 				else
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.', !Tools::getValue('ajax')));
 			}
 			else
 			{
@@ -275,7 +275,7 @@ class OrderControllerCore extends ParentOrderController
 				CartRule::autoAddToCart($this->context);
 				
 				if (!$this->context->cart->update())
-					$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
+					$this->errors[] = Tools::displayError('An error occurred while updating your cart.', !Tools::getValue('ajax'));
 
 				if (!$this->context->cart->isMultiAddressDelivery())
 					$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
