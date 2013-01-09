@@ -25,7 +25,6 @@
 */
 
 define('_PS_ADMIN_DIR_', getcwd());
-
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 if (!isset(Context::getContext()->employee) || !Context::getContext()->employee->isLoggedBack())
