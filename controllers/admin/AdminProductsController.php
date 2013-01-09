@@ -3775,11 +3775,16 @@ class AdminProductsControllerCore extends AdminController
 					}
 
 					// gets the minimum
-					$pack_quantity = $pack_quantities[0];
-					foreach ($pack_quantities as $value)
-					{
-						if ($pack_quantity > $value)
-							$pack_quantity = $value;
+					if (!count($pack_quantities))
+						$pack_quantity = 0;
+					else
+					{	
+						$pack_quantity = $pack_quantities[0];
+						foreach ($pack_quantities as $value)
+						{
+							if ($pack_quantity > $value)
+								$pack_quantity = $value;
+						}
 					}
 
 					if (!Warehouse::getPackWarehouses((int)$obj->id))

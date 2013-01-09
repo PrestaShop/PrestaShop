@@ -1161,22 +1161,17 @@ class CarrierCore extends ObjectModel
 		$query->where('pc.id_product = '.(int)$product->id);
 		$query->where('pc.id_shop = '.(int)$id_shop);
 
-		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		if (!empty($carriers))
-		{
+		$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		$carrier_list = array();
+		if (!empty($carriers_for_product))
+		{				
 			//the product is linked with carriers
-			$carrier_list = array();
-			foreach ($carriers as $carrier) //check if the linked carriers are available in current zone
+			foreach ($carriers_for_product as $carrier) //check if the linked carriers are available in current zone
 				if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone))
 					$carrier_list[] = $carrier['id_carrier'];
-			if (!empty($carrier_list))
-				return $carrier_list;
-			else
+			if (empty($carrier_list))
 				return array();//no linked carrier are available for this zone
 		}
-
-		$carrier_list = array();
 
 		// The product is not dirrectly linked with a carrier
 		// Get all the carriers linked to a warehouse
@@ -1189,13 +1184,17 @@ class CarrierCore extends ObjectModel
 		$available_carrier_list = array();
 		$customer = new Customer($cart->id_customer);
 		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
+				
 		foreach ($carriers as $carrier)
 			$available_carrier_list[] = $carrier['id_carrier'];
-
-		if (empty($warehouse_carrier_list))
-			$carrier_list = $available_carrier_list;
+		
+		if ($carrier_list)
+			$carrier_list = array_intersect($available_carrier_list, $carrier_list);
 		else
-			$carrier_list = array_intersect($warehouse_carrier_list, $available_carrier_list);
+			$carrier_list = $available_carrier_list;
+			 								
+		if (isset($warehouse_carrier_list))
+			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);						
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
