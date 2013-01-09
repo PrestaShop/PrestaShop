@@ -216,7 +216,7 @@ var ajaxCart = {
 					$picture.css({'position': 'absolute', 'top': pictureOffsetOriginal.top, 'left': pictureOffsetOriginal.left});
 
 				var pictureOffset = $picture.offset();
-				if ($('#cart_block').offset().top && $('#cart_block').offset().left)
+				if ($('#cart_block')[0] && $('#cart_block').offset().top && $('#cart_block').offset().left)
 					var cartBlockOffset = $('#cart_block').offset();
 				else
 					var cartBlockOffset = $('#shopping_cart').offset();
