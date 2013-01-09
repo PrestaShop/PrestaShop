@@ -1508,7 +1508,6 @@ class CartCore extends ObjectModel
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), 2);
 			}
-			
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
@@ -2603,8 +2602,12 @@ class CartCore extends ObjectModel
 
 		$carrier = self::$_carriers[$id_carrier];
 
+		// No valid Carrier or $id_carrier <= 0 ?
 		if (!Validate::isLoadedObject($carrier))
-			die(Tools::displayError('Fatal error: "no default carrier"'));
+		{
+			Cache::store($cache_id, 0);
+			return 0;
+		}
 
 		if (!$carrier->active)
 		{
