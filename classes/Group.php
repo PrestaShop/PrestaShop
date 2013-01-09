@@ -157,7 +157,7 @@ class GroupCore extends ObjectModel
 
 	public function delete()
 	{
-		if ($this->id == _PS_DEFAULT_CUSTOMER_GROUP_)
+		if ($this->id == (int)Configuration::get('PS_CUSTOMER_GROUP'))
 			return false;
 		if (parent::delete())
 		{

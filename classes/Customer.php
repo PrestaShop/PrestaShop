@@ -42,7 +42,7 @@ class CustomerCore extends ObjectModel
 	public $id_gender = 0;
 
 	/** @var integer Default group ID */
-	public $id_default_group = _PS_DEFAULT_CUSTOMER_GROUP_;
+	public $id_default_group;
 
 	/** @var string Lastname */
 	public $lastname;
@@ -189,7 +189,13 @@ class CustomerCore extends ObjectModel
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
-
+	
+	public function __contruct($id = null)
+	{
+		$this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+		parent::__construct($id);
+	}
+	
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
@@ -201,11 +207,11 @@ class CustomerCore extends ObjectModel
 		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 			
-		if ($this->id_default_group == _PS_DEFAULT_CUSTOMER_GROUP_)
+		if ($this->id_default_group == Configuration::get('PS_CUSTOMER_GROUP'))
 			if ($this->is_guest)
-				$this->id_default_group = Configuration::get('PS_GUEST_GROUP');
+				$this->id_default_group = (int)Configuration::get('PS_GUEST_GROUP');
 			else
-				$this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+				$this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
