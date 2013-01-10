@@ -186,7 +186,7 @@
 		{assign var=count_ok value=count($orders_ok)}
 		{if $count_ok}
 			<div>
-				<h3 style="color:green;font-weight:700">
+				<h3 style="color:green;font-weight:700;clear:both;">
 					{l s='Valid orders:'} {$count_ok} {l s='for'} {$total_ok}
 				</h3>
 				<table cellspacing="0" cellpadding="0" class="table" style="width:100%; text-align:left;">
