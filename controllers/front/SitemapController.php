@@ -50,7 +50,7 @@ class SitemapControllerCore extends FrontController
 		if(Module::isInstalled('blockmanufacturer'))
 		{
 			$blockmanufacturer = Module::getInstanceByName('blockmanufacturer');			
-			$this->context->smarty->assign('display_manufacturer_link', (bool)$blockmanufacturer->active);
+			$this->context->smarty->assign('display_manufacturer_link', isset($blockmanufacturer->active) ? (bool)$blockmanufacturer->active : false);
 		}
 		else			
 			$this->context->smarty->assign('display_manufacturer_link', 0);
@@ -58,7 +58,7 @@ class SitemapControllerCore extends FrontController
 		if(Module::isInstalled('blocksupplier'))
 		{
 			$blocksupplier = Module::getInstanceByName('blocksupplier');			
-			$this->context->smarty->assign('display_supplier_link', (bool)$blocksupplier->active);
+			$this->context->smarty->assign('display_supplier_link', isset($blocksupplier->active) ? (bool)$blocksupplier->active : false);
 		}
 		else			
 			$this->context->smarty->assign('display_supplier_link', 0);
