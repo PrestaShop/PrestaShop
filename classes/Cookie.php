@@ -336,15 +336,17 @@ class CookieCore
 		if (!$this->_modified || headers_sent() || !$this->_allow_writing)
 			return;
 
-		$cookie = '';
+		$cookie = array();
 
 		/* Serialize cookie content */
 		if (isset($this->_content['checksum'])) unset($this->_content['checksum']);
 		foreach ($this->_content as $key => $value)
-			$cookie .= $key.'|'.$value.'¤';
+			$cookie[] = $key.'|'.$value;
+
+		$cookie = join('¤', $cookie);
 
 		/* Add checksum to cookie */
-		$cookie .= 'checksum|'.crc32($this->_iv.$cookie);
+		$cookie .= '¤checksum|'.crc32($this->_iv.$cookie);
 		$this->_modified = false;
 		/* Cookies are encrypted for evident security reasons */
 		return $this->_setcookie($cookie);
