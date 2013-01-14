@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
 if (Tools::getValue('bo'))
 {
 	if (!is_dir(_PS_ROOT_DIR_.'/admin/'))
