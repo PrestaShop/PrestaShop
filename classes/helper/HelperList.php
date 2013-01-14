@@ -530,7 +530,7 @@ class HelperListCore extends Helper
 		if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
-		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name));
+		$prefix = isset($this->controller_name) ? str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name)) : '';
 		foreach ($this->fields_list as $key => $params)
 		{
 			if (!isset($params['type']))
