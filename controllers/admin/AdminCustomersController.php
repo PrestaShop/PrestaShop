@@ -666,7 +666,8 @@ class AdminCustomersControllerCore extends AdminController
 			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
 			'last_update' => Tools::displayDate($customer->date_upd, $this->default_form_language, true),
 			'customer_exists' => Customer::customerExists($customer->email),
-			'id_lang' => (int)(count($orders) ? $orders[0]['id_lang'] : Configuration::get('PS_LANG_DEFAULT')),
+			'id_lang' => $customer->id_lang,
+			'customerLanguage' => (new Language($customer->id_lang)),
 
 			// Add a Private note
 			'customer_note' => Tools::htmlentitiesUTF8($customer->note),
