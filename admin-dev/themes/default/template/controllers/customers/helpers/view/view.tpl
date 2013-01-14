@@ -81,6 +81,7 @@
 				<img src="../img/admin/edit.gif" />
 			</a>
 		</div>
+		{l s='Language:'} {if isset($customerLanguage)}{$customerLanguage->name}{else}{l s='undefined'}{/if}<br />
 		{l s='Newsletter:'} {if $customer->newsletter}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
 		{l s='Opt in:'} {if $customer->optin}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
 		{l s='Age:'} {$customer_stats['age']} {if isset($customer->birthday['age'])}({$customer_birthday}){else}{l s='unknown'}{/if}<br /><br />
