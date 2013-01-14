@@ -144,17 +144,19 @@
 					</div>
 				{/if}
 			</div>
-			<div id="employee_links">
-				<span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
-				<span class="separator">&nbsp;</span>
-				<a class="employee" href="index.php?controller=AdminEmployees&amp;id_employee={$employee->id}&amp;updateemployee&amp;token={getAdminToken tab='AdminEmployees'}" alt="">{l s='My preferences'}</a>
-				<span class="separator">&nbsp;</span>
-				<a href="index.php?logout" id="header_logout">{l s='logout'}</a>
-				{if {$base_url}}
-					<span class="separator">&nbsp;</span>
-					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-				{/if}
+		
+			<div id="employee_box">
+				<div id="employee_infos">
+					<div class="employee_name">{l s='Welcome,'} <strong>{$first_name}&nbsp;{$last_name}</strong></div>
+					<div class="clear"></div>
+					<ul id="employee_links">
+						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
+						<li class="separator">&nbsp;</li>
+						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
+					</ul>
+				</div>
 			</div>
+			
 			<div id="header_search">
 				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
 					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />

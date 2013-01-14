@@ -61,7 +61,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Name'),
 				'filter_key' => 'a!name',
-				'width' => 200
+				'width' => 'auto'
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop'),
