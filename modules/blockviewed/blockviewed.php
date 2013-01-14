@@ -94,7 +94,9 @@ class BlockViewed extends Module
 	{
 		$id_product = (int)Tools::getValue('id_product');
 		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
-
+	        if(!in_array($id_product, $productsViewed))
+	            $productsViewed[] = $id_product;
+	            
 		if (sizeof($productsViewed))
 		{
 			$defaultCover = Language::getIsoById($params['cookie']->id_lang).'-default';
@@ -177,8 +179,7 @@ class BlockViewed extends Module
 
 			return $this->display(__FILE__, 'blockviewed.tpl');
 		}
-		elseif ($id_product)
-			$params['cookie']->viewed = (int)($id_product);
+
 		return ;
 	}
 
