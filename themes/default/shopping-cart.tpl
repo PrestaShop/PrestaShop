@@ -185,7 +185,7 @@
 					<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 						<fieldset>
 							<p class="title_block"><label for="discount_name">{l s='Vouchers'}</label></p>
-							<p>
+							<p class="discount_name_block">
 								<input type="text" class="discount_name" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 							</p>
 							<p class="submit"><input type="hidden" name="submitDiscount" /><input type="submit" name="submitAddDiscount" value="{l s='OK'}" class="button" /></p>
