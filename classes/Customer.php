@@ -44,6 +44,9 @@ class CustomerCore extends ObjectModel
 	/** @var integer Default group ID */
 	public $id_default_group;
 
+	/** @var integer Current language used by the customer */
+	public $id_lang;
+
 	/** @var string Lastname */
 	public $lastname;
 
@@ -135,6 +138,7 @@ class CustomerCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_default_group' => array('xlink_resource' => 'groups'),
+			'id_lang' => array('xlink_resource' => 'languages'),
 			'newsletter_date_add' => array(),
 			'ip_registration_newsletter' => array(),
 			'last_passwd_gen' => array('setter' => null),
@@ -181,6 +185,7 @@ class CustomerCore extends ObjectModel
 			'id_shop' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
 			'id_shop_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
 			'id_default_group' => 			array('type' => self::TYPE_INT, 'copy_post' => false),
+			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
 		),
@@ -200,6 +205,7 @@ class CustomerCore extends ObjectModel
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
 		$this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
+		$this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
