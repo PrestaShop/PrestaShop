@@ -154,6 +154,9 @@
 						<li class="separator">&nbsp;</li>
 						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
 					</ul>
+					{if {$base_url}}
+						<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
+					{/if}
 				</div>
 			</div>
 			
