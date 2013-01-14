@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -108,22 +107,32 @@ Context::getContext()->country = $defaultCountry;
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
+/* Set locales */
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
+setlocale(LC_COLLATE, $locale);
+setlocale(LC_CTYPE, $locale);
+setlocale(LC_TIME, $locale);
+setlocale(LC_NUMERIC, 'en_US.UTF-8');
+
 /* Instantiate cookie */
-$cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
+
+
+$cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
+$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
 if (defined('_PS_ADMIN_DIR_'))
-	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
+	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
 else
 {
 	if (Context::getContext()->shop->getGroup()->share_order)
-		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookieLifetime, Context::getContext()->shop->getUrlsSharedCart());
+		$cookie = new Cookie('ps-sg'.Context::getContext()->shop->getGroup()->id, '', $cookie_lifetime, Context::getContext()->shop->getUrlsSharedCart());
 	else
 	{
 		$domains = null;
-		if(Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
+		if (Context::getContext()->shop->domain != Context::getContext()->shop->domain_ssl)
 		  $domains = array(Context::getContext()->shop->domain_ssl, Context::getContext()->shop->domain);
 		
-		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookieLifetime, $domains);
+		$cookie = new Cookie('ps-s'.Context::getContext()->shop->id, '', $cookie_lifetime, $domains);
 	}
 }
 
@@ -151,7 +160,7 @@ else
 	{
 		$customer = new Customer();
 		
-		// Change the default group 
+		// Change the default group
 		if (Group::isFeatureActive())
 			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
 	}

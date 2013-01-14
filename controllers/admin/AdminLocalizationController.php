@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -324,6 +323,10 @@ class AdminLocalizationControllerCore extends AdminController
 	public function updateOptionPsCurrencyDefault($value)
 	{
 		Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
+
+		/* Set conversion rate of default currency to 1 */
+		ObjectModel::updateMultishopTable('Currency', array('conversion_rate' => 1), 'a.id_currency');
+
 		Currency::refreshCurrencies();
 	}
 }

@@ -15,7 +15,9 @@
 	<?php endif; ?>
 </div>
 </form>
-
+<div id="phone_help">
+	<?php echo $this->l('If you are experiencing problems during the installation process, please call our team at %s and one of our experts will be happy to help.', $this->getPhone()) ?>
+</div>
 </div><!-- div id="container" -->
 
 <ul id="footer">
@@ -26,5 +28,9 @@
 	<li><a href="http://www.prestashop.com/contact.php" title="<?php echo $this->l('Contact us!'); ?>" target="_blank"><?php echo $this->l('Contact us!'); ?></a> | </li>
 	<li>&copy; 2005-<?php echo date('Y'); ?></li>
 </ul>
+<script type="text/javascript">
+	if (typeof psuser_assistance != 'undefined')
+		psuser_assistance.setStep('install_<?php echo addslashes($this->step) ?>');
+</script>
 </body>
 </html>

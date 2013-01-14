@@ -54,7 +54,7 @@
     <keywords>plan, sitio</keywords>
     <url_rewrite>mapa-del-sitio</url_rewrite>
   </meta>
-  <meta id="supply" id_shop="1">
+  <meta id="supplier" id_shop="1">
     <title>Proveedores</title>
     <description>Lista de Proveedores</description>
     <keywords>proveedores</keywords>

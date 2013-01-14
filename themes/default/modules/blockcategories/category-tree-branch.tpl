@@ -19,11 +19,21 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- BlockWishlist -->
-<script type="text/javascript" src="{$modules_dir}blockwishlist/js/ajax-wishlist.js"></script>
-<!-- END BlockWishlist -->
+<li {if isset($last) && $last == 'true'}class="last"{/if}>
+	<a href="{$node.link|escape:'htmlall':'UTF-8'}" {if isset($currentCategoryId) && $node.id == $currentCategoryId}class="selected"{/if} title="{$node.desc|escape:'htmlall':'UTF-8'}">{$node.name|escape:'htmlall':'UTF-8'}</a>
+	{if $node.children|@count > 0}
+		<ul>
+		{foreach from=$node.children item=child name=categoryTreeBranch}
+			{if $smarty.foreach.categoryTreeBranch.last}
+				{include file="$branche_tpl_path" node=$child last='true'}
+			{else}
+				{include file="$branche_tpl_path" node=$child last='false'}
+			{/if}
+		{/foreach}
+		</ul>
+	{/if}
+</li>

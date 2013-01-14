@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7515 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -211,7 +210,7 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 		{
 			Category::regenerateEntireNtree();
-			$this->recalculateLevelDepth($this->id_category);
+			$this->recalculateLevelDepth($this->id);
 		}
 		Hook::exec('actionCategoryUpdate', array('category' => $this));
 		return $ret;
@@ -265,7 +264,7 @@ class CategoryCore extends ObjectModel
 			$this->description = Category::getDescriptionClean($this->description);
 			
 		return array(
-			'id' => (int)$this->id_category,
+			'id' => (int)$this->id,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
 			'name' => $this->name,
 			'desc'=> $this->description,
@@ -658,7 +657,7 @@ class CategoryCore extends ObjectModel
 			Tools::orderbyPrice($result, $order_way);
 
 		if (!$result)
-			return false;
+			return array();
 
 		/* Modify SQL result */
 		return Product::getProductsProperties($id_lang, $result);
@@ -965,8 +964,8 @@ class CategoryCore extends ObjectModel
 			$root_category = Category::getRootCategory();
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP &&
 				(!Tools::isSubmit('id_category') ||
-					(int)Tools::getValue('id_category') == (int)$root_category->id_category ||
-					(int)$root_category->id_category == (int)$context->shop->id_category))
+					(int)Tools::getValue('id_category') == (int)$root_category->id ||
+					(int)$root_category->id == (int)$context->shop->id_category))
 				$sql .= '
 					AND c.`id_parent` != 0';
 

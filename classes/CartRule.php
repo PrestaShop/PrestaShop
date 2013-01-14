@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -65,6 +64,7 @@ class CartRuleCore extends ObjectModel
 	public $reduction_product;
 	public $gift_product;
 	public $gift_product_attribute;
+	public $highlight;
 	public $active = 1;
 	public $date_add;
 	public $date_upd;
@@ -104,6 +104,7 @@ class CartRuleCore extends ObjectModel
 			'reduction_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'gift_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'gift_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'highlight' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -216,6 +217,7 @@ class CartRuleCore extends ObjectModel
 			cr.`id_customer` = '.(int)$id_customer.'
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
+		AND highlight = 1
 		'.($active ? 'AND cr.`active` = 1' : '').'
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 

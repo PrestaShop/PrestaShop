@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +35,7 @@ class Feeder extends Module
 	{
 		$this->name = 'feeder';
 		$this->tab = 'front_office_features';
-		$this->version = 0.2;
+		$this->version = 0.3;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -49,17 +48,13 @@ class Feeder extends Module
 	
 	function install()
 	{
-		if (!parent::install())
-			return false;
-		if (!$this->registerHook('header'))
-			return false;
-		return true;
+		return (parent::install() && $this->registerHook('header'));
 	}
 	
 	function hookHeader($params)
 	{
-		$id_category = (int)(Tools::getValue('id_category'));
-		if (!$id_category)
+		
+		if (!($id_category = (int)Tools::getValue('id_category')))
 		{
 			if (isset($_SERVER['HTTP_REFERER']) && preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs) && !strstr($_SERVER['HTTP_REFERER'], '.html'))
 			{

@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block links module -->
 <div id="links_block_left" class="block">
-	<h4>
+	<h4 class="title_block">
 	{if $url}
 		<a href="{$url|escape}">{$title|escape}</a>
 	{else}

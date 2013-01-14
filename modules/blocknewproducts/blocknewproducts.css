@@ -37,6 +37,11 @@
 	padding:0;
 	text-align:right;
 }
+
+#new-products_block_right p.title_block, #new-products_block_right h4  {
+	padding:6px 11px;
+	text-align:left;
+}
 #new-products_block_right .button_large {
 	padding:0;
 	border:none;

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7436 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,6 +31,7 @@ abstract class ModuleCore
 
 	/** @var float Version */
 	public $version;
+	public $database_version;
 
 	/**
 	 * @since 1.5.0.1
@@ -176,6 +176,8 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
+		
+		$this->database_version = $this->version;
 	}
 
 	/**
@@ -396,8 +398,13 @@ abstract class ModuleCore
 	{
 		self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
 		// Check the version of the module with the registered one and look if any upgrade file exist
-		return Tools::version_compare($module->version, $module->database_version, '>')
-				&& Module::loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+		if (Tools::version_compare($module->version, $module->database_version, '>'))
+		{
+			$module = Module::getInstanceByName($module->name);
+			if ($module instanceof Module)
+				return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+		}
+		return null;
 	}
 
 	/**
@@ -512,7 +519,7 @@ abstract class ModuleCore
 		
 		return false;
 	}
-
+	
 	/**
 	 * This function enable module $name. If an $name is an array,
 	 * this will enable all of them
@@ -526,10 +533,12 @@ abstract class ModuleCore
 		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
-
+		$res = true;
 		// Enable each module
-		foreach ($name as $k => $v)
-			Module::getInstanceByName($name)->enable();
+		foreach ($name as $n)
+			if (Validate::isModuleName($n))
+				$res &= Module::getInstanceByName($n)->enable();
+		return $res;
 	}
 
 	/**
@@ -575,12 +584,12 @@ abstract class ModuleCore
 		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
-
+		$res = true;
 		// Disable each module
-		foreach ($name as $k => $v)
-			Module::getInstanceByName($name)->disable();
-
-		return true;
+		foreach ($name as $n)
+			if (Validate::isModuleName($n))
+				$res &= Module::getInstanceByName($n)->disable();
+		return $res;
 	}
 
 	/**
@@ -1054,10 +1063,19 @@ abstract class ModuleCore
 					$item->active = $tmp_module->active;
 					$item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
 					$item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
-
-					// Method pointer to get dynamically the onclick content
+					$item->confirmUninstall = isset($tmp_module->confirmUninstall) ? $tmp_module->confirmUninstall : null;
+					
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
-
+					if ($item->onclick_option)
+					{
+						$href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;
+						$item->onclick_option_content = array();
+						$option_tab = array('desactive', 'reset', 'configure', 'delete');
+						foreach ($option_tab as $opt)
+							$item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);					
+					}
+					
+					
 					$module_list[] = $item;
 					if (!$xml_exist || $needNewConfigFile)
 					{
@@ -1618,7 +1636,7 @@ abstract class ModuleCore
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
-		Tools::clearCache(Context::getContext()->smarty, $template, $cache_id, $compile_id);
+		Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 	}
 

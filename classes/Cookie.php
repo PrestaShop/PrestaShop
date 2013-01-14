@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,6 +51,8 @@ class CookieCore
 	protected $_iv;
 
 	protected $_modified = false;
+	
+	protected $_allow_writing;
 
 	/**
 	 * Get data if the cookie exists and else initialize an new one
@@ -62,7 +63,7 @@ class CookieCore
 	public function __construct($name, $path = '', $expire = null, $shared_urls = null)
 	{
 		$this->_content = array();
-		$this->_expire = isset($expire) ? (int)($expire) : (time() + 1728000);
+		$this->_expire = is_null($expire) ? time() + 1728000 : (int)$expire;
 		$this->_name = md5(_PS_VERSION_.$name);
 		$this->_path = trim(Context::getContext()->shop->physical_uri.$path, '/\\').'/';
 		if ($this->_path{0} != '/') $this->_path = '/'.$this->_path;
@@ -72,11 +73,17 @@ class CookieCore
 		$this->_key = _COOKIE_KEY_;
 		$this->_iv = _COOKIE_IV_;
 		$this->_domain = $this->getDomain($shared_urls);
+		$this->_allow_writing = true;
 		if (Configuration::get('PS_CIPHER_ALGORITHM'))
 			$this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
 		else
 			$this->_cipherTool = new Blowfish($this->_key, $this->_iv);
 		$this->update();
+	}
+
+	public function disallowWriting()
+	{
+		$this->_allow_writing = false;
 	}
 
 	protected function getDomain($shared_urls = null)
@@ -326,7 +333,7 @@ class CookieCore
 	 */
 	public function write()
 	{
-		if (!$this->_modified || headers_sent())
+		if (!$this->_modified || headers_sent() || !$this->_allow_writing)
 			return;
 
 		$cookie = '';

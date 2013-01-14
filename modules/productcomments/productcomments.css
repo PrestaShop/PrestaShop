@@ -185,7 +185,7 @@
 	overflow:hidden;
 	width: 360px
 }
-#product_comments_block_tab div.comment_details h4 {padding-bottom:10px}
+#product_comments_block_tab div.comment_details .title_block, #product_comments_block_tab div.comment_details h4  {padding-bottom:10px}
 #product_comments_block_tab div.comment_details p {padding-bottom:10px}
 #product_comments_block_tab div.comment_details ul {
 	list-style-type:none;

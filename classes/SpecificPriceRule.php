@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7158 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,7 +96,6 @@ class SpecificPriceRuleCore extends ObjectModel
 			return;
 
 		$result = Db::getInstance()->insert('specific_price_rule_condition_group', array(
-			'id_specific_price_rule_condition_group' =>	'',
 			'id_specific_price_rule' =>	(int)$this->id
 		));
 		if (!$result)
@@ -106,7 +104,6 @@ class SpecificPriceRuleCore extends ObjectModel
 		foreach ($conditions as $condition)
 		{
 			$result = Db::getInstance()->insert('specific_price_rule_condition', array(
-				'id_specific_price_rule_condition' => '',
 				'id_specific_price_rule_condition_group' => (int)$id_specific_price_rule_condition_group,
 				'type' => pSQL($condition['type']),
 				'value' => (float)$condition['value'],

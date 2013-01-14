@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -124,6 +123,9 @@ class LinkCore
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 		
+		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category'))
+			$params['category'] = Tools::str2url($product->category);
+		
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference'))
 			$params['reference'] = Tools::str2url($product->reference);
 
@@ -167,7 +169,7 @@ class LinkCore
 		$params['meta_title'] = Tools::str2url($category->meta_title);
 
 		// Selected filters is used by the module blocklayered
-		$selected_filters = is_null($selected_filters) ? Tools::getValue('selected_filters') : $selected_filters;
+		$selected_filters = is_null($selected_filters) ? '' : $selected_filters;
 
 		if (empty($selected_filters))
 			$rule = 'category_rule';

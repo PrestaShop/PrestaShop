@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +34,7 @@ class PrestaShopExceptionCore extends Exception
 	 */
 	public function displayMessage()
 	{
-		if (_PS_MODE_DEV_)
+		if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_'))
 		{
 			// Display error message
 			echo '<style>
@@ -53,7 +52,7 @@ class PrestaShopExceptionCore extends Exception
 			echo '<h2>['.get_class($this).']</h2>';
 			printf(
 				'<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>',
-				$this->getMessage(),
+				Tools::safeOutput($this->getMessage()),
 				$this->getLine(),
 				ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
 			);

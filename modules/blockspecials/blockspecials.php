@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7048 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -93,7 +92,7 @@ class BlockSpecials extends Module
 		$this->smarty->assign(array(
 			'special' => $special,
 			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
-			'mediumSize' => Image::getSize('medium_default'),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 		));
 
 		return $this->display(__FILE__, 'blockspecials.tpl');

@@ -79,7 +79,7 @@ h3 {
 	padding-bottom:20px;
 	font-size:16px
 }
-h4 {
+.title_block {
 	padding-bottom:20px;
 	font-size:14px
 }
@@ -129,6 +129,17 @@ a, a:active, a:visited {
 }
 	a:hover {text-decoration:underline}
 
+	
+/* HACK IOS ipad, iphone */
+input[type="text"], input[type="email"], input[type="search"], input[type="password"], input[type="submit"], input[type="image"] {
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	-webkit-border-radius:0px !important;
+	-moz-border-radius:0px !important;
+	border-radius:0px !important;
+}
+	
 /*buttons ************************************************************************************** */
 input.button_mini, input.button_small, input.button, input.button_large,
 input.button_mini_disabled, input.button_small_disabled, input.button_disabled, input.button_large_disabled,
@@ -142,9 +153,9 @@ span.exclusive_mini, span.exclusive_small, span.exclusive, span.exclusive_large,
 	display:inline-block;
 	padding:5px 7px;
 	border:1px solid #cc9900;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+	-moz-border-radius: 3px !important;
+	-webkit-border-radius: 3px !important;
+	border-radius: 3px !important;
 	font-weight:bold;
 	color:#000;
 	background:url(../img/bg_bt.gif) repeat-x 0 0 #f4b61b;
@@ -223,7 +234,7 @@ input.button_small, input.button_small_disabled, input.exclusive_small, input.ex
 input.button_disabled, input.exclusive_disabled, span.exclusive {
 	border:1px solid #ccc;
 	color:#999;
-	background:url(../img/bg_bt_2.gif) repeat-x 0 0 #f4b61b;
+	background:url(../img/bg_bt_2.gif) repeat-x 0 0 #CCCCCC;
 	cursor:default;
 }
 input.button_large, input.button_large_disabled, input.exclusive_large, input.exclusive_large_disabled, a.button_large, a.exclusive_large, span.button_large, span.exclusive_large, span.exclusive_large_disabled {
@@ -276,15 +287,17 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block h4 {
+	.block .title_block, .block h4 {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;
 		text-shadow:0 1px 0 #000;
 		text-transform:uppercase;
-		background:#383838
+		background:#383838;
+		text-align:left;
+		font-weight: bold;
 	}
-		.block h4 a {color:#fff}
+		.block .title_block a, .block h4 a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
@@ -566,12 +579,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		width:175px
 	}
 	.blockcategories_footer {margin-left:0}
-#footer h4 {
+#footer .title_block {
 	padding-bottom: 10px;
 	text-transform:uppercase
 }
-#footer h4,
-#footer h4 a {
+#footer .title_block ,
+#footer .title_block  a {
 	font-weight:normal;
 	font-size:14px;
 	color:#fff
@@ -583,7 +596,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li a {color:#fff}
 
 #footer .myaccount {padding: 15px 10px}
-#footer .myaccount h4 {
+#footer .myaccount .title_block, #footer .myaccount h4 {
 	padding:0 0 10px 0;
 	background:none;
 	text-shadow:none
@@ -790,9 +803,9 @@ table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
 }
 
-.cart_voucher h4,
+.cart_voucher .title_block, .cart_voucher h4
 .cart_voucher p {float:left;}
-.cart_voucher h4 {
+.cart_voucher .title_block, .cart_voucher h4 {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
@@ -800,13 +813,20 @@ table#cart_summary #total_price_container {
 .cart_voucher p {padding-bottom:0;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
-	line-height: 16px;
+	line-height: 20px;
 	color:#666;
+	padding-top:2px;
 	font-weight:normal;
 	border-top:1px dotted #ccc
 }
-.cart_voucher .title_offers {margin-top:10px}
-.cart_voucher #display_cart_vouchers span {font-weight:bold}
+.cart_voucher .title_offers {
+	margin-top:15px;
+	margin-bottom:5px
+}
+.cart_voucher #display_cart_vouchers span {
+	font-weight:bold;
+	cursor:pointer;
+}
 .cart_voucher input.discount_name {
 	padding:0 5px;
 	height:22px;
@@ -863,7 +883,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	border:1px solid #999;
 	background:#fff
 }
-#order_carrier h4 {
+#order_carrier .title_block  {
 	padding:0 15px;
 	height: 29px;
 	font-weight: bold;
@@ -922,7 +942,7 @@ table#cart_summary .gift-icon {
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#create-account_form h4 {
+#create-account_form .title_block  {
 	padding-bottom:22px;
 	font-size:11px;
 	color:#333
@@ -1748,7 +1768,7 @@ ul#suppliers_list li .right_side {float:right;}
 /* ************************************************************************************************
 		addon customer privacy
 ************************************************************************************************ */
-#account-creation_form fieldset.customerprivacy label{
+#account-creation_form fieldset.customerprivacy label, fieldset.customerprivacy label{
 	padding-bottom:0;
 	font-size:14px;
 	text-align:left;
@@ -2066,3 +2086,5 @@ tr.subitem > td:first-child + td {
 	padding:0;
 	text-align:center
 }
+
+.ie7 #featured-products_block_center .product_image span.new {top:-20px;right:-19px}

@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7077 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block suppliers module -->
 <div id="suppliers_block_left" class="block blocksupplier">
-	<h4>{if $display_link_supplier}<a href="{$link->getPageLink('supplier')}" title="{l s='Suppliers' mod='blocksupplier'}">{/if}{l s='Suppliers' mod='blocksupplier'}{if $display_link_supplier}</a>{/if}</h4>
+	<h4 class="title_block">{if $display_link_supplier}<a href="{$link->getPageLink('supplier')}" title="{l s='Suppliers' mod='blocksupplier'}">{/if}{l s='Suppliers' mod='blocksupplier'}{if $display_link_supplier}</a>{/if}</h4>
 	<div class="block_content">
 {if $suppliers}
 	{if $text_list}

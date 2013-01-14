@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block tags module -->
 <div id="tags_block_left" class="block tags_block">
-	<h4>{l s='Tags' mod='blocktags'}</h4>
+	<h4 class="title_block">{l s='Tags' mod='blocktags'}</h4>
 	<p class="block_content">
 {if $tags}
 	{foreach from=$tags item=tag name=myLoop}

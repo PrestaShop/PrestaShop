@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -96,25 +95,6 @@
 				</p>
 			</div>
 		</form>
-		<div class="clear">&nbsp;</div>
-		<div style="width:50%; margin: 0 auto;">
-			{l s='Note that our samples are available below.'}
-			<div class="clear">&nbsp;</div>
-			<ul id="sample_files_import">
-				<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
-				<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
-				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
-				<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
-				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
-				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
-				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
-				{if $PS_ADVANCED_STOCK_MANAGEMENT}
-					<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-					<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
-				{/if}
-			</ul>
-		</div>
-		<div class="clear">&nbsp;</div>
 	</div>
 </div>
 
@@ -145,7 +125,23 @@
 				&nbsp;
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
-
+			<div style="width:50%; margin: 0 auto;">
+				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to see our samples import csv files.'}</a>
+				<ul id="sample_files_import" style="display:none">
+					<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
+					<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
+					<li><a href="../docs/csv_import/combinations_import.csv">{l s='Sample Combinations file'}</a></li>
+					<li><a href="../docs/csv_import/customers_import.csv">{l s='Sample Customers file'}</a></li>
+					<li><a href="../docs/csv_import/addresses_import.csv">{l s='Sample Addresses file'}</a></li>
+					<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Sample Manufacturers file'}</a></li>
+					<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Sample Suppliers file'}</a></li>
+					{if $PS_ADVANCED_STOCK_MANAGEMENT}
+						<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+						<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
+					{/if}
+				</ul>
+				<div class="clear">&nbsp;</div>
+			</div>
 			<label class="clear">{l s='What kind of Entity would you like to import?'} </label>
 			<div class="margin-form">
 				<select name="entity" id="entity">

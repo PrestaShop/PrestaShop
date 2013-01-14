@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,6 +69,13 @@ function pSQL($string, $htmlOK = false)
 function bqSQL($string)
 {
 	return str_replace('`', '\`', pSQL($string));
+}
+
+function displayFatalError()
+{
+	$error = error_get_last();
+	if ($error !== NULL)
+		echo '[PrestaShop] Fatal error in module '.substr(basename($error['file']), 0, -4).':<br />'.$error['message'];
 }
 
 /**

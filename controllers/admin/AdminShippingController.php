@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -99,7 +98,7 @@ class AdminShippingControllerCore extends AdminController
 			else
 				$array_carrier[] = $carrier['id_carrier'];
 
-		$id_carrier = Tools::getValue('id_carrier');
+		$id_carrier = (int)Tools::getValue('id_carrier');
 
 		if (count($carriers) && isset($array_carrier[0]))
 		{

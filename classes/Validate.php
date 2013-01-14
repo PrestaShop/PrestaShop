@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7040 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -473,9 +472,9 @@ class ValidateCore
 	 */
 	public static function isDate($date)
 	{
-		if (!preg_match('/^([0-9]{4})-((0?[0-9])|(1[0-2]))-((0?[0-9])|([1-2][0-9])|(3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches))
+		if (!preg_match('/^([0-9]{4})-((?:0?[0-9])|(?:1[0-2]))-((?:0?[0-9])|(?:[1-2][0-9])|(?:3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches))
 			return false;
-		return checkdate((int)$matches[2], (int)$matches[5], (int)$matches[0]);
+		return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
 	}
 
 	/**
@@ -488,9 +487,9 @@ class ValidateCore
 	{
 		if (empty($date) || $date == '0000-00-00')
 			return true;
-		if (preg_match('/^([0-9]{4})-((0?[1-9])|(1[0-2]))-((0?[1-9])|([1-2][0-9])|(3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
+		if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
 		{
-			if ($birth_date[1] > date('Y') || $birth_date[2] > date('m') || $birth_date[3] > date('d'))
+			if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d'))
 				return false;
 			return true;
 		}
@@ -803,12 +802,12 @@ class ValidateCore
 
 	public static function isWeightUnit($unit)
 	{
-		return preg_match('/^[a-zA-Z]{1,3}$/', $unit);
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isDistanceUnit($unit)
 	{
-		return preg_match('/^[a-zA-Z]{1,2}$/', $unit);
+		return (Validate::isGenericName($unit) & (Tools::strlen($unit) < 5));
 	}
 
 	public static function isSubDomainName($domain)

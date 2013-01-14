@@ -19,14 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block myaccount module -->
 <div class="block myaccount">
-	<h4><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></h4>
+	<h4 class="title_block"><a href="{$link->getPageLink('my-account', true)}">{l s='My account' mod='blockmyaccount'}</a></h4>
 	<div class="block_content">
 		<ul class="bullet">
 			<li><a href="{$link->getPageLink('history', true)}" title="">{l s='My orders' mod='blockmyaccount'}</a></li>

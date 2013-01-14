@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7307 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -111,7 +110,7 @@ class StatsBestVouchers extends ModuleGrid
 
 	public function getData()
 	{
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS ocr.code, COUNT(ocr.id_cart_rule) as total, SUM(o.total_paid_real) / o.conversion_rate as ca
+		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS ocr.name as name, COUNT(ocr.id_cart_rule) as total, ROUND(SUM(o.total_paid_real) / o.conversion_rate, 2) as ca
 				FROM '._DB_PREFIX_.'order_cart_rule ocr
 				LEFT JOIN '._DB_PREFIX_.'orders o ON o.id_order = ocr.id_order
 				WHERE o.valid = 1
@@ -121,7 +120,7 @@ class StatsBestVouchers extends ModuleGrid
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) && (strtoupper($this->_direction) == 'ASC' || strtoupper($this->_direction) == 'DESC'))
+			if (isset($this->_direction) && (strtoupper($this->_direction) == 'ASC' || strtoupper($this->_direction) == 'DESC'))
 				$this->_query .= ' '.pSQL($this->_direction);
 		}
 		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))

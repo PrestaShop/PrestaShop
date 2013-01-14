@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -96,7 +95,6 @@ class AdminHomeControllerCore extends AdminController
 		$opti_list = array();
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
-			$this->context->smarty->assign('hide_tips', Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
 			$opti_list[] = array(
 				'title' => $this->l('URL rewriting'),
 				'href' => $link->getAdminLink('AdminMeta'),
@@ -146,8 +144,12 @@ class AdminHomeControllerCore extends AdminController
 				'image' => $lights[$htaccessAfterUpdate]['image'],
 			);
 		}
-		$this->context->smarty->assign('opti_list', $opti_list);
-		$this->context->smarty->assign('content', $content);
+		$this->context->smarty->assign(array(
+			'opti_list' => $opti_list,
+			'content' => $content,
+			'hide_tips' => Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'))
+		);
+
 		$template = $this->createTemplate('optimizationTips.tpl');
 		return $template->fetch();
 	}
@@ -378,8 +380,9 @@ class AdminHomeControllerCore extends AdminController
 			SELECT total_paid / conversion_rate as total_converted, left(invoice_date, 10) as invoice_date
 			FROM '._DB_PREFIX_.'orders o
 			WHERE valid = 1
-				AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
-				'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
+			AND total_paid > 0
+			AND invoice_date BETWEEN \''.date('Y-m-d', strtotime('-7 DAYS', time())).' 00:00:00\' AND \''.date('Y-m-d H:i:s').'\'
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 		');
 		foreach ($result as $row)
 			$chart->getCurve(1)->setPoint(strtotime($row['invoice_date'].' 02:00:00'), $row['total_converted']);

@@ -19,11 +19,9 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6758 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div id="carrier_area">
 {if !$opc}
 	<script type="text/javascript">
 	//<![CDATA[
@@ -32,8 +30,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product'}";
-	var txtProducts = "{l s='products'}";
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
 	var orderUrl = '{$link->getPageLink("order", true)}';
 
 	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
@@ -73,6 +71,12 @@
 {if !$opc}
 	{capture name=path}{l s='Shipping'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
+{/if}
+
+{if !$opc}
+	<div id="carrier_area">
+{else}
+	<div id="carrier_area" class="opc-main-block">
 {/if}
 
 {if !$opc}

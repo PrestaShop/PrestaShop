@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -185,6 +184,13 @@ class AdminCustomersControllerCore extends AdminController
 		parent::initToolbar();
 		if (!$this->can_add_customer)
 			unset($this->toolbar_btn['new']);
+		else if (!$this->display) //display import button only on listing
+		{
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'desc' => $this->l('Import')
+			);
+		}
 	}
 
 	public function initProcess()

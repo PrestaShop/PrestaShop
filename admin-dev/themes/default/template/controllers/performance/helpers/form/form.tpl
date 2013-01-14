@@ -19,7 +19,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 9795 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -193,10 +192,6 @@
 
 		$('input[name="combination"], input[name="feature"]').change(function(){
 			$('#features_detachables_up').val('true');
-		});
-
-		$('input[name="PS_CSS_THEME_CACHE"], input[name="PS_JS_THEME_CACHE"], input[name="PS_HTML_THEME_COMPRESSION"], input[name="PS_JS_HTML_THEME_COMPRESSION"], input[name="PS_HIGH_HTML_THEME_COMPRESSION"]').change(function(){
-			$('#ccc_up').val(1);
 		});
 
 		$('input[name="_MEDIA_SERVER_1_"], input[name="_MEDIA_SERVER_2_"], input[name="_MEDIA_SERVER_3_"]').change(function(){

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -188,7 +187,7 @@ abstract class ControllerCore
 		else
 		{
 			$this->initCursedPage();
-			$this->display();
+			$this->smartyOutputContent($this->layout);
 		}
 	}
 

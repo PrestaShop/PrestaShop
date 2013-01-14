@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7506 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -164,7 +163,13 @@ class ProductCore extends ObjectModel
 
 	/** @var boolean Product statuts */
 	public $active = true;
-
+	
+	/** @var boolean Product statuts */
+	public $redirect_type = '';
+	
+	/** @var boolean Product statuts */
+	public $id_product_redirected = 0;
+		
 	/** @var boolean Product available for order */
 	public $available_for_order = true;
 
@@ -220,7 +225,7 @@ class ProductCore extends ObjectModel
 	 */
 	public $category;
 
-	public static $_taxCalculationMethod = PS_TAX_EXC;
+	public static $_taxCalculationMethod = null;
 	protected static $_prices = array();
 	protected static $_pricesLevel2 = array();
 	protected static $_incat = array();
@@ -239,7 +244,7 @@ class ProductCore extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => array(
-			// Classic fields
+			/* Classic fields */
 			'id_shop_default' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -273,6 +278,8 @@ class ProductCore extends ObjectModel
 			'text_fields' => 				array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 			'uploadable_files' => 			array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 			'active' => 					array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+			'redirect_type' => 				array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
+			'id_product_redirected' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
 			'available_for_order' => 		array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'available_date' => 			array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 			'condition' => 					array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
@@ -503,8 +510,9 @@ class ProductCore extends ObjectModel
 
 	public static function getTaxCalculationMethod($id_customer = null)
 	{
-		if ($id_customer)
-			Product::initPricesComputation((int)$id_customer);
+		if (self::$_taxCalculationMethod === null || $id_customer !== null)
+			Product::initPricesComputation($id_customer);
+
 		return (int)self::$_taxCalculationMethod;
 	}
 
@@ -651,7 +659,26 @@ class ProductCore extends ObjectModel
 
 		return parent::validateFieldsLang($die, $error_return);
 	}
-
+	
+	public function toggleStatus()
+	{
+		//test if the product is active and if redirect_type is empty string and set default value to id_product_redirected & redirect_type
+		//  /!\ after parent::toggleStatus() active will be false, that why we set 404 by default :p
+		if ($this->active)
+		{
+			//case where active will be false after parent::toggleStatus()
+			$this->id_product_redirected = 0;
+			$this->redirect_type = '404';
+		}
+		else
+		{	
+			//case where active will be true after parent::toggleStatus()
+			$this->id_product_redirected = 0;
+			$this->redirect_type = '';
+		}
+		return parent::toggleStatus();
+	}
+	
 	public function delete()
 	{
 		/*
@@ -799,7 +826,7 @@ class ProductCore extends ObjectModel
 			SELECT c.`id_category`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'category` c ON (c.`id_category` = cp.`id_category`)
-			'.Shop::addSqlAssociation('category', 'c', true).'
+			'.Shop::addSqlAssociation('category', 'c', true, null, true).'
 			WHERE cp.`id_category` NOT IN ('.implode(',', array_map('intval', $categories)).')
 			AND cp.id_product = '.$this->id
 		);
@@ -2528,19 +2555,19 @@ class ProductCore extends ObjectModel
 			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
-		$cache_id_2 = $id_product;
+		$cache_id_2 = $id_product.'-'.$id_shop;
 		if (!isset(self::$_pricesLevel2[$cache_id_2]))
 		{
 			$sql = new DbQuery();
 			$sql->select('product_shop.`price`, product_shop.`ecotax`');
 			$sql->from('product', 'p');
-			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop='.(int)$id_shop.')');
+			$sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = '.(int)$id_shop.')');
 			$sql->where('p.`id_product` = '.(int)$id_product);
 			if (Combination::isFeatureActive())
 			{
 				$sql->select('product_attribute_shop.id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
 				$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute=pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')');
+				$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop = '.(int)$id_shop.')');
 			}
 			else
 				$sql->select('0 as id_product_attribute');
@@ -2577,7 +2604,8 @@ class ProductCore extends ObjectModel
 		if (is_array($result) && (!$specific_price || !$specific_price['id_product_attribute'] || $specific_price['price'] < 0))
 		{
 			$attribute_price = Tools::convertPrice($result['attribute_price'] !== null ? (float)$result['attribute_price'] : 0, $id_currency);
-			if ($id_product_attribute !== false && !is_null($id_product_attribute)) // If you want the default combination, please use NULL value instead
+			// If you want the default combination, please use NULL value instead
+			if ($id_product_attribute !== false)
 				$price += $attribute_price;
 		}
 
@@ -3191,8 +3219,8 @@ class ProductCore extends ObjectModel
 		{
 			if (!array_key_exists($row['id_product'].'-'.$id_lang, self::$_frontFeaturesCache))
 				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang] = array();
-			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']]))
-				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_product']] = $row;
+			if (!isset(self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']]))
+				self::$_frontFeaturesCache[$row['id_product'].'-'.$id_lang][$row['id_feature']] = $row;
 		}
 	}
 
@@ -3672,14 +3700,11 @@ class ProductCore extends ObjectModel
 		$row['specific_prices'] = $specific_prices;
 
 		if ($row['id_product_attribute'])
-		{
-			$row['quantity_all_versions'] = $row['quantity'];
-			$row['quantity'] = Product::getQuantity(
+			$row['quantity_all_versions'] = Product::getQuantity(
 				(int)$row['id_product'],
-				$row['id_product_attribute'],
+				0,
 				isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
 			);
-		}
 		else
 			$row['quantity'] = Product::getQuantity((int)$row['id_product']);
 

@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7331 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -105,16 +104,45 @@ class ProductControllerCore extends FrontController
 			 * allow showing the product
 			 * In all the others cases => 404 "Product is no longer available"
 			 */
-			if (!$this->product->isAssociatedToShop()
-			|| ((!$this->product->active && ((Tools::getValue('adtoken') != Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
-			|| !file_exists(_PS_ROOT_DIR_.'/'.Tools::getValue('ad').'/index.php')))))
+			if (!$this->product->isAssociatedToShop() || !$this->product->active)
 			{
-				header('HTTP/1.1 404 page not found');
-				$this->errors[] = Tools::displayError('Product is no longer available.');
+				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')))
+				{
+					// If the product is not active, it's the admin preview mode
+					$this->context->smarty->assign('adminActionDisplay', true);
+				}
+				else
+				{
+					$this->context->smarty->assign('adminActionDisplay', false);
+					if ($this->product->id_product_redirected == $this->product->id)
+						$this->product->redirect_type = '404';
+					
+					switch ($this->product->redirect_type)
+					{
+						case '301':
+							header('HTTP/1.1 301 Moved Permanently');
+							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+						break;
+						case '302':
+							header('HTTP/1.1 302 Moved Temporarily');
+							header('Cache-Control: no-cache');
+							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+						break;
+						case '404':
+							header('HTTP/1.1 404 Not Found');
+							header('Status: 404 Not Found');
+							$this->errors[] = Tools::displayError('Product is no longer available.');
+						break;
+					}
+				}
 			}
 			else if (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			{
+				header('HTTP/1.1 403 Forbidden');
+				header('Status: 403 Forbidden');
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
-
+			}
+			
 			// Load category
 			if (isset($_SERVER['HTTP_REFERER'])
 				&& !strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
@@ -150,10 +178,6 @@ class ProductControllerCore extends FrontController
 		{
 			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
-
-			// If the product is not active, it's the admin preview mode
-			if (!$this->product->active)
-				$this->context->smarty->assign('adminActionDisplay', true);
 
 			// Product pictures management
 			require_once('images.inc.php');
@@ -321,15 +345,19 @@ class ProductControllerCore extends FrontController
 			$product_images[(int)$image['id_image']] = $image;
 		}
 		if (!isset($cover))
-			$cover = array('id_image' => $this->context->language->iso_code.'-default', 'legend' => 'No picture', 'title' => 'No picture');
-		$size = Image::getSize('large_default');
+			$cover = array(
+				'id_image' => $this->context->language->iso_code.'-default', 
+				'legend' => 'No picture', 
+				'title' => 'No picture'
+				);
+		$size = Image::getSize(ImageType::getFormatedName('large'));
 		$this->context->smarty->assign(array(
 			'have_image' => Product::getCover((int)Tools::getValue('id_product')),
 			'cover' => $cover,
 			'imgWidth' => (int)$size['width'],
-			'mediumSize' => Image::getSize('medium_default'),
-			'largeSize' => Image::getSize('large_default'),
-			'homeSize' => Image::getSize('home_default'),
+			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
+			'largeSize' => Image::getSize(ImageType::getFormatedName('large')),
+			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 			'col_img_dir' => _PS_COL_IMG_DIR_));
 		if (count($product_images))
 			$this->context->smarty->assign('images', $product_images);
@@ -449,10 +477,10 @@ class ProductControllerCore extends FrontController
 	protected function assignCategory()
 	{
 		// Assign category to the template
-		if ($this->category !== false && Validate::isLoadedObject($this->category))
+		if ($this->category !== false && Validate::isLoadedObject($this->category) && $this->category->inShop() && $this->category->isAssociatedToShop())
 		{
+			$path = Tools::getPath($this->category->id, $this->product->name, true);
 			$this->context->smarty->assign(array(
-				'path' => Tools::getPath($this->category->id, $this->product->name, true),
 				'category' => $this->category,
 				'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
 				'id_category_current' => (int)$this->category->id,
@@ -460,9 +488,16 @@ class ProductControllerCore extends FrontController
 				'return_category_name' => Tools::safeOutput($this->category->name)
 			));
 		}
-		else
-			$this->context->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
-
+		elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop))
+		{
+			$cat_default = new Category((int)$this->product->id_category_default);
+			if (Validate::isLoadedObject($cat_default) && $cat_default->active && $cat_default->isAssociatedToShop())
+				$path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
+		}
+		if (!isset($path) || !$path)
+			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
+		$this->context->smarty->assign('path', $path);
+		
 		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
 		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
