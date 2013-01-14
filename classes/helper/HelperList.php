@@ -530,11 +530,12 @@ class HelperListCore extends Helper
 		if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
 			$table_dnd = true;
 
+		$prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name));
 		foreach ($this->fields_list as $key => $params)
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key)};
+			$value = Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.(array_key_exists('filter_key', $params) ? $params['filter_key'] : $key)};
 			switch ($params['type'])
 			{
 				case 'bool':
@@ -558,9 +559,9 @@ class HelperListCore extends Helper
 				case 'select':
 					foreach ($params['list'] as $option_value => $option_display)
 					{
-						if (isset(Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']})
-							&& Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']} == $option_value
-							&& Context::getContext()->cookie->{$this->table.'Filter_'.$params['filter_key']} != '')
+						if (isset(Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']})
+							&& Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']} == $option_value
+							&& Context::getContext()->cookie->{$prefix.$this->table.'Filter_'.$params['filter_key']} != '')
 							$this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
 					}
 					break;
