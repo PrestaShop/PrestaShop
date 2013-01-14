@@ -812,6 +812,8 @@ table#cart_summary #total_price_container {
 	font-size:13px
 }
 .cart_voucher p {padding-bottom:0;}
+
+.cart_voucher p.discount_name_block {float:left;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
 	line-height: 20px;
