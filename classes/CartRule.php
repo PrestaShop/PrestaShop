@@ -219,7 +219,6 @@ class CartRuleCore extends ObjectModel
 			cr.`id_customer` = '.(int)$id_customer.'
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
-		AND highlight = 1
 		'.($active ? 'AND cr.`active` = 1' : '').'
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 
