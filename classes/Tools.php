@@ -110,7 +110,7 @@ class ToolsCore
 	}
 
 	/**
-	* Redirect url wich allready PS_BASE_URI
+	* Redirect URLs already containing PS_BASE_URI
 	*
 	* @param string $url Desired URL
 	*/
