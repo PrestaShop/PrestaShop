@@ -396,6 +396,18 @@ class DispatcherCore
 			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
 				}
 		
+		// Set default routes
+		foreach (Language::getLanguages() as $lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$lang['id_lang'],
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array()
+				);
+		
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
@@ -431,7 +443,7 @@ class DispatcherCore
 					foreach (Language::getLanguages() as $lang)
 						$this->addRoute(
 							$route_id,
-							$custom_route ? $custom_route : $route['rule'],
+							$custom_route,
 							$route_data['controller'],
 							$lang['id_lang'],
 							$route_data['keywords'],
