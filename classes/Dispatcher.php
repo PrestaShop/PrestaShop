@@ -425,31 +425,28 @@ class DispatcherCore
 					'controller' =>	'index',
 				);
 
-			// Load custom routes
+
+			// Load custom & default routes
 			foreach ($this->default_routes as $route_id => $route_data)
-				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
-					foreach (Language::getLanguages() as $lang)
-						$this->addRoute(
-							$route_id,
-							$custom_route,
-							$route_data['controller'],
-							$lang['id_lang'],
-							$route_data['keywords'],
-							isset($route_data['params']) ? $route_data['params'] : array()
-						);
+                        {
+                            if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
+                            {
+                                $route_data['rule']=$custom_route;
+                            }
+                            foreach (Language::getLanguages() as $lang)
+                                    $this->addRoute(
+                                            $route_id,
+                                            $route_data['rule'],
+                                            $route_data['controller'],
+                                            $lang['id_lang'],
+                                            $route_data['keywords'],
+                                            isset($route_data['params']) ? $route_data['params'] : array()
+                                    );
+                        }
 		}
 
-		// Set default routes
-		foreach (Language::getLanguages() as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array()
-				);
+		// Set default routes - overrides the custom rules
+                // Moved and combined with the custom rules
 	}
 
 	/**
