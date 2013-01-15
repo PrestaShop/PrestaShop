@@ -447,6 +447,13 @@ class AdminModulesControllerCore extends AdminController
 		// Try to upload and unarchive the module
 	 	if ($this->tabAccess['add'] === '1')
 		{
+			// UPLOAD_ERR_OK: 0
+			// UPLOAD_ERR_INI_SIZE: 1
+			// UPLOAD_ERR_FORM_SIZE: 2
+			// UPLOAD_ERR_NO_TMP_DIR: 6
+			// UPLOAD_ERR_CANT_WRITE: 7
+			// UPLOAD_ERR_EXTENSION: 8
+			// UPLOAD_ERR_PARTIAL: 3
 			if (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name']))
 				$this->errors[] = $this->l('No file has been selected');
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'

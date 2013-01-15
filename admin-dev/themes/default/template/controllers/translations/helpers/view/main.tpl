@@ -87,7 +87,7 @@
 				<img src="../img/admin/import.gif" />{l s='Add / Update a language'}
 			</legend>
 			<div id="submitAddLangContent" style="float:left;">
-				<p>{l s='You can add or update a language directly from the PrestaShop webiste here:'}</p>
+				<p>{l s='You can add or update a language directly from the PrestaShop website here:'}</p>
 				<div class="warn">
 					{l s='If you choose to update an existing language pack, all of your previous customization\'s in the theme named "Default" will be lost. This includes Front Office expressions and default email templates.'}
 				</div>
