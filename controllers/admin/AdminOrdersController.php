@@ -301,6 +301,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{firstname}' => $customer->firstname,
 							'{lastname}' => $customer->lastname,
 							'{id_order}' => $order->id,
+							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
 						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
