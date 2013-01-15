@@ -113,8 +113,18 @@ class AdminCartsControllerCore extends AdminController
 		/* Display order information */
 		$id_order = (int)Order::getOrderByCartId($cart->id);
 		$order = new Order($id_order);
-
-		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+		if (Validate::isLoadedObject($order))
+		{
+			$tax_calculation_method = $order->getTaxCalculationMethod();
+			$id_shop = (int)$order->id_shop;
+		}
+		else
+		{
+			$id_shop = (int)$cart->id_shop;
+			$tax_calculation_method = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+		}
+		
+		if ($tax_calculation_method == PS_TAX_EXC)
 		{
 			$total_products = $summary['total_products'];
 			$total_discounts = $summary['total_discounts_tax_exc'];
@@ -132,7 +142,7 @@ class AdminCartsControllerCore extends AdminController
 		}
 		foreach ($products as $k => &$product)
 		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+			if ($tax_calculation_method == PS_TAX_EXC)
 			{
 				$product['product_price'] = $product['price'];
 				$product['product_total'] = $product['total'];
@@ -153,7 +163,7 @@ class AdminCartsControllerCore extends AdminController
 																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
 			$product_obj = new Product($product['id_product']);
-			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$order->id_shop);
+			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$id_shop);
 
 			$image_product = new Image($image['id_image']);
 			$product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
