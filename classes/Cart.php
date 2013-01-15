@@ -51,7 +51,7 @@ class CartCore extends ObjectModel
 	public $id_lang;
 
 	/** @var boolean True if the customer wants a recycled package */
-	public $recyclable = 1;
+	public $recyclable = 0;
 
 	/** @var boolean True if the customer wants a gift wrapping */
 	public $gift = 0;
