@@ -110,7 +110,7 @@ class ToolsCore
 	}
 
 	/**
-	* Redirect url wich allready PS_BASE_URI
+	* Redirect URLs already containing PS_BASE_URI
 	*
 	* @param string $url Desired URL
 	*/
@@ -968,15 +968,20 @@ class ToolsCore
 	 */
 	public static function str2url($str)
 	{
+		static $allow_accented_chars = null;
+
+		if ($allow_accented_chars === null)
+			$allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+
 		if (function_exists('mb_strtolower'))
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
-		if (!function_exists('mb_strtolower') || !Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+		if (!function_exists('mb_strtolower') || !$allow_accented_chars)
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
-		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+		if ($allow_accented_chars)
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);	
 		else
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);

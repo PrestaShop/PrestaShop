@@ -50,7 +50,7 @@
 				{if $discountDetail.id_discount_type == 1}
 					{$discountDetail.value|escape:'htmlall':'UTF-8'}%
 				{elseif $discountDetail.id_discount_type == 2}
-					{convertPrice price=$discountDetail.value}
+					{convertPrice price=$discountDetail.value} ({if $discountDetail.reduction_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
 				{elseif $discountDetail.id_discount_type == 3}
 					{l s='Free shipping'}
 				{else}
@@ -76,9 +76,6 @@
 	{/foreach}
 	</tbody>
 </table>
-<p>
-	*{l s='Tax included'}
-</p>
 {else}
 	<p class="warning">{l s='You do not have any vouchers.'}</p>
 {/if}
