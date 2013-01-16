@@ -77,7 +77,7 @@ class Tools extends ToolsCore
 
 
 	/**
-	* Redirect url wich allready PS_BASE_URI after 5 sec
+	* Redirect URLs already containing PS_BASE_URI after 5s
 	*
 	* @param string $url Desired URL
 	*/
