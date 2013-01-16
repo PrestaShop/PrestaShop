@@ -665,8 +665,8 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,
-							'title' => sprintf($this->l('Click here to display the shops in group %s', 'AdminShop', false, false)), $row['group_name']),
-						)
+							'title' => sprintf($this->l('Click here to display the shops in group %s', 'AdminShop', false, false), $row['group_name']),
+						),
 					),
 					'attr' => array(
 						'id' => 'tree-group-'.$id_shop_group,
@@ -685,7 +685,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-shop.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&id_shop='.$id_shop,
-							'title' => sprintf($this->l('Click here to display the URLs of shops %s', 'AdminShop', false, false)), $row['shop_name']),
+							'title' => sprintf($this->l('Click here to display the URLs of shops %s', 'AdminShop', false, false), $row['shop_name']),
 						)
 					),
 					'attr' => array(
