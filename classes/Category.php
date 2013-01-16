@@ -1348,7 +1348,7 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
-			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` IN ('.implode(', ', Shop::getContextListShopID()).') )
 		WHERE cs.`id_shop` = '.(int)$id_shop.'
 		AND c.`id_parent` = '.(int)$this->id_parent);
 	}
