@@ -639,6 +639,7 @@ $_LANGADM['AdminControlleref61fb324d729c341ea8ab9901e23566'] = 'Créer';
 $_LANGADM['AdminControllerf22def68c5c456936078623b6dcd27ff'] = 'Traductions ajoutées avec succès';
 $_LANGADM['AdminControllerf84b4e2770ec98e3db2926cd49864d2f'] = 'Mes préférences';
 $_LANGADM['AdminControllerfc2c8663d58c42bc29edd45a79b4358c'] = 'La remise a été générée avec succès';
+$_LANGADM['AdminControllerfe8558c5676d75d543fb486e702d87bc'] = 'Cliquez ici pour obtenir plus d\'informations';
 $_LANGADM['AdminCountries00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_LANGADM['AdminCountries0c750dacc725ba4047374d2efc56ce3a'] = 'Requiert un numéro d\'identification fiscale ?';
 $_LANGADM['AdminCountries10d30c6319cf61386c878e4d9a3e09a2'] = 'Assigner une nouvelle zone';
