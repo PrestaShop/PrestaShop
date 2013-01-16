@@ -61,7 +61,6 @@ class AddressFormatCore extends ObjectModel
 	public static $forbiddenPropertyList = array(
 		'deleted',
 		'date_add',
-		'other',
 		'alias',
 		'secure_key',
 		'note',
