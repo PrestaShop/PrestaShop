@@ -120,7 +120,7 @@ class ImageManagerCore
 	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
 		// Avoid Warning in PHP 5.2 : "Wrong parameter count for clearstatcache()"
-		if (version_compare(PHP_VERSION, '5.3.0', '<') {
+		if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 			clearstatcache();
 		} else {
 			clearstatcache(true, $src_file);
