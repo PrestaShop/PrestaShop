@@ -244,7 +244,19 @@
 											</div><br />
 										{/if}
 									{/if}
-									<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+									
+									{if isset($input.lang) AND $input.lang}
+										<div class="translatable">
+											{foreach $languages as $language}
+												<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+													<input type="file" name="{$input.name}_{$language.id_lang}" {if isset($input.id)}id="{$input.id}_{$language.id_lang}"{/if} />
+									
+												</div>
+											{/foreach}
+										</div>
+									{else}
+										<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+									{/if}
 									{if !empty($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 								{elseif $input.type == 'password'}
 									<input type="password"
