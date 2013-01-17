@@ -171,13 +171,13 @@
 							<p><span class="price" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</span></p>
 						</div>
 					{/if}
-
-					<h3>{l s='Total (tax excl.):'}</h3>
-					<p><span class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</span></p>
-
-					<h3>{l s='Total tax:'}</h3>
-					<p><span class="price" id="total_tax">{displayPrice price=$total_tax}</span></p>
-
+					{if $use_taxes}
+						<h3>{l s='Total (tax excl.):'}</h3>
+						<p><span class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</span></p>
+	
+						<h3>{l s='Total tax:'}</h3>
+						<p><span class="price" id="total_tax">{displayPrice price=$total_tax}</span></p>
+					{/if}
 					<h3>{l s='Total:'}</h3>
 					{if $use_taxes}
 						<p><span class="price" id="total_price">{displayPrice price=$total_price}</span></p>
