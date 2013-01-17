@@ -139,7 +139,7 @@ class AdminLoginControllerCore extends AdminController
 		{
 			// Find employee
 			$this->context->employee = new Employee();
-			$is_employee_loaded = $this->context->employee->getByemail($email, $passwd);
+			$is_employee_loaded = $this->context->employee->getByEmail($email, $passwd);
 			$employee_associated_shop = $this->context->employee->getAssociatedShops();
 			if (!$is_employee_loaded)
 			{
@@ -193,7 +193,7 @@ class AdminLoginControllerCore extends AdminController
 		else
 		{
 			$employee = new Employee();
-			if (!$employee->getByemail($email) || !$employee)
+			if (!$employee->getByEmail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
 				$this->errors[] = sprintf(
