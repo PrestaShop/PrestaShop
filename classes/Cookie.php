@@ -217,10 +217,11 @@ class CookieCore
 
 	/**
 	 * Delete cookie
-	 * As of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;
+	 * @deprecated as of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;
 	 */
 	public function logout()
 	{
+		Tools::displayAsDeprecated();
 		$this->_content = array();
 		$this->_setcookie();
 		unset($_COOKIE[$this->_name]);
@@ -230,10 +231,11 @@ class CookieCore
 	/**
 	 * Soft logout, delete everything links to the customer
 	 * but leave there affiliate's informations.
-	 * As of version 1.5 don't call this function, use Customer::mylogout() instead;
+	 * @deprecated as of version 1.5 don't call this function, use Customer::mylogout() instead;
 	 */
 	public function mylogout()
 	{
+		Tools::displayAsDeprecated();
 		unset($this->_content['id_compare']);
 		unset($this->_content['id_customer']);
 		unset($this->_content['id_guest']);
