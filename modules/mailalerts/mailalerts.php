@@ -479,7 +479,7 @@ class MailAlerts extends Module
 
 	public function hookDisplayMyAccountBlock($params)
 	{
-		return $this->hookDisplayCustomerAccount($params);
+		return $this->_customer_qty ? $this->display(__FILE__, 'my-account-block.tpl') : null;
 	}
 
 	public function hookActionProductDelete($params)
