@@ -1285,7 +1285,7 @@ class AdminOrdersControllerCore extends AdminController
 		foreach (PaymentModule::getInstalledPaymentModules() as $payment)
 		{
 			$module = Module::getInstanceByName($payment['name']);
-			if (Validate::isLoadedObject($module))
+			if (Validate::isLoadedObject($module) && $module->active)
 				$payment_methods[] = $module->displayName;
 		}
 
