@@ -482,7 +482,7 @@ class Loyalty extends Module
 	
 	public function hookDisplayMyAccountBlock($params)
 	{
-		return $this->hookCustomerAccount($params);
+		return $this->display(__FILE__, 'my-account-block.tpl');
 	}
 
 	/* Catch product returns and substract loyalty points */
