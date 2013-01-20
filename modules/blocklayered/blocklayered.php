@@ -2343,6 +2343,8 @@ class BlockLayered extends Module
 				AND c.active = 1)';
 		}
 
+        $t = 0;
+
 		foreach ($selected_filters as $key => $filter_values)
 		{
 			if (!count($filter_values))
@@ -2382,13 +2384,14 @@ class BlockLayered extends Module
 					}
 					foreach ($sub_queries as $sub_query)
 					{
-						$query_filters_where .= ' AND p.id_product IN (SELECT pa.`id_product`
-						FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-						LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-						ON (pa.`id_product_attribute` = pac.`id_product_attribute`)';
+                        $query_filters_from .= "
+                            INNER JOIN
+                                (SELECT pa.`id_product`
+                                FROM `ps_product_attribute_combination` pac
+                                LEFT JOIN `ps_product_attribute` pa ON (pa.`id_product_attribute` = pac.`id_product_attribute`)";
 						if (version_compare(_PS_VERSION_,'1.5','>'))
-							$query_filters_where .= Shop::addSqlAssociation('product_attribute', 'pa');
-						$query_filters_where .= 'WHERE '.implode(' OR ', $sub_query).') ';
+                            $query_filters_from .= Shop::addSqlAssociation('product_attribute', 'pa');
+						$query_filters_from .= 'WHERE '.implode(' OR ', $sub_query).') t' . $t . ' ON (t' . $t . '.id_product = p.id_product) ';
 					}
 				break;
 
@@ -2541,7 +2544,7 @@ class BlockLayered extends Module
 		
 		if (Tools::getProductsOrder('by', Tools::getValue('orderby'), true) == 'p.price')
 			Tools::orderbyPrice($this->products, Tools::getProductsOrder('way', Tools::getValue('orderway')));
-			
+		
 		return $this->products;
 	}
 	
@@ -2813,6 +2816,7 @@ class BlockLayered extends Module
 			foreach ($filters as $filter_tmp)
 			{
 				$method_name = 'get'.ucfirst($filter_tmp['type']).'FilterSubQuery';
+				
 				if (method_exists('BlockLayered', $method_name) &&
 				(!in_array($filter['type'], array('price', 'weight')) && $filter['type'] != $filter_tmp['type'] || $filter['type'] == $filter_tmp['type']))
 				{
@@ -2824,14 +2828,17 @@ class BlockLayered extends Module
 							$selected_filters_cleaned = $this->cleanFilterByIdValue(@$selected_filters[$filter_tmp['type']], $filter_tmp['id_value']);
 						else
 							$selected_filters_cleaned = @$selected_filters[$filter_tmp['type']];
+						
 						$sub_query_filter = self::$method_name($selected_filters_cleaned, $filter['type'] == $filter_tmp['type']);
 					}
+					
 					foreach ($sub_query_filter as $key => $value)
 						$sql_query[$key] .= $value;
 				}
 			}
 			
 			$products = false;
+			
 			if (!empty($sql_query['from']))
 			{
 				if (version_compare(_PS_VERSION_,'1.5','>'))
@@ -3334,10 +3341,12 @@ class BlockLayered extends Module
 	public function generateFiltersBlock($selected_filters)
 	{
 		global $smarty;
+
 		if ($filter_block = $this->getFilterBlock($selected_filters))
 		{
 			if ($filter_block['nbr_filterBlocks'] == 0)
 				return false;
+
 				
 			$smarty->assign($filter_block);
 			$smarty->assign('hide_0_values', Configuration::get('PS_LAYERED_HIDE_0_VALUES'));
@@ -3408,22 +3417,25 @@ class BlockLayered extends Module
 		
 		return array('where' => $query_filters);
 	}
-	private static function getId_attribute_groupFilterSubQuery($filter_value, $ignore_join)
-	{
-		if (empty($filter_value))
-			return array();
-		$query_filters = '
-		AND p.id_product IN (SELECT pa.`id_product`
+
+    private static function getId_attribute_groupFilterSubQuery($filter_value, $ignore_join)
+    {
+        if (empty($filter_value))
+            return array();
+        $joinKey = uniqid();
+        $query_filters = '
+		INNER JOIN (SELECT pa.`id_product`
 		FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
 		WHERE ';
-		
-		foreach ($filter_value as $filter_val)
-			$query_filters .= 'pac.`id_attribute` = '.(int)$filter_val.' OR ';
-		$query_filters = rtrim($query_filters, 'OR ').') ';
-		
-		return array('where' => $query_filters);
-	}
+
+        foreach ($filter_value as $filter_val)
+            $query_filters .= 'pac.`id_attribute` = '.(int)$filter_val.' OR ';
+        $query_filters = rtrim($query_filters, 'OR ') .
+            ') ' .$joinKey . ' ON ('. $joinKey.'.id_product = p.id_product) ';
+
+        return array('join' => $query_filters);
+    }
 	
 	private static function getCategoryFilterSubQuery($filter_value, $ignore_join)
 	{
@@ -3868,7 +3880,7 @@ class BlockLayered extends Module
 		
 		$smarty->assign(
 			array(
-				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
+				'homeSize' => Image::getSize(version_compare(_PS_VERSION_,'1.5','>') ? ImageType::getFormatedName('home') : 'home'),
 				'nb_products' => $nb_products,
 				'category' => (object)array('id' => Tools::getValue('id_category_layered', 1)),
 				'pages_nb' => (int)($pages_nb),
