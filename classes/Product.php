@@ -669,6 +669,15 @@ class ProductCore extends ObjectModel
 		return parent::validateFieldsLang($die, $error_return);
 	}
 	
+	/**
+	 * @see ObjectModel::validateField()
+	 */
+	public function validateField($field, $value, $id_lang = null)
+	{
+		$value = ($field == 'description_short' ? strip_tags($value) : $value);
+		return parent::validateField($field, $value, $id_lang);
+	}
+
 	public function toggleStatus()
 	{
 		//test if the product is active and if redirect_type is empty string and set default value to id_product_redirected & redirect_type
