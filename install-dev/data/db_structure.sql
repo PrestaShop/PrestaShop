@@ -2433,6 +2433,15 @@ CREATE TABLE `PREFIX_module_preference` (
   UNIQUE KEY `employee_module` (`id_employee`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_tab_module_preference` (
+  `id_tab_module_preference` int(11) NOT NULL auto_increment,
+  `id_employee` int(11) NOT NULL,
+  `id_tab` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_tab_module_preference`),
+  UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
  CREATE TABLE `PREFIX_carrier_tax_rules_group_shop` (
 	`id_carrier` int( 11 ) unsigned NOT NULL,
 	`id_tax_rules_group` int(11) unsigned NOT NULL,

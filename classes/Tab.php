@@ -42,6 +42,8 @@ class TabCore extends ObjectModel
 
 	/** @var integer active */
 	public $active = true;
+	
+	const TAB_MODULE_LIST_URL = 'api.prestashop.com/xml/tab_modules_list.xml';
 
 	/**
 	 * @see ObjectModel::$definition
@@ -502,5 +504,36 @@ class TabCore extends ObjectModel
 	public static function getClassNameById($id_tab)
 	{
 		return Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab = '.(int)$id_tab);
+	}
+	
+	public static function getTabModulesList($id_tab)
+	{
+		$modules_list = array();
+		$xml_tab_modules_list = false;
+		$db_tab_module_list = Db::getInstance()->executeS('
+			SELECT module
+			FROM '._DB_PREFIX_.'tab_module_preference
+			WHERE `id_tab` = '.(int)$id_tab.'
+			AND `id_employee` = '.(int)Context::getContext()->employee->id
+			);
+
+		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST))
+			$xml_tab_modules_list = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST);
+		
+		if ($xml_tab_modules_list)
+			foreach ($xml_tab_modules_list->children() as $tab)
+				foreach($tab->attributes() as $key => $value)
+					if ($key == 'class_name' && Tab::getIdFromClassName((string)$value) == $id_tab)
+						foreach ($tab->children() as $module)
+							foreach ($module->attributes() as $k => $v)
+								if ($k == 'name')
+									$modules_list[] = (string)$v;
+		
+		//merge tab modules preferences from db with xml  
+		foreach($db_tab_module_list as $m)
+			if (!in_array($m, $modules_list))
+				$modules_list[] = $m['module'];
+
+		return $modules_list;	
 	}
 }

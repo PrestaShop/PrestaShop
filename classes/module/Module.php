@@ -122,6 +122,8 @@ abstract class ModuleCore
 	
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 	
+	const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
+	
 	const CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST = '/config/xml/default_country_modules_list.xml';
 	
 	const CACHE_FILE_CUSTOMER_MODULES_LIST = '/config/xml/customer_modules_list.xml';

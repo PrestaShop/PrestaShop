@@ -194,7 +194,7 @@ a.module_toggle_all{color: #268CCD;}
 .multishop_toolbar .chzn-container .chzn-results .shop{padding-left: 30px;background-color: #EAF2FC;}
 
 /*toolbarBox*/
-.toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
+.toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;position:relative}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
 .toolbarBox .pageTitle h3 {font-size: 2em; font-weight: normal; line-height: 52px; margin: 0; padding: 0; text-shadow:0 1px 0 #fff;}
 .toolbarBox ul.cc_button {float:right;margin:0 5px 0 0;padding:0;}
@@ -233,6 +233,32 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-standardRefund{ background-image: url('../img/process-icon-standard-refund.png');}
 .toolbarBox .process-icon-help{ background-image: url('../img/process-icon-help.png');}
 .toolbarBox .process-icon-help-new{ background-image: url('../img/process-icon-help-new.png');}
+.toolbarBox .process-icon-modules-list{ background-image: url('../img/process-icon-modules-list.png');}
+
+.toolbarBox #modules_list_container {
+	background: none repeat scroll 0 0 #FFF;
+	border: solid 1px #CCC;
+	display: block;
+	float: right;
+	height: auto;
+	width: 300px;
+	position: absolute;
+	right: 13px;
+	top: 63px;
+	z-index: 100;
+	padding: 10px;
+	box-shadow: 1px 5px 5px #CCCCCC;
+	-moz-box-shadow: 1px 5px 10px #CCCCCC;
+	-webkit-box-shadow: 1px 5px 10px #CCCCCC;
+}
+
+.toolbarBox #modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
+.toolbarBox #modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
+.toolbarBox #modules_list_container #modules_list_container_tab tr { height: auto}
+.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
+.toolbarBox #modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
+.toolbarBox #modules_list_container #modules_list_loader {margin-top: 10px}
+
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;}
 
@@ -423,7 +449,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #moduleContainer .table tr th { height:40px;}
 #moduleContainer .table tr td { font-size:12px; vertical-align:top; padding: 5px 7px 0; border-top:1px solid #ccc; border-bottom:none;}
 #moduleContainer .table tr:first-child {border-top:1px solid #ccc}
-#moduleContainer .table tr td .imgm {width:32px;}
+#moduleContainer .table tr td .imgm , #modules_list_container_tab .imgm {width:32px;}
 #moduleContainer .moduleDesc { font-size:12px; position:relative; margin-bottom:10px;}
 #moduleContainer .moduleDesc h3 { color:#3A6EA7; margin:0;}
 #moduleContainer .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
@@ -445,6 +471,34 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #moduleContainer .moduleGridDesc { position:relative; display:block; height:30px;}
 #moduleContainer .moduleGridDesc h3 { color:#3A6EA7; margin:0;}
 #moduleContainer ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
+
+/*TAB MODULES LIST*/
+#modules_list_container_tab table tr th { height:40px;}
+#modules_list_container_tab table tr td { font-size:12px; padding: 3px 3px 3px; border-top:1px solid #ccc; border-bottom:none;}
+#modules_list_container_tab table tr td tr td {border: none}
+#modules_list_container_tab table tr:first-child {border-top:1px solid #ccc}
+#modules_list_container_tab .imgm {width:32px;}
+#modules_list_container_tab .moduleDesc { font-size:12px; margin-bottom:10px;}
+#modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left}
+#modules_list_container_tab .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
+#modules_list_container_tab .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
+#modules_list_container_tab .moduleDesc .metadata dl dt, .moduleDesc .metadata dl dd { float:left; margin:0; padding:0;}
+#modules_list_container_tab .moduleDesc .metadata dl dd { padding-right:10px;}
+#modules_list_container_tab .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
+#modules_list_container_tab .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; display:block; clear:both;text-align: left}
+#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
+#modules_list_container_tab .setup.non-install { background-color:#ec7000;}
+#modules_list_container_tab .setup.must-have { background-color: #ec7000;}
+#modules_list_container_tab .setup.off{ background-color:#ccc;}
+#modules_list_container_tab .row-actions-module span { padding-right:5px;}
+#modules_list_container_tab .row-actions-module span a { font-size:12px;}
+#modules_list_container_tab ul.listing-grid-module { position:relative; margin:0; padding:0;}
+#modules_list_container_tab ul.listing-grid-module li { float:left; border:1px solid #ccc; width:400px; min-height:30px; margin:10px; padding:5px; border-radius:4px;}
+#modules_list_container_tab .moduleGridDesc { position:relative; display:block; height:30px;}
+#modules_list_container_tab .moduleGridDesc h3 { color:#3A6EA7; margin:0;}
+#modules_list_container_tab ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
+#modules_list_container_tab table tr td.tab_modules_actions_row { height: 20px}
+
 
 /*MODULE POSITION*/
 .blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
