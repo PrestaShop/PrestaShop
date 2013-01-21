@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_ordermessage>
+	<ordermessage id="delay">
+		<name><![CDATA[Frist]]></name>
+		<message><![CDATA[Hi,Leider ist einer der Artikel aus Ihrer Bestellung momentan nicht auf Lager. Dies kann zu einer leichten Lieferverzögerung führen. Wir entschuldigen uns hierfür und bemühen uns schnellstens um Abhilfe.Mit freundlichen Grüßen,]]></message>
+	</ordermessage>
+</list_ordermessage>

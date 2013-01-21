@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_ordermessage>
+	<ordermessage id="delay">
+		<name><![CDATA[Délai]]></name>
+		<message><![CDATA[Bonjour,Un des éléments de votre commande est actuellement en réapprovisionnement, ce qui peut légèrement retarder son envoi.Merci de votre compréhension.Cordialement,]]></message>
+	</ordermessage>
+</list_ordermessage>

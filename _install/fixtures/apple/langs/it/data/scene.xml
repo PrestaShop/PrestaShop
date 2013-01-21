@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity_scene>
+  <scene id="The_iPods_Nano">
+    <name>Gli iPod Nano</name>
+  </scene>
+  <scene id="The_iPods">
+    <name>Gli iPod</name>
+  </scene>
+  <scene id="The_MacBooks">
+    <name>I MacBook</name>
+  </scene>
+</entity_scene>

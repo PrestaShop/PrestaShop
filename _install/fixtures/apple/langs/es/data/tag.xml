@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<entity_tag>
+  <tag id="tag_36" name="superdrive" products="MacBook"/>
+  <tag id="tag_34" name="shuffle" products="iPod_shuffle"/>
+  <tag id="tag_32" name="apple" products="iPod_Nano,MacBook"/>
+  <tag id="tag_31" name="nano" products="iPod_Nano"/>
+  <tag id="tag_30" name="ipod" products="iPod_Nano,iPod_shuffle"/>
+  <tag id="tag_37" name="Ipod touch" products="iPod_touch"/>
+</entity_tag>

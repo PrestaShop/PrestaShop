@@ -1,0 +1,352 @@
+body, html{
+	margin: 0; 
+	padding: 0;
+	height: 100%;
+	border: none;
+	overflow: hidden;
+	background-color: #FFFFFF;
+}
+
+body, html, table, form, textarea{
+	font: 12px monospace, sans-serif;
+}
+
+#editor{
+	border: solid #888888 1px;
+	overflow: hidden;
+}
+
+#result{
+	z-index: 4; 
+	overflow: scroll;
+	border-top: solid #888888 1px;
+	border-bottom: solid #888888 1px;
+	position: relative;
+}
+
+#container{
+	overflow: hidden;
+	/*height: 100px;*/
+	border: solid blue 0px;
+	position: relative; 
+	padding: 0 5px 0px 0;
+	z-index: 10;
+}
+
+#textarea{
+	position: relative; 
+	top: 0px; 
+	left: 0px;
+	padding: 0px 0px 0px 45px; 
+	width: 100%;
+	height: 100%; 
+	/*position: absolute;*/
+	overflow: hidden;  
+	z-index: 7; 
+	border: solid green 0px;
+/*	background: none;
+	background-color: transparent;*/
+}
+
+#content_highlight{
+	white-space: pre;
+	/*background-color: #FFFFFF;*/
+	padding: 1px 0 0 45px; 
+	position : absolute; 
+	z-index: 4; 
+	overflow: visible; 
+	border: solid yellow 0px;
+}
+
+
+#selection_field{
+	padding: 0px 0px 0 45px; 
+	background-color: #FFFF99; 
+	height: 1px;  
+	position: absolute;
+	z-index: 5;
+	top: -100px;
+	margin: 1px 0 0 0px;
+	white-space: pre;
+	overflow: hidden;
+}
+
+#line_number{
+	position: absolute;
+	overflow: hidden;
+	border-right: solid black 1px;
+	z-index:8;
+	width: 38px;
+	padding-right: 5px;
+	text-align: right;
+	color: #AAAAAA;
+}
+
+#test_font_size{
+	padding: 0; 
+	margin: 0; 
+	visibility: hidden;
+	position: absolute;
+	white-space: pre;
+}
+
+pre{
+	margin: 0;
+	padding: 0;
+}
+
+.hidden{
+	opacity: 0.2; 
+	-moz-opacity: 0.2;
+	filter:alpha(opacity=20);
+}
+
+#result .edit_area_cursor{
+	position: absolute; 
+	z-index:6; 
+	background-color: #FF6633;
+	top: -100px;
+	margin: 1px 0 0 0px;
+}
+
+#result .edit_area_selection_field .overline{
+	background-color: #996600;
+}
+
+
+/* area popup */
+.editarea_popup{
+	border: solid 1px #888888;
+	background-color: #ECE9D8; 
+	width: 250px; 
+	padding: 4px; 
+	position: absolute;
+	visibility: hidden; 
+	/*display: none;*/
+	z-index: 15;
+	top: -500px;
+
+	/*font-family: Aria, Verdana, sans-serif;
+	font-size: 10pt;*/
+}
+
+.editarea_popup, .editarea_popup table{
+	font-family: sans-serif;
+	font-size: 10pt;
+}
+
+.editarea_popup img{
+	border: 0;
+}
+
+.editarea_popup .close_popup{
+	float: right; 
+	line-height: 16px; 
+	border: 0px; 
+	padding: 0px;
+}
+
+.editarea_popup h1,.editarea_popup h2,.editarea_popup h3,.editarea_popup h4,.editarea_popup h5,.editarea_popup h6{
+	margin: 0px;
+	padding: 0px;
+}
+
+.editarea_popup .copyright{
+	text-align: right;
+}	
+
+/* Area_search */
+div#area_search_replace{
+	/*width: 250px;*/
+}
+
+div#area_search_replace img{
+	border: 0px;
+}
+
+div#area_search_replace div.button{
+	text-align: center;
+	line-height: 1.7em;
+}
+
+div#area_search_replace .button a{
+	cursor: pointer;
+	border: solid 1px #888888;
+	background-color: #DEDEDE;
+	text-decoration: none;
+	padding: 0 2px;
+	color: #000000;	
+	white-space: nowrap;
+}
+
+div#area_search_replace a:hover{	
+	/*border: solid 1px #888888;*/
+	background-color: #EDEDED;
+}
+
+div#area_search_replace  #move_area_search_replace{
+	cursor: move; 
+	border: solid 1px #888888;
+}
+
+div#area_search_replace  #close_area_search_replace{
+	text-align: right; 
+	vertical-align: top; 
+	white-space: nowrap;
+}
+
+div#area_search_replace  #area_search_msg{
+	height: 18px; 
+	overflow: hidden; 
+	border-top: solid 1px #888888; 
+	margin-top: 3px;
+}
+
+/* area help */
+#edit_area_help{
+	width: 350px;
+}
+
+#edit_area_help div.close_popup{
+	float: right;
+}
+
+/* area_toolbar */
+.area_toolbar{
+	/*font: 11px sans-serif;*/
+	width: 100%; 
+	/*height: 21px; */
+	margin: 0px; 
+	padding: 0px;
+	background-color: #ECE9D8;
+	text-align: center;
+}
+
+.area_toolbar, .area_toolbar table{
+	font: 11px sans-serif;
+}
+
+.area_toolbar img{
+	border: 0px;
+	vertical-align: middle;
+}
+
+.area_toolbar input{
+	margin: 0px;
+	padding: 0px;
+}
+
+.area_toolbar select{
+    font-family: 'MS Sans Serif',sans-serif,Verdana,Arial;
+    font-size: 7pt;
+    font-weight: normal;
+    margin: 2px 0 0 0 ;
+    padding: 0;
+    vertical-align: top;
+    background-color: #F0F0EE;
+}
+
+table.statusbar{
+	width: 100%;
+}
+
+.area_toolbar td.infos{
+	text-align: center;
+	width: 130px;
+	border-right: solid 1px #888888;
+	border-width: 0 1px 0 0;
+	padding: 0;
+}
+
+.area_toolbar td.total{
+	text-align: right;
+	width: 50px;
+	padding: 0;
+}
+
+.area_toolbar td.resize{
+	text-align: right;
+}
+/*
+.area_toolbar span{
+	line-height: 1px;
+	padding: 0;
+	margin: 0;
+}*/
+
+.area_toolbar span#resize_area{
+	cursor: nw-resize;
+	visibility: hidden;
+}
+
+/* toolbar buttons */
+.editAreaButtonNormal, .editAreaButtonOver, .editAreaButtonDown, .editAreaSeparator, .editAreaSeparatorLine, .editAreaButtonDisabled, .editAreaButtonSelected {
+	border: 0px; margin: 0px; padding: 0px; background: transparent;
+	margin-top: 0px;
+	margin-left: 1px;
+	padding: 0px;
+}
+
+.editAreaButtonNormal {
+	border: 1px solid #ECE9D8 !important;
+	cursor: pointer;
+}
+
+.editAreaButtonOver {
+	border: 1px solid #0A246A !important;
+	cursor: pointer;
+	background-color: #B6BDD2;
+}
+
+.editAreaButtonDown {
+	cursor: pointer;
+	border: 1px solid #0A246A !important;
+	background-color: #8592B5;
+}
+
+.editAreaButtonSelected {
+	border: 1px solid #C0C0BB !important;
+	cursor: pointer;
+	background-color: #F4F2E8;
+}
+
+.editAreaButtonDisabled {
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=30);
+	-moz-opacity:0.3;
+	opacity: 0.3;
+	border: 1px solid #F0F0EE !important;
+	cursor: pointer;
+}
+
+.editAreaSeparatorLine {
+	margin: 1px 2px;
+	background-color: #C0C0BB;
+	width: 2px;
+	height: 18px;
+}
+
+/* waiting screen */
+#processing{
+	display: none; 
+	background-color:#ECE9D8; 
+	border: solid #888888 1px;
+	position: absolute; 
+	top: 0; 
+	left: 0;
+	width: 100%; 
+	height: 100%; 
+	z-index: 100; 
+	text-align: center;
+}
+
+#processing_text{
+	position:absolute;
+	left: 50%;
+	top: 50%;
+	width: 200px;
+	height: 20px; 
+	margin-left: -100px;
+	margin-top: -10px;
+	text-align: center;
+}
+/* end */

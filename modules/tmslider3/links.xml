@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<links>
+	<link>
+		<url>category.php?id_category=2</url>
+		<img>slides/slide_00.jpg</img>
+	</link>
+	<link>
+		<url>category.php?id_category=3</url>
+		<img>slides/slide_01.jpg</img>
+	</link>
+</links>

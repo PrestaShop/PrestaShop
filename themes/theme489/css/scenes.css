@@ -1,0 +1,148 @@
+
+/*TMP*/
+#scenes .cluetip span{
+	background:transparent url(../img/icon/cible.gif) no-repeat scroll center center;
+	color:black;
+	display:block;
+	font-size:1.1em;
+	font-weight:bold;
+	height:23px;
+	padding-top:5px;
+	text-align:center;
+	width:23px;
+}
+/*TMP*/
+.thumbs_banner{
+	margin:10px auto;
+	padding:2px 0;
+	height: 60px !important;
+	width:100%;
+	border-top:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+}
+
+.thumbs_banner .space-keeper{
+	width:21px;
+	float:left;
+	display:block;
+	height:100%;
+}
+
+.thumbs_banner .space-keeper a.prev{
+	display:none;
+	width:21px;
+	text-align:center;
+	font-size:1.5em;
+	text-decoration:none;
+	background:url(../img/icon/serial_scroll_left.gif) no-repeat 0 0 #eee;
+}
+#scenes_list{
+	overflow:hidden;
+	float:left;
+	width:478px;
+}
+#scenes_list ul{
+	list-style-type:none;
+}
+
+#scenes_list li{
+	float:left;
+}
+
+#scenes_list a{
+	display:block;
+}
+
+.thumbs_banner a.next {
+	float:left;
+	display:block;
+	width:21px;
+	text-align:center;
+	font-size:1.5em;
+	text-decoration:none;
+	background:url(../img/icon/serial_scroll_right.gif) no-repeat 0 0 #ddd;
+}
+
+/* Cluetip design ****************************************************************************** */
+#scenes .screen_scene {
+	margin:0 auto;
+}
+
+#scenes a.cluetip{
+	display:block;
+	position:absolute;
+	text-decoration:none;
+}
+
+.cluetip-product_scene {
+	padding:10px;
+	border:7px solid #999;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+   border-radius:3px;
+	text-align:left;
+	background:#fff;
+	opacity:0.95;
+}
+
+.cluetip-product_scene #cluetip-close{
+	text-align:right;
+	float:right;
+}
+
+.cluetip-product_scene img {
+	float:left;
+	margin-right:10px;
+	border:1px solid #ccc
+}
+.cluetip-product_scene h4{
+	display:inline-block;
+	margin-bottom:5px;
+	padding:0 !important;
+	font-size:12px;
+}
+
+.cluetip-product_scene .clear {margin:0; padding:0}
+.cluetip-product_scene .clear a {
+	/*float:left;*/
+	margin-top:2px;
+}
+
+.cluetip-product_scene p.description{
+	float:left;
+	padding:0;
+	width:140px;
+	color:#666
+}
+
+.cluetip-product_scene div.prices{
+	float:right;
+	position:relative;
+	width:65px;
+	text-align:right;
+}
+.cluetip-product_scene .new {
+	position:absolute;
+	top:0;
+	right:0;
+   display: inline-block;
+   padding: 1px 5px;
+   font-weight: bold;
+   font-size: 10px;
+   color: #fff;
+   text-transform: uppercase;
+	background: none repeat scroll 0 0 #9B0000
+}
+.cluetip-product_scene .price{
+	padding-top:18px;
+	font-weight:bold;
+	font-size:13px;
+	color:#990000
+}
+.cluetip-product_scene .on_sale, .cluetip-product_scene .discount {
+	display:block;
+	font-weight:bold;
+	color:#DA0F00;
+	text-transform:uppercase;
+}
+/* END Cluetip design */

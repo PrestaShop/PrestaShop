@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category_product>
+  <fields primary="id_category, id_product">
+    <field name="id_category" relation="category"/>
+    <field name="id_product" relation="product"/>
+    <field name="position"/>
+  </fields>
+  <entities>
+    <category_product id="category_product_2_1" id_category="Home" id_product="iPod_Nano" position="0"/>
+    <category_product id="category_product_2_2" id_category="Home" id_product="iPod_shuffle" position="1"/>
+    <category_product id="category_product_2_4" id_category="Home" id_product="MacBook" position="2"/>
+    <category_product id="category_product_2_5" id_category="Home" id_product="iPod_touch" position="3"/>
+    <category_product id="category_product_3_1" id_category="iPods" id_product="iPod_Nano" position="0"/>
+    <category_product id="category_product_3_2" id_category="iPods" id_product="iPod_shuffle" position="1"/>
+    <category_product id="category_product_3_5" id_category="iPods" id_product="iPod_touch" position="2"/>
+    <category_product id="category_product_4_6" id_category="Accessories" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" position="0"/>
+    <category_product id="category_product_4_7" id_category="Accessories" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" position="1"/>
+    <category_product id="category_product_5_3" id_category="Laptops" id_product="MacBook_Air" position="0"/>
+    <category_product id="category_product_5_4" id_category="Laptops" id_product="MacBook" position="1"/>
+  </entities>
+</entity_category_product>

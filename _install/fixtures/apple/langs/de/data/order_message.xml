@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<entity_order_message>
+  <order_message id="Delay">
+    <name>Frist</name>
+    <message>Hi,
+
+Leider ist einer der Artikel aus Ihrer Bestellung momentan nicht auf Lager. Dies kann zu einer leichten Lieferverz&#xF6;gerung f&#xFC;hren. Wir entschuldigen uns hierf&#xFC;r und bem&#xFC;hen uns schnellstens um Abhilfe.
+
+Mit freundlichen Gr&#xFC;&#xDF;en,</message>
+  </order_message>
+</entity_order_message>

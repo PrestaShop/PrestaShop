@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<entity_attribute_group>
+  <attribute_group id="Disk_space">
+    <name>Capacidad</name>
+    <public_name>Capacidad</public_name>
+  </attribute_group>
+  <attribute_group id="Color">
+    <name>Color</name>
+    <public_name>Color</public_name>
+  </attribute_group>
+  <attribute_group id="ICU">
+    <name>ICU</name>
+    <public_name>Procesador</public_name>
+  </attribute_group>
+</entity_attribute_group>

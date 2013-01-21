@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<entity_order_message>
+  <order_message id="Delay">
+    <name>Atraso</name>
+    <message>Ol&#xE1;,&#xD;
+&#xD;
+Infelizmente, um item em sua ordem est&#xE1; atualmente fora de estoque. Isso pode causar um ligeiro atraso na entrega.&#xD;
+Por favor, aceitem nossas desculpas e tenha a certeza de que estamos trabalhando duro para corrigir esta situa&#xE7;&#xE3;o.&#xD;
+&#xD;
+Atenciosamente,</message>
+  </order_message>
+</entity_order_message>

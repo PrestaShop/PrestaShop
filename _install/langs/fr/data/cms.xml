@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<entity_cms>
+  <cms id="Delivery">
+    <meta_title>Livraison</meta_title>
+    <meta_description>Nos conditions g&#xE9;n&#xE9;rales de livraison</meta_description>
+    <meta_keywords>conditions, livraison, d&#xE9;lais, transport, colis</meta_keywords>
+    <content>&lt;h2&gt;Livraisons et retours&lt;/h2&gt;&lt;h3&gt;Le transport de votre colis&lt;/h3&gt;&lt;p&gt;Les colis sont g&amp;eacute;n&amp;eacute;ralement exp&amp;eacute;di&amp;eacute;s en 48h apr&amp;egrave;s r&amp;eacute;ception de votre paiement. Le mode d'exp&#xE9;dition standard est le Colissimo suivi, remis sans signature. Si vous souhaitez une remise avec signature, un co&amp;ucirc;t suppl&amp;eacute;mentaire s'applique, merci de nous contacter. Quel que soit le mode d'exp&#xE9;dition choisi, nous vous fournirons d&amp;egrave;s que possible un lien qui vous permettra de suivre en ligne la livraison de votre colis.&lt;/p&gt;&lt;p&gt;Les frais d'exp&amp;eacute;dition comprennent l'emballage, la manutention et les frais postaux. Ils peuvent contenir une partie fixe et une partie variable en fonction du prix ou du poids de votre commande. Nous vous conseillons de regrouper vos achats en une unique commande. Nous ne pouvons pas grouper deux commandes distinctes et vous devrez vous acquitter des frais de port pour chacune d'entre elles. Votre colis est exp&amp;eacute;di&amp;eacute; &amp;agrave; vos propres risques, un soin particulier est apport&amp;eacute; au colis contenant des produits fragiles..&lt;br /&gt;&lt;br /&gt;Les colis sont surdimensionn&amp;eacute;s et prot&amp;eacute;g&amp;eacute;s.&lt;/p&gt;</content>
+    <link_rewrite>livraison</link_rewrite>
+  </cms>
+  <cms id="Legal_Notice">
+    <meta_title>Mentions l&#xE9;gales</meta_title>
+    <meta_description>Mentions l&#xE9;gales</meta_description>
+    <meta_keywords>mentions, l&#xE9;gales, cr&#xE9;dits</meta_keywords>
+    <content>&lt;h2&gt;Mentions l&amp;eacute;gales&lt;/h2&gt;&lt;h3&gt;Cr&amp;eacute;dits&lt;/h3&gt;&lt;p&gt;Concept et production :&lt;/p&gt;&lt;p&gt;Ce site internet a &amp;eacute;t&amp;eacute; r&amp;eacute;alis&amp;eacute; en utilisant la solution open-source &lt;a href="http://www.prestashop.com"&gt;PrestaShop&lt;/a&gt;&amp;trade; .&lt;/p&gt;</content>
+    <link_rewrite>mentions-legales</link_rewrite>
+  </cms>
+  <cms id="Terms_and_conditions_of_use">
+    <meta_title>Conditions d'utilisation</meta_title>
+    <meta_description>Nos conditions g&#xE9;n&#xE9;rales de ventes</meta_description>
+    <meta_keywords>conditions, utilisation, g&#xE9;n&#xE9;rales, ventes</meta_keywords>
+    <content>&lt;h2&gt;Vos conditions de ventes&lt;/h2&gt;&lt;h3&gt;R&#xE8;gle n&#xB0;1&lt;/h3&gt;&lt;p&gt;Contenu de la r&#xE8;gle num&#xE9;ro 1&lt;/p&gt;&#xD;
+&lt;h3&gt;R&#xE8;gle n&#xB0;2&lt;/h3&gt;&lt;p&gt;Contenu de la r&#xE8;gle num&#xE9;ro 2&lt;/p&gt;&#xD;
+&lt;h3&gt;R&#xE8;gle n&#xB0;3&lt;/h3&gt;&lt;p&gt;Contenu de la r&#xE8;gle num&#xE9;ro 3&lt;/p&gt;</content>
+    <link_rewrite>conditions-generales-de-ventes</link_rewrite>
+  </cms>
+  <cms id="About_us">
+    <meta_title>A propos</meta_title>
+    <meta_description>Apprenez-en d'avantage sur nous</meta_description>
+    <meta_keywords>&#xE0; propos, informations</meta_keywords>
+    <content>&lt;h2&gt;A propos&lt;/h2&gt;&#xD;
+&lt;h3&gt;Notre entreprise&lt;/h3&gt;&lt;p&gt;Notre entreprise&lt;/p&gt;&#xD;
+&lt;h3&gt;Notre &#xE9;quipe&lt;/h3&gt;&lt;p&gt;Notre &#xE9;quipe&lt;/p&gt;&#xD;
+&lt;h3&gt;Informations&lt;/h3&gt;&lt;p&gt;Informations&lt;/p&gt;</content>
+    <link_rewrite>a-propos</link_rewrite>
+  </cms>
+  <cms id="Secure_payment">
+    <meta_title>Paiement s&#xE9;curis&#xE9;</meta_title>
+    <meta_description>Notre offre de paiement s&#xE9;curis&#xE9;</meta_description>
+    <meta_keywords>paiement s&#xE9;curis&#xE9;, ssl, visa, mastercard, paypal</meta_keywords>
+    <content>&lt;h2&gt;Paiement s&#xE9;curis&#xE9;&lt;/h2&gt;&#xD;
+&lt;h3&gt;Notre offre de paiement s&#xE9;curis&#xE9;&lt;/h3&gt;&lt;p&gt;Avec SSL&lt;/p&gt;&#xD;
+&lt;h3&gt;Utilisation de Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;A propos de ces services&lt;/p&gt;</content>
+    <link_rewrite>paiement-securise</link_rewrite>
+  </cms>
+</entity_cms>

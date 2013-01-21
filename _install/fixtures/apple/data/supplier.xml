@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_supplier>
+  <fields id="name" class="Supplier" image="su">
+    <field name="name"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <supplier id="AppleStore" active="1">
+      <name>AppleStore</name>
+    </supplier>
+    <supplier id="Shure_Online_Store" active="1">
+      <name>Shure Online Store</name>
+    </supplier>
+  </entities>
+</entity_supplier>
