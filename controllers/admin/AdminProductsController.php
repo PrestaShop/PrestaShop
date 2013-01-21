@@ -989,7 +989,12 @@ class AdminProductsControllerCore extends AdminController
 		elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
-			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
+		{
+			$category = new Category((int)tools::getValue('id_category'));							
+			if (Validate::isLoadedObject($category))
+				Hook::exec('actionCategoryUpdate', array('category' => $category));
+			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');				
+		}
 	}
 
 	public function initProcess()
@@ -4212,7 +4217,12 @@ class AdminProductsControllerCore extends AdminController
 					{
 						if ($product = new Product((int)$pos[2]))
 							if (isset($position) && $product->updatePosition($way, $position))
-								echo 'ok position '.(int)$position.' for product '.(int)$pos[2].'\r\n';
+							{
+								$category = new Category((int)$id_category);
+								if (Validate::isLoadedObject($category))
+									hook::Exec('categoryUpdate', array('category' => $category));
+								echo 'ok position '.(int)$position.' for product '.(int)$pos[2]."\r\n";							
+							}
 							else
 								echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
 						else
@@ -4250,4 +4260,3 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 }
-
