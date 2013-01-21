@@ -228,6 +228,7 @@ div.field {
 		font-family:Georgia;
 		font-style:italic;
 		color:#999;
+		float: right;
 }
 
 #uploadedImage {border:1px solid #ccc;}	
@@ -242,6 +243,8 @@ div.field {
 	padding:20px 20px 20px 38px;
 	background:#ffebe8 url(img/pict_error.png) no-repeat 15px 21px;
 	border:1px solid #cc0000;
+	clear: both;
+    display: block;
 }
 
 .errorTxt {

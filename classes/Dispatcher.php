@@ -395,7 +395,19 @@ class DispatcherCore
 			      	$this->default_routes[$route] = array();
 			      $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
 				}
-
+		
+		// Set default routes
+		foreach (Language::getLanguages() as $lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$lang['id_lang'],
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array()
+				);
+		
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
@@ -438,18 +450,6 @@ class DispatcherCore
 							isset($route_data['params']) ? $route_data['params'] : array()
 						);
 		}
-
-		// Set default routes
-		foreach (Language::getLanguages() as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array()
-				);
 	}
 
 	/**
@@ -581,7 +581,6 @@ class DispatcherCore
 			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$id_lang][$route_id];
-
 		// Check required fields
 		$query_params = isset($route['params']) ? $route['params'] : array();
 		foreach ($route['keywords'] as $key => $data)
@@ -598,8 +597,10 @@ class DispatcherCore
 		// Build an url which match a route
 		if ($this->use_routes || $force_routes)
 		{
+			
 			$url = $route['rule'];
 			$add_param = array();
+			
 			foreach ($params as $key => $value)
 			{
 				if (!isset($route['keywords'][$key]))

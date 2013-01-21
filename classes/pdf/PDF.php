@@ -80,7 +80,11 @@ class PDFCore
 		}
 
 		if ($render)
+		{
+			// clean the output buffer to avoid random bugs with tcpdf
+			ob_end_clean();
 			return $this->pdf_renderer->render($this->filename, $display);
+		}
 	}
 
 	public function getTemplateObject($object)

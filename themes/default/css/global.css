@@ -748,8 +748,12 @@ table#cart_summary tr ul {
 table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
-}table#cart_summary tbody tr:last-child td {
+}
+table#cart_summary tbody tr:last-child td {
 	border-bottom: 1px solid #999;
+}
+table#cart_summary tbody tr td.cart_discount_delete {
+	padding-left: 34px;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary .cart_description {
@@ -812,6 +816,8 @@ table#cart_summary #total_price_container {
 	font-size:13px
 }
 .cart_voucher p {padding-bottom:0;}
+
+.cart_voucher p.discount_name_block {float:left;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
 	line-height: 20px;
@@ -1445,7 +1451,8 @@ form#add_adress {}
 	width:360px;/* 370 */
 	border:1px solid #ccc;
 	font-size: 12px;
-	color:#666
+	color:#666;
+	line-height:22px
 }
 #add_adress p.checkbox input {
 	margin-left:260px;

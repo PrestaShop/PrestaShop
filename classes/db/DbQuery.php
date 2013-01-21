@@ -67,7 +67,7 @@ class DbQueryCore
 	public function from($table, $alias = null)
 	{
 		if (!empty($table))
-			$this->query['from'] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
+			$this->query['from'][] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
 		return $this;
 	}
 
@@ -220,7 +220,7 @@ class DbQueryCore
 
 		if (!$this->query['from'])
 			die('DbQuery->build() missing from clause');
-		$sql .= 'FROM '.$this->query['from']."\n";
+		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
 
 		if ($this->query['join'])
 			$sql .= implode("\n", $this->query['join'])."\n";

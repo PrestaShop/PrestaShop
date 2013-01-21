@@ -51,7 +51,7 @@ class CartCore extends ObjectModel
 	public $id_lang;
 
 	/** @var boolean True if the customer wants a recycled package */
-	public $recyclable = 1;
+	public $recyclable = 0;
 
 	/** @var boolean True if the customer wants a gift wrapping */
 	public $gift = 0;
@@ -1685,7 +1685,7 @@ class CartCore extends ObjectModel
 			{
 				$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
 				if (in_array((int)$id_war, $product['warehouse_list']) && $id_warehouse == 0)
-					$id_warehouse = $id_war;
+					$id_warehouse = (int)$id_war;
 			}
 
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))

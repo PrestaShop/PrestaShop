@@ -206,7 +206,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->fields_list['name_category'] = array(
 				'title' => $this->l('Category'),
-				'width' => 230,
+				'width' => 'auto',
 				'filter_key' => 'cl!name',
 			);
 		$this->fields_list['price'] = array(

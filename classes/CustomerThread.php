@@ -102,6 +102,7 @@ class CustomerThreadCore extends ObjectModel
 				SELECT id_customer_thread
 				FROM '._DB_PREFIX_.'customer_thread ct2
 				WHERE status = "open" AND ct.id_contact = ct2.id_contact
+				'.Shop::addSqlRestriction().'
 				ORDER BY date_upd ASC
 				LIMIT 1
 			) as id_customer_thread
@@ -111,6 +112,7 @@ class CustomerThreadCore extends ObjectModel
 			WHERE ct.status = "open"
 				AND ct.id_contact IS NOT NULL
 				AND cl.id_contact IS NOT NULL
+				'.Shop::addSqlRestriction().'
 			GROUP BY ct.id_contact HAVING COUNT(*) > 0
 		');
 	}
