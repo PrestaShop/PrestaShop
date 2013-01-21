@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<entity_product>
+  <product id="iPod_Nano" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size: small;"&gt;Immer eine Kurve voraus.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;F&#xFC;r all die, die gleich losrocken wollen, gibt es jetzt neun tolle Farben zur Auswahl. Aber das ist nur ein Teil der Geschichte. Mit seinem runden Design, das komplett aus Aluminium und Glas besteht, werden Sie den iPod nano nicht mehr weglegen wollen.&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;span style="font-size: small;"&gt;Tolles Design. Und viel K&#xF6;pfchen.&lt;/Span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Die neue Genius-Funktion verwandelt den iPod nano in Ihren hoch intelligenten, pers&#xF6;nlichen DJ. Es erstellt Abspiellisten aus den Songs in Ihrer Sammlung, die gut zusammenpassen.&lt;/P&gt;&#xD;
+&lt;p&gt;&lt;span style="font-size: small;"&gt;Passt sich Ihren Bewegungen an.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Der iPod nano jetzt mit Beschleunigungsmesser. Einmal sch&#xFC;tteln, und Ihre Musik wird neu sortiert. Kippen Sie es zur Seite f&#xFC;r die Cover Flow-Ansicht. Und spielen Sie mit den Bewegungen, an die Sie denken.&lt;/P&gt;</description>
+    <description_short>&lt;p&gt;New design. New features. Now in 8GB and 16GB. iPod nano rocks like never before.&lt;/p&gt;</description_short>
+    <link_rewrite>ipod-nano</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod Nano</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="iPod_shuffle" id_shop="1">
+    <description>&lt;p&gt;style="font-size: small;"&gt;&lt;strong&gt;Gleich festmachen.&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Tragen Sie bis zu 500 Songs am &#xC4;rmel. Oder an Ihrem G&#xFC;rtel. Oder an Ihrer Sporthose. iPod shuffle ist ein Erkennungszeichen echter Musikfans. Jetzt in neuen, noch leuchtenderen Farben.&lt;/P&gt;&#xD;
+&lt;p&gt;style="font-size: small;"&gt;&lt;strong&gt;F&#xFC;ttern Sie Ihren iPod shuffle.&lt;/Strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;iTunes ist Ihr Super-Store f&#xFC;r Unterhaltung. Es ist Ihre optimal organisierte Musik-Sammlung und Jukebox. Und Sie k&#xF6;nnen Ihren iPod shuffle mit einem Klick laden.&lt;/P&gt;&#xD;
+&lt;p&gt;style="font-size: small;"&gt;&lt;strong&gt;Die Sch&#xF6;ne und der Beat.&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Das farbintensive eloxierte Aluminium erg&#xE4;nzt das schlichte Design des iPod shuffle. Jetzt in Blau, Gr&#xFC;n, Rosa, Rot und klassischem Silber.&lt;/P&gt;</description>
+    <description_short>&lt;p&gt;iPod shuffle, the world&#x2019;s most wearable music player, now clips on in more vibrant blue, green, pink, and red.&lt;/p&gt;</description_short>
+    <link_rewrite>ipod-shuffle</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod shuffle</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="MacBook_Air" id_shop="1">
+    <description>&lt;p&gt;MacBook Air ist kaum dicker als Ihr Zeigefinger. Nahezu jedes Detail wurde abgeflacht. Und dabei hat es immer noch einen 13,3-Zoll-Widescreen-LED-Display, eine Tastatur in voller Gr&#xF6;&#xDF;e und einen gro&#xDF;en Multi-Touch-Trackpad. Es besitzt eine unvergleichliche Tragbarkeit, ohne die &#xFC;blichen Kompromisse f&#xFC;r ultraportable Bildschirme und Tastaturen.&lt;/P&gt;Der unglaublich d&#xFC;nne MacBook Air ist das Ergebnis zahlreicher Innovationen zur Gr&#xF6;&#xDF;en- und Gewichtsoptimierung. Die flachere Festplatte, die strategisch versteckten I/O-Ports und eine noch flachere Batterie: Alles wurde immer wieder &#xFC;berdacht, immer mit dem Ziel, es noch d&#xFC;nner zu gestalten.&lt;/P&gt;Das Design und Konzept von MacBook Air ist voll auf die Vorteile der Kabelfreiheit ausgerichtet. Eine Welt, in der 802.11n WLAN heutzutage so schnell und so leicht verf&#xFC;gbar ist, dass die Menschen heute grenzenlos Filme online kaufen oder mieten, Software downloaden und Dateien &#xFC;ber das Internet teilen oder speichern k&#xF6;nnen. &lt;/P&gt;</description>
+    <description_short>MacBook Air is ultrathin, ultraportable, and ultra unlike anything else. But you don&#x2019;t lose inches and pounds overnight. It&#x2019;s the result of rethinking conventions. Of multiple wireless innovations. And of breakthrough design. With MacBook Air, mobile computing suddenly has a new standard.</description_short>
+    <link_rewrite>macbook-Air</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>MacBook Air</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="MacBook" id_shop="1">
+    <description>Jedes MacBook verf&#xFC;gt &#xFC;ber eine gr&#xF6;&#xDF;ere Festplatte, bis zu 250GB, zum Speichern immer gr&#xF6;&#xDF;er werdender Mediensammlungen und wertvoller Daten.&lt;br/&gt;&lt;br/&gt;Die 2,4 GHz MacBook-Modelle haben nun 2 GB Standard-Arbeitsspeicher - ideal zum reibungslosen Abspielen Ihrer Lieblings-Anwendungen.</description>
+    <description_short>MacBook makes it easy to hit the road thanks to its tough polycarbonate case, built-in wireless technologies, and innovative MagSafe Power Adapter that releases automatically if someone accidentally trips on the cord.</description_short>
+    <link_rewrite>macbook</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>MacBook</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="iPod_touch" id_shop="1">
+    <description>&lt;h3&gt;F&#xFC;nf neue Hands-on-Anwendungen&lt;/h3&gt;&#xD;
+&lt;p&gt;Rich-HTML-E-Mails mit Fotos anzeigen sowie PDF-, Word-und Excel-Anh&#xE4;nge. Holen Sie sich Karten, Wegbeschreibungen und Echtzeit-Verkehrsinformationen. Sie k&#xF6;nnen sich Notizen machen und B&#xF6;rsen- und Wetterberichte lesen.&lt;/P&gt;&#xD;
+&lt;h3&gt;Ber&#xFC;hren Sie Ihre Musik, Filme und vieles mehr&lt;/h3&gt;&#xD;
+&lt;p&gt;Mit der revolution&#xE4;ren, in den wundersch&#xF6;nen 3,5-Zoll-Display integrierten Multi-Touch-Technologie k&#xF6;nnen Sie  zuziehen, zoomen, scrollen und streichen.&lt;/p&gt;&#xD;
+&lt;h3&gt;Internet in Ihrer Tasche&lt;/h3&gt;&#xD;
+&lt;p&gt;Mit dem Safari-Webbrowser sehen Sie Webseiten so, wie sie gesehen werden sollten und vergr&#xF6;&#xDF;ern und verkleinern sie mit einer Ber&#xFC;hrung.&lt;sup&gt;2&lt;/sup&gt;F&#xFC;gen Sie Web-Clips zu Ihrer Startseite hinzu f&#xFC;r den Schnellzugriff auf Ihre bevorzugten Webseiten.&lt;/p&gt;&#xD;
+&lt;h3&gt;Zum Set geh&#xF6;ren/h3&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;der iPod touch&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Ohrh&#xF6;rer&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;USB 2.0-Kabel&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Anschluss-Adapter&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Poliertuch&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Basis&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Quick Start Guide&lt;/li&gt;&#xD;
+&lt;/ul&gt;</description>
+    <description_short>&lt;ul&gt;&#xD;
+&lt;li&gt;Revolutionary Multi-Touch interface&lt;/li&gt;&#xD;
+&lt;li&gt;3.5-inch widescreen color display&lt;/li&gt;&#xD;
+&lt;li&gt;Wi-Fi (802.11b/g)&lt;/li&gt;&#xD;
+&lt;li&gt;8 mm thin&lt;/li&gt;&#xD;
+&lt;li&gt;Safari, YouTube, Mail, Stocks, Weather, Notes, iTunes Wi-Fi Music Store, Maps&lt;/li&gt;&#xD;
+&lt;/ul&gt;</description_short>
+    <link_rewrite>iPod-Touch</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod touch</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" id_shop="1">
+    <description>&lt;p&gt;Lorem ipsum&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Lorem ipsum&lt;/p&gt;</description_short>
+    <link_rewrite>lederhulle-belkin-fur-ipod-nano-schwarz-schokolade</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Lederh&#xFC;lle Belkin f&#xFC;r ipod nano - Schwarz/Schokolade</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_shop="1">
+    <description>&lt;div class="product-overview-full"&gt;Mit ihren hochaufl&#xF6;senden Micro-Lautsprechern, die vollen Klang liefern und ihrem ergonomischen, leichten Design sind die SE210 Ohrh&#xF6;rer ideal zum mobilen Extraklasse-Musik h&#xF6;ren auf Ihrem iPod oder iPhone. Sie bieten die genaueste Tonwiedergabe, sowohl aus tragbaren als auch aus Home-Stereo-Audio-Quellen - f&#xFC;r ultimative pr&#xE4;zisen H&#xF6;hen und kraftvolle B&#xE4;sse. Dar&#xFC;ber hinaus erm&#xF6;glicht das flexible Design optimalen Tragekomfort durch eine Vielzahl von Tragem&#xF6;glichkeiten. &lt;br/&gt;&lt;br/&gt;Funktionen&lt;/strong&gt;&lt;br/&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Klangisolierendes Design&lt;/li&gt;&#xD;
+&lt;li&gt;Hochaufl&#xF6;sende Micro-Lautsprecher mit Single Balanced Armature-Treiber&lt;/li&gt;&#xD;
+&lt;li&gt;Abnehmbare modulare Kabel, die Sie je nach Aktivit&#xE4;t l&#xE4;nger oder k&#xFC;rzer einstellen k&#xF6;nnen&lt;/li&gt;&#xD;
+&lt;li&gt;Kompatibler Stecker mit Kopfh&#xF6;rer-Anschl&#xFC;ssen f&#xFC;r iPod und iPhone&lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;strong&gt;Daten&lt;/strong&gt;&lt;br/&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Lautsprecher-Typ: Hochaufl&#xF6;sende Micro-Lautsprecher&lt;/li&gt;&#xD;
+&lt;li&gt; Frequenzbereich: 25Hz-18.5kHz &lt;/li&gt;&#xD;
+&lt;li&gt;Impedanz (1kHz): 26 Ohm &lt;/li&gt;&#xD;
+&lt;li&gt;Empfindlichkeit (1mW): 114 dB SPL/mW&lt;/li&gt;&#xD;
+&lt;li&gt; Kabell&#xE4;nge (mit Erweiterung): 18,0 Zoll/45,0 cm (54,0 Zoll/137,1 cm) &lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;strong&gt;Im Set enthalten&lt;/strong&gt;&lt;br/&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Shure SE210 Ohrh&#xF6;rer &lt;/li&gt;&#xD;
+&lt;li&gt; Verl&#xE4;ngerungskabel (36,0 Zoll/91,4 cm) &lt;/li&gt;&#xD;
+&lt;li&gt; Drei Paar Schaumstoff-H&#xF6;rmuschelh&#xFC;llen (klein, mittel, gro&#xDF;) &lt;/li&gt;&#xD;
+&lt;li&gt; Drei Paar weiche Flex-H&#xF6;rmuschelh&#xFC;llen (klein, mittel, gro&#xDF;) &lt;/li&gt;&#xD;
+&lt;li&gt; Ein Paar Triple-Flange-H&#xF6;rmuschelh&#xFC;llen &lt;/li&gt;&#xD;
+&lt;li&gt; Trage-Etui &lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+Garantie&lt;br /&gt; Zwei Jahre &lt;br /&gt;(Einzelheiten hierzu finden Sie auf &lt;br /&gt;www.shure.com/PersonalAudio/CustomerSupport/ProductReturnsAndWarranty/index.htm). &lt;br /&gt;&lt;br /&gt; Mfr. Teilenummer: SE210-A-EFS &lt;br /&gt;&lt;br /&gt;Hinweis: F&#xFC;r Produkte auf dieser Website, die nicht den Markennamen Apple tragen, werden Service und Support ausschlie&#xDF;lich von den Herstellern gem&#xE4;&#xDF; der den Produkten beiliegenden Nutzungsbedingungen &#xFC;bernommen. Die von Apple angebotene Garantiezeit gilt nicht f&#xFC;r Produkte, die kein Apple-Markenzeichen tragen, selbst wenn diese zusammen mit Apple-Produkten verpackt oder verkauft wurden. Bitte wenden Sie sich direkt an den Hersteller f&#xFC;r den technischen Support und Kundendienst.&lt;/div&gt;</description>
+    <description_short>&lt;p&gt;Evolved from personal monitor technology road-tested by pro musicians and perfected by Shure engineers, the lightweight and stylish SE210 delivers full-range audio that's free from outside noise.&lt;/p&gt;</description_short>
+    <link_rewrite>klangisolierte-ohrhorer-shure-se210-weib</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Shure SE210 Klangisolierte Ohrh&#xF6;rer f&#xFC;r iPod und iPhone</name>
+    <available_now/>
+    <available_later/>
+  </product>
+</entity_product>

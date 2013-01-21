@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_image>
+  <fields id="legend" class="Image" image="p">
+    <field name="id_product" relation="product"/>
+    <field name="cover"/>
+  </fields>
+  <entities>
+    <image id="MacBook_Air" id_product="MacBook_Air" cover="1"/>
+    <image id="MacBook_Air_1" id_product="MacBook_Air" cover="0"/>
+    <image id="MacBook_Air_2" id_product="MacBook_Air" cover="0"/>
+    <image id="MacBook_Air_3" id_product="MacBook" cover="0"/>
+    <image id="MacBook_Air_4" id_product="MacBook" cover="0"/>
+    <image id="MacBook_Air_SuperDrive" id_product="MacBook" cover="1"/>
+    <image id="iPod_touch" id_product="iPod_touch" cover="1"/>
+    <image id="iPod_touch_1" id_product="iPod_touch" cover="0"/>
+    <image id="iPod_touch_2" id_product="iPod_touch" cover="0"/>
+    <image id="iPod_touch_3" id_product="iPod_touch" cover="0"/>
+    <image id="iPod_touch_4" id_product="iPod_touch" cover="0"/>
+    <image id="iPod_touch_5" id_product="iPod_touch" cover="0"/>
+    <image id="housse-portefeuille-en-cuir" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" cover="1"/>
+    <image id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" cover="1"/>
+    <image id="iPod_Nano" id_product="iPod_Nano" cover="1"/>
+    <image id="iPod_Nano_1" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_2" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_3" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_4" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_5" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_6" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_Nano_7" id_product="iPod_Nano" cover="0"/>
+    <image id="iPod_shuffle" id_product="iPod_shuffle" cover="1"/>
+    <image id="iPod_shuffle_1" id_product="iPod_shuffle" cover="0"/>
+    <image id="iPod_shuffle_2" id_product="iPod_shuffle" cover="0"/>
+    <image id="iPod_shuffle_3" id_product="iPod_shuffle" cover="0"/>
+  </entities>
+</entity_image>

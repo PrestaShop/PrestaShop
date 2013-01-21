@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<links>
+	<link>
+		<field1_1>Information</field1_1>
+		<field2_1>Sitemap</field2_1>
+		<field3_1>index.php?controller=sitemap</field3_1>
+		<field4_1>Legal Notice</field4_1>
+		<field5_1>index.php?id_cms=2&amp;controller=cms&amp;id_lang=1</field5_1>
+		<field6_1>Terms and conditions</field6_1>
+		<field7_1>index.php?id_cms=3&amp;controller=cms&amp;id_lang=1</field7_1>
+		<field8_1>About us</field8_1>
+		<field9_1>index.php?id_cms=4&amp;controller=cms&amp;id_lang=1</field9_1>
+		<field10_1>Contact</field10_1>
+		<field11_1>index.php?controller=contact</field11_1>
+		<field1_4>Información</field1_4>
+		<field2_4>Mapa del sitio</field2_4>
+		<field3_4>index.php?controller=sitemap</field3_4>
+		<field4_4>Aviso legal</field4_4>
+		<field5_4>index.php?id_cms=2&amp;controller=cms&amp;id_lang=4</field5_4>
+		<field6_4>Condiciones de uso</field6_4>
+		<field7_4>index.php?id_cms=3&amp;controller=cms&amp;id_lang=4</field7_4>
+		<field8_4>Sobre</field8_4>
+		<field9_4>index.php?id_cms=4&amp;controller=cms&amp;id_lang=4</field9_4>
+		<field10_4>Contacto</field10_4>
+		<field11_4>index.php?controller=contact</field11_4>
+		<field1_5>Informations</field1_5>
+		<field2_5>Plan du site</field2_5>
+		<field3_5>index.php?controller=sitemap</field3_5>
+		<field4_5>Mentions legales</field4_5>
+		<field5_5>index.php?id_cms=2&amp;controller=cms&amp;id_lang=5</field5_5>
+		<field6_5>Conditions d&#039;utilisation</field6_5>
+		<field7_5>index.php?id_cms=3&amp;controller=cms&amp;id_lang=5</field7_5>
+		<field8_5>A propos</field8_5>
+		<field9_5>index.php?id_cms=4&amp;controller=cms&amp;id_lang=5</field9_5>
+		<field10_5>Contact</field10_5>
+		<field11_5>index.php?controller=contact</field11_5>
+	</link>
+	<link>
+		<field1_1>Our offers</field1_1>
+		<field2_1>New products</field2_1>
+		<field3_1>index.php?controller=new-products</field3_1>
+		<field4_1>Specials</field4_1>
+		<field5_1>index.php?controller=prices-drop</field5_1>
+		<field6_1>Top sellers</field6_1>
+		<field7_1>index.php?controller=best-sales</field7_1>
+		<field8_1>Manufacturers</field8_1>
+		<field9_1>index.php?controller=manufacturer</field9_1>
+		<field10_1>Suppliers</field10_1>
+		<field11_1>index.php?controller=supplier</field11_1>
+		<field1_4>Nuestras ofertas</field1_4>
+		<field2_4>Nuevos productos</field2_4>
+		<field3_4>index.php?controller=new-products</field3_4>
+		<field4_4>Especiales</field4_4>
+		<field5_4>index.php?controller=prices-drop</field5_4>
+		<field6_4>Top ventas</field6_4>
+		<field7_4>index.php?controller=best-sales</field7_4>
+		<field8_4>Fabricantes</field8_4>
+		<field9_4>index.php?controller=manufacturer</field9_4>
+		<field10_4>Proveedores</field10_4>
+		<field11_4>index.php?controller=supplier</field11_4>
+		<field1_5>Nos offres</field1_5>
+		<field2_5>Nouveaux produits</field2_5>
+		<field3_5>index.php?controller=new-products</field3_5>
+		<field4_5>Promotions</field4_5>
+		<field5_5>index.php?controller=prices-drop</field5_5>
+		<field6_5>Meilleures ventes</field6_5>
+		<field7_5>index.php?controller=best-sales</field7_5>
+		<field8_5>Fabricants</field8_5>
+		<field9_5>index.php?controller=manufacturer</field9_5>
+		<field10_5>Fournisseurs</field10_5>
+		<field11_5>index.php?controller=supplier</field11_5>
+	</link>
+	<link>
+		<field1_1>My account</field1_1>
+		<field2_1>My orders</field2_1>
+		<field3_1>index.php?controller=history</field3_1>
+		<field4_1>My addresses</field4_1>
+		<field5_1>index.php?controller=addresses</field5_1>
+		<field6_1>My personal info</field6_1>
+		<field7_1>index.php?controller=identity</field7_1>
+		<field8_1>My credit slips</field8_1>
+		<field9_1>index.php?controller=order-slip</field9_1>
+		<field10_1>My vouchers</field10_1>
+		<field11_1>index.php?controller=discount</field11_1>
+		<field1_4>Mi cuenta</field1_4>
+		<field2_4>Mis pedidos</field2_4>
+		<field3_4>index.php?controller=history</field3_4>
+		<field4_4>Mis direcciones</field4_4>
+		<field5_4>index.php?controller=addresses</field5_4>
+		<field6_4>Mis datos personales</field6_4>
+		<field7_4>index.php?controller=identity</field7_4>
+		<field8_4>Mis vales descuento</field8_4>
+		<field9_4>index.php?controller=order-slip</field9_4>
+		<field10_4>Mis vales</field10_4>
+		<field11_4>index.php?controller=discount</field11_4>
+		<field1_5>Mon compte</field1_5>
+		<field2_5>Mes commandes</field2_5>
+		<field3_5>index.php?controller=history</field3_5>
+		<field4_5>Mes adresses</field4_5>
+		<field5_5>index.php?controller=addresses</field5_5>
+		<field6_5>Mes données personnelles</field6_5>
+		<field7_5>index.php?controller=identity</field7_5>
+		<field8_5>Mes avoirs</field8_5>
+		<field9_5>index.php?controller=order-slip</field9_5>
+		<field10_5>Mes bons de réductions</field10_5>
+		<field11_5>index.php?controller=discount</field11_5>
+	</link>
+</links>

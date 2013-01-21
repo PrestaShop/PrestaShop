@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature_value>
+  <fields id="value" class="FeatureValue">
+    <field name="id_feature" relation="feature"/>
+    <field name="custom"/>
+  </fields>
+  <entities>
+    <feature_value id="Jack_stereo" id_feature="Headphone" custom="0"/>
+    <feature_value id="Mini-jack_stereo" id_feature="Headphone" custom="0"/>
+    <feature_value id="2_75_in" id_feature="Height" custom="1"/>
+    <feature_value id="2_06_in" id_feature="Width" custom="1"/>
+    <feature_value id="49_2_g" id_feature="Weight" custom="1"/>
+    <feature_value id="0_26_in" id_feature="Depth" custom="1"/>
+    <feature_value id="1_07_in" id_feature="Height" custom="1"/>
+    <feature_value id="1_62_in" id_feature="Width" custom="1"/>
+    <feature_value id="15_5_g" id_feature="Weight" custom="1"/>
+    <feature_value id="0_41_in_clip_included" id_feature="Depth" custom="1"/>
+    <feature_value id="4_33_in" id_feature="Height" custom="1"/>
+    <feature_value id="2_76_in" id_feature="Width" custom="1"/>
+    <feature_value id="120g" id_feature="Weight" custom="1"/>
+    <feature_value id="0_31_in" id_feature="Depth" custom="1"/>
+  </entities>
+</entity_feature_value>

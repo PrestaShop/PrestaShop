@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_scene>
+  <fields id="name" class="Scene" image="scenes, scenes/thumbs">
+    <field name="active"/>
+  </fields>
+  <entities>
+    <scene id="The_iPods_Nano" active="1"/>
+    <scene id="The_iPods" active="1"/>
+    <scene id="The_MacBooks" active="1"/>
+  </entities>
+</entity_scene>

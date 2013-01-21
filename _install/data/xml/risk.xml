@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<entity_risk>
+  <fields id="name" class="Risk">
+    <field name="percent"/>
+    <field name="color"/>
+  </fields>
+  <entities>
+    <risk id="None" percent="0" color="LimeGreen"/>
+    <risk id="Low" percent="35" color="DarkOrange"/>
+    <risk id="Medium" percent="75" color="Crimson"/>
+    <risk id="High" percent="100" color="#ec2e15"/>
+  </entities>
+</entity_risk>

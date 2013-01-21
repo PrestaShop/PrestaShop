@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_attribute>
+  <fields id="name" class="Attribute">
+    <field name="id_attribute_group" relation="attribute_group"/>
+    <field name="color"/>
+  </fields>
+  <entities>
+    <attribute id="2GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="4GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="Metal" id_attribute_group="Color" color="#D2D6D5"/>
+    <attribute id="Blue" id_attribute_group="Color" color="#008CB7"/>
+    <attribute id="Pink" id_attribute_group="Color" color="#F3349E"/>
+    <attribute id="Green" id_attribute_group="Color" color="#93D52D"/>
+    <attribute id="Orange" id_attribute_group="Color" color="#FD9812"/>
+    <attribute id="Optional_64GB_solid-state_drive" id_attribute_group="Disk_space" color=""/>
+    <attribute id="80GB_Parallel_ATA_Drive_4200_rpm" id_attribute_group="Disk_space" color=""/>
+    <attribute id="1_60GHz_Intel_Core_2_Duo" id_attribute_group="ICU" color=""/>
+    <attribute id="1_80GHz_Intel_Core_2_Duo" id_attribute_group="ICU" color=""/>
+    <attribute id="80GB_20_000_Songs" id_attribute_group="Disk_space" color=""/>
+    <attribute id="160GB_40_000_Songs" id_attribute_group="Disk_space" color=""/>
+    <attribute id="Black" id_attribute_group="Color" color="#000000"/>
+    <attribute id="8GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="16GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="32GB" id_attribute_group="Disk_space" color=""/>
+    <attribute id="Purple" id_attribute_group="Color" color="#7800F0"/>
+    <attribute id="Yellow" id_attribute_group="Color" color="#F6EF04"/>
+    <attribute id="Red" id_attribute_group="Color" color="#F60409"/>
+  </entities>
+</entity_attribute>

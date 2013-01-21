@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<entity_feature_value>
+  <feature_value id="Jack_stereo">
+    <value>Jack stereo</value>
+  </feature_value>
+  <feature_value id="Mini-jack_stereo">
+    <value>Mini-jack st&#xE9;r&#xE9;o</value>
+  </feature_value>
+  <feature_value id="2_75_in">
+    <value>69.8 mm</value>
+  </feature_value>
+  <feature_value id="2_06_in">
+    <value>52.3 mm</value>
+  </feature_value>
+  <feature_value id="49_2_g">
+    <value>49,2 g</value>
+  </feature_value>
+  <feature_value id="0_26_in">
+    <value>6,5 mm</value>
+  </feature_value>
+  <feature_value id="1_07_in">
+    <value>27.3 mm</value>
+  </feature_value>
+  <feature_value id="1_62_in">
+    <value>41.2 mm</value>
+  </feature_value>
+  <feature_value id="15_5_g">
+    <value>15.5 g</value>
+  </feature_value>
+  <feature_value id="0_41_in_clip_included">
+    <value>10,5 mm (clip incluyendo)</value>
+  </feature_value>
+  <feature_value id="4_33_in">
+    <value>110 mm</value>
+  </feature_value>
+  <feature_value id="2_76_in">
+    <value>70 mm</value>
+  </feature_value>
+  <feature_value id="120g">
+    <value>120g</value>
+  </feature_value>
+  <feature_value id="0_31_in">
+    <value>8 mm</value>
+  </feature_value>
+</entity_feature_value>
