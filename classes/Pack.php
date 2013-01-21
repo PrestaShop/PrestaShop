@@ -142,8 +142,8 @@ class PackCore extends Product
 				AND a.`id_product_pack` = '.(int)$id_product;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-		foreach ($result as &$row)
-			$row = Product::getTaxesInformations($row);
+		foreach ($result as &$line)
+			$line = Product::getTaxesInformations($line);
 			
 		if (!$full)
 			return $result;

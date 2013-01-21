@@ -50,9 +50,14 @@
 
 {if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
-		{foreach $informations as $info}
-			{$info}<br />
-		{/foreach}
+		<span id="see_more_infos">
+			<b><a href="#" style="color:#00529B;" onclick="$('#see_more_infos').hide(); $('#infos_block').show();return false;">{l s='Click here to see more informations'}</a></b>
+		</span>
+		<div id="infos_block" style="display:none;">
+			{foreach $informations as $info}
+				{$info}<br />
+			{/foreach}
+		</div>
 	</div><br />
 {/if}
 

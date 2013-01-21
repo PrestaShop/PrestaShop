@@ -112,6 +112,7 @@ class CmsControllerCore extends FrontController
 		else if ($this->assignCase == 2)
 		{
 			$this->context->smarty->assign(array(
+				'category' => $this->cms_category, //for backward compatibility
 				'cms_category' => $this->cms_category,
 				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
 				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),

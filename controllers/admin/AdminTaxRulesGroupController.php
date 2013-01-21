@@ -398,11 +398,16 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		if (empty($this->selected_states) || count($this->selected_states) == 0)
 			$this->selected_states = array(0);
-
+		$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
 		foreach ($this->selected_countries as $id_country)
 		{
 			foreach ($this->selected_states as $id_state)
 			{
+				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state))
+				{
+					$this->errors[] = Tools::displayError('A tax rule already exists for this country/state with tax only behavior');
+					continue;
+				}
 				$tr = new TaxRule();
 
 				// update or creation?

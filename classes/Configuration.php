@@ -145,6 +145,9 @@ class ConfigurationCore extends ObjectModel
 	  */
 	public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
+		if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_)
+			return false;
+		
 		// If conf if not initialized, try manual query
 		if (!self::$_CONF)
 		{

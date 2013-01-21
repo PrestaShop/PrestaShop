@@ -589,8 +589,15 @@ class ProductCore extends ObjectModel
 	*/
 	public static function getDefaultAttribute($id_product, $minimum_quantity = 0)
 	{
+		static $combinations = array();
+
 		if (!Combination::isFeatureActive())
 			return 0;
+
+		if (!isset($combinations[$id_product]))
+			$combinations[$id_product] = array();
+		if (isset($combinations[$id_product][$minimum_quantity]))
+			return $combinations[$id_product][$minimum_quantity];
 
 		$sql = 'SELECT pa.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa
@@ -630,6 +637,8 @@ class ProductCore extends ObjectModel
 					WHERE pa.id_product = '.(int)$id_product;
 			$result = Db::getInstance()->getValue($sql);
 		}
+		
+		$combinations[$id_product][$minimum_quantity] = $result;
 		return $result;
 	}
 
@@ -2533,8 +2542,11 @@ class ProductCore extends ObjectModel
 		if (!$use_customer_price)
 			$id_customer = 0;
 
+		if ($id_product_attribute === null)
+			$id_product_attribute = Product::getDefaultAttribute($id_product);
+
 		$cache_id = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.
-			'-'.$quantity.'-'.(int)$id_product_attribute.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
+			'-'.$quantity.'-'.$id_product_attribute.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
 			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer;
 	
 		// reference parameter is filled before any returns
