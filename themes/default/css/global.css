@@ -748,8 +748,12 @@ table#cart_summary tr ul {
 table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
-}table#cart_summary tbody tr:last-child td {
+}
+table#cart_summary tbody tr:last-child td {
 	border-bottom: 1px solid #999;
+}
+table#cart_summary tbody tr td.cart_discount_delete {
+	padding-left: 34px;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary .cart_description {
