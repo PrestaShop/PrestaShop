@@ -347,7 +347,7 @@ class OrderHistoryCore extends ObjectModel
 			// An additional email is sent the first time a virtual item is validated
 			$virtual_products = $order->getVirtualProducts();
 
-			if ($virtual_products && (!$last_order_state || !$last_order_state->logable) && $new_order_state && $new_order_state->logable)
+			if ($virtual_products && (!$last_order_state || !$last_order_state->logable || ($last_order_state->id == $new_order_state->id)) && $new_order_state && $new_order_state->logable)
 			{
 				$assign = array();
 				foreach ($virtual_products as $key => $virtual_product)
