@@ -414,8 +414,6 @@ abstract class PaymentModuleCore extends Module
 						if (!$values['tax_excl'])
 							continue;
 
-						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
-
 						/* IF
 						** - This is not multi-shipping
 						** - The value of the voucher is greater than the total of the order
@@ -466,7 +464,12 @@ abstract class PaymentModuleCore extends Module
 									null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
 								);
 							}
+
+							$values['tax_incl'] -= $values['tax_incl'] - $order->total_products_wt;
+							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
 						}
+
+						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{
