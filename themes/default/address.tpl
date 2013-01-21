@@ -25,10 +25,10 @@
 
 <script type="text/javascript">
 // <![CDATA[
-idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
-countries = new Array();
-countriesNeedIDNumber = new Array();
-countriesNeedZipCode = new Array();
+var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
+var countries = new Array();
+var countriesNeedIDNumber = new Array();
+var countriesNeedZipCode = new Array();
 {foreach from=$countries item='country'}
 	{if isset($country.states) && $country.contains_states}
 		countries[{$country.id_country|intval}] = new Array();

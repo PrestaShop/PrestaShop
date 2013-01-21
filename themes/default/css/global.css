@@ -1451,7 +1451,8 @@ form#add_adress {}
 	width:360px;/* 370 */
 	border:1px solid #ccc;
 	font-size: 12px;
-	color:#666
+	color:#666;
+	line-height:22px
 }
 #add_adress p.checkbox input {
 	margin-left:260px;
