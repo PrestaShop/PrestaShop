@@ -1368,6 +1368,7 @@ class AdminControllerCore extends Controller
 		$this->getLanguages();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
+		$this->initTabModuleList();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
@@ -1384,7 +1385,6 @@ class AdminControllerCore extends Controller
 		}
 		elseif (!$this->ajax)
 		{
-
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
 
@@ -1397,6 +1397,27 @@ class AdminControllerCore extends Controller
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
+	}
+	
+	/**
+	 * init tab modules list and add button in toolbar
+	 */
+	protected function initTabModuleList()
+	{
+		$tab_modules_list = array();
+		if (!$this->isFresh(Module::CACHE_FILE_TAB_MODULES_LIST, 604800))
+			$this->refresh(Module::CACHE_FILE_TAB_MODULES_LIST, 'http://'.Tab::TAB_MODULE_LIST_URL);
+		
+		$tab_modules_list = Tab::getTabModulesList($this->id);
+		if ($tab_modules_list)
+			$this->toolbar_btn['modules-list'] = array(
+					'href' => '#',
+					'desc' => $this->l('Modules List')
+				);
+		
+		$this->context->smarty->assign(array(
+			'tab_modules_list' => implode(',', $tab_modules_list),
+			'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules')));
 	}
 
 	/**
