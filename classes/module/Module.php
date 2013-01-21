@@ -400,9 +400,10 @@ abstract class ModuleCore
 		// Check the version of the module with the registered one and look if any upgrade file exist
 		if (Tools::version_compare($module->version, $module->database_version, '>'))
 		{
+			$oldVersion = $module->database_version;
 			$module = Module::getInstanceByName($module->name);
 			if ($module instanceof Module)
-				return $module->loadUpgradeVersionList($module->name, $module->version, $module->database_version);
+				return $module->loadUpgradeVersionList($module->name, $module->version, $oldVersion);
 		}
 		return null;
 	}
