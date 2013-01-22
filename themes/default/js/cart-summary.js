@@ -432,6 +432,8 @@ function upQuantity(id, qty)
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) !== 'undefined')
 					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();					
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -515,6 +517,8 @@ function downQuantity(id, qty)
 					
 					if (typeof(getCarrierListAndUpdate) !== 'undefined')
 						getCarrierListAndUpdate();
+					if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+						updatePaymentMethodsDisplay();							
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
