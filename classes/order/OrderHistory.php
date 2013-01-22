@@ -88,6 +88,7 @@ class OrderHistoryCore extends ObjectModel
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
+		
 
 		// executes hook
 		if ($new_os->id == Configuration::get('PS_OS_PAYMENT'))
@@ -101,6 +102,49 @@ class OrderHistoryCore extends ObjectModel
 
 		if (Validate::isLoadedObject($order) && ($old_os instanceof OrderState) && ($new_os instanceof OrderState))
 		{
+			// An email is sent the first time a virtual item is validated
+			$virtual_products = $order->getVirtualProducts();
+			if ($virtual_products && (!$old_os || !$old_os->logable) && $new_os && $new_os->logable)
+			{
+				$context = Context::getContext();
+				$assign = array();
+				foreach ($virtual_products as $key => $virtual_product)
+				{
+					$id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
+					$product_download = new ProductDownload($id_product_download);
+					// If this virtual item has an associated file, we'll provide the link to download the file in the email
+					if ($product_download->display_filename != '')
+					{
+						$assign[$key]['name'] = $product_download->display_filename;
+						$dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
+							.'&id_order='.$order->id
+							.'&secure_key='.$order->secure_key;
+						$assign[$key]['link'] = $dl_link;
+						if ($virtual_product['download_deadline'] != '0000-00-00 00:00:00')
+							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline'], $order->id_lang);
+						if ($product_download->nb_downloadable != 0)
+							$assign[$key]['downloadable'] = $product_download->nb_downloadable;
+					}
+				}
+				$customer = new Customer((int)$order->id_customer);
+				$context->smarty->assign('virtualProducts', $assign);
+				$context->smarty->assign('id_order', $order->id);
+				$iso = Language::getIsoById((int)($order->id_lang));
+				$links = $context->smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
+				$data = array(
+						'{lastname}' => $customer->lastname,
+						'{firstname}' => $customer->firstname,
+						'{id_order}' => (int)$order->id,
+						'{order_name}' => $order->getUniqReference(),
+						'{nbProducts}' => count($virtual_products),
+						'{virtualProducts}' => $links
+					);
+				// If there's at least one downloadable file
+				if (!empty($assign))
+					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
+						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+			}
+
 			// @since 1.5.0 : gets the stock manager
 			$manager = null;
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -308,9 +352,7 @@ class OrderHistoryCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 		$order = new Order($this->id_order);
-		$last_order_state = $order->getCurrentOrderState();
-		$new_order_state = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT'));
-
+		
 		if (!$this->add($autodate))
 			return false;
 
@@ -343,42 +385,6 @@ class OrderHistoryCore extends ObjectModel
 			
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = $order->getUniqReference();
-
-			// An additional email is sent the first time a virtual item is validated
-			$virtual_products = $order->getVirtualProducts();
-
-			if ($virtual_products && (!$last_order_state || !$last_order_state->logable) && $new_order_state && $new_order_state->logable)
-			{
-				$assign = array();
-				foreach ($virtual_products as $key => $virtual_product)
-				{
-					$id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
-					$product_download = new ProductDownload($id_product_download);
-					// If this virtual item has an associated file, we'll provide the link to download the file in the email
-					if ($product_download->display_filename != '')
-					{
-						$assign[$key]['name'] = $product_download->display_filename;
-						$dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
-							.'&id_order='.$order->id
-							.'&secure_key='.$order->secure_key;
-						$assign[$key]['link'] = $dl_link;
-						if ($virtual_product['download_deadline'] != '0000-00-00 00:00:00')
-							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline'], $order->id_lang);
-						if ($product_download->nb_downloadable != 0)
-							$assign[$key]['downloadable'] = $product_download->nb_downloadable;
-					}
-				}
-				$context->smarty->assign('virtualProducts', $assign);
-				$context->smarty->assign('id_order', $order->id);
-				$iso = Language::getIsoById((int)($order->id_lang));
-				$links = $context->smarty->fetch(_PS_MAIL_DIR_.$iso.'/download-product.tpl');
-				$tmp_array = array('{nbProducts}' => count($virtual_products), '{virtualProducts}' => $links);
-				$data = array_merge ($data, $tmp_array);
-				// If there's at least one downloadable file
-				if (!empty($assign))
-					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
-			}
 
 			if (Validate::isLoadedObject($order))
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
