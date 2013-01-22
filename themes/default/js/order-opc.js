@@ -43,6 +43,30 @@ function updatePaymentMethods(json)
 	$('#opc_payment_methods-content #HOOK_PAYMENT').html(json.HOOK_PAYMENT);
 }
 
+function updatePaymentMethodsDisplay()
+{
+	var checked = '';
+	if ($('#cgv:checked').length !== 0)
+		checked = 1;
+	else
+		checked = 0;
+	$('#opc_payment_methods-overlay').fadeIn('slow', function(){
+		$.ajax({
+			type: 'POST',
+			url: orderOpcUrl,
+			async: true,
+			cache: false,
+			dataType : "json",
+			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
+			success: function(json)
+			{
+				updatePaymentMethods(json);
+			}
+		});
+		$(this).fadeOut('slow');		
+	});
+}
+
 function updateAddressSelection()
 {
 	var idAddress_delivery = ($('#opc_id_address_delivery').length === 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
@@ -111,8 +135,7 @@ function updateAddressSelection()
 						$(this).find('.cart_quantity_up')
 							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
 							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
-					}
-					
+					}	
 				});
 
 				// Update global var deliveryAddress
@@ -705,28 +728,7 @@ function bindInputs()
 	
 	// Term Of Service (TOS)
 	$('#cgv').click(function() {
-		var checked = '';
-
-		if ($('#cgv:checked').length !== 0)
-			checked = 1;
-		else
-			checked = 0;
-		
-		$('#opc_payment_methods-overlay').fadeIn('slow');
-		$.ajax({
-			type: 'POST',
-			url: orderOpcUrl,
-			async: true,
-			cache: false,
-			dataType : "json",
-			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
-			success: function(json)
-			{
-				$('div#HOOK_TOP_PAYMENT').html(json.HOOK_TOP_PAYMENT);
-				$('#opc_payment_methods-content div#HOOK_PAYMENT').html(json.HOOK_PAYMENT);
-				$('#opc_payment_methods-overlay').fadeOut('slow');
-			}
-		});
+		updatePaymentMethodsDisplay();
 	});
 }
 
