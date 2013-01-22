@@ -1302,7 +1302,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if ($this->tabAccess['edit'] === '1')
 				{
 					// Get a good path for module directory
-					if ($this->theme_selected == self::DEFAULT_THEME_NAME)
+					if ($this->theme_selected == self::DEFAULT_THEME_NAME && _PS_MODE_DEV_)
 						$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
 					else
 						$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
@@ -1379,10 +1379,10 @@ class AdminTranslationsControllerCore extends AdminController
 			$arr_mail_content['core_mail'] = Tools::getValue('core_mail');
 
 			// Get path of directory for find a good path of translation file
-			if ($this->theme_selected != self::DEFAULT_THEME_NAME)
-				$arr_mail_path['core_mail'] = $this->translations_informations[$this->type_selected]['override']['dir'];
-			else
+			if ($this->theme_selected == self::DEFAULT_THEME_NAME && _PS_MODE_DEV_)
 				$arr_mail_path['core_mail'] = $this->translations_informations[$this->type_selected]['dir'];
+			else
+				$arr_mail_path['core_mail'] = $this->translations_informations[$this->type_selected]['override']['dir'];
 		}
 
 		if (Tools::getValue('module_mail'))
@@ -1390,10 +1390,10 @@ class AdminTranslationsControllerCore extends AdminController
 			$arr_mail_content['module_mail'] = Tools::getValue('module_mail');
 
 			// Get path of directory for find a good path of translation file
-			if ($this->theme_selected != self::DEFAULT_THEME_NAME)
-				$arr_mail_path['module_mail'] = $this->translations_informations['modules']['override']['dir'].'{module}/mails/'.$this->lang_selected->iso_code.'/';
-			else
+			if ($this->theme_selected == self::DEFAULT_THEME_NAME && _PS_MODE_DEV_)
 				$arr_mail_path['module_mail'] = $this->translations_informations['modules']['dir'].'{module}/mails/'.$this->lang_selected->iso_code.'/';
+			else
+				$arr_mail_path['module_mail'] = $this->translations_informations['modules']['override']['dir'].'{module}/mails/'.$this->lang_selected->iso_code.'/';
 		}
 
 		// Save each mail content
@@ -2266,20 +2266,24 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	public function getModulesHasMails($with_module_name = false)
 	{
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME)
-			$i18n_dir = $this->translations_informations['modules']['override']['dir'];
-		else
-			$i18n_dir = $this->translations_informations['modules']['dir'];
-
 		$arr_modules = array();
-		foreach (scandir($i18n_dir) as $module_dir)
+		foreach (scandir($this->translations_informations['modules']['dir']) as $module_dir)
 		{
-			$dir = $i18n_dir.$module_dir.'/';
-			if (!in_array($module_dir, self::$ignore_folder) && Tools::file_exists_cache($dir.'mails/'))
-				if ($with_module_name)
-					$arr_modules[$module_dir] = $dir;
-				else
-					$arr_modules[$dir] = scandir($dir);
+			if (!in_array($module_dir, self::$ignore_folder))
+			{
+				$dir = false;
+				if (($this->theme_selected != self::DEFAULT_THEME_NAME || !_PS_MODE_DEV_) && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/mails/'))
+					$dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/';
+				elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/mails/'))
+					$dir = $this->translations_informations['modules']['dir'].$module_dir.'/';
+				if ($dir !== false)
+				{
+					if ($with_module_name)
+						$arr_modules[$module_dir] = $dir;
+					else
+						$arr_modules[$dir] = scandir($dir);
+				}
+			}
 		}
 		return $arr_modules;
 	}
@@ -2327,7 +2331,7 @@ class AdminTranslationsControllerCore extends AdminController
 					$subject_mail = $this->getSubjectMail($dir, $file, $subject_mail);
 
 		// Get path of directory for find a good path of translation file
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME && @filemtime($this->translations_informations[$this->type_selected]['override']['dir']))
+		if (($this->theme_selected != self::DEFAULT_THEME_NAME || !_PS_MODE_DEV_) && @filemtime($this->translations_informations[$this->type_selected]['override']['dir']))
 			$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
 		else
 			$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
@@ -2519,7 +2523,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormModules()
 	{
 		// Get path of directory for find a good path of translation file
-		if ($this->theme_selected != self::DEFAULT_THEME_NAME)
+		if ($this->theme_selected != self::DEFAULT_THEME_NAME || !_PS_MODE_DEV_)
 			$i18n_dir = $this->translations_informations[$this->type_selected]['override']['dir'];
 		else
 			$i18n_dir = $this->translations_informations[$this->type_selected]['dir'];
