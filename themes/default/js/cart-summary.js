@@ -167,7 +167,7 @@ function changeAddressDelivery(obj)
 			dataType: 'json',
 			context: obj,
 			data: 'controller=cart'
-				+'&ajax=true&duplicate&summary'
+				+'&ajax=true&duplicate=true&summary=true'
 				+'&id_product='+id_product
 				+'&id_product_attribute='+id_product_attribute
 				+'&id_address_delivery='+old_id_address_delivery
@@ -279,7 +279,7 @@ function deleteProductFromSummary(id)
 		cache: false,
 		dataType: 'json',
 		data: 'controller=cart'
-			+'&ajax=true&delete&summary'
+			+'&ajax=true&delete=true&summary=true'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
 			+'&id_address_delivery='+id_address_delivery+ ( (customizationId !== 0) ? '&id_customization='+customizationId : '')
@@ -404,9 +404,9 @@ function upQuantity(id, qty)
 		dataType: 'json',
 		data: 'controller=cart'
 			+'&ajax=true'
-			+'&add'
-			+'&getproductprice'
-			+'&summary'
+			+'&add=true'
+			+'&getproductprice=true'
+			+'&summary=true'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
 			+'&id_address_delivery='+id_address_delivery
@@ -485,9 +485,9 @@ function downQuantity(id, qty)
 			dataType: 'json',
 			data: 'controller=cart'
 				+'&ajax=true'
-				+'&add'
-				+'&getproductprice'
-				+'&summary'
+				+'&add=true'
+				+'&getproductprice=true'
+				+'&summary=true'
 				+'&id_product='+productId
 				+'&ipa='+productAttributeId
 				+'&id_address_delivery='+id_address_delivery
@@ -784,7 +784,7 @@ $(document).ready(function() {
 			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
-			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
+			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
 				+($(this).prop('checked') ? '1' : '0')
 				+'&token='+static_token
 				+'&allow_refresh=1',
