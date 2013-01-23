@@ -49,7 +49,8 @@ function updateStateByIdCountry()
 	
 	var query = $.ajax({
 		type: 'POST',
-		url: baseDir + 'modules/carriercompare/ajax.php',
+		headers: { "cache-control": "no-cache" },
+		url: baseDir + 'modules/carriercompare/ajax.php' + '?rand=' + new Date().getTime(),
 		data: 'method=getStates&id_country=' + $('#id_country').val(),
 		dataType: 'json',
 		success: function(json) {
@@ -78,7 +79,8 @@ function updateCarriersList()
 	
 	var query = $.ajax({
 		type: 'POST',
-		url: baseDir + 'modules/carriercompare/ajax.php',
+		headers: { "cache-control": "no-cache" },
+		url: baseDir + 'modules/carriercompare/ajax.php' + '?rand=' + new Date().getTime(),
 		data: 'method=getCarriers&id_country=' + $('#id_country').val() + '&id_state=' + $('#id_state').val() + '&zipcode=' + $('#zipcode').val(),
 		dataType: 'json',
 		success: function(json) {
@@ -129,7 +131,8 @@ function saveSelection()
 	
 	var query = $.ajax({
 		type: 'POST',
-		url: baseDir + 'modules/carriercompare/ajax.php',
+		headers: { "cache-control": "no-cache" },
+		url: baseDir + 'modules/carriercompare/ajax.php' + '?rand=' + new Date().getTime(),
 		data: 'method=saveSelection&' + $('#compare_shipping_form').serialize(),
 		dataType: 'json',
 		success: function(json) {

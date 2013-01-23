@@ -338,7 +338,8 @@ function searchProducts()
 	
 	$.ajax({
 		type: 'POST',
-		url: 'ajax-tab.php',
+		headers: { "cache-control": "no-cache" }, 		
+		url: 'ajax-tab.php' + '?rand=' + new Date().getTime(),
 		async: true,
 		dataType: 'json',
 		data: {

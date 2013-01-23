@@ -55,8 +55,9 @@ var CartUpd = (function()
 			customizationId = 0;
 
 			$.ajax({
-				type: 'GET',
-				url: baseDir,
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + '?rand=' + new Date().getTime(),
 				async: true,
 				cache: false,
 				dataType: 'json',
@@ -74,8 +75,9 @@ var CartUpd = (function()
 			id_address_delivery = $("#cart_product_address_delivery_id_"+id).val();
 			customizationId = 0;
 			$.ajax({
-				type: 'GET',
-				url: baseDir,
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + '?rand=' + new Date().getTime(),
 				async: true,
 				cache: false,
 				dataType: 'json',

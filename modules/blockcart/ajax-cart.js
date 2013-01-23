@@ -110,10 +110,12 @@ var ajaxCart = {
 
 			// save the expand statut in the user cookie
 			$.ajax({
-				type: 'GET',
-				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php',
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
-				data: 'ajax_blockcart_display=expand' + '&rand=' + new Date().getTime()
+				cache: false,
+				data: 'ajax_blockcart_display=expand'
 			});
 
 
@@ -122,8 +124,9 @@ var ajaxCart = {
 	// Fix display when using back and previous browsers buttons
 	refresh : function(){
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -152,9 +155,11 @@ var ajaxCart = {
 
 			// save the expand statut in the user cookie
 			$.ajax({
-				type: 'GET',
-				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php',
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: baseDir + 'modules/blockcart/blockcart-set-collapse.php' + '?rand=' + new Date().getTime(),
 				async: true,
+				cache: false,
 				data: 'ajax_blockcart_display=collapse' + '&rand=' + new Date().getTime()
 			});
 		}
@@ -194,7 +199,8 @@ var ajaxCart = {
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
-			url: baseUri,
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -251,7 +257,8 @@ var ajaxCart = {
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
-			url: baseUri,
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -698,7 +705,13 @@ $(document).ready(function(){
 	);
 	
 	$('.delete_voucher').live('click', function() {
-		$.ajax({url:$(this).attr('href')});
+		$.ajax({
+			type: 'POST',			
+			headers: { "cache-control": "no-cache" },
+			async: true,
+			cache: false,			
+			url:$(this).attr('href') + '?rand=' + new Date().getTime()
+		});
 		$(this).parent().parent().remove();
 		if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
 		{

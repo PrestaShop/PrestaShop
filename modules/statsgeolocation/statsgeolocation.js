@@ -37,8 +37,9 @@ function wait()
 function doAjax(dataform)
 {
 	$.ajax({
-		url: '../modules/statsgeolocation/config.php',
+		url: '../modules/statsgeolocation/config.php' + '?rand=' + new Date().getTime(),
 		type: 'POST',
+		headers: { "cache-control": "no-cache" },
 		data: dataform,
 		dataType: 'html',
 		error: function()

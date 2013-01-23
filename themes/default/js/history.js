@@ -108,7 +108,8 @@ function sendOrderMessage()
 
 	$.ajax({
 		type: "POST",
-		url: $('#sendOrderMessage').attr("action"),
+		headers: { "cache-control": "no-cache" },
+		url: $('#sendOrderMessage').attr("action") + '?rand=' + new Date().getTime(),
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {

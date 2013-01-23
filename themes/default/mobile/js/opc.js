@@ -73,7 +73,8 @@ function initEvent()
 			var checked = 0;
 		$.ajax({
 			type: 'POST',
-			url: orderOpcUrl,
+			headers: { "cache-control": "no-cache" },
+			url: orderOpcUrl + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType : "json",
@@ -120,7 +121,8 @@ function updateCarrierSection(elm)
 
 	$.ajax({
 		type: 'POST',
-		url: orderOpcUrl,
+		headers: { "cache-control": "no-cache" },
+		url: orderOpcUrl + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : "json",

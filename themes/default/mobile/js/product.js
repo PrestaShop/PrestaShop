@@ -219,7 +219,8 @@ var ProductFn = (function()
 	
 		$.ajax({
 			type: 'POST',
-			url: customAction,
+			headers: { "cache-control": "no-cache" },
+			url: customAction + '?rand=' + new Date().getTime(),
 			data: 'ajax=true&'+$('#customizationForm').serialize(),
 			dataType: 'json',
 			async : true,

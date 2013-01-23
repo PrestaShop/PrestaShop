@@ -86,8 +86,9 @@ function changeAddressDelivery(obj)
 	if (new_id_address_delivery > 0) // Change the delivery address
 	{
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -158,8 +159,9 @@ function changeAddressDelivery(obj)
 		});
 		
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -270,8 +272,9 @@ function deleteProductFromSummary(id)
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
-		type: 'GET',
-		url: baseUri,
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType: 'json',
@@ -393,8 +396,9 @@ function upQuantity(id, qty)
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
-		type: 'GET',
-		url: baseUri,
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType: 'json',
@@ -473,8 +477,9 @@ function downQuantity(id, qty)
 	if (newVal > 0 || $('#product_'+id+'_gift').length)
 	{
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -774,8 +779,9 @@ $(document).ready(function() {
 	
 	$('#allow_seperated_package').live('click', function() {
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
@@ -815,7 +821,8 @@ function updateExtraCarrier(id_delivery_option, id_address)
 	
 	$.ajax({
 		type: 'POST',
-		url: url,
+		headers: { "cache-control": "no-cache" },
+		url: url + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : "json",

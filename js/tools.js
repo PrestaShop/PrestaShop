@@ -263,7 +263,8 @@ function setCurrency(id_currency)
 {
 	$.ajax({
 		type: 'POST',
-		url: baseDir + 'index.php',
+		headers: { "cache-control": "no-cache" },
+		url: baseDir + 'index.php' + '?rand=' + new Date().getTime(),
 		data: 'controller=change-currency&id_currency='+ parseInt(id_currency),
 		success: function(msg)
 		{
