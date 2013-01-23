@@ -2095,4 +2095,7 @@ tr.subitem > td:first-child + td {
 	text-align:center
 }
 
-.ie7 #featured-products_block_center .product_image span.new {top:-20px;right:-19px}
+.ie7 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}
+.ie9 #featured-products_block_center .product_image span.new{top:21px;right:-24px}
+.ie8 #featured-products_block_center .product_image span.new{top:110px;right:0;width:94%}
+.lt-ie6 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}
