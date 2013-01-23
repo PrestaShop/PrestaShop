@@ -66,7 +66,8 @@ function getStores(coordinates, radius)
 		// ajax call
 		$.ajax({
 			type: 'POST',
-			url: 'index.php?controller=stores',
+			headers: { "cache-control": "no-cache" },
+			url: 'index.php?controller=stores' + '&rand=' + new Date().getTime(),
 			data: 'ajax=true&latitude=' + latitude + '&longitude=' + longitude + '&radius=' + radius,
 			dataType: 'json',
 			async : true,

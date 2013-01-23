@@ -117,10 +117,11 @@ function ProductTabsManager(){
 		}
 
 		return $.ajax({
-			url : $('#link-'+tab_name).attr("href")+"&ajax=1",
+			url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 			type: 'POST',
+			headers: { "cache-control": "no-cache" },
 			data: data,
 			success : function(data)
 			{

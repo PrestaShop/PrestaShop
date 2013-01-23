@@ -35,9 +35,10 @@ reloadProductComparison = function() {
 		$.ajax({
   			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
  			async: false,
+ 			cache: false,
   			success: function(){
-	return true;
-}
+				return true;
+			}
 		});	
 	});
 
@@ -51,12 +52,13 @@ reloadProductComparison = function() {
 			$.ajax({
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=add&id_product=' + idProduct,
 	 			async: true,
+	 			cache: false,
 	  			success: function(data){
 	  				if (data === '0')
 	  				{
 	  					checkbox.attr('checked', false);
-		alert(max_item);
-}
+						alert(max_item);
+					}
 	  			},
 	    		error: function(){
 	    			checkbox.attr('checked', false);
@@ -68,6 +70,7 @@ reloadProductComparison = function() {
 			$.ajax({
 	  			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 	 			async: true,
+	 			cache: false,
 	  			success: function(data){
 	  				if (data === '0')
 	  					checkbox.attr('checked', true);

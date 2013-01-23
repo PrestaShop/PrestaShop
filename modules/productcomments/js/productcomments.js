@@ -12,13 +12,14 @@ $(function() {
 		var parent = $(this).parent();
 
 		$.ajax({
-			url: productcomments_controller_url,
+			url: productcomments_controller_url + '?rand=' + new Date().getTime(),
 			data: {
 				id_product_comment: id_product_comment,
 				action: 'comment_is_usefull',
 				value: is_usefull
 			},
 			type: 'POST',
+			headers: { "cache-control": "no-cache" },
 			success: function(result){
 				parent.fadeOut('slow', function() {
 					parent.remove();
@@ -34,12 +35,13 @@ $(function() {
 			var parent = $(this).parent();
 
 			$.ajax({
-				url: productcomments_controller_url,
+				url: productcomments_controller_url + '?rand=' + new Date().getTime(),
 				data: {
 					id_product_comment: idProductComment,
 					action: 'report_abuse'
 				},
 				type: 'POST',
+				headers: { "cache-control": "no-cache" },
 				success: function(result){
 					parent.fadeOut('slow', function() {
 						parent.remove();
@@ -57,9 +59,10 @@ $(function() {
 
 		url_options = parseInt(productcomments_url_rewrite) ? '?' : '&';
 		$.ajax({
-			url: productcomments_controller_url+url_options+'action=add_comment&secure_key='+secure_key,
+			url: productcomments_controller_url + url_options + 'action=add_comment&secure_key=' + secure_key + '&rand=' + new Date().getTime(),
 			data: $('#fancybox-content form').serialize(),
 			type: 'POST',
+			headers: { "cache-control": "no-cache" },
 			dataType: "json",
 			success: function(data){
 				if (data.result)

@@ -27,6 +27,16 @@ $(document).ready(function() {
 	initTableDnD();
 });
 
+function objToString(obj) {
+    var str = '';
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            str += p + '=' + obj[p] + '&';
+        }
+    }
+    return str;
+}
+
 function initTableDnD(table)
 {
 	if (typeof(table) == 'undefined')
@@ -119,9 +129,10 @@ function initTableDnD(table)
 
 				$.ajax({
 					type: 'POST',
+					headers: { "cache-control": "no-cache" },
 					async: false,
-					url: currentIndex + '&token=' + token + '&' + $.tableDnD.serialize(),
-					data: params,
+					url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+					data: $.tableDnD.serialize() + '&' + objToString(params) ,
 					success: function(data) {
 						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
 
