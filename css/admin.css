@@ -2384,3 +2384,8 @@ margin-bottom:7px;
 	margin-left:30px;
 	list-style-type:disc;
 }
+
+.id_customization .customization_field {
+	min-width: 205px;
+	width: 205px;
+}

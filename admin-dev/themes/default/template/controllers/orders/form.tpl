@@ -42,6 +42,7 @@
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
 	$(document).ready(function() {
+				
 		$('#customer').typeWatch({
 			captureLength: 1,
 			highlight: true,
@@ -597,7 +598,11 @@
 					});
 					products_found += '</select>';
 					$('#products_found #product_list').html(products_found);
-					$('#products_found #attributes_list').html(attributes_html);
+					$('#products_found #attributes_list').html(attributes_html);		
+					$('link[rel="stylesheet"]').each(function (i, element) {
+						sheet = $(element).clone();
+						$('#products_found #customization_list').contents().find('head').append(sheet);
+					});
 					$('#products_found #customization_list').contents().find('body').html(customization_html);
 					display_product_attributes();
 					display_product_customizations();
