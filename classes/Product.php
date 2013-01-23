@@ -419,7 +419,7 @@ class ProductCore extends ObjectModel
 						'xlink_resource' => 'product'),
 				)
 			),
-			'product_bundle'] => array(
+			'product_bundle' => array(
                         	'resource' => 'products',
                         	'fields' => array(
                                 	'id' => array('required' => true),
