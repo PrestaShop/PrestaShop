@@ -694,7 +694,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					}
 					elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
 					{
-						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[3]);
+						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[2]);
 						return $object->deleteImage(true);
 					}
 					else
