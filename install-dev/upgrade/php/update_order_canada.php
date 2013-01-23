@@ -55,7 +55,7 @@ function update_order_canada()
 
 		$id_order_list = Db::getInstance()->executeS($sql);
 		$default_price_display_method = Db::getInstance()->getValue('SELECT price_display_method
-			FROM `'._DB_PREFIX_.'group WHERE id_group=1`');
+			FROM `'._DB_PREFIX_.'group` WHERE id_group=1');
 		$values = '';
 		foreach ($id_order_list as $order)
 		{
