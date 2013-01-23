@@ -3567,7 +3567,7 @@ class ProductCore extends ObjectModel
 
 			if (isset($customizations['labels']))
 			{
-				$query = 'INSERT INTO `'._DB_PREFIX_.'` (`id_customization_field`, `id_lang`, `name`) VALUES ';
+				$query = 'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`) VALUES ';
 				$data = array();
 				foreach ($customizations['labels'][$old_customization_field_id] as $customization_label)
 					$data = array(

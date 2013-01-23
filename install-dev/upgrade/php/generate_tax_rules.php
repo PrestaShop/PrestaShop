@@ -63,8 +63,8 @@ function generate_tax_rules()
 		}
 
 		$states = Db::getInstance()->executeS('
-		SELECT * FROM `'._DB_PREFIX_.'states s
-		LEFT JOIN `'._DB_PREFIX_.'tax_state ts ON (ts.`id_state` = s.`id_state`)
+		SELECT * FROM `'._DB_PREFIX_.'states` s
+		LEFT JOIN `'._DB_PREFIX_.'tax_state` ts ON (ts.`id_state` = s.`id_state`)
 		WHERE `id_tax` = '.(int)$id_tax);
 
 		if ($states)

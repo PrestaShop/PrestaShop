@@ -79,7 +79,7 @@ function create_multistore()
 
 	// Stock conversion
 	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)
-	VALUES (SELECT `p.id_product`, 0, 1, 1, `p.quantity` FROM `'._DB_PREFIX_.'.product` p);';
+	VALUES (SELECT p.`id_product`, 0, 1, 1, p.`quantity` FROM `'._DB_PREFIX_.'.product` p);';
 	$res &= Db::getInstance()->execute($sql);
 
 	$sql = 'INSERT INTO `'._DB_PREFIX_.'.stock` (`id_product`, `id_product_attribute`, `id_group_shop`, `id_shop`, `quantity`)

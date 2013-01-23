@@ -27,7 +27,7 @@
 function setAllGroupsOnHomeCategory()
 {
 	$ps_lang_default = Db::getInstance()->getValue('SELECT value 
-		FROM `'._DB_PREFIX_.'`configuration WHERE name="PS_LANG_DEFAULT"');
+		FROM `'._DB_PREFIX_.'configuration` WHERE name="PS_LANG_DEFAULT"');
 
 	$results = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
 	$groups = array();
