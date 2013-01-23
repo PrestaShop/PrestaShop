@@ -564,7 +564,7 @@ $(function(){ldelim}
 	<fieldset class="account_creation dni">
 		<h3>{l s='Tax identification'}</h3>
 		<p class="required text">
-			<label for="dni">{l s='Identification number'}</label>
+			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
