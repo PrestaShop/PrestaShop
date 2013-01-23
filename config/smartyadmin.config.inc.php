@@ -65,6 +65,8 @@ function smartyTranslate($params, &$smarty)
 		// Eg. xxx/controllers/customers/xxx => AdminCustomers
 		if ($key !== false)
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
+		elseif (isset($folder_tree[0]))
+			$class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
 		else
 			$class = null;
 	}

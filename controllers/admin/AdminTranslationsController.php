@@ -1751,8 +1751,14 @@ class AdminTranslationsControllerCore extends AdminController
 					if (preg_match('#controllers#', $tmp))
 					{
 						$parent_class = explode(DIRECTORY_SEPARATOR, $tmp);
-						$key = array_search('controllers', $parent_class);
-						$prefix_key = 'Admin'.ucfirst($parent_class[$key + 1]);
+						$override = array_search('override', $parent_class);
+						if ($override !== false)
+							$prefix_key = 'Admin'.ucfirst($parent_class[count($parent_class) - 1]);
+						else
+						{
+							$key = array_search('controllers', $parent_class);
+							$prefix_key = 'Admin'.ucfirst($parent_class[$key + 1]);
+						}
 					}
 					else
 						$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
