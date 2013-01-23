@@ -105,8 +105,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			// With no parameters, we consider that we are doing a new install, so session where the last process step
 			// was stored can be cleaned
 			if (Tools::getValue('restart'))
+			{
 				$this->session->process_validated = array();
-			else if (!Tools::getValue('submitNext'))
+				$this->session->database_clear = true;
+			}
+			elseif (!Tools::getValue('submitNext'))
 			{
 				$this->session->step = 'configure';
 				$this->session->last_step = 'configure';
