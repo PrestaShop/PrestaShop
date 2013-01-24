@@ -517,7 +517,7 @@ class AuthControllerCore extends FrontController
 			if (!count($this->errors))
 			{
 				// if registration type is in one step, we save the address
-				if ((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Tools::isSubmit('submitGuestAccount'))
+				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Tools::isSubmit('submitGuestAccount'))
 					if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
 						die(Tools::displayError());
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
