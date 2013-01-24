@@ -58,10 +58,10 @@ ul#product_list {
 			-webkit-transform: rotate(45deg);
 			-o-transform:rotate(45deg);
 			background-color: #990000;
-			transform: rotate(45deg);  /* Newer browsers */
+			transform: rotate(45deg); 
+			-ms-transform: rotate(45deg);			/* Newer browsers */
 		}
 		
-		.ie9 #product_list li span.new{top:21px;right:-24px}
 		.ie8 #product_list li span.new{top:111px;right:0;width:94%}
 		.ie7 #product_list li span.new {top:111px;right:0;width:94%}
 		.lt-ie6 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
