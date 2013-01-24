@@ -60,7 +60,7 @@
 	</tr>
 	<tr>
 		<td class="col-left"><label>{l s='Additional shipping cost (per quantity):'}</label></td>
-		<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
+		<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');"
 				value="{$product->additional_shipping_cost|htmlentities}" />{$currency->suffix}
 			{if $country_display_tax_label}{l s='tax excl.'}{/if}
 			<p class="preference_description">{l s='A carrier tax will be applied.'}</p>
