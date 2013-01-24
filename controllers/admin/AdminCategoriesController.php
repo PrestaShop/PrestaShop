@@ -619,10 +619,10 @@ class AdminCategoriesControllerCore extends AdminController
 			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
 			WHERE p.`id_product` NOT IN (SELECT DISTINCT(cp.`id_product`) FROM `'._DB_PREFIX_.'category_product` cp)');
-			
+
 		foreach ($fatherless_products as $id_poor_product)
 		{
-			$poor_product = new Product((int)$id_poor_product);
+			$poor_product = new Product((int)$id_poor_product['id_product']);
 			if (Validate::isLoadedObject($poor_product))
 			{
 				if ($this->remove_products || $id_parent == 0)
