@@ -34,6 +34,9 @@ class AdminCmsContentControllerCore extends AdminController
 
 	/** @var object Category() instance for navigation*/
 	protected static $category = null;
+	
+	/** @var string display type */
+	protected $display_type;
 
 	public function __construct()
 	{
@@ -75,11 +78,11 @@ class AdminCmsContentControllerCore extends AdminController
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
 
-		if ($this->display == 'edit_category')
+		if ($this->display_type == 'edit_category')
 			$this->content .= $this->admin_cms_categories->renderForm();
-		else if ($this->display == 'edit_page')
+		else if ($this->display_type == 'edit_page')
 			$this->content .= $this->admin_cms->renderForm();
-		else if ($this->display == 'view_page')
+		else if ($this->display_type == 'view_page')
 			$fixme = 'fixme';// @FIXME
 		else
 		{
@@ -130,14 +133,14 @@ class AdminCmsContentControllerCore extends AdminController
 		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->admin_cms_categories->errors))
 			|| Tools::isSubmit('updatecms_category')
 			|| Tools::isSubmit('addcms_category'))
-			$this->display = 'edit_category';
+			$this->display_type = 'edit_category';
 		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
 			|| Tools::isSubmit('updatecms')
 			|| Tools::isSubmit('addcms'))
-			$this->display = 'edit_page';
+			$this->display_type = 'edit_page';
 		else
 		{
-			$this->display = 'list';
+			$this->display_type = 'list';
 			$this->id_cms_category = (int)Tools::getValue('id_cms_category');
 		}
 
