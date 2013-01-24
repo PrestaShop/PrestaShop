@@ -604,22 +604,32 @@ class AdminTranslationsControllerCore extends AdminController
 		$global = false;
 		foreach ($lines as $line)
 		{
+			// PHP tags
 			if (in_array($line, array('<?php', '?>', '')))
 				continue;
+			
+			// Global variable declaration
 			if (!$global && preg_match('/^global\s+\$([a-z0-9-_]+)\s*;$/i', $line, $matches))
 			{
 				$global = $matches[1];
 				continue;
 			}
+			// Global variable initialization
 			if ($global != false && preg_match('/^\$'.preg_quote($global, '/').'\s*=\s*array\(\s*\)\s*;$/i', $line))
 				continue;
+				
+			// Global variable initialization without declaration
 			if (!$global && preg_match('/^\$([a-z0-9-_]+)\s*=\s*array\(\s*\)\s*;$/i', $line, $matches))
 			{
 				$global = $matches[1];
 				continue;
 			}
+			
+			// Assignation
 			if (preg_match('/^\$'.preg_quote($global, '/').'\[\''._PS_TRANS_PATTERN_.'\'\]\s*=\s*\''._PS_TRANS_PATTERN_.'\'\s*;$/i', $line))
 				continue;
+				
+			// Sometimes the global variable is returned...
 			if (preg_match('/^return\s+\$'.preg_quote($global, '/').'\s*;$/i', $line, $matches))
 				continue;
 			return false;
