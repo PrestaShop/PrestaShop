@@ -442,14 +442,15 @@ class DispatcherCore
 		// Set default routes
 		foreach (Language::getLanguages() as $lang)
 			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array()
-				);
+				if (!isset($this->routes[$lang['id_lang']][$id]))
+					$this->addRoute(
+						$id,
+						$route['rule'],
+						$route['controller'],
+						$lang['id_lang'],
+						$route['keywords'],
+						isset($route['params']) ? $route['params'] : array()
+					);
 	}
 
 	/**
