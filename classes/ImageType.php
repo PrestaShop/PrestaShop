@@ -62,7 +62,7 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 85),
 			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'categories' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
