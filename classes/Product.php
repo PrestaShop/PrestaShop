@@ -3570,14 +3570,16 @@ class ProductCore extends ObjectModel
 				$query = 'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`) VALUES ';
 				$data = array();
 				foreach ($customizations['labels'][$old_customization_field_id] as $customization_label)
+				{
 					$data = array(
 						'id_customization_field' => (int)$customization_field_id,
 						'id_lang' => (int)$customization_label['id_lang'],
 						'name' => pSQL($customization_label['name']),
 					);
 
-				if (!Db::getInstance()->insert('customization_field_lang', $data))
-					return false;
+					if (!Db::getInstance()->insert('customization_field_lang', $data))
+						return false;
+				}
 			}
 		}
 		return true;
