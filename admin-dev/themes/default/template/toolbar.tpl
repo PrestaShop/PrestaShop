@@ -49,6 +49,7 @@
 			<script language="javascript" type="text/javascript">
 			//<![CDATA[
 				var submited = false
+				var modules_list_loaded = false;
 				$(function() {
 					//get reference on save link
 					btn_save = $('span[class~="process-icon-save"]').parent();
@@ -117,41 +118,45 @@
 						{/block}
 					}
 					
-					var modules_list_loaded = false;
-					
-					$('.process-icon-modules-list').parent('a').click( function (){
-						$('#modules_list_container').slideDown();
-						if (!modules_list_loaded)
-						{
-							$.ajax({
-								type:"POST",
-								url : '{$admin_module_ajax_url}',
-								async: true,
-								data : {
-									ajax : "1",
-									controller : "AdminModules",
-									action : "getTabModulesList",
-									tab_modules_list : '{$tab_modules_list}'
-								},
-								success : function(data)
-								{
-									$('#modules_list_container_tab').html(data).slideDown();
-									$('#modules_list_loader').hide();
-									modules_list_loaded = true;
-								},
-								error: function(res,textStatus,jqXHR)
-								{
-								}
-							});
-						}
-						else
-						{
-							$('#modules_list_container_tab').slideDown();
-							$('#modules_list_loader').hide();
-						}
-						return false;
-					});
+					if ({$tab_modules_open})
+						openModulesList();
 				});
+				
+				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
+					openModulesList();
+				});
+				
+				function openModulesList()
+				{
+					$('#modules_list_container').slideDown();
+					if (!modules_list_loaded)
+					{
+						$.ajax({
+							type:"POST",
+							url : '{$admin_module_ajax_url}',
+							async: true,
+							data : {
+								ajax : "1",
+								controller : "AdminModules",
+								action : "getTabModulesList",
+								tab_modules_list : '{$tab_modules_list}',
+								back_tab_modules_list : '{$back_tab_modules_list}',
+							},
+							success : function(data)
+							{
+								$('#modules_list_container_tab').html(data).slideDown();
+								$('#modules_list_loader').hide();
+								modules_list_loaded = true;
+							}
+						});
+					}
+					else
+					{
+						$('#modules_list_container_tab').slideDown();
+						$('#modules_list_loader').hide();
+					}
+					return false;
+				}
 			//]]>
 			</script>
 		{/block}

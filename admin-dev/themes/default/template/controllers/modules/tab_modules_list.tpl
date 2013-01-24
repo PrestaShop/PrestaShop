@@ -30,28 +30,58 @@
 		$('.action_tab_module').each( function (){
 			$(this).click(function () {
 				option = $('#'+$(this).data('option')+' :selected');
-				/* if ($(option).data('onclick')) */
+				if ($(option).data('onclick') != '')
+				{
+					var f = eval("(function(){ "+$(option).data('onclick')+"})");
+					if (f.call())
+						window.location.href = $(option).data('href');
+				}
+				else
 					window.location.href = $(option).data('href');
 				return false;
 			});			
 		});
+		
+		$('#nav_tabs_modules_installed').click( function () {
+			$('#tab_modules_list_not_installed').hide();
+			$('#tab_modules_list_installed').show();
+			$(this).parent('li').addClass('active');
+			$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
+			return false;
+		});
+		
+		$('#nav_tabs_modules_not_installed').click( function () {
+			$('#tab_modules_list_installed').hide();
+			$('#tab_modules_list_not_installed').show();
+			$(this).parent('li').addClass('active');
+			$('#nav_tabs_modules_installed').parent('li').removeClass('active');
+			return false;
+		});
 	});
 </script>
-	<div id="tab_module_switch">
-		<a href="#" onclick="$('#tab_modules_list_not_installed').hide();$('#tab_modules_list_installed').show();return false;" class="button">{l s='Installed'}</a>
-		<a href="#" onclick="$('#tab_modules_list_installed').hide();$('#tab_modules_list_not_installed').show();return false;"  class="button">{l s='Not Installed'}</a>
+	<ul class="nav-tabs-modules">
+	  <li class="active"><a id="nav_tabs_modules_installed" href="#" onclick="">{l s='Installed'}</a></li>
+	  <li><a href="#" id="nav_tabs_modules_not_installed" >{l s='Not Installed'}</a></li>
+	</ul>
+	<div id="modules_list_container_content" style="clear:both">
+		<table id="tab_modules_list_installed" style="clear:both">
+			{if count($tab_modules_list.installed)}
+				{foreach from=$tab_modules_list.installed item=module}
+					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+				{/foreach}
+			{else}
+				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+			{/if}
+		</table>
+		<table id="tab_modules_list_not_installed" style="display:none;clear:both">
+			{if count($tab_modules_list.not_installed)}
+				{foreach from=$tab_modules_list.not_installed item=module}
+					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+				{/foreach}
+			{else}
+				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+			{/if}
+		</table>
 	</div>
-	<table id="tab_modules_list_installed">
-		{foreach from=$tab_modules_list.installed item=module}
-			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-		{/foreach}
-	</table>
-	<table id="tab_modules_list_not_installed" style="display:none">
-		{foreach from=$tab_modules_list.not_installed item=module}
-			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-		{/foreach}
-	</table>
-{else}
-	<b>{l s='No modules available in this section.'}</b>
 {/if}
-<p><b><a href="{$admin_module_favorites_view}" style="color:#666">{l s='Click here to choose which modules to display here'}</a></b></p>
+<p style="text-align:right;text-decoration:underline"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>
