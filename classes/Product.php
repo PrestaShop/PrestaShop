@@ -244,7 +244,7 @@ class ProductCore extends ObjectModel
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => array(
-			/* Classic fields */
+			// Classic fields
 			'id_shop_default' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
@@ -3722,14 +3722,21 @@ class ProductCore extends ObjectModel
 
 		$row['specific_prices'] = $specific_prices;
 
+		$row['quantity'] = Product::getQuantity(
+			(int)$row['id_product'],
+			0,
+			isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+		);
+
 		if ($row['id_product_attribute'])
-			$row['quantity_all_versions'] = Product::getQuantity(
+		{
+			$row['quantity_all_versions'] = $row['quantity'];
+			$row['quantity'] = Product::getQuantity(
 				(int)$row['id_product'],
-				0,
-				isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+    			$row['id_product_attribute'],
+			   isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
 			);
-		else
-			$row['quantity'] = Product::getQuantity((int)$row['id_product']);
+		}	
 
 		$row['id_image'] = Product::defineProductImage($row, $id_lang);
 		$row['features'] = Product::getFrontFeaturesStatic((int)$id_lang, $row['id_product']);
