@@ -64,7 +64,6 @@ ul#product_list {
 		
 		.ie8 #product_list li span.new{top:111px;right:0;width:94%}
 		.ie7 #product_list li span.new {top:111px;right:0;width:94%}
-		.lt-ie6 #featured-products_block_center .product_image span.new {top:-30px;right:-25px}
 	#product_list li h3 {
 		padding:0 0 10px 0;
 		font-size:13px;
