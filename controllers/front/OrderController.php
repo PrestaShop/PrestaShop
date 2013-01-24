@@ -39,8 +39,6 @@ class OrderControllerCore extends ParentOrderController
 		parent::init();
 
 		$this->step = (int)(Tools::getValue('step'));
-		if (!$this->nbProducts)
-			$this->step = -1;
 
 		// If some products have disappear
 		if (!$this->context->cart->checkQuantities())
@@ -54,7 +52,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$orderTotal = $this->context->cart->getOrderTotal();
 		$minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step != -1)
+		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step > 0)
 		{
 			$this->step = 0;
 			$this->errors[] = sprintf(

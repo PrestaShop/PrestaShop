@@ -229,7 +229,7 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 function updateQty(val, cart, el)
 {
 	var prefix = "";
-
+	
 	if (typeof(cart) === 'undefined' || cart)
 		prefix = '#order-detail-content ';
 	else
@@ -547,6 +547,8 @@ function updateCartSummary(json)
 
 	if (typeof json === 'undefined')
 		return;
+		
+	$('div.error').fadeOut();		
 
 	$('.cart_quantity_input').val(0);
 
