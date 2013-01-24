@@ -235,7 +235,7 @@ class ContactControllerCore extends FrontController
 		));
 
 
-		if ($id_customer_thread = (int)Tools::getValue('id_customer_thread') && $token = Tools::getValue('token'))
+		if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token'))
 		{
 			$customerThread = Db::getInstance()->getRow('
 				SELECT cm.* 
