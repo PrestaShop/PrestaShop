@@ -581,6 +581,8 @@ abstract class DbCore
 		$result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+		if (_PS_DEBUG_SQL_)
+			$this->displayError($sql);
 		return $result;
 	}
 
