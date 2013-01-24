@@ -236,6 +236,9 @@ class AdminModulesControllerCore extends AdminController
 	public function ajaxProcessGetTabModulesList()
 	{
 		$tab_modules_list = Tools::getValue('tab_modules_list');
+		$back = Tools::getValue('back_tab_modules_list');
+		if ($back)
+			$back .= '&tab_modules_open=1';
 		$modules_list = array('installed' =>array(), 'not_installed' => array());
 		if ($tab_modules_list)
 		{
@@ -245,7 +248,7 @@ class AdminModulesControllerCore extends AdminController
 			{
 				if (in_array($module->name, $tab_modules_list))
 				{
-					$this->fillModuleData($module, 'select');
+					$this->fillModuleData($module, 'select', $back);
 					if ($module->id)
 						$modules_list['installed'][] = $module;
 					else
@@ -290,6 +293,22 @@ class AdminModulesControllerCore extends AdminController
 			if ($action == 'f')
 				$insert['favorite'] = ($value == '' ? null : (int)$value);
 			Db::getInstance()->insert('module_preference', $insert, true);
+		}
+		die('OK');
+	}
+	
+	public function ajaxProcessSaveTabModulePreferences()
+	{
+		$values = Tools::getValue('value_pref');
+		$module = Tools::getValue('module_pref');
+		if (Validate::isModuleName($module))
+		{
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
+			if (is_array($values) && count($values))
+				foreach($values as $value)
+					Db::getInstance()->execute('
+						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`) 
+						VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
 		}
 		die('OK');
 	}
@@ -759,6 +778,9 @@ class AdminModulesControllerCore extends AdminController
 		// Call appropriate module callback
 		if (!isset($ppmReturn))
 			$this->postProcessCallback();
+		
+		if ($back = Tools::getValue('back'))
+			Tools::redirectAdmin($back);	
 	}
 
 	/**
@@ -787,12 +809,17 @@ class AdminModulesControllerCore extends AdminController
 		return $html_error;
 	}
 
-	/*
-	** Display Modules Lists
-	**
-	*/
+	/**
+	 * Display modules list
+	 *
+	 * @param $module
+	 * @param $output_type (link or select)
+	 * @param $back 
+	 *
+	 * @return string
+	 */
 	protected $translationsTab = array();
-	public function displayModuleOptions($module, $output_type = 'link')
+	public function displayModuleOptions($module, $output_type = 'link', $back = null)
 	{	
 		if (!isset($this->translationsTab['Disable this module']))
 		{
@@ -803,10 +830,19 @@ class AdminModulesControllerCore extends AdminController
 			$this->translationsTab['Reset'] = $this->l('Reset');
 			$this->translationsTab['Configure'] = $this->l('Configure');
 			$this->translationsTab['Delete'] = $this->l('Delete');
+			$this->translationsTab['Install'] = $this->l('Install');
+			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
 		}	
 		
 		$modules_options = array(
+			'configure-module' => array(
+				'href' => self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
+				'title' => '',
+				'text' => $this->translationsTab['Configure'],
+				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
+				),
 			'desactive-module' => array(
 				'href' => self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
 				'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
@@ -820,13 +856,6 @@ class AdminModulesControllerCore extends AdminController
 				'title' => '',
 				'text' => $this->translationsTab['Reset'],
 				'cond' => $module->id && $module->active,
-				),
-			'configure-module' => array(
-				'href' => self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
-				'title' => '',
-				'text' => $this->translationsTab['Configure'],
-				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
 				),
 			'delete-module' => array(
 				'href' => self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
@@ -843,15 +872,22 @@ class AdminModulesControllerCore extends AdminController
 				{
 					if ($output_type == 'link')
 						$return .= '<span class="'.$option_name.'">
-							<a class="action_module" href="'.$option['href'].'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
+							<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
 							</span>';
 					else if ($output_type == 'select')
-						$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+						$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 				}
 			}
 			if ($output_type == 'select')
+			{
+				if (!$module->id)
+					$return = '<option data-onclick="" data-href="'.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
+				else
+					$return = '<option data-onclick=""  data-href="'.self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>'.$return;
 				$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
 
+			}
+			
 		return $return;
 	}
 
@@ -1038,6 +1074,13 @@ class AdminModulesControllerCore extends AdminController
 		// Browse modules list
 		foreach ($modules as $km => $module)
 		{
+			//if we are in favorites view we only display installed modules
+			if (Tools::getValue('select') == 'favorites' && !$module->id)
+			{
+				unset($modules[$km]);
+				continue;
+			}
+			
 			// Upgrade Module process, init check if a module could be upgraded
 			if (Module::initUpgradeModule($module))
 			{
@@ -1161,7 +1204,7 @@ class AdminModulesControllerCore extends AdminController
 		$smarty->assign($tpl_vars);
 	}
 	
-	public function fillModuleData(&$module, $output_type = 'link')
+	public function fillModuleData(&$module, $output_type = 'link', $back = null)
 	{
 		$obj = null;
 		if ($module->onclick_option)
@@ -1172,7 +1215,7 @@ class AdminModulesControllerCore extends AdminController
 			$module->logo = 'logo.gif';
 		if (file_exists('../modules/'.$module->name.'/logo.png'))
 			$module->logo = 'logo.png';
-		$module->optionsHtml = $this->displayModuleOptions($module, $output_type);
+		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
 		$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 		$module->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 		$module->options['update_url'] = self::$currentIndex.'&update='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);

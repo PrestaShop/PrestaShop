@@ -42,7 +42,7 @@
 						<td>{if isset($module->id) && $module->id gt 0}<span class="setup">{l s='Installed'}</span>{else}<span class="setup non-install">{l s='Not Installed'}</span>{/if}</td>
 						<td>
 							{assign var="module_name" value=$module->name}
-							<select class="chosen" multiple="multiple">
+							<select class="chosen moduleTabPreferencesChoise" name="t_{$module->name}" multiple="multiple">
 								{foreach $tabs AS $t}
 									{if $t.active}
 										<option {if isset($tab_modules_preferences.$module_name) && in_array($t.id_tab, $tab_modules_preferences.$module_name)} selected="selected" {/if} class="group" value="{$t.id_tab}">{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}</option>

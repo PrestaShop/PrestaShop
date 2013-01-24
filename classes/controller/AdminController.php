@@ -1414,10 +1414,13 @@ class AdminControllerCore extends Controller
 					'href' => '#',
 					'desc' => $this->l('Modules List')
 				);
-		
+				
 		$this->context->smarty->assign(array(
 			'tab_modules_list' => implode(',', $tab_modules_list),
-			'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules')));
+			'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules'),
+			'back_tab_modules_list' => $this->context->link->getAdminLink(Tools::getValue('controller')),
+			'tab_modules_open' => (int)Tools::getValue('tab_modules_open')
+			));
 	}
 
 	/**
