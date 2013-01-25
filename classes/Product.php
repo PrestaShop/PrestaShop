@@ -3418,7 +3418,8 @@ class ProductCore extends ObjectModel
 				'nb_days_accessible' => (int)$row['nb_days_accessible'],
 				'nb_downloadable' => (int)$row['nb_downloadable'],
 				'active' => (int)$row['active'],
-				'is_shareable' => (int)$row['is_shareable']
+				'is_shareable' => (int)$row['is_shareable'],
+				'date_add' => date('Y-m-d H:i:s')
 			);
 		return Db::getInstance()->insert('product_download', $data);
 	}
