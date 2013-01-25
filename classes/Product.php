@@ -3409,11 +3409,16 @@ class ProductCore extends ObjectModel
 			return true;
 
 		$data = array();
+		$res = true;
 		foreach ($results as $row)
+		{
+			$new_filename = ProductDownload::getNewFilename();
+			copy(_PS_DOWNLOAD_DIR_.$row['filename'], _PS_DOWNLOAD_DIR_.$new_filename);
+
 			$data[] = array(
 				'id_product' => (int)$id_product_new,
 				'display_filename' => pSQL($row['display_filename']),
-				'filename' => pSQL($row['filename']),
+				'filename' => pSQL($new_filename),
 				'date_expiration' => pSQL($row['date_expiration']),
 				'nb_days_accessible' => (int)$row['nb_days_accessible'],
 				'nb_downloadable' => (int)$row['nb_downloadable'],
@@ -3421,7 +3426,10 @@ class ProductCore extends ObjectModel
 				'is_shareable' => (int)$row['is_shareable'],
 				'date_add' => date('Y-m-d H:i:s')
 			);
-		return Db::getInstance()->insert('product_download', $data);
+			$res &= Db::getInstance()->insert('product_download', $data);
+		}
+
+		return $res;
 	}
 
 	public static function duplicateAttachments($id_product_old, $id_product_new)
