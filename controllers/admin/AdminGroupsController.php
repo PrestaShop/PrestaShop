@@ -341,7 +341,8 @@ class AdminGroupsControllerCore extends AdminController
 			$auth_modules = $modules;
 		$auth_modules_tmp = array();
 		foreach ($auth_modules as $key => $val)
-			$auth_modules_tmp[] = Module::getInstanceById($val['id_module']);
+			if ($module = Module::getInstanceById($val['id_module']))
+				$auth_modules_tmp[] = $module;
 
 		$auth_modules = $auth_modules_tmp;
 
