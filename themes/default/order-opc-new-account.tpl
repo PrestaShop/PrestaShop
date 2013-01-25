@@ -237,11 +237,10 @@
 				{elseif $field_name eq "state" || $field_name eq 'State:name'}
 				{$stateExist = true}
 				<p class="required id_state select" style="display:none;">
-					<label for="id_state">{l s='State'}</label>
+					<label for="id_state">{l s='State'}<sup>*</sup></label>
 					<select name="id_state" id="id_state">
 						<option value="">-</option>
 					</select>
-					<sup>*</sup>
 				</p>
 				{/if}
 				{/foreach}
@@ -350,11 +349,10 @@
 					{/foreach}
 					{if !$stateExist}
 					<p class="required id_state_invoice select" style="display:none;">
-						<label for="id_state_invoice">{l s='State'}</label>
+						<label for="id_state_invoice">{l s='State'}<sup>*</sup></label>
 						<select name="id_state_invoice" id="id_state_invoice">
 							<option value="">-</option>
 						</select>
-						<sup>*</sup>
 					</p>
 					{/if}
 					<p class="textarea is_customer_param">
