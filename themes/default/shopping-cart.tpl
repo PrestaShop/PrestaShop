@@ -138,7 +138,7 @@
 				</td>
 			</tr>
 			{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
-				<tr class="cart_total_delivery">
+				<tr class="cart_total_delivery" style="{if !isset($carrier->id) || is_null($carrier->id)}display:none;{/if}">
 					<td colspan="5">{l s='Shipping:'}</td>
 					<td colspan="2" class="price" id="total_shipping">{l s='Free Shipping!'}</td>
 				</tr>

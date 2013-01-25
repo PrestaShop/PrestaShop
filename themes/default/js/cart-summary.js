@@ -668,15 +668,28 @@ function updateCartSummary(json)
 	}
 
 	// Block cart
-	if (priceDisplayMethod !== 0)
+	$('#cart_block_shipping_cost').show();
+	$('#cart_block_shipping_cost').next().show();
+	if (json.total_shipping > 0)
 	{
-		$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_total').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
-	} else {
-		$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_total').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
+		if (priceDisplayMethod !== 0)
+		{
+			$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_total').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
+		} else {
+			$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_total').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
+		}
+	}
+	else
+	{
+		if (json.carrier.id == null)
+		{
+			$('#cart_block_shipping_cost').hide();
+			$('#cart_block_shipping_cost').next().hide();
+		}
 	}
 
 	$('#cart_block_tax_cost').html(formatCurrency(json.total_tax, currencyFormat, currencySign, currencyBlank));
@@ -691,21 +704,21 @@ function updateCartSummary(json)
 	$('#total_price').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
 	$('#total_price_without_tax').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
 	$('#total_tax').html(formatCurrency(json.total_tax, currencyFormat, currencySign, currencyBlank));
-
+	
+	$('.cart_total_delivery').show();
 	if (json.total_shipping > 0)
 	{
 		if (priceDisplayMethod !== 0)
-		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		}
 		else
-		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
-		}
 	}
 	else
 	{
-		$('#total_shipping').html(freeShippingTranslation);
+		if (json.carrier.id != null)
+			$('#total_shipping').html(freeShippingTranslation);
+		else
+			$('.cart_total_delivery').hide();
 	}
 
 	if (json.free_ship > 0 && !json.is_virtual_cart)
