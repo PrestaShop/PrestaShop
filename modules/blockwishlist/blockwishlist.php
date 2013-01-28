@@ -170,6 +170,8 @@ class BlockWishList extends Module
 	{
 		$this->context->controller->addCSS(($this->_path).'blockwishlist.css', 'all');
 		$this->context->controller->addJS(($this->_path).'js/ajax-wishlist.js');
+		
+		$this->smarty->assign(array('wishlist_link' => $this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
 	}
 
 	public function hookRightColumn($params)
@@ -202,8 +204,6 @@ class BlockWishList extends Module
 		}
 		else
 			$this->smarty->assign(array('wishlist_products' => false, 'wishlists' => false));
-		
-		$this->smarty->assign(array('wishlist_link' => $this->context->link->getModuleLink('blockwishlist', 'mywishlist')));
 		
 		return ($this->display(__FILE__, 'blockwishlist.tpl'));
 	}
