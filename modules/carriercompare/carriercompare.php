@@ -105,7 +105,7 @@ class CarrierCompare extends Module
 		if (!$this->isModuleAvailable())
 			return;
 					
-		if (!isset($this->context->cart) || !$this->context->cart->nbProducts)
+		if (!isset($this->context->cart) || $this->context->cart->getProducts() == 0)
 			return;			
 		
 		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
