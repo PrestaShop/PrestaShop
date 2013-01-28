@@ -315,7 +315,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('#cart_block dl.products dt').length == 0)
 								{
-									$("#cart_block").stop(true, true).slideUp(200);
+									$("#header #cart_block").stop(true, true).slideUp(200);
 									$('#cart_block_no_products:hidden').slideDown(450);
 									$('#cart_block dl.products').remove();
 								}
@@ -683,10 +683,10 @@ $(document).ready(function(){
 				$("#cart_block").stop(true, true).slideDown(450);
 		},
 		function() {
-			$('#shopping_cart a').css('border-radius', '3px');
+			$('#header #shopping_cart a').css('border-radius', '3px');
 			setTimeout(function() {
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#cart_block").stop(true, true).slideUp(450);
+					$("#header #cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
