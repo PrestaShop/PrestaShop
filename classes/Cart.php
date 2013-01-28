@@ -2393,11 +2393,13 @@ class CartCore extends ObjectModel
 	*/
 	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
 	{
+		if(isset(Context::getContext()->cookie->id_country))		
+			$default_country = new Country(Context::getContext()->cookie->id_country);
 		if (is_null($delivery_option))
 			$delivery_option = $this->getDeliveryOption($default_country, false, false);
 
 		$total_shipping = 0;
-		$delivery_option_list = $this->getDeliveryOptionList();
+		$delivery_option_list = $this->getDeliveryOptionList($default_country);
 		foreach ($delivery_option as $id_address => $key)
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
@@ -2465,7 +2467,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @return float Shipping total
 	 */
-	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
+	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
 	{
 		if ($this->isVirtualCart())
 			return 0;
@@ -2511,19 +2513,22 @@ class CartCore extends ObjectModel
 			return $shipping_cost;
 		}
 
-		// Get id zone
-		if (!$this->isMultiAddressDelivery()
-			&& isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
-			&& $this->id_address_delivery
-			&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
-		))
-			$id_zone = Address::getZoneById((int)$this->id_address_delivery);
-		else
+		if(!isset($id_zone))
 		{
-			if (!Validate::isLoadedObject($default_country))
-				$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-
-			$id_zone = (int)$default_country->id_zone;
+			// Get id zone
+			if (!$this->isMultiAddressDelivery()
+				&& isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
+				&& $this->id_address_delivery
+				&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
+			))
+				$id_zone = Address::getZoneById((int)$this->id_address_delivery);
+			else
+			{
+				if (!Validate::isLoadedObject($default_country))
+					$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+	
+				$id_zone = (int)$default_country->id_zone;
+			}
 		}
 
 		if ($id_carrier && !$this->isCarrierInRange((int)$id_carrier, (int)$id_zone))
@@ -2658,13 +2663,16 @@ class CartCore extends ObjectModel
 		// Get shipping cost using correct method
 		if ($carrier->range_behavior)
 		{
-			// Get id zone
-			if (isset($this->id_address_delivery)
-				&& $this->id_address_delivery
-				&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
-				$id_zone = Address::getZoneById((int)$this->id_address_delivery);
-			else
-				$id_zone = (int)$default_country->id_zone;
+			if(!isset($id_zone))
+			{
+				// Get id zone
+				if (isset($this->id_address_delivery)
+					&& $this->id_address_delivery
+					&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
+					$id_zone = Address::getZoneById((int)$this->id_address_delivery);
+				else
+					$id_zone = (int)$default_country->id_zone;
+			}
 
 			$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight((int)$carrier->id, $this->getTotalWeight(), (int)$id_zone);
 
