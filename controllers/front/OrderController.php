@@ -251,7 +251,8 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->cart->setNoMultishipping();
 			
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
-			|| (Tools::isSubmit('same') && !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
+			|| (!Tools::isSubmit('same') && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
+				&& !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
 			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
