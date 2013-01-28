@@ -730,11 +730,16 @@ class ToolsCore
 	*
 	* @param object $object Object to display
 	*/
-	public static function fd($object)
+	public static function fd($object, $type = 'log')
 	{
+		$types = array('log', 'debug', 'info', 'warn', 'error', 'assert');
+		
+		if(!in_array($type, $types))
+			$type = 'log';
+		
 		echo '
 			<script type="text/javascript">
-				console.log('.json_encode($object).');
+				console.'.$type.'('.json_encode($object).');
 			</script>
 		';
 	}
