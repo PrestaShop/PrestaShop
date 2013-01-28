@@ -472,7 +472,7 @@ class Followup extends Module
 			$cartRule->name[(int)$language['id_lang']] = $description;
 			
 		$code = 'FLW-'.(int)($id_email_type).'-'.strtoupper(Tools::passwdGen(10));
-		$cartRule->name = $code;
+		$cartRule->code = $code;
 		$cartRule->active = 1;
 		if (!$cartRule->add())
 			return false;
