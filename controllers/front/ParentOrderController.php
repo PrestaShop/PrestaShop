@@ -241,7 +241,15 @@ class ParentOrderControllerCore extends FrontController
 				$key = Cart::desintifier(Tools::getValue('id_carrier'));
 				foreach ($delivery_option_list as $id_address => $options)
 					if (isset($options[$key]))
+					{
+						$this->context->cart->id_carrier = (int)Tools::getValue('id_carrier');
 						$this->context->cart->setDeliveryOption(array($id_address => $key));
+						if(isset($this->context->cookie->id_country))
+							unset($this->context->cookie->id_country);
+						if(isset($this->context->cookie->id_state))
+							unset($this->context->cookie->id_state);							
+							
+					}
 			}
 		}
 
