@@ -204,8 +204,17 @@ class CarrierCompare extends Module
 		$this->context->cookie->id_state = $id_state;
 		$this->context->cookie->postcode = $zipcode;
 		$this->context->cart->id_carrier = $id_carrier;
+		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+
+		$delivery_option = reset($delivery_option_list);
+		$id_carrier = (string)$id_carrier;
+		$id_carrier .= ',';
+		foreach ($delivery_option_list as $id_address => $options)
+			if (isset($options[$id_carrier]))
+				$this->context->cart->setDeliveryOption(array($id_address => $id_carrier));	
+				
 		if (!$this->context->cart->update())
-			return array($this->l('Cannot update the cart'));
+			return array($this->l('Cannot update the cart'));				
 		return array();
 	}
 
@@ -254,8 +263,8 @@ class CarrierCompare extends Module
 		 * If visitor is logged, the module isn't available on Front office,
 		 * we use the account informations for carrier selection and taxes.
 		 */
-		if (Context::getContext()->customer->id)
-			return false;
+		/*if (Context::getContext()->customer->id)
+			return false;*/
 		return true;
 }
 }
