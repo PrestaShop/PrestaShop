@@ -39,6 +39,8 @@ class OrderControllerCore extends ParentOrderController
 		parent::init();
 
 		$this->step = (int)(Tools::getValue('step'));
+		if (!$this->nbProducts)
+			$this->step = -1;		
 
 		// If some products have disappear
 		if (!$this->context->cart->checkQuantities())

@@ -104,6 +104,9 @@ class CarrierCompare extends Module
 	{
 		if (!$this->isModuleAvailable())
 			return;
+					
+		if (!isset($this->context->cart) || !$this->context->cart->nbProducts)
+			return;			
 		
 		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
 			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
@@ -117,12 +120,33 @@ class CarrierCompare extends Module
 		
 		$refresh_method = Configuration::get('SE_RERESH_METHOD');
 		
+		if(isset($this->context->cookie->id_country) && $this->context->cookie->id_country > 0)
+			$id_country = (int)$this->context->cookie->id_country;
+		if(!isset($id_country))
+			$id_country = (isset($this->context->customer->geoloc_id_country) ? (int)$this->context->customer->geoloc_id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		if (isset($this->context->customer->id) && $this->context->customer->id && isset($this->context->cart->id_address_delivery) && $this->context->cart->id_address_delivery)
+		{
+			$address = new Address((int)($this->context->cart->id_address_delivery));
+			$id_country = (int)$address->id_country;
+		}			
+			
+			
+		if(isset($this->context->cookie->id_state) && $this->context->cookie->id_state > 0)
+			$id_state = (int)$this->context->cookie->id_state;
+		if(!isset($id_state))
+			$id_state = (isset($this->context->customer->geoloc_id_state) ? (int)$this->context->customer->geoloc_id_state : 0);	
+			
+		if(isset($this->context->cookie->postcode) && $this->context->cookie->postcode > 0)
+			$zipcode = Tools::safeOutput($this->context->cookie->postcode);
+		if(!isset($zipcode))
+			$zipcode = (isset($this->context->customer->geoloc_postcode) ? $this->context->customer->geoloc_postcode : '');
+
 		$this->smarty->assign(array(
 			'countries' => Country::getCountries((int)$this->context->cookie->id_lang, true),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
-			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
-			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
-			'zipcode' => (isset($this->context->customer->geoloc_postcode) ? $this->context->customer->geoloc_postcode : ''),
+			'id_country' => $id_country,
+			'id_state' => $id_state,
+			'zipcode' => $zipcode,
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
@@ -162,14 +186,14 @@ class CarrierCompare extends Module
 			$id_zone = State::getIdZone($id_state);
 		if (!$id_zone)
 			$id_zone = Country::getIdZone($id_country);
-		
+
 		// Need to set the infos for carrier module !
 		$this->context->cookie->id_country = $id_country;
 		$this->context->cookie->id_state = $id_state;
 		$this->context->cookie->postcode = $zipcode;
 
 		$carriers = Carrier::getCarriersForOrder((int)$id_zone);
-		
+
 		return (sizeof($carriers) ? $carriers : array());
 	}
 
