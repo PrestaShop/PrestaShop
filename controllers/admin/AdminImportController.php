@@ -644,10 +644,14 @@ class AdminImportControllerCore extends AdminController
 
 		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
-		$fd = fopen($uniqid_path, 'r');
-		$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
-		fclose($fd);
-		unlink($uniqid_path);
+		$tab = '';
+		if(!empty($uniqid_path))
+		{
+			$fd = fopen($uniqid_path, 'r');
+			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
+			fclose($fd);
+			unlink($uniqid_path);
+		}
 
 		if (empty($tab) || (!is_array($tab)))
 			return array();
@@ -727,8 +731,9 @@ class AdminImportControllerCore extends AdminController
 	public static function getMaskedRow($row)
 	{
 		$res = array();
-		foreach (self::$column_mask as $type => $nb)
-			$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
+		if (is_array(self::$column_mask))
+			foreach (self::$column_mask as $type => $nb)
+				$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
 
 		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is remove from the CSV file.
 			unset($res['id']);
@@ -972,8 +977,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					$info['name'],
-					(isset($info['id']) ? $info['id'] : 'null')
+					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
+					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 				);
 				$error_tmp = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 				if ($error_tmp != '')
@@ -1303,8 +1308,8 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					$info['name'],
-					(isset($info['id']) ? $info['id'] : 'null')
+					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
+					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
@@ -1347,7 +1352,7 @@ class AdminImportControllerCore extends AdminController
 					$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
 					$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
 					if (!$specific_price->add())
-						$this->addProductWarning($info['name'], $product->id, $this->l('Discount is invalid'));
+						$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
 				}
 
 				if (isset($product->tags) && !empty($product->tags))
@@ -1363,7 +1368,7 @@ class AdminImportControllerCore extends AdminController
 							$is_tag_added = Tag::addTags($key, $product->id, $tags, $this->multiple_value_separator);
 							if (!$is_tag_added)
 							{
-								$this->addProductWarning($info['name'], $product->id, $this->l('Tags list is invalid'));
+								$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Tags list is invalid'));
 								break;
 							}
 						}
@@ -1380,7 +1385,7 @@ class AdminImportControllerCore extends AdminController
 							$is_tag_added = Tag::addTags($key, $product->id, $str, $this->multiple_value_separator);
 							if (!$is_tag_added)
 							{
-								$this->addProductWarning($info['name'], $product->id, 'Invalid tag(s) ('.$str.')');
+								$this->addProductWarning(Tools::safeOutput($info['name']), (int)$product->id, 'Invalid tag(s) ('.$str.')');
 								break;
 							}
 						}
@@ -1445,9 +1450,12 @@ class AdminImportControllerCore extends AdminController
 						$feature_name = trim($tab_feature[0]);
 						$feature_value = trim($tab_feature[1]);
 						$position = isset($tab_feature[2]) ? $tab_feature[2]: false;
-						$id_feature = Feature::addFeatureImport($feature_name, $position);
-						$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
-						Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+						if(!empty($feature_name) && !empty($feature_value))
+						{
+							$id_feature = Feature::addFeatureImport($feature_name, $position);
+							$id_feature_value = FeatureValue::addFeatureValueImport($id_feature, $feature_value);
+							Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
+						}
 					}
 				// clean feature positions to avoid conflict
 				Feature::cleanPositions();
@@ -1511,8 +1519,12 @@ class AdminImportControllerCore extends AdminController
 					$id_shop_list[] = Shop::getIdByName($shop);
 				else
 					$id_shop_list[] = $shop;
-
-			$product = new Product((int)$info['id_product'], false, $default_language);
+			
+			if(isset($info['id_product']))
+				$product = new Product((int)$info['id_product'], false, $default_language);
+			else
+				continue;
+				
 			$id_image = null;
 
 			//delete existing images if "delete_existing_images" is set to 1
@@ -1577,53 +1589,54 @@ class AdminImportControllerCore extends AdminController
 			$id_attribute_group = 0;
 			// groups
 			$groups_attributes = array();
-			foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
-			{
-				$tab_group = explode(':', $group);
-				$group = trim($tab_group[0]);
-				if (!isset($tab_group[1]))
-					$type = 'select';
-				else
-				$type = trim($tab_group[1]);
-
-				// sets group
-				$groups_attributes[$key]['group'] = $group;
-
-				// if position is filled
-				if (isset($tab_group[2]))
-					$position = trim($tab_group[2]);
-				else
-					$position = false;
-
-				if (!isset($groups[$group]))
+			if(isset($info['group']))
+				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
-					$obj = new AttributeGroup();
-					$obj->is_color_group = false;
-					$obj->group_type = pSQL($type);
-					$obj->name[$default_language] = $group;
-					$obj->public_name[$default_language] = $group;
-					$obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
-
-					if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
-					{
-						$obj->add();
-						$obj->associateTo($id_shop_list);
-						$groups[$group] = $obj->id;
-					}
+					$tab_group = explode(':', $group);
+					$group = trim($tab_group[0]);
+					if (!isset($tab_group[1]))
+						$type = 'select';
 					else
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
-
-					// fils groups attributes
-					$id_attribute_group = $obj->id;
-					$groups_attributes[$key]['id'] = $id_attribute_group;
+					$type = trim($tab_group[1]);
+	
+					// sets group
+					$groups_attributes[$key]['group'] = $group;
+	
+					// if position is filled
+					if (isset($tab_group[2]))
+						$position = trim($tab_group[2]);
+					else
+						$position = false;
+	
+					if (!isset($groups[$group]))
+					{
+						$obj = new AttributeGroup();
+						$obj->is_color_group = false;
+						$obj->group_type = pSQL($type);
+						$obj->name[$default_language] = $group;
+						$obj->public_name[$default_language] = $group;
+						$obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
+	
+						if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+						{
+							$obj->add();
+							$obj->associateTo($id_shop_list);
+							$groups[$group] = $obj->id;
+						}
+						else
+							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+	
+						// fils groups attributes
+						$id_attribute_group = $obj->id;
+						$groups_attributes[$key]['id'] = $id_attribute_group;
+					}
+					else // alreay exists
+					{
+						$id_attribute_group = $groups[$group];
+						$groups_attributes[$key]['id'] = $id_attribute_group;
+					}
 				}
-				else // alreay exists
-				{
-					$id_attribute_group = $groups[$group];
-					$groups_attributes[$key]['id'] = $id_attribute_group;
-				}
-			}
 
 			// inits attribute
 			$id_product_attribute = 0;
@@ -1631,116 +1644,118 @@ class AdminImportControllerCore extends AdminController
 			$attributes_to_add = array();
 
 			// for each attribute
-			foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
-			{
-				$tab_attribute = explode(':', $attribute);
-				$attribute = trim($tab_attribute[0]);
-				// if position is filled
-				if (isset($tab_attribute[1]))
-					$position = trim($tab_attribute[1]);
-				else
-					$position = false;
-
-				if (isset($groups_attributes[$key]))
+			if(isset($info['attribute']))
+				foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
 				{
-					$group = $groups_attributes[$key]['group'];
-					if (!isset($attributes[$group.'_'.$attribute]) && count($groups_attributes[$key]) == 2)
+					$tab_attribute = explode(':', $attribute);
+					$attribute = trim($tab_attribute[0]);
+					// if position is filled
+					if (isset($tab_attribute[1]))
+						$position = trim($tab_attribute[1]);
+					else
+						$position = false;
+	
+					if (isset($groups_attributes[$key]))
 					{
-						$id_attribute_group = $groups_attributes[$key]['id'];
-						$obj = new Attribute();
-						// sets the proper id (corresponding to the right key)
-						$obj->id_attribute_group = $groups_attributes[$key]['id'];
-						$obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
-						$obj->position = (!$position) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
-
-						if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-							($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+						$group = $groups_attributes[$key]['group'];
+						if (!isset($attributes[$group.'_'.$attribute]) && count($groups_attributes[$key]) == 2)
 						{
-							$obj->add();
-							$obj->associateTo($id_shop_list);
-							$attributes[$group.'_'.$attribute] = $obj->id;
-						}
-						else
-							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
-					}
-
-					$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
-
-					$info['wholesale_price'] = str_replace(',', '.', $info['wholesale_price']);
-					$info['price'] = str_replace(',', '.', $info['price']);
-					$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
-					$info['weight'] = str_replace(',', '.', $info['weight']);
-
-					// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
-					if (isset($info['reference']) && !empty($info['reference']))
-					{
-						$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
-
-						// updates the attribute
-						if ($id_product_attribute)
-						{
-							// gets all the combinations of this product
-							$attribute_combinations = $product->getAttributeCombinations($default_language);
-							foreach ($attribute_combinations as $attribute_combination)
+							$id_attribute_group = $groups_attributes[$key]['id'];
+							$obj = new Attribute();
+							// sets the proper id (corresponding to the right key)
+							$obj->id_attribute_group = $groups_attributes[$key]['id'];
+							$obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
+							$obj->position = (!$position && isset($groups[$group])) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
+	
+							if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+								($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 							{
-								if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination))
+								$obj->add();
+								$obj->associateTo($id_shop_list);
+								$attributes[$group.'_'.$attribute] = $obj->id;
+							}
+							else
+								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+						}
+	
+						$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
+	
+						$info['wholesale_price'] = str_replace(',', '.', $info['wholesale_price']);
+						$info['price'] = str_replace(',', '.', $info['price']);
+						$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
+						$info['weight'] = str_replace(',', '.', $info['weight']);
+	
+						// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
+						if (isset($info['reference']) && !empty($info['reference']))
+						{
+							$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+	
+							// updates the attribute
+							if ($id_product_attribute)
+							{
+								// gets all the combinations of this product
+								$attribute_combinations = $product->getAttributeCombinations($default_language);
+								foreach ($attribute_combinations as $attribute_combination)
 								{
-									$product->updateAttribute(
-										$id_product_attribute,
-										(float)$info['wholesale_price'],
-										(float)$info['price'],
-										(float)$info['weight'],
-										0,
-										(float)$info['ecotax'],
-										$id_image,
-										strval($info['reference']),
-										strval($info['ean13']),
-										(int)$info['default_on'],
-										0,
-										strval($info['upc']),
-										(int)$info['minimal_quantity'],
-										0,
-										null,
-										$id_shop_list
-									);
-
-									$id_product_attribute_update = true;
+									if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination))
+									{
+										$product->updateAttribute(
+											$id_product_attribute,
+											(float)$info['wholesale_price'],
+											(float)$info['price'],
+											(float)$info['weight'],
+											0,
+											(float)$info['ecotax'],
+											$id_image,
+											strval($info['reference']),
+											strval($info['ean13']),
+											(int)$info['default_on'],
+											0,
+											strval($info['upc']),
+											(int)$info['minimal_quantity'],
+											0,
+											null,
+											$id_shop_list
+										);
+	
+										$id_product_attribute_update = true;
+									}
 								}
 							}
 						}
+	
+						// if no attribute reference is specified, creates a new one
+						if (!$id_product_attribute)
+						{
+							$id_product_attribute = $product->addCombinationEntity(
+								(float)$info['wholesale_price'],
+								(float)$info['price'],
+								(float)$info['weight'],
+								0,
+								(float)$info['ecotax'],
+								(int)$info['quantity'],
+								$id_image,
+								strval($info['reference']),
+								0,
+								strval($info['ean13']),
+								(int)$info['default_on'],
+								0,
+								strval($info['upc']),
+								(int)$info['minimal_quantity'],
+								$id_shop_list
+							);
+						}
+	
+						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
+						if(isset($attributes[$group.'_'.$attribute]))
+							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
+	
+						// after insertion, we clean attribute position and group attribute position
+						$obj = new Attribute();
+						$obj->cleanPositions((int)$id_attribute_group, false);
+						AttributeGroup::cleanPositions();
 					}
-
-					// if no attribute reference is specified, creates a new one
-					if (!$id_product_attribute)
-					{
-						$id_product_attribute = $product->addCombinationEntity(
-							(float)$info['wholesale_price'],
-							(float)$info['price'],
-							(float)$info['weight'],
-							0,
-							(float)$info['ecotax'],
-							(int)$info['quantity'],
-							$id_image,
-							strval($info['reference']),
-							0,
-							strval($info['ean13']),
-							(int)$info['default_on'],
-							0,
-							strval($info['upc']),
-							(int)$info['minimal_quantity'],
-							$id_shop_list
-						);
-					}
-
-					// fills our attributes array, in order to add the attributes to the product_attribute afterwards
-					$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
-
-					// after insertion, we clean attribute position and group attribute position
-					$obj = new Attribute();
-					$obj->cleanPositions((int)$id_attribute_group, false);
-					AttributeGroup::cleanPositions();
 				}
-			}
 
 			$product->checkDefaultAttributes();
 			if (!$product->cache_default_attribute)
@@ -2188,10 +2203,10 @@ class AdminImportControllerCore extends AdminController
 			{
 				$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					$info['name'],
-					(isset($info['id']) ? $info['id'] : 'null')
+					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
+					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 				);
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -2235,8 +2250,8 @@ class AdminImportControllerCore extends AdminController
 				if (!$res)
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
 						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						$info['name'],
-						(isset($info['id']) ? $info['id'] : 'null')
+						(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
+						(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 					);
 				else
 				{
