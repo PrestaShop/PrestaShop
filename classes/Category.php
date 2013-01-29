@@ -451,14 +451,15 @@ class CategoryCore extends ObjectModel
 	  *
 	  * @param integer $id_lang Language ID
 	  * @param boolean $active return only active categories
+	  * @param string $sql_fields return only the specified sql fields
 	  * @return array Categories
 	  */
-	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_fields = '', $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
 	 	if (!Validate::isBool($active))
 	 		die(Tools::displayError());
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
+			SELECT '.($fields != '' ? $fields : '*').'
 			FROM `'._DB_PREFIX_.'category` c
 			'.Shop::addSqlAssociation('category', 'c').'
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
