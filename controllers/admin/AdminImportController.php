@@ -904,7 +904,7 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create->name[$default_language_id],
 							(isset($category_to_create->id) ? $category_to_create->id : 'null')
 						);
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -980,7 +980,7 @@ class AdminImportControllerCore extends AdminController
 					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
 					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 				);
-				$error_tmp = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
+				$error_tmp = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 				if ($error_tmp != '')
 					$this->errors[] = $error_tmp;
 			}
@@ -1104,7 +1104,7 @@ class AdminImportControllerCore extends AdminController
 							$manufacturer->name,
 							(isset($manufacturer->id) ? $manufacturer->id : 'null')
 						);
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1135,7 +1135,7 @@ class AdminImportControllerCore extends AdminController
 							$supplier->name,
 							(isset($supplier->id) ? $supplier->id : 'null')
 						);
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1181,7 +1181,7 @@ class AdminImportControllerCore extends AdminController
 									$category_to_create->name[$default_language_id],
 									(isset($category_to_create->id) ? $category_to_create->id : 'null')
 								);
-								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
 						}
@@ -1213,7 +1213,7 @@ class AdminImportControllerCore extends AdminController
 									$category_to_create->name[$default_language_id],
 									(isset($category_to_create->id) ? $category_to_create->id : 'null')
 								);
-								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
 						}
@@ -1311,7 +1311,7 @@ class AdminImportControllerCore extends AdminController
 					(isset($info['name']) ? Tools::safeOutput($info['name']) : 'No Name'),
 					(isset($info['id']) ? Tools::safeOutput($info['id']) : 'No ID')
 				);
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 
 			}
@@ -1564,7 +1564,7 @@ class AdminImportControllerCore extends AdminController
 						Tools::displayError('%s cannot be saved'),
 						(isset($image->id_product) ? ' ('.$image->id_product.')' : '')
 					);
-					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
+					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
 			elseif (isset($info['image_position']) && $info['image_position'])
@@ -1625,7 +1625,7 @@ class AdminImportControllerCore extends AdminController
 							$groups[$group] = $obj->id;
 						}
 						else
-							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
 	
 						// fils groups attributes
 						$id_attribute_group = $obj->id;
@@ -1675,7 +1675,7 @@ class AdminImportControllerCore extends AdminController
 								$attributes[$group.'_'.$attribute] = $obj->id;
 							}
 							else
-								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
 						}
 	
 						$info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
@@ -1922,7 +1922,7 @@ class AdminImportControllerCore extends AdminController
 					$info['email'],
 					(isset($info['id']) ? $info['id'] : 'null')
 				);
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -1969,7 +1969,7 @@ class AdminImportControllerCore extends AdminController
 					else
 					{
 						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1999,7 +1999,7 @@ class AdminImportControllerCore extends AdminController
 					else
 					{
 						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -2068,7 +2068,7 @@ class AdminImportControllerCore extends AdminController
 						$manufacturer->name,
 						(isset($manufacturer->id) ? $manufacturer->id : 'null')
 					);
-					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
 			}
@@ -2089,7 +2089,7 @@ class AdminImportControllerCore extends AdminController
 						$supplier->name,
 						(isset($supplier->id) ? $supplier->id : 'null')
 					);
-					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
 			}
@@ -2278,7 +2278,7 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				$this->errors[] = $this->l('Supplier is invalid').' ('.$supplier->name.')';
-				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
 			}
 		}
 		$this->closeCsvFile($handle);
