@@ -119,7 +119,10 @@ class ImageManagerCore
 	 */
 	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false)
 	{
-		clearstatcache(true, $src_file);
+		if (PHP_VERSION_ID < 50300)
+			clearstatcache();
+		else
+			clearstatcache(true, $src_file);
 		
 		if (!file_exists($src_file) || !filesize($src_file))
 			return false;
