@@ -1277,9 +1277,9 @@ class ToolsCore
 
 	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
-		if ($stream_context == null && !strstr($url, 'http'))
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !strstr($url, 'http'))
+		if ($stream_context == null && !preg_match('/^https?:\/\//', $url))
+			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
+		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
 			return @file_get_contents($url, $use_include_path, $stream_context);
 		elseif (function_exists('curl_init'))
 		{
@@ -1308,10 +1308,7 @@ class ToolsCore
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
-		else
-			return false;
+		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 	}
 
 
