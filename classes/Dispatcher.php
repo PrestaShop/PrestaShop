@@ -468,7 +468,7 @@ class DispatcherCore
 		if ($keywords)
 		{
 			$transform_keywords = array();
-			preg_match_all('#\\\{(([^{}]+)\\\:)?('.implode('|', array_keys($keywords)).')(\\\:([^{}]+))?\\\}#', $regexp, $m);
+			preg_match_all('#\\\{(([^{}]*)\\\:)?('.implode('|', array_keys($keywords)).')(\\\:([^{}]*))?\\\}#', $regexp, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
 			{
 				$prepend = $m[2][$i];
@@ -537,7 +537,7 @@ class DispatcherCore
 		if (!isset($this->routes[$id_lang]) && !isset($this->routes[$id_lang][$route_id]))
 			return false;
 
-		return preg_match('#\{([^{}]+:)?'.preg_quote($keyword, '#').'(:[^{}])?\}#', $this->routes[$id_lang][$route_id]['rule']);
+		return preg_match('#\{([^{}]*:)?'.preg_quote($keyword, '#').'(:[^{}]*)?\}#', $this->routes[$id_lang][$route_id]['rule']);
 	}
 
 	/**
@@ -554,7 +554,7 @@ class DispatcherCore
 			return false;
 
 		foreach ($this->default_routes[$route_id]['keywords'] as $keyword => $data)
-			if (isset($data['param']) && !preg_match('#\{([^{}]+:)?'.$keyword.'(:[^{}])?\}#', $rule))
+			if (isset($data['param']) && !preg_match('#\{([^{}]*:)?'.$keyword.'(:[^{}]*)?\}#', $rule))
 				$errors[] = $keyword;
 
 		return (count($errors)) ? false : true;
@@ -614,10 +614,10 @@ class DispatcherCore
 						$replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
 					else
 						$replace = '';
-					$url = preg_replace('#\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
+					$url = preg_replace('#\{([^{}]*:)?'.$key.'(:[^{}]*)?\}#', $replace, $url);
 				}
 			}
-			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
+			$url = preg_replace('#\{([^{}]*:)?[a-z0-9_]+?(:[^{}]*)?\}#', '', $url);
 			if (count($add_param))
 				$url .= '?'.http_build_query($add_param, '', '&');
 		}
