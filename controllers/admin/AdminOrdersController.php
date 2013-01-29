@@ -1292,7 +1292,7 @@ class AdminOrdersControllerCore extends AdminController
 		// display warning if there are products out of stock
 		$display_out_of_stock_warning = false;
 		$current_order_state = $order->getCurrentOrderState();
-		if ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)
+		if (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1))
 			$display_out_of_stock_warning = true;
 
 		// products current stock (from stock_available)
