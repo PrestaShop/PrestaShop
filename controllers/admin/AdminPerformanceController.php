@@ -725,6 +725,7 @@ class AdminPerformanceControllerCore extends AdminController
 					$cache_active = 0;
 				else
 					$cache_active = 1;
+
 				if (!$caching_system = Tools::getValue('caching_system'))
 					$this->errors[] = Tools::displayError('Caching system is missing');
 				else
@@ -733,6 +734,7 @@ class AdminPerformanceControllerCore extends AdminController
 						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
 						$new_settings
 					);
+					
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 						<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
@@ -778,8 +780,7 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-
-		if ($redirecAdmin)
+		if ($redirecAdmin && (!isset($this->errors) || !count($this->errors)))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 		else
 			return parent::postProcess();
