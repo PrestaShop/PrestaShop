@@ -65,7 +65,7 @@ $(document).ready(function() {
 			$('#vat_number').hide();
 	}
 });
-{/if}
+{/literal}
 //]]>
 </script>
 
