@@ -56,22 +56,21 @@ class CacheMemcacheCore extends Cache
 			{
 			    if (is_array($slabs))
 			    {
-
-				        foreach (array_keys($slabs) as $slab_id)
-				        {
-			    			if(is_int($slab_id))
-							{				        	
-					            $dump = $this->memcache->getStats('cachedump', (int)$slab_id);
-					            if ($dump)
-					            {
-					               foreach ($dump as $entries)
-					               {
-					                    if ($entries)
-					                        $this->keys = array_merge($this->keys, array_keys($entries));
-					               }
-					            }
-				            }
-				        }
+					foreach (array_keys($slabs) as $slab_id)
+					{
+						if(is_int($slab_id))
+						{				        	
+					        $dump = $this->memcache->getStats('cachedump', (int)$slab_id);
+					        if ($dump)
+					        {
+					           foreach ($dump as $entries)
+					           {
+					                if ($entries)
+					                    $this->keys = array_merge($this->keys, array_keys($entries));
+					           }
+					        }
+					    }
+					}
 			    }
 			}
 	}
