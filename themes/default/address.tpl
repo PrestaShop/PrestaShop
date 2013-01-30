@@ -46,7 +46,6 @@ var countriesNeedZipCode = new Array();
 $(function(){ldelim}
 	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{/if}{/if}]').attr('selected', true);
 {rdelim});
-{if $vat_management}
 {literal}
 	$(document).ready(function() {
 		$('#company').blur(function(){
@@ -62,7 +61,6 @@ $(function(){ldelim}
 		}
 	});
 {/literal}
-{/if}
 //]]>
 </script>
 
@@ -104,13 +102,7 @@ $(function(){ldelim}
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company}{/if}{/if}" />
 		</p>
-		{if $vat_display == 2}
-			<div id="vat_area">
-		{elseif $vat_display == 1}
-			<div id="vat_area" style="display: none;">
-		{else}
-			<div style="display: none;">
-		{/if}
+		<div id="vat_area">
 			<div id="vat_number">
 				<p class="text">
 					<label for="vat_number">{l s='VAT number'}</label>
