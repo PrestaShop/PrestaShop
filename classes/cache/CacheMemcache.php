@@ -47,8 +47,9 @@ class CacheMemcacheCore extends Cache
 		// Get keys (this code comes from Doctrine 2 project)
         $this->keys = array();
         $servers = self::getMemcachedServers();
-        if(is_array($servers) && count($servers) > 0)
+        if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getExtendedStats'))
         	$all_slabs = $this->memcache->getExtendedStats('slabs');
+       	
 		if(isset($all_slabs) && is_array($all_slabs))
 			foreach ($all_slabs as $server => $slabs)
 			{
