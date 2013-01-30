@@ -127,7 +127,7 @@ function findCombination(firstTime)
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
-			
+
 			//update the display
 			updateDisplay();
 
@@ -157,7 +157,7 @@ function updateDisplay()
 
 		//hide the hook out of stock
 		$('#oosHook').hide();
-		
+
 		//hide availability date
 		$('#availability_date_label').hide();
 		$('#availability_date_value').hide();
@@ -233,7 +233,7 @@ function updateDisplay()
 		}
 		if(stock_management == 1)
 			$('#availability_statut:hidden').show();
-		
+
 		//display availability date
 		if (selectedCombination.length)
 		{
@@ -332,12 +332,12 @@ function updateDisplay()
 			if (product_specific_price['reduction_type'] == 'percentage')
 				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
 		}
-		
+
 		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
 			$('#discount_reduced_price,#old_price').show();
 		else
 			$('#discount_reduced_price,#old_price').hide();
-		
+
 		if (product_specific_price['reduction_type'] == 'percentage' || selectedCombination['specific_price'].reduction_type == 'percentage')
 			$('#reduction_percent').show();
 		else
@@ -410,7 +410,7 @@ function updateDisplay()
 		else
 			productPricePretaxed = productPrice;
 		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
-		// Unit price 
+		// Unit price
 		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
@@ -429,16 +429,18 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	
+
 	if (domAAroundImgThumb.attr('href'))
 	{
 		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
 		if ($('#bigpic').attr('src') != newSrc)
 		{
 			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
-				$(this).attr('src', newSrc).show();
-				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-					$(this).attr('alt', domAAroundImgThumb.attr('href'));
+				$(this).attr('src', newSrc).load(function() {
+					$(this).show();
+					if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+						$(this).attr('alt', domAAroundImgThumb.attr('href'));
+				});
 			});
 		}
 		$('#views_block li a').removeClass('shown');
@@ -576,12 +578,12 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
-	
+
 	original_url = window.location+'';
 	first_url_check = true;
 	checkUrl();
 	initLocationChange();
-	
+
 });
 
 function saveCustomization()
@@ -600,10 +602,10 @@ function submitPublishProduct(url, redirect, token)
 	var id_product = $('#admin-action-product-id').val();
 
 	$.ajaxSetup({async: false});
-	$.post(url+'/index.php', { 
+	$.post(url+'/index.php', {
 		action:'publishProduct',
-		id_product: id_product, 
-		status: 1, 
+		id_product: id_product,
+		status: 1,
 		redirect: redirect,
 		ajax: 1,
 		tab: 'AdminProducts',
