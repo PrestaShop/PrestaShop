@@ -902,7 +902,7 @@ class ProductCore extends ObjectModel
 			);
 
 		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
-		if ($clean_positions === true)
+		if ($clean_positions === true && is_array($result))
 			foreach ($result as $row)
 					$return &= $this->cleanPositions((int)$row['id_category']);
 		
