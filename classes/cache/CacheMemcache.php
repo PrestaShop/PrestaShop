@@ -47,26 +47,31 @@ class CacheMemcacheCore extends Cache
 		// Get keys (this code comes from Doctrine 2 project)
         $this->keys = array();
         $servers = self::getMemcachedServers();
-        if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getExtendedStats'))
-        	$all_slabs = $this->memcache->getExtendedStats('slabs');
-       	
+       
+        if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
+        	$all_slabs = $this->memcache->getStats('slabs');
+	    	        	
 		if(isset($all_slabs) && is_array($all_slabs))
 			foreach ($all_slabs as $server => $slabs)
 			{
 			    if (is_array($slabs))
 			    {
-			        foreach (array_keys($slabs) as $slab_id)
-			        {
-			            $dump = $this->memcache->getExtendedStats('cachedump', (int)$slab_id);
-			            if ($dump)
-			            {
-			               foreach ($dump as $entries)
-			               {
-			                    if ($entries)
-			                        $this->keys = array_merge($this->keys, array_keys($entries));
-			               }
-			            }
-			        }
+
+				        foreach (array_keys($slabs) as $slab_id)
+				        {
+			    			if(is_int($slab_id))
+							{				        	
+					            $dump = $this->memcache->getStats('cachedump', (int)$slab_id);
+					            if ($dump)
+					            {
+					               foreach ($dump as $entries)
+					               {
+					                    if ($entries)
+					                        $this->keys = array_merge($this->keys, array_keys($entries));
+					               }
+					            }
+				            }
+				        }
 			    }
 			}
 	}
@@ -85,7 +90,7 @@ class CacheMemcacheCore extends Cache
 			$this->memcache = new Memcache();
 		else
 			return false;
-			
+		
 		$servers = self::getMemcachedServers();
 		if (!$servers)
 			return false;
