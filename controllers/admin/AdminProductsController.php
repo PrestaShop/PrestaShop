@@ -1422,8 +1422,9 @@ class AdminProductsControllerCore extends AdminController
 		if (!Image::getCover($image->id_product))
 		{
 			$res &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
-			SET image_shop.`cover` = 1
+			UPDATE `'._DB_PREFIX_.'image_shop` image_shop, '._DB_PREFIX_.'image i
+			SET image_shop.`cover` = 1,
+			i.cover = 1
 			WHERE image_shop.`id_image` = (SELECT id_image FROM
 														(SELECT image_shop.id_image
 															FROM '._DB_PREFIX_.'image i'.
@@ -1431,7 +1432,8 @@ class AdminProductsControllerCore extends AdminController
 															WHERE i.id_product ='.(int)$image->id_product.' LIMIT 1
 														) tmpImage)
 			AND id_shop='.(int)$this->context->shop->id.'
-			LIMIT 1');
+			AND i.id_image = image_shop.id_image
+			');
 		}
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
