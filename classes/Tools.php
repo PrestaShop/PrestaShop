@@ -1541,6 +1541,18 @@ class ToolsCore
 				'virtual' =>	$shop_url->virtual_uri,
 				'id_shop' =>	$shop_url->id_shop
 			);
+			
+			if ($shop_url->domain == $shop_url->domain_ssl)
+				continue;
+			
+			if (!isset($domains[$shop_url->domain_ssl]))
+				$domains[$shop_url->domain_ssl] = array();
+
+			$domains[$shop_url->domain_ssl][] = array(
+				'physical' =>	$shop_url->physical_uri,
+				'virtual' =>	$shop_url->virtual_uri,
+				'id_shop' =>	$shop_url->id_shop
+			);
 		}
 
 		// Write data in .htaccess file
