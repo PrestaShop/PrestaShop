@@ -71,35 +71,33 @@
 					{/foreach}
 				{/if}
 				//]]>
-				{if $vat_management}
-					{literal}
-					function vat_number()
-					{
-						if ($('#company').val() != '')
-							$('#vat_number_block').show();
-						else
-							$('#vat_number_block').hide();
-					}
-					function vat_number_invoice()
-					{
-						if ($('#company_invoice').val() != '')
-							$('#vat_number_block_invoice').show();
-						else
-							$('#vat_number_block_invoice').hide();
-					}
-					
-					$(document).ready(function() {
-						$('#company').blur(function(){
-							vat_number();
-						});
-						$('#company_invoice').blur(function(){
-							vat_number_invoice();
-						});
+				{literal}
+				function vat_number()
+				{
+					if ($('#company').val() != '')
+						$('#vat_number_block').show();
+					else
+						$('#vat_number_block').hide();
+				}
+				function vat_number_invoice()
+				{
+					if ($('#company_invoice').val() != '')
+						$('#vat_number_block_invoice').show();
+					else
+						$('#vat_number_block_invoice').hide();
+				}
+				
+				$(document).ready(function() {
+					$('#company').blur(function(){
 						vat_number();
+					});
+					$('#company_invoice').blur(function(){
 						vat_number_invoice();
 					});
-					{/literal}
-				{/if}
+					vat_number();
+					vat_number_invoice();
+				});
+				{/literal}
 				</script>
 				<!-- Error return block -->
 				<div id="opc_account_errors" class="error" style="display:none;"></div>
