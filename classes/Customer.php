@@ -412,16 +412,17 @@ class CustomerCore extends ObjectModel
 	 */
 	public static function customerHasAddress($id_customer, $id_address)
 	{
-		if (!array_key_exists($id_customer, self::$_customerHasAddress))
+		$key = (int)$id_customer.'-'.(int)$id_address;
+		if (!array_key_exists($id_address, self::$_customerHasAddress))
 		{
-			self::$_customerHasAddress[$id_customer] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			self::$_customerHasAddress[$key] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `id_address` = '.(int)$id_address.'
 			AND `deleted` = 0');
 		}
-		return self::$_customerHasAddress[$id_customer];
+		return self::$_customerHasAddress[$key];
 	}
 
 	public static function resetAddressCache($id_customer)

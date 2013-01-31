@@ -2837,8 +2837,8 @@ class CartCore extends ObjectModel
 		$invoice = new Address((int)$this->id_address_invoice);
 
 		// New layout system with personalization fields
+		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
 		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
-		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);
 
 		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
 
