@@ -445,7 +445,7 @@ class CustomerCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
 				'.(Context::getContext()->shop->getGroup()->share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
 				WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
-				d($sql);
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
