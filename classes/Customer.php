@@ -438,13 +438,14 @@ class CustomerCore extends ObjectModel
 	 */
 	public function getAddresses($id_lang)
 	{
-		$sql = 'SELECT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
+		$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 				FROM `'._DB_PREFIX_.'address` a
 				LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
 				'.(Context::getContext()->shop->getGroup()->share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
 				WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
+				d($sql);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
