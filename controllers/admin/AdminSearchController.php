@@ -202,7 +202,11 @@ class AdminSearchControllerCore extends AdminController
 		global $_LANGADM;
 		$tabs = array();
 		$key_match = array();
-		$result = Db::getInstance()->executeS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
+		$result = Db::getInstance()->executeS('
+		SELECT class_name, name
+		FROM '._DB_PREFIX_.'tab t
+		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id.')
+		WHERE active = 1');
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
