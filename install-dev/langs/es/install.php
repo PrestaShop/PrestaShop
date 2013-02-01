@@ -146,7 +146,7 @@
     'The installation process should take only few minutes!' => 'El proceso de instalación tardará solo unos minutos.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => NULL,
     'Did you know?' => '¿Sabía que?',
-    'PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.' => NULL,
+    'PrestaShop and its community offers over %d different languages for free, directly accessible from your Back Office on the Localization tab.' => NULL,
     'License Agreements' => 'Contrato de Licencia',
     'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => NULL,
     'I agree to the above terms and conditions.' => 'Estoy de acuerdo con los términos y condiciones.',
