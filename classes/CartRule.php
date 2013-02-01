@@ -119,13 +119,19 @@ class CartRuleCore extends ObjectModel
 	/**
 	 * @see ObjectModel::add()
 	 */
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		if (!parent::add($autodate, $nullValues))
+		if (!parent::add($autodate, $null_values))
 			return false;
 
 		Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', '1');
 		return true;
+	}
+	
+	public function update($null_values = false)
+	{
+		Cache::clean('getContextualValue_'.$this->id.'_*');
+		return parent::update($null_values);	
 	}
 
 	/**

@@ -274,7 +274,10 @@ abstract class InstallControllerHttp
 	 */
 	public function findNextStep()
 	{
-		return (isset(self::$steps[$this->getStepOffset($this->step) + 1])) ? self::$steps[$this->getStepOffset($this->step) + 1] : false;
+		$nextStep = (isset(self::$steps[$this->getStepOffset($this->step) + 1])) ? self::$steps[$this->getStepOffset($this->step) + 1] : false;
+		if ($nextStep == 'system' && self::$instances[$nextStep]->validate())
+			$nextStep = self::$instances[$nextStep]->findNextStep();
+		return $nextStep;
 	}
 
 	/**

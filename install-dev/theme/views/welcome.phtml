@@ -39,12 +39,12 @@
 
 <!-- Did you know -->
 <h3 class="no-margin"><?php echo $this->l('Did you know?'); ?></h3>
-<p><?php echo $this->l('PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.'); ?> </p>
+<p><?php echo $this->l('PrestaShop and its community offers over %d different languages for free, directly accessible from your Back Office on the Localization tab.', 56); ?> </p>
 
 <!-- License agreement -->
-<h2 id="licenses-agreement"><?php echo $this->l('Licenses Agreement') ?></h2>
+<h2 id="licenses-agreement"><?php echo $this->l('License Agreements') ?></h2>
+<p><strong><?php echo $this->l('PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.') ?></strong></p>
 <div style="height:200px; border:1px solid #ccc; margin-bottom:8px; padding:5px; background:#fff; overflow: auto; overflow-x:hidden; overflow-y:scroll;">
-	<p><strong><?php echo $this->l('PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.') ?></strong></p>
 	<h3>Core: Open Software License ("OSL") v. 3.0</h3>
 	<p>This Open Software License (the "License") applies to any original work of authorship (the "Original Work") whose owner (the "Licensor") has placed the following licensing notice adjacent to the copyright notice for the Original Work:</p>
 	<h4>Licensed under the Open Software License version 3.0</h4>
@@ -100,16 +100,12 @@
 	<p><strong>16. Modification of This License.</strong> This License is Copyright © 2005 Lawrence Rosen. Permission is granted to copy, distribute, or communicate this License without modification. Nothing in this License permits You to modify this License as applied to the Original Work or to Derivative Works. However, You may modify the text of this License and copy, distribute or communicate your modified version (the "Modified License") and apply it to other original works of authorship subject to the following conditions: (i) You may not indicate in any way that your Modified License is the "Academic Free License" or "AFL" and you may not use those names in the name of your Modified License; (ii) You must replace the notice specified in the first paragraph above with the notice "Licensed under &lt;insert your license name here&gt;" or with a notice of your own that is not confusingly similar to the notice in this License; and (iii) You may not claim that your original works are open source software unless your Modified License has been approved by Open Source Initiative (OSI) and You comply with its license review and certification process.</p>
 </div>
 
-<p>
-	<label>
-		<input type="checkbox" id="set_license" class="required" name="licence_agrement" value="1" style="vertical-align: middle;" <?php if ($this->session->licence_agrement): ?>checked="checked"<?php endif; ?> />
-		<strong><?php echo $this->l('I agree to the above terms and conditions.') ?></strong>
-	</label>
+<div>
+	<input type="checkbox" id="set_license" class="required" name="licence_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->licence_agrement): ?>checked="checked"<?php endif; ?> />
+	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to the above terms and conditions.') ?></strong></div>
 	<br />
-	<label>
-		<input type="checkbox" name="configuration_agrement" value="1" style="vertical-align: middle;" <?php if ($this->session->configuration_agrement): ?>checked="checked"<?php endif; ?> />
-		<strong><?php echo $this->l('I agree to participate in improving the solution by sending anonymous information about my configuration.') ?></strong>
-	</label>
-</p>
+	<input type="checkbox" name="configuration_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->configuration_agrement): ?>checked="checked"<?php endif; ?> />
+	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to participate in improving the solution by sending anonymous information about my configuration.') ?></strong></div>
+</div>
 
 <?php $this->displayTemplate('footer') ?>

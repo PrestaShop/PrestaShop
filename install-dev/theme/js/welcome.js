@@ -22,4 +22,9 @@ $(document).ready(function()
 		else
 			$('#btNext').addClass('disabled').attr('disabled', true);
 	});
+	
+	if ($('#set_license').prop('checked'))
+		$('#btNext').removeClass('disabled').attr('disabled', false);
+	else
+		$('#btNext').addClass('disabled').attr('disabled', true);
 });
