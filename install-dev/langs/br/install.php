@@ -153,7 +153,7 @@ return array(
 		'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => 'Se você precisar de ajuda, não deixe de visitar <a href="%1$s" target="_blank">nossa documentação</a> ou contatar nossa equipe de suporte : %2$s',
 		'Choose the installer language:' => 'Escolha a língua para instalação :',
 		'Did you know?' => 'Você sabia ?',
-		'PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop e sua comunidade oferece mais de 40 diferentes idiomas de graça, acessível diretamente a partir da sua Área Administrativa na aba localização.',
+		'PrestaShop and its community offers over %d different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop e sua comunidade oferece mais de %d diferentes idiomas de graça, acessível diretamente a partir da sua Área Administrativa na aba localização.',
 		'License Agreements' => 'Acordo de licença',
 		'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => 'O núcleo PrestaShop é publicado sob a OSL 3.0 enquanto os módulos e temas são publicados sob a AFL 3.0.',
 		'I agree to the above terms and conditions.' => 'Eu concordo com os termos e condições acima.',

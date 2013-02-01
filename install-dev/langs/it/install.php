@@ -146,7 +146,7 @@
     'The installation process should take only few minutes!' => 'Il processo di installazione dovrebbe durare solo pochi minuti!',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => 'Se hai bisogno di aiuto non asitare a guardare <a href="%1$s" target="_blank">our documentation</a> o contattare il nostro supporto: %2$s',
     'Did you know?' => 'Lo sapevi?',
-    'PrestaShop and its community offers over 40 different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop e la sua comunità offre 40 diverse lingue gratuite, direttamente accessibile nel tuo back office nel tab Traduzioni',
+    'PrestaShop and its community offers over %d different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop e la sua comunità offre %d diverse lingue gratuite, direttamente accessibile nel tuo back office nel tab Traduzioni',
     'License Agreements' => 'Contratto di Licenza',
     'PrestaShop core is released under the OSL 3.0 while PrestaShop modules and themes are released under the AFL 3.0.' => 'Il core di PrestaShop è rilasicata sollo licenza OSL 3.0 mentre i moduli e i temi prestashop sono rilasciati sotto licenza AFL 3.0',
     'I agree to the above terms and conditions.' => 'Accetto i termini e le condizioni del contratto seguente.',
