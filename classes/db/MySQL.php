@@ -174,6 +174,28 @@ class MySQLCore extends Db
 		@mysql_close($link);
 		return 0;
 	}
+	
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		ini_set('mysql.connect_timeout', 5);
+		if (!$link = @mysql_connect($server, $user, $pwd, true))
+			return false;
+		if (!@mysql_select_db($db, $link))
+			return false;
+
+		$sql = '
+			CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+			) ENGINE=MyISAM';
+
+		$result = mysql_query($sql, $link);
+		
+		if (!$result)
+			return mysql_error($link);
+
+		mysql_query('DROP TABLE `'.$prefix.'test`', $link);
+		return true;
+	}
 
 	/**
 	 * @see Db::checkEncoding()
