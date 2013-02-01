@@ -94,7 +94,7 @@ class CacheMemcacheCore extends Cache
 		if (!$servers)
 			return false;
 		foreach ($servers as $server)
-			$this->memcache->addServer($server['ip'], $server['port'], $server['weight']);
+			$this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
 
 		$this->is_connected = true;
 	}
