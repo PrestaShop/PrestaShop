@@ -101,11 +101,11 @@
 </div>
 
 <div>
-	<input type="checkbox" id="set_license" class="required" name="licence_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->licence_agrement): ?>checked="checked"<?php endif; ?> />
-	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to the above terms and conditions.') ?></strong></div>
+	<label><input type="checkbox" id="set_license" class="required" name="licence_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->licence_agrement): ?>checked="checked"<?php endif; ?> />
+	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to the above terms and conditions.') ?></strong></div></label>
 	<br />
-	<input type="checkbox" name="configuration_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->configuration_agrement): ?>checked="checked"<?php endif; ?> />
-	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to participate in improving the solution by sending anonymous information about my configuration.') ?></strong></div>
+	<label><input type="checkbox" name="configuration_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->configuration_agrement): ?>checked="checked"<?php endif; ?> />
+	<div style="float:left;width:600px;margin-left:8px"><strong><?php echo $this->l('I agree to participate in improving the solution by sending anonymous information about my configuration.') ?></strong></div></label>
 </div>
 
 <?php $this->displayTemplate('footer') ?>
