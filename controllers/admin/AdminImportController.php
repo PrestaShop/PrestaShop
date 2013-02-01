@@ -1472,9 +1472,6 @@ class AdminImportControllerCore extends AdminController
 
 		}
 
-		if (Configuration::get('PS_SEARCH_INDEXATION'))
-			Search::indexation(true);
-
 		$this->closeCsvFile($handle);
 	}
 
