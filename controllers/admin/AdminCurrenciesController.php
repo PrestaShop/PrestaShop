@@ -71,6 +71,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->_select .= 'currency_shop.conversion_rate conversion_rate';
 		$this->_join .= Shop::addSqlAssociation('currency', 'a');
+		$this->_group .= 'GROUP BY id_currency';
 	}
 
 	public function renderList()
