@@ -10,3 +10,13 @@ UPDATE `PREFIX_customer` c, `PREFIX_orders` o SET c.id_lang = o.id_lang WHERE c.
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCartRules&addcart_rule' WHERE `link` = 'index.php?tab=AdminDiscounts&adddiscount';
 
+ALTER TABLE `PREFIX_order_cart_rule` ADD `free_shipping` BOOLEAN NOT NULL DEFAULT FALSE AFTER `value_tax_excl`;
+
+UPDATE `PREFIX_order_cart_rule` ocr, `PREFIX_cart_rule` cr SET ocr.free_shipping = 1 WHERE ocr.id_cart_rule = cr.id_cart_rule AND cr.free_shipping = 1;
+
+UPDATE `PREFIX_orders` o, `PREFIX_order_cart_rule` ocr SET
+	o.`total_discounts` = o.total_discounts + o.`total_shipping_tax_incl`,
+	o.`total_discounts_tax_incl` = o.`total_discounts_tax_incl` + o.`total_shipping_tax_incl`,
+	o.`total_discounts_tax_excl` = o.`total_discounts_tax_excl` + o.`total_shipping_tax_excl`
+WHERE o.id_order = ocr.id_order AND ocr.free_shipping = 1;
+

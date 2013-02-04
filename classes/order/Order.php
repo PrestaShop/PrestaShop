@@ -1027,7 +1027,7 @@ class OrderCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @return bool
 	 */
-	public function addCartRule($id_cart_rule, $name, $values, $id_order_invoice = 0)
+	public function addCartRule($id_cart_rule, $name, $values, $id_order_invoice = 0, $free_shipping = null)
 	{
 		$order_cart_rule = new OrderCartRule();
 		$order_cart_rule->id_order = $this->id;
@@ -1036,6 +1036,12 @@ class OrderCore extends ObjectModel
 		$order_cart_rule->name = $name;
 		$order_cart_rule->value = $values['tax_incl'];
 		$order_cart_rule->value_tax_excl = $values['tax_excl'];
+		if ($free_shipping === null)
+		{
+			$cart_rule = new CartRule($id_cart_rule);
+			$free_shipping = $cart_rule->free_shipping;
+		}
+		$order_cart_rule->free_shipping = (int)$free_shipping;
 		$order_cart_rule->add();
 	}
 
