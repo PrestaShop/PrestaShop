@@ -103,12 +103,12 @@
 				<td class="price-discount price" id="total_discount">
 				{if $use_taxes}
 					{if $priceDisplay}
-						{displayPrice price=$total_discounts_tax_exc}
+						{displayPrice price=$total_discounts_tax_exc*-1}
 					{else}
-						{displayPrice price=$total_discounts}
+						{displayPrice price=$total_discounts*-1}
 					{/if}
 				{else}
-					{displayPrice price=$total_discounts_tax_exc}
+					{displayPrice price=$total_discounts_tax_exc*-1}
 				{/if}
 				</td>
 			</tr>
