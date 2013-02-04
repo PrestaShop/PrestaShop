@@ -88,31 +88,7 @@
 					<td class="price" id="total_product">{displayPrice price=$total_products}</td>
 				</tr>
 			{/if}
-			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display: none;"{/if}>
-				<td colspan="5">
-				{if $use_taxes}
-					{if $priceDisplay}
-						{if $display_tax_label}{l s='Total vouchers (tax excl.):'}{else}{l s='Total vouchers:'}{/if}
-					{else}
-						{if $display_tax_label}{l s='Total vouchers (tax incl.):'}{else}{l s='Total vouchers:'}{/if}
-					{/if}
-				{else}
-					{l s='Total vouchers:'}
-				{/if}
-				</td>
-				<td class="price-discount price" id="total_discount">
-				{if $use_taxes}
-					{if $priceDisplay}
-						{displayPrice price=$total_discounts_tax_exc*-1}
-					{else}
-						{displayPrice price=$total_discounts*-1}
-					{/if}
-				{else}
-					{displayPrice price=$total_discounts_tax_exc*-1}
-				{/if}
-				</td>
-			</tr>
-			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display: none;"{/if}>
+			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display:none"{/if}>
 				<td colspan="5">
 				{if $use_taxes}
 					{if $priceDisplay}
@@ -144,23 +120,47 @@
 			{else}
 				{if $use_taxes}
 					{if $priceDisplay}
-						<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none;"{/if}>
+						<tr class="cart_total_delivery" {if $shippingCost <= 0} style="display:none"{/if}>
 							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</td>
 							<td class="price" id="total_shipping">{displayPrice price=$shippingCostTaxExc}</td>
 						</tr>
 					{else}
-						<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
+						<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none"{/if}>
 							<td colspan="5">{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</td>
 							<td class="price" id="total_shipping" >{displayPrice price=$shippingCost}</td>
 						</tr>
 					{/if}
 				{else}
-					<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none;"{/if}>
+					<tr class="cart_total_delivery"{if $shippingCost <= 0} style="display:none"{/if}>
 						<td colspan="5">{l s='Total shipping:'}</td>
 						<td class="price" id="total_shipping" >{displayPrice price=$shippingCostTaxExc}</td>
 					</tr>
 				{/if}
 			{/if}
+			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display:none"{/if}>
+				<td colspan="5">
+				{if $use_taxes}
+					{if $priceDisplay}
+						{if $display_tax_label}{l s='Total vouchers (tax excl.):'}{else}{l s='Total vouchers:'}{/if}
+					{else}
+						{if $display_tax_label}{l s='Total vouchers (tax incl.):'}{else}{l s='Total vouchers:'}{/if}
+					{/if}
+				{else}
+					{l s='Total vouchers:'}
+				{/if}
+				</td>
+				<td class="price-discount price" id="total_discount">
+				{if $use_taxes}
+					{if $priceDisplay}
+						{displayPrice price=$total_discounts_tax_exc*-1}
+					{else}
+						{displayPrice price=$total_discounts*-1}
+					{/if}
+				{else}
+					{displayPrice price=$total_discounts_tax_exc*-1}
+				{/if}
+				</td>
+			</tr>
 			{if $use_taxes}
 				{if $priceDisplay && $total_tax != 0}
 					<tr class="cart_total_tax">

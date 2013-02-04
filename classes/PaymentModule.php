@@ -469,7 +469,7 @@ abstract class PaymentModuleCore extends Module
 							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
 						}
 
-						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
+						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{
