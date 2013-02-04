@@ -508,7 +508,7 @@ class TabCore extends ObjectModel
 	
 	public static function getTabModulesList($id_tab)
 	{
-		$modules_list = array();
+		$modules_list = array('default_list' => array(), 'slider_list' => array());
 		$xml_tab_modules_list = false;
 		$db_tab_module_list = Db::getInstance()->executeS('
 			SELECT module
@@ -520,19 +520,32 @@ class TabCore extends ObjectModel
 		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST))
 			$xml_tab_modules_list = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST);
 		
+		$class_name = null;
+		$display_type = 'default_list';
 		if ($xml_tab_modules_list)
-			foreach ($xml_tab_modules_list->children() as $tab)
+			foreach($xml_tab_modules_list->tab as $tab)
+			{
 				foreach($tab->attributes() as $key => $value)
-					if ($key == 'class_name' && Tab::getIdFromClassName((string)$value) == $id_tab)
-						foreach ($tab->children() as $module)
-							foreach ($module->attributes() as $k => $v)
-								if ($k == 'name')
-									$modules_list[] = (string)$v;
+					if ($key == 'class_name')
+						$class_name = (string)$value;
+
+				if (Tab::getIdFromClassName((string)$class_name) == $id_tab)
+				{
+					foreach($tab->attributes() as $key => $value)
+						if ($key == 'display_type')
+							$display_type = (string)$value;
+							
+					foreach ($tab->children() as $module)
+						foreach ($module->attributes() as $k => $v)
+							if ($k == 'name')
+								$modules_list[$display_type][] = (string)$v;
+				}
+			}
 		
 		//merge tab modules preferences from db with xml  
 		foreach($db_tab_module_list as $m)
 			if (!in_array($m, $modules_list))
-				$modules_list[] = $m['module'];
+				$modules_list['slider_list'][] = $m['module'];
 
 		return $modules_list;	
 	}

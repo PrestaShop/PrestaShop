@@ -352,6 +352,8 @@ select optgroup option {
 #content {
 	padding: 1.25em;
 	padding-bottom: 0.5em;
+	position: relative;
+    z-index: 3000;
 }
 
 #news {
