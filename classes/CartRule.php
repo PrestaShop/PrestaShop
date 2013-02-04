@@ -31,6 +31,7 @@ class CartRuleCore extends ObjectModel
 	const FILTER_ACTION_SHIPPING = 2;
 	const FILTER_ACTION_REDUCTION = 3;
 	const FILTER_ACTION_GIFT = 4;
+	const FILTER_ACTION_ALL_NOCAP = 5;
 
 	const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 	
@@ -757,7 +758,7 @@ class CartRuleCore extends ObjectModel
 			return Cache::retrieve($cache_id);
 
 		// Free shipping on selected carriers
-		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
+		if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING)))
 		{
 			if (!$this->carrier_restriction)
 				$reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, is_null($package) ? null : $package['products'], is_null($package) ? null : $package['id_carrier']);
@@ -775,7 +776,7 @@ class CartRuleCore extends ObjectModel
 			}
 		}
 
-		if ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_REDUCTION)
+		if (in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION)))
 		{
 			// Discount (%) on the whole order
 			if ($this->reduction_percent && $this->reduction_product == 0)
@@ -892,9 +893,12 @@ class CartRuleCore extends ObjectModel
 					// Discount (¤) on the whole order
 					elseif ($this->reduction_product == 0)
 					{
-						// TODO : this should not use the prorata
 						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+						
+						// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+						if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
+							$reduction_amount = min($reduction_amount, $this->reduction_tax ? $cart_amount_ti : $cart_amount_te);
 
 						$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
 
@@ -919,7 +923,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Free gift
-		if ((int)$this->gift_product && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_GIFT))
+		if ((int)$this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT)))
 		{
 			$id_address = (is_null($package) ? 0 : $package['id_address']);
 			foreach ($package_products as $product)
