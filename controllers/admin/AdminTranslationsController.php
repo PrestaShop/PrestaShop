@@ -1060,7 +1060,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($type_file == 'php')
 						$regex = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
-						$regex = '/\{l\s*s=\''._PS_TRANS_PATTERN_.'\'(\s*sprintf=.*)?(\s*mod=\'.+\')?(\s*js=1)?\s*\}/U';
+						$regex = '/\{l\s*s=[\'\"]'._PS_TRANS_PATTERN_.'[\'\"](\s*sprintf=.*)?(\s*mod=[\'\"].+[\'\"])?(\s*js=1)?\s*\}/U';
 				break;
 
 			case 'pdf':
