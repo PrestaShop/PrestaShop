@@ -135,7 +135,7 @@
 		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">
 			{foreach from=$invoices_collection item=invoice}
-			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
+			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$invoice->number}</option>
 			{/foreach}
 		</select>
 		{else}
