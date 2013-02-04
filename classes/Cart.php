@@ -1331,6 +1331,9 @@ class CartCore extends ObjectModel
 		else
 			$shipping_fees = 0;
 
+		if ($type == Cart::ONLY_SHIPPING)
+			return $shipping_fees;
+
 		if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
 			$type = Cart::ONLY_PRODUCTS;
 
@@ -1455,6 +1458,8 @@ class CartCore extends ObjectModel
 		$wrapping_fees = 0;
 		if ($this->gift)
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), 2), Currency::getCurrencyInstance((int)$this->id_currency));
+		if ($type == Cart::ONLY_WRAPPING)
+			return $wrapping_fees;
 
 		$order_total_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
@@ -1511,12 +1516,6 @@ class CartCore extends ObjectModel
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
-
-		if ($type == Cart::ONLY_SHIPPING)
-			return $shipping_fees;
-
-		if ($type == Cart::ONLY_WRAPPING)
-			return $wrapping_fees;
 
 		if ($type == Cart::BOTH)
 			$order_total += $shipping_fees + $wrapping_fees;
@@ -2861,14 +2860,22 @@ class CartCore extends ObjectModel
 		foreach ($cart_rules as &$cart_rule)
 		{
 			// If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
-			if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code'])))
+			if ($cart_rule['free_shipping'])
 			{
-				$cart_rule['value_real'] -= $total_shipping;
-				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
+				if (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code']))
+				{
+					$cart_rule['value_real'] -= $total_shipping;
+					$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
 
-				// Update total shipping
-				$total_shipping = 0;
-				$total_shipping_tax_exc = 0;
+					// Update total shipping
+					$total_shipping = 0;
+					$total_shipping_tax_exc = 0;
+				}
+				else
+				{
+					$total_discounts += $total_shipping;
+					$total_discounts_tax_exc += $total_shipping_tax_exc;
+				}
 			}
 			if ($cart_rule['gift_product'])
 			{
