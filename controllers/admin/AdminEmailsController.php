@@ -170,9 +170,10 @@ class AdminEmailsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->initToolbar();
+		$this->addToolBarModulesListButton();
 		unset($this->toolbar_btn['save']);
-		
 		$back = $this->context->link->getAdminLink('AdminHome');
 		
 		$this->toolbar_btn['back'] = array(

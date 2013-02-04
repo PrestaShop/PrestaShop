@@ -23,26 +23,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helpers/view/view.tpl"}
-{block name="override_tpl"}
-{if !$shop_context}
-	<div class="warn">{l s='You have more than one shop and must select one to configure payment.'}</div>
-{else}
-		{if isset($modules_list)}
-			{$modules_list}
-		{/if}
-	
-		<br />
-	
-		{if $display_restrictions}
-			<br /><h2 class="space">{l s='Payment module restrictions'}</h2>
-			{foreach $lists as $list}
-				{include file='controllers/payment/restrictions.tpl'}
-				<br />
+<h2 style="margin-top:0">{l s='Modules list'}</h2>
+<div id="modules_list_container_tab" class="default_modules_list_display_type">
+	<ul id="modules_list_container_content" style="list-style-type:none; padding:0; margin:0;">
+		{if count($modules_list)}
+			{foreach from=$modules_list item=module}
+				<li style="display:block;float:left;">
+					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
+				</li> 
 			{/foreach}
 		{else}
-			<br />
-			<div class='warn'>{l s='No payment module installed'}</div>
-		{/if}
-{/if}
-{/block}
+			<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+		{/if}		
+	</ul>
+</div>
+<div class="clear"></div>
