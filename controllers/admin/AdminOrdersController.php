@@ -434,7 +434,7 @@ class AdminOrdersControllerCore extends AdminController
 						else
 						{
 							$message = $customer_message->message;
-							if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
+							if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT)
 								$message = Tools::nl2br($customer_message->message);
 
 							$varsTpl = array(
@@ -972,7 +972,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			if (!Configuration::get('PS_INVOICE'))
+			if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
 				$this->errors[] = Tools::displayError('Invoice management has been disabled');
 			elseif ($order->hasInvoice())
 				$this->errors[] = Tools::displayError('This order already has an invoice');
@@ -1352,7 +1352,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'invoice_management_active' => Configuration::get('PS_INVOICE')
+			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop)
 		);
 
 		return parent::renderView();
@@ -1535,7 +1535,7 @@ class AdminOrdersControllerCore extends AdminController
 		$use_taxes = true;
 
 		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 
 		// Creating specific price if needed
 		if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl)
@@ -1612,11 +1612,11 @@ class AdminOrdersControllerCore extends AdminController
 
 				$order_invoice->id_order = $order->id;
 				if ($order_invoice->number)
-					Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
+					Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 				$carrier = new Carrier((int)$order->id_carrier);
 				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
 
