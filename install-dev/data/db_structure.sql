@@ -1182,6 +1182,7 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `name` varchar(254) NOT NULL,
   `value` decimal(17,2) NOT NULL default '0.00',
   `value_tax_excl` decimal(17,2) NOT NULL default '0.00',
+  `free_shipping` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id_order_cart_rule`),
   KEY `id_order` (`id_order`),
   KEY `id_cart_rule` (`id_cart_rule`)
