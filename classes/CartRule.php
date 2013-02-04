@@ -864,7 +864,15 @@ class CartRuleCore extends ObjectModel
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!
 				if ($this->reduction_tax == $use_tax)
+				{
+					// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+					if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
+					{
+						$cart_amount = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+						$reduction_amount = min($reduction_amount, $cart_amount);
+					}
 					$reduction_value += $prorata * $reduction_amount;
+				}
 				else
 				{
 					if ($this->reduction_product > 0)
