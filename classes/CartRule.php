@@ -223,7 +223,7 @@ class CartRuleCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'cart_rule` cr
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
 		WHERE (
-			cr.`id_customer` = '.(int)$id_customer.'
+			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
@@ -232,20 +232,17 @@ class CartRuleCore extends ObjectModel
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 
 		// Remove cart rule that does not match the customer groups
-		if ($includeGeneric)
-		{
-			$customerGroups = Customer::getGroupsStatic($id_customer);
-			foreach ($result as $key => $cart_rule)
-				if ($cart_rule['group_restriction'])
-				{
-					$cartRuleGroups = Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'cart_rule_group WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
-					foreach ($cartRuleGroups as $cartRuleGroup)
-						if (in_array($cartRuleGroups['id_group'], $customerGroups))
-							continue 2;
+		$customerGroups = Customer::getGroupsStatic($id_customer);
+		foreach ($result as $key => $cart_rule)
+			if ($cart_rule['group_restriction'])
+			{
+				$cartRuleGroups = Db::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'cart_rule_group WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
+				foreach ($cartRuleGroups as $cartRuleGroup)
+					if (in_array($cartRuleGroup['id_group'], $customerGroups))
+						continue 2;
 
-					unset($result[$key]);
-				}
-		}
+				unset($result[$key]);
+			}
 
 		foreach ($result as &$cart_rule)
 			if ($cart_rule['quantity_per_user'])
@@ -867,7 +864,15 @@ class CartRuleCore extends ObjectModel
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!
 				if ($this->reduction_tax == $use_tax)
+				{
+					// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+					if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
+					{
+						$cart_amount = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+						$reduction_amount = min($reduction_amount, $cart_amount);
+					}
 					$reduction_value += $prorata * $reduction_amount;
+				}
 				else
 				{
 					if ($this->reduction_product > 0)
