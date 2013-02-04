@@ -222,7 +222,7 @@ class AdminPaymentControllerCore extends AdminController
 		}
 
 		$this->tpl_view_vars = array(
-			'url_modules' => isset($token_modules) ? 'index.php?tab=AdminModules&token='.$token_modules.'&&filterCategory=payments_gateways' : null,
+			'modules_list' => $this->renderModulesList(),
 			'display_restrictions' => $display_restrictions,
 			'lists' => $lists,
 			'ps_base_uri' => __PS_BASE_URI__,

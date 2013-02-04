@@ -117,11 +117,12 @@
 							}
 						{/block}
 					}
-					
-					if ({$tab_modules_open})
-						openModulesList();
+					{if isset($tab_modules_open)}
+						if ({$tab_modules_open})
+							openModulesList();
+					{/if}
 				});
-				
+				{if isset($tab_modules_list)}
 				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
 					openModulesList();
 				});
@@ -140,7 +141,7 @@
 								controller : "AdminModules",
 								action : "getTabModulesList",
 								tab_modules_list : '{$tab_modules_list}',
-								back_tab_modules_list : '{$back_tab_modules_list}',
+								back_tab_modules_list : '{$back_tab_modules_list}'
 							},
 							success : function(data)
 							{
@@ -157,6 +158,7 @@
 					}
 					return false;
 				}
+				{/if}
 			//]]>
 			</script>
 		{/block}

@@ -255,11 +255,11 @@ class AdminModulesControllerCore extends AdminController
 						$modules_list['not_installed'][] = $module;
 				}		
 			}
-			$this->context->smarty->assign(array(
+		}
+		$this->context->smarty->assign(array(
 				'tab_modules_list' => $modules_list,
 				'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
 				));
-		}
 		
 		$this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
 		exit;
@@ -809,88 +809,6 @@ class AdminModulesControllerCore extends AdminController
 		return $html_error;
 	}
 
-	/**
-	 * Display modules list
-	 *
-	 * @param $module
-	 * @param $output_type (link or select)
-	 * @param $back 
-	 *
-	 * @return string
-	 */
-	protected $translationsTab = array();
-	public function displayModuleOptions($module, $output_type = 'link', $back = null)
-	{	
-		if (!isset($this->translationsTab['Disable this module']))
-		{
-			$this->translationsTab['Disable this module'] = $this->l('Disable this module');
-			$this->translationsTab['Enable this module for all shops'] = $this->l('Enable this module for all shops');
-			$this->translationsTab['Disable'] = $this->l('Disable');
-			$this->translationsTab['Enable'] = $this->l('Enable');
-			$this->translationsTab['Reset'] = $this->l('Reset');
-			$this->translationsTab['Configure'] = $this->l('Configure');
-			$this->translationsTab['Delete'] = $this->l('Delete');
-			$this->translationsTab['Install'] = $this->l('Install');
-			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
-			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
-		}	
-		
-		$modules_options = array(
-			'configure-module' => array(
-				'href' => self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
-				'title' => '',
-				'text' => $this->translationsTab['Configure'],
-				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
-				),
-			'desactive-module' => array(
-				'href' => self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
-				'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
-				'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
-				'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
-				'cond' => $module->id,
-				),
-			'reset-module' => array(
-				'href' => self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
-				'title' => '',
-				'text' => $this->translationsTab['Reset'],
-				'cond' => $module->id && $module->active,
-				),
-			'delete-module' => array(
-				'href' => self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
-				'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
-				'title' => '',
-				'text' => $this->translationsTab['Delete'],
-				'cond' => true,
-				),
-			);
-		$return = '';
-			foreach($modules_options as $option_name => $option)
-			{
-				if ($option['cond'])
-				{
-					if ($output_type == 'link')
-						$return .= '<span class="'.$option_name.'">
-							<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
-							</span>';
-					else if ($output_type == 'select')
-						$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
-				}
-			}
-			if ($output_type == 'select')
-			{
-				if (!$module->id)
-					$return = '<option data-onclick="" data-href="'.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
-				else
-					$return = '<option data-onclick=""  data-href="'.self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>'.$return;
-				$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
-
-			}
-			
-		return $return;
-	}
-
 	public function initModulesList(&$modules)
 	{
 		foreach ($modules as $k => $module)
@@ -1144,6 +1062,8 @@ class AdminModulesControllerCore extends AdminController
 			else
 			{
 				$this->fillModuleData($module);
+				$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
+
 				if (isset($modules_preferences[$modules[$km]->name]))
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
@@ -1202,33 +1122,5 @@ class AdminModulesControllerCore extends AdminController
 			$tpl_vars['username_addons'] = $this->context->cookie->username_addons;
 		}
 		$smarty->assign($tpl_vars);
-	}
-	
-	public function fillModuleData(&$module, $output_type = 'link', $back = null)
-	{
-		$obj = null;
-		if ($module->onclick_option)
-			$obj = new $module->name();
-		// Fill module data
-		$module->logo = '../../img/questionmark.png';
-		if (file_exists('../modules/'.$module->name.'/logo.gif'))
-			$module->logo = 'logo.gif';
-		if (file_exists('../modules/'.$module->name.'/logo.png'))
-			$module->logo = 'logo.png';
-		$module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
-		$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
-		$module->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['update_url'] = self::$currentIndex.'&update='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-
-		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
-			((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
-			$obj->onclickOption('uninstall', $module->options['uninstall_url']));
-
-		if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0)
-			$module->message = $this->_conf[(int)Tools::getValue('conf')];
-
-		if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0)
-		unset($obj);
 	}
 }

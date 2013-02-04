@@ -28,12 +28,12 @@
 <td>
 	<table border="0" cellpadding="0" cellspacing="0">
 		<tr>
-			<td valign="top">
+			<td height="60" valign="top" width="75">
 				<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 			</td>
-			<td>
+			<td height="60" width="220" valign="top">
 				<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-					<h3>{$module->displayName} {$module->version}
+					<h3>{$module->displayName|truncate:40:'…'} {$module->version}
 						
 					</h3>
 					<p class="desc">
@@ -47,7 +47,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td border="0" height="20" width="75" style="text-align:center" valign="bottom">
 				{if isset($module->id) && $module->id gt 0 }
 					{if $module->active}
 						<span class="setup">{l s='Enabled'}</span>
@@ -63,16 +63,18 @@
 					
 				{/if}
 			</td>
-			<td  class="tab_modules_actions_row">
-				{if isset($module->type) && $module->type == 'addonsMustHave'}
-					<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
-					<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
-				{else if !isset($module->not_on_disk)}
-					{$module->optionsHtml}
-					<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
-				{else}
-					<a href="{$module->options.install_url}" class="button action_tab_module"><span>{l s='Install'}</span></a>
-				{/if}
+			<td  class="tab_modules_actions_row" height="20" border="0" width="220" valign="bottom">
+				<div style="float:right">
+					{if isset($module->type) && $module->type == 'addonsMustHave'}
+						<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
+						<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
+					{else if !isset($module->not_on_disk)}
+						{$module->optionsHtml}
+						<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
+					{else}
+						<a href="{$module->options.install_url}" class="button action_tab_module">{l s='Install'}</a>
+					{/if}
+				</div>
 			</td>
 		</tr>
 	</table>
