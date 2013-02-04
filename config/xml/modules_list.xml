@@ -102,12 +102,13 @@
 	</modules>
 	<modules type="partner">
 		<module name="authorizeaim"/>
+		<module name="avalaratax"/>
 		<module name="cashticket"/>
 		<module name="criteo"/>
 		<module name="dejala"/>
 		<module name="dibs"/>
-	  <module name="ebay"/> 
-    <module name="envoimoinscher"/>
+		<module name="ebay"/> 
+		<module name="envoimoinscher"/>
 		<module name="ekomi"/>
 		<module name="fedexcarrier"/>
 		<module name="fianetfraud"/>
@@ -121,6 +122,7 @@
 		<module name="paypal"/>
 		<module name="reverso"/>
 		<module name="secuvad"/>
+		<module name="shipwire"/>
 		<module name="socolissimo"/>
 		<module name="treepodia"/>
 		<module name="trustedshops"/>

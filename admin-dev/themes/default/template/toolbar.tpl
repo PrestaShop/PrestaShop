@@ -33,6 +33,15 @@
 							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></span>
 							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
 						</a>
+						{if $k == 'modules-list'}
+							<div id="modules_list_container" style="display:none">
+							<div style="float:right;top:-5px">
+								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
+							</div>
+							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+							<div id="modules_list_container_tab" style="display:none;"></div>
+							</div>
+						{/if}
 					</li>
 				{/foreach}
 			</ul>
@@ -40,6 +49,7 @@
 			<script language="javascript" type="text/javascript">
 			//<![CDATA[
 				var submited = false
+				var modules_list_loaded = false;
 				$(function() {
 					//get reference on save link
 					btn_save = $('span[class~="process-icon-save"]').parent();
@@ -107,7 +117,48 @@
 							}
 						{/block}
 					}
+					{if isset($tab_modules_open)}
+						if ({$tab_modules_open})
+							openModulesList();
+					{/if}
 				});
+				{if isset($tab_modules_list)}
+				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
+					openModulesList();
+				});
+				
+				function openModulesList()
+				{
+					$('#modules_list_container').slideDown();
+					if (!modules_list_loaded)
+					{
+						$.ajax({
+							type:"POST",
+							url : '{$admin_module_ajax_url}',
+							async: true,
+							data : {
+								ajax : "1",
+								controller : "AdminModules",
+								action : "getTabModulesList",
+								tab_modules_list : '{$tab_modules_list}',
+								back_tab_modules_list : '{$back_tab_modules_list}'
+							},
+							success : function(data)
+							{
+								$('#modules_list_container_tab').html(data).slideDown();
+								$('#modules_list_loader').hide();
+								modules_list_loaded = true;
+							}
+						});
+					}
+					else
+					{
+						$('#modules_list_container_tab').slideDown();
+						$('#modules_list_loader').hide();
+					}
+					return false;
+				}
+				{/if}
 			//]]>
 			</script>
 		{/block}

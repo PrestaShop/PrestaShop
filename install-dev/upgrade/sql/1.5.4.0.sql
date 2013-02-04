@@ -10,3 +10,11 @@ UPDATE `PREFIX_customer` c, `PREFIX_orders` o SET c.id_lang = o.id_lang WHERE c.
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCartRules&addcart_rule' WHERE `link` = 'index.php?tab=AdminDiscounts&adddiscount';
 
+CREATE TABLE `PREFIX_tab_module_preference` (
+  `id_tab_module_preference` int(11) NOT NULL auto_increment,
+  `id_employee` int(11) NOT NULL,
+  `id_tab` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_tab_module_preference`),
+  UNIQUE KEY `employee_module` (`id_employee`, `id_tab`, `module`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

@@ -36,8 +36,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function initContent()
 	{
+		$this->initTabModuleList();
+		$this->addToolBarModulesListButton();
 		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
-
 		if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object

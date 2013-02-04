@@ -296,7 +296,40 @@
 		$('#module_install_filter').change(function() { setFilter(); });
 		$('#module_status_filter').change(function() { setFilter(); });
 		$('#country_module_value_filter').change(function() { setFilter(); });
+		
+		
+		$('.moduleTabPreferencesChoise').change(function()
+		{			
+			var value_pref = $(this).val();
+			var module_pref = $(this).attr('name');
+			module_pref = module_pref.substring(2, module_pref.length);
 
+			$.ajax({
+				type:"POST",
+				url : ajaxCurrentIndex,
+				async: true,
+				data : {
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "saveTabModulePreferences",
+					module_pref : module_pref,
+					value_pref : value_pref
+				},
+				success : function(data)
+				{
+					// res.status  = cache or refresh
+					if (data == 'OK')
+						$('#r_' + module_pref).html(confirmPreferencesSaved);
+				},
+				error: function(res,textStatus,jqXHR)
+				{
+					//jAlert("TECHNICAL ERROR"+res);
+				}
+
+			});
+		});
+		
 		// Method to save favorites preferences
 		$('.moduleFavorite').change(function()
 		{
