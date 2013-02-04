@@ -1909,7 +1909,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
-
+		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
 
