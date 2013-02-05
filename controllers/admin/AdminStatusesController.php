@@ -139,6 +139,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->_orderBy = null;
 
 		$this->addRowAction('editstatus');
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5));
 
 		$this->fields_list = array(
 			'id_order_return_state' => array(
