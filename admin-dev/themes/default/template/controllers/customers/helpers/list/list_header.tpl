@@ -62,5 +62,10 @@
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>
+		<script>
+			$(document).ready(function() {
+				$('table[name=\'list_table\']').hide();
+			});
+		</script>
 	{/if}
 {/block}
