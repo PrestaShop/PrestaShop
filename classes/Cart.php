@@ -1331,6 +1331,9 @@ class CartCore extends ObjectModel
 		else
 			$shipping_fees = 0;
 
+		if ($type == Cart::ONLY_SHIPPING)
+			return $shipping_fees;
+
 		if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
 			$type = Cart::ONLY_PRODUCTS;
 
@@ -1455,12 +1458,14 @@ class CartCore extends ObjectModel
 		$wrapping_fees = 0;
 		if ($this->gift)
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), 2), Currency::getCurrencyInstance((int)$this->id_currency));
+		if ($type == Cart::ONLY_WRAPPING)
+			return $wrapping_fees;
 
 		$order_total_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
 		{
 			// First, retrieve the cart rules associated to this "getOrderTotal"
-			if ($with_shipping)
+			if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
 			else
 			{
@@ -1486,7 +1491,7 @@ class CartCore extends ObjectModel
 			foreach ($cart_rules as $cart_rule)
 			{
 				// If the cart rule offers free shipping, add the shipping cost
-				if ($with_shipping && $cart_rule['obj']->free_shipping)
+				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), 2);
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
@@ -1511,12 +1516,6 @@ class CartCore extends ObjectModel
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
-
-		if ($type == Cart::ONLY_SHIPPING)
-			return $shipping_fees;
-
-		if ($type == Cart::ONLY_WRAPPING)
-			return $wrapping_fees;
 
 		if ($type == Cart::BOTH)
 			$order_total += $shipping_fees + $wrapping_fees;
@@ -2837,8 +2836,8 @@ class CartCore extends ObjectModel
 		$invoice = new Address((int)$this->id_address_invoice);
 
 		// New layout system with personalization fields
+		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
 		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
-		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);
 
 		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
 

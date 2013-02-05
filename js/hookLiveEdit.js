@@ -23,7 +23,7 @@ $(document).ready(function() {
 	$('a').each(function() {
 		var href = this.href;
 		var search = this.search;
-		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop');
+		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop') + '&id_employee=' + get('id_employee');
 		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir)
 		{
 			if (search.length == 0)

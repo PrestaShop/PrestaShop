@@ -44,7 +44,7 @@
 		<div class="margin-form">
 			<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
 				{foreach $hooks as $hook}
-					<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>"{$hook['title']}" {l s='known as'} "{$hook['name']}"</option>
+					<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
 				{/foreach}
 			</select><sup> *</sup>
 		</div>

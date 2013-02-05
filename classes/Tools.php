@@ -1277,10 +1277,9 @@ class ToolsCore
 
 	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
-		if ($stream_context == null)
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
-
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
+		if ($stream_context == null && !preg_match('/^https?:\/\//', $url))
+			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
+		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
 			return @file_get_contents($url, $use_include_path, $stream_context);
 		elseif (function_exists('curl_init'))
 		{
@@ -1289,6 +1288,16 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_URL, $url);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
+			$opts = stream_context_get_options($stream_context);
+			if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
+			{
+				curl_setopt($curl, CURLOPT_POST, true);
+				if (isset($opts['http']['content']))
+				{
+					parse_str($opts['http']['content'], $datas);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+				}
+			}
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;
@@ -1299,10 +1308,7 @@ class ToolsCore
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
-		else
-			return false;
+		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 	}
 
 
@@ -1531,6 +1537,18 @@ class ToolsCore
 				$domains[$shop_url->domain] = array();
 
 			$domains[$shop_url->domain][] = array(
+				'physical' =>	$shop_url->physical_uri,
+				'virtual' =>	$shop_url->virtual_uri,
+				'id_shop' =>	$shop_url->id_shop
+			);
+			
+			if ($shop_url->domain == $shop_url->domain_ssl)
+				continue;
+			
+			if (!isset($domains[$shop_url->domain_ssl]))
+				$domains[$shop_url->domain_ssl] = array();
+
+			$domains[$shop_url->domain_ssl][] = array(
 				'physical' =>	$shop_url->physical_uri,
 				'virtual' =>	$shop_url->virtual_uri,
 				'id_shop' =>	$shop_url->id_shop

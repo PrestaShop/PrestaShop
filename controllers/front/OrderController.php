@@ -273,7 +273,7 @@ class OrderControllerCore extends ParentOrderController
 						
 			// Add checking for all addresses
 			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
-			if (count($address_without_carriers))
+			if (count($address_without_carriers) && !$this->context->cart->isVirtualCart())
 			{
 				if (count($address_without_carriers) > 1)
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.', !Tools::getValue('ajax')));

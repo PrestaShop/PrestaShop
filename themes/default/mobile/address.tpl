@@ -51,23 +51,21 @@ countriesNeedZipCode = new Array();
 $(function(){ldelim}
 	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state}{else}{if isset($address->id_state)}{$address->id_state|escape:'htmlall':'UTF-8'}{/if}{/if}]').attr('selected', 'selected');
 {rdelim});
-{if $vat_management}
 {literal}
-	$(document).ready(function() {
-		$('#company').blur(function(){
-			vat_number();
-		});
+$(document).ready(function() {
+	$('#company').blur(function(){
 		vat_number();
-		function vat_number()
-		{
-			if ($('#company').val() != '')
-				$('#vat_number').show();
-			else
-				$('#vat_number').hide();
-		}
 	});
+	vat_number();
+	function vat_number()
+	{
+		if ($('#company').val() != '')
+			$('#vat_number').show();
+		else
+			$('#vat_number').hide();
+	}
+});
 {/literal}
-{/if}
 //]]>
 </script>
 

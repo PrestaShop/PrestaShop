@@ -674,6 +674,11 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
 	}
 
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
+	}
+
 	/**
 	 * @deprecated 1.5.0
 	 */

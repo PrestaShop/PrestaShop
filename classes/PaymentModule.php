@@ -406,8 +406,8 @@ abstract class PaymentModuleCore extends Module
 					{
 						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
 						$values = array(
-							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $package),
-							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $package)
+							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL_NOCAP, $package),
+							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL_NOCAP, $package)
 						);
 
 						// If the reduction is not applicable to this order, then continue with the next one
@@ -469,7 +469,7 @@ abstract class PaymentModuleCore extends Module
 							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
 						}
 
-						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
+						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{
@@ -616,7 +616,7 @@ abstract class PaymentModuleCore extends Module
 						{
 							$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
 							$file_attachement['content'] = $pdf->render(false);
-							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang).sprintf('%06d', $order->invoice_number).'.pdf';
+							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
 							$file_attachement['mime'] = 'application/pdf';
 						}
 						else

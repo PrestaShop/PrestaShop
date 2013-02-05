@@ -31,6 +31,7 @@ class CartRuleCore extends ObjectModel
 	const FILTER_ACTION_SHIPPING = 2;
 	const FILTER_ACTION_REDUCTION = 3;
 	const FILTER_ACTION_GIFT = 4;
+	const FILTER_ACTION_ALL_NOCAP = 5;
 
 	const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 	
@@ -119,13 +120,19 @@ class CartRuleCore extends ObjectModel
 	/**
 	 * @see ObjectModel::add()
 	 */
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		if (!parent::add($autodate, $nullValues))
+		if (!parent::add($autodate, $null_values))
 			return false;
 
 		Configuration::updateGlobalValue('PS_CART_RULE_FEATURE_ACTIVE', '1');
 		return true;
+	}
+	
+	public function update($null_values = false)
+	{
+		Cache::clean('getContextualValue_'.$this->id.'_*');
+		return parent::update($null_values);	
 	}
 
 	/**
@@ -216,27 +223,26 @@ class CartRuleCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'cart_rule` cr
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
 		WHERE (
-			cr.`id_customer` = '.(int)$id_customer.'
+			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
+		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
+		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
 		'.($active ? 'AND cr.`active` = 1' : '').'
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 
 		// Remove cart rule that does not match the customer groups
-		if ($includeGeneric)
-		{
-			$customerGroups = Customer::getGroupsStatic($id_customer);
-			foreach ($result as $key => $cart_rule)
-				if ($cart_rule['group_restriction'])
-				{
-					$cartRuleGroups = Db::getInstance()->getValue('SELECT id_group FROM '._DB_PREFIX_.'cart_rule_group WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
-					foreach ($cartRuleGroups as $cartRuleGroup)
-						if (in_array($cartRuleGroups['id_group'], $customerGroups))
-							continue 2;
+		$customerGroups = Customer::getGroupsStatic($id_customer);
+		foreach ($result as $key => $cart_rule)
+			if ($cart_rule['group_restriction'])
+			{
+				$cartRuleGroups = Db::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'cart_rule_group WHERE id_cart_rule = '.(int)$cart_rule['id_cart_rule']);
+				foreach ($cartRuleGroups as $cartRuleGroup)
+					if (in_array($cartRuleGroup['id_group'], $customerGroups))
+						continue 2;
 
-					unset($result[$key]);
-				}
-		}
+				unset($result[$key]);
+			}
 
 		foreach ($result as &$cart_rule)
 			if ($cart_rule['quantity_per_user'])
@@ -749,7 +755,7 @@ class CartRuleCore extends ObjectModel
 			return Cache::retrieve($cache_id);
 
 		// Free shipping on selected carriers
-		if ($this->free_shipping && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_SHIPPING))
+		if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING)))
 		{
 			if (!$this->carrier_restriction)
 				$reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, is_null($package) ? null : $package['products'], is_null($package) ? null : $package['id_carrier']);
@@ -767,7 +773,7 @@ class CartRuleCore extends ObjectModel
 			}
 		}
 
-		if ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_REDUCTION)
+		if (in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION)))
 		{
 			// Discount (%) on the whole order
 			if ($this->reduction_percent && $this->reduction_product == 0)
@@ -858,7 +864,15 @@ class CartRuleCore extends ObjectModel
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!
 				if ($this->reduction_tax == $use_tax)
+				{
+					// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+					if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
+					{
+						$cart_amount = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+						$reduction_amount = min($reduction_amount, $cart_amount);
+					}
 					$reduction_value += $prorata * $reduction_amount;
+				}
 				else
 				{
 					if ($this->reduction_product > 0)
@@ -884,9 +898,12 @@ class CartRuleCore extends ObjectModel
 					// Discount (¤) on the whole order
 					elseif ($this->reduction_product == 0)
 					{
-						// TODO : this should not use the prorata
 						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+						
+						// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
+						if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
+							$reduction_amount = min($reduction_amount, $this->reduction_tax ? $cart_amount_ti : $cart_amount_te);
 
 						$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
 
@@ -911,7 +928,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Free gift
-		if ((int)$this->gift_product && ($filter == CartRule::FILTER_ACTION_ALL || $filter == CartRule::FILTER_ACTION_GIFT))
+		if ((int)$this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT)))
 		{
 			$id_address = (is_null($package) ? 0 : $package['id_address']);
 			foreach ($package_products as $product)
