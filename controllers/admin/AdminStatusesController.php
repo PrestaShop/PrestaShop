@@ -98,6 +98,18 @@ class AdminStatusesControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false
 			),
+			'delivery' => array(
+				'title' => $this->l('Delivery'),
+				'align' => 'center',
+				'width' => 25,
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'orderby' => false
+			)
+			,
 			'invoice' => array(
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
@@ -323,6 +335,17 @@ class AdminStatusesControllerCore extends AdminController
 					)
 				),
 				array(
+					'type' => 'checkbox',
+					'name' => 'delivery',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on', 'name' => $this->l('Show delivery PDF'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					)
+				),
+				array(
 					'type' => 'select_template',
 					'label' => $this->l('Template:'),
 					'name' => 'template',
@@ -351,7 +374,8 @@ class AdminStatusesControllerCore extends AdminController
 			'hidden_on' => $this->getFieldValue($obj, 'hidden'),
 			'send_email_on' => $this->getFieldValue($obj, 'send_email'),
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
-			'paid_on' => $this->getFieldValue($obj, 'paid')
+			'paid_on' => $this->getFieldValue($obj, 'paid'),
+			'delivery_on' => $this->getFieldValue($obj, 'delivery')
 		);
 
 		return parent::renderForm();
@@ -465,6 +489,7 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['hidden'] = (int)Tools::getValue('hidden_on');
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
+			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);
