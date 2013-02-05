@@ -175,6 +175,9 @@ class AdminControllerCore extends Controller
 
 	/** @var array required_fields to display in the Required Fields form */
 	public $required_fields = array();
+	
+	/** @var Helper */
+	protected $helper;
 
 	/**
 	 * @var array actions to execute on multiple selections
@@ -1635,6 +1638,8 @@ class AdminControllerCore extends Controller
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
+		
+		$this->helper = $helper;
 	}
 
 	public function setMedia()
