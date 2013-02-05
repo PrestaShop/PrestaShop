@@ -1191,6 +1191,7 @@ class CartCore extends ObjectModel
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
 			CartRule::autoRemoveFromCart();
+			CartRule::autoAddToCart();
 			
 			return $return;
 		}

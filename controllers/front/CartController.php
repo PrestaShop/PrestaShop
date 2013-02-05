@@ -257,6 +257,7 @@ class CartControllerCore extends FrontController
 		}
 
 		$removed = CartRule::autoRemoveFromCart();
+		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
