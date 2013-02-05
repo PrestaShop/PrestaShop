@@ -746,4 +746,14 @@ class AdminCartsControllerCore extends AdminController
 	{
 		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
 	}
+	
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		// don't display ordered carts
+		foreach ($this->_list as $row)
+			if ($row['id_cart'] == $id && isset($row['id_order']) && $row['id_order'])
+				return ;
+		
+		return $this->helper->displayDeleteLink($token, $id, $name);
+	}
 }
