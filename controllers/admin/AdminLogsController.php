@@ -61,7 +61,7 @@ class AdminLogsControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
-
+		$this->list_no_link = true;
 		parent::__construct();
 	}
 

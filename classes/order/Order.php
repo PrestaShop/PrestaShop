@@ -264,7 +264,7 @@ class OrderCore extends ObjectModel
 	public function getFields()
 	{
 		if (!$this->id_lang)
-			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+			$this->id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $this->id_shop);
 
 		return parent::getFields();
 	}
@@ -289,7 +289,7 @@ class OrderCore extends ObjectModel
 
 		if ($this->hasBeenDelivered())
 		{
-			if (!Configuration::get('PS_ORDER_RETURN'))
+			if (!Configuration::get('PS_ORDER_RETURN', null, null, $this->id_shop))
 				throw new PrestaShopException('PS_ORDER_RETURN is not defined in table configuration');
 			$orderDetail->product_quantity_return += (int)($quantity);
 			return $orderDetail->update();
@@ -1027,7 +1027,7 @@ class OrderCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @return bool
 	 */
-	public function addCartRule($id_cart_rule, $name, $values, $id_order_invoice = 0)
+	public function addCartRule($id_cart_rule, $name, $values, $id_order_invoice = 0, $free_shipping = null)
 	{
 		$order_cart_rule = new OrderCartRule();
 		$order_cart_rule->id_order = $this->id;
@@ -1036,12 +1036,18 @@ class OrderCore extends ObjectModel
 		$order_cart_rule->name = $name;
 		$order_cart_rule->value = $values['tax_incl'];
 		$order_cart_rule->value_tax_excl = $values['tax_excl'];
+		if ($free_shipping === null)
+		{
+			$cart_rule = new CartRule($id_cart_rule);
+			$free_shipping = $cart_rule->free_shipping;
+		}
+		$order_cart_rule->free_shipping = (int)$free_shipping;
 		$order_cart_rule->add();
 	}
 
 	public function getNumberOfDays()
 	{
-		$nbReturnDays = (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'));
+		$nbReturnDays = (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS', null, null, $this->id_shop));
 		if (!$nbReturnDays)
 			return true;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -1059,7 +1065,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function isReturnable()
 	{
-		if (Configuration::get('PS_ORDER_RETURN') && $this->isPaidAndShipped())
+		if (Configuration::get('PS_ORDER_RETURN', null, null, $this->id_shop) && $this->isPaidAndShipped())
 			return $this->getNumberOfDays();
 
 		return false;
@@ -1082,10 +1088,10 @@ class OrderCore extends ObjectModel
 		{
 			$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
-			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER');
+			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
 			// If invoice start number has been set, you clean the value of this configuration
 			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false	);
+				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
 			else
 				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
@@ -1169,11 +1175,11 @@ class OrderCore extends ObjectModel
 		$order_invoice_collection = $this->getInvoicesCollection();
 		foreach ($order_invoice_collection as $order_invoice)
 		{
-			$number = (int)Configuration::get('PS_DELIVERY_NUMBER');
+			$number = (int)Configuration::get('PS_DELIVERY_NUMBER', null, null, $this->id_shop);
 			if (!$number)
 			{
 				//if delivery number is not set or wrong, we set a default one.
-				Configuration::updateValue('PS_DELIVERY_NUMBER', 1);
+				Configuration::updateValue('PS_DELIVERY_NUMBER', 1, false, null, $this->id_shop);
 				$number = 1;
 			}
 				
@@ -1185,7 +1191,7 @@ class OrderCore extends ObjectModel
 
 			// Keep for backward compatibility
 			$this->delivery_number = $number;
-			Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1);
+			Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1, false, null, $this->id_shop);
 		}
 
 		// Keep it for backward compatibility, to remove on 1.6 version
@@ -1591,7 +1597,7 @@ class OrderCore extends ObjectModel
 			else
 			{
 				$amount = Tools::convertPrice($payment->amount, $payment->id_currency, false);
-				if ($currency->id == Configuration::get('PS_DEFAULT_CURRENCY'))
+				if ($currency->id == Configuration::get('PS_DEFAULT_CURRENCY', null, null, $this->id_shop))
 					$total += $amount;
 				else
 					$total += Tools::convertPrice($amount, $currency->id, true);

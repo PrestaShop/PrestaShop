@@ -70,10 +70,10 @@ class OrderHistoryCore extends ObjectModel
 	 * Sets the new state of the given order
 	 *
 	 * @param int $new_order_state
-	 * @param int $id_order
+	 * @param int/object $id_order
 	 * @param bool $use_existing_payment
 	 */
-	public function changeIdOrderState($new_order_state, &$id_order, $use_existing_payment = false)
+	public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
 	{
 		if (!$new_order_state || !$id_order)
 			return;
@@ -210,7 +210,7 @@ class OrderHistoryCore extends ObjectModel
 					// if the product is a pack, we restock every products in the pack using the last negative stock mvts
 					if (Pack::isPack($product['product_id']))
 					{
-						$pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT'));
+						$pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
 						foreach ($pack_products as $pack_product)
 						{
 							if ($pack_product->advanced_stock_management == 1)

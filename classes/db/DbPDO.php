@@ -174,6 +174,28 @@ class DbPDOCore extends Db
 		return (bool)$result->fetch();
 	}
 
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
+		} catch (PDOException $e) {
+			return false;
+		}
+
+		$sql = '
+			CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+			) ENGINE=MyISAM';
+		$result = $link->query($sql);
+		if (!$result)
+		{
+			$error = $link->errorInfo();
+			return $error[2];
+		}
+		$link->query('DROP TABLE `'.$prefix.'test`');
+		return true;
+	}
+
 	/**
 	 * @see Db::checkConnection()
 	 */

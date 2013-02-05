@@ -185,6 +185,25 @@ class DbMySQLiCore extends Db
 		$link->close();
 		return 0;
 	}
+	
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		$link = @new mysqli($server, $user, $pwd, $db);
+		if (mysqli_connect_error())
+			return false;
+
+		$sql = '
+			CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+			) ENGINE=MyISAM';
+		$result = $link->query($sql);
+
+		if (!$result)
+			return $link->error;
+
+		$link->query('DROP TABLE `'.$prefix.'test`');
+		return true;
+	}
 
 	/**
 	 * @see Db::checkEncoding()

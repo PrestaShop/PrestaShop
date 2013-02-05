@@ -902,7 +902,7 @@ class ProductCore extends ObjectModel
 			);
 
 		$return = Db::getInstance()->delete('category_product', 'id_product = '.(int)$this->id);
-		if ($clean_positions === true)
+		if ($clean_positions === true && is_array($result))
 			foreach ($result as $row)
 					$return &= $this->cleanPositions((int)$row['id_category']);
 		
@@ -4951,7 +4951,7 @@ class ProductCore extends ObjectModel
 		{
 			$query->from('product_attribute', 'pa');
 			$query->join(Shop::addSqlAssociation('product_attribute', 'pa'));
-			$query->innerJoin('product_lang', 'pl', 'pl.id_product = pa.id_product AND pl.id_lang = '.(int)$id_lang);
+			$query->innerJoin('product_lang', 'pl', 'pl.id_product = pa.id_product AND pl.id_lang = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl'));
 			$query->leftJoin('product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute');
 			$query->leftJoin('attribute', 'atr', 'atr.id_attribute = pac.id_attribute');
 			$query->leftJoin('attribute_lang', 'al', 'al.id_attribute = atr.id_attribute AND al.id_lang = '.(int)$id_lang);
@@ -4962,6 +4962,7 @@ class ProductCore extends ObjectModel
 		{
 			$query->from('product_lang', 'pl');
 			$query->where('pl.id_product = '.(int)$id_product);
+			$query->where('pl.id_lang = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl'));
 		}
 
 		return Db::getInstance()->getValue($query);

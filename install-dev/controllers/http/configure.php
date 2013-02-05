@@ -250,7 +250,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 
 		foreach ($top_countries as $iso)
 			$this->list_countries[] = array('iso' => $iso, 'name' => $countries[$iso]);
-		$this->list_countries[] = array('name' => '-----------------');
+		$this->list_countries[] = array('iso' => 0, 'name' => '-----------------');
 
 		foreach ($countries as $iso => $lang)
 			if (!in_array($iso, $top_countries))

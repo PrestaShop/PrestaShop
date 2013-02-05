@@ -208,6 +208,7 @@ class AdminModulesControllerCore extends AdminController
 			die ('KO');
 		if ($result == 'OK')
 		{
+			Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 			$this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
 			$this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
 		}

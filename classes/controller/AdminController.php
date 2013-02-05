@@ -2268,9 +2268,10 @@ class AdminControllerCore extends Controller
 			$class_name = $this->className;
 
 		/* Class specific validation rules */
-		$rules = call_user_func(array($class_name, 'getValidationRules'), $class_name);
+		if (!empty($class_name))
+			$rules = call_user_func(array($class_name, 'getValidationRules'), $class_name);
 
-		if ((count($rules['requiredLang']) || count($rules['sizeLang']) || count($rules['validateLang'])))
+		if (isset($rules) && count($rules) && (count($rules['requiredLang']) || count($rules['sizeLang']) || count($rules['validateLang'])))
 		{
 			/* Language() instance determined by default language */
 			$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -2280,56 +2281,61 @@ class AdminControllerCore extends Controller
 		}
 
 		/* Checking for required fields */
-		foreach ($rules['required'] as $field)
-			if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
-					$this->errors[] = sprintf(
-						Tools::displayError('The field %s is required.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-					);
+		if (isset($rules['required']) && is_array($rules['required']))
+			foreach ($rules['required'] as $field)
+				if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+					if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
+						$this->errors[] = sprintf(
+							Tools::displayError('The field %s is required.'),
+							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+						);
 
 		/* Checking for multilingual required fields */
-		foreach ($rules['requiredLang'] as $field_lang)
-			if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
-				$this->errors[] = sprintf(
-					Tools::displayError('The field %1$s is required at least in %2$s.'),
-					call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-					$default_language->name
-				);
+		if (isset($rules['requiredLang']) && is_array($rules['requiredLang']))		
+			foreach ($rules['requiredLang'] as $field_lang)
+				if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
+					$this->errors[] = sprintf(
+						Tools::displayError('The field %1$s is required at least in %2$s.'),
+						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+						$default_language->name
+					);
 
 		/* Checking for maximum fields sizes */
-		foreach ($rules['size'] as $field => $max_length)
-			if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
-				$this->errors[] = sprintf(
-					Tools::displayError('The field %1$s is too long (%2$d chars max).'),
-					call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
-					$max_length
-				);
-
-		/* Checking for maximum multilingual fields size */
-		foreach ($rules['sizeLang'] as $field_lang => $max_length)
-			foreach ($languages as $language)
-			{
-				$field_lang_value = Tools::getValue($field_lang.'_'.$language['id_lang']);
-				if ($field_lang_value !== false && Tools::strlen($field_lang_value) > $max_length)
+		if (isset($rules['size']) && is_array($rules['size']))			
+			foreach ($rules['size'] as $field => $max_length)
+				if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
 					$this->errors[] = sprintf(
-						Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
-						call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-						$language['name'],
+						Tools::displayError('The field %1$s is too long (%2$d chars max).'),
+						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name),
 						$max_length
 					);
-			}
+
+		/* Checking for maximum multilingual fields size */
+		if (isset($rules['sizeLang']) && is_array($rules['sizeLang']))			
+			foreach ($rules['sizeLang'] as $field_lang => $max_length)
+				foreach ($languages as $language)
+				{
+					$field_lang_value = Tools::getValue($field_lang.'_'.$language['id_lang']);
+					if ($field_lang_value !== false && Tools::strlen($field_lang_value) > $max_length)
+						$this->errors[] = sprintf(
+							Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'),
+							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+							$language['name'],
+							$max_length
+						);
+				}
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
 		/* Checking for fields validity */
-		foreach ($rules['validate'] as $field => $function)
-			if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
-				if (!Validate::$function($value) && !empty($value))
-					$this->errors[] = sprintf(
-						Tools::displayError('The field %s is invalid.'),
-						call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
-					);
+		if (isset($rules['validate']) && is_array($rules['validate']))			
+			foreach ($rules['validate'] as $field => $function)
+				if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
+					if (!Validate::$function($value) && !empty($value))
+						$this->errors[] = sprintf(
+							Tools::displayError('The field %s is invalid.'),
+							call_user_func(array($class_name, 'displayFieldName'), $field, $class_name)
+						);
 
 		/* Checking for passwd_old validity */
 		if (($value = Tools::getValue('passwd')) != false)
@@ -2347,15 +2353,16 @@ class AdminControllerCore extends Controller
 		}
 
 		/* Checking for multilingual fields validity */
-		foreach ($rules['validateLang'] as $field_lang => $function)
-			foreach ($languages as $language)
-				if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
-					if (!Validate::$function($value))
-						$this->errors[] = sprintf(
-							Tools::displayError('The field %1$s (%2$s) is invalid.'),
-							call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-							$language['name']
-						);
+		if (isset($rules['validateLang']) && is_array($rules['validateLang']))			
+			foreach ($rules['validateLang'] as $field_lang => $function)
+				foreach ($languages as $language)
+					if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
+						if (!Validate::$function($value))
+							$this->errors[] = sprintf(
+								Tools::displayError('The field %1$s (%2$s) is invalid.'),
+								call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
+								$language['name']
+							);
 	}
 
 	/**

@@ -189,7 +189,10 @@ abstract class ModuleCore
 	{
 		// Check module name validation
 		if (!Validate::isModuleName($this->name))
-			die(Tools::displayError());
+		{
+			$this->_errors[] = $this->l('Unable to install the module (Module name is not valid).');
+			return false;
+		}
 
 		// Check PS version compliancy
 		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) >= 0)

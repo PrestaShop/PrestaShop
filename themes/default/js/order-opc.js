@@ -305,9 +305,9 @@ function saveAddress(type)
 	params += 'phone='+encodeURIComponent($('#phone'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'phone_mobile='+encodeURIComponent($('#phone_mobile'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'alias='+encodeURIComponent($('#alias'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	if (type === 'delivery' && $('#opc_id_address_delivery').val() != 'undefined' && parseInt($('#opc_id_address_delivery').val()) > 0)
+	if (type === 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
 		params += 'opc_id_address_delivery='+encodeURIComponent($('#opc_id_address_delivery').val())+'&';
-	if (type === 'invoice' && $('#opc_id_address_invoice').val() != 'undefined' && parseInt($('#opc_id_address_invoice').val()) > 0)			
+	if (type === 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)			
 		params += 'opc_id_address_invoice='+encodeURIComponent($('#opc_id_address_invoice').val())+'&';		
 	// Clean the last &
 	params = params.substr(0, params.length-1);

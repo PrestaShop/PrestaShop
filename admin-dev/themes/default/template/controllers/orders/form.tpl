@@ -300,7 +300,7 @@
 				id_product: id_product,
 				id_product_attribute: id_product_attribute,
 				id_customer: id_customer,
-				price: new_price
+				price: new Number(new_price.replace(",",".")).toFixed(4).toString()
 				},
 			success : function(res)
 			{

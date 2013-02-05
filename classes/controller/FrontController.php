@@ -585,7 +585,7 @@ class FrontControllerCore extends Controller
 	/* Display a maintenance page if shop is closed */
 	protected function displayMaintenancePage()
 	{
-		if ($this->maintenance == true || (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE'))))
+		if ($this->maintenance == true || !(int)Configuration::get('PS_SHOP_ENABLE'))
 		{
 			$this->maintenance = true;
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))

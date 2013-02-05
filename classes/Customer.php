@@ -412,16 +412,17 @@ class CustomerCore extends ObjectModel
 	 */
 	public static function customerHasAddress($id_customer, $id_address)
 	{
-		if (!array_key_exists($id_customer, self::$_customerHasAddress))
+		$key = (int)$id_customer.'-'.(int)$id_address;
+		if (!array_key_exists($id_address, self::$_customerHasAddress))
 		{
-			self::$_customerHasAddress[$id_customer] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			self::$_customerHasAddress[$key] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `id_address` = '.(int)$id_address.'
 			AND `deleted` = 0');
 		}
-		return self::$_customerHasAddress[$id_customer];
+		return self::$_customerHasAddress[$key];
 	}
 
 	public static function resetAddressCache($id_customer)
@@ -438,13 +439,14 @@ class CustomerCore extends ObjectModel
 	 */
 	public function getAddresses($id_lang)
 	{
-		$sql = 'SELECT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
+		$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 				FROM `'._DB_PREFIX_.'address` a
 				LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
 				'.(Context::getContext()->shop->getGroup()->share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
 				WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
