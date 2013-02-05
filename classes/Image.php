@@ -367,6 +367,18 @@ class ImageCore extends ObjectModel
 			');
 	 	return self::$_cacheGetSize[$type];
 	}
+	
+	public static function getWidth($params, &$smarty)
+	{
+		$result = self::getSize($params['type']);
+		return $result['width'];
+	}
+	
+	public static function getHeight($params, &$smarty)
+	{
+		$result = self::getSize($params['type']);
+		return $result['height'];
+	}
 
 	/**
 	 * Clear all images in tmp dir
