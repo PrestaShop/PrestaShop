@@ -488,8 +488,8 @@ class AdminLanguagesControllerCore extends AdminController
 		{
 			// Get all iso code available
 			$lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']);
-			
-			if ($lang_packs !== '' && Tools::jsonDecode($lang_packs) !== null)
+			$result = Tools::jsonDecode($lang_packs);
+			if ($lang_packs !== '' && $result && !isset($result->error))
 			{
 				$this->status = 'ok';
 				$this->content = $lang_packs;
@@ -497,7 +497,10 @@ class AdminLanguagesControllerCore extends AdminController
 			else
 			{
 				$this->status = 'error';
-				$this->errors[] = $this->l('Wrong ISO code, or the selectec language pack is unavailable.');
+				$msg = $this->l('Wrong ISO code, or the selected language pack is unavailable.');
+				if ($result)
+					$msg = $result->msg;
+				$this->errors[] = $msg;
 			}
 		}
 		else
