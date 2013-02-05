@@ -1238,7 +1238,7 @@ class AdminImportControllerCore extends AdminController
 			if (!$valid_link)
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
-					$link_rewrite,
+					$product->name[$default_language_id],
 					(isset($info['id']) ? $info['id'] : 'null'),
 					$link_rewrite
 				);
@@ -1250,6 +1250,11 @@ class AdminImportControllerCore extends AdminController
 				foreach ($product->meta_keywords as &$meta_keyword)
 					if (!empty($meta_keyword))
 						$meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
+
+			// Convert comma into dot for all floating values
+			foreach (Product::$definition['fields'] as $key => $array)
+				if ($array['type'] == Product::TYPE_FLOAT)
+					$product->{$key} = str_replace(',', '.', $product->{$key});
 
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
