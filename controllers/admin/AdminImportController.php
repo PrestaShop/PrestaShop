@@ -1023,6 +1023,7 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		AdminImportController::setLocale();
+		$shop_ids = Shop::getCompleteListOfShopsID();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
@@ -1298,8 +1299,12 @@ class AdminImportControllerCore extends AdminController
 			{
 				$shop = trim($shop);
 				if (!is_numeric($shop))
-					$shop = ShopGroup::getIdByName($shop);
-				$shops[] = $shop;
+					$shop = Shop::getIdByName($shop);
+
+				if (in_array($shop, $shop_ids))
+					$shops[] = $shop;
+				else
+					$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Shop is not valid'));
 			}
 			if (empty($shops))
 				$shops = Shop::getContextListShopID();
