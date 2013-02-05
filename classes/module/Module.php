@@ -187,7 +187,7 @@ abstract class ModuleCore
 	{
 		// Check module name validation
 		if (!Validate::isModuleName($this->name))
-			die(Tools::displayError());
+			Tools::displayError();
 
 		// Check PS version compliancy
 		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) >= 0)
