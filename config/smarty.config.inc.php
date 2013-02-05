@@ -80,6 +80,9 @@ smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'disp
 smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
 smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
 smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
+smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
+
 
 function smartyDieObject($params, &$smarty)
 {
