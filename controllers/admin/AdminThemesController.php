@@ -613,20 +613,24 @@ class AdminThemesControllerCore extends AdminController
 				return false;
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+			
+			$force_type = false;
+			
+			if($field_name == 'PS_LOGO' && $_FILES[$field_name]['type']  == 'image/png')
+			{
+				$ext = '.png';
+				$force_type = true;
+			}
+			
 			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
 			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0)
 				$logo_name = $logo_prefix.$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
-			{
-				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name, null, null, 'gif', true))
-					$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			}
-			else
-			{
-				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
-					$this->errors[] = Tools::displayError('An error occurred during logo copy.');
-			}
+				$force_type = true;
+			
+			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name, null, null, str_replace('.', '',$ext), $force_type))
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 
 			Configuration::updateValue($field_name, $logo_name);
 			$this->fields_options['appearance']['fields'][$field_name]['thumb'] = _PS_IMG_.$logo_name.'?date='.time();
