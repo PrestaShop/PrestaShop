@@ -389,7 +389,7 @@ abstract class ObjectModelCore
 				return (int)$value;
 
 			case self::TYPE_FLOAT :
-				return (float)$value;
+				return (float)str_replace(',', '.', $value);
 
 			case self::TYPE_DATE :
 				if (!$value)
