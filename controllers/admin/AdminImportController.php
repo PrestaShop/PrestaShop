@@ -1023,6 +1023,7 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		AdminImportController::setLocale();
+		$shop_ids = Shop::getCompleteListOfShopsID();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
@@ -1237,7 +1238,7 @@ class AdminImportControllerCore extends AdminController
 			if (!$valid_link)
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
-					$link_rewrite,
+					$product->name[$default_language_id],
 					(isset($info['id']) ? $info['id'] : 'null'),
 					$link_rewrite
 				);
@@ -1249,6 +1250,11 @@ class AdminImportControllerCore extends AdminController
 				foreach ($product->meta_keywords as &$meta_keyword)
 					if (!empty($meta_keyword))
 						$meta_keyword = str_replace($this->multiple_value_separator, ',', $meta_keyword);
+
+			// Convert comma into dot for all floating values
+			foreach (Product::$definition['fields'] as $key => $array)
+				if ($array['type'] == Product::TYPE_FLOAT)
+					$product->{$key} = str_replace(',', '.', $product->{$key});
 
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
@@ -1298,8 +1304,12 @@ class AdminImportControllerCore extends AdminController
 			{
 				$shop = trim($shop);
 				if (!is_numeric($shop))
-					$shop = ShopGroup::getIdByName($shop);
-				$shops[] = $shop;
+					$shop = Shop::getIdByName($shop);
+
+				if (in_array($shop, $shop_ids))
+					$shops[] = $shop;
+				else
+					$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Shop is not valid'));
 			}
 			if (empty($shops))
 				$shops = Shop::getContextListShopID();
