@@ -678,6 +678,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	
 	public function ajaxProcessSyncImap()
 	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+
 		if (Tools::isSubmit('syncImapMail'))
 		{
 			if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
