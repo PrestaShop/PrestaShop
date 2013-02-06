@@ -2795,7 +2795,7 @@ class AdminControllerCore extends Controller
 	{
 		$content = Tools::file_get_contents($external_file);
 		if ($content)
-			return file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
+			return (bool)file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
 		return false;
 	}
 
