@@ -538,7 +538,7 @@ function getUrlParams()
 function updateProductUrl()
 {
 	// Adding the filters to URL product
-	if (typeof(param_product_url) != 'undefined') {
+	if (typeof(param_product_url) != 'undefined' && param_product_url != '#') {
 		$.each($('ul#product_list li.ajax_block_product .product_img_link,'+
 				'ul#product_list li.ajax_block_product h3 a,'+
 				'ul#product_list li.ajax_block_product .product_desc a,'+
