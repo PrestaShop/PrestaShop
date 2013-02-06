@@ -110,7 +110,7 @@ class ManufacturerCore extends ObjectModel
 	{
 		$address = new Address($this->id_address);
 
-		if (!$address->delete())
+		if (Validate::isLoadedObject($address) AND !$address->delete())
 			return false;
 
 		if (parent::delete())
