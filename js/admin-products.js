@@ -991,7 +991,8 @@ product_tabs['Pack'] = new function(){
 			},
 			extraParams: {
 				excludeIds : getSelectedIds(),
-				excludeVirtuals : 1
+				excludeVirtuals : 1,
+				exclude_packs: 1
 			}
 		}).result(function(event, item){
 			$('#curPackItemId').val(item[1]);

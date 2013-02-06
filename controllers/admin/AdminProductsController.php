@@ -3379,6 +3379,7 @@ class AdminProductsControllerCore extends AdminController
 		$product->tags = Tag::getProductTags($product->id);
 
 		$data->assign('product_type', (int)Tools::getValue('type_product', $product->getType()));
+		$data->assign('is_in_pack', (int)Pack::isPacked($product->id));
 
 		$check_product_association_ajax = false;
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL)
@@ -4115,10 +4116,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
 	}
 
-
-
-
-
 	/**
 	 * delete all items in pack, then check if type_product value is 2.
 	 * if yes, add the pack items from input "inputPackItems"
@@ -4143,7 +4140,9 @@ class AdminProductsControllerCore extends AdminController
 						list($qty, $item_id) = explode('x', $line);
 						if ($qty > 0 && isset($item_id))
 						{
-							if (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
+							if (Pack::isPack((int)$item_id))
+								$this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
+							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
 								$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 						}
 					}
