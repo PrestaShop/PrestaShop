@@ -49,8 +49,15 @@
 				$('#ajax_loader').html('<img src="{$smarty.const._PS_ADMIN_IMG_}ajax-loader.gif">');
 				ajaxQuery = $.ajax({
 					type: "POST",
-					url: "ajax.php",
-					data: "syncImapMail=1",
+					url: "index.php",
+					data: {
+						ajax: "1",
+						token: "{$token}", 
+						syncImapMail: "1",
+						ajax:"1",
+						action:"syncImap",
+						tab:"AdminCustomerThreads"
+					},
 					dataType : "json",
 					success: function(jsonData) {
 						jsonError = '';
