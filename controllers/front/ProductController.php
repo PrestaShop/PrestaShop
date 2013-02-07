@@ -300,7 +300,7 @@ class ProductControllerCore extends FrontController
 		$id_product = (int)$this->product->id;
 		$id_shop = $this->context->shop->id;
 
-		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
+		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
 		foreach ($quantity_discounts as &$quantity_discount)
 			if ($quantity_discount['id_product_attribute'])
 			{
