@@ -39,6 +39,7 @@
 		"price_float":   "{$product.total}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
 		"idAddressDelivery": {if isset($product.id_address_delivery)}{$product.id_address_delivery}{else}0{/if},
+		"is_gift" : {if isset($product.is_gift) && $product.is_gift}1{else}0{/if},
 {if isset($product.attributes_small)}
 		"hasAttributes": true,
 		"attributes":    "{$product.attributes_small|addslashes|replace:'\\\'':'\''}",
