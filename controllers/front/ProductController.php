@@ -275,7 +275,7 @@ class ProductControllerCore extends FrontController
 	protected function assignPriceAndTax()
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
-		$id_group = (isset($this->context->customer) ? $this->context->customer->id_default_group : (int)Configuration::get('PS_CUSTOMER_GROUP'));
+		$id_group = (int)Group::getCurrent()->id;
 		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
