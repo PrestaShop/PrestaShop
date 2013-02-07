@@ -1418,7 +1418,7 @@ class AdminControllerCore extends Controller
 		$this->tab_modules_list = Tab::getTabModulesList($this->id);
 
 		if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list']))
-			$this->filter_modules_list = $tab_modules_list['default_list'];	
+			$this->filter_modules_list = $this->tab_modules_list['default_list'];	
 		else if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 		{
 			$this->addToolBarModulesListButton();
