@@ -396,7 +396,7 @@ class AdminCountriesControllerCore extends AdminController
 				}
 
 				if (!$save_status)
-					$this->errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
+					$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
 			}
 			unset($tmp_addr_format);
 		}
