@@ -196,7 +196,7 @@ a.module_toggle_all{color: #268CCD;}
 /*toolbarBox*/
 .toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
-.toolbarBox .pageTitle h3 {font-size: 2em; font-weight: normal; line-height: 52px; margin: 0; padding: 0; text-shadow:0 1px 0 #fff;}
+.toolbarBox .pageTitle h3 {font-size: 1.6em; font-weight: normal; line-height: 52px; margin: 0; padding: 0; text-shadow:0 1px 0 #fff;}
 .toolbarBox ul.cc_button {float:right;margin:0 5px 0 0;padding:0;}
 .toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
 .toolbarBox a.toolbar_btn {   border:1px solid #f8f8f8; min-width:50px; border-width: 1px; font-size:11px;cursor: pointer; display: block; float: left; padding: 3px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;}

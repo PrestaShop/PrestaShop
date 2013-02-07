@@ -85,6 +85,7 @@
 			</td>
 		</tr>
 	</table>
+	<p>{l s='This restriction applies to the country of delivery.'}</p>
 </div>
 {/if}
 {if $carriers.unselected|@count + $carriers.selected|@count > 1}
