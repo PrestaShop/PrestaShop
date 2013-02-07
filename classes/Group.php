@@ -106,10 +106,10 @@ class GroupCore extends ObjectModel
 	public static function getReduction($id_customer = null)
 	{
 		if (!isset(self::$cache_reduction['customer'][(int)$id_customer]))
-        {
-            $id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Configuration::get('PS_CUSTOMER_GROUP');
-			self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
-        }
+		{
+				$id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Group::getCurrent()->id;
+				self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
+		}
 		return self::$cache_reduction['customer'][(int)$id_customer];
 	}
 
