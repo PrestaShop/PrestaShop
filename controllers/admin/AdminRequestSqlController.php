@@ -323,7 +323,7 @@ class AdminRequestSqlControllerCore extends AdminController
 				if (file_exists(_PS_ADMIN_DIR_.'/export/'.$file))
 				{
 					$filesize = filesize(_PS_ADMIN_DIR_.'/export/'.$file);
-					$upload_max_filesize = $this->returnBytes(ini_get('upload_max_filesize'));
+					$upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 					if ($filesize < $upload_max_filesize)
 					{
 						if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL'))
@@ -343,28 +343,6 @@ class AdminRequestSqlControllerCore extends AdminController
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get number of bytes
-	 *
-	 * @param $val
-	 * @return int|string
-	 */
-	public function returnBytes($val)
-	{
-	    $val = trim($val);
-	    $last = strtolower($val[strlen($val) - 1]);
-	    switch ($last)
-	    {
-	        case 'g':
-	            $val *= 1024;
-	        case 'm':
-	            $val *= 1024;
-	        case 'k':
-	            $val *= 1024;
-	    }
-	    return $val;
 	}
 
 	/**
