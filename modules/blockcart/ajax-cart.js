@@ -353,7 +353,7 @@ var ajaxCart = {
 		var removeLinks = $('#cart_block_product_' + domIdProduct).find('a.ajax_cart_block_remove_link');
 		if (!product.hasCustomizedDatas && !removeLinks.length)
 			$('#' + domIdProduct + ' span.remove_link').html('<a class="ajax_cart_block_remove_link" rel="nofollow" href="' + baseUri + '?controller=cart&amp;delete&amp;id_product=' + product['id'] + '&amp;ipa=' + product['idCombination'] + '&amp;token=' + static_token + '"> </a>');
-		if (parseFloat(product.price_float) <= 0)
+		if (product.is_gift)
 			$('#' + domIdProduct + ' span.remove_link').html('');
 	},
 
@@ -453,7 +453,7 @@ var ajaxCart = {
 					else
 						content += '<span class="remove_link"></span>';
 					if (typeof(freeShippingTranslation) != 'undefined')
-						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeProductTranslation) + '</span>';
+						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeShippingTranslation) + '</span>';
 					content += '</dt>';
 					if (this.hasAttributes)
 						  content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="hidden"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a>';
@@ -470,7 +470,7 @@ var ajaxCart = {
 					if($('#cart_block_product_' + domIdProduct + ' .quantity').text() != jsonProduct.quantity || $('dt#cart_block_product_' + domIdProduct + ' .price').text() != jsonProduct.priceByLine)
 					{
 						// Usual product
-						if (parseFloat(this.price_float) > 0)
+						if (!this.is_gift)
 							$('#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
 						else
 							$('#cart_block_product_' + domIdProduct + ' .price').html(freeProductTranslation);

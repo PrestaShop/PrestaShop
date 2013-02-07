@@ -65,7 +65,7 @@ class InstallSimplexmlElement extends SimpleXMLElement
 		$dom->loadXML(parent::asXML());
 
 		if ($filename)
-			return file_put_contents($filename, $dom->saveXML());
+			return (bool)file_put_contents($filename, $dom->saveXML());
 		return $dom->saveXML();
 	}
 }

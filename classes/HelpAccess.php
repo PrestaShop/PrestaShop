@@ -79,7 +79,7 @@ class HelpAccessCore
         $tooltip = '';
 
         $ctx = @stream_context_create(array('http' => array('timeout' => 10)));
-        $res = @file_get_contents($url, 0, $ctx);
+        $res = Tools::file_get_contents($url, false, $ctx);
 
 	    $infos = preg_split('/\|/', $res);
 	    if (count($infos) > 0)

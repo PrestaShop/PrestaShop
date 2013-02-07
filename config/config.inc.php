@@ -164,15 +164,21 @@ else
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);
-		$customer->logged = $cookie->logged;
-
-		if ($customer->id_lang != $context->language->id)
+		if(!Validate::isLoadedObject($customer))
+			$customer->logout();
+		else
 		{
-			$customer->id_lang = $context->language->id;
-			$customer->update();
+			$customer->logged = $cookie->logged;
+
+			if ($customer->id_lang != $context->language->id)
+			{
+				$customer->id_lang = $context->language->id;
+				$customer->update();
+			}
 		}
 	}
-	else
+
+	if (!isset($customer) || !Validate::isLoadedObject($customer))
 	{
 		$customer = new Customer();
 		
