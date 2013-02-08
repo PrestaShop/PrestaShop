@@ -31,6 +31,7 @@
 	var id_order = {$order->id};
 	var id_lang = {$current_id_lang};
 	var id_currency = {$order->id_currency};
+	var id_customer = {$order->id_customer|intval};
 	{assign var=PS_TAX_ADDRESS_TYPE value=Configuration::get('PS_TAX_ADDRESS_TYPE')}
 	var id_address = {$order->$PS_TAX_ADDRESS_TYPE};
 	var currency_sign = "{$currency->sign}";

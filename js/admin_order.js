@@ -335,6 +335,7 @@ function init()
 				id_lang: id_lang,
 				id_currency: id_currency,
 				id_address: id_address,
+				id_customer: id_customer,
 				product_search: function() { return $('#add_product_product_name').val(); }
 			}
 		}
