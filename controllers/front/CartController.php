@@ -311,7 +311,7 @@ class CartControllerCore extends FrontController
 			foreach ($result['summary']['products'] as $key => &$product)
 			{
 				$product['quantity_without_customization'] = $product['quantity'];
-				if ($result['customizedDatas'])
+				if ($result['customizedDatas'] && isset($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']]))
 				{
 					foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses)
 						foreach ($addresses as $customization)
