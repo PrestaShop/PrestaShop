@@ -39,6 +39,8 @@ class ProductControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
+		if (count($this->errors))
+			return ;
 
 		if ($this->context->getMobileDevice() == false)
 		{
@@ -137,33 +139,35 @@ class ProductControllerCore extends FrontController
 					}
 				}
 			}
-			else if (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			elseif (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
 			{
 				header('HTTP/1.1 403 Forbidden');
 				header('Status: 403 Forbidden');
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
 			}
-			
-			// Load category
-			if (isset($_SERVER['HTTP_REFERER'])
-				&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-				&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
-			{
-				// If the previous page was a category and is a parent category of the product use this category as parent category
-				if (isset($regs[2]) && is_numeric($regs[2]))
-				{
-					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
-						$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
-				}
-				else if (isset($regs[5]) && is_numeric($regs[5]))
-				{
-					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
-						$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
-				}
-			}
 			else
-				// Set default product category
-				$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+			{
+				// Load category
+				if (isset($_SERVER['HTTP_REFERER'])
+					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
+					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+				{
+					// If the previous page was a category and is a parent category of the product use this category as parent category
+					if (isset($regs[2]) && is_numeric($regs[2]))
+					{
+						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
+							$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
+					}
+					else if (isset($regs[5]) && is_numeric($regs[5]))
+					{
+						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
+							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
+					}
+				}
+				else
+					// Set default product category
+					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+			}
 		}
 	}
 
