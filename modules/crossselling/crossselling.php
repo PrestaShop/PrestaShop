@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_'))
 class CrossSelling extends Module
 {
 	private $_html;
+	private static $maxOrderTested = 100;
 
 	public function __construct()
 	{
@@ -198,7 +199,9 @@ class CrossSelling extends Module
 		SELECT o.id_order
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
-		WHERE o.valid = 1 AND od.product_id = '.(int)$params['product']->id);
+		WHERE o.valid = 1 AND od.product_id = '.(int)$params['product']->id.'
+		ORDER BY o.date_add DESC 
+		LIMIT 0, '.self::$maxOrderTested);
 
 		if (sizeof($orders))
 		{
