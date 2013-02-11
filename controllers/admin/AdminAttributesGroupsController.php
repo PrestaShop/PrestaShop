@@ -123,7 +123,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cp!position',
+				'filter_key' => 'a!position',
 				'position' => 'position'
 			);
 
