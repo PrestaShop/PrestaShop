@@ -362,6 +362,10 @@ class ProductCore extends ObjectModel
 				'getter' => false,
 				'setter' => false
 			),
+			'type' => array(
+				'getter' => 'getWsType',
+				'setter' => false,
+			),
 		),
 		'associations' => array(
 			'categories' => array(
@@ -414,7 +418,14 @@ class ProductCore extends ObjectModel
 						'required' => true,
 						'xlink_resource' => 'product'),
 				)
-			),			
+			),
+			'product_bundle' => array(
+				'resource' => 'products',
+				'fields' => array(
+					'id' => array('required' => true),
+					'quantity' => array(),
+				),
+			),
 		),
 	);
 
@@ -5209,6 +5220,21 @@ class ProductCore extends ObjectModel
 		$query->where('p.ean13 = \''.pSQL($ean13).'\'');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+	
+	public function getWsType()
+	{
+		$type_information = array(
+			Product::PTYPE_SIMPLE => 'simple',
+			Product::PTYPE_PACK => 'pack',
+			Product::PTYPE_VIRTUAL => 'virtual',
+		);
+		return $type_information[$this->getType()];
+	}
+
+	public function getWsProductBundle()
+	{
+		return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$this->id);
 	}
 }
 
