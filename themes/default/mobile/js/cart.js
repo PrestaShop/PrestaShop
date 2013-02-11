@@ -61,7 +61,7 @@ var CartUpd = (function()
 				async: true,
 				cache: false,
 				dataType: 'json',
-				data: 'controller=cart&ajax=true&add&getproductprice&summary&id_product='+id+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+ ( op == 0 ? '&op=down' : '' ) + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
+				data: 'controller=cart&ajax=true&add=true&getproductprice&summary&id_product='+id+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+ ( op == 0 ? '&op=down' : '' ) + ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&qty='+qty+'&token=' + static_token ,
 				success: function(jsonData)
 				{
 					if (!jsonData.hasError)
@@ -81,7 +81,7 @@ var CartUpd = (function()
 				async: true,
 				cache: false,
 				dataType: 'json',
-				data: 'controller=cart&ajax=true&delete&summary&id_product='+id+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+ ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&token=' + static_token ,
+				data: 'controller=cart&ajax=true&delete=true&summary=true&id_product='+id+'&ipa='+productAttributeId+'&id_address_delivery='+id_address_delivery+ ( (customizationId != 0) ? '&id_customization='+customizationId : '') + '&token=' + static_token ,
 				success: function(jsonData)
 				{
 					if (!jsonData.hasError)
