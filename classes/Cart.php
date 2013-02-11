@@ -2322,11 +2322,12 @@ class CartCore extends ObjectModel
 	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
 	* @return array delivery option
 	*/
-	public function getDeliveryOption($default_country = null, $dontAutoSeletectOptions = false, $use_cache = true)
+	public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
 	{
-		static $cache = array(0 => false, 1 => false);
-		if ($cache[(int)$dontAutoSeletectOptions] !== false && $use_cache)
-			return $cache[(int)$dontAutoSeletectOptions];
+		static $cache = array();
+		$cache_id = (int)$default_country.'-'.(int)$dontAutoSelectOptions;
+		if (isset($cache[$cache_id]) && $use_cache)
+			return $cache[$cache_id];
 		
 		$delivery_option_list = $this->getDeliveryOptionList($default_country);
 
@@ -2344,12 +2345,12 @@ class CartCore extends ObjectModel
 
 			if ($validated)
 			{
-				$cache[(int)$dontAutoSeletectOptions] = $delivery_option;
+				$cache[$cache_id] = $delivery_option;
 				return $delivery_option;
 			}
 		}
 		
-		if ($dontAutoSeletectOptions)
+		if ($dontAutoSelectOptions)
 			return false;
 
 		// No delivery option selected or delivery option selected is not valid, get the better for all options
@@ -2378,7 +2379,7 @@ class CartCore extends ObjectModel
 				$delivery_option[$id_address] = key($options);
 		}
 		
-		$cache[(int)$dontAutoSeletectOptions] = $delivery_option;
+		$cache[$cache_id] = $delivery_option;
 
 		return $delivery_option;
 	}
