@@ -400,7 +400,6 @@ class FrontControllerCore extends Controller
 			die(Tools::displayError());
 
 		$this->iso = $iso;
-		$this->setMedia();
 
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
