@@ -239,7 +239,8 @@ span.view_scroll_spacer {
 	margin: 10px 0 0 0;
 }
 
-#availability_statut span#availability_label {
+#availability_statut span#availability_label, 
+#availability_statut span#availability_date_label {
 	display:inline-block;
 	width:125px;
 	font-weight:700;

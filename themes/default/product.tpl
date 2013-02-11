@@ -337,9 +337,11 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>
-				{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}
-				</span>
+				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
+				{if $product->quantity <= 0 && isset($product->available_date) && $product->available_date >= $smarty.now|date_format:'%Y-%m-%d'}
+				<br class="clear"/><span id="availability_date_label">{l s='Availability date:'}</span>
+				<span id="availability_date_value">{$product->available_date}</span>
+				{/if}				
 			</p>
 
 			<!-- number of item in stock -->
