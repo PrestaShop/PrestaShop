@@ -502,9 +502,8 @@ abstract class ModuleCore
 		$result = Db::getInstance()->executeS($sql);
 		foreach	($result as $row)
 		{
-			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$row['id_hook'];
-			Db::getInstance()->execute($sql);
-			$this->cleanPositions($row['id_hook']);
+			$this->unregisterHook((int)$row['id_hook']);
+			$this->unregisterExceptions((int)$row['id_hook']);
 		}
 
 		// Disable the module for all shops
@@ -1999,7 +1998,7 @@ abstract class ModuleCore
 			if (!$override_class->hasProperty($property->getName()))
 				continue;
 
-			// Remplacer la ligne de déclaration par "remove"
+			// Remplacer la ligne de declaration par "remove"
 			foreach ($override_file as $line_number => &$line_content)
 				if (preg_match('/(public|private|protected)\s+(static\s+)?\$'.$property->getName().'/i', $line_content))
 				{
