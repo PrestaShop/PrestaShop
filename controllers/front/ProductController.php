@@ -129,6 +129,7 @@ class ProductControllerCore extends FrontController
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
 						break;
 						case '404':
+						default:
 							header('HTTP/1.1 404 Not Found');
 							header('Status: 404 Not Found');
 							$this->errors[] = Tools::displayError('Product is no longer available.');

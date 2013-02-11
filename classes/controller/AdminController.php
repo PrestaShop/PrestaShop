@@ -2028,6 +2028,9 @@ class AdminControllerCore extends Controller
 			|| !Validate::isUnsignedId($id_lang))
 			throw new PrestaShopException('get list params is not valid');
 
+		if (isset($this->fields_list[$order_by]) && isset($this->fields_list[$order_by]['filter_key']))
+			$order_by = $this->fields_list[$order_by]['filter_key'];
+
 		/* Determine offset from current page */
 		if ((isset($_POST['submitFilter'.$this->table]) ||
 		isset($_POST['submitFilter'.$this->table.'_x']) ||
@@ -2097,9 +2100,9 @@ class AdminControllerCore extends Controller
 				$having_clause .= $this->_having.' ';
 		}
 
-		if (strpos($order_by, '.') > 0)
+		if (preg_match('/[.!]/', $order_by))
 		{
-			$order_by = explode('.', $order_by);
+			$order_by = preg_split('/[.!]/', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
 
