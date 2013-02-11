@@ -1307,6 +1307,14 @@ abstract class ModuleCore
 	{
 		return true;
 	}
+	
+	public static function getPaypalIgnore()
+	{
+		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
+		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
+			return 'm.`name` = \'paypal\'';
+	}
 
 	/**
 	 * Returns the list of the payment module associated to the current customer
@@ -1335,14 +1343,10 @@ abstract class ModuleCore
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
 			$hookPayment = 'displayPayment';
 
-		$paypal_condition = '';
-		$iso_code = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$paypal_countries = array('ES', 'FR', 'PL', 'IT');
-		if (Context::getContext()->getMobileDevice() && Context::getContext()->shop->getTheme() == 'default' && in_array($iso_code, $paypal_countries))
-			$paypal_condition = ' AND m.`name` = \'paypal\'';
-
 		$list = Shop::getContextListShopID();
-
+		if ($paypal_condition = Module::getPaypalIgnore())
+			$paypal_condition = ' AND '.$paypal_condition;
+			
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		'.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'

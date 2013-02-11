@@ -286,6 +286,7 @@ class HookCore extends ObjectModel
 			{
 				$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 				$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
+				$sql->where(Module::getPaypalIgnore());
 				$sql->groupBy('hm.id_hook, hm.id_module');
 			}
 
@@ -298,16 +299,9 @@ class HookCore extends ObjectModel
 			// Get all available payment module
 			$payment_modules = array();
 
-			if (isset($context->shop->id))
-				foreach (Module::getPaymentModules() as $module)
-					$payment_modules[] = $module['name'];
-			
 			if ($results)
 				foreach ($results as $row)
 				{
-					if ($row['hook'] == 'displayPayment' && !in_array($row['module'], $payment_modules))
-						continue;
-
 					$row['hook'] = strtolower($row['hook']);
 					if (!isset($list[$row['hook']]))
 						$list[$row['hook']] = array();
