@@ -24,7 +24,7 @@ function initEvent()
 				url: baseDir,
 				async: true,
 				cache: false,
-				data: 'controller=cart&add&id_product='+$(this).data('id-product')+'&ipa='+$(this).data('id-product-attribute')+'&op='+op+'&qty='+qty+'&id_address_delivery=0&token='+static_token,
+				data: 'controller=cart&add=true&id_product='+$(this).data('id-product')+'&ipa='+$(this).data('id-product-attribute')+'&op='+op+'&qty='+qty+'&id_address_delivery=0&token='+static_token,
 				success: function()
 				{
 					window.location.href = orderOpcUrl;
