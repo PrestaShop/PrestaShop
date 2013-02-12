@@ -1492,7 +1492,7 @@ class ToolsCore
 		return Tools::getHttpHost();
 	}
 
-	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false)
+	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return true;
@@ -1504,6 +1504,9 @@ class ToolsCore
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+
+		if ($disable_modsec === null)
+			$disable_modsec =  (int)Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
 
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
@@ -1566,6 +1569,9 @@ class ToolsCore
 		// Disable multiviews ?
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
+
+		if ($disable_modsec)
+			fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>");
 
 		fwrite($write_fd, "RewriteEngine on\n");
 	
