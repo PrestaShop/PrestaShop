@@ -653,11 +653,14 @@ class ProductCore extends ObjectModel
 		return $result;
 	}
 
-	public static function updateDefaultAttribute($id_product)
+	public function setAvailableDate($available_date = '0000-00-00')
 	{
-		Db::getInstance()->update('product_shop', array(
-			'cache_default_attribute' => (int)Product::getDefaultAttribute($id_product),
-		), 'id_product = '.(int)$id_product);
+		if (Validate::isDateFormat($available_date) && $this->available_date != $available_date)
+		{
+			$this->available_date = $available_date;
+			return $this->update();
+		}
+		return false;
 	}
 
 	public static function updateIsVirtual($id_product)
@@ -1252,7 +1255,19 @@ class ProductCore extends ObjectModel
 		$result &= ObjectModel::updateMultishopTable('product', array(
 			'cache_default_attribute' => (int)$id_product_attribute,
 		), 'a.`id_product` = '.(int)$this->id);
+		$this->cache_default_attribute = (int)$id_product_attribute;
+		return $result;
+	}
 
+	public static function updateDefaultAttribute($id_product)
+	{
+		$id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+		$result =  Db::getInstance()->update('product_shop', array(
+			'cache_default_attribute' => $id_default_attribute,
+		), 'id_product = '.(int)$id_product);
+		$result &=  Db::getInstance()->update('product', array(
+			'cache_default_attribute' => $id_default_attribute,
+		), 'id_product = '.(int)$id_product);
 		return $result;
 	}
 
@@ -2962,7 +2977,7 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Check if there is not a default attribute and create it not
+	 * Check if there is no default attribute and create it if not
 	 */
 	public function checkDefaultAttributes()
 	{
