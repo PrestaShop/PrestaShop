@@ -407,10 +407,6 @@ class ProductControllerCore extends FrontController
 					$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
 				$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)$row['quantity'];
 
-				if ($row['available_date'] != '0000-00-00 00:00:00' && $row['available_date'] != '0000-00-00')
-					$available_date = Tools::displayDate($row['available_date'], $this->context->language->id);
-				else
-					$available_date = $row['available_date'];
 
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['attributes'][] = (int)$row['id_attribute'];
@@ -429,7 +425,10 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-				$combinations[$row['id_product_attribute']]['available_date'] = $available_date;
+				if ($row['available_date'] != '0000-00-00')
+					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
+				else
+					$combinations[$row['id_product_attribute']]['available_date'] = '';
 
 				if (isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = $combination_images[$row['id_product_attribute']][0]['id_image'];
