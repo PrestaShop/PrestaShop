@@ -2041,7 +2041,14 @@ class AdminControllerCore extends Controller
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
-		$this->_orderBy = (strpos($order_by, '.') !== false) ? substr($order_by, strpos($order_by, '.') + 1) : $order_by;
+
+		if (preg_match('/[.!]/', $order_by))
+		{
+			$order_by_split = preg_split('/[.!]/', $order_by);
+			$order_by = pSQL($order_by_split[0]).'.`'.pSQL($order_by_split[1]).'`';
+		}
+
+		$this->_orderBy = $order_by_split[1];
 		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
@@ -2100,11 +2107,7 @@ class AdminControllerCore extends Controller
 				$having_clause .= $this->_having.' ';
 		}
 
-		if (preg_match('/[.!]/', $order_by))
-		{
-			$order_by = preg_split('/[.!]/', $order_by);
-			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
-		}
+
 
 		$this->_listsql = '
 		SELECT SQL_CALC_FOUND_ROWS
