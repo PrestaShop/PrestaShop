@@ -75,6 +75,7 @@ class AdminMetaControllerCore extends AdminController
 
 		$url_description = '';
 		if ($this->checkConfiguration($this->ht_file))
+		{
 			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
 				'title' => $this->l('Disable apache multiviews'),
 				'desc' => $this->l('Enable this option only if you have problems with URL rewriting.'),
@@ -82,6 +83,15 @@ class AdminMetaControllerCore extends AdminController
 				'cast' => 'intval',
 				'type' => 'bool',
 			);
+
+			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
+				'title' => $this->l('Disable apache mod security'),
+				'desc' => $this->l('Some features could not work correctly with a specific configuration of apache mod security. We recommend to turn it off.'),
+				'validation' => 'isBool',
+				'cast' => 'intval',
+				'type' => 'bool',
+			);
+		}
 		else
 		{
 			$url_description = $this->l('Before being able to use this tool, you need to:');
@@ -459,7 +469,7 @@ class AdminMetaControllerCore extends AdminController
 	public function updateOptionPsRewritingSettings()
 	{
 		Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
-		Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'));
+		Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC'));
 
 		Tools::enableCache();
 		Tools::clearCache($this->context->smarty);
