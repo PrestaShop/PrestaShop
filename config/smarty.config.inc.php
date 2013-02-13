@@ -55,11 +55,6 @@ if (defined('_PS_ADMIN_DIR_'))
 else
 	require_once (dirname(__FILE__).'/smartyfront.config.inc.php');
 
-if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
-	$smarty->registerFilter('output', 'smartyMinifyHTML');
-if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
-	$smarty->registerFilter('output', 'smartyPackJSinHTML');
-
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 

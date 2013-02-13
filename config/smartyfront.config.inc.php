@@ -27,6 +27,11 @@
 global $smarty;
 $smarty->setTemplateDir(_PS_THEME_DIR_.'tpl');
 
+if (Configuration::get('PS_HTML_THEME_COMPRESSION'))
+	$smarty->registerFilter('output', 'smartyMinifyHTML');
+if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION'))
+	$smarty->registerFilter('output', 'smartyPackJSinHTML');
+
 function smartyTranslate($params, &$smarty)
 {
 	global $_LANG;
