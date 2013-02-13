@@ -71,6 +71,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->_defaultOrderBy = 'position';
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
+		$this->allow_export = true;
 
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array (

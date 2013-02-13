@@ -44,6 +44,8 @@ class AdminAddressesControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		$this->allow_export = true;
+
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
 
@@ -61,8 +63,15 @@ class AdminAddressesControllerCore extends AdminController
 			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
 		parent::__construct();
+
+		$this->_select = 'cl.`name` as country';
+		$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
+		';
+		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 	}
-	
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
@@ -70,18 +79,6 @@ class AdminAddressesControllerCore extends AdminController
 			'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
 			'desc' => $this->l('Import')
 		);
-	}
-	
-	public function renderList()
-	{
-		$this->_select = 'cl.`name` as country';
-		$this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
-		';
-		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
-
-		return parent::renderList();
 	}
 
 	public function renderForm()

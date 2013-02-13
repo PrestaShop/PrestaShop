@@ -170,6 +170,8 @@ class AdminControllerCore extends Controller
 	/** @var bool boolean List content lines are clickable if true */
 	protected $list_no_link = false;
 
+	protected $allow_export = false;
+
 	/** @var array $cache_lang cache for traduction */
 	public static $cache_lang = array();
 
@@ -563,6 +565,39 @@ class AdminControllerCore extends Controller
 		}
 		$this->errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 		return $object;
+	}
+	
+	public function processExport()
+	{
+		// clean buffer
+		ob_clean();
+		$this->getList($this->context->language->id);
+		if (!count($this->_list))
+			return;
+
+		header('Content-type: text/csv');
+		header('Content-Type: application/force-download; charset=UTF-8');
+		header('Cache-Control: no-store, no-cache');
+		header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.csv"');
+
+		$headers = array();
+		foreach ($this->fields_list as $datas)
+			$headers[] = $datas['title'];
+
+		$content = array();
+		foreach ($this->_list as $i => $row)
+		{
+			$content[$i] = array();
+			foreach ($this->fields_list as $key => $value)
+				$content[$i][] = $row[$key];
+		}
+		$this->context->smarty->assign(array(
+			'export_headers' => $headers,
+			'export_content' => $content
+			)
+		);
+			
+		$this->layout = 'layout-export.tpl';
 	}
 
 	/**
@@ -1025,6 +1060,11 @@ class AdminControllerCore extends Controller
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
+				if ($this->allow_export)
+					$this->toolbar_btn['export'] = array(
+						'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+						'desc' => $this->l('Export')
+					);
 		}
 		$this->addToolBarModulesListButton();
 	}
@@ -1928,6 +1968,11 @@ class AdminControllerCore extends Controller
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to view here.');
+		}
+		elseif (isset($_GET['export'.$this->table]))
+		{
+			if ($this->tabAccess['view'] === '1')
+				$this->action = 'export';
 		}
 		/* Cancel all filters for this tab */
 		elseif (isset($_POST['submitReset'.$this->table]))
