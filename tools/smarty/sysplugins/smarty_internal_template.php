@@ -266,6 +266,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         // get variables from calling scope
         if ($parent_scope == Smarty::SCOPE_LOCAL) {
             $tpl->tpl_vars = $this->tpl_vars;
+            $tpl->tpl_vars['smarty'] = clone $this->tpl_vars['smarty'];
         } elseif ($parent_scope == Smarty::SCOPE_PARENT) {
             $tpl->tpl_vars = &$this->tpl_vars;
         } elseif ($parent_scope == Smarty::SCOPE_GLOBAL) {
@@ -305,6 +306,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         // get variables from calling scope
         if ($parent_scope == Smarty::SCOPE_LOCAL ) {
             $tpl->tpl_vars = $this->tpl_vars;
+            $tpl->tpl_vars['smarty'] = clone $this->tpl_vars['smarty'];
         } elseif ($parent_scope == Smarty::SCOPE_PARENT) {
             $tpl->tpl_vars = &$this->tpl_vars;
         } elseif ($parent_scope == Smarty::SCOPE_GLOBAL) {
@@ -342,7 +344,11 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 foreach ($this->required_plugins['compiled'] as $tmp) {
                     foreach ($tmp as $data) {
                         $file = addslashes($data['file']);
-                        $plugins_string .= "if (!is_callable('{$data['function']}')) include '{$file}';\n";
+                        if (is_Array($data['function'])){
+                            $plugins_string .= "if (!is_callable(array('{$data['function'][0]}','{$data['function'][1]}'))) include '{$file}';\n";
+                        } else {
+                            $plugins_string .= "if (!is_callable('{$data['function']}')) include '{$file}';\n";
+                        }
                     }
                 }
                 $plugins_string .= '?>';
@@ -353,7 +359,11 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 foreach ($this->required_plugins['nocache'] as $tmp) {
                     foreach ($tmp as $data) {
                         $file = addslashes($data['file']);
-                        $plugins_string .= addslashes("if (!is_callable('{$data['function']}')) include '{$file}';\n");
+                        if (is_Array($data['function'])){
+                            $plugins_string .= addslashes("if (!is_callable(array('{$data['function'][0]}','{$data['function'][1]}'))) include '{$file}';\n");
+                        } else {
+                            $plugins_string .= addslashes("if (!is_callable('{$data['function']}')) include '{$file}';\n");
+                        }
                     }
                 }
                 $plugins_string .= "?>/*/%%SmartyNocache:{$this->properties['nocache_hash']}%%*/';?>\n";
@@ -442,7 +452,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                         $mtime = $this->source->timestamp;
                     } else {
                         // file and php types can be checked without loading the respective resource handlers
-                        $mtime = filemtime($_file_to_check[0]);
+                        $mtime = @filemtime($_file_to_check[0]);
                     }
                 } elseif ($_file_to_check[2] == 'string') {
                     continue;
@@ -450,7 +460,7 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                     $source = Smarty_Resource::source(null, $this->smarty, $_file_to_check[0]);
                     $mtime = $source->timestamp;
                 }
-                if ($mtime > $_file_to_check[1]) {
+                if (!$mtime || $mtime > $_file_to_check[1]) {
                     $is_valid = false;
                     break;
                 }
