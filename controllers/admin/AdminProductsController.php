@@ -680,6 +680,7 @@ class AdminProductsControllerCore extends AdminController
 				if (!isset($_POST['attribute_ecotax'])) $_POST['attribute_ecotax'] = 0;
 				if (Tools::getValue('attribute_default'))
 					$product->deleteDefaultAttributes();
+
 				// Change existing one
 				if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) || ($id_product_attribute = $product->productAttributeExists(Tools::getValue('attribute_combination_list'), false, null, true, true)))
 				{
@@ -703,11 +704,10 @@ class AdminProductsControllerCore extends AdminController
 								Tools::getValue('attribute_location'),
 								Tools::getValue('attribute_upc'),
 								$this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-								$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
-								false);
+								$this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null, false);
 								StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
 								StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
-						}						
+						}
 					}
 					else
 						$this->errors[] = Tools::displayError('You do not have permission to add here.');
@@ -749,11 +749,14 @@ class AdminProductsControllerCore extends AdminController
 					$combination = new Combination((int)$id_product_attribute);
 					$combination->setAttributes(Tools::getValue('attribute_combination_list'));
 					$product->checkDefaultAttributes();
-				}
-				if (!count($this->errors))
-				{
-					if (!$product->cache_default_attribute)
-						Product::updateDefaultAttribute($product->id);
+					if (Tools::getValue('attribute_default'))
+					{
+						Product::updateDefaultAttribute((int)$product->id);
+						if(isset($id_product_attribute))
+							$product->cache_default_attribute = (int)$id_product_attribute;
+						if ($available_date = Tools::getValue('available_date_attribute'))
+							$product->setAvailableDate($available_date);
+					}
 				}
 			}
 		}
@@ -1958,10 +1961,10 @@ class AdminProductsControllerCore extends AdminController
 	public function updateDownloadProduct($product, $edit = 0)
 	{
 		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
-		$product->setDefaultAttribute(0);//reset cache_default_attribute
 		// add or update a virtual product
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
+			$product->setDefaultAttribute(0);//reset cache_default_attribute			
 			if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date') && !empty($is_virtual_file)))
 			{
 				if (!Tools::getValue('virtual_product_expiration_date'))
@@ -3547,7 +3550,7 @@ class AdminProductsControllerCore extends AdminController
 					$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
 					$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
 					$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
+					$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities($this->getFieldValue($product, 'available_date'), $this->context->language->id)) : '0000-00-00');
 
 					$i = 0;
 					$data->assign('imageType', ImageType::getByNameNType('small_default', 'products'));
@@ -4126,10 +4129,10 @@ class AdminProductsControllerCore extends AdminController
 	public function updatePackItems($product)
 	{
 		Pack::deleteItems($product->id);
-		$product->setDefaultAttribute(0);//reset cache_default_attribute
 		// lines format: QTY x ID-QTY x ID
 		if (Tools::getValue('type_product') == Product::PTYPE_PACK)
 		{
+			$product->setDefaultAttribute(0);//reset cache_default_attribute		
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
 			// lines is an array of string with format : QTYxID

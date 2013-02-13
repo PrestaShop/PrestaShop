@@ -240,7 +240,7 @@ span.view_scroll_spacer {
 }
 
 #availability_statut span#availability_label, 
-#availability_statut span#availability_date_label {
+#availability_date_label {
 	display:inline-block;
 	width:125px;
 	font-weight:700;
