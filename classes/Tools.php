@@ -1691,11 +1691,9 @@ class ToolsCore
 
 FileETag INode MTime Size
 <IfModule mod_deflate.c>
-	AddOutputFilterByType DEFLATE text/html
-	AddOutputFilterByType DEFLATE text/css
-	AddOutputFilterByType DEFLATE text/javascript
-	AddOutputFilterByType DEFLATE application/javascript
-	AddOutputFilterByType DEFLATE application/x-javascript
+	<IfModule mod_filter.c>
+		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
+	</IfModule>
 </IfModule>\n\n";
 			fwrite($write_fd, $cache_control);
 		}
