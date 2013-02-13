@@ -47,6 +47,7 @@
   <tab id="Outstanding" name="No resuelto"/>
   <tab id="Cart_Rules" name="Reglas de cesta"/>
   <tab id="Catalog_Price_Rules" name="Reglas de precio del cat&#xE1;logo"/>
+  <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Env&#xED;o"/>
   <tab id="Carriers" name="Transportistas"/>
   <tab id="Price_Ranges" name="Rangos de precio"/>
