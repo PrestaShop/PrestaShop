@@ -47,6 +47,7 @@
   <tab id="Outstanding" name="Encours"/>
   <tab id="Cart_Rules" name="R&#xE8;gles paniers"/>
   <tab id="Catalog_Price_Rules" name="R&#xE8;gles de prix catalogue"/>
+  <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Transport"/>
   <tab id="Carriers" name="Transporteurs"/>
   <tab id="Price_Ranges" name="Tranches de prix"/>

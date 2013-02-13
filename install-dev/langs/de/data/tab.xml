@@ -47,6 +47,7 @@
   <tab id="Outstanding" name="Offene Forderungen"/>
   <tab id="Cart_Rules" name="Warenkorb Preisregeln"/>
   <tab id="Catalog_Price_Rules" name="Katalog Preisregeln"/>
+  <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Versand"/>
   <tab id="Carriers" name="Versanddienste"/>
   <tab id="Price_Ranges" name="Preisklassen"/>

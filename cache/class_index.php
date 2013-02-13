@@ -89,6 +89,8 @@
   'AdminMaintenanceControllerCore' => 'controllers/admin/AdminMaintenanceController.php',
   'AdminManufacturersController' => 'override/controllers/admin/AdminManufacturersController.php',
   'AdminManufacturersControllerCore' => 'controllers/admin/AdminManufacturersController.php',
+  'AdminMarketingController' => 'override/controllers/admin/AdminMarketingController.php',
+  'AdminMarketingControllerCore' => 'controllers/admin/AdminMarketingController.php',
   'AdminMetaController' => 'override/controllers/admin/AdminMetaController.php',
   'AdminMetaControllerCore' => 'controllers/admin/AdminMetaController.php',
   'AdminModulesController' => 'override/controllers/admin/AdminModulesController.php',
