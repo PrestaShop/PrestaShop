@@ -121,15 +121,19 @@ var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
 var doesntExistNoMoreBut = '{l s='with those attributes but is available with others.' js=1}';
 var uploading_in_progress = '{l s='Uploading in progress, please be patient.' js=1}';
 var fieldRequired = '{l s='Please fill in all the required fields before saving your customization.' js=1}';
+
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
 		var specific_price_combination = new Array();
+		var available_date = new Array();
 		specific_price_combination['reduction_percent'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'percentage'}{$combination.specific_price.reduction*100}{else}0{/if};
 		specific_price_combination['reduction_price'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
 		specific_price_combination['price'] = {if $combination.specific_price AND $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
 		specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
-		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}', specific_price_combination);
+		available_date['date'] = '{$combination.available_date}';
+		available_date['date_formatted'] = '{dateFormat date=$combination.available_date full=false}';
+		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, available_date, specific_price_combination);
 	{/foreach}
 {/if}
 
@@ -337,13 +341,12 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
-				{if $product->quantity <= 0 && isset($product->available_date) && $product->available_date >= $smarty.now|date_format:'%Y-%m-%d'}
-				<br class="clear"/><span id="availability_date_label">{l s='Availability date:'}</span>
-				<span id="availability_date_value">{$product->available_date}</span>
-				{/if}				
+				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
 			</p>
-
+			<p id="availability_date"{if ($product->quantity > 0) OR !$product->available_for_order OR $PS_CATALOG_MODE OR !isset($product->available_date) OR $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
+				<span id="availability_date_label">{l s='Availability date:'}</span>
+				<span id="availability_date_value">{dateFormat date=$product->available_date full=false}</span>
+			</p>
 			<!-- number of item in stock -->
 			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $product->available_for_order)}
 			<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>

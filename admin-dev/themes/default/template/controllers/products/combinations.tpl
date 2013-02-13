@@ -267,7 +267,7 @@
 				</td>
 				<td style="padding-bottom:5px;">
 					<input type="checkbox" name="attribute_default" id="attribute_default" value="1" />
-					&nbsp;{l s='Make this combination the default combination for this product'}<br /><br />
+					&nbsp;<label for="attribute_default" style="float:none;">{l s='Make this combination the default combination for this product'}</label><br /><br />
 				</td>
 			</tr>
 			<tr>
