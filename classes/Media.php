@@ -128,12 +128,18 @@ class MediaCore
 
 	public static function packJS($js_content)
 	{
-		if (strlen($js_content) > 0)
+		if (!empty($js_content))
 		{
 			require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
-			return JSMin::minify($js_content);
+			try {
+				$js_content = JSMin::minify($js_content);
+			} catch (Exception $e) {
+				if (_PS_MODE_DEV_)
+					echo $e->getMessage();
+				return $js_content;
+			}
 		}
-		return false;
+		return $js_content;
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
