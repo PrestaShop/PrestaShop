@@ -4234,7 +4234,7 @@ class ProductCore extends ObjectModel
 			SELECT ctg.`id_group`
 			FROM `'._DB_PREFIX_.'category_product` cp
 			INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
-			WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` = 1');
+			WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` ='.(int)Group::getCurrent()->id);
 		else
 			return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT cg.`id_group`
