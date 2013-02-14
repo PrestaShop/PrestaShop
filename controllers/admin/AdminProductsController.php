@@ -53,6 +53,8 @@ class AdminProductsControllerCore extends AdminController
 	protected $position_identifier = 'id_product';
 
 	protected $submitted_tabs;
+	
+	protected $id_current_category;
 
 	public function __construct()
 	{
@@ -122,17 +124,28 @@ class AdminProductsControllerCore extends AdminController
 				$this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
 			}
 
-
+		if (Tools::getValue('reset_filter_category'))
+			$this->context->cookie->id_category_products_filter = false;
 		/* Join categories table */
 		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
 		{
 			$this->_category = new Category((int)$id_category);
 			$_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];
 		}
-		elseif ($id_category = Tools::getvalue('id_category'))
-			$this->_category = new Category((int)$id_category);
 		else
-			$this->_category = new Category();
+		{
+			if ($id_category = (int)Tools::getValue('id_category'))
+			{
+				$this->id_current_category = $id_category;
+				$this->context->cookie->id_category_products_filter = $id_category;	
+			}
+			elseif ($id_category = $this->context->cookie->id_category_products_filter)
+				$this->id_current_category = $id_category;
+			if ($this->id_current_category)
+				$this->_category = new Category((int)$this->id_current_category);
+			else
+				$this->_category = new Category();
+		}
 			
 		$join_category = false;
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
@@ -242,7 +255,8 @@ class AdminProductsControllerCore extends AdminController
 			'type' => 'bool',
 			'orderby' => false
 		);
-		if ((int)Tools::getValue('id_category'))
+
+		if ((int)$this->id_current_category)
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 70,
@@ -2127,8 +2141,8 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 		{
-			if ($id_category = (int)Tools::getValue('id_category'))
-				self::$currentIndex .= '&id_category='.(int)$id_category;
+			if ($id_category = (int)$this->id_current_category)
+				self::$currentIndex .= '&id_category='.(int)$this->id_current_category;
 
 			// If products from all categories are displayed, we don't want to use sorting by position
 			if (!$id_category)
@@ -2140,8 +2154,9 @@ class AdminProductsControllerCore extends AdminController
 					unset($this->context->cookie->{$this->table.'Orderway'});
 				}
 			}
-			$id_category = (int)Tools::getValue('id_category', 1);
-			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
+			if (!$id_category)
+				$id_category = 1;
+			$this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
 
 			// Generate category selection tree
 			$helper = new Helper();
