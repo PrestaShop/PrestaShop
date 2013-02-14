@@ -1962,7 +1962,7 @@ class AdminProductsControllerCore extends AdminController
 	public function updateDownloadProduct($product, $edit = 0)
 	{
 		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
-		$product_type = (int)Tools::getValue('product_type');
+		$type_product = (int)Tools::getValue('type_product');
 		// add or update a virtual product
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
@@ -2024,7 +2024,7 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
 
-			if (!empty($id_product_download) && $product_type != 2)
+			if (!empty($id_product_download) && $type_product != 2)
 			{
 				$product_download = new ProductDownload((int)$id_product_download);
 				$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
