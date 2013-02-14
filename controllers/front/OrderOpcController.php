@@ -480,15 +480,6 @@ class OrderOpcControllerCore extends ParentOrderController
 		else
 			$link_conditions .= '&content_only=1';
 		
-		// If a rule offer free-shipping, force hidding shipping prices
-		$free_shipping = false;
-		foreach ($this->context->cart->getCartRules() as $rule)
-			if ($rule['free_shipping'])
-			{
-				$free_shipping = true;
-				break;
-			}
-		
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false, false);
 
@@ -496,7 +487,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 
 		$vars = array(
-			'free_shipping' => $free_shipping,
+			'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
