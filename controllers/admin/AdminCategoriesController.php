@@ -291,7 +291,11 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($this->tabAccess['add'])
 			{
 				$this->action = 'add'.$this->table.'root';
-				$this->display = 'edit';
+				$obj = $this->loadObject(true);
+				if (Validate::isLoadedObject($obj))
+					$this->display = 'edit';
+				else
+					$this->display = 'add';
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
