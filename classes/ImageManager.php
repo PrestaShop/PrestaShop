@@ -168,6 +168,9 @@ class ImageManagerCore
 			}
 		}
 
+		if (!ImageManager::checkImageMemoryLimit($src_file))
+			return false;
+		
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
