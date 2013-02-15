@@ -1917,6 +1917,8 @@ abstract class ModuleCore
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
 			copy($override_src, $override_dest);
+			// Re-generate the class index
+			Autoload::getInstance()->generateIndex();
 			return true;
 		}
 		
@@ -1965,7 +1967,7 @@ abstract class ModuleCore
 
 		if (!Autoload::getInstance()->getClassPath($classname))
 			return true;
-		
+
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.Autoload::getInstance()->getClassPath($classname);
 		if (!is_writable($override_path))
