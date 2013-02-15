@@ -1175,6 +1175,9 @@ class OrderCore extends ObjectModel
 		$order_invoice_collection = $this->getInvoicesCollection();
 		foreach ($order_invoice_collection as $order_invoice)
 		{
+			if ($order_invoice->delivery_number)
+				continue;
+
 			$number = (int)Configuration::get('PS_DELIVERY_NUMBER', null, null, $this->id_shop);
 			if (!$number)
 			{
