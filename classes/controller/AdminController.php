@@ -589,7 +589,9 @@ class AdminControllerCore extends Controller
 		{
 			$content[$i] = array();
 			foreach ($this->fields_list as $key => $value)
-				$content[$i][] = $row[$key];
+				if (isset($row[$key]))
+					$content[$i][] = $row[$key];
+				
 		}
 		$this->context->smarty->assign(array(
 			'export_headers' => $headers,
