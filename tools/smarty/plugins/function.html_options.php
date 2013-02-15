@@ -90,7 +90,24 @@ function smarty_function_html_options($params, $template)
                     $selected = smarty_function_escape_special_chars((string) $_val);
                 }
                 break;
-
+            
+            case 'strict': break;
+            
+            case 'disabled':
+            case 'readonly':
+                if (!empty($params['strict'])) {
+                    if (!is_scalar($_val)) {
+                        trigger_error("html_options: $_key attribute must be a scalar, only boolean true or string '$_key' will actually add the attribute", E_USER_NOTICE);
+                    }
+                    
+                    if ($_val === true || $_val === $_key) {
+                        $extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_key) . '"';
+                    }
+                    
+                    break;
+                }
+                // omit break; to fall through!
+            
             default:
                 if (!is_array($_val)) {
                     $extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_val) . '"';
@@ -150,6 +167,8 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
                 trigger_error("html_options: value is an object of class '". get_class($value) ."' without __toString() method", E_USER_NOTICE);
                 return '';
             }
+        } else {
+            $value = smarty_function_escape_special_chars((string) $value);
         }
         $_html_result .= $_html_class . $_html_id . '>' . $value . '</option>' . "\n";
         $idx++;

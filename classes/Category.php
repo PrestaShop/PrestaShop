@@ -1048,7 +1048,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
-				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = 1
+				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id.'
 			');
 		} else {
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('

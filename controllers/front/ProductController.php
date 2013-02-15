@@ -87,19 +87,11 @@ class ProductControllerCore extends FrontController
 		{
 			header('HTTP/1.1 404 Not Found');
 			header('Status: 404 Not Found');
+			$this->errors[] = Tools::displayError('Product not found');
 		}
 		else
-			$this->canonicalRedirection();
-
-		if (!Validate::isLoadedObject($this->product))
-			$this->errors[] = Tools::displayError('Product not found');
-		else
 		{
-			if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
-				$this->product->quantity = 0;
-
-			$this->product->description = $this->transformDescriptionWithImg($this->product->description);
-
+			$this->canonicalRedirection();
 			/*
 			 * If the product is associated to the shop
 			 * and is active or not active but preview mode (need token + file_exists)
@@ -181,11 +173,14 @@ class ProductControllerCore extends FrontController
 
 		if (!$this->errors)
 		{
+			if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
+				$this->product->quantity = 0;
+
+			$this->product->description = $this->transformDescriptionWithImg($this->product->description);
+
 			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
 
-			// Product pictures management
-			require_once('images.inc.php');
 			$this->context->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 			if (Tools::isSubmit('submitCustomizedDatas'))
@@ -204,15 +199,21 @@ class ProductControllerCore extends FrontController
 			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
-			$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
+			
 			$pictures = array();
-			foreach ($files as $file)
-				$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
-
-			$texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
 			$text_fields = array();
-			foreach ($texts as $text_field)
-				$text_fields['textFields_'.$this->product->id.'_'.$text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
+			if ($this->product->customizable)
+			{
+				$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
+				foreach ($files as $file)
+					$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
+
+				$texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
+
+				foreach ($texts as $text_field)
+					$text_fields['textFields_'.$this->product->id.'_'.$text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
+			}
+
 			$this->context->smarty->assign(array(
 				'pictures' => $pictures,
 				'textFields' => $text_fields));

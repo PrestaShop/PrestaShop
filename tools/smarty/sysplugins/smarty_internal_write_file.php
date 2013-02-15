@@ -44,12 +44,30 @@ class Smarty_Internal_Write_File {
             throw new SmartyException("unable to write file {$_tmp_file}");
             return false;
         }
+        
+        /*
+         * Windows' rename() fails if the destination exists,
+         * Linux' rename() properly handles the overwrite.
+         * Simply unlink()ing a file might cause other processes 
+         * currently reading that file to fail, but linux' rename()
+         * seems to be smart enough to handle that for us.
+         */
+        if (Smarty::$_IS_WINDOWS) {
+            // remove original file
+            @unlink($_filepath);
+            // rename tmp file
+            $success = @rename($_tmp_file, $_filepath);
+        } else {
+            // rename tmp file
+            $success = @rename($_tmp_file, $_filepath);
+            if (!$success) {
+                // remove original file
+                @unlink($_filepath);
+                // rename tmp file
+                $success = @rename($_tmp_file, $_filepath);
+            }
+        }
 
-        // remove original file
-        @unlink($_filepath);
-
-        // rename tmp file
-        $success = rename($_tmp_file, $_filepath);
         if (!$success) {
             error_reporting($_error_reporting);
             throw new SmartyException("unable to write file {$_filepath}");

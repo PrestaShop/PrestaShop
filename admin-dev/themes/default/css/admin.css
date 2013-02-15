@@ -546,6 +546,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
 .default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 115px}
+#modules_list_container_tab ul li {margin:5px;height:140px}
 
 /*MODULE POSITION*/
 .blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}

@@ -2325,7 +2325,7 @@ class CartCore extends ObjectModel
 	public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
 	{
 		static $cache = array();
-		$cache_id = (int)$default_country.'-'.(int)$dontAutoSelectOptions;
+		$cache_id = (int)(is_object($default_country) ? $default_country->id : 0).'-'.(int)$dontAutoSelectOptions;
 		if (isset($cache[$cache_id]) && $use_cache)
 			return $cache[$cache_id];
 		
@@ -2865,7 +2865,9 @@ class CartCore extends ObjectModel
 			if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code'])))
 			{
 				$cart_rule['value_real'] -= $total_shipping;
-				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
+				$cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
+				$total_discounts -= $total_shipping;
+				$total_discounts_tax_exc -= $total_shipping_tax_exc;
 
 				// Update total shipping
 				$total_shipping = 0;

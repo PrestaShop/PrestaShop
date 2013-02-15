@@ -1072,6 +1072,12 @@ class AdminModulesControllerCore extends AdminController
 			unset($object);
 		}
 
+		// Don't display categories without modules
+		$cleaned_list = array();
+		foreach ($this->list_modules_categories as $k => $list)
+			if ($list['nb'] > 0)
+				$cleaned_list[$k] = $list;
+
 		// Actually used for the report of the upgraded errors
 		if (count($module_errors))
 		{
@@ -1109,7 +1115,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nb_modules_uninstalled'] = $tpl_vars['nb_modules'] - $tpl_vars['nb_modules_installed'];
 		$tpl_vars['nb_modules_activated'] = $this->nb_modules_activated;
 		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
-		$tpl_vars['list_modules_categories'] = $this->list_modules_categories;
+		$tpl_vars['list_modules_categories'] = $cleaned_list;
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
 
 		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');

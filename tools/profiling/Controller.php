@@ -387,7 +387,7 @@ abstract class Controller extends ControllerCore
 		uasort($queries, 'prestashop_querytime_sort');
 		foreach ($queries as $data)
 		{
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'].'<br />in '.$data['file'].':'.$data['line'].'<br />';
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['file'].':'.$data['line'].'<br />';
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
 				$explain = Db::getInstance()->executeS('explain '.$data['query']);

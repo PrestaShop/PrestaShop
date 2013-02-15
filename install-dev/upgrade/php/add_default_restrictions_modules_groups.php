@@ -41,7 +41,7 @@ function add_default_restrictions_modules_groups()
 		FROM `'._DB_PREFIX_.'shop`');
 	foreach ($groups as $group)
 	{
-		if (!is_array($modules))
+		if (!is_array($modules) || !is_array($shops))
 			return false;
 		else
 		{
@@ -49,9 +49,9 @@ function add_default_restrictions_modules_groups()
 			foreach ($modules as $mod)
 				foreach ($shops as $s)
 					$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
-			// removing last comma to avoid SQL error
-			$sql = substr($sql, 0, strlen($sql) - 1);
-			$res &= Db::getInstance()->execute($sql);
+				// removing last comma to avoid SQL error
+				$sql = substr($sql, 0, strlen($sql) - 1);
+				$res &= Db::getInstance()->execute($sql);
 		}
 	}
 	return $res;
