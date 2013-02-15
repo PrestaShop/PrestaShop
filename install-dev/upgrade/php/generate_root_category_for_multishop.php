@@ -54,29 +54,35 @@ function generate_root_category_for_multishop()
 	');
 
 	$data = array();
-	foreach ($langs as $lang)
-		foreach ($shops as $shop)
-			$data[] = array(
-				'id_lang' => $lang['id_lang'],
-				'id_shop' => $shop['id_shop'],
-				'id_category' => $id,
-				'name' => 'Root',
-				'link_rewrite' => '',
-			);
-	Db::getInstance()->insert('category_lang', $data);
+	if(is_array($shops) && is_array($langs))
+	{
+		foreach ($langs as $lang)
+			foreach ($shops as $shop)
+				$data[] = array(
+					'id_lang' => $lang['id_lang'],
+					'id_shop' => $shop['id_shop'],
+					'id_category' => $id,
+					'name' => 'Root',
+					'link_rewrite' => '',
+				);
+		Db::getInstance()->insert('category_lang', $data);
+	}
 
 	$categories = Db::getInstance()->executeS('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category`
 	');
 	$data = array();
-	foreach ($categories as $category)
-		foreach ($shops as $shop)
-			$data[] = array(
-				'id_category' => $category['id_category'],
-				'id_shop' => $shop['id_shop']
-			);
-	Db::getInstance()->insert('category_shop', $data);
+	if(is_array($shops) && is_array($categories))
+	{	
+		foreach ($categories as $category)
+			foreach ($shops as $shop)
+				$data[] = array(
+					'id_category' => $category['id_category'],
+					'id_shop' => $shop['id_shop']
+				);
+		Db::getInstance()->insert('category_shop', $data);
+	}
 
 	Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'category`

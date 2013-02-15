@@ -35,7 +35,7 @@ class AdminOrdersControllerCore extends AdminController
 		$this->lang = false;
 		$this->addRowAction('view');
 		$this->explicitSelect = true;
-
+		$this->allow_export = true;
 		$this->deleted = false;
 		$this->context = Context::getContext();
 

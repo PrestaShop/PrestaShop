@@ -51,6 +51,11 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
         static $_is_stringy = array('string' => true, 'eval' => true);
         $this->_rdl = preg_quote($compiler->smarty->right_delimiter);
         $this->_ldl = preg_quote($compiler->smarty->left_delimiter);
+        if (!$compiler->smarty->auto_literal) {
+            $al = '\s*';
+        } else {
+            $al = '';
+        }
         $filepath = $compiler->template->source->filepath;
         $this->mbstring_overload = ini_get('mbstring.func_overload') & 2;
         // check and get attributes
@@ -77,12 +82,12 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
             $compiler->trigger_template_error("illegal recursive call of \"{$include_file}\"", $compiler->lex->line - 1);
         }
         $compiler->template->properties['file_dependency'][$template_sha1] = array($_template->source->filepath, $_template->source->timestamp, $_template->source->type);
-        $_content = ($this->mbstring_overload ? mb_substr($compiler->template->source->content, $compiler->lex->counter - 1, 20000000, 'latin1') : substr($compiler->template->source->content, $compiler->lex->counter - 1));
-        if (preg_match_all("!({$this->_ldl}block\s(.+?){$this->_rdl})!", $_content, $s) !=
-        preg_match_all("!({$this->_ldl}/block{$this->_rdl})!", $_content, $c)) {
+        $_content = ($this->mbstring_overload ? mb_substr($compiler->lex->data, $compiler->lex->counter - 1, 20000000, 'latin1') : substr($compiler->lex->data, $compiler->lex->counter - 1));
+        if (preg_match_all("!({$this->_ldl}{$al}block\s(.+?)\s*{$this->_rdl})!", $_content, $s) !=
+        preg_match_all("!({$this->_ldl}{$al}/block\s*{$this->_rdl})!", $_content, $c)) {
             $compiler->trigger_template_error('unmatched {block} {/block} pairs');
         }
-        preg_match_all("!{$this->_ldl}block\s(.+?){$this->_rdl}|{$this->_ldl}/block{$this->_rdl}|{$this->_ldl}\*([\S\s]*?)\*{$this->_rdl}!", $_content, $_result, PREG_OFFSET_CAPTURE);
+        preg_match_all("!{$this->_ldl}{$al}block\s(.+?)\s*{$this->_rdl}|{$this->_ldl}{$al}/block\s*{$this->_rdl}|{$this->_ldl}\*([\S\s]*?)\*{$this->_rdl}!", $_content, $_result, PREG_OFFSET_CAPTURE);
         $_result_count = count($_result[0]);
         $_start = 0;
         while ($_start+1 < $_result_count) {

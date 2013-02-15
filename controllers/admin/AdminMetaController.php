@@ -64,6 +64,13 @@ class AdminMetaControllerCore extends AdminController
 				'type' => 'rewriting_settings',
 				'mod_rewrite' => $mod_rewrite
 			),
+			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
+				'title' => $this->l('Accented URL'),
+				'desc' => $this->l('Enable if you want to allow accented characters in your friendly URLs.'),
+				'validation' => 'isBool',
+				'cast' => 'intval',
+				'type' => 'bool'
+			),
 			'PS_CANONICAL_REDIRECT' => array(
 				'title' => $this->l('Automatically redirect to the canonical URL.'),
 				'desc' => $this->l('Recommended, but your theme must be compliant.'),

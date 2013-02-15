@@ -978,11 +978,11 @@ class ToolsCore
 		if ($allow_accented_chars === null)
 			$allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 
+		$str = trim($str);
+
 		if (function_exists('mb_strtolower'))
 			$str = mb_strtolower($str, 'utf-8');
-
-		$str = trim($str);
-		if (!function_exists('mb_strtolower') || !$allow_accented_chars)
+		elseif (!$allow_accented_chars)
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
@@ -990,7 +990,7 @@ class ToolsCore
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);	
 		else
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
-		
+
 		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
 
@@ -1691,11 +1691,9 @@ class ToolsCore
 
 FileETag INode MTime Size
 <IfModule mod_deflate.c>
-	AddOutputFilterByType DEFLATE text/html
-	AddOutputFilterByType DEFLATE text/css
-	AddOutputFilterByType DEFLATE text/javascript
-	AddOutputFilterByType DEFLATE application/javascript
-	AddOutputFilterByType DEFLATE application/x-javascript
+	<IfModule mod_filter.c>
+		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
+	</IfModule>
 </IfModule>\n\n";
 			fwrite($write_fd, $cache_control);
 		}

@@ -35,6 +35,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->className = 'Manufacturer';
 	 	$this->lang = false;
 	 	$this->deleted = false;
+		$this->allow_export = true;
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 

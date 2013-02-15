@@ -42,6 +42,8 @@ class AdminCustomersControllerCore extends AdminController
 		$this->deleted = true;
 		$this->explicitSelect = true;
 
+		$this->allow_export = true;
+
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');

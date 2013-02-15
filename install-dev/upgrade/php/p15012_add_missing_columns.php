@@ -160,22 +160,24 @@ function p15012_add_missing_columns()
 		if (empty($table))
 			continue;
 		$list_fields = $db->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
-		foreach($list_fields as $k => $field)
-			$list_fields[$k] = $field['Field'];
-		foreach ($cols as $col => $q)
-		{
-			// do only if column exists
-			if (in_array($col, $list_fields))
-				$do = 'mod';
-			else
-				$do = 'add';
-
-			if (!empty($q[$do]))
+		if (is_array($list_fields))
+			foreach($list_fields as $k => $field)
+				$list_fields[$k] = $field['Field'];
+		if (is_array($cols))				
+			foreach ($cols as $col => $q)
 			{
-				if (!$db->execute($q[$do]))
-					$errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
+				// do only if column exists
+				if (is_array($list_fields) && in_array($col, $list_fields))
+					$do = 'mod';
+				else
+					$do = 'add';
+	
+				if (!empty($q[$do]))
+				{
+					if (!$db->execute($q[$do]))
+						$errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
+				}
 			}
-		}
 	}
 
 	if (sizeof($errors) > 0)
@@ -186,4 +188,3 @@ function p15012_add_missing_columns()
 	else
 		return true;
 }
-

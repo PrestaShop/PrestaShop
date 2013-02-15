@@ -35,7 +35,7 @@
 					if (this.value !== "")
 						location.href = base_url + '&id_category=' + parseInt(this.value);
 					else
-						location.href = base_url;
+						location.href = base_url + '&reset_filter_category=1';
 				});
 
 				// Make sure the checkbox is checked/unchecked when the link is clicked
@@ -47,7 +47,7 @@
 					else
 					{
 						$(this).find('input').removeAttr('checked');
-						location.href = base_url;
+						location.href = base_url + '&reset_filter_category=1';
 					}
 				});
 			});

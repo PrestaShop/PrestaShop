@@ -240,9 +240,8 @@ class Smarty_Internal_Config {
         }
         // scan sections
         if (!empty($sections)) {
-            $sections = array_flip((array) $sections);
-            foreach ($_config_vars['sections'] as $this_section => $dummy) {
-                if (isset($sections[$this_section])) {
+            foreach ((array) $sections as $this_section) {
+                if (isset($_config_vars['sections'][$this_section])) {
                     foreach ($_config_vars['sections'][$this_section]['vars'] as $variable => $value) {
                         if ($this->smarty->config_overwrite || !isset($scope_ptr->config_vars[$variable])) {
                             $scope_ptr->config_vars[$variable] = $value;

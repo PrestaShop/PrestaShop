@@ -34,6 +34,8 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
+		$this->allow_export = true;
+		
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = 'COUNT(DISTINCT ps.`id_product`) AS products';
