@@ -612,7 +612,8 @@ class AdminThemesControllerCore extends AdminController
 			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
 				return false;
 
-			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+			$file_ext = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
+			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.'.$file_ext;
 			$logo_name = $logo_prefix.'-'.(int)$id_shop.$ext;
 			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0)
 				$logo_name = $logo_prefix.$ext;
