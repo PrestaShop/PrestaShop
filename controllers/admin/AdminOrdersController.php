@@ -1260,6 +1260,11 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, $order->reference, $customer->firstname, $customer->lastname);
+		if (Shop::isFeatureActive())
+		{
+			$shop = new Shop((int)$order->id_shop);
+			$this->toolbar_title .= ' - '.sprintf($this->l('Shop: %s'), $shop->name);
+		}
 
 		// gets warehouses to ship products, if and only if advanced stock management is activated
 		$warehouse_list = null;
