@@ -193,7 +193,7 @@
 			<p>
 				<script>
 					var no_related_product = '{l s='No related product'}';
-					var id_product_redirected = {$product->id_product_redirected|escape:html:'UTF-8'};
+					var id_product_redirected = {$product->id_product_redirected|intval};
 					var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
 				</script>
 				<span id="related_product_name">{l s='No related product'}</span>

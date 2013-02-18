@@ -1163,27 +1163,6 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
-	 * Override parent to add stock data to object
-	 * We don't want to make a "full" product load because of side effects to prices
-	 *
-	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
-	 */
-	protected function loadObject($opt = false)
-	{
-		$result = parent::loadObject($opt);
-		if ($result)
-		{
-			if ($this->object->id)
-				if (!$this->object->isAssociatedToShop() && $this->object->id_shop_default)
-					$this->object = new $this->className((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
-
-			$this->object->loadStockData();
-		}
-		return $result;
-	}
-
-	/**
 	 * postProcess handle every checks before saving products information
 	 *
 	 * @return void
@@ -2352,33 +2331,6 @@ class AdminProductsControllerCore extends AdminController
 			return;
 
 		$product = $this->object;
-		$this->product_exists_in_shop = true;
-		if ($this->display == 'edit' && Validate::isLoadedObject($product) && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
-		{
-			$this->product_exists_in_shop = false;
-			if ($this->tab_display == 'Informations')
-				$this->displayWarning($this->l('Warning: The product does not exist in this shop.'));
-			
-			$default_product = new Product();
-			$fields_to_copy = array('minimal_quantity',
-											'price',
-											'additional_shipping_cost',
-											'wholesale_price',
-											'on_sale',
-											'online_only',
-											'unity',
-											'unit_price_ratio',
-											'ecotax',
-											'active',
-											'available_for_order',
-											'available_date',
-											'show_price',
-											'indexed',
-											'id_tax_rules_group',
-											'advanced_stock_management');
-			foreach ($fields_to_copy as $field)
-				$product->$field = $default_product->$field;
-		}
 
 		// Product for multishop
 		$this->context->smarty->assign('bullet_common_field', '');
@@ -2440,6 +2392,20 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['upload_max_filesize'] = $upload_max_filesize;
 		$this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
 		$this->tpl_form_vars['has_combinations'] = $this->object->hasAttributes();
+
+		$this->product_exists_in_shop = true;
+		if ($this->display == 'edit' && Validate::isLoadedObject($product) && Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop($this->context->shop->id))
+		{
+			$this->product_exists_in_shop = false;
+			if ($this->tab_display == 'Informations')
+				$this->displayWarning($this->l('Warning: The product does not exist in this shop.'));
+			
+			$default_product = new Product();
+			$definition = ObjectModel::getDefinition($product);
+			foreach ($definition['fields'] as $field_name => $field)
+				if (isset($field['shop']) && $field['shop'])
+					$product->$field_name = ObjectModel::formatValue($default_product->$field_name, $field['type']);
+		}
 
 		// let's calculate this once for all
 		if (!Validate::isLoadedObject($this->object) && Tools::getValue('id_product'))
