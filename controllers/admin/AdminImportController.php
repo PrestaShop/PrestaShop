@@ -954,6 +954,12 @@ class AdminImportControllerCore extends AdminController
 					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
 					$category->id =	(int)$category_already_created['id_category'];
 				}
+				
+				if ($category->id && $category->id == $category->id_parent)
+				{
+					$this->errors[] = Tools::displayError('a category cannot be its own parent');
+					continue;
+				}
 
 				/* No automatic nTree regeneration for import */
 				$category->doNotRegenerateNTree = true;
