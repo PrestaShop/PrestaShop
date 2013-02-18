@@ -191,7 +191,7 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['table'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
@@ -614,7 +614,6 @@ abstract class ObjectModelCore
 			}
 			else
 				$all_fields = $fields;
-
 
 			foreach ($id_shop_list as $id_shop)
 			{
@@ -1159,9 +1158,9 @@ abstract class ObjectModelCore
 	public function clearCache($all = false)
 	{
 		if ($all)
-			Cache::clean('objectmodel_'.$this->def['table'].'_*');
-		else if ($this->id)
-			Cache::clean('objectmodel_'.$this->def['table'].'_'.(int)$this->id.'_*');
+			Cache::clean('objectmodel_'.$this->def['classname'].'_*');
+		elseif ($this->id)
+			Cache::clean('objectmodel_'.$this->def['classname'].'_'.(int)$this->id.'_*');
 	}
 
 	/**
