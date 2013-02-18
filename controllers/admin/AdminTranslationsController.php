@@ -1844,6 +1844,10 @@ class AdminTranslationsControllerCore extends AdminController
 			throw new PrestaShopException(Tools::displayError('Fatal error: Module directory does not exist').'('.$this->translations_informations['modules']['dir'].')');
 		if (!is_writable($this->translations_informations['modules']['dir']))
 			throw new PrestaShopException(Tools::displayError('The module directory must be writable'));
+		
+                if(Tools::getvalue('module')){
+                    return array(Tools::getvalue('module'));
+                }
 
 		$modules = array();
 		if (!_PS_MODE_DEV_ && $this->theme_selected == self::DEFAULT_THEME_NAME)
