@@ -254,7 +254,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_reference',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Associated carriers. Use CTRL+CLICK to select several.'),
+					'desc' => $this->l('Associated carriers. Use CTRL+CLICK to select several.').'<br />'.$this->l('You must select at least one carrier, if you do not select a carrier none will be able to ship from this warehouse.'),
 					'hint' => $this->l('You can specify the number of carriers available to ship orders from particular warehouses.'),
 				),
 			),
