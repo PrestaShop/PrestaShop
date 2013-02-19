@@ -323,7 +323,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'genders' => Gender::getGenders(),
 		));
 		/* Call a hook to display more information on form */
-		self::$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
 			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 		));
