@@ -77,7 +77,7 @@
 	
 	<div class="info-customer-right">
 		<div style="float: right">
-			<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
+			<a href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
 				<img src="../img/admin/edit.gif" />
 			</a>
 		</div>
@@ -154,7 +154,7 @@
 	
 	<h2>
 		{l s='Groups'} ({count($groups)})
-		<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
+		<a href="{$current}&updatecustomer&id_customer={$customer->id}&token={$token}">
 			<img src="../img/admin/edit.gif" />
 		</a>
 	</h2>
