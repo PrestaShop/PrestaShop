@@ -27,11 +27,17 @@
 <div id="modules_list_container_tab" class="default_modules_list_display_type">
 	<ul id="modules_list_container_content">
 		{if count($modules_list)}
-			{foreach from=$modules_list item=module}
-				<li>
-					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
-				</li> 
-			{/foreach}
+			<li>
+				{counter start=1  assign="count"}
+					{foreach from=$modules_list item=module}	
+						{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
+						{if $count %2 == 0}
+			</li>
+			<li>
+						{/if}
+					{counter}
+				{/foreach}
+			</li>
 		{else}
 			<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
 		{/if}		
