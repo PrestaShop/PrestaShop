@@ -525,15 +525,17 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 	margin:0;
 	white-space: nowrap;
 	overflow: auto;
+	height: 335px;
 }
 #modules_list_container_tab #modules_list_container_content li{display:inline-block;}
+#modules_list_container_tab table{ margin-bottom:15px}
 #modules_list_container_tab table tr th { height:40px;}
 #modules_list_container_tab table tr td { font-size:12px; padding: 3px 3px 3px; border-top:1px solid #ccc; border-bottom:none;}
 #modules_list_container_tab table tr td tr td {border: none}
 #modules_list_container_tab table tr:first-child {border-top:1px solid #ccc}
 #modules_list_container_tab table td.tab_modules_actions_row {border-top:1px solid #ccc}
 #modules_list_container_tab .imgm {width:32px;}
-#modules_list_container_tab .moduleDesc { font-size:12px;width: 240px;}
+#modules_list_container_tab .moduleDesc { font-size:12px;width: 238px;}
 #modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left;white-space: normal;}
 #modules_list_container_tab .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
 #modules_list_container_tab .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
