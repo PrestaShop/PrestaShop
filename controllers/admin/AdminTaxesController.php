@@ -103,6 +103,8 @@ class AdminTaxesControllerCore extends AdminController
 				);
 
 		parent::__construct();
+		
+		$this->_where .= ' AND a.deleted = 0';
 	}
 
 	/**

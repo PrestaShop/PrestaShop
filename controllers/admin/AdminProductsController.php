@@ -355,7 +355,7 @@ class AdminProductsControllerCore extends AdminController
 	protected function loadObject($opt = false)
 	{
 		$result = parent::loadObject($opt);
-		if ($result && Validate::isLoadedObjec($this->object))
+		if ($result && Validate::isLoadedObject($this->object))
 			$this->object->loadStockData();
 		return $result;
 	}
