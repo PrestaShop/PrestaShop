@@ -36,9 +36,9 @@ echo '
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOFOLLOW, NOINDEX" />
-		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/datepicker/datepicker.css" />
+		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/ui/themes/base/jquery.ui.datepicker.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
-		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'jquery.cluetip.css" />
+		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/cluetip/jquery.cluetip.css" />
 		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/plugins/chosen/jquery.chosen.css" />
 		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
@@ -231,28 +231,37 @@ echo '		var html = "";
 							</div>
 						</div>';
 				}
-	echo		'</div><span id="employee_links">
-				<a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" class="employee">'.translate('My preferences').'</a>
-				<span class="separator"></span>
-				<span class="employee_name">
-				'.Tools::substr(Context::getContext()->employee->firstname, 0, 1).'.&nbsp;'.htmlentities(Context::getContext()->employee->lastname, ENT_COMPAT, 'UTF-8').'
-				</span><span class="separator"></span><a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a><span class="separator"></span>';
-				if (Context::getContext()->shop->getBaseURL())
-					echo '<a href="'.Context::getContext()->shop->getBaseURL().'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'"><span>'.translate('View my shop').'</span></a>';
-			echo '</span>
+	echo		'</div>
+	
+	<div id="employee_box">
+				<div id="employee_infos">
+					<div class="employee_name">'.translate('Welcome,').' <strong>'.Context::getContext()->employee->firstname.'&nbsp'.Context::getContext()->employee->lastname.'</strong></div>
+					<div class="clear"></div>
+					<ul id="employee_links">
+						<li><a href="'.htmlentities(Context::getContext()->link->getAdminLink('AdminEmployees'), ENT_COMPAT, 'UTF-8').'&id_employee={$employee->id}&amp;updateemployee">'.translate('My preferences').'</a></li>
+						<li class="separator">&nbsp;</li>
+						<li><a id="header_logout" href="index.php?logout">'.translate('logout').'</a></li>
+					</ul>';
+					if (defined(_PS_BASE_URL_))
+						echo '<a href="'._PS_BASE_URL_.'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'">'.translate('View my shop').'</a>';
+				echo '</div>
+			</div>
+			
 			<div id="header_search">
-				<form method="post" action="index.php?controller=AdminSearch&token='.Tools::getAdminTokenLite('AdminSearch').'">
-					<input type="text" name="bo_query" id="bo_query"
-						value="'.Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))).'"
-					/>
-					<select name="bo_search_type" id="bo_search_type">
+			
+				<form method="post" action="index.php?controller=AdminSearch&amp;token='.Tools::getAdminTokenLite('AdminSearch').'">
+					<input type="text" name="bo_query" id="bo_query" value="'.Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))).'" />
+					<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 						<option value="0">'.translate('everywhere').'</option>
 						<option value="1" '.(Tools::getValue('bo_search_type') == 1 ? 'selected="selected"' : '').'>'.translate('catalog').'</option>
-						<option value="2" '.(Tools::getValue('bo_search_type') == 2 ? 'selected="selected"' : '').'>'.translate('customers').'</option>
-						<option value="6" '.(Tools::getValue('bo_search_type') == 6 ? 'selected="selected"' : '').'>'.translate('ip address').'</option>
+						<optgroup label="'.translate('customers').':">
+							<option value="2" '.(Tools::getValue('bo_search_type') == 2 ? 'selected="selected"' : '').'>'.translate('by name').'</option>
+							<option value="6" '.(Tools::getValue('bo_search_type') == 6 ? 'selected="selected"' : '').'>'.translate('by ip address').'</option>
+						</optgroup>
 						<option value="3" '.(Tools::getValue('bo_search_type') == 3 ? 'selected="selected"' : '').'>'.translate('orders').'</option>
 						<option value="4" '.(Tools::getValue('bo_search_type') == 4 ? 'selected="selected"' : '').'>'.translate('invoices').'</option>
 						<option value="5" '.(Tools::getValue('bo_search_type') == 5 ? 'selected="selected"' : '').'>'.translate('carts').'</option>
+						<option value="7" '.(Tools::getValue('bo_search_type') == 7 ? 'selected="selected"' : '').'>'.translate('modules').'</option>
 					</select>
 					<input type="submit" id="bo_search_submit" class="button" value="'.translate('Search').'"/>
 				</form>

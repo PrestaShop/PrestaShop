@@ -1288,6 +1288,7 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_URL, $url);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);			
 			$opts = stream_context_get_options($stream_context);
 			if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
 			{
