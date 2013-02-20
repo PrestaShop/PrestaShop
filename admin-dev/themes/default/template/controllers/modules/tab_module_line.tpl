@@ -26,12 +26,12 @@
 
 <tr class="{$class_row}">
 <td>
-	<table border="0" cellpadding="0" cellspacing="0">
+	<table border="0" cellpadding="0" cellspacing="5">
 		<tr>
-			<td height="60" valign="top" width="75">
+			<td height="60" valign="top" width="75" align="center">
 				<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 			</td>
-			<td height="60" width="220" valign="top">
+			<td height="60" width="100" valign="top">
 				<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
 					<h3>{$module->displayName|truncate:40:'…'} {$module->version}
 						
@@ -47,7 +47,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td border="0" height="20" width="75" style="text-align:center" valign="bottom">
+			<td border="0" height="20" width="75" align="left" valign="bottom">
 				{if isset($module->id) && $module->id gt 0 }
 					{if $module->active}
 						<span class="setup">{l s='Enabled'}</span>
@@ -63,7 +63,7 @@
 					
 				{/if}
 			</td>
-			<td  class="tab_modules_actions_row" height="20" border="0" width="220" valign="bottom">
+			<td  class="tab_modules_actions_row" height="20" border="0" width="100" valign="bottom">
 				<div style="float:right">
 					{if isset($module->type) && $module->type == 'addonsMustHave'}
 						<a href="{$module->addons_buy_url}" target="_blank" class="button updated">

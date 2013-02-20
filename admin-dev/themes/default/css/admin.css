@@ -47,7 +47,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_infos{ position:relative; margin: 0; padding:0; height:60px; }
 #header #header_shopname {float: left; margin:10px 15px 0 10px;}
 #header #employee_box {float: right; display:block;}
-#header #employee_infos {display:block; margin:10px 15px 0 10px;}
+#header #employee_infos {display:block; margin:5px 15px 0 10px;}
 #header #employee_infos a{color:#BABABA; text-transform:capitalize;margin-right: 5px}
 #header #employee_infos a:hover {color:#fff;}
 #header #employee_infos .employee_name { float:left; color:#fff;padding: 0 20px 0 0;}
@@ -518,20 +518,30 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #moduleContainer ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
 /*TAB MODULES LIST*/
+
+#modules_list_container_tab #modules_list_container_content{
+	list-style-type:none; 
+	padding:0; 
+	margin:0;
+	white-space: nowrap;
+	overflow: auto;
+}
+#modules_list_container_tab #modules_list_container_content li{display:inline-block;}
 #modules_list_container_tab table tr th { height:40px;}
 #modules_list_container_tab table tr td { font-size:12px; padding: 3px 3px 3px; border-top:1px solid #ccc; border-bottom:none;}
 #modules_list_container_tab table tr td tr td {border: none}
 #modules_list_container_tab table tr:first-child {border-top:1px solid #ccc}
+#modules_list_container_tab table td.tab_modules_actions_row {border-top:1px solid #ccc}
 #modules_list_container_tab .imgm {width:32px;}
-#modules_list_container_tab .moduleDesc { font-size:12px;}
-#modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left}
+#modules_list_container_tab .moduleDesc { font-size:12px;width: 240px;}
+#modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left;white-space: normal;}
 #modules_list_container_tab .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
 #modules_list_container_tab .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
 #modules_list_container_tab .moduleDesc .metadata dl dt, .moduleDesc .metadata dl dd { float:left; margin:0; padding:0;}
 #modules_list_container_tab .moduleDesc .metadata dl dd { padding-right:10px;}
 #modules_list_container_tab .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
-#modules_list_container_tab .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; display:block; clear:both;text-align: left}
-#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; position:relative; padding:2px 3px; display: inline-block; border-radius:3px;}
+#modules_list_container_tab .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; text-align: left;white-space: normal;}
+#modules_list_container_tab .setup  {background-color:#6db300; font-weight:bold; font-size:10px; color:#fff; text-transform:uppercase; position:relative; padding:2px 10px; display: inline-block; border-radius:3px;}
 #modules_list_container_tab .row-actions-module {float: right;}
 #modules_list_container_tab .setup.non-install { background-color:#ec7000;}
 #modules_list_container_tab .setup.must-have { background-color: #ec7000;}
@@ -545,7 +555,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
-.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 115px}
+.default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 140px;}
 #modules_list_container_tab ul li {margin:5px;height:140px}
 
 /*MODULE POSITION*/
@@ -636,4 +646,3 @@ ul.listForm li {padding-bottom:3px;}
 	background: linear-gradient(top, #ddd, #aaa);
 	color: #666
 }
-
