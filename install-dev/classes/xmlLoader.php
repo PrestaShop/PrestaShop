@@ -61,7 +61,6 @@ class InstallXmlLoader
 	{
 		$this->language = InstallLanguages::getInstance();
 		$this->setDefaultPath();
-		require_once _PS_ROOT_DIR_.'/images.inc.php';
 	}
 
 	/**
