@@ -136,7 +136,7 @@ class StoresControllerCore extends FrontController
 			}
 			$smarty->assign('days_datas', $days_datas);
 			$smarty->assign('id_country', $store['id_country']);
-			return self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+			return $this->context->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 		}
 		return false;
 	}

@@ -407,22 +407,6 @@ class FrontControllerCore extends Controller
 	
 	public function postProcess()
 	{
-		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
-		if (method_exists(get_class($this), 'preProcess'))
-		{
-			$reflection = new ReflectionClass($this);
-			if (!in_array($reflection->getMethod('preProcess')->class, array('FrontController', 'FrontControllerCore')))
-			{
-				Tools::displayAsDeprecated('Method preProcess() is deprecated in controllers, use method postProcess() instead');
-				$this->preProcess();
-			}
-		}*/
-
-		//$this->preProcess();
-	}
-
-	public function preProcess()
-	{
 	}
 
 	public function initContent()
