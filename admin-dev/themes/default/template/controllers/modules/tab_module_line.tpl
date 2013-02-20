@@ -26,7 +26,7 @@
 
 <tr class="{$class_row}">
 	<td>
-		<table width="100%" border="0" cellpadding="0" cellspacing="5">
+		<table border="0" cellpadding="0" cellspacing="5">
 			<tr>
 				<td height="60" valign="top" width="75" align="center">
 					<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
@@ -63,8 +63,8 @@
 						
 					{/if}
 				</td>
-				<td  class="tab_modules_actions_row" height="20" border="0" width="100" valign="bottom">
-					<div style="float:right">
+				<td  class="tab_modules_actions_row" height="20" border="0"  valign="bottom" align="right">
+					<div class="btn_right">
 						{if isset($module->type) && $module->type == 'addonsMustHave'}
 							<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
 							<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
