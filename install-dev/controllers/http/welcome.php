@@ -25,31 +25,20 @@
 */
 
 /**
- * Step 1 : display agrement form
+ * Step 1 : display language form
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp
 {
-	/**
-	 * Process welcome form
-	 *
-	 * @see InstallAbstractModel::process()
-	 */
 	public function processNextStep()
 	{
-		$this->session->licence_agrement = Tools::getValue('licence_agrement');
-		$this->session->configuration_agrement = Tools::getValue('configuration_agrement');
+
 	}
 
-	/**
-	 * Licence agrement must be checked to validate this step
-	 *
-	 * @see InstallAbstractModel::validate()
-	 */
 	public function validate()
 	{
-		return $this->session->licence_agrement;
+		return true;
 	}
-
+	
 	/**
 	 * Change language
 	 */

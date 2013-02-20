@@ -4,14 +4,16 @@
 <div id="dbPart">
 	<h2><?php echo $this->l('Configure your database by filling out the following fields:') ?></h2>
 	<p>
-		<?php echo $this->l('You have to create a database, help available in <a href="http://doc.prestashop.com" target="_blank">our online documentation</a>.') ?>
+		<?php echo $this->l('To use PrestaShop, you must <a href="http://doc.prestashop.com" target="_blank">create a database</a> to collect all of your store’s data-related activities.') ?>
+		<br />
+		<?php echo $this->l('Please complete the fields below in order for PrestaShop to connect to your database. ') ?>
 	</p>
 
 	<div id="formCheckSQL">
 		<p class="first" style="margin-top: 15px;">
 			<label for="dbServer"><?php echo $this->l('Database server address:') ?> </label>
 			<input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server) ?>" />
-			<span class="userInfos aligned"><?php echo $this->l('If you want to use a different port, add :XX after your server address where XX is your port number.') ?></span>
+			<span class="userInfos aligned"><?php echo $this->l('The default port is 3306. To use a different port, add the port number at the end of your server’s address i.e ":4242".') ?></span>
 		</p>
 		<p>
 			<label for="dbName"><?php echo $this->l('Database name:') ?> </label>
@@ -43,7 +45,7 @@
 			</p>
 		<?php endif; ?>
 		<p class="aligned last">
-			<input id="btTestDB" class="button" type="button" value="<?php echo $this->l('Verify now!') ?>"/>
+			<input id="btTestDB" class="button" type="button" value="<?php echo $this->l('Test your database connection now!') ?>"/>
 		</p>
 
 		<?php if ($this->errors): ?>
@@ -55,6 +57,7 @@
 </div>
 
 <!-- Email configuration -->
+<!--
 <div id="mailPart">
 	<h2><?php echo $this->l('E-mail delivery set-up') ?></h2>
 
@@ -102,5 +105,5 @@
 	</p>
 	<p id="mailResultCheck" style="display: none;"></p>
 </div>
-
+-->
 <?php $this->displayTemplate('footer') ?>
