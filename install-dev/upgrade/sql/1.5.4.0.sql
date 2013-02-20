@@ -32,3 +32,6 @@ CREATE TABLE `PREFIX_tab_module_preference` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 /* PHP:add_new_tab(AdminMarketing, es:Marketing|it:Marketing|en:Marketing|de:Marketing|fr:Marketing,  1); */;
+
+ALTER TABLE `PREFIX_stock_available` DROP INDEX `product_sqlstock`;
+ALTER TABLE `PREFIX_stock_available` ADD UNIQUE `product_sqlstock` (`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`);
