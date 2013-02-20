@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(dirname(__FILE__).'/../images.inc.php');
-
 function bindDatepicker($id, $time)
 {
 	if ($time)
