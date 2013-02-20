@@ -352,6 +352,14 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
+	protected function loadObject($opt = false)
+	{
+		$result = parent::loadObject($opt);
+		if ($result && Validate::isLoadedObjec($this->object))
+			$this->object->loadStockData();
+		return $result;
+	}
+
 	public function ajaxProcessDeleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdProduct((int)Tools::getValue('id_product'))))
