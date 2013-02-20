@@ -8,7 +8,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 
 <!-- Configuration form -->
 <div id="infosShopBlock">
-	<h2><?php echo $this->l('Shop settings and merchant account information') ?></h2>
+	<h2><?php echo $this->l('Information about your Store') ?></h2>
 
 	<!-- Shop name -->
 	<div class="field clearfix">
@@ -31,7 +31,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 				<option value="0"><?php echo $this->l('Other activity...') ?></option>
 			</select>
 		</div>
-		<p class="userInfos aligned"><?php echo $this->l('This information is not required, it will only be used for statistical purposes. This information does not change anything in your store.') ?></p>
+		<p class="userInfos aligned"><?php echo $this->l('Help us learn more about your store so we can offer you optimal guidance and the best features for your business!') ?></p>
 	</div>
 
 	<!-- Install type (with fixtures or not) -->
@@ -86,7 +86,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<div class="contentinput">
 			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
 		</div>
-		<p class="userInfos aligned"><?php echo $this->l('Recommended dimensions:') ?><br />209px x 52px</p>
+		<p class="userInfos aligned"><?php echo $this->l('Optional - You can add you logo at a later time.') ?></p>
 
 		<div id="inputFileLogo" class="contentinput" style="top:-20px;position:relative">
 			<input type="file" name="fileToUpload" id="fileToUpload"/>
@@ -121,6 +121,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 			<input type="text" class="text required" id="infosEmail" name="admin_email" value="<?php echo htmlspecialchars($this->session->admin_email) ?>" />
 			<sup class="required">*</sup>
 		</div>
+		<p class="userInfos aligned"><?php echo $this->l('This email address will be your username to access your store\'s back office.') ?></p>
 		<?php echo $this->displayError('admin_email') ?>
 	</div>
 

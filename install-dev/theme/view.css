@@ -477,7 +477,8 @@ ul#optional {
 }
 	ul#required li.ok, 
 	ul#optional li.ok{
-		background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px
+		display:none
+		/*background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px*/
 }
 	ul#required li.fail,
 	ul#optional li.fail {
