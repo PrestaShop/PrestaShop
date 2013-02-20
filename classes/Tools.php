@@ -1277,7 +1277,7 @@ class ToolsCore
 
 	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
-		if ($stream_context == null && !preg_match('/^https?:\/\//', $url))
+		if ($stream_context == null && preg_match('/^https?:\/\//', $url))
 			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
 			return @file_get_contents($url, $use_include_path, $stream_context);
