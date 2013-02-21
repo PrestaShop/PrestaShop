@@ -56,6 +56,7 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
+							3 => $this->l('Never send emails (may be useful for test purpose)'), 
 							1 => $this->l('Use PHP mail() function. Recommended; works in most cases'), 
 							2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')
 						),
