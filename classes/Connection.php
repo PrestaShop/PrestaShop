@@ -145,7 +145,7 @@ class ConnectionCore extends ObjectModel
 			$connection->id_shop_group = Context::getContext()->shop->id_shop_group;
 			$connection->date_add = $cookie->date_add;
 			if (Validate::isAbsoluteUrl($referer))
-				$connection->http_referer = $referer;
+				$connection->http_referer = substr($referer, 0, 254);
 			$connection->add();
 			$cookie->id_connections = $connection->id;
 			return $connection->id_page;
