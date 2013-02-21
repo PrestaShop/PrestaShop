@@ -158,7 +158,7 @@
 				{/if}
 				</td>
 				<td colspan="2" class="price-discount price" id="total_discount">
-				{if $use_taxes}
+				{if $use_taxes && $priceDisplay == 0}
 					{assign var='total_discounts_negative' value=$total_discounts * -1}
 				{else}
 					{assign var='total_discounts_negative' value=$total_discounts_tax_exc * -1}
