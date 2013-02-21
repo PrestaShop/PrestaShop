@@ -348,9 +348,9 @@ class StatsForecast extends Module
 			foreach ($ca['payment'] as $payment)
 				$this->_html .= '
 					<tr>
-						<td>'.$payment['module'].'</td>
-						<td style="text-align:center;padding:4px">'.(int)$payment['nb'].'<br />'.($ca['ventil']['nb'] ? number_format((100 * $payment['nb'] / $ca['ventil']['nb']), 1, '.', ' ') : '0').' %</td>
-						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'<br />'.((int)$ca['ventil']['total'] ? number_format((100 * $payment['total'] / $ca['ventil']['total']), 1, '.', ' ') : '0').' %</td>
+						<td>'.$payment['payment_method'].'</td>
+						<td style="text-align:center;padding:4px">'.(int)$payment['nb'].'</td>
+						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['total'], $currency).'</td>
 						<td style="text-align:center;padding:4px">'.Tools::displayPrice($payment['cart'], $currency).'</td>
 					</tr>';
 			$this->_html .= '
@@ -518,14 +518,15 @@ class StatsForecast extends Module
 			$ca['langprev'] = array();
 		}
 
-		$sql = 'SELECT module, SUM(total_paid_tax_incl / o.conversion_rate) as total, COUNT(*) as nb, AVG(total_paid_tax_incl / o.conversion_rate) as cart
+		$sql = 'SELECT op.payment_method, SUM(amount / o.conversion_rate) as total, COUNT(*) as nb, AVG(amount / o.conversion_rate) as cart
 				FROM `'._DB_PREFIX_.'orders` o
+				LEFT JOIN `'._DB_PREFIX_.'order_payment` op ON o.reference = op.order_reference
 				'.$join.'
 				WHERE o.valid = 1
 				AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$where.'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-				GROUP BY o.module
+				GROUP BY op.payment_method
 				ORDER BY total DESC';
 		$ca['payment'] = Db::getInstance()->executeS($sql);
 
