@@ -558,14 +558,11 @@ class HomeSlider extends Module
 			$languages = Language::getLanguages(false);
 			foreach ($languages as $language)
 			{
-				if (Tools::getValue('title_'.$language['id_lang']) != '')
-					$slide->title[$language['id_lang']] = Tools::getValue('title_'.$language['id_lang']);
-				if (Tools::getValue('url_'.$language['id_lang']) != '')
-					$slide->url[$language['id_lang']] = Tools::getValue('url_'.$language['id_lang']);
-				if (Tools::getValue('legend_'.$language['id_lang']) != '')
-					$slide->legend[$language['id_lang']] = Tools::getValue('legend_'.$language['id_lang']);
-				if (Tools::getValue('description_'.$language['id_lang']) != '')
-					$slide->description[$language['id_lang']] = Tools::getValue('description_'.$language['id_lang']);
+				$slide->title[$language['id_lang']] = Tools::getValue('title_'.$language['id_lang']);
+				$slide->url[$language['id_lang']] = Tools::getValue('url_'.$language['id_lang']);
+				$slide->legend[$language['id_lang']] = Tools::getValue('legend_'.$language['id_lang']);
+				$slide->description[$language['id_lang']] = Tools::getValue('description_'.$language['id_lang']);
+
 				/* Uploads image and sets slide */
 				$type = strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['name'], '.'), 1));
 				$imagesize = array();
@@ -601,7 +598,8 @@ class HomeSlider extends Module
 				{
 					if (!$slide->add())
 						$errors[] = $this->displayError($this->l('Slide could not be added'));
-				} /* Update */
+				}
+				/* Update */
 				elseif (!$slide->update())
 					$errors[] = $this->displayError($this->l('Slide could not be updated'));
 				$this->clearCache();
