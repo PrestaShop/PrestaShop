@@ -50,15 +50,16 @@ class StatsData extends Module
 	
 	public function getContent()
 	{
+		$html = '';
 		if (Tools::isSubmit('submitStatsData'))
 		{
 			Configuration::updateValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_CUSTOMER_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PAGESVIEWS', (int)Tools::getValue('PS_STATSDATA_PAGESVIEWS'));
 			Configuration::updateValue('PS_STATSDATA_PLUGINS', (int)Tools::getValue('PS_STATSDATA_PLUGINS'));
-			echo '<div class="conf">'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="conf">'.$this->l('Configuration updated').'</div>';
 		}
 	
-		return '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
+		$html .=  '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Settings').'</legend>
 			<label>'.$this->l('Save page views for each customer').'</label>
 			<div class="margin-form">
@@ -89,6 +90,8 @@ class StatsData extends Module
 			<div class="clear">&nbsp;</div>
 			<input type="submit" class="button" name="submitStatsData" value="'.$this->l('Update').'" />
 		</fieldset>';
+
+		return $html;
 	}
 
 	public function hookFooter($params)
