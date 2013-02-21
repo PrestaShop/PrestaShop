@@ -296,6 +296,11 @@ class ConfigurationTestCore
 
 	public static function test_mcrypt()
 	{
+		return function_exists('mb_strtolower');
+	}
+
+	public static function test_mcrypt()
+	{
 		return function_exists('mcrypt_encrypt');
 	}
 
