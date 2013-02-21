@@ -270,11 +270,7 @@ class ImageManagerCore
 	public static function validateUpload($file, $max_file_size = 0)
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
-			return sprintf(
-				Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
-				$file['size'] / 1000,
-				$max_file_size / 1000
-			);
+			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
 		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
