@@ -3474,18 +3474,17 @@ class AdminProductsControllerCore extends AdminController
 					$current_shop_id = 0;
 					
 				$data->assign(array(
-									'countImages' => $count_images,
-									'id_product' => (int)Tools::getValue('id_product'),
-									'id_category_default' => (int)$this->_category->id,
-									'images' => $images,
-									'token' =>  $this->token,
-									'table' => $this->table,
-									'max_image_size' => $this->max_image_size / 1024 / 1024,
-									'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
-									'currency' => $this->context->currency,
-									'current_shop_id' => $current_shop_id
-									)
-								);
+						'countImages' => $count_images,
+						'id_product' => (int)Tools::getValue('id_product'),
+						'id_category_default' => (int)$this->_category->id,
+						'images' => $images,
+						'token' =>  $this->token,
+						'table' => $this->table,
+						'max_image_size' => $this->max_image_size / 1024 / 1024,
+						'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
+						'currency' => $this->context->currency,
+						'current_shop_id' => $current_shop_id
+				));
 			}
 			else
 				$this->displayWarning($this->l('You must save the product in this shop before adding images.'));	

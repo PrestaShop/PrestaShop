@@ -35,3 +35,5 @@ CREATE TABLE `PREFIX_tab_module_preference` (
 
 ALTER TABLE `PREFIX_stock_available` DROP INDEX `product_sqlstock`;
 ALTER TABLE `PREFIX_stock_available` ADD UNIQUE `product_sqlstock` (`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`);
+
+UPDATE PREFIX_configuration SET `value` = '8388608' WHERE `name` = 'PS_PRODUCT_PICTURE_MAX_SIZE' AND `value` <= '524288';
