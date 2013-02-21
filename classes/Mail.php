@@ -54,18 +54,6 @@ class MailCore
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null, $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null)
 	{
-		$theme_path = _PS_THEME_DIR_;
-
-		// Get the path of theme by id_shop if exist
-		if (is_numeric($id_shop) && $id_shop)
-		{
-			$shop = new Shop((int)$id_shop);
-			$theme_name = $shop->getTheme();
-
-			if (_THEME_NAME_ != $theme_name)
-				$theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
-		}
-
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHOP_EMAIL',
 			'PS_MAIL_METHOD',
@@ -78,6 +66,22 @@ class MailCore
 			'PS_MAIL_METHOD',
 			'PS_MAIL_TYPE'
 		));
+		
+		// Returns immediatly if emails are deactivated
+		if ($configuration['PS_MAIL_METHOD'] == 3)
+			return true;
+		
+		$theme_path = _PS_THEME_DIR_;
+
+		// Get the path of theme by id_shop if exist
+		if (is_numeric($id_shop) && $id_shop)
+		{
+			$shop = new Shop((int)$id_shop);
+			$theme_name = $shop->getTheme();
+
+			if (_THEME_NAME_ != $theme_name)
+				$theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
+		}
 
 		if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']))
 			$configuration['PS_MAIL_SMTP_ENCRYPTION'] = 'off';
