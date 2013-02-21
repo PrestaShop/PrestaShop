@@ -294,7 +294,7 @@ class ConfigurationTestCore
 		return ConfigurationTest::test_dir($dir);
 	}
 
-	public static function test_mcrypt()
+	public static function test_mbstring()
 	{
 		return function_exists('mb_strtolower');
 	}

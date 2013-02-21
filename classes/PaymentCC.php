@@ -53,15 +53,6 @@ class PaymentCCCore extends OrderPayment
 		'primary' => 'id_payment_cc',
 	);
 
-	/**
-	 * @deprecated 1.5.0.2
-	 * @see OrderPaymentCore
-	 */
-	public function getFields()
-	{
-		Tools::displayAsDeprecated();
-		return parent::getFields();
-	}
 
 	/**
 	 * @deprecated 1.5.0.2
