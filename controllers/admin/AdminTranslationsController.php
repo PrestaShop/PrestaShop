@@ -657,6 +657,8 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					foreach ($files_list as $file2check)
 					{
+                        // skip folders inside the archive
+                        if(is_dir($sandbox.$file2check['filename'])) continue;
 						//don't validate index.php, will be overwrite when extract in translation directory
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php')
 							continue;
