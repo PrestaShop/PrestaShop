@@ -411,19 +411,18 @@ class AuthControllerCore extends FrontController
 			{
 				if (Tools::isSubmit('newsletter'))
 					$this->processCustomerNewsletter($customer);
+
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 				if (!Validate::isBirthDate($customer->birthday))
 					$this->errors[] = Tools::displayError('Invalid birthday.');
-				$customer->active = 1;
+
 				// New Guest customer
-				if (Tools::isSubmit('is_new_customer'))
-					$customer->is_guest = !Tools::getValue('is_new_customer', 1);
-				else
-					$customer->is_guest = 0;
+				$customer->is_guest = (Tools::isSubmit('is_new_customer') ? !Tools::getValue('is_new_customer', 1) : 0);
+				$customer->active = 1;
+
 				if (!count($this->errors))
-					if (!$customer->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
-					else
+				{
+					if ($customer->add())
 					{
 						if (!$customer->is_guest)
 							if (!$this->sendConfirmationMail($customer))
@@ -456,6 +455,9 @@ class AuthControllerCore extends FrontController
 						else
 							Tools::redirect('index.php?controller=my-account');
 					}
+					else
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
+				}
 			}
 
 		}
