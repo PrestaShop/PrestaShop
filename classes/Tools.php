@@ -1811,7 +1811,7 @@ exit;
 				$message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
 			}
 			$class = isset($callee['class']) ? $callee['class'] : null;
-			Logger::addLog($message, 3, $class);
+			Logger::addLog($message, Logger::ERROR, $class);
 		}
 	}
 
@@ -1845,8 +1845,9 @@ exit;
 	{
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
+            // TODO Why is it commented out?
 //			trigger_error($error, E_USER_WARNING);
-			Logger::addLog($message, 3, $class);
+			Logger::addLog($message, Logger::WARNING, $class);
 		}
 	}
 

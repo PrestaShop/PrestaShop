@@ -24,8 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class	LoggerCore extends ObjectModel
+class LoggerCore extends ObjectModel
 {
+    // Error severity levels
+    const INFORMATIVE_ONLY = 1;
+    const WARNING          = 2;
+    const ERROR            = 3;
+    const CRASH            = 4;
+
 	/** @var integer Log id */
 	public $id_log;
 
