@@ -37,7 +37,6 @@ class AdminCmsControllerCore extends AdminController
 		$this->table = 'cms';
 		$this->className = 'CMS';
 		$this->lang = true;
-		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
@@ -48,7 +47,7 @@ class AdminCmsControllerCore extends AdminController
 			'meta_title' => array('title' => $this->l('Title'), 'width' => '300', 'filter_key' => 'b!meta_title'),
 			'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 			'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
-			);
+		);
 
 		// The controller can't be call directly
 		// In this case, AdminCmsContentController::getCurrentCMSCategory() is null
