@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
 require_once(dirname(__FILE__).'/../config/config.inc.php');
-require_once(dirname(__FILE__).'/init.php');
 
 if (isset($_GET['img']) AND Validate::isMd5($_GET['img']) AND isset($_GET['name']) AND Validate::isGenericName($_GET['name']) AND file_exists(_PS_UPLOAD_DIR_.$_GET['img']))
 {
