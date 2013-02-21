@@ -94,7 +94,7 @@ class ReferralProgramModule extends ObjectModel
 		$cartRule->code = $this->getDiscountPrefix().Tools::passwdGen(6);
 		$cartRule->name = Configuration::getInt('REFERRAL_DISCOUNT_DESCRIPTION');
 		$cartRule->id_customer = (int)$id_customer;
-		$cartRule->id_currency = (int)$id_currency;
+		$cartRule->reduction_currency = (int)$id_currency;
 
 		if ($cartRule->add())
 		{
