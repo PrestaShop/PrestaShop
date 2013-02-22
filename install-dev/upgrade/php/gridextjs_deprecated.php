@@ -36,7 +36,7 @@ function gridextjs_deprecated()
 		if (defined('_PS_ROOT_DIR_'))
 			$gridextjs_path = _PS_ROOT_DIR_ . '/modules/gridextjs';
 		else
-			$gridextjs_path = dirname(__FILE__).'/../../modules/gridextjs';
+			$gridextjs_path = dirname(__FILE__).'/../../../modules/gridextjs';
 
 	if (file_exists($gridextjs_path))
 		return rename($gridextjs_path, str_replace('gridextjs', 'gridextjs.deprecated', $gridextjs_path));
