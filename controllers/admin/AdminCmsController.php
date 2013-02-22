@@ -73,6 +73,11 @@ class AdminCmsControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Save and preview')
 		);
+		$this->toolbar_btn['save-and-stay'] = array(
+			'short' => 'SaveAndStay',
+			'href' => '#',
+			'desc' => $this->l('Save and stay'),
+		);
 		$this->initToolbar();
 		if (!$this->loadObject(true))
 			return;
@@ -325,6 +330,8 @@ class AdminCmsControllerCore extends AdminController
                     }
                     Tools::redirectAdmin($preview_url);
                 }
+                elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+                    $this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$this->token;
                 else
 					Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 			}
