@@ -81,8 +81,9 @@ class PDFCore
 
 		if ($render)
 		{
-			// clean the output buffer to avoid random bugs with tcpdf
-			@ob_end_clean(); //if you change zlib output compression setting in between ob_start and ob_end_clean or ob_end_flush, you will get an error
+			// clean the output buffer
+			if (ob_get_level() && ob_get_length() > 0)
+				ob_clean();
 			return $this->pdf_renderer->render($this->filename, $display);
 		}
 	}
