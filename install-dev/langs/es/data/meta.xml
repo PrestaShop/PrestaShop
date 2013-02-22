@@ -151,7 +151,7 @@
     <url_rewrite>estado-pedido</url_rewrite>
   </meta>
   <meta id="order-confirmation" id_shop="1">
-    <title>Confirmación de pedido</title>
+    <title>Confirmaci&#xF3;n de pedido</title>
     <description/>
     <keywords/>
     <url_rewrite>confirmacion-pedido</url_rewrite>
