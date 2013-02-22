@@ -570,7 +570,8 @@ class AdminControllerCore extends Controller
 	public function processExport()
 	{
 		// clean buffer
-		ob_clean();
+		if (ob_get_level() && ob_get_length() > 0)
+			ob_clean();
 		$this->getList($this->context->language->id);
 		if (!count($this->_list))
 			return;
