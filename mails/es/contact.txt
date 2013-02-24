@@ -8,4 +8,8 @@ Mensaje:
 
 {message}
 
+Order ID : {id_order}
+
+Archivo : {attached_file}
+
 {shop_url} desarrollado por PrestaShop™

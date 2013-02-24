@@ -8,4 +8,8 @@ Message
 
 {message}
 
+Référence commande : {order_name}
+
+Fichier attaché : {attached_file}
+
 {shop_url} réalisé avec PrestaShop™
