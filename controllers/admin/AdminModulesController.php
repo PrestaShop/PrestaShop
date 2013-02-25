@@ -259,9 +259,9 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 		$this->context->smarty->assign(array(
-				'tab_modules_list' => $modules_list,
-				'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
-				));
+			'tab_modules_list' => $modules_list,
+			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites'
+		));
 		
 		$this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
 		exit;

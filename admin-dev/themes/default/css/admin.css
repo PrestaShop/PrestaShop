@@ -235,7 +235,10 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-help-new{ background-image: url('../img/process-icon-help-new.png');}
 .toolbarBox .process-icon-modules-list{ background-image: url('../img/process-icon-modules-list.png');}
 
-.toolbarBox #modules_list_container {
+.toolbarReduced {margin-right:221px}
+#modules_list_button {width:211px;height:63px;border:none;float:right;background-image:url('../img/modules_list_button.png');font-size: 1.6em;cursor:pointer;padding-left:45px;margin-top:-73px}
+
+#modules_list_container {
 	background: none repeat scroll 0 0 #FFF;
 	border: solid 1px #CCC;
 	display: block;
@@ -244,7 +247,7 @@ a.module_toggle_all{color: #268CCD;}
 	width: 300px;
 	position: absolute;
 	right: 13px;
-	top: 63px;
+	top: 83px;
 	z-index: 100;
 	padding: 10px;
 	box-shadow: 1px 5px 5px #CCCCCC;
@@ -253,29 +256,29 @@ a.module_toggle_all{color: #268CCD;}
 	opacity: 1;
 
 }
-.toolbarBox #modules_list_container #modules_list_container_content
+#modules_list_container #modules_list_container_content
 {
 	max-height: 500px;
     overflow: auto;
 
 }
 
-.toolbarBox #modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
-.toolbarBox #modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
-.toolbarBox #modules_list_container #modules_list_container_tab tr { height: auto}
-.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
-.toolbarBox #modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
-.toolbarBox #modules_list_container #modules_list_loader {margin-top: 10px}
-.toolbarBox #modules_list_container .nav-tabs-modules:after {clear: both;}
-.toolbarBox #modules_list_container .nav-tabs-modules > li {height: 19px;}
-.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
+#modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
+#modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
+#modules_list_container #modules_list_container_tab tr { height: auto}
+#modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
+#modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
+#modules_list_container #modules_list_loader {margin-top: 10px}
+#modules_list_container .nav-tabs-modules:after {clear:both}
+#modules_list_container .nav-tabs-modules > li {height: 19px;float:left}
+#modules_list_container .nav-tabs-modules > li > a {
   padding-right: 12px;
   padding-left: 12px;
   margin-right: 2px;
   line-height: 14px;
 }
 
-.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
+#modules_list_container .nav-tabs-modules > li > a {
   padding-top: 8px;
   padding-bottom: 7px;
   border: 1px solid transparent;
@@ -285,15 +288,15 @@ a.module_toggle_all{color: #268CCD;}
           border-radius: 4px 4px 0 0;
 }
 
-.toolbarBox #modules_list_container .nav-tabs-modules > li > a:hover {
+#modules_list_container .nav-tabs-modules > li > a:hover {
   border-color: #C0C0C0;
   background-color: #ffffff;
 }
 
-.toolbarBox #modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
+#modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
 
-.toolbarBox #modules_list_container .nav-tabs-modules > .active > a,
-.toolbarBox #modules_list_container .nav-tabs-modules > .active > a:hover {
+#modules_list_container .nav-tabs-modules > .active > a,
+#modules_list_container .nav-tabs-modules > .active > a:hover {
   color: #555555;
   cursor: default;
   background-color: #EEE;
