@@ -131,6 +131,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
 
 		$this->show_toolbar = false;
+		$this->tpl_list_vars = array('id_tax_rules_group' => (int)$id_group);
 
 		return parent::renderList();
 	}
