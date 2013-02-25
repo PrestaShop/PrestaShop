@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -85,7 +85,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'upload' => $this->l('Can upload files ?'),
 						'system' => $this->l('Can create new files and folders ?'),
 						'gd' => $this->l('Is GD Library installed ?'),
-						'mysql_support' => $this->l('Is MySQL support is on ?'),
+						'mysql_support' => $this->l('Is MySQL support on ?'),
 					)
 				),
 				array(
@@ -116,7 +116,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'gz' => $this->l('Is GZIP compression activated (recommended) ?'),
 						'mcrypt' => $this->l('Is Mcrypt extension available (recommended) ?'),
 						'magicquotes' => $this->l('Is PHP magic quotes option deactivated (recommended) ?'),
-						'dom' => $this->l('Is Dom extension loaded ?'),
+						'dom' => $this->l('Is DOM extension loaded ?'),
 						'pdo_mysql' => $this->l('Is PDO MySQL extension loaded ?'),
 					)
 				),

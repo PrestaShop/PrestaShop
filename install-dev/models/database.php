@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,7 +74,7 @@ class InstallModelDatabase extends InstallAbstractModel
 				break;
 
 				case 1:
-					$errors[] = $this->language->l('Database Server is not found. Please verify the login, password and server fields').$dbtype;
+					$errors[] = $this->language->l('Database server not found. Please verify the login, password and server fields').$dbtype;
 				break;
 
 				case 2:
@@ -82,7 +82,7 @@ class InstallModelDatabase extends InstallAbstractModel
 				break;
 
 				case 4:
-					$errors[] = $this->language->l('Engine innoDB is not supported by your MySQL server, please use MyISAM').$dbtype;
+					$errors[] = $this->language->l('InnoDB engine is not supported by your MySQL server, please use MyISAM').$dbtype;
 				break;
 			}
 		}
