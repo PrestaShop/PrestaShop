@@ -84,7 +84,7 @@ class GroupCore extends ObjectModel
 		ORDER BY g.`id_group` ASC');
 	}
 
-	public function getCustomers($count = false, $start = 0, $limit = 0)
+	public function getCustomers($count = false, $start = 0, $limit = 0, $shop_filtering = false)
 	{
 		if ($count)
 			return Db::getInstance()->getValue('
@@ -92,6 +92,7 @@ class GroupCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customer_group` cg
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
 			WHERE cg.`id_group` = '.(int)$this->id.'
+			'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 			AND c.`deleted` != 1');
 		return Db::getInstance()->executeS('
 		SELECT cg.`id_customer`, c.*
@@ -99,6 +100,7 @@ class GroupCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
 		WHERE cg.`id_group` = '.(int)$this->id.'
 		AND c.`deleted` != 1
+		'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 		ORDER BY cg.`id_customer` ASC
 		'.($limit > 0 ? 'LIMIT '.(int)$start.', '.(int)$limit : ''));
 	}
