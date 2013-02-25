@@ -374,8 +374,6 @@ class AdminFeaturesControllerCore extends AdminController
 
 		parent::initProcess();
 
-		if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add'))
-			$this->display = 'editFeatureValue';
 	}
 
 	public function postProcess()
@@ -391,6 +389,9 @@ class AdminFeaturesControllerCore extends AdminController
 				array('errors' => &$this->errors)); // send errors as reference to allow displayFeaturePostProcess to stop saving process
 
 		parent::postProcess();
+
+		if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add'))
+			$this->display = 'editFeatureValue';
 	}
 
 	/**
@@ -403,7 +404,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
-		else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
+		elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
 			$this->display = 'editFeatureValue';
 
 		return $object;
