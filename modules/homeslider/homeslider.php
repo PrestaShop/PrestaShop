@@ -463,15 +463,15 @@ class HomeSlider extends Module
 			$languages = Language::getLanguages(false);
 			foreach ($languages as $language)
 			{
-				if (strlen(Tools::getValue('title_'.$language['id_lang'])) > 40)
+				if (Tools::strlen(Tools::getValue('title_'.$language['id_lang'])) > 255)
 					$errors[] = $this->l('Title is too long');
-				if (strlen(Tools::getValue('legend_'.$language['id_lang'])) > 40)
+				if (Tools::strlen(Tools::getValue('legend_'.$language['id_lang'])) > 255)
 					$errors[] = $this->l('Legend is too long');
-				if (strlen(Tools::getValue('url_'.$language['id_lang'])) > 200)
+				if (Tools::strlen(Tools::getValue('url_'.$language['id_lang'])) > 255)
 					$errors[] = $this->l('URL is too long');
-				if (strlen(Tools::getValue('description_'.$language['id_lang'])) > 400)
+				if (Tools::strlen(Tools::getValue('description_'.$language['id_lang'])) > 4000)
 					$errors[] = $this->l('Description is too long');
-				if (strlen(Tools::getValue('url_'.$language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_'.$language['id_lang'])))
+				if (Tools::strlen(Tools::getValue('url_'.$language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_'.$language['id_lang'])))
 					$errors[] = $this->l('URL format is not correct');
 				if (Tools::getValue('image_'.$language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_'.$language['id_lang'])))
 					$errors[] = $this->l('Invalid filename');
@@ -481,11 +481,11 @@ class HomeSlider extends Module
 
 			/* Checks title/url/legend/description for default lang */
 			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
-			if (strlen(Tools::getValue('title_'.$id_lang_default)) == 0)
+			if (Tools::strlen(Tools::getValue('title_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('Title is not set');
-			if (strlen(Tools::getValue('legend_'.$id_lang_default)) == 0)
+			if (Tools::strlen(Tools::getValue('legend_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('Legend is not set');
-			if (strlen(Tools::getValue('url_'.$id_lang_default)) == 0)
+			if (Tools::strlen(Tools::getValue('url_'.$id_lang_default)) == 0)
 				$errors[] = $this->l('URL is not set');
 			if (!Tools::isSubmit('has_picture') && (!isset($_FILES['image_'.$id_lang_default]) || empty($_FILES['image_'.$id_lang_default]['tmp_name'])))
 				$errors[] = $this->l('Image is not set');
