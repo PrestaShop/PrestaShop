@@ -36,13 +36,6 @@ class AdminGroupsControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->_select = '
-		(SELECT COUNT(jcg.`id_customer`)
-		FROM `'._DB_PREFIX_.'customer_group` jcg
-		LEFT JOIN `'._DB_PREFIX_.'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
-		WHERE jc.`deleted` != 1
-		AND jcg.`id_group` = a.`id_group`) AS nb';
-
 		$groups_to_keep = array(
 			Configuration::get('PS_UNIDENTIFIED_GROUP'),
 			Configuration::get('PS_GUEST_GROUP'),
@@ -90,6 +83,13 @@ class AdminGroupsControllerCore extends AdminController
 		$this->addRowActionSkipList('delete', $groups_to_keep);
 
 		parent::__construct();
+
+		$this->_select .= '(SELECT COUNT(jcg.`id_customer`)
+		FROM `'._DB_PREFIX_.'customer_group` jcg
+		LEFT JOIN `'._DB_PREFIX_.'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
+		WHERE jc.`deleted` != 1
+		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+		AND jcg.`id_group` = a.`id_group`) AS nb';
 	}
 
 	public function setMedia()
@@ -158,7 +158,7 @@ class AdminGroupsControllerCore extends AdminController
 				'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
 			));
 
-		$customer_list = $group->getCustomers(false);
+		$customer_list = $group->getCustomers(false, 0, 0, true);
 
 		$helper = new HelperList();
 		$helper->currentIndex = Context::getContext()->link->getAdminLink('AdminCustomers', false);
