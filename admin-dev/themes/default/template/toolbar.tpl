@@ -24,7 +24,7 @@
 *}
 
 <div class="toolbar-placeholder">
-	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
+	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if} {if isset($tab_modules_list)}toolbarReduced{/if}">
 		{block name=toolbarBox}
 			<ul class="cc_button">
 				{foreach from=$toolbar_btn item=btn key=k}
@@ -33,15 +33,6 @@
 							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></span>
 							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
 						</a>
-						{if $k == 'modules-list'}
-							<div id="modules_list_container" style="display:none">
-							<div style="float:right;top:-5px">
-								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
-							</div>
-							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
-							<div id="modules_list_container_tab" style="display:none;"></div>
-							</div>
-						{/if}
 					</li>
 				{/foreach}
 			</ul>
@@ -117,13 +108,51 @@
 							}
 						{/block}
 					}
-					{if isset($tab_modules_open)}
-						if ({$tab_modules_open})
-							openModulesList();
-					{/if}
 				});
-				{if isset($tab_modules_list)}
-				$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
+			//]]>
+			</script>
+		{/block}
+		<div class="pageTitle">
+			<h3>{block name=pageTitle}
+				<span id="current_obj" style="font-weight: normal;">
+					{if $title}
+						{foreach $title as $key => $item name=title}
+							{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
+							<span class="breadcrumb item-{$key} ">{$item|strip_tags}
+								{if !$smarty.foreach.title.last}
+									<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
+								{/if}
+							</span>
+						{/foreach}
+					{else}
+						&nbsp;
+					{/if}
+				</span>
+				{/block}
+			</h3>
+		</div>
+	</div>
+	{if isset($tab_modules_list)}
+		<button id="modules_list_button">
+			{l s='Modules list'}
+		</button>
+		<div class="clear">&nbsp;</div>
+		<div id="modules_list_container" style="display:none">
+			<div style="float:right;top:-5px">
+				<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
+			</div>
+			<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+			<div id="modules_list_container_tab" style="display:none"></div>
+		</div>
+		<script language="javascript" type="text/javascript">
+		//<![CDATA[
+			{if isset($tab_modules_open)}
+				if ({$tab_modules_open})
+					openModulesList();
+			{/if}
+				
+			{if isset($tab_modules_list)}
+				$('#modules_list_button').bind('click', function (){
 					openModulesList();
 				});
 				
@@ -133,7 +162,7 @@
 					if (!modules_list_loaded)
 					{
 						$.ajax({
-							type:"POST",
+							type: "POST",
 							url : '{$admin_module_ajax_url}',
 							async: true,
 							data : {
@@ -158,28 +187,8 @@
 					}
 					return false;
 				}
-				{/if}
-			//]]>
-			</script>
-		{/block}
-		<div class="pageTitle">
-			<h3>{block name=pageTitle}
-				<span id="current_obj" style="font-weight: normal;">
-					{if $title}
-						{foreach $title as $key => $item name=title}
-							{* Use strip_tags because if the string already has been through htmlentities using escape will break it *}
-							<span class="breadcrumb item-{$key} ">{$item|strip_tags}
-								{if !$smarty.foreach.title.last}
-									<img alt="&gt;" style="margin-right:5px" src="../img/admin/separator_breadcrumb.png" />
-								{/if}
-							</span>
-						{/foreach}
-					{else}
-						&nbsp;
-					{/if}
-				</span>
-				{/block}
-			</h3>
-		</div>
-	</div>
+			{/if}
+		//]]>
+		</script>
+	{/if}
 </div>
