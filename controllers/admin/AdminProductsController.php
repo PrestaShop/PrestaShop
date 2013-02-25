@@ -360,6 +360,54 @@ class AdminProductsControllerCore extends AdminController
 		return $result;
 	}
 
+	public function ajaxProcessGetCountriesOptions()
+	{
+		if (!$res = Country::getCountriesByIdShop((int)Tools::getValue('id_shop'), (int)$this->context->language->id))
+			return ;
+
+		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
+		$tpl->assign(array(
+			'option_list' => $res,
+			'key_id' => 'id_country',
+			'key_value' => 'name'
+			)
+		);
+
+		$this->content = $tpl->fetch();
+	}
+	
+	public function ajaxProcessGetCurrenciesOptions()
+	{
+		if (!$res = Currency::getCurrenciesByIdShop((int)Tools::getValue('id_shop')))
+			return ;
+
+		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
+		$tpl->assign(array(
+			'option_list' => $res,
+			'key_id' => 'id_currency',
+			'key_value' => 'name'
+			)
+		);
+
+		$this->content = $tpl->fetch();
+	}
+	
+	public function ajaxProcessGetGroupsOptions()
+	{
+		if (!$res = Group::getGroups((int)$this->context->language->id, (int)Tools::getValue('id_shop')))
+			return ;
+
+		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
+		$tpl->assign(array(
+			'option_list' => $res,
+			'key_id' => 'id_group',
+			'key_value' => 'name'
+			)
+		);
+
+		$this->content = $tpl->fetch();
+	}
+
 	public function ajaxProcessDeleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdProduct((int)Tools::getValue('id_product'))))
