@@ -55,6 +55,17 @@ class CustomerMessageCore extends ObjectModel
 			'read' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
 		),
 	);
+	
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_employee' => array(
+				'xlink_resource' => 'employees'
+			),
+			'id_customer_thread' => array(
+				'xlink_resource' => 'customer_threads'
+			),
+		),
+	);
 
 	public static function getMessagesByOrderId($id_order, $private = true)
 	{

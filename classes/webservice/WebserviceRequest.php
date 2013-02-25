@@ -231,6 +231,8 @@ class WebserviceRequestCore
 			'countries' => array('description' => 'The countries','class' => 'Country'),
 			'currencies' => array('description' => 'The currencies', 'class' => 'Currency'),
 			'customers' => array('description' => 'The e-shop\'s customers','class' => 'Customer'),
+			'customer_threads' => array('description' => 'Customer services threads','class' => 'CustomerThread'),
+			'customer_messages' => array('description' => 'Customer services messages','class' => 'CustomerMessage'),
 			'deliveries' => array('description' => 'Product delivery', 'class' => 'Delivery'),
 			'groups' => array('description' => 'The customer\'s groups','class' => 'Group'),
 			'guests' => array('description' => 'The guests', 'class' => 'Guest'),
