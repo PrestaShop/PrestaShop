@@ -59,6 +59,39 @@ class CustomerThreadCore extends ObjectModel
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
+	
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_lang' => array(
+				'xlink_resource' => 'languages'
+			),
+			'id_shop' => array(
+				'xlink_resource' => 'shops'
+			),
+			'id_customer' => array(
+				'xlink_resource' => 'customers'
+			),
+			'id_order' => array(
+				'xlink_resource' => 'orders'
+			),
+			'id_product' => array(
+				'xlink_resource' => 'products'
+			),
+		),
+		'associations' => array(
+			'customer_messages' => array(
+				'resource' => 'customer_message',
+				'id' => array('required' => true)),
+		)
+	);
+	
+	public function getWsCustomerMessages()
+	{
+		return Db::getInstance()->executeS('
+		SELECT `id_customer_message` id
+		FROM `'._DB_PREFIX_.'customer_message`
+		WHERE `id_customer_thread` = '.(int)$this->id);
+	}
 
 	public function delete()
 	{
