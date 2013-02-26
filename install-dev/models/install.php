@@ -391,6 +391,11 @@ class InstallModelInstall extends InstallAbstractModel
 
 		Context::getContext()->shop = new Shop(1);
 		Configuration::loadConfiguration();
+
+		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
+		if (@ini_get('safe_mode') == 1)
+			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
+	
 		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration
