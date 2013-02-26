@@ -197,24 +197,24 @@ $(document).ready(function() {
 				<!-- Account -->
 				<p class="required text">
 					<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
-					<input type="text" class="text" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}">
+					<input type="text" class="text" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
 				</p>
 				<p class="radio required">
 					<span>{l s='Title'}</span>
 					{foreach from=$genders key=k item=gender}
-						<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id}checked="checked"{/if} />
+						<input type="radio" name="id_gender" id="id_gender{$gender->id}" value="{$gender->id}"{if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id} checked="checked"{/if} />
 						<label for="id_gender{$gender->id}" class="top">{$gender->name}</label>
 					{/foreach}
 				</p>
 				<p class="required text">
 					<label for="firstname">{l s='First name'} <sup>*</sup></label>
-					<input type="text" class="text" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}"/>
-					<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}"/>
+					<input type="text" class="text" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+					<input type="hidden" class="text" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 				</p>
 				<p class="required text">
 					<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-					<input type="text" class="text" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}"/>
-					<input type="hidden" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}"/>
+					<input type="text" class="text" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+					<input type="hidden" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 				</p>
 				<p class="select">
 					<span>{l s='Date of Birth'}</span>
@@ -253,11 +253,11 @@ $(document).ready(function() {
 				</p>
 				{if isset($newsletter) && $newsletter}
 					<p class="checkbox">
-						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if}/>
+						<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == '1'}checked="checked"{/if} />
 						<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
 					</p>
 					<p class="checkbox">
-						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if}/>
+						<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == '1'}checked="checked"{/if} />
 						<label for="optin">{l s='Receive special offers from our partners!'}</label>
 					</p>
 				{/if}
@@ -278,17 +278,17 @@ $(document).ready(function() {
 						{elseif $field_name eq "address1"}
 						<p class="required text">
 							<label for="address1">{l s='Address'} <sup>*</sup></label>
-							<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}"/>
+							<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
 						</p>
 						{elseif $field_name eq "postcode"}
 						<p class="required postcode text">
 							<label for="postcode">{l s='Zip / Postal Code'} <sup>*</sup></label>
-							<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());"/>
+							<input type="text" class="text" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
 						</p>
 						{elseif $field_name eq "city"}
 						<p class="required text">
 							<label for="city">{l s='City'} <sup>*</sup></label>
-							<input type="text" class="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}"/>
+							<input type="text" class="text" name="city" id="city" value="{if isset($smarty.post.city)}{$smarty.post.city}{/if}" />
 						</p>
 						<!--
 							   if customer hasn't update his layout address, country has to be verified
@@ -316,7 +316,7 @@ $(document).ready(function() {
 						{elseif $field_name eq "phone"}
 						<p class="required text">
 							<label for="phone">{l s='Phone'} <sup>*</sup></label>
-							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}"/>
+							<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if} "/>
 						</p>
 					{/if}
 				{/foreach}
@@ -337,7 +337,7 @@ $(document).ready(function() {
 			<h3>{l s='Tax identification'}</h3>
 			<p class="required text">
 				<label for="dni">{l s='Identification number'}</label>
-				<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}"/>
+				<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if} "/>
 				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 			</p>
 		</fieldset>
@@ -345,7 +345,7 @@ $(document).ready(function() {
 		<p class="cart_navigation required submit">
 			<span><sup>*</sup>{l s='Required field'}</span>
 			<input type="hidden" name="display_guest_checkout" value="1" />
-			<input type="submit" class="exclusive" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'}"/>
+			<input type="submit" class="exclusive" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'} "/>
 		</p>
 	</form>
 	{/if}
