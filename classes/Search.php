@@ -111,7 +111,7 @@ class SearchCore
 			$string = preg_replace('/[^\s]-+/', '', $string);
 		}
 
-		$blacklist = Configuration::get('PS_SEARCH_BLACKLIST', $id_lang);
+		$blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
 		if (!empty($blacklist))
 		{
 			$string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
