@@ -277,127 +277,128 @@ class AdminLanguagesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function postProcess()
+	public function processDelete()
 	{
-		if (isset($_GET['delete'.$this->table]))
-		{
-			if ($this->tabAccess['delete'] === '1')
-		 	{
-				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
-				{
-					if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
-						$this->errors[] = $this->l('You cannot delete the default language.');
-					else if ($object->id == $this->context->language->id)
-						$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
-					else if ($this->deleteNoPictureImages((int)Tools::getValue('id_lang')) && $object->delete())
-					{
-						$this->checkEmployeeIdLang($object->id);
-						Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
-					}
-						
-				}
-				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.
-						Tools::displayError('(cannot load object)');
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-		else if (Tools::getValue('submitDel'.$this->table) && isset($_POST[$this->table.'Box']))
-		{
-		 	if ($this->tabAccess['delete'] === '1')
-			{
-				if (in_array(Configuration::get('PS_LANG_DEFAULT'), $_POST[$this->table.'Box']))
-					$this->errors[] = $this->l('You cannot delete the default language.');
-				else if (in_array($this->context->language->id, $_POST[$this->table.'Box']))
-					$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
-				else
-				{
-				 	foreach ($_POST[$this->table.'Box'] as $language)
-				 		$this->deleteNoPictureImages($language);
-				 	if (Validate::isLoadedObject($object = $this->loadObject()))
-				 		$this->checkEmployeeIdLang($object->id);
-					parent::postProcess();
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-		else if (Tools::isSubmit('submitAddlang'))
-		{
-			/* New language */
-			if ((int)Tools::getValue('id_'.$this->table) == 0)
-			{
-				if ($this->tabAccess['add'] === '1')
-				{
-					if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
-						$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
-					if ((!empty($_FILES['no-picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
-					{
-						if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
-							$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-						// class AdminTab deal with every $_FILES content, don't do that for no-picture
-						unset($_FILES['no-picture']);
-						parent::postProcess();
-					}
-					else
-					{
-						$this->validateRules();
-						$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
-					}
-				}
-				else
-					$this->errors[] = Tools::displayError('You do not have permission to add here.');
-			}
-			/* Language edition */
-			else
-			{
-				if ($this->tabAccess['edit'] === '1')
-				{
-					if (( isset($_FILES['no-picture']) && !$_FILES['no-picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
-						&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
-					{
-						if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
-							$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-						// class AdminTab deal with every $_FILES content, don't do that for no-picture
-						unset($_FILES['no-picture']);
-						parent::postProcess();
-					}
+		$object = $this->loadObject();
+		if (!$this->checkDeletion($object))
+			return false;
+		if (!$this->deleteNoPictureImages((int)$object->id))
+			$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> ';
 
-					if (!Validate::isLoadedObject($object = $this->loadObject()))
-						$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-					if ((int)$object->id == (int)Configuration::get('PS_LANG_DEFAULT') && (int)$_POST['active'] != (int)$object->active)
-						$this->errors[] = Tools::displayError('You cannot change the status of the default language.');
-					else
-						parent::postProcess();
+		return parent::processDelete();
+	}
 
-					$this->validateRules();
+	protected function processBulkDelete()
+	{
+		$can_bulk = true;
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			foreach ($this->boxes as $id_lang)
+			{
+				$object = new Language((int)$id_lang);
+				if (!$this->checkDeletion($object))
+					return false;
+				if (!$this->deleteNoPictureImages((int)$object->id))
+				{
+					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> ';
+					return false;
 				}
-				else
-					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			}
 		}
-		else if (isset($_GET['status'.$this->table]) && isset($_GET['id_lang']))
+		return parent::processBulkDelete();
+	}
+
+	protected function checkDeletion($object)
+	{
+		if (Validate::isLoadedObject($object))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (!Validate::isLoadedObject($object = $this->loadObject()))
-					$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-				if ((int)$object->id == (int)Configuration::get('PS_LANG_DEFAULT'))
+			if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
+				$this->errors[] = $this->l('You cannot delete the default language.');
+			elseif ($object->id == $this->context->language->id)
+				$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
+			else
+				return true;
+		}
+		else	
+			$this->errors[] = Tools::displayError('(cannot load object)');	
+
+		return false;
+	}
+
+	protected function checkDisableStatus($object)
+	{
+		if (!Validate::isLoadedObject($object))
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		else
+		{
+			if ($object->id == (int)Configuration::get('PS_LANG_DEFAULT'))
 					$this->errors[] = Tools::displayError('You cannot change the status of the default language.');
-				else
-				{
-					if (Validate::isLoadedObject($object))
-						$this->checkEmployeeIdLang($object->id);
-					return parent::postProcess();
-				}
-					
-			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				return true;
+		}
+		return false;
+	}
+
+	public function processStatus()
+	{
+		$object = $this->loadObject();
+		if ($this->checkDisableStatus($object))
+		{
+			$this->checkEmployeeIdLang($object->id);
+			return parent::processStatus();
+		}
+		return false;
+	}
+
+	protected function processBulkDisableSelection()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			foreach ($this->boxes as $id_lang)
+			{
+				$object = new Language((int)$id_lang);
+				if (!$this->checkDisableStatus($object))
+					return false;
+				$this->checkEmployeeIdLang($object->id);
+			}
+		}
+		return parent::processBulkDisableSelection();
+	}
+
+	public function processAdd()
+	{
+		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
+			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
+		if ((!empty($_FILES['no-picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		{
+			if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+				$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+			unset($_FILES['no-picture']);
+			return parent::processAdd();
 		}
 		else
-			return parent::postProcess();
+			$this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
+
+		return false;
+	}
+
+	public function processUpdate()
+	{
+		if (( isset($_FILES['no-picture']) && !$_FILES['no-picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
+				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+			{
+				if ($_FILES['no-picture']['error'] == UPLOAD_ERR_OK)
+					$this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+						// class AdminTab deal with every $_FILES content, don't do that for no-picture
+					unset($_FILES['no-picture']);
+			}
+			$object = $this->loadObject();
+			if (Tools::getValue('active') != (int)$object->active)
+				if (!$this->checkDisableStatus($object))
+					return false;
+
+		$this->checkEmployeeIdLang($object->id);
+		return parent::processUpdate();
 	}
 
 	/**
@@ -515,21 +516,4 @@ class AdminLanguagesControllerCore extends AdminController
 		//update employee lang if current id lang is disabled
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'employee` set `id_lang`='.(int)Configuration::get('PS_LANG_DEFAULT').' WHERE `id_lang`='.(int)$current_id_lang);
 	}
-	
-	protected function processBulkStatusSelection($status)
-	{
-		if (!$status)//only check if status == 0 (disable)
-		{
-			if (is_array($this->boxes) && !empty($this->boxes))
-				foreach ($this->boxes as $id)
-					if (Configuration::get('PS_LANG_DEFAULT') == $id)
-						$this->errors[] = $this->l('You cannot change the status of the default language.');
-			if (!count($this->errors))
-				parent::processBulkStatusSelection($status);
-		}
-		else
-			parent::processBulkStatusSelection($status);
-	}
 }
-
-
