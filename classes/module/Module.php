@@ -1177,12 +1177,12 @@ abstract class ModuleCore
 								$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 								foreach ($prices as $currency => $price)
 									if ($id_currency = Currency::getIdByIsoCode($currency))
-										if ($id_default_currency == $id_currency)
-										{
+									{
 											$item->price = (float)$price;
 											$item->id_currency = (int)$id_currency;
-										}
-										
+											if ($id_default_currency == $id_currency)
+												break;
+									}
 							}
 							$module_list[] = $item;
 						}
