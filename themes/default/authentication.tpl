@@ -337,7 +337,7 @@ $(document).ready(function() {
 			<h3>{l s='Tax identification'}</h3>
 			<p class="required text">
 				<label for="dni">{l s='Identification number'}</label>
-				<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if} "/>
+				<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{/if}" />
 				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 			</p>
 		</fieldset>
@@ -345,7 +345,7 @@ $(document).ready(function() {
 		<p class="cart_navigation required submit">
 			<span><sup>*</sup>{l s='Required field'}</span>
 			<input type="hidden" name="display_guest_checkout" value="1" />
-			<input type="submit" class="exclusive" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'} "/>
+			<input type="submit" class="exclusive" name="submitGuestAccount" id="submitGuestAccount" value="{l s='Continue'}" />
 		</p>
 	</form>
 	{/if}
