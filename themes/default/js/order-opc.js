@@ -400,6 +400,7 @@ function updateNewAccountToAddressBlock()
 					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
 					updateCarrierList(json.carrier_data);
+					updateCarrierSelectionAndGift();
 					updatePaymentMethods(json);
 					if ($('#gift-price').length === 1)
 						$('#gift-price').html(json.gift_price);
@@ -595,7 +596,7 @@ $(function() {
 						});
 					}
 
-					isGuest = ($('#is_new_customer').val() === 1 ? 0 : 1);
+					isGuest = parseInt($('#is_new_customer').val()) === 1 ? 0 : 1;
 					// update addresses id
 					if(jsonData.id_address_delivery !== undefined && jsonData.id_address_delivery > 0)
 						$('#opc_id_address_delivery').val(jsonData.id_address_delivery);
@@ -628,7 +629,7 @@ $(function() {
 						
 						// force to refresh carrier list
 						if (isGuest)
-						{
+						{						
 							isLogged = 1;
 							$('#opc_account_saved').fadeIn('slow');
 							$('#submitAccount').hide();
