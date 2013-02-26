@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {ldelim}
 "products": [
 {if $products}
@@ -47,12 +46,10 @@
 		"hasAttributes": false,
 {/if}
 		"hasCustomizedDatas": {if isset($customizedDatas.$productId.$productAttributeId)}true{else}false{/if},
-
 		"customizedDatas":[
 		{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 		{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizedDatas'}{ldelim}
 {* This empty line was made in purpose (product addition debug), please leave it here *}
-
 			"customizationId":	{$id_customization},
 			"quantity":			"{$customization.quantity}",
 			"datas": [
@@ -75,12 +72,9 @@
 		{/foreach}
 		{/if}
 		]
-
-
 	{rdelim}{if !$smarty.foreach.products.last},{/if}
 {/foreach}{/if}
 ],
-
 "discounts": [
 {if $discounts}{foreach from=$discounts item=discount name='discounts'}
 	{ldelim}
@@ -96,7 +90,6 @@
 	{if !$smarty.foreach.discounts.last},{/if}
 {/foreach}{/if}
 ],
-
 "shippingCost": "{$shipping_cost|html_entity_decode:2:'UTF-8'}",
 "shippingCostFloat": "{$shipping_cost_float|html_entity_decode:2:'UTF-8'}",
 {if isset($tax_cost)}
@@ -106,7 +99,6 @@
 "nbTotalProducts": "{$nb_total_products}",
 "total": "{$total|html_entity_decode:2:'UTF-8'}",
 "productTotal": "{$product_total|html_entity_decode:2:'UTF-8'}",
-
 {if isset($errors) && $errors}
 "hasError" : true,
 "errors" : [
@@ -118,5 +110,4 @@
 {else}
 "hasError" : false
 {/if}
-
 {rdelim}
