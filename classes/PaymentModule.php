@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
-				if (!$order_creation_failed & isset($order->id))
+				if (!$order_creation_failed && isset($order->id))
 				{
 					if (!$secure_key)
 						$message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');
