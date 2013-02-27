@@ -4736,7 +4736,7 @@ class ProductCore extends ObjectModel
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` la
 				ON (la.`id_attribute` = a.`id_attribute` AND la.`id_lang` = '.(int)Context::getContext()->language->id.')
-			WHERE la.`url_name` IS NOT NULL
+			WHERE la.`url_name` IS NOT NULL AND la.`url_name` != \'\'
 			AND pa.`id_product` = '.(int)$id_product);
 
 			if (!empty($nb_custom_values))
@@ -4753,7 +4753,7 @@ class ProductCore extends ObjectModel
 						ON (a.`id_attribute_group` = g.`id_attribute_group`)
 					WHERE a.`id_attribute` = '.(int)$attribute['id_attribute'].'
 					AND g.`id_lang` = '.(int)Context::getContext()->language->id.'
-					AND g.`url_name` IS NOT NULL');
+					AND g.`url_name` IS NOT NULL AND g.`url_name` != \'\'');
 					if (empty($group))
 					{
 						$group = Db::getInstance()->executeS('
@@ -4842,7 +4842,7 @@ class ProductCore extends ObjectModel
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` la
 				ON (la.`id_attribute` = a.`id_attribute` AND la.`id_lang` = '.(int)Context::getContext()->language->id.')
-			WHERE la.`url_name` IS NOT NULL
+			WHERE la.`url_name` IS NOT NULL AND la.`url_name` != \'\'
 			AND pa.`id_product` = '.(int)$id_product);
 
 			if (!empty($nb_custom_values))
@@ -4859,7 +4859,7 @@ class ProductCore extends ObjectModel
 						ON (a.`id_attribute_group` = g.`id_attribute_group`)
 					WHERE a.`id_attribute` = '.(int)$attribute['id_attribute'].'
 					AND g.`id_lang` = '.(int)Context::getContext()->language->id.'
-					AND g.`url_name` IS NOT NULL');
+					AND g.`url_name` IS NOT NULL AND g.`url_name` != \'\'');
 					if (empty($group))
 					{
 						$group = Db::getInstance()->executeS('
