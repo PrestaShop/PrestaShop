@@ -3,5 +3,5 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{feeder}prestashop>feeder_d70a880c7153de483014eababfa65f11'] = 'Generieren Sie ein RSS-Feed für Produkte';
-$_MODULE['<{feeder}prestashop>feeder_4dce2f12546b229088d3cc214c3c2f7d'] = 'RSS-Feeds für Produkte';
+$_MODULE['<{feeder}prestashop>feeder_b118eb1df6ece770ad9d2bbe97cc1a79'] = 'Generieren Sie ein RSS-Feed für Produkte';
+$_MODULE['<{feeder}prestashop>feeder_d97c951c07d785b317ffb55c01bf6976'] = 'RSS-Feeds für Produkte';

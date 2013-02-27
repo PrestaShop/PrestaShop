@@ -45,7 +45,7 @@ class StatsNewsletter extends ModuleGraph
 		parent::__construct();
 
 		$this->displayName = $this->l('Newsletter');
-		$this->description = $this->l('Display the newsletter registrations');
+		$this->description = $this->l('Display newsletter registrations.');
 	}
 
 	public function install()
@@ -63,15 +63,15 @@ class StatsNewsletter extends ModuleGraph
 			$this->_html = '
 			<div class="blocStats">
 				<h2><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</h2>
-				<p>'.$this->l('Registrations from customers:').' '.(int)$totals['customers'].'</p>
-				<p>'.$this->l('Registrations from visitors:').' '.(int)$totals['visitors'].'</p>
+				<p>'.$this->l('Customer registrations:').' '.(int)$totals['customers'].'</p>
+				<p>'.$this->l('Visitor registrations: ').' '.(int)$totals['visitors'].'</p>
 				<p>'.$this->l('Both:').' '.(int)$totals['both'].'</p>
 				<div>'.$this->engine(array('type' => 'line', 'layers' => 3)).'</div>
 				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
 			</div>';
 		}
 		else
-			$this->_html = '<p>'.$this->l('Module Newsletter Block must be installed').'</p>';
+			$this->_html = '<p>'.$this->l('The "Newsletter Block" module must be installed.').'</p>';
 
 		return $this->_html;
 	}

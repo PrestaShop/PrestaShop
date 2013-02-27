@@ -37,7 +37,7 @@
 	<form action="{$current}&token={$token}" method="post">
 		<fieldset class="width4">
 			<legend><img src="../img/admin/picture.gif" /> {l s='Regenerate thumbnails'}</legend><br />
-			<label>{l s='Select image'}</label>
+			<label>{l s='Select an image'}</label>
 			<div class="margin-form">
 				<select name="type" onchange="changeFormat(this)">
 					<option value="all">{l s='All'}</option>
@@ -48,7 +48,7 @@
 			</div>
 
 			{foreach $types AS $k => $type}
-				<label class="second-select format_{$k}" style="display:none;">{l s='Select format'}</label>
+				<label class="second-select format_{$k}" style="display:none;">{l s='Select a format'}</label>
 				<div class="second-select margin-form format_{$k}" style="display:none;">
 					<select class="second-select format_{$k}" name="format_{$k}">
 						<option value="all">{l s='All'}</option>
@@ -82,7 +82,7 @@
 	<br />
 	{if $safe_mode}
 		<div class="warn">
-			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should continue to use the existing system.'}
+			{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}
 		</div>
 	{else}
 		<form action="{$current}&token={$token}" method="post">

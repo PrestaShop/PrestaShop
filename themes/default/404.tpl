@@ -29,7 +29,7 @@
 		{l s='We\'re sorry, but the Web address you\'ve entered is no longer available.'}
 	</p>
 
-	<h3>{l s='To find a product, please type its name in the field below'}</h3>
+	<h3>{l s='To find a product, please type its name in the field below.'}</h3>
 	<form action="{$link->getPageLink('search')}" method="post" class="std">
 		<fieldset>
 			<p>

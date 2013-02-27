@@ -68,8 +68,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('previous page'),
-							1 => $this->l('cart summary')
+							0 => $this->l('Previous page'),
+							1 => $this->l('Cart summary')
 						)
 					),
 					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
@@ -206,7 +206,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced stock management'),
+						'title' => $this->l('Enable advanced-stock management'),
 						'desc' => $this->l('Allows you to manage physical stock, warehouses and supply orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',

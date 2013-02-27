@@ -40,7 +40,7 @@ class BlockNewProducts extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('New products block');
-		$this->description = $this->l('Displays a block featuring newly added products.');
+		$this->description = $this->l('Displays a block featuring your store\'s newest products.');
 	}
 
 	public function install()
@@ -56,7 +56,7 @@ class BlockNewProducts extends Module
 		if (Tools::isSubmit('submitBlockNewProducts'))
 		{
 			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
-				$output .= '<div class="alert error">'.$this->l('Please fill in the "products displayed" field.').'</div>';
+				$output .= '<div class="alert error">'.$this->l('Please complete the "products to display" field.').'</div>';
 			elseif ((int)($productNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
@@ -74,12 +74,12 @@ class BlockNewProducts extends Module
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 		<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<label>'.$this->l('Products displayed').'</label>
+				<label>'.$this->l('Products to display.').'</label>
 					<div class="margin-form">
 						<input type="text" name="productNbr" value="'.(int)(Configuration::get('NEW_PRODUCTS_NBR')).'" />
-						<p class="clear">'.$this->l('Set the number of products to be displayed in this block').'</p>
+						<p class="clear">'.$this->l('Define the number of products to be displayed in this block.').'</p>
 					</div>
-					<label>'.$this->l('Always display block').'</label>
+					<label>'.$this->l('Always display this block.').'</label>
 					<div class="margin-form">
 						<input type="radio" name="always_display" id="display_on" value="1" '.(Tools::getValue('always_display', Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY')) ? 'checked="checked" ' : '').'/>
 						<label class="t" for="display_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>

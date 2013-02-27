@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="warn width2" style="float: left;">
-		<p>{l s='How to restore a database Backup in 10 easy steps:'}</p>
+		<p>{l s='How to restore a database backup in 10 easy steps:'}</p>
 		<ol style="font-size: 11px; font-weight: normal; line-height: 20px;">
 			<li>{l s='Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.'}</li>
 			<li>{l s='Download the backup from the list below or from your FTP server (in the folder "admin/backups").'}</li>
@@ -69,7 +69,7 @@
 			<li>{l s='Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.'}</li>
 			<li>{l s='At the top of the screen, please select the "Import" tab'}</li>
 			<li>{l s='Click on the "Browse" button and select the backup file from your hard drive.'}</li>
-			<li>{l s='Check the max. allowed filesize (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistence. '}</li>
+			<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistence. '}</li>
 			<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
 		</ol>
 	</div>

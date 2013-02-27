@@ -317,7 +317,7 @@ class AdminAddressesControllerCore extends AdminController
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
-				$this->errors[] = Tools::displayError('This e-mail address is not registered.');
+				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
 		else if ($id_customer = Tools::getValue('id_customer'))
 		{
@@ -330,14 +330,14 @@ class AdminAddressesControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('Unknown customer');
 		if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni'))
-			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
+			$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 
 		/* If the selected country does not contain states */
 		$id_state = (int)Tools::getValue('id_state');
 		$id_country = (int)Tools::getValue('id_country');
 		$country = new Country((int)$id_country);
 		if ($country && !(int)$country->contains_states && $id_state)
-			$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
+			$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
 
 		/* If the selected country contains states, then a state have to be selected */
 		if ((int)$country->contains_states && !$id_state)
@@ -356,14 +356,14 @@ class AdminAddressesControllerCore extends AdminController
 				$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 				$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 				if (!preg_match($zip_regexp, $postcode))
-					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.
-									   Tools::displayError('Must be typed as follows:').' '.
+					$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.
+									   Tools::displayError('It must be entered as follows:').' '.
 									   str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
 			}
 			else if ($zip_code_format)
-				$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
+				$this->errors[] = Tools::displayError('A Postal / Zip Code required.');
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-				$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
+				$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.');
 		}
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)

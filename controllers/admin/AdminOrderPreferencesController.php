@@ -49,7 +49,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			),
 			array(
 				'value' => PS_ORDER_PROCESS_OPC,
-				'name' => $this->l('One page checkout')
+				'name' => $this->l('One-page checkout')
 			)
 		);
 
@@ -83,7 +83,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
-						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
+						'desc' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'

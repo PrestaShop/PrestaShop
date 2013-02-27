@@ -56,7 +56,7 @@
 	<fieldset>
 		<legend><img src="../img/admin/translation.gif" />{l s='Modify translations'}</legend>
 		{l s='Here you can modify translations for every line of copy inside PrestaShop.'}<br />
-		{l s='First, select a section (such as Back Office or Modules), then click the flag representing the language you want to edit.'}<br /><br />
+		{l s='First, select a section (such as Back Office or Installed modules), and then click the flag representing the language you want to edit.'}<br /><br />
 		<form method="get" action="index.php" id="typeTranslationForm">
 			<input type="hidden" name="controller" value="AdminTranslations" />
 			<input type="hidden" name="lang" id="translation_lang" value="0" />

@@ -112,7 +112,7 @@
 					&nbsp;
 					<select name="country_module_value" id="country_module_value_filter" {if $showCountryModules eq 1}style="background-color:#49B2FF;color:white;"{/if}>
 						<option value="0" >{l s='All countries'}</option>
-						<option value="1" {if $showCountryModules eq 1}selected="selected"{/if}>{l s='Current country:'} {$nameCountryDefault}</option>
+						<option value="1" {if $showCountryModules eq 1}selected="selected"{/if}>{l s='Current country: '} {$nameCountryDefault}</option>
 					</select>
 
 			</div>

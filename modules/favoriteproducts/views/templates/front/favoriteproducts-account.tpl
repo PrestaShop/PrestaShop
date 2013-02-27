@@ -56,12 +56,12 @@ $('document').ready(function()
 {capture name=path}
 	<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">
 		{l s='My account' mod='favoriteproducts'}</a>
-		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}
+		<span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products.' mod='favoriteproducts'}
 {/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <div id="favoriteproducts_block_account">
-	<h2>{l s='My favorite products' mod='favoriteproducts'}</h2>
+	<h2>{l s='My favorite products.' mod='favoriteproducts'}</h2>
 	{if $favoriteProducts}
 		<div>
 			{foreach from=$favoriteProducts item=favoriteProduct}
@@ -78,12 +78,12 @@ $('document').ready(function()
 			{/foreach}
 		</div>
 	{else}
-		<p class="warning">{l s='No favorite products yet.' mod='favoriteproducts'}</p>
+		<p class="warning">{l s='No favorite products have been determined just yet. ' mod='favoriteproducts'}</p>
 	{/if}
 
 	<ul class="footer_links">
 		<li class="fleft">
 			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}"><img src="{$img_dir}icon/my-account.gif" alt="" class="icon" /></a>
-			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">{l s='Back to Your Account' mod='favoriteproducts'}</a></li>
+			<a href="{$link->getPageLink('my-account', true)|escape:'htmlall':'UTF-8'}">{l s='Back to your account.' mod='favoriteproducts'}</a></li>
 	</ul>
 </div>

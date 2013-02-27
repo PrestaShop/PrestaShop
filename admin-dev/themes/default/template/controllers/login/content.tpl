@@ -24,7 +24,7 @@
 *}
 <script type="text/javascript">
 	var there_are = '{l s='There are'}';
-	var there_is = '{l s='There is'}';
+	var there_is = '{l s='There is an'}';
 	var label_errors = '{l s='errors'}';
 	var label_error = '{l s='error'}';
 </script>

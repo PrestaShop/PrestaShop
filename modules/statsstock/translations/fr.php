@@ -13,8 +13,8 @@ $_MODULE['<{statsstock}prestashop>statsstock_689202409e48743b914713f96d93947c'] 
 $_MODULE['<{statsstock}prestashop>statsstock_1b2379801de373b6b563c347014fb34b'] = 'Votre catalogue est vide.';
 $_MODULE['<{statsstock}prestashop>statsstock_7d74f3b92b19da5e606d737d339a9679'] = 'Article';
 $_MODULE['<{statsstock}prestashop>statsstock_88940d60e75cf4ff38ce27db4efc83b2'] = 'Prix*';
-$_MODULE['<{statsstock}prestashop>statsstock_40cfe6142794ce67fbee8431434905e2'] = 'Correspond au prix de vente par défaut selon le fournisseur par défaut du produit. Un prix moyen est utilisé quand le produit possède des déclinaisons.';
-$_MODULE['<{statsstock}prestashop>statsstock_f1c1f40589b2e7f12e0333b8f725fc0f'] = 'Quantités statistiques disponibles';
-$_MODULE['<{statsstock}prestashop>statsstock_b840d120e539d6d41af11c6d00df8e8d'] = 'Quantités disponibles pour la valorisation de la vente';
+$_MODULE['<{statsstock}prestashop>statsstock_a9873f90f06f9e2cfa3d048298ecca8c'] = 'Correspond au prix de vente par défaut selon le fournisseur par défaut du produit. Un prix moyen est utilisé quand le produit possède des déclinaisons.';
+$_MODULE['<{statsstock}prestashop>statsstock_4416eb048e458e909c65b5210cee2b83'] = 'Quantités statistiques disponibles';
+$_MODULE['<{statsstock}prestashop>statsstock_f27f89ed1aeb8108c091677cf7b99c28'] = 'Quantités disponibles pour la valorisation de la vente';
 $_MODULE['<{statsstock}prestashop>statsstock_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Toutes';
 $_MODULE['<{statsstock}prestashop>statsstock_4364f8c09d7bf97996a20840900e7b30'] = 'Prix moyen';

@@ -3,14 +3,14 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_0cec62d1bea02fbb1484d55d14f493dd'] = 'Bloque de privacidad de datos de los clientes';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_77cb2fa873bee41280d3a1c9ffd9b821'] = 'El dato personal que da esta utilizado para responder a sus búsquedas, procesa sus ordenes o autorizase el acceso especifico a la información. ';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_b75fe4f32f17eb695f145704a8909146'] = 'Mensaje sobre la privacidad de datos de los clientes';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_ffeb523df77567c7fad7faf8af5f7e46'] = 'Por favor, acepte el acuerdo sobre la privacidad de los datos de los clientes marcando la casilla de abajo.';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_03e6791c07164957bb87bfad5030f846'] = 'Mensaje que se mostrará en el formulario de creación de la cuenta.';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_3a32ec2dbd8d955f6240d95d6004557c'] = 'Agrega un bloque para mostrar un mensaje respecto a la privacidad de los datos.';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_f2ec0fd2abc5714608241a1a0eac321b'] = 'Bloque de privacidad de datos de los clientes';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_d71315851e7e67cbacf5101c5c4ab83d'] = 'El dato personal que da esta utilizado para responder a sus búsquedas, procesa sus ordenes o autorizase el acceso especifico a la información. ';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_d8b716e21c731aba4b94ba9f3ac4858c'] = 'Mensaje sobre la privacidad de datos de los clientes';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_fb32badede7c8613fddb8502d847c18b'] = 'Por favor, acepte el acuerdo sobre la privacidad de los datos de los clientes marcando la casilla de abajo.';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_03e1a999dcdb904300ee1b1e767c83c9'] = 'Mensaje que se mostrará en el formulario de creación de la cuenta.';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_cb6b92b60c9302e74a26ac246d0af0fa'] = 'Agrega un bloque para mostrar un mensaje respecto a la privacidad de los datos.';
 $_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_0560788430987c4914fea998886d3977'] = 'Tiene derecho de modificar todas las informaciones personales que tenemos sobre usted en pagina \\"my account\\".';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_b43d08355db3df47796e65c72cfd5714'] = 'Tiene derecho de modificar todas las informaciones personales que tenemos sobre usted en pagina \\"my account\\".';
 $_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuración actualizada';
 $_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_fb0440f9ca32a8b49eded51b09e70821'] = 'Privacidad de los datos de los clientes';
-$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_4b1d5885ba2b2cfa06bb3a705a265871'] = 'Recorde que si el texto es demasiado largo para estar escrito directamente en el campo, puede añadir un enlace en una de sus paginas creadas con la pagina “CMS” bajo el menú “Preferencias”.';
+$_MODULE['<{blockcustomerprivacy}prestashop>blockcustomerprivacy_b51d73fb490ad1245fa9b87042bbbbb7'] = 'Recorde que si el texto es demasiado largo para estar escrito directamente en el campo, puede añadir un enlace en una de sus paginas creadas con la pagina “CMS” bajo el menú “Preferencias”.';
