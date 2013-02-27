@@ -58,7 +58,7 @@
 					{else}
 						<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
 							{$total_thread} 
-							{if $total_thread > 1}{l s='new messages'}{else}{l s='new message'}{/if}
+							{if $total_thread > 1}{l s='New messages'}{else}{l s='New message'}{/if}
 						</a>
 					{/if}
 			</div>

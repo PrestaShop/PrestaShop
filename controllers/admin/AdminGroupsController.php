@@ -359,7 +359,7 @@ class AdminGroupsControllerCore extends AdminController
 	public function processSave()
 	{
 		if (!$this->validateDiscount(Tools::getValue('reduction')))
-			$this->errors[] = Tools::displayError('Discount value is incorrect (must be a percentage)');
+			$this->errors[] = Tools::displayError('The discount value is incorrect (must be a percentage).');
 		else
 		{
 			$this->updateCategoryReduction();
@@ -390,7 +390,7 @@ class AdminGroupsControllerCore extends AdminController
 		}
 		else if (!$this->validateDiscount($category_reduction))
 		{
-			$result['errors'][] = Tools::displayError('Discount value is incorrect (must be a percentage)');
+			$result['errors'][] = Tools::displayError('The discount value is incorrect (must be a percentage).');
 			$result['hasError'] = true;
 		}
 		else
@@ -435,7 +435,7 @@ class AdminGroupsControllerCore extends AdminController
 			foreach ($category_reduction as $cat => $reduction)
 			{
 				if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction))
-					$this->errors[] = Tools::displayError('Discount value is incorrect');
+					$this->errors[] = Tools::displayError('The discount value is incorrect.');
 				else
 				{
 					$category = new Category((int)$cat);
@@ -445,7 +445,7 @@ class AdminGroupsControllerCore extends AdminController
 					$group_reduction->reduction = (float)($reduction / 100);
 					$group_reduction->id_category = (int)$cat;
 					if (!$group_reduction->save())
-						$this->errors[] = Tools::displayError('Cannot save group reductions');
+						$this->errors[] = Tools::displayError('You cannot save group reductions.');
 				}
 			}
 		}
@@ -458,10 +458,10 @@ class AdminGroupsControllerCore extends AdminController
 	{
 		$group = new Group($this->id_object);
 		if (!Validate::isLoadedObject($group))
-			$this->errors[] = Tools::displayError('An error occurred while updating group.');
+			$this->errors[] = Tools::displayError('An error occurred while updating this group.');
 		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
 		if (!$update)
-			$this->errors[] = Tools::displayError('An error occurred while updating group.');
+			$this->errors[] = Tools::displayError('An error occurred while updating this group.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 

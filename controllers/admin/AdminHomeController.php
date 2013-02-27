@@ -198,14 +198,14 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminSpecificPriceRule')]['add'])
 			$quick_links['third'] = array(
 				'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
-				'title' => $this->l('New Price Rule for catalog'),
+				'title' => $this->l('New price rule for catalog'),
 				'description' => $this->l('Monitor your activity with a thorough analysis of your shop.'),
 			);
 		
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminProducts')]['add'])
 			$quick_links['fourth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
-				'title' => $this->l('New Product'),
+				'title' => $this->l('New product'),
 				'description' => $this->l('Add a new employee account and discharge a part of your duties as shop owner.'),
 			);
 
@@ -213,27 +213,27 @@ class AdminHomeControllerCore extends AdminController
 			$quick_links['fifth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminModules'),
 				'title' => $this->l('New module'),
-				'description' => $this->l('Configure your modules.'),
+				'description' => $this->l('Configure your modules'),
 			);
 			
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCartRules')]['add'])
 			$quick_links['sixth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
 				'title' => $this->l('New price rule for cart'),
-				'description' => $this->l('Add new cart rule.'),
+				'description' => $this->l('Add new cart rule'),
 			);
 			
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCmsContent')]['add'])
 			$quick_links['seventh'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
-				'title' => $this->l('New Page CMS'),
+				'title' => $this->l('New CMS page'),
 				'description' => $this->l('Add a new CMS page.'),
 			);
 
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCarts')]['view'])
 			$quick_links['eighth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
-				'title' => $this->l('Abandoned Carts'),
+				'title' => $this->l('Abandoned shopping carts'),
 				'description' => $this->l('View your customer\'s carts.'),
 			);
 		return $quick_links;

@@ -64,7 +64,7 @@ class AdminSearchConfControllerCore extends AdminController
 				'icon' => 'search',
 				'info' =>
 						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
-						'.$this->l('Indexed products:').' <b>'.(int)$indexed.' / '.(int)$total.'</b>.
+						'.$this->l('Indexed products').' <b>'.(int)$indexed.' / '.(int)$total.'</b>.
 						</p>
 						<p>'.$this->l('Building the product index may take a few minutes.')
 						.$this->l('If your server stops before the process ends, you can resume the indexation by clicking "Add missing products."').'</p>
@@ -99,7 +99,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
-						'desc' => $this->l('Enable instant search for your visitors.').'<br />'.
+						'desc' => $this->l('Enable instant search for your visitors?').'<br />'.
 								$this->l('With instant search, the results will appear immediately as the user writes a query.')),
 					'PS_SEARCH_MINWORDLEN' => array(
 						'title' => $this->l('Minimum word length (in characters)'),
@@ -240,7 +240,7 @@ class AdminSearchConfControllerCore extends AdminController
 					'size' => 40,
 					'required' => true,
 					'desc' => array(
-						$this->l('Enter each alias separated by a comma (\',\') (e.g. \'prestshop,preztashop,prestasohp\')'),
+						$this->l('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\')'),
 						$this->l('Forbidden characters: <>;=#{}')
 					)
 				),

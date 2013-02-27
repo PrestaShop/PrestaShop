@@ -38,7 +38,7 @@ class AdminEmailsControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'email' => array(
-				'title' => $this->l('Email:'),
+				'title' => $this->l('Email'),
 				'icon' => 'email',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
@@ -76,7 +76,7 @@ class AdminEmailsControllerCore extends AdminController
 				'submit' => array()
 			),
 			'smtp' => array(
-				'title' => $this->l('Email:'),
+				'title' => $this->l('Email'),
 				'icon' => 'email',
 				'top' => '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">',
 				'bottom' => '</div>',
@@ -204,7 +204,7 @@ class AdminEmailsControllerCore extends AdminController
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
 		if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
-			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know, use the PHP mail() function instead.');
+			$this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.');
 	}
 
 	public function ajaxProcessSendMailTest()

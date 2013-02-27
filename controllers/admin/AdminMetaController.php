@@ -249,7 +249,7 @@ class AdminMetaControllerCore extends AdminController
 
  		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Meta-Tags'),
+				'title' => $this->l('Meta tags'),
 				'image' => '../img/admin/metatags.gif'
 			),
 			'input' => array(
@@ -310,7 +310,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Only letters and the minus (-) character are allowed'),
+					'hint' => $this->l('Only letters and hyphens are allowed'),
 					'desc' => $this->l('e.g. "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
@@ -343,7 +343,7 @@ class AdminMetaControllerCore extends AdminController
 
 			if (!$defaultLangIsValidated && !$englishLangIsValidated)
 			{
-				$this->errors[] = Tools::displayError('URL rewrite field must be filled at least in default or English language.');
+				$this->errors[] = Tools::displayError('The URL rewrite field must be filled in either the default or English language.');
 				return false;
 			}
 
@@ -531,7 +531,7 @@ class AdminMetaControllerCore extends AdminController
 				$this->url->update();
 			}
 			else
-				$this->errors[] = Tools::displayError('Domain is not valid');
+				$this->errors[] = Tools::displayError('This domain is not valid.');
 		}
 	}
 
@@ -548,7 +548,7 @@ class AdminMetaControllerCore extends AdminController
 				$this->url->update();
 			}
 			else
-				$this->errors[] = Tools::displayError('SSL Domain is not valid');
+				$this->errors[] = Tools::displayError('The SSL domain is not valid.');
 		}
 	}
 

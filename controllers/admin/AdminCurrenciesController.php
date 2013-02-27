@@ -52,7 +52,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
-				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is.'),
+				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.'),
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
 					'class' => 'button',
@@ -135,7 +135,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
+					'desc' => $this->l('Conversion rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20"').' 1&euro; = $1.20',
 				),
 				array(
 					'type' => 'select',
@@ -254,7 +254,7 @@ class AdminCurrenciesControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 		}
 		else
-			$this->errors[] = Tools::displayError('An error occurred while deleting object.').'
+			$this->errors[] = Tools::displayError('An error occurred while deleting the object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
@@ -271,10 +271,10 @@ class AdminCurrenciesControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
 					(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
 			else
-				$this->errors[] = Tools::displayError('An error occurred while updating status.');
+				$this->errors[] = Tools::displayError('An error occurred while updating the status.');
 		}
 		else
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').'
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
@@ -297,10 +297,10 @@ class AdminCurrenciesControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'exchangeRates';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num')))
-				$this->errors[] = Tools::displayError('This currency already exist.');
+				$this->errors[] = Tools::displayError('This currency already exists.');
 		parent::initProcess();
 	}
 }

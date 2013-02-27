@@ -42,8 +42,8 @@ class HomeFeatured extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Featured Products on the homepage');
-		$this->description = $this->l('Displays Featured Products in the middle of your homepage.');
+		$this->displayName = $this->l('Featured products on the homepage.');
+		$this->description = $this->l('Displays featured products in the middle of your homepage.');
 	}
 
 	function install()
@@ -60,13 +60,13 @@ class HomeFeatured extends Module
 		{
 			$nbr = (int)(Tools::getValue('nbr'));
 			if (!$nbr OR $nbr <= 0 OR !Validate::isInt($nbr))
-				$errors[] = $this->l('Invalid number of products');
+				$errors[] = $this->l('An invalid number of products has been specified.');
 			else
 				Configuration::updateValue('HOME_FEATURED_NBR', (int)($nbr));
 			if (isset($errors) AND sizeof($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
-				$output .= $this->displayConfirmation($this->l('Settings updated'));
+				$output .= $this->displayConfirmation($this->l('Your settings have been updated.'));
 		}
 		return $output.$this->displayForm();
 	}
@@ -76,11 +76,11 @@ class HomeFeatured extends Module
 		$output = '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-				<p>'.$this->l('In order to add products to your homepage, just add them to the "home" category.').'</p><br />
-				<label>'.$this->l('Number of products displayed').'</label>
+				<p>'.$this->l('To add products to your homepage, simply add them to the "home" category.').'</p><br />
+				<label>'.$this->l('Define the number of products to be displayed.').'</label>
 				<div class="margin-form">
 					<input type="text" size="5" name="nbr" value="'.Tools::safeOutput(Tools::getValue('nbr', (int)(Configuration::get('HOME_FEATURED_NBR')))).'" />
-					<p class="clear">'.$this->l('The number of products displayed on homepage (default: 10).').'</p>
+					<p class="clear">'.$this->l('Define the number of products that you would like to display on homepage (default: 10).').'</p>
 
 				</div>
 				<center><input type="submit" name="submitHomeFeatured" value="'.$this->l('Save').'" class="button" /></center>

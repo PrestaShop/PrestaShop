@@ -250,7 +250,7 @@ function checkingTab($tab)
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
 			Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-		echo sprintf(Tools::displayError('Page %s cannot be found.'),$tab);
+		echo sprintf(Tools::displayError('Page %s cannot be found..'),$tab);
 		return false;
 	}
 

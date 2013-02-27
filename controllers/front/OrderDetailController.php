@@ -53,11 +53,11 @@ class OrderDetailControllerCore extends FrontController
 			$msgText = Tools::getValue('msgText');
 
 			if (!$idOrder || !Validate::isUnsignedId($idOrder))
-				$this->errors[] = Tools::displayError('Order is no longer valid');
+				$this->errors[] = Tools::displayError('The order is no longer valid.');
 			elseif (empty($msgText))
-				$this->errors[] = Tools::displayError('Message cannot be blank');
+				$this->errors[] = Tools::displayError('The message cannot be blank.');
 			elseif (!Validate::isMessage($msgText))
-				$this->errors[] = Tools::displayError('Message is invalid (HTML is not allowed)');
+				$this->errors[] = Tools::displayError('This message is invalid (HTML is not allowed).');
 			if (!count($this->errors))
 			{
 				$order = new Order($idOrder);
@@ -204,7 +204,7 @@ class OrderDetailControllerCore extends FrontController
 				unset($carrier, $addressInvoice, $addressDelivery);
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot find this order');
+				$this->errors[] = Tools::displayError('This order cannot be found.');
 			unset($order);
 		}
 

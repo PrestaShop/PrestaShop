@@ -31,10 +31,10 @@
 	<div data-role="content" id="content">
 		<div id="not_found">
 			<p>{l s='We\'re sorry, but the Web address you\'ve entered is no longer available.'}</p>
-			<p>{l s='To find a product, please type its name in the field below'}</p>
+			<p>{l s='To find a product, please type its name in the field below.'}</p>
 			<div data-role="fieldcontain" class="input_search_404">
 				<form action="{$link->getPageLink('search')}" method="post" class="std">
-				<input type="search" name="search_query" id="search_query" value="{l s='Search:'}" />
+				<input type="search" name="search_query" id="search_query" value="{l s='Search'}" />
 				</form>
 			</div>
 			<p>

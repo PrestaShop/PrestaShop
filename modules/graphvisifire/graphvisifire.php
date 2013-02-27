@@ -57,7 +57,7 @@ class GraphVisifire extends ModuleGraphEngine
 	        Module::__construct();
 			
 	        $this->displayName = $this->l('Visifire');
-	        $this->description = $this->l('Visifire is a set of open source data visualization components - powered by Microsoft Silverlight 2 beta 2.');
+	        $this->description = $this->l('Visifire is a set of open-source data visualization components -- Powered by Microsoft Silverlight 2 (beta 2).');
 		}
     }
 

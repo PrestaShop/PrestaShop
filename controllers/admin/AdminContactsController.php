@@ -60,7 +60,7 @@ class AdminContactsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'desc' => $this->l('Contact name (e.g. Technical Support)'),
+					'desc' => $this->l('Contact name (e.g. Customer Support)'),
 				),
 				array(
 					'type' => 'text',

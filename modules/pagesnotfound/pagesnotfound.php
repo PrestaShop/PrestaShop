@@ -42,7 +42,7 @@ class Pagesnotfound extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Pages not found');
-		$this->description = $this->l('Display the pages requested by your visitors but not found.');
+		$this->description = $this->l('Display the pages requested by your visitors that have not been found.');
 	}
 
 	public function install()
@@ -96,7 +96,7 @@ class Pagesnotfound extends Module
 		if (Tools::isSubmit('submitTruncatePNF'))
 		{
 			Db::getInstance()->execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
-			$this->_html .= '<div class="conf confirm"> '.$this->l('Pages not found has been emptied.').'</div>';
+			$this->_html .= '<div class="conf confirm"> '.$this->l('The pages not found cache has been emptied.').'</div>';
 		}
 		else if (Tools::isSubmit('submitDeletePNF'))
 		{
@@ -108,7 +108,7 @@ class Pagesnotfound extends Module
 
 		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
-			$this->_html .= '<br/><div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
+			$this->_html .= '<br/><div class="warning warn">'.$this->l('You must use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
 
 		$pages = $this->getPages();
 		if (count($pages))
@@ -140,7 +140,7 @@ class Pagesnotfound extends Module
 			$this->_html .= '<div class="clear">&nbsp;</div>
 			<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Empty database').'</h2>
 				<form action="'.Tools::htmlEntitiesUtf8($_SERVER['REQUEST_URI']).'" method="post">
-					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found in this period').'">
+					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found for this period').'">
 					<input type="submit" class="button" name="submitTruncatePNF" value="'.$this->l('Empty ALL pages not found').'">
 				</form>	
 			</div>';
@@ -152,10 +152,10 @@ class Pagesnotfound extends Module
 				When it is available, the referrer is shown so you can find the page which contains the dead link. 
 				If not, it means generally that it is a direct access, so someone may have bookmarked a link which doesn\'t exist anymore.').'</p>
 			<h3>'.$this->l('How to catch these errors?').'</h3>
-			<p>'.$this->l('If your webhost supports the <i>.htaccess</i> file, you can create it in the root directory of PrestaShop and insert the following line inside:').' 
+			<p>'.$this->l('If your webhost supports .htaccess files, you can create one in the root directory of PrestaShop and insert the following line inside:').' 
 				<i>ErrorDocument 404 '.__PS_BASE_URI__.'404.php</i>. '.
-				$this->l('A user requesting a page which doesn\'t exist will be redirected to the page.').' <i>'.__PS_BASE_URI__.'404.php</i>. '.
-				$this->l('This module logs the accesses to this page: the page requested, the referrer and the number of times that it occurred.').'</p><br />
+				$this->l('A user requesting a page which doesn\'t exist will be redirected to the following page.').' <i>'.__PS_BASE_URI__.'404.php</i>. '.
+				$this->l('This module logs access to this page.').'</p><br />
 		</div>';
 
 		return $this->_html;
