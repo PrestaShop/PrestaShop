@@ -308,7 +308,7 @@ a.module_toggle_all{color: #268CCD;}
 
 
 
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;width:90% !important;margin:auto}
 
 /*button upload files*/
 #content .qq-upload-button {

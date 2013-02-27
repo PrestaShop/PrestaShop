@@ -355,10 +355,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
 
-		// Mail is send only if option is selected
-		if ($this->session->send_informations)
-			$this->process_steps[] = array('key' => 'sendEmail', 'lang' => $this->l('Send information e-mail'));
-
 		$this->displayTemplate('process');
 	}
 }
