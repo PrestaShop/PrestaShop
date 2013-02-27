@@ -220,6 +220,7 @@ class AdminModulesControllerCore extends AdminController
 	{
 		$this->context->cookie->username_addons = '';
 		$this->context->cookie->password_addons = '';
+		$this->context->cookie->write();
 		die('OK');
 	}
 
