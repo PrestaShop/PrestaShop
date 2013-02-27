@@ -161,7 +161,7 @@ abstract class HTMLTemplateCore
 	{
 		$template = false;
 		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-		$overriden_template = _PS_THEME_DIR_.'/pdf/'.$template_name.'.tpl';
+		$overriden_template = _PS_THEME_DIR_.'pdf/'.$template_name.'.tpl';
 
 		if (file_exists($overriden_template))
 			$template = $overriden_template;
