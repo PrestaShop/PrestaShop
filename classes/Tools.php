@@ -2232,7 +2232,7 @@ exit;
 
 		$filtered_files = array();
 
-		$real_ext = '';
+		$real_ext = false;
 		if (!empty($ext))
 			$real_ext = '.'.$ext;
 		$real_ext_length = strlen($real_ext);
@@ -2240,7 +2240,7 @@ exit;
 		$subdir = ($dir) ? $dir.'/' : '';
 		foreach ($files as $file)
 		{
-			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
+			if (!$real_ext || (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length)))
 				$filtered_files[] = $subdir.$file;
 
 			if ($recursive && $file[0] != '.' && is_dir($real_path.$file))
