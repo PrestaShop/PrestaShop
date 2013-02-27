@@ -274,7 +274,7 @@ class AdminCmsControllerCore extends AdminController
 					{
 						$cms->cleanPositions((int)Tools::getValue('id_cms_category'));
 						$token = Tools::getAdminTokenLite('AdminCmsContent');
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_category='.(int)Tools::getValue('id_cms_category'));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int)Tools::getValue('id_cms_category'));
 					}
 					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 
@@ -288,60 +288,56 @@ class AdminCmsControllerCore extends AdminController
 		elseif (Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndPreview'))
 		{
 			parent::validateRules();
-			if (!count($this->errors))
-			{
-				if (!$id_cms = (int)Tools::getValue('id_cms'))
-				{
-					$cms = new CMS();
-					$this->copyFromPost($cms, 'cms');
-					if (!$cms->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating object.')
-							.' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-					else
-						$this->updateAssoShop($cms->id);
-				}
-				else
-				{
-					$cms = new CMS($id_cms);
-					$this->copyFromPost($cms, 'cms');
-					if (!$cms->update())
-						$this->errors[] = Tools::displayError('An error occurred while updating object.')
-							.' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-					else
-						$this->updateAssoShop($cms->id);
-
-				}
-                if (Tools::isSubmit('submitAddcmsAndPreview'))
-                {
-                    $alias = $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id);
-                    $preview_url = $this->context->link->getCMSLink($cms, $alias, $this->context->language->id);
-
-                    if (!$cms->active)
-                    {
-                    	$admin_dir = dirname($_SERVER['PHP_SELF']);
-                        $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-                    	
-                    	$params = http_build_query(array(
-                    		'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
-                    		'ad' => $admin_dir,
-                    		'id_employee' => (int)$this->context->employee->id)
-                    		);
-                    	if (Configuration::get('PS_REWRITING_SETTINGS'))
-                    		$params = '?'.$params;
-                    	else
-                    		$params = '&'.$params;
-                    	
-                    	$preview_url .= $cms->active ? '' : $params;
-                    }
-                    Tools::redirectAdmin($preview_url);
-                }
-                elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-                    $this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$this->token;
+			if (count($this->errors))
+                return false;
+            if (!$id_cms = (int)Tools::getValue('id_cms'))
+            {
+                $cms = new CMS();
+                $this->copyFromPost($cms, 'cms');
+                if (!$cms->add())
+                    $this->errors[] = Tools::displayError('An error occurred while creating object.')
+                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
                 else
-					Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
-			}
+                    $this->updateAssoShop($cms->id);
+            }
+            else
+            {
+                $cms = new CMS($id_cms);
+                $this->copyFromPost($cms, 'cms');
+                if (!$cms->update())
+                    $this->errors[] = Tools::displayError('An error occurred while updating object.')
+                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+                else
+                    $this->updateAssoShop($cms->id);
+            }
+            if (Tools::isSubmit('submitAddcmsAndPreview'))
+            {
+                $alias = $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id);
+                $preview_url = $this->context->link->getCMSLink($cms, $alias, $this->context->language->id);
+
+                if (!$cms->active)
+                {
+                    $admin_dir = dirname($_SERVER['PHP_SELF']);
+                    $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+                    $params = http_build_query(array(
+                        'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
+                        'ad' => $admin_dir,
+                        'id_employee' => (int)$this->context->employee->id)
+                        );
+                    if (Configuration::get('PS_REWRITING_SETTINGS'))
+                        $params = '?'.$params;
+                    else
+                        $params = '&'.$params;
+                    $preview_url .= $cms->active ? '' : $params;
+                }
+                Tools::redirectAdmin($preview_url);
+            }
+            elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+            else
+                Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
-		elseif (Tools::getValue('position'))
+		elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position')))
 		{
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -351,7 +347,7 @@ class AdminCmsControllerCore extends AdminController
 			elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)Tools::getValue('id_cms_category')) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Change object statuts (active, inactive) */
 		elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier))
@@ -361,7 +357,7 @@ class AdminCmsControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->toggleStatus())
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((int)Tools::getValue('id_cms_category') ? '&id_cms_category='.(int)Tools::getValue('id_cms_category') : '').'&token='.Tools::getValue('token'));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=5&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getValue('token'));
 					else
 						$this->errors[] = Tools::displayError('An error occurred while updating status.');
 				}
@@ -371,6 +367,25 @@ class AdminCmsControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+        /* Delete multiple CMS content */
+		elseif (Tools::isSubmit('submitBulkdeletecms'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+			{
+                $this->action = 'bulkdelete';
+                $this->boxes = Tools::getValue($this->table.'Box');
+                if (is_array($this->boxes) && array_key_exists(0, $this->boxes))
+                {
+                    $firstCms = new CMS((int)$this->boxes[0]);
+                    $id_cms_category = (int)$firstCms->id_cms_category;
+                    if (!$res = parent::postProcess(true))
+                        return $res;
+                    Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
+                }
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		else
 			parent::postProcess(true);
