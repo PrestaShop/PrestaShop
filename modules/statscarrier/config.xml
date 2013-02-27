@@ -3,7 +3,7 @@
             <name>statscarrier</name>
             <displayName><![CDATA[Carrier distribution]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the carriers distribution]]></description>
+            <description><![CDATA[Display each carriers&#039; distribution. ]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>
