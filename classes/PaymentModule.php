@@ -174,13 +174,6 @@ abstract class PaymentModuleCore extends Module
 			$order_creation_failed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
 
-			if ($this->context->cart->orderExists())
-			{
-				$error = Tools::displayError('An order has already been placed using this cart.');
-				Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
-				die($error);
-			}
-
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
 					foreach ($data['package_list'] as $id_package)
