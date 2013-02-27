@@ -149,19 +149,19 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<?php echo $this->displayError('admin_password_confirm') ?>
 	</div>
 
-	<!-- Recieve by email -->
+	<!-- Newsletter -->
 	<div class="field clearfix" id="contentInfosNotification">
 		<div class="contentinput">
-			<input type="checkbox" name="send_informations" id="infosNotification" class="aligned" style="vertical-align: middle;" <?php if ($this->session->send_informations): ?>checked="checked"<?php endif; ?> />
-			<label for="infosNotification"><?php echo $this->l('Receive this information by e-mail') ?></label>
+			<input type="checkbox" name="send_informations" id="infosNotification" class="aligned" style="vertical-align:middle" <?php if ($this->session->send_informations): ?>checked="checked"<?php endif; ?> />
+			<label for="infosNotification"><?php echo $this->l('Sign-up to the newsletter') ?></label>
 			<br/>
 			<span id="resultInfosNotification" class="result aligned"></span>
 		</div>
-		<p class="userInfos aligned"><?php echo $this->l('Warning: You will receive this information only if your e-mail configuration is correct.') ?></p>
+		<p class="userInfos aligned"><?php echo $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.') ?></p>
 	</div>
 </div>
 
 <!-- Partners form -->
-<div id="benefitsBlock" style="display: none;"></div>
+<div id="benefitsBlock" style="display:none"></div>
 
 <?php $this->displayTemplate('footer') ?>
