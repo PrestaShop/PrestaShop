@@ -152,7 +152,6 @@ return array(
 		'Welcome to the PrestaShop %s Installer.' => 'Bienvenue sur l\'installation de PrestaShop %s',
 		'The installation process should take only few minutes!' => 'Le processus d\'installation devrait vous prendre quelques minutes seulement !',
 		'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s' => 'Si vous avez besoin d\'aide, n\'hésitez pas à visiter <a href="%1$s" target="_blank">notre documentation</a> ou à contacter notre équipe de support : %2$s',
-		'Choose the installer language:' => 'Choisissez la langue pour l\'installation :',
 		'Did you know?' => 'Le saviez vous ?',
 		'PrestaShop and its community offers over %d different languages for free, directly accessible from your Back Office on the Localization tab.' => 'PrestaShop et sa communauté vous proposent gratuitement des traductions dans %d langues directement accessibles depuis votre administration.',
 		'License Agreements' => 'Contrats de licence',

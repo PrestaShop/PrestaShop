@@ -37,25 +37,28 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	 */
 	public function processNextStep()
 	{
-		// Save shop configuration
-		$this->session->shop_name = trim(Tools::getValue('shop_name'));
-		$this->session->shop_activity = Tools::getValue('shop_activity');
-		$this->session->install_type = Tools::getValue('db_mode');
-		$this->session->shop_country = Tools::getValue('shop_country');
-		$this->session->shop_timezone = Tools::getValue('shop_timezone');
+		if (Tools::isSubmit('shop_name'))
+		{
+			// Save shop configuration
+			$this->session->shop_name = trim(Tools::getValue('shop_name'));
+			$this->session->shop_activity = Tools::getValue('shop_activity');
+			$this->session->install_type = Tools::getValue('db_mode');
+			$this->session->shop_country = Tools::getValue('shop_country');
+			$this->session->shop_timezone = Tools::getValue('shop_timezone');
 
-		// Save admin configuration
-		$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
-		$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
-		$this->session->admin_email = trim(Tools::getValue('admin_email'));
-		$this->session->send_informations = Tools::getValue('send_informations');
+			// Save admin configuration
+			$this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
+			$this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
+			$this->session->admin_email = trim(Tools::getValue('admin_email'));
+			$this->session->send_informations = Tools::getValue('send_informations');
 
-		// If password fields are empty, but are already stored in session, do not fill them again
-		if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
-			$this->session->admin_password = trim(Tools::getValue('admin_password'));
+			// If password fields are empty, but are already stored in session, do not fill them again
+			if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
+				$this->session->admin_password = trim(Tools::getValue('admin_password'));
 
-		if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
-			$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+			if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
+				$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+		}
 	}
 
 	/**

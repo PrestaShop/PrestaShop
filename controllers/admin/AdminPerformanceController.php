@@ -585,7 +585,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
-		$redirecAdmin = false;
+		$redirectAdmin = false;
 		if ((bool)Tools::getValue('smarty_up'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -593,7 +593,7 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -606,7 +606,7 @@ class AdminPerformanceControllerCore extends AdminController
 				if (!Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -624,7 +624,7 @@ class AdminPerformanceControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
 				{
-					$redirecAdmin = true;
+					$redirectAdmin = true;
 					if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
 						Tools::generateHtaccess();
 				}
@@ -654,7 +654,7 @@ class AdminPerformanceControllerCore extends AdminController
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					$redirecAdmin = true;
+					$redirectAdmin = true;
 				}
 			}
 			else
@@ -705,7 +705,7 @@ class AdminPerformanceControllerCore extends AdminController
 					))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
-						$redirecAdmin = true;
+						$redirectAdmin = true;
 					}
 					else
 						$this->errors[] = Tools::displayError('Cannot overwrite settings file.');
@@ -772,7 +772,7 @@ class AdminPerformanceControllerCore extends AdminController
 						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
 						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
 					))
-						$redirecAdmin = true;
+						$redirectAdmin = true;
 					else
 						$this->errors[] = Tools::displayError('Cannot overwrite settings file.');
 				}
@@ -780,7 +780,7 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		if ($redirecAdmin && (!isset($this->errors) || !count($this->errors)))
+		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 		else
 			return parent::postProcess();
