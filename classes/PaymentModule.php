@@ -177,7 +177,7 @@ abstract class PaymentModuleCore extends Module
 			if ($this->context->cart->orderExists())
 			{
 				$error = Tools::displayError('An order has already been placed using this cart.');
-				Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+				Logger::addLog($error, Logger::CRASH, '0000001', 'Cart', intval($this->context->cart->id));
 				die($error);
 			}
 
@@ -655,7 +655,7 @@ abstract class PaymentModuleCore extends Module
 				else
 				{
 					$error = Tools::displayError('Order creation failed');
-					Logger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+					Logger::addLog($error, Logger::CRASH, '0000002', 'Cart', intval($order->id_cart));
 					die($error);
 				}
 			} // End foreach $order_detail_list
@@ -666,7 +666,7 @@ abstract class PaymentModuleCore extends Module
 		else
 		{
 			$error = Tools::displayError('Cart cannot be loaded or an order has already been placed using this cart');
-			Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+			Logger::addLog($error, Logger::CRASH, '0000001', 'Cart', intval($this->context->cart->id));
 			die($error);
 		}
 	}
