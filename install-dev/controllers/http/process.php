@@ -85,21 +85,21 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (Tools::getValue('generateSettingsFile'))
 			$this->processGenerateSettingsFile();
-		else if (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile']))
+		elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile']))
 			$this->processInstallDatabase();
-		else if (Tools::getValue('installDefaultData'))
+		elseif (Tools::getValue('installDefaultData'))
 			$this->processInstallDefaultData();
-		else if (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase']))
+		elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase']))
 			$this->processPopulateDatabase();
-		else if (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase']))
+		elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase']))
 			$this->processConfigureShop();
-		else if (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
+		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallModules();
-		else if (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
+		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallFixtures();
-		else if (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
+		elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallTheme();
-		else if (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme']))
+		elseif (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme']))
 			$this->processSendEmail();
 		else
 		{
@@ -210,6 +210,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$success || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+
 		$this->session->process_validated = array_merge($this->session->process_validated, array('configureShop' => true));
 		$this->ajaxJsonAnswer(true);
 	}

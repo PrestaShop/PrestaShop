@@ -37,8 +37,7 @@ class AdminLoginControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
-	
+
 	public function setMedia()
 	{
 		$this->addJquery();
@@ -69,11 +68,19 @@ class AdminLoginControllerCore extends AdminController
 			}
 		}
 
-		if (file_exists(_PS_ADMIN_DIR_.'/../install') || file_exists(_PS_ADMIN_DIR_.'/../admin'))
-			$this->context->smarty->assign(array(
-				'randomNb' => rand(100, 999),
-				'wrong_folder_name' => true
-			));
+		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
+			$this->context->smarty->assign('wrong_folder_name', true);
+		if (file_exists(_PS_ADMIN_DIR_.'/../admin'))
+		{
+			$rand = sprintf('%04d', rand(0, 9999));
+			if (@rename(_PS_ADMIN_DIR_.'/../admin', _PS_ADMIN_DIR_.'/../admin'.$rand))
+				Tools::redirectAdmin('../admin'.$rand);
+			else
+				$this->context->smarty->assign(array(
+					'randomNb' => rand(100, 999),
+					'wrong_folder_name' => true
+				));
+		}
 
 		// Redirect to admin panel
 		if (Tools::isSubmit('redirect') && Validate::isControllerName(Tools::getValue('redirect')))
@@ -91,6 +98,7 @@ class AdminLoginControllerCore extends AdminController
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
+
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
