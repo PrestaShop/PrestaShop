@@ -41,6 +41,10 @@ var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 			<tr class="odd">
 				<td class="label"><?php echo $this->l('E-mail:') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
+				<td rowspan="2" class="print" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
+					<img src="theme/img/print.png" alt="" style="vertical-align:top">
+					<?php echo $this->l('Print my login information') ?>
+				</td>
 			</tr>
 			<tr>
 				<td class="label"><?php echo $this->l('Password:') ?></td>
