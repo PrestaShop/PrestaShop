@@ -75,6 +75,9 @@ class OrderCore extends ObjectModel
 	/** @var string Gift message if specified */
 	public $gift_message;
 
+	/** @var boolean Mobile Theme */
+	public $mobile_theme;
+
 	/**
 	 * @var string Shipping number
 	 * @deprecated 1.5.0.4
@@ -176,6 +179,7 @@ class OrderCore extends ObjectModel
 			'recyclable' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift_message' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+			'mobile_theme' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'total_discounts' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_discounts_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_discounts_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),

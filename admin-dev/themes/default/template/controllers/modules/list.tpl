@@ -43,7 +43,13 @@
 					<tbody>
 					{foreach from=$modules item=module}
 						<tr>
-							<td><input type="checkbox" name="modules" value="{$module->name}" {if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if} class="noborder"></td>
+							<td>
+								{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
+								<input type="checkbox" name="modules" value="{$module->name}"
+									{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
+									class="noborder">
+								{/if}
+							</td>
 							<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
