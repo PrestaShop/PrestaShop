@@ -593,7 +593,7 @@ class AuthControllerCore extends FrontController
 								Tools::redirect('index.php?controller=address');
 							if ($back = Tools::getValue('back'))
 								Tools::redirect($back);
-							Tools::redirect('index.php?controller=my-account');
+							
 							// redirection: if cart is not empty : redirection to the cart
 							if (count($this->context->cart->getProducts(true)) > 0)
 								Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
