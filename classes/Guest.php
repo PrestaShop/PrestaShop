@@ -40,6 +40,7 @@ class GuestCore extends ObjectModel
 	public $real_player;
 	public $windows_media;
 	public $accept_language;
+	public $mobile_theme;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -62,6 +63,7 @@ class GuestCore extends ObjectModel
 			'real_player' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'windows_media' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'accept_language' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8),
+			'mobile_theme' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
@@ -77,7 +79,7 @@ class GuestCore extends ObjectModel
 		$acceptLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
 		$this->id_operating_system = $this->getOs($userAgent);
 		$this->id_web_browser = $this->getBrowser($userAgent);
-		$this->accept_language = $this->getLanguage($acceptLanguage);
+		$this->mobile_theme = Context::getContext()->getMobileDevice();
 	}
 	
 	protected function getLanguage($acceptLanguage)

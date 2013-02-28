@@ -59,6 +59,9 @@ class CartCore extends ObjectModel
 	/** @var string Gift message if specified */
 	public $gift_message;
 
+	/** @var boolean Mobile Theme */
+	public $mobile_theme;
+
 	/** @var string Object creation date */
 	public $date_add;
 
@@ -109,6 +112,7 @@ class CartCore extends ObjectModel
 			'recyclable' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift_message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+			'mobile_theme' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'delivery_option' => 		array('type' => self::TYPE_STRING),
 			'secure_key' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'allow_seperated_package' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -119,12 +123,12 @@ class CartCore extends ObjectModel
 
 	protected $webserviceParameters = array(
 		'fields' => array(
-		'id_address_delivery' => array('xlink_resource' => 'addresses'),
-		'id_address_invoice' => array('xlink_resource' => 'addresses'),
-		'id_currency' => array('xlink_resource' => 'currencies'),
-		'id_customer' => array('xlink_resource' => 'customers'),
-		'id_guest' => array('xlink_resource' => 'guests'),
-		'id_lang' => array('xlink_resource' => 'languages'),
+			'id_address_delivery' => array('xlink_resource' => 'addresses'),
+			'id_address_invoice' => array('xlink_resource' => 'addresses'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'id_customer' => array('xlink_resource' => 'customers'),
+			'id_guest' => array('xlink_resource' => 'guests'),
+			'id_lang' => array('xlink_resource' => 'languages'),
 		),
 		'associations' => array(
 			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(

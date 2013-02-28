@@ -213,6 +213,11 @@ class CartControllerCore extends FrontController
 			// Add cart if no cart found
 			if (!$this->context->cart->id)
 			{
+				if (Context::getContext()->cookie->id_guest)
+				{
+					$guest = new Guest(Context::getContext()->cookie->id_guest);
+					$this->context->cart->mobile_theme = $guest->mobile_theme;
+				}
 				$this->context->cart->add();
 				if ($this->context->cart->id)
 					$this->context->cookie->id_cart = (int)$this->context->cart->id;
