@@ -157,10 +157,11 @@
 						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
 						<li class="separator">&nbsp;</li>
 						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
+						{if {$base_url}}
+							<li class="separator">&nbsp;</li>
+							<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
+						{/if}
 					</ul>
-					{if {$base_url}}
-						<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-					{/if}
 				</div>
 			</div>
 			
@@ -185,18 +186,6 @@
 
 			{if count($quick_access) > 0}
 			<div id="header_quick">
-				<script type="text/javascript">
-					function quickSelect(elt)
-					{
-						var eltVal = $(elt).val();
-						if (eltVal == "0")
-							return false;
-						else if (eltVal.substr(eltVal.length - 6) == '_blank')
-							window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
-						else
-							location.href = eltVal;
-					}
-				</script>
 				<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
 					<option value="0">{l s='Quick Access'}</option>
 					{foreach $quick_access as $quick}

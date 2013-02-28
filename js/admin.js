@@ -846,7 +846,8 @@ function showAjaxOverlay()
 	clearTimeout(ajax_running_timeout);
 }
 
-function display_action_details(row_id, controller, token, action, params) {
+function display_action_details(row_id, controller, token, action, params)
+{
 	var id = action+'_'+row_id;
 	var current_element = $('#details_'+id);
 	if (!current_element.data('dataMaped')) {
@@ -953,4 +954,15 @@ function display_action_details(row_id, controller, token, action, params) {
 		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}
+}
+
+function quickSelect(elt)
+{
+	var eltVal = $(elt).val();
+	if (eltVal == "0")
+		return false;
+	else if (eltVal.substr(eltVal.length - 6) == '_blank')
+		window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
+	else
+		location.href = eltVal;
 }
