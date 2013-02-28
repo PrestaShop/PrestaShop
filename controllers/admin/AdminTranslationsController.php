@@ -454,8 +454,14 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public static function checkAndAddMailsFiles($iso_code, $files_list)
 	{
+		if (Language::getIdByIso('en'))
+			$default_language = 'en';
+		else
+			$default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
+			return false;
 		// 1 - Scan mails files
-		$mails = scandir(_PS_MAIL_DIR_.'en/');
+		$mails = scandir(_PS_MAIL_DIR_.$default_language.'/');
 
 		$mails_new_lang = array();
 
@@ -475,7 +481,7 @@ class AdminTranslationsControllerCore extends AdminController
 		// Add mails files
 		foreach ($arr_mails_needed as $mail_to_add)
 			if (!in_array($mail_to_add, self::$ignore_folder))
-				@copy(_PS_MAIL_DIR_.'en/'.$mail_to_add, _PS_MAIL_DIR_.$iso_code.'/'.$mail_to_add);
+				@copy(_PS_MAIL_DIR_.$default_language.'/'.$mail_to_add, _PS_MAIL_DIR_.$iso_code.'/'.$mail_to_add);
 
 		// 2 - Scan modules files
 		$modules = scandir(_PS_MODULE_DIR_);
@@ -485,15 +491,15 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($modules as $module)
 		{
-			if (!in_array($module, self::$ignore_folder) && Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/en/'))
+			if (!in_array($module, self::$ignore_folder) && Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/'.$default_language.'/'))
 			{
-				$arr_files = scandir(_PS_MODULE_DIR_.$module.'/mails/en/');
+				$arr_files = scandir(_PS_MODULE_DIR_.$module.'/mails/'.$default_language.'/');
 
 				foreach ($arr_files as $file)
 				{
 					if (!in_array($file, self::$ignore_folder))
 					{
-						if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/en/'.$file))
+						if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/'.$default_language.'/'.$file))
 							$module_mail_en[] = _PS_MODULE_DIR_.$module.'/mails/ISO_CODE/'.$file;
 
 						if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module.'/mails/'.$iso_code.'/'.$file))
@@ -509,7 +515,7 @@ class AdminTranslationsControllerCore extends AdminController
 		// Add mails files for this modules
 		foreach ($arr_modules_mails_needed as $file)
 		{
-			$file_en = str_replace('ISO_CODE', 'en', $file);
+			$file_en = str_replace('ISO_CODE', $default_language, $file);
 			$file_iso_code = str_replace('ISO_CODE', $iso_code, $file);
 			$dir_iso_code = substr($file_iso_code, 0, -(strlen($file_iso_code) - strrpos($file_iso_code, '/') - 1));
 
@@ -2047,6 +2053,12 @@ class AdminTranslationsControllerCore extends AdminController
 	public function getMailFiles($dir, $group_name = 'mail')
 	{
 		$arr_return = array();
+		if (Language::getIdByIso('en'))
+			$default_language = 'en';
+		else	
+			$default_language = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+		if (!$default_language || !Validate::isLanguageIsoCode($default_language))
+			return false;
 
 		// Very usefull to name input and textarea fields
 		$arr_return['group_name'] = $group_name;
@@ -2055,7 +2067,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$arr_return['directory'] = $dir;
 
 		// Get path for english mail directory
-		$dir_en = str_replace('/'.$this->lang_selected->iso_code.'/', '/en/', $dir);
+		$dir_en = str_replace('/'.$this->lang_selected->iso_code.'/', '/'.$default_language.'/', $dir);
 
 		if (Tools::file_exists_cache($dir_en))
 		{
