@@ -943,7 +943,7 @@ class ShopCore extends ObjectModel
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
-			$id_shop = Context::getContext()->shop->id;
+			$id_shop = Shop::getContextShopID();
 		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
 	}
 
