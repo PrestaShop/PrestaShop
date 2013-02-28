@@ -111,7 +111,7 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				if(isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
 					$this->mobile_device = true;
 				else
 				{
@@ -143,9 +143,25 @@ class ContextCore
 	{
 		// Check mobile context
 		if (Tools::isSubmit('no_mobile_theme'))
+		{
 			Context::getContext()->cookie->no_mobile = true;
-		else if (Tools::isSubmit('mobile_theme_ok'))
+			if (Context::getContext()->cookie->id_guest)
+			{
+				$guest = new Guest(Context::getContext()->cookie->id_guest);
+				$guest->mobile_theme = false;
+				$guest->update();
+			}
+		}
+		elseif (Tools::isSubmit('mobile_theme_ok'))
+		{
 			Context::getContext()->cookie->no_mobile = false;
+			if (Context::getContext()->cookie->id_guest)
+			{
+				$guest = new Guest(Context::getContext()->cookie->id_guest);
+				$guest->mobile_theme = true;
+				$guest->update();
+			}
+		}
 
 		return isset($_SERVER['HTTP_USER_AGENT'])
 			&& isset(Context::getContext()->cookie)
