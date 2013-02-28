@@ -56,7 +56,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header ul#employee_links li {display: inline;line-height: 20px;}
 
 #header #header_infos #header_shopname span{display:block; font-size:24px; height:28px; overflow:hidden;margin:0; color:#fff; text-shadow: 0 1px 0 #000000;}
-#header #header_infos a#header_logout { background: transparent url('../img/logout.png') no-repeat scroll left top; padding-left:15px; color:#bababa;}
+#header #header_infos a#header_logout { background: transparent url('../img/logout.png') no-repeat scroll left top; padding-left:20px; color:#bababa;}
 #header #header_infos a#header_logout:hover {color:#fff;}
 #header #header_infos #header_logout a span {color:#bababa}
 #header #header_infos #header_foaccess{ text-decoration:none; color:#bababa;}
@@ -67,7 +67,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 
 #header #header_search{ background-color:#fff; border:2px solid #000; float:left; margin-top:15px; position:relative; height:25px; box-shadow: 0 1px 0 #666666; }
 #header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 transparent;  border:none; box-shadow:none;  padding: 5px 0px 5px 4px; width: 160px; }
-#header #header_search #bo_search_type_chzn{ font-size:13px; float:left; margin:0 23px 0 0; padding:0 4px; vertical-align:middle;width:100px;height:27px; border:none;}
+#header #header_search #bo_search_type_chzn{ font-size:13px; float:left; margin:0 23px 0 0; padding:0 4px; vertical-align:middle;width:80px !important;height:27px; border:none;}
 #header #header_search #bo_search_type_chzn.chzn-container-single .chzn-single { box-shadow:none; border-radius:0px; border:none; border-left:1px dotted #ccc;} 
 #header #header_search #bo_search_submit { background:  url('../img/icon-search2.png') no-repeat scroll center; border:none; width:27px; height:25px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; border-left:1px solid #3079ED; border-radius:0px; /*hacking ie7*/ font-size:0 !ie7; color: transparent !ie;}
 #header #header_quick{float:right; display:block; margin-top:15px;}
