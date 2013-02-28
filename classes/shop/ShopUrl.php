@@ -124,10 +124,11 @@ class ShopUrlCore extends ObjectModel
 	public function canAddThisUrl($domain, $domain_ssl, $physical_uri, $virtual_uri)
 	{
 		$physical_uri = trim($physical_uri, '/');
+
 		if ($physical_uri)
 			$physical_uri = preg_replace('#/+#', '/', '/'.$physical_uri.'/');
 		else
-			$this->physical_uri = '/';
+			$physical_uri = '/';
 
 		$virtual_uri = trim($virtual_uri, '/');
 		if ($virtual_uri)
