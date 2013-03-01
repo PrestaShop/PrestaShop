@@ -76,6 +76,7 @@ class ConfigurationTestCore
 			'register_globals' => false,
 			'gz' => false,
 			'mcrypt' => false,
+			'mbstring' => false,
 			'magicquotes' => false,
 			'dom' => false,
 			'pdo_mysql' => false,
