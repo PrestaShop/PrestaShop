@@ -523,7 +523,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
 			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 
@@ -539,7 +539,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -626,7 +626,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
@@ -727,7 +727,7 @@ class BlockLayered extends Module
 			$id_lang = (int)$language['id_lang'];
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
 			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
-			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
+			\''.pSQL(Tools::getValue('meta_title_'.$id_lang), true).'\')');
 		}
 	}
 	
