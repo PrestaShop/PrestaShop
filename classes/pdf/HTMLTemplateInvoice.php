@@ -85,10 +85,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getTaxTabContent()
 	{
-			$invoice_address = new Address((int)$this->order->id_address_invoice);
+			$address = new Address((int)$this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-								&& !empty($invoice_address->vat_number)
-								&& $invoice_address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+								&& !empty($address->vat_number)
+								&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
