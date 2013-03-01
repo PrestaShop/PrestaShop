@@ -43,7 +43,7 @@ $_MODULE['<{bankwire}prestashop>payment_return_1552c5916ccfe019f35d91fd8955755e'
 $_MODULE['<{bankwire}prestashop>payment_return_de6d813f05e3916a86b89bd8b1a8a489'] = 'mit dieser Bankverbindung';
 $_MODULE['<{bankwire}prestashop>payment_return_619b26a60df1af3649d2e8920a7949cd'] = 'an diese Bank';
 $_MODULE['<{bankwire}prestashop>payment_return_63fb3f7c94ee5d8027bf599885de279d'] = 'Vergessen Sie nicht Ihre Bestellnummer #%d in den Titel Ihrer Bankverbindung anzugeben.';
-$_MODULE['<{bankwire}prestashop>payment_return_1faa25b80a8d31e5ef25a78d3336606d'] = 'Vergessen Sie nicht Ihre Auftrags-Referenz-Nummer #%d in den Titel Ihrer Bankverbindung anzugeben.';
+$_MODULE['<{bankwire}prestashop>payment_return_1faa25b80a8d31e5ef25a78d3336606d'] = 'Vergessen Sie nicht Ihre Auftrags-Referenz-Nummer #%s in den Titel Ihrer Bankverbindung anzugeben.';
 $_MODULE['<{bankwire}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Bei Fragen oder für weitere Informationen, kontaktieren Sie bitte unseren';
 $_MODULE['<{bankwire}prestashop>bankwire_85ee0d0492a4e37e6c183520f5d59c40'] = 'Banküberweisung';
 $_MODULE['<{bankwire}prestashop>bankwire_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
