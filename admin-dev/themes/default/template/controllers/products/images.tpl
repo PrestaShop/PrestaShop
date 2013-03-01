@@ -280,6 +280,7 @@
 				{
 					"action":"UpdateProductImageShopAsso",
 					"id_image":id,
+					"id_product":id_product,
 					"id_shop": id_shop,
 					"active":active,
 					"token" : "{/literal}{$token}{literal}",
