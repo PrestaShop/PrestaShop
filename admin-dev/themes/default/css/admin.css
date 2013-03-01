@@ -44,6 +44,10 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 
 /*HEADER*/
 #header { background-color: #394049; height:90px; }
+/* Portrait orientation targeting */ 
+@media screen and (orientation: portrait) {#header{min-width:1250px}}
+/* Portrait orientation targeting */ 
+@media screen and (orientation: landscape) {#header{min-width:1250px}}
 #header #header_infos{ position:relative; margin: 0; padding:0; height:60px; }
 #header #header_shopname {float: left; margin:10px 15px 0 10px;}
 #header #employee_box {float: right; display:block;}
