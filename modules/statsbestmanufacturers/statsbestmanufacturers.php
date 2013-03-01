@@ -132,8 +132,8 @@ class StatsBestManufacturers extends ModuleGrid
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_order = od.id_order)
 				LEFT JOIN '._DB_PREFIX_.'currency c ON (c.id_currency = o.id_currency)
 				LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
-				WHERE '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-					AND o.invoice_date BETWEEN '.$this->getDate().'
+				WHERE o.invoice_date BETWEEN '.$this->getDate().'
+					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
 					AND m.id_manufacturer IS NOT NULL
 				GROUP BY p.id_manufacturer';
