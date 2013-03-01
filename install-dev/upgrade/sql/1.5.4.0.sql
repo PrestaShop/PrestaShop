@@ -41,3 +41,6 @@ UPDATE PREFIX_configuration SET `value` = '8388608' WHERE `name` = 'PS_PRODUCT_P
 ALTER TABLE `PREFIX_guest` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0;
 ALTER TABLE `PREFIX_orders` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0 AFTER `gift_message`;
 ALTER TABLE `PREFIX_cart` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0 AFTER `gift_message`;
+
+ALTER TABLE `PREFIX_address` CHANGE `phone` `phone` varchar(32) default NULL;
+ALTER TABLE `PREFIX_address` CHANGE `phone_mobile` `phone_mobile` varchar(32) default NULL;
