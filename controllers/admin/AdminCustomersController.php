@@ -502,7 +502,10 @@ class AdminCustomersControllerCore extends AdminController
 		);
 
 		// Added values of object Group
-		$customer_groups = $obj->getGroups();
+		if (!Validate::isUnsignedId($obj->id))
+			$customer_groups = array();
+		else
+			$customer_groups = $obj->getGroups();
 		$customer_groups_ids = array();
 		if (is_array($customer_groups))
 			foreach ($customer_groups as $customer_group)
