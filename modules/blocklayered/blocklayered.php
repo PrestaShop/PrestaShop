@@ -2706,7 +2706,7 @@ class BlockLayered extends Module
 					AND c.active = 1)) ';
 					$sql_query['group'] = '
 					GROUP BY lpa.id_attribute
-					ORDER BY id_attribute_group, id_attribute ';
+					ORDER BY id_attribute_group, a.position ';
 					
 					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
 					{
@@ -2738,7 +2738,7 @@ class BlockLayered extends Module
 							'.(version_compare(_PS_VERSION_,'1.5','>') ? 'AND lpa.`id_shop` = '.(int)Context::getContext()->shop->id : '').'
 							
 							GROUP BY lpa.id_attribute
-							ORDER BY id_attribute_group, id_attribute';
+							ORDER BY id_attribute_group, a.position';
 					}
 					break;
 
