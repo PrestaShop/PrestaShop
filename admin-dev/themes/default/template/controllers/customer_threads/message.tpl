@@ -163,7 +163,7 @@
 			</button>
 	{/if}
 
-	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;"">
+	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;">
 		<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data">
 			<p>{l s='Please type your reply below:'}</p>
 			<textarea style="width: 450px; height: 175px;" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE}</textarea>
@@ -172,7 +172,7 @@
 			</div>
 			<div style="width: 450px; margin-top: 0px;">
 				<input type="file" name="joinFile"/>
-			<div>
+			</div>
 			<div>
 				<input type="submit" class="button" name="submitReply" value="{l s='Send my reply'}" style="margin-top:20px;" />
 				<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread}" />
