@@ -314,29 +314,13 @@ class FeatureCore extends ObjectModel
 	{
 		$return = true;
 		$sql = '
-			CREATE TEMPORARY TABLE `'._DB_PREFIX_.'feature_tmp` (
-			`rank` INT NOT NULL AUTO_INCREMENT,
-			`id_feature` int not null,
-				`position` int not null,
-				primary key(rank)
-			);
-			INSERT INTO '._DB_PREFIX_.'feature_tmp(id_feature,position) SELECT id_feature,position FROM '._DB_PREFIX_.'feature ORDER BY position ASC;
-			UPDATE `'._DB_PREFIX_.'feature` f LEFT JOIN '._DB_PREFIX_.'feature_tmp t USING(id_feature) SET f.position = rank-1';
+			UPDATE `'._DB_PREFIX_.'feature` f LEFT JOIN
+				(SELECT @i := @i +1 AS rank, id_feature, position 
+				FROM `'._DB_PREFIX_.'feature` JOIN (SELECT @i :=1) dummy
+				ORDER by position) AS f2
+				USING(id_feature)
+				SET f.position = f2.rank-1';
 		$return = Db::getInstance()->executeS($sql);
-		if (!$return) {
-			$sql = '
-			SELECT `id_feature`
-			FROM `'._DB_PREFIX_.'feature`
-			ORDER BY `position`';
-			$result = Db::getInstance()->executeS($sql);
-
-			$i = 0;
-			foreach ($result as $value)
-				$return = Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'feature`
-				SET `position` = '.(int)$i++.'
-				WHERE `id_feature` = '.(int)$value['id_feature']);
-		}
 		return $return;
 	}
 
