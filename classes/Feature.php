@@ -313,19 +313,15 @@ class FeatureCore extends ObjectModel
 	public static function cleanPositions()
 	{
 		$return = true;
-
-		$sql = '
-		SELECT `id_feature`
-		FROM `'._DB_PREFIX_.'feature`
-		ORDER BY `position`';
-		$result = Db::getInstance()->executeS($sql);
-
-		$i = 0;
-		foreach ($result as $value)
-			$return = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'feature`
-			SET `position` = '.(int)$i++.'
-			WHERE `id_feature` = '.(int)$value['id_feature']);
+		$sql = 'CREATE TEMPORARY TABLE `'._DB_PREFIX_.'feature_tmp` (
+			`rank` INT NOT NULL AUTO_INCREMENT,
+			`id_feature` int not null,
+				`position` int not null,
+				primary key(rank)
+		);
+		INSERT INTO '._DB_PREFIX_.'feature_tmp(id_feature,position) SELECT id_feature,position FROM ps_feature ORDER BY position ASC;
+		UPDATE `'._DB_PREFIX_.'feature_tmp` f LEFT JOIN ps_feature_tmp t USING(id_feature) SET f.position = rank-1';
+		$return = Db::getInstance()->executeS($sql);
 		return $return;
 	}
 
