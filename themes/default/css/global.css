@@ -55,9 +55,6 @@ body{
 	color:#222;
 	background:#fff
 }
-body.mceContentBody {
-	padding:5px !important;
-}
 body.content_only {
 	background: #FFF;
 }
