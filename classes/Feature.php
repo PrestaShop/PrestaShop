@@ -319,7 +319,7 @@ class FeatureCore extends ObjectModel
 				`position` int not null,
 				primary key(rank)
 		);
-		INSERT INTO '._DB_PREFIX_.'feature_tmp(id_feature,position) SELECTT id_feature,position FROM ps_feature ORDER BY position ASC;
+		INSERT INTO '._DB_PREFIX_.'feature_tmp(id_feature,position) SELECT id_feature,position FROM ps_feature ORDER BY position ASC;
 		UPDATE `'._DB_PREFIX_.'feature_tmp` f LEFT JOIN ps_feature_tmp t USING(id_feature) SET f.position = rank-1';
 		$return = Db::getInstance()->executeS($sql);
 		return $return;
