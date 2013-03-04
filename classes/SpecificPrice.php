@@ -207,7 +207,7 @@ class SpecificPriceCore extends ObjectModel
 		** The price must not change between the top and the bottom of the page
 		*/
 
-		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$real_quantity);
+		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
 		if (!array_key_exists($key, self::$_specificPriceCache))
 		{
 			$now = date('Y-m-d H:i:s');
