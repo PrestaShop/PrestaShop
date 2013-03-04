@@ -39,7 +39,7 @@ class PDFGeneratorCore extends TCPDF
 	public $content;
 	public $font;
 
-	public $font_by_lang = array('jp' => 'cid0jp');
+	public $font_by_lang = array('ja' => 'cid0jp');
 
 
 	public function __construct($use_cache = false)
@@ -93,10 +93,11 @@ class PDFGeneratorCore extends TCPDF
 	public function setFontForLang($iso_lang)
 	{
 		$this->font = PDFGenerator::DEFAULT_FONT;
-		$this->setHeaderFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
-		$this->setFooterFont(array(PDFGenerator::DEFAULT_FONT, '', PDF_FONT_SIZE_MAIN));
 		if (array_key_exists($iso_lang, $this->font_by_lang))
 			$this->font = $this->font_by_lang[$iso_lang];
+
+		$this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
+		$this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
 
 		$this->setFont($this->font);
 	}
