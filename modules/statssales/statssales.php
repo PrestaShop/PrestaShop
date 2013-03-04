@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -133,8 +133,8 @@ class StatsSales extends ModuleGraph
 		{
 			case 1:
 				$this->_titles['main'][0] = $this->l('Products and orders');
-				$this->_titles['main'][1] = $this->l('Orders');
-				$this->_titles['main'][2] = $this->l('Products');
+				$this->_titles['main'][1] = $this->l('orders');
+				$this->_titles['main'][2] = $this->l('Products:');
 				break;
 			case 2:
 				$currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));

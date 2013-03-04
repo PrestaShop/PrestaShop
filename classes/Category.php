@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -239,9 +239,6 @@ class CategoryCore extends ObjectModel
 	public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
 	{
 		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
-
-		if (!(int)$id_lang)
-			$id_lang = _USER_ID_LANG_;
 
 		$children = array();
 		$subcats = $this->getSubCategories($id_lang, true);
@@ -1051,7 +1048,7 @@ class CategoryCore extends ObjectModel
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
-				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = 1
+				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id.'
 			');
 		} else {
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -1351,7 +1348,7 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
-			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` IN ('.implode(', ', Shop::getContextListShopID()).') )
 		WHERE cs.`id_shop` = '.(int)$id_shop.'
 		AND c.`id_parent` = '.(int)$this->id_parent);
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -113,8 +113,7 @@ class PackCore extends Product
 		foreach ($items as $item)
 		{
 			// Updated for 1.5.0
-			if (Product::getQuantity($item->id) < $item->pack_quantity
-				|| (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)))
+			if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
 				return false;
 		}
 		return true;
@@ -143,16 +142,16 @@ class PackCore extends Product
 				AND a.`id_product_pack` = '.(int)$id_product;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-		foreach ($result as &$row)
-			$row = Product::getTaxesInformations($row);
+		foreach ($result as &$line)
+			$line = Product::getTaxesInformations($line);
 			
 		if (!$full)
 			return $result;
 
 		$array_result = array();
-		foreach ($result as $row)
-			if (!Pack::isPack($row['id_product']))
-				$array_result[] = Product::getProductProperties($id_lang, $row);
+		foreach ($result as $prow)
+			if (!Pack::isPack($prow['id_product']))
+				$array_result[] = Product::getProductProperties($id_lang, $prow);
 		return $array_result;
 	}
 

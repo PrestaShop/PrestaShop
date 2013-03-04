@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_6bde6531cb3dc89a517c203d2177315d'] = 'Blocco informazioni contatto';
+$_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_632535e0cdfd3380906f6b7d40ba78d3'] = 'Blocco informazioni contatto';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_dd7bf230fde8d4836917806aff6a6b27'] = 'Indirizzo';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_ce8ae9da5b7cd6c3df2929543a9af92d'] = 'E-mail';
 $_MODULE['<{blockcontactinfos}prestashop>blockcontactinfos_02d4482d332e1aef3437cd61c9bcc624'] = 'Contattaci';

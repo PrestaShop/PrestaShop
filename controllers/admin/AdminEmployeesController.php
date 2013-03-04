@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -72,9 +72,9 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_employee' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'lastname' => array('title' => $this->l('Last name'), 'width' => 'auto'),
-			'firstname' => array('title' => $this->l('First name'), 'width' => 130),
-			'email' => array('title' => $this->l('E-mail address'), 'width' => 180),
+			'lastname' => array('title' => $this->l('Last Name'), 'width' => 'auto'),
+			'firstname' => array('title' => $this->l('First Name'), 'width' => 130),
+			'email' => array('title' => $this->l('Email address'), 'width' => 180),
 			'profile' => array('title' => $this->l('Profile'), 'width' => 90, 'type' => 'select', 'list' => $this->profiles_array, 'filter_key' => 'pl!name'),
 			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 30),
 		);
@@ -85,7 +85,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array(
 						'title' => $this->l('Password regeneration'),
-						'desc' => $this->l('Security: minimum time to wait between two password changes'),
+						'desc' => $this->l('Security: Minimum time to wait between two password changes'),
 						'cast' => 'intval',
 						'size' => 5,
 						'type' => 'text',
@@ -93,8 +93,8 @@ class AdminEmployeesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-						'title' => $this->l('Memorize language used in Admin panel forms'),
-						'desc' => $this->l('Allow employees to select a specific language for Admin panel forms'),
+						'title' => $this->l('Memorize the language used in Admin panel forms.'),
+						'desc' => $this->l('Allow employees to select a specific language for the Admin panel form.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -189,12 +189,12 @@ class AdminEmployeesControllerCore extends AdminController
 					'required' => true,
 					'size' => 33,
 					'desc' => ($obj->id ?
-								$this->l('Leave blank if you do not want to change your password') :
-									$this->l('Min. 8 characters; use only letters, numbers or').' -_')
+								$this->l('Leave this field blank if you do not want to change your password.') :
+									$this->l('Minimum of eight characters (use only letters and numbers)').' -_')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address:'),
+					'label' => $this->l('Email address:'),
 					'name' => 'email',
 					'size' => 33,
 					'required' => true
@@ -205,7 +205,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'size' => 20,
-					'desc' => $this->l('Admin panel background will be displayed in this color. HTML colors only (e.g.').' "lightblue", "#CC6600")'
+					'desc' => $this->l('Admin panel background will be displayed in this color (HTML colors only).').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'default_tab',
@@ -216,7 +216,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Back Office width:'),
+					'label' => $this->l('Back Office width'),
 					'name' => 'bo_width',
 					'size' => 10,
 					'desc' => $this->l('Back Office width, in pixels. The value "0" means that the Back Office width will be flexible.')
@@ -243,7 +243,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'type' => 'radio',
 					'label' => $this->l('Show screencast at log in:'),
 					'name' => 'bo_show_screencast',
-					'desc' => $this->l('Display the welcome video in the Admin panel dashboard at log in'),
+					'desc' => $this->l('Display the welcome video in the Admin panel dashboard at log in.'),
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
@@ -284,7 +284,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'desc' => $this->l('Allow or disallow this employee to log into the Admin panel')
+				'desc' => $this->l('Allow or disallow this employee to log into the Admin panel.')
 			);
 
 			// if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -324,7 +324,7 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -343,7 +343,7 @@ class AdminEmployeesControllerCore extends AdminController
 		$email = $this->getFieldValue($obj, 'email');
 		if (!Validate::isEmail($email))
 	 		$this->errors[] = Tools::displayError('Invalid e-mail');
-		else if (Employee::employeeExists($email) && !Tools::getValue('id_employee'))
+		elseif (Employee::employeeExists($email) && (!Tools::getValue('id_employee') ||  ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
 			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$email;
 	}
 

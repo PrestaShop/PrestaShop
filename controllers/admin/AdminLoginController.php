@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,8 +37,7 @@ class AdminLoginControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
-	
+
 	public function setMedia()
 	{
 		$this->addJquery();
@@ -69,11 +68,19 @@ class AdminLoginControllerCore extends AdminController
 			}
 		}
 
-		if (file_exists(_PS_ADMIN_DIR_.'/../install') || file_exists(_PS_ADMIN_DIR_.'/../admin'))
-			$this->context->smarty->assign(array(
-				'randomNb' => rand(100, 999),
-				'wrong_folder_name' => true
-			));
+		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
+			$this->context->smarty->assign('wrong_folder_name', true);
+		if (file_exists(_PS_ADMIN_DIR_.'/../admin'))
+		{
+			$rand = sprintf('%04d', rand(0, 9999));
+			if (@rename(_PS_ADMIN_DIR_.'/../admin', _PS_ADMIN_DIR_.'/../admin'.$rand))
+				Tools::redirectAdmin('../admin'.$rand);
+			else
+				$this->context->smarty->assign(array(
+					'randomNb' => rand(100, 999),
+					'wrong_folder_name' => true
+				));
+		}
 
 		// Redirect to admin panel
 		if (Tools::isSubmit('redirect') && Validate::isControllerName(Tools::getValue('redirect')))
@@ -91,6 +98,7 @@ class AdminLoginControllerCore extends AdminController
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
+
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
@@ -139,7 +147,7 @@ class AdminLoginControllerCore extends AdminController
 		{
 			// Find employee
 			$this->context->employee = new Employee();
-			$is_employee_loaded = $this->context->employee->getByemail($email, $passwd);
+			$is_employee_loaded = $this->context->employee->getByEmail($email, $passwd);
 			$employee_associated_shop = $this->context->employee->getAssociatedShops();
 			if (!$is_employee_loaded)
 			{
@@ -193,7 +201,7 @@ class AdminLoginControllerCore extends AdminController
 		else
 		{
 			$employee = new Employee();
-			if (!$employee->getByemail($email) || !$employee)
+			if (!$employee->getByEmail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
 				$this->errors[] = sprintf(
@@ -215,7 +223,7 @@ class AdminLoginControllerCore extends AdminController
 				'{passwd}' => $pwd
 			);
 						
-			if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new password', (int)Configuration::get('PS_LANG_DEFAULT')), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
 				$result = $employee->update();
@@ -224,7 +232,7 @@ class AdminLoginControllerCore extends AdminController
 				else
 					die(Tools::jsonEncode(array(
 						'hasErrors' => false,
-						'confirm' => $this->l('Your password has been e-mailed to you', 'AdminTab', false, false)
+						'confirm' => $this->l('Your password has been emailed to you.', 'AdminTab', false, false)
 					)));
 			}
 			else

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -67,15 +67,15 @@
 		});
 
 		$('#useLastDefaultLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your last registered address format'}");
+			switchExplanationText("{l s='This will restore your last registered address format.'}");
 		});
 
 		$('#useDefaultLayoutSystem').mouseover(function() {
-			switchExplanationText("{l s='This will restore the default address format for this country'}");
+			switchExplanationText("{l s='This will restore the default address format for this country.'}");
 		});
 
 		$('#useCurrentLastModifiedLayout').mouseover(function() {
-			switchExplanationText("{l s='This will restore your current address format'}");
+			switchExplanationText("{l s='This will restore your current address format.'}");
 		});
 
 		$('#eraseCurrentLayout').mouseover(function() {

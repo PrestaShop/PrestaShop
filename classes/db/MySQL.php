@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -68,7 +68,12 @@ class MySQLCore extends Db
 	 */
 	public function nextRow($result = false)
 	{
-		return mysql_fetch_assoc($result ? $result : $this->result);
+		$return = false;
+		if(is_resource($result) && $result)
+			$return = mysql_fetch_assoc($result);
+		elseif(is_resource($this->_result) && $this->_result)
+			$return = mysql_fetch_assoc($this->_result);
+		return $return;	
 	}
 
 	/**
@@ -173,6 +178,28 @@ class MySQLCore extends Db
 		}
 		@mysql_close($link);
 		return 0;
+	}
+	
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		ini_set('mysql.connect_timeout', 5);
+		if (!$link = @mysql_connect($server, $user, $pwd, true))
+			return false;
+		if (!@mysql_select_db($db, $link))
+			return false;
+
+		$sql = '
+			CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+			) ENGINE=MyISAM';
+
+		$result = mysql_query($sql, $link);
+		
+		if (!$result)
+			return mysql_error($link);
+
+		mysql_query('DROP TABLE `'.$prefix.'test`', $link);
+		return true;
 	}
 
 	/**

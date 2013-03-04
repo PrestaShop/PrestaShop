@@ -9,7 +9,7 @@ $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_f4f70727dc34561dfde1a
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_bfdff752293014f11f17122c92909ad5'] = 'Utilizzare un elenco';
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_2e5acd674f7f821a81e99ed01d5305d1'] = 'Per visualizzare i produttori in un elenco';
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_f68d82d608d94a571e0984a0288595e0'] = 'Per visualizzare i produttori in un elenco a cascata';
-$_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_2377be3c2ad9b435ba277a73f0f1ca76'] = 'Produttori';
+$_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_0e1e874dde345d19583102a9fd63fb7e'] = 'Produttori';
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_bc3e73cfa718a3237fb1d7e1da491395'] = 'Blocco produttori';
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_9859921e6d3733788e09599adb681dcd'] = 'Visualizza un blocco di produttori / marche';
 $_MODULE['<{blockmanufacturer}prestashop>blockmanufacturer_bb30aac3161f999a357af767ce2fd7ec'] = 'Attiva almeno un elenco di sistema';

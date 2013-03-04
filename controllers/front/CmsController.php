@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -112,6 +112,7 @@ class CmsControllerCore extends FrontController
 		else if ($this->assignCase == 2)
 		{
 			$this->context->smarty->assign(array(
+				'category' => $this->cms_category, //for backward compatibility
 				'cms_category' => $this->cms_category,
 				'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
 				'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)($this->cms_category->id) ),

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -160,22 +160,24 @@ function p15012_add_missing_columns()
 		if (empty($table))
 			continue;
 		$list_fields = $db->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
-		foreach($list_fields as $k => $field)
-			$list_fields[$k] = $field['Field'];
-		foreach ($cols as $col => $q)
-		{
-			// do only if column exists
-			if (in_array($col, $list_fields))
-				$do = 'mod';
-			else
-				$do = 'add';
-
-			if (!empty($q[$do]))
+		if (is_array($list_fields))
+			foreach($list_fields as $k => $field)
+				$list_fields[$k] = $field['Field'];
+		if (is_array($cols))				
+			foreach ($cols as $col => $q)
 			{
-				if (!$db->execute($q[$do]))
-					$errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
+				// do only if column exists
+				if (is_array($list_fields) && in_array($col, $list_fields))
+					$do = 'mod';
+				else
+					$do = 'add';
+	
+				if (!empty($q[$do]))
+				{
+					if (!$db->execute($q[$do]))
+						$errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
+				}
 			}
-		}
 	}
 
 	if (sizeof($errors) > 0)
@@ -186,4 +188,3 @@ function p15012_add_missing_columns()
 	else
 		return true;
 }
-

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -182,13 +182,13 @@ class ParentOrderControllerCore extends FrontController
 			else if ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
 			{
 				$message = new Message((int)($oldMessage['id_message']));
-				$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
+				$message->message = $messageContent;
 				$message->update();
 			}
 			else
 			{
 				$message = new Message();
-				$message->message = htmlentities($messageContent, ENT_COMPAT, 'UTF-8');
+				$message->message = $messageContent;
 				$message->id_cart = (int)($this->context->cart->id);
 				$message->id_customer = (int)($this->context->cart->id_customer);
 				$message->add();
@@ -241,7 +241,15 @@ class ParentOrderControllerCore extends FrontController
 				$key = Cart::desintifier(Tools::getValue('id_carrier'));
 				foreach ($delivery_option_list as $id_address => $options)
 					if (isset($options[$key]))
+					{
+						$this->context->cart->id_carrier = (int)Tools::getValue('id_carrier');
 						$this->context->cart->setDeliveryOption(array($id_address => $key));
+						if(isset($this->context->cookie->id_country))
+							unset($this->context->cookie->id_country);
+						if(isset($this->context->cookie->id_state))
+							unset($this->context->cookie->id_state);							
+							
+					}
 			}
 		}
 
@@ -329,7 +337,7 @@ class ParentOrderControllerCore extends FrontController
 		$cart_cart_rules = $this->context->cart->getCartRules();
 		foreach ($available_cart_rules as $key => $available_cart_rule)
 		{
-			if (strpos($available_cart_rule['code'], 'BO_ORDER_') === 0)
+			if (!$available_cart_rule['highlight'] || strpos($available_cart_rule['code'], 'BO_ORDER_') === 0)
 			{
 				unset($available_cart_rules[$key]);
 				continue;
@@ -485,7 +493,7 @@ class ParentOrderControllerCore extends FrontController
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
-		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, true);
+		$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, false);
 		if (!strpos($this->link_conditions, '?'))
 			$this->link_conditions .= '?content_only=1';
 		else

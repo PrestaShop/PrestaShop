@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -123,7 +123,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->fields_list['position'] = array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cp!position',
+				'filter_key' => 'a!position',
 				'position' => 'position'
 			);
 
@@ -237,7 +237,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -330,7 +330,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		);
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -430,7 +430,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').
+			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').
 				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').
 				'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
@@ -497,11 +497,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-					'desc' => $this->l('Add new Attributes')
+					'desc' => $this->l('Add New Attributes')
 				);
 				$this->toolbar_btn['newAttributes'] = array(
 					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add new Values'),
+					'desc' => $this->l('Add New Values'),
 					'class' => 'toolbar-new'
 				);
 		}
@@ -514,18 +514,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'edit':
-				$bread_extended[] = $this->l('Edit new Attribute');
+				$bread_extended[] = $this->l('Edit New Attributes');
 				break;
 
 			case 'add':
-				$bread_extended[] = $this->l('Add new Attribute');
+				$bread_extended[] = $this->l('Add New Attributes');
 				break;
 
 			case 'editAttributes':
 				if ($this->id_attribute)
 					$bread_extended[] = $this->l('Edit Value');
 				else
-					$bread_extended[] = $this->l('Add new Value');
+					$bread_extended[] = $this->l('Add New Values');
 				break;
 		}
 

@@ -228,6 +228,7 @@ div.field {
 		font-family:Georgia;
 		font-style:italic;
 		color:#999;
+		float: right;
 }
 
 #uploadedImage {border:1px solid #ccc;}	
@@ -242,6 +243,8 @@ div.field {
 	padding:20px 20px 20px 38px;
 	background:#ffebe8 url(img/pict_error.png) no-repeat 15px 21px;
 	border:1px solid #cc0000;
+	clear: both;
+    display: block;
 }
 
 .errorTxt {
@@ -474,7 +477,8 @@ ul#optional {
 }
 	ul#required li.ok, 
 	ul#optional li.ok{
-		background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px
+		display:none
+		/*background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px*/
 }
 	ul#required li.fail,
 	ul#optional li.fail {
@@ -573,11 +577,13 @@ ul#optional {
 	#resultInstall tr.odd {background:#f8f8f8;}
 	#resultInstall td.resultEnd {color:#666;}
 
+.print{background:white;color:#78A542;cursor:pointer;font-weight:700}
+
 .blockInfoEnd {
 	float:left;
 	margin:34px 20px 22px 0;
 	padding:10px;
-	width:292px;/* 312 */
+	width:292px;
 	background:#fff url(img/bg_blockInfoEnd.png) repeat-x 0 0;
 	border:1px solid #ccc;
 	-moz-border-radius: 5px;

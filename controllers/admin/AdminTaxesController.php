@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,7 +49,7 @@ class AdminTaxesControllerCore extends AdminController
 
 		$ecotax_desc = '';
 		if (Configuration::get('PS_USE_ECOTAX'))
-			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0');
+			$ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0.');
 
 		$this->fields_options = array(
 			'general' => array(
@@ -60,12 +60,12 @@ class AdminTaxesControllerCore extends AdminController
 						'desc' => $this->l('Select whether or not to include tax on purchases'),
 						'cast' => 'intval', 'type' => 'bool'),
 					'PS_TAX_DISPLAY' => array(
-						'title' => $this->l('Display tax in cart:'),
-						'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart'),
+						'title' => $this->l('Display tax in the shopping cart:'),
+						'desc' => $this->l('Select whether or not to display tax on a distinct line in the cart.'),
 						'cast' => 'intval',
 						'type' => 'bool'),
 					'PS_TAX_ADDRESS_TYPE' => array(
-						'title' => $this->l('Base on:'),
+						'title' => $this->l('Based on:'),
 						'cast' => 'pSQL',
 						'type' => 'select',
 						'list' => array(
@@ -94,7 +94,7 @@ class AdminTaxesControllerCore extends AdminController
 		if (Configuration::get('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
 				'title' => $this->l('Ecotax:'),
-				'desc' => $this->l('The tax to apply on the ecotax (e.g. French ecotax: 19.6%).'),
+				'desc' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
 				'cast' => 'intval',
 				'type' => 'select',
 				'identifier' => 'id_tax',
@@ -103,6 +103,8 @@ class AdminTaxesControllerCore extends AdminController
 				);
 
 		parent::__construct();
+		
+		$this->_where .= ' AND a.deleted = 0';
 	}
 
 	/**
@@ -117,7 +119,7 @@ class AdminTaxesControllerCore extends AdminController
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		if (TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use in a tax rule. Are you sure you would like to continue?');
+			$confirm = $this->l('This tax is currently in use as tax rule. Are you sure you\'d like to continue?');
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -141,7 +143,7 @@ class AdminTaxesControllerCore extends AdminController
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		if ($value && TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you would like to continue?');
+			$confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?');
 
 		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
@@ -158,7 +160,7 @@ class AdminTaxesControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Taxes'),
+				'title' => $this->l('Taxes:'),
 				'image' => '../img/admin/dollar.gif'
 			),
 			'input' => array(
@@ -170,7 +172,7 @@ class AdminTaxesControllerCore extends AdminController
 					'required' => true,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'desc' => $this->l('Tax name to display in cart and on invoice, e.g. VAT')
+					'desc' => $this->l('Tax name to display in carts and on invoices (e.g. VAT).')
 				),
 				array(
 					'type' => 'text',

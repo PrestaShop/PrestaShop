@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +32,7 @@ class MediaCore
 		'ui.mouse' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => false),
 		'ui.position' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array(), 'theme' => false),
 		'ui.draggable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => false),
-		'ui.droppable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('uicore', 'ui.widget', 'ui.mouse', 'ui.draggable'), 'theme' => false),
+		'ui.droppable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse', 'ui.draggable'), 'theme' => false),
 		'ui.resizable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
 		'ui.selectable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
 		'ui.sortable' => array('fileName' => 'jquery.ui.mouse.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
@@ -68,11 +68,13 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/(<[a-zA-Z0-9]+)((\s?[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s?)*)>/',
 				array('Media', 'minifyHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
-			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
+			if (trim($minified_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'))) !=  '')
+				$html_content = $minified_content;
 
 			return $html_content;
 		}
@@ -101,7 +103,8 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i',
 				array('Media', 'packJSinHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			// If the string is too big preg_replace return an error
 			// In this case, we don't compress the content
@@ -128,12 +131,18 @@ class MediaCore
 
 	public static function packJS($js_content)
 	{
-		if (strlen($js_content) > 0)
+		if (!empty($js_content))
 		{
 			require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
-			return JSMin::minify($js_content);
+			try {
+				$js_content = JSMin::minify($js_content);
+			} catch (Exception $e) {
+				if (_PS_MODE_DEV_)
+					echo $e->getMessage();
+				return $js_content;
+			}
 		}
-		return false;
+		return $js_content;
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
@@ -143,10 +152,10 @@ class MediaCore
 		$current_css_file = $fileuri;
 		if (strlen($css_content) > 0)
 		{
-			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content);
-			$css_content = preg_replace_callback('#url\((?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, Media::getBackTrackLimit());
+			$css_content = preg_replace_callback('#url\((?!data:)(?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, Media::getBackTrackLimit()); 
 
-			$css_content = preg_replace('#\s+#', ' ', $css_content);
+			$css_content = preg_replace('#\s+#', ' ', $css_content, Media::getBackTrackLimit());
 			$css_content = str_replace("\t", '', $css_content);
 			$css_content = str_replace("\n", '', $css_content);
 			//$css_content = str_replace('}', "}\n", $css_content);
@@ -465,6 +474,18 @@ class MediaCore
 		return $css_files;
 	}
 
+	public static function getBackTrackLimit()
+	{
+		static $limit = null;
+		if ($limit === null)
+		{
+			$limit = @ini_get('pcre.backtrack_limit');
+			if (!$limit)
+				$limit = -1;
+		}
+
+		return $limit;
+	}
 
 	/**
 	* Combine Compress and Cache (ccc) JS calls

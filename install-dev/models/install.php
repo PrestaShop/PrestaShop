@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -391,6 +391,11 @@ class InstallModelInstall extends InstallAbstractModel
 
 		Context::getContext()->shop = new Shop(1);
 		Configuration::loadConfiguration();
+
+		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
+		if (@ini_get('safe_mode') == 1)
+			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
+	
 		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration

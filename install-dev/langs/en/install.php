@@ -9,10 +9,11 @@ return array(
 		'support' => 'http://support.prestashop.com/en/',
 	),
 	'translations' => array(
-		'menu_welcome' => 'Welcome!',
+		'menu_welcome' => 'Choose your language',
+		'menu_license' => 'License agreements',
 		'menu_system' => 'System Compatibility',
 		'menu_database' => 'System Configuration',
-		'menu_configure' => 'Shop Configuration',
-		'menu_process' => 'Installation process',
+		'menu_configure' => 'Store information',
+		'menu_process' => 'Store installation',
 	),
 );

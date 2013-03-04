@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,7 +97,7 @@ class StatsNewsletter extends ModuleGraph
 	protected function getData($layers)
 	{
 		$this->_titles['main'][0] = $this->l('Newsletter statistics');
-		$this->_titles['main'][1] = $this->l('Customers');
+		$this->_titles['main'][1] = $this->l('customers');
 		$this->_titles['main'][2] = $this->l('Visitors');
 		$this->_titles['main'][3] = $this->l('Both');
 

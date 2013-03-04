@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -110,7 +110,7 @@ class ToolsCore
 	}
 
 	/**
-	* Redirect url wich allready PS_BASE_URI
+	* Redirect URLs already containing PS_BASE_URI
 	*
 	* @param string $url Desired URL
 	*/
@@ -644,14 +644,14 @@ class ToolsCore
 	{
 		if (is_array($string))
 			return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
-		return htmlentities($string, $type, 'utf-8');
+		return htmlentities((string)$string, $type, 'utf-8');
 	}
 
 	public static function htmlentitiesDecodeUTF8($string)
 	{
 		if (is_array($string))
 			return array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
-		return html_entity_decode($string, ENT_QUOTES, 'utf-8');
+		return html_entity_decode((string)$string, ENT_QUOTES, 'utf-8');
 	}
 
 	public static function safePostVars()
@@ -730,11 +730,16 @@ class ToolsCore
 	*
 	* @param object $object Object to display
 	*/
-	public static function fd($object)
+	public static function fd($object, $type = 'log')
 	{
+		$types = array('log', 'debug', 'info', 'warn', 'error', 'assert');
+		
+		if(!in_array($type, $types))
+			$type = 'log';
+		
 		echo '
 			<script type="text/javascript">
-				console.log('.json_encode($object).');
+				console.'.$type.'('.json_encode($object).');
 			</script>
 		';
 	}
@@ -968,19 +973,24 @@ class ToolsCore
 	 */
 	public static function str2url($str)
 	{
-		if (function_exists('mb_strtolower'))
-			$str = mb_strtolower($str, 'utf-8');
+		static $allow_accented_chars = null;
+
+		if ($allow_accented_chars === null)
+			$allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 
 		$str = trim($str);
-		if (!function_exists('mb_strtolower') || !Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+
+		if (function_exists('mb_strtolower'))
+			$str = mb_strtolower($str, 'utf-8');
+		elseif (!$allow_accented_chars)
 			$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
-		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+		if ($allow_accented_chars)
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);	
 		else
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
-		
+
 		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
 
@@ -1267,18 +1277,28 @@ class ToolsCore
 
 	public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5)
 	{
-		if ($stream_context == null)
-			$stream_context = @stream_context_create(array('http' => array('timeout' => 5)));
-
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
+		if ($stream_context == null && preg_match('/^https?:\/\//', $url))
+			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
+		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
 			return @file_get_contents($url, $use_include_path, $stream_context);
 		elseif (function_exists('curl_init'))
 		{
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $curl_timeout);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);			
+			$opts = stream_context_get_options($stream_context);
+			if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
+			{
+				curl_setopt($curl, CURLOPT_POST, true);
+				if (isset($opts['http']['content']))
+				{
+					parse_str($opts['http']['content'], $datas);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+				}
+			}
 			$content = curl_exec($curl);
 			curl_close($curl);
 			return $content;
@@ -1289,10 +1309,7 @@ class ToolsCore
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
-		else
-			return false;
+		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 	}
 
 
@@ -1476,7 +1493,7 @@ class ToolsCore
 		return Tools::getHttpHost();
 	}
 
-	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false)
+	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return true;
@@ -1488,6 +1505,9 @@ class ToolsCore
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+
+		if ($disable_modsec === null)
+			$disable_modsec =  (int)Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
 
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
@@ -1525,6 +1545,18 @@ class ToolsCore
 				'virtual' =>	$shop_url->virtual_uri,
 				'id_shop' =>	$shop_url->id_shop
 			);
+			
+			if ($shop_url->domain == $shop_url->domain_ssl)
+				continue;
+			
+			if (!isset($domains[$shop_url->domain_ssl]))
+				$domains[$shop_url->domain_ssl] = array();
+
+			$domains[$shop_url->domain_ssl][] = array(
+				'physical' =>	$shop_url->physical_uri,
+				'virtual' =>	$shop_url->virtual_uri,
+				'id_shop' =>	$shop_url->id_shop
+			);
 		}
 
 		// Write data in .htaccess file
@@ -1538,6 +1570,9 @@ class ToolsCore
 		// Disable multiviews ?
 		if ($disable_multiviews)
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
+
+		if ($disable_modsec)
+			fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>");
 
 		fwrite($write_fd, "RewriteEngine on\n");
 	
@@ -1657,11 +1692,9 @@ class ToolsCore
 
 FileETag INode MTime Size
 <IfModule mod_deflate.c>
-	AddOutputFilterByType DEFLATE text/html
-	AddOutputFilterByType DEFLATE text/css
-	AddOutputFilterByType DEFLATE text/javascript
-	AddOutputFilterByType DEFLATE application/javascript
-	AddOutputFilterByType DEFLATE application/x-javascript
+	<IfModule mod_filter.c>
+		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
+	</IfModule>
 </IfModule>\n\n";
 			fwrite($write_fd, $cache_control);
 		}
@@ -1830,6 +1863,7 @@ exit;
 		self::$_caching = (int)$smarty->caching;
 		$smarty->force_compile = 0;
 		$smarty->caching = (int)$level;
+		$smarty->cache_lifetime = 31536000; // 1 Year
 	}
 
 	public static function restoreCacheSettings(Context $context = null)
@@ -2198,7 +2232,7 @@ exit;
 
 		$filtered_files = array();
 
-		$real_ext = '';
+		$real_ext = false;
 		if (!empty($ext))
 			$real_ext = '.'.$ext;
 		$real_ext_length = strlen($real_ext);
@@ -2206,7 +2240,7 @@ exit;
 		$subdir = ($dir) ? $dir.'/' : '';
 		foreach ($files as $file)
 		{
-			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
+			if (!$real_ext || (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length)))
 				$filtered_files[] = $subdir.$file;
 
 			if ($recursive && $file[0] != '.' && is_dir($real_path.$file))

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -106,7 +106,7 @@ class AdminStatesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'desc' => $this->l('State name to display in addresses and on invoices')
+					'desc' => $this->l('Provide the State name to be display in addresses and on invoices.')
 				),
 				array(
 					'type' => 'text',
@@ -142,7 +142,7 @@ class AdminStatesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'desc' => array(
-						$this->l('Geographical zone where this state is located'),
+						$this->l('Geographical region where this state is located.'),
 						$this->l('Used for shipping')
 					)
 				),

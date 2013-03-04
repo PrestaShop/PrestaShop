@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,9 +29,9 @@
 			<ul class="cc_button">
 				{if $add_permission eq '1'}
 				<li>
-					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add new module'}">
+					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
 						<span class="process-icon-new-module" ></span>
-						<div>{l s='Add new module'}</div>
+						<div>{l s='Add a new module'}</div>
 					</a>
 				</li>
 				{/if}
@@ -49,7 +49,7 @@
 	<div id="module_install" style="width:500px;margin-top:5px;{if !isset($smarty.post.downloadflag)}display: none;{/if}">
 		<fieldset>
 			<legend><img src="../img/admin/add.gif" alt="{l s='Add a new module'}" class="middle" /> {l s='Add a new module'}</legend>
-			<p>{l s='The module must be either a zip file or a tarball.'}</p>
+			<p>{l s='The module must either be a zip file or a tarball.'}</p>
 			<div style="float:left;margin-right:50px">
 				<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data">
 					<label style="width: 100px">{l s='Module file'}</label>

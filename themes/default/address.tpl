@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,17 +18,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <script type="text/javascript">
 // <![CDATA[
-idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
-countries = new Array();
-countriesNeedIDNumber = new Array();
-countriesNeedZipCode = new Array();
+var idSelectedCountry = {if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{else}false{/if}{/if};
+var countries = new Array();
+var countriesNeedIDNumber = new Array();
+var countriesNeedZipCode = new Array();
 {foreach from=$countries item='country'}
 	{if isset($country.states) && $country.contains_states}
 		countries[{$country.id_country|intval}] = new Array();
@@ -46,7 +46,6 @@ countriesNeedZipCode = new Array();
 $(function(){ldelim}
 	$('.id_state option[value={if isset($smarty.post.id_state)}{$smarty.post.id_state|intval}{else}{if isset($address->id_state)}{$address->id_state|intval}{/if}{/if}]').attr('selected', true);
 {rdelim});
-{if $vat_management}
 {literal}
 	$(document).ready(function() {
 		$('#company').blur(function(){
@@ -62,7 +61,6 @@ $(function(){ldelim}
 		}
 	});
 {/literal}
-{/if}
 //]]>
 </script>
 
@@ -92,10 +90,9 @@ $(function(){ldelim}
 	<fieldset>
 		<h3>{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3>
 		<p class="required text dni">
-			<label for="dni">{l s='Identification number'}</label>
+			<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 			<input type="text" class="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni}{/if}{/if}" />
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
-			<sup>*</sup>
 		</p>
 	{assign var="stateExist" value="false"}
 	{foreach from=$ordered_adr_fields item=field_name}
@@ -105,13 +102,7 @@ $(function(){ldelim}
 			<label for="company">{l s='Company'}</label>
 			<input type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company}{/if}{/if}" />
 		</p>
-		{if $vat_display == 2}
-			<div id="vat_area">
-		{elseif $vat_display == 1}
-			<div id="vat_area" style="display: none;">
-		{else}
-			<div style="display: none;">
-		{/if}
+		<div id="vat_area">
 			<div id="vat_number">
 				<p class="text">
 					<label for="vat_number">{l s='VAT number'}</label>
@@ -215,7 +206,7 @@ $(function(){ldelim}
 			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other}{/if}{/if}</textarea>
 		</p>
 		{if $one_phone_at_least}
-			<p class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
+			<p class="inline-infos required">{l s='You must register at least one phone number.'} <sup class="required">*</sup></p>
 		{/if}
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
@@ -226,7 +217,7 @@ $(function(){ldelim}
 			<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile}{/if}{/if}" />
 		</p>
 		<p class="required text" id="adress_alias">
-			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
+			<label for="alias">{l s='Please assign an address title for future reference.'} <sup>*</sup></label>
 			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias}{else if isset($select_address)}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>

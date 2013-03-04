@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,10 +42,12 @@ class AdminCustomersControllerCore extends AdminController
 		$this->deleted = true;
 		$this->explicitSelect = true;
 
+		$this->allow_export = true;
+
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Would you like to delete the selected items?')));
 
 		$this->context = Context::getContext();
 
@@ -93,11 +95,11 @@ class AdminCustomersControllerCore extends AdminController
 				'width' => 'auto'
 			),
 			'firstname' => array(
-				'title' => $this->l('First name'),
+				'title' => $this->l('First Name'),
 				'width' => 'auto'
 			),
 			'email' => array(
-				'title' => $this->l('E-mail address'),
+				'title' => $this->l('Email address'),
 				'width' => 140,
 			),
 			'age' => array(
@@ -174,7 +176,7 @@ class AdminCustomersControllerCore extends AdminController
 			));
 
 		if (!$this->can_add_customer && !$this->display)
-			$this->informations[] = $this->l('You have to select a shop if you want to create a customer');
+			$this->informations[] = $this->l('You have to select a shop if you want to create a customer.');
 
 		parent::initContent();
 	}
@@ -290,7 +292,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address:'),
+					'label' => $this->l('Email address:'),
 					'name' => 'email',
 					'size' => 33,
 					'required' => true
@@ -301,7 +303,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'passwd',
 					'size' => 33,
 					'required' => ($obj->id ? false : true),
-					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
+					'desc' => ($obj->id ? $this->l('Leave  this field blank if there\'s no change') : $this->l('Minimum of five characters (only letters and numbers).').' -_')
 				),
 				array(
 					'type' => 'birthday',
@@ -332,7 +334,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Allow or disallow this customer to log in')
+					'desc' => $this->l('Enable or disable customer login')
 				),
 				array(
 					'type' => 'radio',
@@ -353,11 +355,11 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customer will receive your newsletter via e-mail')
+					'desc' => $this->l('Customers will receive your newsletter via email.')
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Opt-in:'),
+					'label' => $this->l('Opt in:'),
 					'name' => 'optin',
 					'required' => false,
 					'class' => 't',
@@ -374,7 +376,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Customer will receive your ads via e-mail')
+					'desc' => $this->l('Customer will receive your ads via email.')
 				),
 			)
 		);
@@ -397,7 +399,7 @@ class AdminCustomersControllerCore extends AdminController
 								'name' => 'groupBox',
 								'values' => $groups,
 								'required' => true,
-								'desc' => $this->l('Select all customer groups you would like to apply to this customer')
+								'desc' => $this->l('Select all the groups that you would like to apply to this customer.')
 							),
 					array(
 						'type' => 'select',
@@ -487,7 +489,7 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -500,7 +502,10 @@ class AdminCustomersControllerCore extends AdminController
 		);
 
 		// Added values of object Group
-		$customer_groups = $obj->getGroups();
+		if (!Validate::isUnsignedId($obj->id))
+			$customer_groups = array();
+		else
+			$customer_groups = $obj->getGroups();
 		$customer_groups_ids = array();
 		if (is_array($customer_groups))
 			foreach ($customer_groups as $customer_group)
@@ -666,7 +671,8 @@ class AdminCustomersControllerCore extends AdminController
 			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
 			'last_update' => Tools::displayDate($customer->date_upd, $this->default_form_language, true),
 			'customer_exists' => Customer::customerExists($customer->email),
-			'id_lang' => (int)(count($orders) ? $orders[0]['id_lang'] : Configuration::get('PS_LANG_DEFAULT')),
+			'id_lang' => $customer->id_lang,
+			'customerLanguage' => (new Language($customer->id_lang)),
 
 			// Add a Private note
 			'customer_note' => Tools::htmlentitiesUTF8($customer->note),

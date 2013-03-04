@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -86,8 +86,9 @@ function changeAddressDelivery(obj)
 	if (new_id_address_delivery > 0) // Change the delivery address
 	{
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
@@ -158,14 +159,15 @@ function changeAddressDelivery(obj)
 		});
 		
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
 			context: obj,
 			data: 'controller=cart'
-				+'&ajax=true&duplicate&summary'
+				+'&ajax=true&duplicate=true&summary=true'
 				+'&id_product='+id_product
 				+'&id_product_attribute='+id_product_attribute
 				+'&id_address_delivery='+old_id_address_delivery
@@ -227,7 +229,7 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 function updateQty(val, cart, el)
 {
 	var prefix = "";
-
+	
 	if (typeof(cart) === 'undefined' || cart)
 		prefix = '#order-detail-content ';
 	else
@@ -270,13 +272,14 @@ function deleteProductFromSummary(id)
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
-		type: 'GET',
-		url: baseUri,
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType: 'json',
 		data: 'controller=cart'
-			+'&ajax=true&delete&summary'
+			+'&ajax=true&delete=true&summary=true'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
 			+'&id_address_delivery='+id_address_delivery+ ( (customizationId !== 0) ? '&id_customization='+customizationId : '')
@@ -393,16 +396,17 @@ function upQuantity(id, qty)
 	if (typeof(ids[3]) !== 'undefined')
 		id_address_delivery = parseInt(ids[3]);
 	$.ajax({
-		type: 'GET',
-		url: baseUri,
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType: 'json',
 		data: 'controller=cart'
 			+'&ajax=true'
-			+'&add'
-			+'&getproductprice'
-			+'&summary'
+			+'&add=true'
+			+'&getproductprice=true'
+			+'&summary=true'
 			+'&id_product='+productId
 			+'&ipa='+productAttributeId
 			+'&id_address_delivery='+id_address_delivery
@@ -432,6 +436,8 @@ function upQuantity(id, qty)
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				if (typeof(getCarrierListAndUpdate) !== 'undefined')
 					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();					
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -471,16 +477,17 @@ function downQuantity(id, qty)
 	if (newVal > 0 || $('#product_'+id+'_gift').length)
 	{
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			dataType: 'json',
 			data: 'controller=cart'
 				+'&ajax=true'
-				+'&add'
-				+'&getproductprice'
-				+'&summary'
+				+'&add=true'
+				+'&getproductprice=true'
+				+'&summary=true'
 				+'&id_product='+productId
 				+'&ipa='+productAttributeId
 				+'&id_address_delivery='+id_address_delivery
@@ -515,6 +522,8 @@ function downQuantity(id, qty)
 					
 					if (typeof(getCarrierListAndUpdate) !== 'undefined')
 						getCarrierListAndUpdate();
+					if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+						updatePaymentMethodsDisplay();							
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -538,6 +547,8 @@ function updateCartSummary(json)
 
 	if (typeof json === 'undefined')
 		return;
+		
+	$('div.error').fadeOut();		
 
 	$('.cart_quantity_input').val(0);
 
@@ -657,15 +668,28 @@ function updateCartSummary(json)
 	}
 
 	// Block cart
-	if (priceDisplayMethod !== 0)
+	$('#cart_block_shipping_cost').show();
+	$('#cart_block_shipping_cost').next().show();
+	if (json.total_shipping > 0)
 	{
-		$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_total').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
-	} else {
-		$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
-		$('#cart_block_total').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
+		if (priceDisplayMethod !== 0)
+		{
+			$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping_tax_exc, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_total').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
+		} else {
+			$('#cart_block_shipping_cost').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_wrapping_cost').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));
+			$('#cart_block_total').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
+		}
+	}
+	else
+	{
+		if (json.carrier.id == null)
+		{
+			$('#cart_block_shipping_cost').hide();
+			$('#cart_block_shipping_cost').next().hide();
+		}
 	}
 
 	$('#cart_block_tax_cost').html(formatCurrency(json.total_tax, currencyFormat, currencySign, currencyBlank));
@@ -680,21 +704,21 @@ function updateCartSummary(json)
 	$('#total_price').html(formatCurrency(json.total_price, currencyFormat, currencySign, currencyBlank));
 	$('#total_price_without_tax').html(formatCurrency(json.total_price_without_tax, currencyFormat, currencySign, currencyBlank));
 	$('#total_tax').html(formatCurrency(json.total_tax, currencyFormat, currencySign, currencyBlank));
-
+	
+	$('.cart_total_delivery').show();
 	if (json.total_shipping > 0)
 	{
 		if (priceDisplayMethod !== 0)
-		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping_tax_exc, currencyFormat, currencySign, currencyBlank));
-		}
 		else
-		{
 			$('#total_shipping').html(formatCurrency(json.total_shipping, currencyFormat, currencySign, currencyBlank));
-		}
 	}
 	else
 	{
-		$('#total_shipping').html(freeShippingTranslation);
+		if (json.carrier.id != null)
+			$('#total_shipping').html(freeShippingTranslation);
+		else
+			$('.cart_total_delivery').hide();
 	}
 
 	if (json.free_ship > 0 && !json.is_virtual_cart)
@@ -770,11 +794,12 @@ $(document).ready(function() {
 	
 	$('#allow_seperated_package').live('click', function() {
 		$.ajax({
-			type: 'GET',
-			url: baseUri,
+			type: 'POST',
+			headers: { "cache-control": "no-cache" },
+			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
-			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
+			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
 				+($(this).prop('checked') ? '1' : '0')
 				+'&token='+static_token
 				+'&allow_refresh=1',
@@ -811,7 +836,8 @@ function updateExtraCarrier(id_delivery_option, id_address)
 	
 	$.ajax({
 		type: 'POST',
-		url: url,
+		headers: { "cache-control": "no-cache" },
+		url: url + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : "json",

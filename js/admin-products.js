@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -63,9 +63,9 @@ product_tabs['Combinations'] = new function(){
 					self.removeButtonCombination('update');
 					$.scrollTo('#add_new_combination', 1200, { offset: -100 });
 					var wholesale_price = Math.abs(data[0]['wholesale_price']);
-					var price = Math.abs(data[0]['price']);
-					var weight = Math.abs(data[0]['weight']);
-					var unit_impact = Math.abs(data[0]['unit_price_impact']);
+					var price = data[0]['price'];
+					var weight = data[0]['weight'];
+					var unit_impact = data[0]['unit_price_impact'];
 					var reference = data[0]['reference'];
 					var ean = data[0]['ean13'];
 					var quantity = data[0]['quantity'];
@@ -991,7 +991,8 @@ product_tabs['Pack'] = new function(){
 			},
 			extraParams: {
 				excludeIds : getSelectedIds(),
-				excludeVirtuals : 1
+				excludeVirtuals : 1,
+				exclude_packs: 1
 			}
 		}).result(function(event, item){
 			$('#curPackItemId').val(item[1]);

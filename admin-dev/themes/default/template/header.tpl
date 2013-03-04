@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6 " lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]> <html lang="fr" class="no-js ie9" lang="en"> <![endif]-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{$iso}" lang="{$iso}">
 <head>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
@@ -144,17 +148,23 @@
 					</div>
 				{/if}
 			</div>
-			<div id="employee_links">
-				<span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
-				<span class="separator">&nbsp;</span>
-				<a class="employee" href="index.php?controller=AdminEmployees&amp;id_employee={$employee->id}&amp;updateemployee&amp;token={getAdminToken tab='AdminEmployees'}" alt="">{l s='My preferences'}</a>
-				<span class="separator">&nbsp;</span>
-				<a href="index.php?logout" id="header_logout">{l s='logout'}</a>
-				{if {$base_url}}
-					<span class="separator">&nbsp;</span>
-					<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
-				{/if}
+		
+			<div id="employee_box">
+				<div id="employee_infos">
+					<div class="employee_name">{l s='Welcome,'} <strong>{$first_name}&nbsp;{$last_name}</strong></div>
+					<div class="clear"></div>
+					<ul id="employee_links">
+						<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'htmlall':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee">{l s='My preferences'}</a></li>
+						<li class="separator">&nbsp;</li>
+						<li><a id="header_logout" href="index.php?logout">{l s='logout'}</a></li>
+						{if {$base_url}}
+							<li class="separator">&nbsp;</li>
+							<a href="{$base_url}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">{l s='View my shop'}</a>
+						{/if}
+					</ul>
+				</div>
 			</div>
+			
 			<div id="header_search">
 				<form method="post" action="index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}">
 					<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
@@ -176,18 +186,6 @@
 
 			{if count($quick_access) > 0}
 			<div id="header_quick">
-				<script type="text/javascript">
-					function quickSelect(elt)
-					{
-						var eltVal = $(elt).val();
-						if (eltVal == "0")
-							return false;
-						else if (eltVal.substr(eltVal.length - 6) == '_blank')
-							window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
-						else
-							location.href = eltVal;
-					}
-				</script>
 				<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
 					<option value="0">{l s='Quick Access'}</option>
 					{foreach $quick_access as $quick}
@@ -209,9 +207,9 @@
 			{foreach $tabs AS $t}
 				{if $t.active}
 					<li class="submenu_size maintab {if $t.current}active{/if}" id="maintab{$t.id_tab}">
-						<span class="title">
+						<a href="#" class="title">
 							<img src="{$t.img}" alt="" />{if $t.name eq ''}{$t.class_name}{else}{$t.name}{/if}
-						</span>
+						</a>
 						<ul class="submenu">
 							{foreach from=$t.sub_tabs item=t2}
 								{if $t2.active}

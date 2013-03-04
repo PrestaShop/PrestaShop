@@ -6,7 +6,7 @@
 		<currency name="Доллар" iso_code="USD" iso_code_num="840" sign="$" blank="0" conversion_rate="0.12315" format="1" decimals="1" />
 	</currencies>
 	<languages>
-		<language iso_code="ru" />
+		<language iso_code="uk" />
 	</languages>
 	<taxes>
 		<tax id="1" name="НДС 20%" rate="20" />

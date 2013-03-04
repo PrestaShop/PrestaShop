@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -102,13 +102,14 @@ function updateOrderLineDisplay(domCheckbox)
 function sendOrderMessage()
 {
 	paramString = "ajax=true";
-	$('#sendOrderMessage').find('input, textarea').each(function(){
-		paramString += '&' + $(this).attr('name') + '=' + escape($(this).val());
+	$('#sendOrderMessage').find('input, textarea, select').each(function(){
+		paramString += '&' + $(this).attr('name') + '=' + encodeURIComponent($(this).val());
 	});
 
 	$.ajax({
 		type: "POST",
-		url: $('#sendOrderMessage').attr("action"),
+		headers: { "cache-control": "no-cache" },
+		url: $('#sendOrderMessage').attr("action") + '?rand=' + new Date().getTime(),
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {

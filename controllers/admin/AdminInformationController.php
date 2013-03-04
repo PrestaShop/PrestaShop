@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -89,23 +89,23 @@ class AdminInformationControllerCore extends AdminController
 		$tests_errors = array(
 			'phpversion' => $this->l('Update your PHP version'),
 			'upload' => $this->l('Configure your server to allow file uploads'),
-			'system' => $this->l('Configure your server to allow the creation of directories and files with write permissions'),
-			'gd' => $this->l('Enable the GD library on your server'),
-			'mysql_support' => $this->l('Enable the MySQL support on your server'),
-			'config_dir' => $this->l('Set write permissions for "config" folder'),
-			'cache_dir' => $this->l('Set write permissions for "cache" folder'),
-			'sitemap' => $this->l('Set write permissions for "sitemap.xml" file'),
-			'img_dir' => $this->l('Set write permissions for "img" folder and subfolders, recursively'),
-			'log_dir' => $this->l('Set write permissions for "log" folder and subfolders, recursively'),
-			'mails_dir' => $this->l('Set write permissions for "mails" folder and subfolders, recursively'),
-			'module_dir' => $this->l('Set write permissions for "modules" folder and subfolders, recursively'),
-			'theme_lang_dir' => $this->l('Set write permissions for "themes/')._THEME_NAME_.$this->l('/lang/" folder and subfolders, recursively'),
-			'translations_dir' => $this->l('Set write permissions for "translations" folder and subfolders, recursively'),
-			'customizable_products_dir' => $this->l('Set write permissions for "upload" folder and subfolders, recursively'),
-			'virtual_products_dir' => $this->l('Set write permissions for "download" folder and subfolders, recursively'),
+			'system' => $this->l('Configure your server to allow the creation of directories and files with write permissions.'),
+			'gd' => $this->l('Enable the GD library on your server.'),
+			'mysql_support' => $this->l('Enable the MySQL support on your server.'),
+			'config_dir' => $this->l('Set write permissions for the "config" folder.'),
+			'cache_dir' => $this->l('Set write permissions for the "cache" folder.'),
+			'sitemap' => $this->l('Set write permissions for the "sitemap.xml" file.'),
+			'img_dir' => $this->l('Set write permissions for the "img" folder and subfolders.'),
+			'log_dir' => $this->l('Set write permissions for the "log" folder and subfolders.'),
+			'mails_dir' => $this->l('Set write permissions for the "mails" folder and subfolders.'),
+			'module_dir' => $this->l('Set write permissions for the "modules" folder and subfolders.'),
+			'theme_lang_dir' => $this->l('Set the write permissions for the "themes')._THEME_NAME_.$this->l('/lang/" folder and subfolders, recursively.'),
+			'translations_dir' => $this->l('Set write permissions for the "translations" folder and subfolders.'),
+			'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
+			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
 			'fopen' => $this->l('Allow the PHP fopen() function on your server'),
 			'register_globals' => $this->l('Set PHP "register_global" option to "Off"'),
-			'gz' => $this->l('Enable GZIP compression on your server')
+			'gz' => $this->l('Enable GZIP compression on your server.')
 		);
 
 		$params_required_results = ConfigurationTest::check($tests);

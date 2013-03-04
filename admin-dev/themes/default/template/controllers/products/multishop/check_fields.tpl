@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,6 +26,6 @@
 {if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 	<label style="float: none">
 		<input type="checkbox" style="vertical-align: text-bottom" onclick="$('#product-tab-content-{$product_tab} input[name^=\'multishop_check[\']').attr('checked', this.checked); ProductMultishop.checkAll{$product_tab}()" />
-		{l s='Check/uncheck all (you are editing this page for several shops, some fields like "name" or "price" are disabled, you have to check these fields in order to edit them for these shops)'}
+		{l s='Check/uncheck all. (If you are editing this page for several shops, some fields like "name" or "price" are may be disabled. You will need check these fields in order to edit them)'}
 	</label>
 {/if}

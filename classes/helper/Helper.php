@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -346,6 +346,16 @@ class HelperCore
 		);
 
 		$tpl = $this->createTemplate('helpers/required_fields.tpl');
+		$tpl->assign($this->tpl_vars);
+
+		return $tpl->fetch();
+	}
+	
+	public function renderModulesList($modules_list)
+	{
+		$this->tpl_vars = array('modules_list' => $modules_list);
+		
+		$tpl = $this->createTemplate('helpers/modules_list/list.tpl');
 		$tpl->assign($this->tpl_vars);
 
 		return $tpl->fetch();

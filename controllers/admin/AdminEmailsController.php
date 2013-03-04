@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,12 +38,12 @@ class AdminEmailsControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'email' => array(
-				'title' => $this->l('E-mail'),
+				'title' => $this->l('Email:'),
 				'icon' => 'email',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
-						'title' => $this->l('Send e-mail to'), 
-						'desc' => $this->l('Where customers send messages from order page'), 
+						'title' => $this->l('Send email to'), 
+						'desc' => $this->l('Where customers send messages from the order page.'), 
 						'validation' => 'isUnsignedId', 
 						'type' => 'select', 
 						'cast' => 'intval', 
@@ -56,7 +56,8 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							1 => $this->l('Use PHP mail() function.  Recommended; works in most cases'), 
+							3 => $this->l('Never send emails (may be useful for test purpose)'), 
+							1 => $this->l('Use PHP mail() function. Recommended; works in most cases'), 
 							2 => $this->l('Set my own SMTP parameters. For advanced users ONLY')
 						),
 						'js' => array(
@@ -66,8 +67,8 @@ class AdminEmailsControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(
-						Mail::TYPE_HTML => $this->l('Send e-mail as HTML'), 
-						Mail::TYPE_TEXT => $this->l('Send e-mail as Text'), 
+						Mail::TYPE_HTML => $this->l('Send email in HTML format. '), 
+						Mail::TYPE_TEXT => $this->l('Send email in text format'), 
 						Mail::TYPE_BOTH => $this->l('Both')
 						)
 					),
@@ -75,14 +76,14 @@ class AdminEmailsControllerCore extends AdminController
 				'submit' => array()
 			),
 			'smtp' => array(
-				'title' => $this->l('E-mail'),
+				'title' => $this->l('Email:'),
 				'icon' => 'email',
 				'top' => '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">',
 				'bottom' => '</div>',
 				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array(
 						'title' => $this->l('Mail domain name:'),
-						'desc' => $this->l('Fully qualified domain name (keep empty if you do not know)'),
+						'desc' => $this->l('Fully qualified domain name (keep this field empty if you don\'t know).'),
 						'empty' => true, 'validation' =>
 						'isUrl', 'size' => 30,
 						'type' => 'text',
@@ -98,7 +99,7 @@ class AdminEmailsControllerCore extends AdminController
 						),
 					'PS_MAIL_USER' => array(
 						'title' => $this->l('SMTP user:'),
-						'desc' => $this->l('Leave blank if not applicable'),
+						'desc' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
 						'size' => 30,
 						'type' => 'text',
@@ -106,7 +107,7 @@ class AdminEmailsControllerCore extends AdminController
 						),
 					'PS_MAIL_PASSWD' => array(
 						'title' => $this->l('SMTP password:'),
-						'desc' => $this->l('Leave blank if not applicable'),
+						'desc' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
 						'size' => 30,
 						'type' => 'password',
@@ -148,17 +149,17 @@ class AdminEmailsControllerCore extends AdminController
 				'submit' => array()
 			),
 			'test' => array(
-				'title' =>	$this->l('Test your e-mail configuration'),
+				'title' =>	$this->l('Test your email configuration'),
 				'icon' =>	'email',
 				'fields' =>	array(
 					'PS_SHOP_EMAIL' => array(
-						'title' => $this->l('Send a test e-mail to'),
+						'title' => $this->l('Send a test email to'),
 						'type' => 'text',
 						'size' => 40,
 						'id' => 'testEmail'
 						),
 				),
-				'bottom' => '<div class="margin-form"><input type="button" class="button" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an e-mail test').'" onclick="verifyMail();" /><br />
+				'bottom' => '<div class="margin-form"><input type="button" class="button" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an email test').'" onclick="verifyMail();" /><br />
 					<p id="mailResultCheck" style="display:none;"></p></div>',
 			)
 		);
@@ -170,14 +171,14 @@ class AdminEmailsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->initToolbar();
 		unset($this->toolbar_btn['save']);
-		
 		$back = $this->context->link->getAdminLink('AdminHome');
 		
 		$this->toolbar_btn['back'] = array(
 			'href' => $back,
-			'desc' => $this->l('Back to dashboard')
+			'desc' => $this->l('Back to the dashboard')
 		);
 		
 		$this->content .= $this->renderOptions();

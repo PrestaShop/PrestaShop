@@ -79,5 +79,8 @@
     <meta id="guest-tracking">
       <page>guest-tracking</page>
     </meta>
+    <meta id="order-confirmation">
+      <page>order-confirmation</page>
+    </meta>
   </entities>
 </entity_meta>

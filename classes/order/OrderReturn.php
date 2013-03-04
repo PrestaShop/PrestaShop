@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -225,11 +225,12 @@ class OrderReturnCore extends ObjectModel
 	public static function addReturnedQuantity(&$products, $id_order)
 	{
 		$details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(ord.product_quantity,0)) as qty_returned
+			SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
 			FROM '._DB_PREFIX_.'order_detail od
 			LEFT JOIN '._DB_PREFIX_.'order_return_detail ord
 			ON ord.id_order_detail = od.id_order_detail
-			WHERE od.id_order = '.(int)$id_order
+			WHERE od.id_order = '.(int)$id_order.'
+			GROUP BY od.id_order_detail'
 		);
 		if (!$details)
 			return;
