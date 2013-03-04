@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,16 +174,21 @@ class AddressControllerCore extends FrontController
 				$address->dni = null;
 		}
 		// Check if the alias exists
-		if (!$this->context->customer->is_guest && !empty($_POST['alias'])
-			&& (int)$this->context->customer->id > 0
-			&& Db::getInstance()->getValue('
+		if (!$this->context->customer->is_guest && !empty($_POST['alias']) && (int)$this->context->customer->id > 0)
+		{
+			$id_address = Tools::getValue('id_address');
+			if(Configuration::get('PS_ORDER_PROCESS_TYPE') && (int)Tools::getValue('opc_id_address_'.Tools::getValue('type')) > 0)
+				$id_address = Tools::getValue('opc_id_address_'.Tools::getValue('type'));
+ 	
+			if (Db::getInstance()->getValue('
 				SELECT count(*)
 				FROM '._DB_PREFIX_.'address
 				WHERE `alias` = \''.pSql($_POST['alias']).'\'
-				AND id_address != '.(int)Tools::getValue('id_address').'
+				AND id_address != '.(int)$id_address.'
 				AND id_customer = '.(int)$this->context->customer->id.'
 				AND deleted = 0') > 0)
-			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+				$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose another one.'), Tools::safeOutput($_POST['alias']));
+		}
 
 		// Check the requires fields which are settings in the BO
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
@@ -209,16 +214,35 @@ class AddressControllerCore extends FrontController
 				}
 			}
 		}
-
+		
+		if ($this->ajax && Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+		{
+			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));			
+			if (count($this->errors))
+			{
+				$return = array(
+					'hasError' => (bool)$this->errors,
+					'errors' => $this->errors
+				);
+				die(Tools::jsonEncode($return));
+			}
+		}
+		
 		// Save address
 		if ($result = $address->save())
-		{
+		{			
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
 				$this->context->cart->updateAddressId($address_old->id, $address->id);
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
+            if (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+            { 
+                $this->context->cart->id_address_invoice = (int)$address->id;
+                $this->context->cart->update();                
+            }
+            
 			if ($this->ajax)
 			{
 				$return = array(
@@ -257,6 +281,7 @@ class AddressControllerCore extends FrontController
 		// Assign common vars
 		$this->context->smarty->assign(array(
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+			'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 			'ajaxurl' => _MODULE_DIR_,
 			'errors' => $this->errors,
 			'token' => Tools::getToken(false),

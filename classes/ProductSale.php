@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -68,7 +68,7 @@ class ProductSaleCore
 
 		$final_order_by = $order_by;
 		if (empty($order_by) || $order_by == 'position' || $order_by = 'price') $order_by = 'sales';
-		if (empty($order_way)) $order_way = 'DESC';
+		if (empty($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -98,6 +98,7 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p').'
 				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg
@@ -150,6 +151,7 @@ class ProductSaleCore
 					ON cl.`id_category` = product_shop.`id_category_default`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'
 					AND p.`id_product` IN (
 						SELECT cp.`id_product`
 						FROM `'._DB_PREFIX_.'category_group` cg

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,9 +49,9 @@ class BlockViewed extends Module
 	public function install()
 	{
 		if (!parent::install()
-			OR !$this->registerHook('leftColumn')
-			OR !$this->registerHook('header')
-			OR !Configuration::updateValue('PRODUCTS_VIEWED_NBR', 2))
+			|| !$this->registerHook('leftColumn')
+			|| !$this->registerHook('header')
+			|| !Configuration::updateValue('PRODUCTS_VIEWED_NBR', 2))
 			return false;
 		return true;
 	}
@@ -81,7 +81,7 @@ class BlockViewed extends Module
 			<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 				<label>'.$this->l('Products displayed').'</label>
 				<div class="margin-form">
-					<input type="text" name="productNbr" value="'.Configuration::get('PRODUCTS_VIEWED_NBR').'" />
+					<input type="text" name="productNbr" value="'.(int)Configuration::get('PRODUCTS_VIEWED_NBR').'" />
 					<p class="clear">'.$this->l('Define the number of products displayed in this block').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockViewed" value="'.$this->l('Save').'" class="button" /></center>
@@ -95,7 +95,7 @@ class BlockViewed extends Module
 		$id_product = (int)Tools::getValue('id_product');
 		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
-		if (sizeof($productsViewed))
+		if (count($productsViewed))
 		{
 			$defaultCover = Language::getIsoById($params['cookie']->id_lang).'-default';
 
@@ -116,11 +116,11 @@ class BlockViewed extends Module
 			);
 
 			$productsImagesArray = array();
-			foreach ($productsImages AS $pi)
+			foreach ($productsImages as $pi)
 				$productsImagesArray[$pi['id_product']] = $pi;
 
 			$productsViewedObj = array();
-			foreach ($productsViewed AS $productViewed)
+			foreach ($productsViewed as $productViewed)
 			{
 				$obj = (object)'Product';
 				if (!isset($productsImagesArray[$productViewed]) || (!$obj->active = $productsImagesArray[$productViewed]['active']))
@@ -147,29 +147,20 @@ class BlockViewed extends Module
 				}
 			}
 
-			if ($id_product AND !in_array($id_product, $productsViewed))
+			if ($id_product && !in_array($id_product, $productsViewed))
 			{
 				// Check if the user to the right of access to this product
-				$result = Db::getInstance()->getRow('
-				SELECT COUNT(cug.`id_customer`) AS total
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-				LEFT JOIN `'._DB_PREFIX_.'customer_group` cug ON (cug.`id_group` = cg.`id_group`)
-				WHERE p.`id_product` = '.(int)($id_product).'
-				'.($this->context->customer->id ? 'AND cug.`id_customer` = '.(int)$this->context->customer->id :
-				'AND cg.`id_group` = 1')
-				);
-				if ($result['total'])
+				$product = new Product((int)$id_product);
+				if ($product->checkAccess((int)$this->context->customer->id))
 					array_unshift($productsViewed, $id_product);
 			}
 			$viewed = '';
-			foreach ($productsViewed AS $id_product_viewed)
+			foreach ($productsViewed as $id_product_viewed)
 				$viewed .= (int)($id_product_viewed).',';
 			$params['cookie']->viewed = rtrim($viewed, ',');
 
-			if (!sizeof($productsViewedObj))
-				return ;
+			if (!count($productsViewedObj))
+				return;
 
 			$this->smarty->assign(array(
 				'productsViewedObj' => $productsViewedObj,
@@ -179,7 +170,7 @@ class BlockViewed extends Module
 		}
 		elseif ($id_product)
 			$params['cookie']->viewed = (int)($id_product);
-		return ;
+		return;
 	}
 
 	public function hookLeftColumn($params)

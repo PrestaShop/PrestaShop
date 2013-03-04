@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -66,6 +66,9 @@ require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 @set_time_limit(0);
 if (!@ini_get('date.timezone'))
 	@date_default_timezone_set('UTC');
+
+// Some hosting still have magic_quotes_runtime configured
+ini_set('magic_quotes_runtime', 0);
 
 // Try to improve memory limit if it's under 32M
 if (psinstall_get_memory_limit() < psinstall_get_octets('32M'))

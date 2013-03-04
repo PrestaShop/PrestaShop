@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 {block name="other_input"}
 	{if $key eq 'selects'}
 	<div class="margin-form">
-	<h3>{l s='Products'}</h3>
+	<h3>{l s='Products:'}</h3>
 	<table class="double_select">
 		<tr>
 			<td style="padding-left:20px;">
@@ -36,7 +36,7 @@
 					<option value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="hint" name="help_box">{l s='Double-click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
+				<span class="hint" name="help_box">{l s='Double click to move the item to another column'}<span class="hint-pointer">&nbsp;</span></span>
 				<br /><br />
 				<a href="#" id="move_to_right" class="multiple_select_add">
 					{l s='Add'} &gt;&gt;
@@ -49,7 +49,7 @@
 					<option selected="selected" value="{$product.id_product}">{$product.name}</option>
 					{/foreach}
 				</select>
-				<span class="hint" name="help_box">{l s='Double-click to move to other column'}<span class="hint-pointer">&nbsp;</span></span>
+				<span class="hint" name="help_box">{l s='Double click to move the item to another column'}<span class="hint-pointer">&nbsp;</span></span>
 				<br /><br />
 				<a href="#" id="move_to_left" class="multiple_select_remove">
 					&lt;&lt; {l s='Remove'}

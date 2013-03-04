@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 	<!-- Block CMS module -->
 	{foreach from=$cms_titles key=cms_key item=cms_title}
 		<div id="informations_block_left_{$cms_key}" class="block informations_block_left">
-			<p class="title_block"><a href="{$cms_title.category_link}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></p>
+			<h4 class="title_block"><a href="{$cms_title.category_link}">{if !empty($cms_title.name)}{$cms_title.name}{else}{$cms_title.category_name}{/if}</a></h4>
 			<ul class="block_content">
 				{foreach from=$cms_title.categories item=cms_page}
 					{if isset($cms_page.link)}<li class="bullet"><b style="margin-left:2em;">
@@ -45,7 +45,7 @@
 {else}
 	<!-- MODULE Block footer -->
 	<div class="block_various_links" id="block_various_links_footer">
-		<p class="title_block">{l s='Information' mod='blockcms'}</p>
+		<h4 class="title_block">{l s='Information' mod='blockcms'}</h4>
 		<ul>
 			{if !$PS_CATALOG_MODE}<li class="first_item"><a href="{$link->getPageLink('prices-drop')}" title="{l s='Specials' mod='blockcms'}">{l s='Specials' mod='blockcms'}</a></li>{/if}
 			<li class="{if $PS_CATALOG_MODE}first_{/if}item"><a href="{$link->getPageLink('new-products')}" title="{l s='New products' mod='blockcms'}">{l s='New products' mod='blockcms'}</a></li>
@@ -58,7 +58,7 @@
 				{/if}
 			{/foreach}
 			<li><a href="{$link->getPageLink('sitemap')}" title="{l s='sitemap' mod='blockcms'}">{l s='Sitemap' mod='blockcms'}</a></li>
-			{if $display_poweredby}<li class="last_item">{l s='Powered by' mod='blockcms'} <a target="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;</li>{/if}
+			{if $display_poweredby}<li class="last_item">{l s='Powered by' mod='blockcms'} <a class="_blank" href="http://www.prestashop.com">PrestaShop</a>&trade;</li>{/if}
 		</ul>
 	{$footer_text}
 	</div>

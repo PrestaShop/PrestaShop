@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Switzerland" version="1.0">
 	<currencies>
-		<currency name="Franc" iso_code="CHF" iso_code_num="756" sign="CHF" blank="1" conversion_rate="1.34183" format="2" decimals="1" />
+		<currency name="Franc" iso_code="CHF" iso_code_num="756" sign="CHF" blank="1" conversion_rate="1.34183" format="5" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="de" />

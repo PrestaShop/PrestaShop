@@ -150,4 +150,10 @@
     <keywords/>
     <url_rewrite>ospite-monitoraggio</url_rewrite>
   </meta>
+  <meta id="order-confirmation" id_shop="1">
+    <title>Conferma d&#x27;ordine</title>
+    <description/>
+    <keywords/>
+    <url_rewrite>conferma-ordine</url_rewrite>
+  </meta>
 </entity_meta>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -149,7 +149,7 @@ class StatsCheckUp extends Module
 
 		$arrayConf = array(
 			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
-			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
+			'IMAGES' => array('name' => $this->l('images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
 			'STOCK' => array('name' => $this->l('Available quantities for sale'), 'text' => $this->l('items'))
 		);
@@ -205,7 +205,7 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('Images').'</th>
+				<th>'.$this->l('images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>
@@ -278,7 +278,7 @@ class StatsCheckUp extends Module
 		foreach ($languages as $language)
 			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
 		$this->html .= '
-				<th>'.$this->l('Images').'</th>
+				<th>'.$this->l('images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>

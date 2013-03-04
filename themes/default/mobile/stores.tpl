@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -36,7 +36,7 @@
 		var defaultLat = '{$defaultLat}';
 		var defaultLong = '{$defaultLong}';
 		
-		var translation_1 = '{l s='No stores found, try selecting a wider radius' js=1}';
+		var translation_1 = '{l s='No stores were found. Please try selecting a wider radius.' js=1}';
 		var translation_2 = '{l s='store found - see details:' js=1}';
 		var translation_3 = '{l s='stores found - see all results:' js=1}';
 		var translation_4 = '{l s='Phone:' js=1}';
@@ -68,7 +68,7 @@
 	
 	<div id="stores_search_block">
 		<button type="submit" data-theme="a" name="submit" value="submit-value" class="ui-btn-hidden" aria-disabled="false">
-			{l s='Search'}
+			{l s='Search:'}
 		</button>
 	</div>
 	

@@ -61,7 +61,8 @@ function doAjaxLogin(redirect) {
 	$('#login_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
-			url: "ajax-tab.php",
+			headers: { "cache-control": "no-cache" },
+			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
 			async: true,
 			dataType: "json",
 			data: {
@@ -92,7 +93,8 @@ function doAjaxForgot() {
 	$('#forgot_password_form .ajax-loader').fadeIn('slow', function() {
 		$.ajax({
 			type: "POST",
-			url: "ajax-tab.php",
+			headers: { "cache-control": "no-cache" },
+			url: "ajax-tab.php" + '?rand=' + new Date().getTime(),
 			async: true,
 			dataType: "json",
 			data: {

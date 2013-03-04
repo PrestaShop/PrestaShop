@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="toolbar-placeholder">
-	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if}">
+	<div class="toolbarBox {if $toolbar_scroll}toolbarHead{/if} {if isset($tab_modules_list)}toolbarReduced{/if}">
 		{block name=toolbarBox}
 			<ul class="cc_button">
 				{foreach from=$toolbar_btn item=btn key=k}
 					<li>
-						<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-							<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></span>
 							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
 						</a>
 					</li>
@@ -40,6 +40,7 @@
 			<script language="javascript" type="text/javascript">
 			//<![CDATA[
 				var submited = false
+				var modules_list_loaded = false;
 				$(function() {
 					//get reference on save link
 					btn_save = $('span[class~="process-icon-save"]').parent();
@@ -131,4 +132,63 @@
 			</h3>
 		</div>
 	</div>
+	{if isset($tab_modules_list)}
+		<button id="modules_list_button">
+			{l s='Modules list'}
+		</button>
+		<div class="clear">&nbsp;</div>
+		<div id="modules_list_container" style="display:none">
+			<div style="float:right;top:-5px">
+				<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png"></a>
+			</div>
+			<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0"></div>
+			<div id="modules_list_container_tab" style="display:none"></div>
+		</div>
+		<script language="javascript" type="text/javascript">
+		//<![CDATA[
+			{if isset($tab_modules_open)}
+				if ({$tab_modules_open})
+					openModulesList();
+			{/if}
+				
+			{if isset($tab_modules_list)}
+				$('#modules_list_button').bind('click', function (){
+					openModulesList();
+				});
+				
+				function openModulesList()
+				{
+					$('#modules_list_container').slideDown();
+					if (!modules_list_loaded)
+					{
+						$.ajax({
+							type: "POST",
+							url : '{$admin_module_ajax_url}',
+							async: true,
+							data : {
+								ajax : "1",
+								controller : "AdminModules",
+								action : "getTabModulesList",
+								tab_modules_list : '{$tab_modules_list}',
+								back_tab_modules_list : '{$back_tab_modules_list}'
+							},
+							success : function(data)
+							{
+								$('#modules_list_container_tab').html(data).slideDown();
+								$('#modules_list_loader').hide();
+								modules_list_loaded = true;
+							}
+						});
+					}
+					else
+					{
+						$('#modules_list_container_tab').slideDown();
+						$('#modules_list_loader').hide();
+					}
+					return false;
+				}
+			{/if}
+		//]]>
+		</script>
+	{/if}
 </div>

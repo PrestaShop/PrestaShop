@@ -43,6 +43,10 @@ class Minify_HTML {
      *
      * @return string
      */
+
+     /* PrestaShop
+     		added a limit for all preg_replace_callback
+     */
     public static function minify($html, $options = array()) {
        
         if (isset($options['cssMinifier'])) {
@@ -67,47 +71,53 @@ class Minify_HTML {
         $html = preg_replace_callback(
             '/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)<\\/script>\\s*/i'
             ,array(self::$className, '_removeScriptCB')
-            ,$html);
+            ,$html,
+            Media::getBackTrackLimit());
        
         // replace STYLEs (and minify) with placeholders
         $html = preg_replace_callback(
             '/\\s*(<style\\b[^>]*?>)([\\s\\S]*?)<\\/style>\\s*/i'
             ,array(self::$className, '_removeStyleCB')
-            ,$html);
-       
+            ,$html,
+            Media::getBackTrackLimit());
+
         // remove HTML comments (not containing IE conditional comments).
         $html = preg_replace_callback(
             '/<!--([\\s\\S]*?)-->/'
             ,array(self::$className, '_commentCB')
-            ,$html);
+            ,$html,
+            Media::getBackTrackLimit());
        
         // replace PREs with placeholders
         $html = preg_replace_callback('/\\s*(<pre\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i'
             ,array(self::$className, '_removePreCB')
-            , $html);
+            , $html,
+            Media::getBackTrackLimit());
        
         // replace TEXTAREAs with placeholders
         $html = preg_replace_callback(
             '/\\s*(<textarea\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i'
             ,array(self::$className, '_removeTaCB')
-            , $html);
+            , $html,
+            Media::getBackTrackLimit());
        
         // trim each line.
         // @todo take into account attribute values that span multiple lines.
-        $html = preg_replace('/^\\s+|\\s+$/m', '', $html);
+        $html = preg_replace('/^\\s+|\\s+$/m', '', $html, Media::getBackTrackLimit());
        
         // remove ws around block/undisplayed elements
         $html = preg_replace('/\\s+(<\\/?(?:area|base(?:font)?|blockquote|body'
             .'|caption|center|cite|col(?:group)?|dd|dir|div|dl|dt|fieldset|form'
             .'|frame(?:set)?|h[1-6]|head|hr|html|legend|li|link|map|menu|meta'
             .'|ol|opt(?:group|ion)|p|param|t(?:able|body|head|d|h||r|foot|itle)'
-            .'|ul)\\b[^>]*>)/i', '$1', $html);
+            .'|ul)\\b[^>]*>)/i', '$1', $html, Media::getBackTrackLimit());
        
         // remove ws outside of all elements
         $html = preg_replace_callback(
             '/>([^<]+)</'
             ,array(self::$className, '_outsideTagCB')
-            ,$html);
+            ,$html,
+            Media::getBackTrackLimit());
        
         // use newlines before 1st attribute in open tags (to limit line lengths)
         //$html = preg_replace('/(<[a-z\\-]+)\\s+([^>]+>)/i', "$1\n$2", $html);
@@ -146,7 +156,7 @@ class Minify_HTML {
 
     protected static function _outsideTagCB($m)
     {
-        return '>' . preg_replace('/^\\s+|\\s+$/', ' ', $m[1]) . '<';
+        return '>' . preg_replace('/^\\s+|\\s+$/', ' ', $m[1], Media::getBackTrackLimit()) . '<';
     }
    
     protected static function _removePreCB($m)
@@ -164,7 +174,7 @@ class Minify_HTML {
         $openStyle = $m[1];
         $css = $m[2];
         // remove HTML comments
-        $css = preg_replace('/(?:^\\s*<!--|-->\\s*$)/', '', $css);
+        $css = preg_replace('/(?:^\\s*<!--|-->\\s*$)/', '', $css, Media::getBackTrackLimit());
        
         // remove CDATA section markers
         $css = self::_removeCdata($css);
@@ -187,7 +197,7 @@ class Minify_HTML {
         $js = $m[2];
        
         // remove HTML comments (and ending "//" if present)
-        $js = preg_replace('/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $js);
+        $js = preg_replace('/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $js, Media::getBackTrackLimit());
            
         // remove CDATA section markers
         $js = self::_removeCdata($js);

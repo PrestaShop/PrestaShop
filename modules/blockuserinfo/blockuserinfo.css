@@ -13,11 +13,7 @@
 }
 
 /* cart */
-#shopping_cart {
-	
-	
-	
-}
+.lt-ie6 #shopping_cart {width: 130px;}
 #shopping_cart a{
 	height: 15px;
 	padding:15px 27px 10px 43px;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -136,7 +136,7 @@ class StoresControllerCore extends FrontController
 			}
 			$smarty->assign('days_datas', $days_datas);
 			$smarty->assign('id_country', $store['id_country']);
-			return self::$smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
+			return $this->context->smarty->fetch(_PS_THEME_DIR_.'store_infos.tpl');
 		}
 		return false;
 	}

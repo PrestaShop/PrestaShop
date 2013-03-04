@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -191,12 +191,9 @@
 				{assign var="shipping_discount_tax_incl" value="0"}
 				{foreach $cart_rules as $cart_rule}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
-					<tr style="line-height:6px;background-color:{$bgcolor};" text-align="left">
-						<td colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
+					<tr style="line-height:6px;background-color:{$bgcolor}" text-align="left">
+						<td style="line-height:3px;text-align:left;width:60%;vertical-align:top" colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
 						<td>
-							{if $cart_rule.free_shipping}
-								{assign var="shipping_discount_tax_incl" value=$order_invoice->total_shipping_tax_incl}
-							{/if}
 							{if $tax_excluded_display}
 								- {$cart_rule.value_tax_excl}
 							{else}

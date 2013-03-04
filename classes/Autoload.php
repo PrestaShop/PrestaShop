@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -129,7 +129,10 @@ class Autoload
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.Autoload::INDEX_FILE;
 		if ((file_exists($filename) && !is_writable($filename)) || !is_writable(dirname($filename)))
-			throw new PrestaShopException($filename.' is not writable, please give write permissions (chmod 666) on this file.');
+		{
+			header('HTTP/1.1 503 temporarily overloaded');
+			die('/cache/class_index.php is not writable, please give write permissions (chmod 666) on this file.');
+		}
 		else
 		{
 			// Let's write index content in cache file

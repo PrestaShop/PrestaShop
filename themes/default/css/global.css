@@ -61,6 +61,7 @@ body.content_only {
 
 /* positionnement ****************************************************************************** */
 .hidden {display:none}
+.f_left {float:left}
 .f_right {float:right}
 p.center {text-align:center}
 .clearBoth {clear:both}
@@ -287,7 +288,7 @@ table.table_block  td {
 /* BLOCK .block ******************************************************************************** */
 .block {margin-bottom:20px}
 #footer .block {margin-bottom:0}
-	.block .title_block  {
+	.block .title_block, .block h4 {
 		padding:6px 11px;
 		font-size:12px;
 		color:#fff;
@@ -297,7 +298,7 @@ table.table_block  td {
 		text-align:left;
 		font-weight: bold;
 	}
-		.block .title_block  a {color:#fff}
+		.block .title_block a, .block h4 a {color:#fff}
 	.block ul {list-style-type:none}
 		.block li.last {	border:none}
 			.block li a {
@@ -579,7 +580,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 		width:175px
 	}
 	.blockcategories_footer {margin-left:0}
-#footer .title_block  {
+#footer .title_block {
 	padding-bottom: 10px;
 	text-transform:uppercase
 }
@@ -596,7 +597,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li a {color:#fff}
 
 #footer .myaccount {padding: 15px 10px}
-#footer .myaccount .title_block  {
+#footer .myaccount .title_block, #footer .myaccount h4 {
 	padding:0 0 10px 0;
 	background:none;
 	text-shadow:none
@@ -747,8 +748,12 @@ table#cart_summary tr ul {
 table#cart_summary .cart_product {
 	width:80px;
 	text-align:center
-}table#cart_summary tbody tr:last-child td {
+}
+table#cart_summary tbody tr:last-child td {
 	border-bottom: 1px solid #999;
+}
+table#cart_summary tbody tr td.cart_discount_delete {
+	padding-left: 34px;
 }
 table#cart_summary  .cart_product  img {border:1px solid #ccc}
 table#cart_summary .cart_description {
@@ -803,14 +808,16 @@ table#cart_summary #total_price_container {
 	border-bottom:1px solid #999;
 }
 
-.cart_voucher .title_block ,
+.cart_voucher .title_block, .cart_voucher h4
 .cart_voucher p {float:left;}
-.cart_voucher .title_block  {
+.cart_voucher .title_block, .cart_voucher h4 {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
 }
 .cart_voucher p {padding-bottom:0;}
+
+.cart_voucher p.discount_name_block {float:left;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
 	line-height: 20px;
@@ -924,7 +931,7 @@ table#cart_summary .gift-icon {
 
 #authentication #create-account_form fieldset,
 #authentication #login_form fieldset {
-	height: 200px
+	min-height: 200px
 }
 
 #authentication #create-account_form .form_content,
@@ -970,7 +977,8 @@ table#cart_summary .gift-icon {
 	width:220px;/* 230 */
 	border:1px solid #ccc;
 	color:#666;
-	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff
+	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff;
+	line-height:20px;
 }
 
 #create-account_form #SubmitCreate,
@@ -1444,7 +1452,8 @@ form#add_adress {}
 	width:360px;/* 370 */
 	border:1px solid #ccc;
 	font-size: 12px;
-	color:#666
+	color:#666;
+	line-height:22px
 }
 #add_adress p.checkbox input {
 	margin-left:260px;
@@ -2087,4 +2096,6 @@ tr.subitem > td:first-child + td {
 	text-align:center
 }
 
-.ie7 #featured-products_block_center .product_image span.new {top:-20px;right:-19px}
+.ie7 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}
+.ie8 #featured-products_block_center .product_image span.new{top:110px;right:0;width:94%}
+.lt-ie6 #featured-products_block_center .product_image span.new {top:110px;right:0;width:94%}

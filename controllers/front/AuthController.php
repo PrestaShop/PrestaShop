@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -167,6 +167,7 @@ class AuthControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 				'years' => $years,
 				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
 				'months' => $months,
@@ -293,14 +294,16 @@ class AuthControllerCore extends FrontController
 				$this->context->customer = $customer;
 				
 				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
+				{
 					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
-				
-				// Update cart address
-				$this->context->cart->id = $this->context->cookie->id_cart;
-				$this->context->cart->setDeliveryOption(null);
-				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
-				
-				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
+					$this->context->cart = new Cart((int)$this->context->cookie->id_cart);
+				}					
+				else
+				{
+					$this->context->cart->setDeliveryOption(null);
+					$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));					
+					$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));					
+				}
 				$this->context->cart->secure_key = $customer->secure_key;
 				$this->context->cart->update();
 				$this->context->cart->autosetProductAddress();
@@ -377,8 +380,24 @@ class AuthControllerCore extends FrontController
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
 		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		
-		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile') &&
-			 (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_GUEST_CHECKOUT_ENABLED')))
+		$error_phone = false;
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST'))
+		{
+			if (Tools::isSubmit('submitGuestAccount') || !Tools::getValue('is_new_customer'))
+			{
+				if (!Tools::getValue('phone'))
+					$error_phone = true;
+			}
+			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) 
+					&& (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create')))
+					&& (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
+				$error_phone = true;
+			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE') && Tools::getValue('email_create')))
+					&& (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
+				$error_phone = true;				
+		}
+
+		if ($error_phone)
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
@@ -388,24 +407,22 @@ class AuthControllerCore extends FrontController
 
 		if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 		{
-			
 			if (!count($this->errors))
 			{
 				if (Tools::isSubmit('newsletter'))
 					$this->processCustomerNewsletter($customer);
+
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 				if (!Validate::isBirthDate($customer->birthday))
 					$this->errors[] = Tools::displayError('Invalid birthday.');
-				$customer->active = 1;
+
 				// New Guest customer
-				if (Tools::isSubmit('is_new_customer'))
-					$customer->is_guest = !Tools::getValue('is_new_customer', 1);
-				else
-					$customer->is_guest = 0;
+				$customer->is_guest = (Tools::isSubmit('is_new_customer') ? !Tools::getValue('is_new_customer', 1) : 0);
+				$customer->active = 1;
+
 				if (!count($this->errors))
-					if (!$customer->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
-					else
+				{
+					if ($customer->add())
 					{
 						if (!$customer->is_guest)
 							if (!$this->sendConfirmationMail($customer))
@@ -438,6 +455,9 @@ class AuthControllerCore extends FrontController
 						else
 							Tools::redirect('index.php?controller=my-account');
 					}
+					else
+						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
+				}
 			}
 
 		}
@@ -501,7 +521,7 @@ class AuthControllerCore extends FrontController
 			if (!count($this->errors))
 			{
 				// if registration type is in one step, we save the address
-				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE'))
+				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Tools::isSubmit('submitGuestAccount'))
 					if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
 						die(Tools::displayError());
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;

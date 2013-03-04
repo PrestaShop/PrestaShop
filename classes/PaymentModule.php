@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,13 +174,6 @@ abstract class PaymentModuleCore extends Module
 			$order_creation_failed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
 
-			if ($this->context->cart->orderExists())
-			{
-				$error = Tools::displayError('An order has already been placed using this cart.');
-				Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
-				die($error);
-			}
-
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
 					foreach ($data['package_list'] as $id_package)
@@ -234,6 +227,7 @@ abstract class PaymentModuleCore extends Module
 					$order->recyclable = $this->context->cart->recyclable;
 					$order->gift = (int)$this->context->cart->gift;
 					$order->gift_message = $this->context->cart->gift_message;
+					$order->mobile_theme = $this->context->cart->mobile_theme;
 					$order->conversion_rate = $this->context->currency->conversion_rate;
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
@@ -327,7 +321,7 @@ abstract class PaymentModuleCore extends Module
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
-				if (!$order_creation_failed & isset($order->id))
+				if (!$order_creation_failed && isset($order->id))
 				{
 					if (!$secure_key)
 						$message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');
@@ -358,10 +352,11 @@ abstract class PaymentModuleCore extends Module
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 						$customization_quantity = 0;
+						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
 						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
 						{
 							$customization_text = '';
-							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']] as $customization)
+							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization)
 							{
 								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
 									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
@@ -369,13 +364,11 @@ abstract class PaymentModuleCore extends Module
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
-
 								$customization_text .= '---<br />';
 							}
-
 							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customizationQuantityTotal'];
+							$customization_quantity = (int)$product['customization_quantity'];
 							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
@@ -407,15 +400,13 @@ abstract class PaymentModuleCore extends Module
 					{
 						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
 						$values = array(
-							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL, $package),
-							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL, $package)
+							'tax_incl' => $cart_rule['obj']->getContextualValue(true, $this->context, CartRule::FILTER_ACTION_ALL_NOCAP, $package),
+							'tax_excl' => $cart_rule['obj']->getContextualValue(false, $this->context, CartRule::FILTER_ACTION_ALL_NOCAP, $package)
 						);
 
 						// If the reduction is not applicable to this order, then continue with the next one
 						if (!$values['tax_excl'])
 							continue;
-
-						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values);
 
 						/* IF
 						** - This is not multi-shipping
@@ -467,7 +458,12 @@ abstract class PaymentModuleCore extends Module
 									null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
 								);
 							}
+
+							$values['tax_incl'] -= $values['tax_incl'] - $order->total_products_wt;
+							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
 						}
+
+						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used))
 						{
@@ -509,7 +505,7 @@ abstract class PaymentModuleCore extends Module
 						$customer_message = new CustomerMessage();
 						$customer_message->id_customer_thread = $customer_thread->id;
 						$customer_message->id_employee = 0;
-						$customer_message->message = htmlentities($update_message->message, ENT_COMPAT, 'UTF-8');
+						$customer_message->message = $update_message->message;
 						$customer_message->private = 0;
 
 						if (!$customer_message->add())
@@ -614,7 +610,7 @@ abstract class PaymentModuleCore extends Module
 						{
 							$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
 							$file_attachement['content'] = $pdf->render(false);
-							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang).sprintf('%06d', $order->invoice_number).'.pdf';
+							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
 							$file_attachement['mime'] = 'application/pdf';
 						}
 						else

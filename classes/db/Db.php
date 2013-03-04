@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -211,7 +211,7 @@ abstract class DbCore
 	public static function getClass()
 	{
 		$class = 'MySQL';
-		if (extension_loaded('pdo_mysql'))
+		if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql'))
 			$class = 'DbPDO';
 		else if (extension_loaded('mysqli'))
 			$class = 'DbMySQLi';
@@ -581,6 +581,8 @@ abstract class DbCore
 		$result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+		if (_PS_DEBUG_SQL_)
+			$this->displayError($sql);
 		return $result;
 	}
 
@@ -670,6 +672,11 @@ abstract class DbCore
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
 		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+	}
+
+	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine)
+	{
+		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
 	}
 
 	/**

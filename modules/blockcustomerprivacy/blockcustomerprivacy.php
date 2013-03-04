@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,6 +73,7 @@ class Blockcustomerprivacy extends Module
 					$message_trads[(int)$id_lang[1]] = $value;
 				}
 			Configuration::updateValue('CUSTPRIV_MESSAGE', $message_trads, true);
+			$this->_clearCache('blockcustomerprivacy.tpl');
 			$output = '<div class="conf confirm">'.$this->l('Configuration updated').'</div>';
 		}
 		
@@ -187,9 +188,9 @@ class Blockcustomerprivacy extends Module
 	{
 		if (!$this->checkConfig())
 			return;
+		if (!$this->isCached('blockcustomerprivacy.tpl', $this->getCacheId()))
+			$this->smarty->assign('privacy_message', Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id));
 		
-		$this->smarty->assign('privacy_message', Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id));
-		
-		return $this->display(__FILE__, 'blockcustomerprivacy.tpl');
+		return $this->display(__FILE__, 'blockcustomerprivacy.tpl', $this->getCacheId());
 	}
 } 

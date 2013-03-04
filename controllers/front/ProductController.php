@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,6 +39,8 @@ class ProductControllerCore extends FrontController
 	public function setMedia()
 	{
 		parent::setMedia();
+		if (count($this->errors))
+			return ;
 
 		if ($this->context->getMobileDevice() == false)
 		{
@@ -85,19 +87,11 @@ class ProductControllerCore extends FrontController
 		{
 			header('HTTP/1.1 404 Not Found');
 			header('Status: 404 Not Found');
+			$this->errors[] = Tools::displayError('Product not found');
 		}
 		else
-			$this->canonicalRedirection();
-
-		if (!Validate::isLoadedObject($this->product))
-			$this->errors[] = Tools::displayError('Product not found');
-		else
 		{
-			if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
-				$this->product->quantity = 0;
-
-			$this->product->description = $this->transformDescriptionWithImg($this->product->description);
-
+			$this->canonicalRedirection();
 			/*
 			 * If the product is associated to the shop
 			 * and is active or not active but preview mode (need token + file_exists)
@@ -129,6 +123,7 @@ class ProductControllerCore extends FrontController
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
 						break;
 						case '404':
+						default:
 							header('HTTP/1.1 404 Not Found');
 							header('Status: 404 Not Found');
 							$this->errors[] = Tools::displayError('Product is no longer available.');
@@ -136,33 +131,35 @@ class ProductControllerCore extends FrontController
 					}
 				}
 			}
-			else if (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			elseif (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
 			{
 				header('HTTP/1.1 403 Forbidden');
 				header('Status: 403 Forbidden');
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
 			}
-			
-			// Load category
-			if (isset($_SERVER['HTTP_REFERER'])
-				&& !strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-				&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
-			{
-				// If the previous page was a category and is a parent category of the product use this category as parent category
-				if (isset($regs[2]) && is_numeric($regs[2]))
-				{
-					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
-						$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
-				}
-				else if (isset($regs[5]) && is_numeric($regs[5]))
-				{
-					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
-						$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
-				}
-			}
 			else
-				// Set default product category
-				$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+			{
+				// Load category
+				if (isset($_SERVER['HTTP_REFERER'])
+					&& strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
+					&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+				{
+					// If the previous page was a category and is a parent category of the product use this category as parent category
+					if (isset($regs[2]) && is_numeric($regs[2]))
+					{
+						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
+							$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
+					}
+					else if (isset($regs[5]) && is_numeric($regs[5]))
+					{
+						if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
+							$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
+					}
+				}
+				else
+					// Set default product category
+					$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+			}
 		}
 	}
 
@@ -176,11 +173,14 @@ class ProductControllerCore extends FrontController
 
 		if (!$this->errors)
 		{
+			if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
+				$this->product->quantity = 0;
+
+			$this->product->description = $this->transformDescriptionWithImg($this->product->description);
+
 			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
 
-			// Product pictures management
-			require_once('images.inc.php');
 			$this->context->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 			if (Tools::isSubmit('submitCustomizedDatas'))
@@ -199,15 +199,21 @@ class ProductControllerCore extends FrontController
 			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
-			$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
+			
 			$pictures = array();
-			foreach ($files as $file)
-				$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
-
-			$texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
 			$text_fields = array();
-			foreach ($texts as $text_field)
-				$text_fields['textFields_'.$this->product->id.'_'.$text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
+			if ($this->product->customizable)
+			{
+				$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
+				foreach ($files as $file)
+					$pictures['pictures_'.$this->product->id.'_'.$file['index']] = $file['value'];
+
+				$texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
+
+				foreach ($texts as $text_field)
+					$text_fields['textFields_'.$this->product->id.'_'.$text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
+			}
+
 			$this->context->smarty->assign(array(
 				'pictures' => $pictures,
 				'textFields' => $text_fields));
@@ -275,7 +281,7 @@ class ProductControllerCore extends FrontController
 	protected function assignPriceAndTax()
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
-		$id_group = (isset($this->context->customer) ? $this->context->customer->id_default_group : _PS_DEFAULT_CUSTOMER_GROUP_);
+		$id_group = (int)Group::getCurrent()->id;
 		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
@@ -300,7 +306,7 @@ class ProductControllerCore extends FrontController
 		$id_product = (int)$this->product->id;
 		$id_shop = $this->context->shop->id;
 
-		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
+		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
 		foreach ($quantity_discounts as &$quantity_discount)
 			if ($quantity_discount['id_product_attribute'])
 			{
@@ -402,10 +408,6 @@ class ProductControllerCore extends FrontController
 					$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
 				$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)$row['quantity'];
 
-				if ($row['available_date'] != '0000-00-00 00:00:00' && $row['available_date'] != '0000-00-00')
-					$available_date = Tools::displayDate($row['available_date'], $this->context->language->id);
-				else
-					$available_date = $row['available_date'];
 
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['attributes'][] = (int)$row['id_attribute'];
@@ -424,7 +426,10 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-				$combinations[$row['id_product_attribute']]['available_date'] = $available_date;
+				if ($row['available_date'] != '0000-00-00')
+					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
+				else
+					$combinations[$row['id_product_attribute']]['available_date'] = '';
 
 				if (isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = $combination_images[$row['id_product_attribute']][0]['id_image'];
@@ -504,7 +509,7 @@ class ProductControllerCore extends FrontController
 
 	protected function transformDescriptionWithImg($desc)
 	{
-		$reg = '/\[img-([0-9]+)-(left|right)-([a-z]+)\]/';
+		$reg = '/\[img\-([0-9]+)\-(left|right)\-([a-zA-Z0-9-_]+)\]/';
 		while (preg_match($reg, $desc, $matches))
 		{
 			$link_lmg = $this->context->link->getImageLink($this->product->link_rewrite, $this->product->id.'-'.$matches[1], $matches[3]);

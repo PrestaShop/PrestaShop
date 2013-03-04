@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ function oosHookJsCode()
 	for (var i = 0; i < oosHookJsCodeFunctions.length; i++)
 	{
 		if (function_exists(oosHookJsCodeFunctions[i]))
-			setTimeout(oosHookJsCodeFunctions[i]+'()', 0);
+			setTimeout(oosHookJsCodeFunctions[i] + '()', 0);
 	}
 }
 
@@ -63,6 +63,7 @@ function addCombination(idCombination, arrayOfIdAttributes, quantity, price, eco
 	combination['reference'] = reference;
 	combination['unit_price'] = unit_price;
 	combination['minimal_quantity'] = minimal_quantity;
+	combination['available_date'] = [];
 	combination['available_date'] = available_date;
 	combination['specific_price'] = [];
 	combination['specific_price'] = combination_specific_price;
@@ -88,9 +89,7 @@ function findCombination(firstTime)
 		$.each(combinations[combination]['idsAttributes'], function(key, value)
 		{
 			if (!in_array(value, choice))
-			{
 				combinationMatchForm = false;
-			}
 		});
 
 		if (combinationMatchForm)
@@ -119,7 +118,7 @@ function findCombination(firstTime)
 
 			//show the large image in relation to the selected combination
 			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
+				displayImage( $('#thumb_' + combinations[combination]['image']).parent() );
 
 			//show discounts values according to the selected combination
 			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
@@ -141,6 +140,8 @@ function findCombination(firstTime)
 	}
 	//this combination doesn't exist (not created in back office)
 	selectedCombination['unavailable'] = true;
+	if (typeof(selectedCombination['available_date']) != 'undefined')
+		delete selectedCombination['available_date'];
 	updateDisplay();
 }
 
@@ -158,9 +159,7 @@ function updateDisplay()
 		//hide the hook out of stock
 		$('#oosHook').hide();
 		
-		//hide availability date
-		$('#availability_date_label').hide();
-		$('#availability_date_value').hide();
+		$('#availability_date').fadeOut();
 
 		//availability value management
 		if (availableNowValue != '')
@@ -172,16 +171,13 @@ function updateDisplay()
 				$('#availability_statut:hidden').show();
 		}
 		else
-		{
-			//hide the availability value
 			$('#availability_statut:visible').hide();
-		}
 
 		//'last quantities' message management
 		if (!allowBuyWhenOutOfStock)
 		{
 			if (quantityAvailable <= maxQuantityToAllowDisplayOfLastQuantityMessage)
-			$('#last_quantities').show('slow');
+				$('#last_quantities').show('slow');
 			else
 				$('#last_quantities').hide('slow');
 		}
@@ -233,28 +229,27 @@ function updateDisplay()
 		}
 		if(stock_management == 1)
 			$('#availability_statut:hidden').show();
-		
-		//display availability date
-		if (selectedCombination.length)
+
+		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
 		{
-			var available_date = selectedCombination['available_date'];
-			tab_date = available_date.split('-');
-			var time_available = new Date(tab_date[2], tab_date[1], tab_date[0]);
+			var available_date = selectedCombination['available_date']['date'];
+			var tab_date = available_date.split('-');
+			var time_available = new Date(tab_date[0], tab_date[1], tab_date[2]);
 			time_available.setMonth(time_available.getMonth()-1);
 			var now = new Date();
-			// date displayed only if time_available
-			if (now.getTime() < time_available.getTime())
+			if (now.getTime() < time_available.getTime() && $('#availability_date_value').text() != selectedCombination['available_date']['date_formatted'])
 			{
-				$('#availability_date_value').text(selectedCombination['available_date']);
-				$('#availability_date_label').show();
-				$('#availability_date_value').show();
+				$('#availability_date').fadeOut('normal', function(){
+					$('#availability_date_value').text(selectedCombination['available_date']['date_formatted']);
+					$(this).fadeIn();
+				});
 			}
-			else
-			{
-				$('#availability_date_label').hide();
-				$('#availability_date_value').hide();
-			}
+			else if(now.getTime() < time_available.getTime())
+				$('#availability_date').fadeIn();
 		}
+		else
+			$('#availability_date').fadeOut();
+
 		//show the 'add to cart' button ONLY IF it's possible to buy when out of stock AND if it was previously invisible
 		if (allowBuyWhenOutOfStock && !selectedCombination['unavailable'] && productAvailableForOrder == 1)
 		{
@@ -308,10 +303,8 @@ function updateDisplay()
 
 		var tax = (taxRate / 100) + 1;
 
-		var display_specific_price;
 		if (selectedCombination.specific_price)
 		{
-			display_specific_price = selectedCombination.specific_price['price'];
 			if (selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
@@ -327,11 +320,8 @@ function updateDisplay()
 			}
 		}
 		else
-		{
-			display_specific_price = product_specific_price['price'];
 			if (product_specific_price['reduction_type'] == 'percentage')
 				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
-		}
 		
 		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
 			$('#discount_reduced_price,#old_price').show();
@@ -342,28 +332,21 @@ function updateDisplay()
 			$('#reduction_percent').show();
 		else
 			$('#reduction_percent').hide();
-		if (display_specific_price)
+		if (product_specific_price['price'] || selectedCombination.specific_price['price'])
 			$('#not_impacted_by_discount').show();
 		else
 			$('#not_impacted_by_discount').hide();
 
-		var taxExclPrice = (display_specific_price && display_specific_price >= 0  ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
-
-		if (display_specific_price)
-			productPriceWithoutReduction = priceTaxExclWithoutGroupReduction + selectedCombination['price'] * currencyRate; // Need to be global => no var
+		if (selectedCombination.specific_price['price'] && selectedCombination.specific_price['price'] >=0)
+			var taxExclPrice = (specific_currency ? selectedCombination.specific_price['price'] : selectedCombination.specific_price['price'] * currencyRate);
+		else
+			var taxExclPrice = priceTaxExclWithoutGroupReduction + (selectedCombination['price'] * currencyRate);
 
 		if (!displayPrice && !noTaxForThisProduct)
-		{
 			productPrice = taxExclPrice * tax; // Need to be global => no var
-			if (display_specific_price)
-				productPriceWithoutReduction = ps_round(productPriceWithoutReduction * tax, 2);
-		}
 		else
-		{
 			productPrice = ps_round(taxExclPrice, 2); // Need to be global => no var
-			if (display_specific_price)
-				productPriceWithoutReduction = ps_round(productPriceWithoutReduction, 2);
-		}
+
 
 		var reduction = 0;
 		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
@@ -380,6 +363,7 @@ function updateDisplay()
 			if (product_specific_price.reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
 		}
+
 		productPriceWithoutReduction = productPrice * group_reduction;
 
 		productPrice -= reduction;
@@ -390,7 +374,6 @@ function updateDisplay()
 		productPrice += ecotaxAmount;
 		productPriceWithoutReduction += ecotaxAmount;
 
-		//productPrice = ps_round(productPrice * currencyRate, 2);
 		var our_price = '';
 		if (productPrice > 0) {
 			our_price = formatCurrency(productPrice, currencyFormat, currencySign, currencyBlank);
@@ -451,15 +434,17 @@ function displayDiscounts(combination)
 {
 	$('#quantityDiscount tbody tr').each(function() {
 		if (($(this).attr('id') != 'quantityDiscount_0') &&
-			($(this).attr('id') != 'quantityDiscount_'+combination) &&
+			($(this).attr('id') != 'quantityDiscount_' + combination) &&
 			($(this).attr('id') != 'noQuantityDiscount'))
 			$(this).fadeOut('slow');
 	 });
 
-	if ($('#quantityDiscount_'+combination).length != 0) {
-		$('#quantityDiscount_'+combination).show();
+	if ($('#quantityDiscount_' + combination).length != 0)
+	{
+		$('#quantityDiscount_' + combination).show();
 		$('#noQuantityDiscount').hide();
-	} else
+	}
+	else
 		$('#noQuantityDiscount').show();
 }
 
@@ -491,13 +476,13 @@ function refreshProductImages(id_product_attribute)
 	}
 	if (i > 0)
 	{
-		var thumb_width = $('#thumbs_list_frame >li').width()+parseInt($('#thumbs_list_frame >li').css('marginRight'));
+		var thumb_width = $('#thumbs_list_frame >li').width() + parseInt($('#thumbs_list_frame >li').css('marginRight'));
 		$('#thumbs_list_frame').width((parseInt((thumb_width)* i) + 3) + 'px'); //  Bug IE6, needs 3 pixels more ?
 	}
 	else
 	{
 		$('#thumbnail_' + idDefaultImage).show();
-		displayImage($('#thumbnail_'+ idDefaultImage +' a'));
+		displayImage($('#thumbnail_' + idDefaultImage + ' a'));
 	}
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);// SerialScroll Bug on goto 0 ?
@@ -576,8 +561,7 @@ $(document).ready(function()
 		'transitionIn'	: 'elastic',
 		'transitionOut'	: 'elastic'
 	});
-	
-	original_url = window.location+'';
+	original_url = window.location + '';
 	first_url_check = true;
 	checkUrl();
 	initLocationChange();
@@ -589,7 +573,7 @@ function saveCustomization()
 	$('#quantityBackup').val($('#quantity_wanted').val());
 	customAction = $('#customizationForm').attr('action');
 	$('body select[id^="group_"]').each(function() {
-		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'='+this.value);
+		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'=' + this.value);
 	});
 	$('#customizationForm').attr('action', customAction);
 	$('#customizationForm').submit();
@@ -600,7 +584,7 @@ function submitPublishProduct(url, redirect, token)
 	var id_product = $('#admin-action-product-id').val();
 
 	$.ajaxSetup({async: false});
-	$.post(url+'/index.php', { 
+	$.post(url + '/index.php', {
 		action:'publishProduct',
 		id_product: id_product, 
 		status: 1, 
@@ -615,7 +599,6 @@ function submitPublishProduct(url, redirect, token)
 			document.location.href = data;
 		}
 	);
-
 	return true;
 }
 
@@ -667,17 +650,17 @@ function getProductAttribute()
 	for (var i in attributesCombinations)
 		for (var a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
-				request += '/'+attributesCombinations[i]['group']+'-'+attributesCombinations[i]['attribute'];
+				request += '/'+attributesCombinations[i]['group'] + '-' + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
-	url = window.location+'';
+	url = window.location + '';
 
 	// redirection
 	if (url.indexOf('#') != -1)
 		url = url.substring(0, url.indexOf('#'));
 
 	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action')+request)
-	window.location = url+request;
+	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request)
+	window.location = url + request;
 }
 
 function initLocationChange(time)
@@ -691,7 +674,7 @@ function checkUrl()
 	if (original_url != window.url || first_url_check)
 	{
 		first_url_check = false;
-		url = window.location+'';
+		url = window.location + '';
 		// if we need to load a specific combination
 		if (url.indexOf('#/') != -1)
 		{
@@ -715,17 +698,17 @@ function checkUrl()
 					{
 						count++;
 						// add class 'selected' to the selected color
-						$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
-						$('#color_'+attributesCombinations[a]['id_attribute']).parent().addClass('selected');
-						$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', true);
-						$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
-						$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected');
+						$('#color_' + attributesCombinations[a]['id_attribute']).parent().addClass('selected');
+						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
+						$('input:hidden[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
+						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 					}
 			// find combination
 			if (count >= 0)
 			{
 				findCombination(false);
-				original_url = window.location+'';
+				original_url = window.location + '';
 			}
 			// no combination found = removing attributes from url
 			else

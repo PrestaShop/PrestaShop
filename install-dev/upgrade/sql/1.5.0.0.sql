@@ -316,3 +316,5 @@ INSERT INTO `PREFIX_scene_shop` (id_shop, id_scene) (SELECT 1, id_scene FROM PRE
 ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`, ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
 
 /* PHP:create_multistore(); */;
+
+UPDATE `PREFIX_customization` INNER JOIN `PREFIX_orders` USING(id_cart) SET in_cart = 1;

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 					{$fields_value.image}
 					<p align="center">{l s='File size'} {$fields_value.size}kb</p>
 					{if $shared_category}
-						<p class="warn">{l s='If you delete this picture it\'s will be deleted for all shared shop'}</p>
+						<p class="warn">{l s='If you delete this picture, it will be deleted in all of your shared shops!'}</p>
 					{/if}
 					<br>
 					<a href="{$current}&{$identifier}={$form_id}&token={$token}&{if $shared_category}forcedeleteImage=1{else}deleteImage=1{/if}">

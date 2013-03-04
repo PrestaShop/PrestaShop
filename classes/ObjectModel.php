@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -169,8 +169,8 @@ abstract class ObjectModelCore
 	{
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
-	
-		$this->def = self::getDefinition($this);
+
+		$this->def = ObjectModel::getDefinition($this);
 		$this->setDefinitionRetrocompatibility();
 
 		if ($id_lang !== null)
@@ -191,7 +191,7 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['table'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
@@ -209,36 +209,37 @@ abstract class ObjectModelCore
 				// Get shop informations
 				if (Shop::isTableAssociated($this->def['table']))
 					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
-				if ($row = ObjectModel::$db->getRow($sql))
-					Cache::store($cache_id, $row);
+				if ($object_datas = ObjectModel::$db->getRow($sql))
+				{
+					if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
+					{
+						$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+								WHERE `'.$this->def['primary'].'` = '.(int)$id
+								.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
+						if ($object_datas_lang = ObjectModel::$db->executeS($sql))
+							foreach ($object_datas_lang as $row)
+								foreach ($row as $key => $value)
+								{
+									if (array_key_exists($key, $this) && $key != $this->def['primary'])
+									{
+										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
+											$object_datas[$key] = array();
+										$object_datas[$key][$row['id_lang']] = $value;
+									}
+								}
+					}
+					Cache::store($cache_id, $object_datas);
+				}
 			}
+			else
+				$object_datas = Cache::retrieve($cache_id);
 
-			$result = Cache::retrieve($cache_id);
-			if ($result)
+			if ($object_datas)
 			{
 				$this->id = (int)$id;
-				foreach ($result as $key => $value)
+				foreach ($object_datas as $key => $value)
 					if (array_key_exists($key, $this))
-						$this->{$key} = $value;
-
-				if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
-				{
-					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-							WHERE `'.$this->def['primary'].'` = '.(int)$id
-							.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
-					$result = ObjectModel::$db->executeS($sql);
-					if ($result)
-						foreach ($result as $row)
-							foreach ($row as $key => $value)
-							{
-								if (array_key_exists($key, $this) && $key != $this->def['primary'])
-								{
-									if (!is_array($this->{$key}))
-										$this->{$key} = array();
-									$this->{$key}[$row['id_lang']] = $value;
-								}
-							}
-				}
+						$this->{$key} = $value;	
 			}
 		}
 
@@ -388,7 +389,7 @@ abstract class ObjectModelCore
 				return (int)$value;
 
 			case self::TYPE_FLOAT :
-				return (float)$value;
+				return (float)str_replace(',', '.', $value);
 
 			case self::TYPE_DATE :
 				if (!$value)
@@ -613,7 +614,6 @@ abstract class ObjectModelCore
 			}
 			else
 				$all_fields = $fields;
-
 
 			foreach ($id_shop_list as $id_shop)
 			{
@@ -1158,9 +1158,9 @@ abstract class ObjectModelCore
 	public function clearCache($all = false)
 	{
 		if ($all)
-			Cache::clean('objectmodel_'.$this->def['table'].'_*');
-		else if ($this->id)
-			Cache::clean('objectmodel_'.$this->def['table'].'_'.(int)$this->id.'_*');
+			Cache::clean('objectmodel_'.$this->def['classname'].'_*');
+		elseif ($this->id)
+			Cache::clean('objectmodel_'.$this->def['classname'].'_'.(int)$this->id.'_*');
 	}
 
 	/**
@@ -1459,24 +1459,34 @@ abstract class ObjectModelCore
 	 */
 	public static function getDefinition($class, $field = null)
 	{
-		$reflection = new ReflectionClass($class);
-		$definition = $reflection->getStaticPropertyValue('definition');
-
 		if (is_object($class))
-			$definition['classname'] = get_class($class);
-		else
+			$class = get_class($class);
+
+		if ($field === null)
+			$cache_id = 'objectmodel_def_'.$class;
+
+		if ($field !== null || !Cache::isStored($cache_id))
+		{
+			$reflection = new ReflectionClass($class);
+			$definition = $reflection->getStaticPropertyValue('definition');
+
 			$definition['classname'] = $class;
 
-		if (!empty($definition['multilang']))
-			$definition['associations'][Collection::LANG_ALIAS] = array(
-				'type' => self::HAS_MANY,
-				'field' => $definition['primary'],
-				'foreign_field' => $definition['primary'],
-			);
+			if (!empty($definition['multilang']))
+				$definition['associations'][Collection::LANG_ALIAS] = array(
+					'type' => self::HAS_MANY,
+					'field' => $definition['primary'],
+					'foreign_field' => $definition['primary'],
+				);
+		
+			if ($field)
+				return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
 
-		if ($field)
-			return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
-		return $definition;
+			Cache::store($cache_id, $definition);
+			return $definition;
+		}
+
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

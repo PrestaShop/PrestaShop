@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -47,7 +47,7 @@
 			<div class="warn">
 				<h2>
 					{if $need_delete_mode}
-						{l s='Do you want to delete products too?'}
+						{l s='Do you want to delete the products too?'}
 					{else}
 						{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}
 					{/if}
@@ -56,15 +56,15 @@
 				<ul class="listForm">
 				<li>
 					<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
-					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No, I want to link products without other categories within the parent category and then disable them.'}</label>
+					<label for="deleteMode_linkanddisable" style="float:none;">{l s='No. I want to link products without other categories -- within the parent category -- and then disable them.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-					<label for="deleteMode_link" style="float:none;">{l s='No, I want to link products without other categories within the parent category.'}</label>
+					<label for="deleteMode_link" style="float:none;">{l s='No. I want to link products without other categories and within the parent category.'}</label>
 				</li>
 				<li>
 					<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-					<label for="deleteMode_delete" style="float:none">{l s='Yes, I want to remove products linked only within this category and no others.'}</label>
+					<label for="deleteMode_delete" style="float:none">{l s='Yes. I want to remove products linked only within this category and no others.'}</label>
 				</li>
 				</ul>
 				{else}

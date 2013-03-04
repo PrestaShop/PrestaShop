@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -213,6 +213,11 @@ class CartControllerCore extends FrontController
 			// Add cart if no cart found
 			if (!$this->context->cart->id)
 			{
+				if (Context::getContext()->cookie->id_guest)
+				{
+					$guest = new Guest(Context::getContext()->cookie->id_guest);
+					$this->context->cart->mobile_theme = $guest->mobile_theme;
+				}
 				$this->context->cart->add();
 				if ($this->context->cart->id)
 					$this->context->cookie->id_cart = (int)$this->context->cart->id;
@@ -257,6 +262,7 @@ class CartControllerCore extends FrontController
 		}
 
 		$removed = CartRule::autoRemoveFromCart();
+		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
@@ -310,7 +316,7 @@ class CartControllerCore extends FrontController
 			foreach ($result['summary']['products'] as $key => &$product)
 			{
 				$product['quantity_without_customization'] = $product['quantity'];
-				if ($result['customizedDatas'])
+				if ($result['customizedDatas'] && isset($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']]))
 				{
 					foreach ($result['customizedDatas'][(int)$product['id_product']][(int)$product['id_product_attribute']] as $addresses)
 						foreach ($addresses as $customization)

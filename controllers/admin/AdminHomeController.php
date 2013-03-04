@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -170,10 +170,10 @@ class AdminHomeControllerCore extends AdminController
 
 		$shop = Context::getContext()->shop;
 		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
-			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This is different from the main shop domain name set in "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
+			$this->displayWarning($this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
+			$this->l('This is different from the main shop domain name set in the "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
-			$this->l('Click here if you want to modify the main shop domain name').'</a>');
+			$this->l('Click here if you want to modify your main shop\'s domain name.').'</a>');
 	}
 
 	protected function getQuickLinks()
@@ -184,7 +184,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminStats')]['view'])
 			$quick_links['first'] = array(
 				'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
-				'title' => $this->l('Products sold recently'),
+				'title' => $this->l('Recently sold products.'),
 				'description' => $this->l('Create a new category and organize your catalog.'),
 			);
 		
@@ -219,7 +219,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($profile_access[(int)Tab::getIdFromClassName('AdminCartRules')]['add'])
 			$quick_links['sixth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-				'title' => $this->l('New Price Rule for cart'),
+				'title' => $this->l('New price rule for cart'),
 				'description' => $this->l('Add new cart rule.'),
 			);
 			
@@ -234,7 +234,7 @@ class AdminHomeControllerCore extends AdminController
 			$quick_links['eighth'] = array(
 				'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
 				'title' => $this->l('Abandoned Carts'),
-				'description' => $this->l('View your customer carts.'),
+				'description' => $this->l('View your customer\'s carts.'),
 			);
 		return $quick_links;
 	}
@@ -457,7 +457,7 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 1))
 		{
 			$result['result'] = 'ok';
-			$result['msg'] = $this->l('Optimization Tips will be hidden by default');
+			$result['msg'] = $this->l('Optimization Tips will be hidden by default.');
 		}
 		else
 		{
@@ -493,8 +493,6 @@ class AdminHomeControllerCore extends AdminController
 
 		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
 			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
-		else
-			$result['discover_prestashop'] .= '';
 
 		// SHOW TIPS OF THE DAY
 		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if isset($orderProducts) && count($orderProducts)}
 <div id="crossselling">
-	<script type="text/javascript">var middle = {$middlePosition_crossselling};</script>
-	<script type="text/javascript" src="{$content_dir}modules/crossselling/js/crossselling.js"></script>
+	<script type="text/javascript">var cs_middle = {$middlePosition_crossselling};</script>
 	<h2 class="productscategory_h2">{l s='Customers who bought this product also bought:' mod='crossselling'}</h2>
 	<div id="{if count($orderProducts) > 5}crossselling{else}crossselling_noscroll{/if}">
 		{if count($orderProducts) > 5}<a id="crossselling_scroll_left" title="{l s='Previous' mod='crossselling'}" href="javascript:{ldelim}{rdelim}">{l s='Previous' mod='crossselling'}</a>{/if}

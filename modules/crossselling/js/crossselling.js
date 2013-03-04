@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,24 +41,27 @@ function cs_serialScrollFixLock(event, targeted, scrolled, items, position)
 }
 
 $(document).ready(function(){
-	//init the serialScroll for thumbs
-	cs_serialScrollNbImages = $('#crossselling_list li').length;
-	cs_serialScrollNbImagesDisplayed = 5;
-	cs_serialScrollActualImagesIndex = 0;
-	$('#crossselling_list').serialScroll({
-		items:'li',
-		prev:'a#crossselling_scroll_left',
-		next:'a#crossselling_scroll_right',
-		axis:'x',
-		offset:0,
-		stop:true,
-		onBefore:cs_serialScrollFixLock,
-		duration:300,
-		step: 1,
-		lazy:true,
-		lock: false,
-		force:false,
-		cycle:false
-	});
-	$('#crossselling_list').trigger( 'goto', [middle-3] );
+	if($('#crossselling_list').length > 0)
+	{
+		//init the serialScroll for thumbs
+		cs_serialScrollNbImages = $('#crossselling_list li').length;
+		cs_serialScrollNbImagesDisplayed = 5;
+		cs_serialScrollActualImagesIndex = 0;
+		$('#crossselling_list').serialScroll({
+			items:'li',
+			prev:'a#crossselling_scroll_left',
+			next:'a#crossselling_scroll_right',
+			axis:'x',
+			offset:0,
+			stop:true,
+			onBefore:cs_serialScrollFixLock,
+			duration:300,
+			step: 1,
+			lazy:true,
+			lock: false,
+			force:false,
+			cycle:false
+		});
+		$('#crossselling_list').trigger( 'goto', [cs_middle-3] );
+	}
 });

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {$content}
 <br /><br />
-<h2>{l s='Fees by carrier, geographical zone, and ranges'}</h2>
+<h2>{l s='Fees by carrier, geographical zone and ranges'}</h2>
 <form action="{$action_fees}" id="fees" name="fees" method="post">
 	<fieldset>
 		<legend><img src="../img/admin/delivery.gif" />{l s='Fees'}</legend>
 		{if empty($carriers)}
-			{l s='You only have free carriers, there is no need to configure your delivery prices.'}
+			{l s='If you only have free carriers, there\'s no need to configure delivery prices.'}
 		{else}
 			<b>{l s='Carrier:'} </b>
 			<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
@@ -55,7 +55,7 @@
 							{foreach $ranges AS $range}
 								<td class="center">
 									{$currency->getSign('left')}
-									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" style="width: 45px;" />
+									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" style="width: 45px;" />
 									{$currency->getSign('right')} {l s='(tax excl.)'}
 								</td>
 							{/foreach}
@@ -76,7 +76,7 @@
 									<input 
 										type="text" 
 										class="fees_{$range[$rangeIdentifier]}" 
-										onchange="this.value = this.value.replace(/,/g, \'.\');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
+										onchange="this.value = this.value.replace(/,/g, '.');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
 										value="{$price|string_format:"%.6f"}"
 										style="width: 45px;" 
 									/>
@@ -94,7 +94,7 @@
 					{else if $carrierSelected->is_free}
 						{l s='This is a free carrier'}
 					{else}
-						{l s='No ranges set for this carrier'}
+						{l s='No ranges is set for this carrier'}
 					{/if}
 					</td>
 				</tr>

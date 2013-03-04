@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,16 +27,38 @@ var ajax_running_timeout = null;
 if (!id_language)
 	var id_language = Number(1);
 
-function str2url(str,encoding,ucfirst)
+function str2url(str, encoding, ucfirst)
 {
 	str = str.toUpperCase();
 	str = str.toLowerCase();
 	if (PS_ALLOW_ACCENTED_CHARS_URL)
 		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
-	else		
+	else
+	{
+		str = str.replace(/[\u0105\u0104\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5]/g,'a');
+		str = str.replace(/[\u00E7\u010D\u0107\u0106]/g,'c');
+		str = str.replace(/[\u010F]/g,'d');
+		str = str.replace(/[\u00E8\u00E9\u00EA\u00EB\u011B\u0119\u0118\u0117]/g,'e');
+		str = str.replace(/[\u00EC\u00ED\u00EE\u00EF\u012F]/g,'i');
+		str = str.replace(/[\u0142\u0141]/g,'l');
+		str = str.replace(/[\u00F1\u0148]/g,'n');
+		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6\u00F8\u00D3]/g,'o');
+		str = str.replace(/[\u0159]/g,'r');
+		str = str.replace(/[\u015B\u015A\u0161]/g,'s');
+		str = str.replace(/[\u00DF]/g,'ss');
+		str = str.replace(/[\u0165]/g,'t');
+		str = str.replace(/[\u00F9\u00FA\u00FB\u00FC\u016F\u016B\u0173]/g,'u');
+		str = str.replace(/[\u00FD\u00FF]/g,'y');
+		str = str.replace(/[\u017C\u017A\u017B\u0179\u017E]/g,'z');
+		str = str.replace(/[\u00E6]/g,'ae');
+		str = str.replace(/[\u0153]/g,'oe');
+		str = str.replace(/[\u013E\u013A]/g,'l');
+		str = str.replace(/[\u0155]/g,'r');
+
 		str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]/g,'');
-	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g,'');
-	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
+	}
+	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E\u002B\u002A\u002F\u003A\u003B\u003C\u003D\u003E]/g, '');
+	str = str.replace(/[\s\'\:\/\[\]-]+/g, ' ');
 
 	// Add special char not used for url rewrite
 	str = str.replace(/[ ]/g, '-');
@@ -824,7 +846,8 @@ function showAjaxOverlay()
 	clearTimeout(ajax_running_timeout);
 }
 
-function display_action_details(row_id, controller, token, action, params) {
+function display_action_details(row_id, controller, token, action, params)
+{
 	var id = action+'_'+row_id;
 	var current_element = $('#details_'+id);
 	if (!current_element.data('dataMaped')) {
@@ -931,4 +954,15 @@ function display_action_details(row_id, controller, token, action, params) {
 		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}
+}
+
+function quickSelect(elt)
+{
+	var eltVal = $(elt).val();
+	if (eltVal == "0")
+		return false;
+	else if (eltVal.substr(eltVal.length - 6) == '_blank')
+		window.open(eltVal.substr(0, eltVal.length - 6), '_blank');
+	else
+		location.href = eltVal;
 }

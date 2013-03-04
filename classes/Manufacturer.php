@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -110,7 +110,7 @@ class ManufacturerCore extends ObjectModel
 	{
 		$address = new Address($this->id_address);
 
-		if (!$address->delete())
+		if (Validate::isLoadedObject($address) AND !$address->delete())
 			return false;
 
 		if (parent::delete())
@@ -316,6 +316,11 @@ class ManufacturerCore extends ObjectModel
 			$alias = 'product_shop.';
 		elseif ($order_by == 'name')
 			$alias = 'pl.';
+		elseif ($order_by == 'manufacturer_name')
+		{
+			$order_by = 'name';
+			$alias = 'm.';
+		}
 		elseif ($order_by == 'quantity')
 			$alias = 'stock.';
 		else
@@ -358,7 +363,7 @@ class ManufacturerCore extends ObjectModel
 					WHERE cg.`id_group` '.$sql_groups.'
 				)
 				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
+				ORDER BY '.$alias.'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

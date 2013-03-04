@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -95,7 +95,7 @@
 {if isset($multipleAddresses) && $multipleAddresses}
 <div class="addresses">
 	<h3>{l s='Your addresses are listed below.'}</h3>
-	<p>{l s='Be sure to update them if they have changed.'}</p>
+	<p>{l s='Be sure to update your personal information if it has changed.'}</p>
 	{assign var="adrs_style" value=$addresses_style}
 	<div class="bloc_adresses clearfix">
 	{foreach from=$multipleAddresses item=address name=myLoop}
@@ -119,7 +119,7 @@
 	<p class="clear" />
 </div>
 {else}
-	<p class="warning">{l s='No addresses available.'}&nbsp;<a href="{$link->getPageLink('address', true)}">{l s='Add new address'}</a></p>
+	<p class="warning">{l s='No addresses are available.'}&nbsp;<a href="{$link->getPageLink('address', true)}">{l s='Add a new address'}</a></p>
 {/if}
 
 <div class="clear address_add"><a href="{$link->getPageLink('address', true)}" title="{l s='Add an address'}" class="button_large">{l s='Add an address'}</a></div>

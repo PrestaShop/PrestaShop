@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -53,6 +53,17 @@ class CustomerMessageCore extends ObjectModel
 			'private' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'read' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
+		),
+	);
+	
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_employee' => array(
+				'xlink_resource' => 'employees'
+			),
+			'id_customer_thread' => array(
+				'xlink_resource' => 'customer_threads'
+			),
 		),
 	);
 

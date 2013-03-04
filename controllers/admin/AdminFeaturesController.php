@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -77,12 +77,12 @@ class AdminFeaturesControllerCore extends AdminController
 	 	// Added specific button in toolbar
 	 	$this->toolbar_btn['newAttributes'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature_value&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature value')
+			'desc' => $this->l('Add new feature values')
 		);
 
 	 	$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&amp;addfeature&amp;token='.$this->token,
-			'desc' => $this->l('Add new feature')
+			'desc' => $this->l('Add a new feature')
 		);
 
 		return parent::renderList();
@@ -239,7 +239,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 				$this->toolbar_btn['back'] = array(
 					'href' => $back,
-					'desc' => $this->l('Back to list')
+					'desc' => $this->l('Back to the list')
 				);
 			break;
 
@@ -353,7 +353,7 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 		}
 		else
-			$this->displayWarning($this->l('This feature has been disabled, you can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performance').'</a>');
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -374,8 +374,6 @@ class AdminFeaturesControllerCore extends AdminController
 
 		parent::initProcess();
 
-		if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add'))
-			$this->display = 'editFeatureValue';
 	}
 
 	public function postProcess()
@@ -391,6 +389,9 @@ class AdminFeaturesControllerCore extends AdminController
 				array('errors' => &$this->errors)); // send errors as reference to allow displayFeaturePostProcess to stop saving process
 
 		parent::postProcess();
+
+		if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add'))
+			$this->display = 'editFeatureValue';
 	}
 
 	/**
@@ -403,7 +404,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
-		else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
+		elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
 			$this->display = 'editFeatureValue';
 
 		return $object;
