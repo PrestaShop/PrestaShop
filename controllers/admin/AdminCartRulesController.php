@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -541,7 +541,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
 				'toolbar_scroll' => $this->toolbar_scroll,
-				'title' => array($this->l('Payment'), $this->l('Cart Rules')),
+				'title' => array($this->l('Payment: '), $this->l('Cart Rules')),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,

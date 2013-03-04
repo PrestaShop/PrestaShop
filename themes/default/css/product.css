@@ -192,6 +192,9 @@ span.view_scroll_spacer {
 	display:inline-block;
 }
 
+#attributes .attribute_list input.attribute_radio{float: left;margin-left: 3px;}
+#attributes .attribute_list span{float: left;margin-bottom: 5px;margin-left: 3px;}
+
 .attribute_list #color_to_pick_list {
 	list-style-type:none;
 	width:125px;
@@ -210,8 +213,8 @@ span.view_scroll_spacer {
 
 .attribute_list #color_to_pick_list a.color_pick {
 	display:block;
-	height:15px;
-	width:15px;
+	height:20px;
+	width:20px;
 }
 
 .product_attributes {
@@ -236,7 +239,8 @@ span.view_scroll_spacer {
 	margin: 10px 0 0 0;
 }
 
-#availability_statut span#availability_label {
+#availability_statut span#availability_label, 
+#availability_date_label {
 	display:inline-block;
 	width:125px;
 	font-weight:700;

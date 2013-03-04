@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -353,7 +353,7 @@ class MailAlerts extends Module
 			'{delivery_postal_code}' => $delivery->postcode,
 			'{delivery_country}' => $delivery->country,
 			'{delivery_state}' => $delivery->id_state ? $delivery_state->name : '',
-			'{delivery_phone}' => $delivery->phone,
+			'{delivery_phone}' => $delivery->phone ? $delivery->phone : $delivery->phone_mobile,
 			'{delivery_other}' => $delivery->other,
 			'{invoice_company}' => $invoice->company,
 			'{invoice_firstname}' => $invoice->firstname,
@@ -364,7 +364,7 @@ class MailAlerts extends Module
 			'{invoice_postal_code}' => $invoice->postcode,
 			'{invoice_country}' => $invoice->country,
 			'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
-			'{invoice_phone}' => $invoice->phone,
+			'{invoice_phone}' => $invoice->phone ? $invoice->phone : $invoice->phone_mobile,
 			'{invoice_other}' => $invoice->other,
 			'{order_name}' => sprintf('%06d', $order->id),
 			'{shop_name}' => Configuration::get('PS_SHOP_NAME'),

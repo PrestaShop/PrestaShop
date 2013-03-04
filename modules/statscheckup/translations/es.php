@@ -26,7 +26,7 @@ $_MODULE['<{statscheckup}prestashop>statscheckup_6927a3a7218a3195858411433ec20a2
 $_MODULE['<{statscheckup}prestashop>statscheckup_4d3d769b812b6faa6b76e1a8abaece2d'] = 'Activado';
 $_MODULE['<{statscheckup}prestashop>statscheckup_24f870376156be0e8e22cfb94d29df6d'] = 'Calidad de su catálogo de inmediato';
 $_MODULE['<{statscheckup}prestashop>statscheckup_8bc84316c4078bf66723fd019616d920'] = 'Descripciones';
-$_MODULE['<{statscheckup}prestashop>statscheckup_fff0d600f8a0b5e19e88bfb821dd1157'] = 'Imágenes';
+$_MODULE['<{statscheckup}prestashop>statscheckup_59b514174bffe4ae402b3d63aad79fe0'] = 'Imágenes';
 $_MODULE['<{statscheckup}prestashop>statscheckup_691d502cfd0e0626cd3b058e5682ad1c'] = 'artículos';
 $_MODULE['<{statscheckup}prestashop>statscheckup_f4abc77d498c89880f67331609406774'] = 'Perfecto';
 $_MODULE['<{statscheckup}prestashop>statscheckup_3f74e68055b1123e5d7deb32cd8b0b1b'] = 'Desactivado';

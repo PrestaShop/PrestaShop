@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block search module -->
 <div id="search_block_left" class="block exclusive">
-	<p class="title_block">{l s='Search' mod='blocksearch'}</p>
+	<h4 class="title_block">{l s='Search:' mod='blocksearch'}</h4>
 	<form method="get" action="{$link->getPageLink('search', true)}" id="searchbox">
 		<p class="block_content">
 			<label for="search_query_block">{l s='Enter a product name' mod='blocksearch'}</label>

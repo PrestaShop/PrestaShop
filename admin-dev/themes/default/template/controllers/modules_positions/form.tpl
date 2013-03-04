@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -44,7 +44,7 @@
 		<div class="margin-form">
 			<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
 				{foreach $hooks as $hook}
-					<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>"{$hook['title']}" {l s='known as'} "{$hook['name']}"</option>
+					<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
 				{/foreach}
 			</select><sup> *</sup>
 		</div>
@@ -88,8 +88,8 @@
 					{$value}
 				{/foreach}
 			{/if}
-			{l s='Please specify the files for which you do not want the module to be displayed'}.<br />
-			{l s='Please type each filename separated by a comma'}.
+			{l s='Please specify the files for which you do not want the module to be displayed.'}.<br />
+			{l s='Please input each filename, separated by a comma.'}.
 			<br /><br />
 		</div>
 	

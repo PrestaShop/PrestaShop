@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,7 +45,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		$order_process_type = array(
 			array(
 				'value' => PS_ORDER_PROCESS_STANDARD,
-				'name' => $this->l('Standard (5 steps)')
+				'name' => $this->l('Standard (Five steps)')
 			),
 			array(
 				'value' => PS_ORDER_PROCESS_OPC,
@@ -60,7 +60,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_ORDER_PROCESS_TYPE' => array(
 						'title' => $this->l('Order process type'),
-						'desc' => $this->l('You can choose the order process type as either standard (5 steps) or One Page Checkout'),
+						'desc' => $this->l('Please choose either the five-step, or one-page, checkout process.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',
@@ -75,14 +75,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_PURCHASE_MINIMUM' => array(
-						'title' => $this->l('Minimum purchase total required in order to validate order'),
+						'title' => $this->l('Minimum purchase total required in order to validate the order.'),
 						'desc' => $this->l('Set to 0 to disable this feature'),
 						'validation' => 'isFloat',
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
 					'PS_ALLOW_MULTISHIPPING' => array(
-						'title' => $this->l('Allow multi-shipping'),
+						'title' => $this->l('Allow multishipping'),
 						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -90,14 +90,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_SHIP_WHEN_AVAILABLE' => array(
 						'title' => $this->l('Delayed shipping'),
-						'desc' => $this->l('Allow the customer to split his order: one with the products currently "in stock", and another with the other products. This option will convert the customer\'s cart into two orders.'),
+						'desc' => $this->l('This option allows you to delay shipping at your customers\' request. '),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_CONDITIONS' => array(
 						'title' => $this->l('Terms of service'),
-						'desc' => $this->l('Require customers to accept or decline terms of service before processing the order'),
+						'desc' => $this->l('Require customers to accept or decline terms of service before processing an order.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
@@ -107,8 +107,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_CONDITIONS_CMS_ID' => array(
-						'title' => $this->l('Conditions of use CMS page'),
-						'desc' => $this->l('Choose the Conditions of use CMS page'),
+						'title' => $this->l('Conditions of use for the CMS page.'),
+						'desc' => $this->l('Choose the conditions of use for the CMS page.'),
 						'validation' => 'isInt',
 						'type' => 'select',
 						'list' => $cms_tab,
@@ -122,22 +122,22 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'icon' =>	'tab-preferences',
 				'fields' =>	array(
 					'PS_GIFT_WRAPPING' => array(
-						'title' => $this->l('Offer gift-wrapping'),
-						'desc' => $this->l('Suggest gift-wrapping to customer and possibility of leaving a message'),
+						'title' => $this->l('Offer gift wrapping'),
+						'desc' => $this->l('Suggest gift-wrapping to customers.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_GIFT_WRAPPING_PRICE' => array(
 						'title' => $this->l('Gift-wrapping price'),
-						'desc' => $this->l('Set a price for gift-wrapping'),
+						'desc' => $this->l('Set a price for gift wrapping'),
 						'validation' => 'isPrice',
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
 					'PS_GIFT_WRAPPING_TAX_RULES_GROUP' => array(
 						'title' => $this->l('Gift-wrapping tax'),
-						'desc' => $this->l('Set a tax for gift-wrapping'),
+						'desc' => $this->l('Set a tax for gift wrapping'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'select',

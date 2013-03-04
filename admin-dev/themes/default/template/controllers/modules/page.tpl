@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -38,7 +38,7 @@
 		<!--start sidebar module-->
 		<div class="sidebar">
 			<div class="categorieTitle">
-				<h3>{l s='Categories'}</h3>
+				<h3>{l s='Categories:'}</h3>
 				<div class="subHeadline">&nbsp;</div>
 				<ul class="categorieList">
 					<li {if isset($categoryFiltered.favorites)}style="background-color:#EBEDF4"{/if} class="categoryModuleFilterLink">

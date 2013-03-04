@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -51,7 +51,7 @@
 	{if !isset($wrong_folder_name)}
 		<form action="#" id="login_form" method="post">
 			<div class="field">
-				<label for="email">{l s='E-mail address:'}</label>
+				<label for="email">{l s='Email address:'}</label>
 				<input type="text" id="email" name="email" class="input email_field" value="{if isset($email)}{$email|escape:'htmlall':'UTF-8'}{/if}" />
 			</div>
 
@@ -77,10 +77,10 @@
 
 		<form action="#" id="forgot_password_form" method="post" class="hide">
 			<h2 class="no-margin">{l s='Forgot your password?'}</h2>
-			<p class="bold">{l s='Please enter the e-mail address you provided during the registration process in order to receive your access code by e-mail'}</p>
+			<p class="bold">{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>
 
 			<div class="field">
-				<label>{l s='E-mail address:'}</label>
+				<label>{l s='Email address:'}</label>
 				<input type="text" name="email_forgot" id="email_forgot" class="input email_field" />
 			</div>
 

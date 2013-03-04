@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -387,7 +387,7 @@ abstract class Controller extends ControllerCore
 		uasort($queries, 'prestashop_querytime_sort');
 		foreach ($queries as $data)
 		{
-			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.$data['query'].'<br />in '.$data['file'].':'.$data['line'].'<br />';
+			echo $hr.'<b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b> '.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />in '.$data['file'].':'.$data['line'].'<br />';
 			if (preg_match('/^\s*select\s+/i', $data['query']))
 			{
 				$explain = Db::getInstance()->executeS('explain '.$data['query']);

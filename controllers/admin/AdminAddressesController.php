@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,6 +44,8 @@ class AdminAddressesControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		$this->allow_export = true;
+
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
 
@@ -53,35 +55,31 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
-			'lastname' => array('title' => $this->l('Last name'), 'width' => 140, 'filter_key' => 'a!lastname'),
+			'firstname' => array('title' => $this->l('First Name'), 'width' => 120, 'filter_key' => 'a!firstname'),
+			'lastname' => array('title' => $this->l('Last Name'), 'width' => 140, 'filter_key' => 'a!lastname'),
 			'address1' => array('title' => $this->l('Address')),
-			'postcode' => array('title' => $this->l('Postal Code/Zip Code'), 'align' => 'right', 'width' => 80),
+			'postcode' => array('title' => $this->l('Zip/Postal Code'), 'align' => 'right', 'width' => 80),
 			'city' => array('title' => $this->l('City'), 'width' => 150),
 			'country' => array('title' => $this->l('Country'), 'width' => 100, 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'));
 
 		parent::__construct();
-	}
-	
-	public function initToolbar()
-	{
-		parent::initToolbar();
-		$this->toolbar_btn['import'] = array(
-			'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
-			'desc' => $this->l('Import')
-		);
-	}
-	
-	public function renderList()
-	{
+
 		$this->_select = 'cl.`name` as country';
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
 		';
 		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
+	}
 
-		return parent::renderList();
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		if (!$this->display)
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderForm()
@@ -141,7 +139,7 @@ class AdminAddressesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -208,7 +206,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Last name'),
+					'label' => $this->l('Last Name'),
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true,
@@ -228,7 +226,7 @@ class AdminAddressesControllerCore extends AdminController
 
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('First name'),
+					'label' => $this->l('First Name'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
@@ -260,7 +258,7 @@ class AdminAddressesControllerCore extends AdminController
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code'),
+					'label' => $this->l('Zip/Postal Code'),
 					'name' => 'postcode',
 					'size' => 33,
 					'required' => true,

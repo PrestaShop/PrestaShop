@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -107,11 +107,11 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->multiple_fieldsets = true;
 		if (!$update_htaccess)
 			$desc_virtual_uri = array(
-				'<span class="warning_mod_rewrite">'.$this->l('You need to activate the URL Rewriting if you want to add a virtual URI.').'</span>'
+				'<span class="warning_mod_rewrite">'.$this->l('You need to activate URL Rewriting if you want to add a virtual URL.').'</span>'
 			);
 		else
 			$desc_virtual_uri = array(
-				$this->l('You can use this option if you want to create a store with a URI that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URI).'),
+				$this->l('You can use this option if you want to create a store with a URL that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).'),
 				'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
 			);
 		$this->fields_form = array(
@@ -158,11 +158,11 @@ class AdminShopUrlControllerCore extends AdminController
 							'desc' => array(
 								$this->l('If you set this URL as the Main URL for the selected shop, all URLs set to this shop will be redirected to this URL (you can only have one Main URL per shop).'),
 								array(
-									'text' => $this->l('Since the selected shop has no Main URL, you have to set this URL as the Main URL'),
+									'text' => $this->l('Since the selected shop has no main URL, you have to set this URL as the Main URL.'),
 									'id' => 'mainUrlInfo'
 								),
 								array(
-									'text' => $this->l('The selected shop has already a Main URL, if you set this one as the Main URL, the older one will be set as the Normal URL.'),
+									'text' => $this->l('The selected shop already has a Main URL. Therefore, if you set this one as the Main URL, the older of the two will be set as the normal URL.'),
 									'id' => 'mainUrlInfoExplain'
 								)
 							)
@@ -214,18 +214,18 @@ class AdminShopUrlControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Physical URI:'),
+							'label' => $this->l('Physical URL:'),
 							'name' => 'physical_uri',
-							'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you would set my-store/ in this field).'),
+							'desc' => $this->l('This is the physical folder for your store on the server. Leave this field empty if your store is installed on the root path (e.g. if your store is available at www.my-prestashop.com/my-store/, you input my-store/ in this field).'),
 							'size' => 50,
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Virtual URI:'),
+							'label' => $this->l('Virtual URL:'),
 							'name' => 'virtual_uri',
 							'desc' => $desc_virtual_uri,
 							'size' => 50,
-							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL don\'t work, please check with your host provider how to activate URL rewriting.') : '',
+							'hint' => (!$update_htaccess) ? $this->l('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your URL doesn\'t work, please check with your host provider on how to activate URL rewriting.') : '',
 						),
 						array(
 							'type' => 'text',
@@ -360,6 +360,10 @@ class AdminShopUrlControllerCore extends AdminController
 	public function processAdd()
 	{
 		$object = $this->loadObject(true);
+				
+		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
+		
 		if ($object->id && Tools::getValue('main'))
 			$object->setMain();
 

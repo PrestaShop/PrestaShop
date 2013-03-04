@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -71,6 +71,12 @@ class InstallModelDatabase extends InstallAbstractModel
 					// Check if a table with same prefix already exists
 					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
+					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix, $engine)) !== true)
+					{
+						$errors[] = $this->language->l(sprintf('Your database login don\'t have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
+						if ($create_error != false)
+							$errors[] = $create_error;
+					}
 				break;
 
 				case 1:

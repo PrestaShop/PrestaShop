@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,8 +30,8 @@
 	var currencyRate = '{$currencyRate|floatval}';
 	var currencyFormat = '{$currencyFormat|intval}';
 	var currencyBlank = '{$currencyBlank|intval}';
-	var txtProduct = "{l s='product' js=1}";
-	var txtProducts = "{l s='products' js=1}";
+	var txtProduct = "{l s='Product' js=1}";
+	var txtProducts = "{l s='Products' js=1}";
 	var orderUrl = '{$link->getPageLink("order", true)}';
 
 	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
@@ -51,7 +51,7 @@
 	</script>
 {else}
 	<script type="text/javascript">
-		var txtFree = "{l s='Free!'}";
+		var txtFree = "{l s='Free'}";
 	</script>
 {/if}
 
@@ -69,7 +69,7 @@
 {/if}
 
 {if !$opc}
-	{capture name=path}{l s='Shipping'}{/capture}
+	{capture name=path}{l s='Shipping:'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 {/if}
 
@@ -80,7 +80,7 @@
 {/if}
 
 {if !$opc}
-	<h1>{l s='Shipping'}</h1>
+	<h1>{l s='Shipping:'}</h1>
 {else}
 	<h2><span>2</span> {l s='Delivery methods'}</h2>
 {/if}
@@ -102,7 +102,7 @@
 {if isset($virtual_cart) && $virtual_cart}
 	<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
 {else}
-	<h3 class="carrier_title">{l s='Choose your delivery method'}</h3>
+	<h3 class="carrier_title">{l s='Choose your delivery method.'}</h3>
 	
 	<div id="HOOK_BEFORECARRIER">
 		{if isset($carriers) && isset($HOOK_BEFORECARRIER)}
@@ -110,12 +110,12 @@
 		{/if}
 	</div>
 	{if isset($isVirtualCart) && $isVirtualCart}
-		<p class="warning">{l s='No carrier needed for this order'}</p>
+		<p class="warning">{l s='No carrier is needed for this order.'}</p>
 	{else}
 		{if $recyclablePackAllowed}
 			<p class="checkbox">
 				<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
-				<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
+				<label for="recyclable">{l s='I would like to receive my order in recycled packaging.'}.</label>
 			</p>
 		{/if}
 	<div class="delivery_options_address">
@@ -177,7 +177,7 @@
 											{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
 										{/if}
 									{else}
-										{l s='Free!'}
+										{l s='Free'}
 									{/if}
 								</div>
 								</td>
@@ -202,9 +202,9 @@
 									{if isset($carrier.instance->delay[$cookie->id_lang])}
 										{$carrier.instance->delay[$cookie->id_lang]}<br />
 										{if count($carrier.product_list) <= 1}
-											({l s='product concerned:'}
+											({l s='Product concerned:'}
 										{else}
-											({l s='products concerned:'}
+											({l s='Products concerned:'}
 										{/if}
 										{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
 										{foreach $carrier.product_list as $product}
@@ -242,7 +242,7 @@
 		<h3 class="gift_title">{l s='Gift'}</h3>
 		<p class="checkbox">
 			<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
-			<label for="gift">{l s='I would like my order to be gift-wrapped.'}</label>
+			<label for="gift">{l s='I would like my order to be gift wrapped.'}</label>
 			<br />
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			{if $gift_wrapping_price > 0}
@@ -254,7 +254,7 @@
 			{/if}
 		</p>
 		<p id="gift_div" class="textarea">
-			<label for="gift_message">{l s='If you wish, you can add a note to the gift:'}</label>
+			<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
 			<textarea rows="5" cols="35" id="gift_message" name="gift_message">{$cart->gift_message|escape:'htmlall':'UTF-8'}</textarea>
 		</p>
 		{/if}
@@ -265,7 +265,7 @@
 	<h3 class="condition_title">{l s='Terms of service'}</h3>
 	<p class="checkbox">
 		<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-		<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(Read Terms of Service)'}</a>
+		<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label> <a href="{$link_conditions}" class="iframe">{l s='(Read the Terms of Service)'}</a>
 	</p>
 	<script type="text/javascript">$('a.iframe').fancybox();</script>
 {/if}
@@ -292,7 +292,7 @@
 {else}
 	<h3>{l s='Leave a message'}</h3>
 	<div>
-		<p>{l s='If you would like to add a comment about your order, please write it below.'}</p>
+		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<p><textarea cols="120" rows="3" name="message" id="message">{if isset($oldMessage)}{$oldMessage}{/if}</textarea></p>
 	</div>
 </div>

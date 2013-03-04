@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -202,7 +202,11 @@ class AdminSearchControllerCore extends AdminController
 		global $_LANGADM;
 		$tabs = array();
 		$key_match = array();
-		$result = Db::getInstance()->executeS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
+		$result = Db::getInstance()->executeS('
+		SELECT class_name, name
+		FROM '._DB_PREFIX_.'tab t
+		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id.')
+		WHERE active = 1');
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
@@ -265,7 +269,7 @@ class AdminSearchControllerCore extends AdminController
 			'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
 			'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
 			'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
-			'email' => array('title' => $this->l('E-mail address'), 'align' => 'left', 'width' => 250),
+			'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),
 			'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
 			'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
 			'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),

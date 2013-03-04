@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -116,20 +116,24 @@ combinationImages[0] = new Array();
 {/if}
 
 // Translations
-var doesntExist = '{l s='This combination does not exist for this product. Please choose another.' js=1}';
+var doesntExist = '{l s='This combination does not exist for this product. Please select another combination.' js=1}';
 var doesntExistNoMore = '{l s='This product is no longer in stock' js=1}';
-var doesntExistNoMoreBut = '{l s='with those attributes but is available with others' js=1}';
-var uploading_in_progress = '{l s='Uploading in progress, please wait...' js=1}';
-var fieldRequired = '{l s='Please fill in all required fields, then save the customization.' js=1}';
+var doesntExistNoMoreBut = '{l s='with those attributes but is available with others.' js=1}';
+var uploading_in_progress = '{l s='Uploading in progress, please be patient.' js=1}';
+var fieldRequired = '{l s='Please fill in all the required fields before saving your customization.' js=1}';
+
 {if isset($groups)}
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
 		var specific_price_combination = new Array();
+		var available_date = new Array();
 		specific_price_combination['reduction_percent'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'percentage'}{$combination.specific_price.reduction*100}{else}0{/if};
 		specific_price_combination['reduction_price'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
 		specific_price_combination['price'] = {if $combination.specific_price AND $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
 		specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
-		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}', specific_price_combination);
+		available_date['date'] = '{$combination.available_date}';
+		available_date['date_formatted'] = '{dateFormat date=$combination.available_date full=false}';
+		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, available_date, specific_price_combination);
 	{/foreach}
 {/if}
 
@@ -176,12 +180,12 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		{if $have_image}
 			<span id="view_full_size">
 				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
-				<span class="span_link">{l s='View full size'}</span>
+				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{else}
 			<span id="view_full_size">
 				<img src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
-				<span class="span_link">{l s='View full size'}</span>
+				<span class="span_link">{l s='Maximize'}</span>
 			</span>
 		{/if}
 		</div>
@@ -304,7 +308,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 							{elseif ($group.group_type == 'radio')}
 								{foreach from=$group.attributes key=id_attribute item=group_attribute}
 									<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
-									{$group_attribute|escape:'htmlall':'UTF-8'}<br/>
+									<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span><br/>
 								{/foreach}
 							{/if}
 							</div>
@@ -337,24 +341,25 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<span id="availability_label">{l s='Availability:'}</span>
-				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>
-				{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}
-				</span>
+				<span id="availability_value"{if $product->quantity <= 0} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>				
 			</p>
-
+			<p id="availability_date"{if ($product->quantity > 0) OR !$product->available_for_order OR $PS_CATALOG_MODE OR !isset($product->available_date) OR $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
+				<span id="availability_date_label">{l s='Availability date:'}</span>
+				<span id="availability_date_value">{dateFormat date=$product->available_date full=false}</span>
+			</p>
 			<!-- number of item in stock -->
 			{if ($display_qties == 1 && !$PS_CATALOG_MODE && $product->available_for_order)}
 			<p id="pQuantityAvailable"{if $product->quantity <= 0} style="display: none;"{/if}>
 				<span id="quantityAvailable">{$product->quantity|intval}</span>
-				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='item in stock'}</span>
-				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='items in stock'}</span>
+				<span {if $product->quantity > 1} style="display: none;"{/if} id="quantityAvailableTxt">{l s='Item in stock'}</span>
+				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='Items in stock'}</span>
 			</p>
 			{/if}
 
 			<!-- Out of stock hook -->
-			<p id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
+			<div id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
 				{$HOOK_PRODUCT_OOS}
-			</p>
+			</div>
 
 			<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties OR $product->quantity <= 0) OR $allow_oosp OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
 		</div>
@@ -397,7 +402,13 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{/if}
 			</div>
 			<p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}><span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
-			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p>
+			<p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
+				<span id="reduction_amount_display">
+				{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' AND $product->specificPrice.reduction|intval !=0}
+					-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
+				{/if}
+				</span>
+			</p>
 			{if $product->specificPrice AND $product->specificPrice.reduction}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
@@ -412,11 +423,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				</p>
 			{/if}
 			{if $packItems|@count && $productPrice < $product->getNoPackPrice()}
-				<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
+				<p class="pack_price">{l s='Instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 				<br class="clear" />
 			{/if}
 			{if $product->ecotax != 0}
-				<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
+				<p class="price-ecotax">{l s='Include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='For green tax'}
 					{if $product->specificPrice AND $product->specificPrice.reduction}
 					<br />{l s='(not impacted by the discount)'}
 					{/if}
@@ -452,15 +463,15 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 {if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 <!-- quantity discount -->
 <ul class="idTabs clearfix">
-	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
+	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Sliding scale pricing'}</a></li>
 </ul>
 <div id="quantityDiscount">
 	<table class="std">
         <thead>
             <tr>
-                <th>{l s='product'}</th>
-                <th>{l s='from (qty)'}</th>
-                <th>{l s='discount'}</th>
+                <th>{l s='Product'}</th>
+                <th>{l s='From (qty)'}</th>
+                <th>{l s='Discount'}</th>
             </tr>
         </thead>
 		<tbody>
@@ -585,7 +596,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 									</div>
 									{/if}
 									<div class="customizationUploadBrowse">
-										<label class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your hard drive'}{/if}{if $field.required}<sup>*</sup>{/if}</label>
+										<label class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your computer'}{/if}{if $field.required}<sup>*</sup>{/if}</label>
 										<input type="file" name="file{$field.id_customization_field}" id="img{$customizationField}" class="customization_block_input {if isset($pictures.$key)}filled{/if}" />
 									</div>
 								</li>

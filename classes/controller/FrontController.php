@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -400,29 +400,12 @@ class FrontControllerCore extends Controller
 			die(Tools::displayError());
 
 		$this->iso = $iso;
-		$this->setMedia();
 
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
 	}
 	
 	public function postProcess()
-	{
-		/*// For retrocompatibility with versions before 1.5, preProcess support will be removed on next release
-		if (method_exists(get_class($this), 'preProcess'))
-		{
-			$reflection = new ReflectionClass($this);
-			if (!in_array($reflection->getMethod('preProcess')->class, array('FrontController', 'FrontControllerCore')))
-			{
-				Tools::displayAsDeprecated('Method preProcess() is deprecated in controllers, use method postProcess() instead');
-				$this->preProcess();
-			}
-		}*/
-
-		//$this->preProcess();
-	}
-
-	public function preProcess()
 	{
 	}
 
@@ -585,7 +568,7 @@ class FrontControllerCore extends Controller
 	/* Display a maintenance page if shop is closed */
 	protected function displayMaintenancePage()
 	{
-		if ($this->maintenance == true || (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE'))))
+		if ($this->maintenance == true || !(int)Configuration::get('PS_SHOP_ENABLE'))
 		{
 			$this->maintenance = true;
 			if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))

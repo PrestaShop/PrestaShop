@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -163,7 +163,7 @@
 			</button>
 	{/if}
 
-	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;"">
+	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;">
 		<form action="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post" enctype="multipart/form-data">
 			<p>{l s='Please type your reply below:'}</p>
 			<textarea style="width: 450px; height: 175px;" name="reply_message">{$PS_CUSTOMER_SERVICE_SIGNATURE}</textarea>
@@ -172,7 +172,7 @@
 			</div>
 			<div style="width: 450px; margin-top: 0px;">
 				<input type="file" name="joinFile"/>
-			<div>
+			</div>
 			<div>
 				<input type="submit" class="button" name="submitReply" value="{l s='Send my reply'}" style="margin-top:20px;" />
 				<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread}" />

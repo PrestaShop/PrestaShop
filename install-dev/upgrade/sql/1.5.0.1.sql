@@ -146,7 +146,7 @@ INSERT INTO `PREFIX_gender_lang` (`id_gender`, `id_lang`, `name`) VALUES
 (2, 4, 'Frau'),
 (2, 5, 'Sig.ra'),
 (3, 1, 'Miss'),
-(3, 2, 'Melle'),
+(3, 2, 'Mlle'),
 (3, 3, 'Miss'),
 (3, 4, 'Miss'),
 (3, 5, 'Miss');

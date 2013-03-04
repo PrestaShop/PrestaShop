@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -432,7 +432,7 @@ class LocalizationPackCore
 			$attributes = $xml->group_default->attributes();
 			if (isset($attributes['price_display_method']) && in_array((int)$attributes['price_display_method'], array(0, 1)))
 			{
-				$group = new Group((int)_PS_DEFAULT_CUSTOMER_GROUP_);
+				$group = new Group((int)Configuration::get('PS_CUSTOMER_GROUP'));
 				$group->price_display_method = (int)$attributes['price_display_method'];
 				if (!$group->save())
 					$this->_errors[] = Tools::displayError('An error occurred during the default group update');

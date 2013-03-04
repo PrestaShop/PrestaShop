@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -238,7 +238,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('E-mail address'),
+					'label' => $this->l('Email address'),
 					'name' => 'email',
 					'size' => 33
 				),
@@ -434,14 +434,14 @@ class AdminStoresControllerCore extends AdminController
 		$formFields = array(
 			'PS_SHOP_NAME' => array(
 				'title' => $this->l('Shop name'),
-				'desc' => $this->l('Displayed in e-mails and page titles'),
+				'desc' => $this->l('Displayed in emails and page titles'),
 				'validation' => 'isGenericName',
 				'required' => true,
 				'size' => 30,
 				'type' => 'text'
 			),
-			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop e-mail'),
-				'desc' => $this->l('Displayed in e-mails sent to customers'),
+			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop email'),
+				'desc' => $this->l('Displayed in emails sent to customers'),
 				'validation' => 'isEmail',
 				'required' => true,
 				'size' => 30,

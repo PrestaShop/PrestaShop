@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->className = 'Manufacturer';
 	 	$this->lang = false;
 	 	$this->deleted = false;
+		$this->allow_export = true;
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
@@ -69,7 +70,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'havingFilter' => true
 			),
 			'products' => array(
-				'title' => $this->l('Products'),
+				'title' => $this->l('Products:'),
 				'havingFilter' => true,
 				'width' => 20,
 				'align' => 'center',
@@ -164,7 +165,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'filter_key' => 'a!name'
 			),
 			'postcode' => array(
-				'title' => $this->l('Postal Code/Zip Code'),
+				'title' => $this->l('Zip Code/Postal Code'),
 				'align' => 'right',
 				'width' => 50
 			),
@@ -232,7 +233,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Manufacturers'),
+				'title' => $this->l('Manufacturers:'),
 				'image' => '../img/admin/manufacturers.gif'
 			),
 			'input' => array(
@@ -269,7 +270,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'desc' => $this->l('Upload manufacturer logo from your computer')
+					'desc' => $this->l('Upload a manufacturer logo from your computer.')
 				),
 				array(
 					'type' => 'text',
@@ -291,7 +292,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}',
-					'desc' => $this->l('To add "tags" click in the field, write something, then press "Enter"')
+					'desc' => $this->l('To add "tags," click inside the field, write something, and then press "Enter."')
 				),
 				array(
 					'type' => 'radio',
@@ -329,7 +330,7 @@ class AdminManufacturersControllerCore extends AdminController
 		}
 
 		$this->fields_form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 
@@ -437,7 +438,7 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 		$form['input'][] = array(
 			'type' => 'text',
-			'label' => $this->l('Postcode / Zip Code:'),
+			'label' => $this->l('Zip Code/Postal Code'),
 			'name' => 'postcode',
 			'size' => 33,
 			'required' => false,
@@ -496,7 +497,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 		);
 		$form['submit'] = array(
-			'title' => $this->l('   Save   '),
+			'title' => $this->l('Save   '),
 			'class' => 'button'
 		);
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,11 +33,11 @@
 		<ul>
 			<li><a href="{$link->getPageLink('new-products')}" title="{l s='View a new products'}">{l s='New products'}</a></li>
 			{if !$PS_CATALOG_MODE}
-			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View a top sellers products'}">{l s='Top sellers'}</a></li>
+			<li><a href="{$link->getPageLink('best-sales')}" title="{l s='View a top sellers products'}">{l s='Best sellers'}</a></li>
 			<li><a href="{$link->getPageLink('prices-drop')}" title="{l s='View a products with price drop'}">{l s='Price drop'}</a></li>
 			{/if}
-			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View list of a manufacturers'}">{l s='Manufacturers'}</a></li>{/if}
-			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View list of a suppliers'}">{l s='Suppliers'}</a></li>{/if}
+			{if $display_manufacturer_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('manufacturer')}" title="{l s='View list of a manufacturers'}">{l s='Manufacturers:'}</a></li>{/if}
+			{if $display_supplier_link OR $PS_DISPLAY_SUPPLIERS}<li><a href="{$link->getPageLink('supplier')}" title="{l s='View list of a suppliers'}">{l s='Suppliers:'}</a></li>{/if}
 		</ul>
 	</div>
 	<div class="sitemap_block">
@@ -62,7 +62,7 @@
 </div>
 <div id="listpage_content">
 	<div class="categTree">
-		<h3>{l s='Categories'}</h3>
+		<h3>{l s='Categories:'}</h3>
 		<div class="tree_top"><a href="{$base_dir_ssl}" title="{$categoriesTree.name|escape:'htmlall':'UTF-8'}">{$categoriesTree.name|escape:'htmlall':'UTF-8'}</a></div>
 		<ul class="tree">
 		{if isset($categoriesTree.children)}

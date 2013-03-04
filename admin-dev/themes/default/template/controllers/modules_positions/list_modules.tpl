@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -65,7 +65,7 @@
 	<input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
 
 {if !$can_move}
-	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list'}</b></div>
+	<br /><div><b>{l s='If you want to order/move the following data, please select a shop from the shop list.'}</b></div>
 {/if}
 {foreach $hooks as $hook}
 	<a name="{$hook['name']}"/>
@@ -121,7 +121,7 @@
 			{/if}
 		{/foreach}
 	{else}
-		<tr><td colspan="5">{l s='No module for this hook'}</td></tr>
+		<tr><td colspan="5">{l s='No module was found for this hook.'}</td></tr>
 	{/if}
 	</table>
 {/foreach}

@@ -19,7 +19,10 @@ function start_install()
 	$('#progress_bar .installing').show();
 	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
-
+	$('#tabs li a').each(function() {
+		 this.rel=$(this).attr('href');
+		 this.href='#';
+	});
 	process_install();
 }
 
@@ -165,6 +168,10 @@ function install_error(step, errors)
 	}
 	if (typeof psuser_assistance != 'undefined')
 		psuser_assistance.setStep('install_process_error');
+
+	$('#tabs li a').each(function() {
+		 this.href=this.rel;
+	});
 }
 
 function install_success()
@@ -177,4 +184,8 @@ function install_success()
 	$('.stepList li:last-child').addClass('ok');
 	if (typeof psuser_assistance != 'undefined')
 		psuser_assistance.setStep('install_process_success');
+
+	$('#tabs li a').each(function() {
+		 this.href=this.rel;
+	});
 }

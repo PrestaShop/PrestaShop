@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +35,7 @@ class AdminOrdersControllerCore extends AdminController
 		$this->lang = false;
 		$this->addRowAction('view');
 		$this->explicitSelect = true;
-
+		$this->allow_export = true;
 		$this->deleted = false;
 		$this->context = Context::getContext();
 
@@ -100,7 +100,7 @@ class AdminOrdersControllerCore extends AdminController
 			'currency' => true
 		),
 		'payment' => array(
-			'title' => $this->l('Payment'),
+			'title' => $this->l('Payment: '),
 			'width' => 100
 		),
 		'osname' => array(
@@ -148,7 +148,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function renderForm()
 	{
 		if (Context::getContext()->shop->getContext() != Shop::CONTEXT_SHOP && Shop::isFeatureActive())
-			$this->errors[] = $this->l('You have to select a shop in order to create new orders.');
+			$this->errors[] = $this->l('You have to select a shop before creating new orders.');
 
 		$id_cart = (int)Tools::getValue('id_cart');
 		$cart = new Cart((int)$id_cart);
@@ -183,7 +183,7 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
-			'title' => array($this->l('Orders'), $this->l('create order'))
+			'title' => array($this->l('Orders'), $this->l('Create order'))
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
@@ -301,6 +301,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{firstname}' => $customer->firstname,
 							'{lastname}' => $customer->lastname,
 							'{id_order}' => $order->id,
+							'{shipping_number}' => $order->shipping_number,
 							'{order_name}' => $order->getUniqReference()
 						);
 						if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
@@ -433,7 +434,7 @@ class AdminOrdersControllerCore extends AdminController
 						else
 						{
 							$message = $customer_message->message;
-							if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
+							if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT)
 								$message = Tools::nl2br($customer_message->message);
 
 							$varsTpl = array(
@@ -496,7 +497,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
 							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cart_rule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							$languages = Language::getLanguages(false);
 							foreach ($languages as $language)
 								// Define a temporary name
@@ -703,7 +704,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cartrule = new CartRule();
 							$languages = Language::getLanguages($order);
-							$cartrule->description = sprintf($this->l('Credit Slip for order #%d'), $order->id);
+							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
 							foreach ($languages as $language)
 							{
 								// Define a temporary name
@@ -840,7 +841,7 @@ class AdminOrdersControllerCore extends AdminController
 				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
 				$payment_module->validateOrder(
 					(int)$cart->id, (int)$id_order_state,
-					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order - Employee:').
+					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').
 					Tools::safeOutput(substr($employee->firstname, 0, 1).'. '.$employee->lastname), array(), null, false, $cart->secure_key
 				);
 				if ($payment_module->currentOrder)
@@ -971,7 +972,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			if (!Configuration::get('PS_INVOICE'))
+			if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
 				$this->errors[] = Tools::displayError('Invoice management has been disabled');
 			elseif ($order->hasInvoice())
 				$this->errors[] = Tools::displayError('This order already has an invoice');
@@ -1101,7 +1102,7 @@ class AdminOrdersControllerCore extends AdminController
 								foreach ($order_invoices_collection as $order_invoice)
 								{
 									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-										$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total (Invoice:').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
+										$this->errors[] = Tools::displayError('Discount value is greater than the order invoice total (Invoice:').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
 									{
 										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -1259,6 +1260,11 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->toolbar_title = sprintf($this->l('Order #%1$d (%2$s) - %3$s %4$s'), $order->id, $order->reference, $customer->firstname, $customer->lastname);
+		if (Shop::isFeatureActive())
+		{
+			$shop = new Shop((int)$order->id_shop);
+			$this->toolbar_title .= ' - '.sprintf($this->l('Shop: %s'), $shop->name);
+		}
 
 		// gets warehouses to ship products, if and only if advanced stock management is activated
 		$warehouse_list = null;
@@ -1284,14 +1290,14 @@ class AdminOrdersControllerCore extends AdminController
 		foreach (PaymentModule::getInstalledPaymentModules() as $payment)
 		{
 			$module = Module::getInstanceByName($payment['name']);
-			if (Validate::isLoadedObject($module))
+			if (Validate::isLoadedObject($module) && $module->active)
 				$payment_methods[] = $module->displayName;
 		}
 
 		// display warning if there are products out of stock
 		$display_out_of_stock_warning = false;
 		$current_order_state = $order->getCurrentOrderState();
-		if ($current_order_state->delivery != 1 && $current_order_state->shipped != 1)
+		if (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1))
 			$display_out_of_stock_warning = true;
 
 		// products current stock (from stock_available)
@@ -1351,7 +1357,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'invoice_management_active' => Configuration::get('PS_INVOICE')
+			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop)
 		);
 
 		return parent::renderView();
@@ -1463,10 +1469,10 @@ class AdminOrdersControllerCore extends AdminController
 					);
 					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
 							$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop))
-						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
 				}
 			}
-			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the e-mail to your customer.')));
+			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 		}
 	}
 
@@ -1534,7 +1540,7 @@ class AdminOrdersControllerCore extends AdminController
 		$use_taxes = true;
 
 		$initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 
 		// Creating specific price if needed
 		if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl)
@@ -1611,11 +1617,11 @@ class AdminOrdersControllerCore extends AdminController
 
 				$order_invoice->id_order = $order->id;
 				if ($order_invoice->number)
-					Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
+					Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $order->id_shop);
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+				$invoice_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 				$carrier = new Carrier((int)$order->id_carrier);
 				$tax_calculator = $carrier->getTaxCalculator($invoice_address);
 
@@ -1712,7 +1718,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 
@@ -1908,14 +1914,14 @@ class AdminOrdersControllerCore extends AdminController
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
-
+		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
 
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 
@@ -2002,7 +2008,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
 

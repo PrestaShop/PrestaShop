@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -33,7 +33,7 @@
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
 	var by = '{l s='by'}';
-	var errorLogin = '{l s='PrestaShop was unable to login to Addons, please check your credentials and your internet connection.'}';
+	var errorLogin = '{l s='PrestaShop was unable to login to Addons. Please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
@@ -296,7 +296,40 @@
 		$('#module_install_filter').change(function() { setFilter(); });
 		$('#module_status_filter').change(function() { setFilter(); });
 		$('#country_module_value_filter').change(function() { setFilter(); });
+		
+		
+		$('.moduleTabPreferencesChoise').change(function()
+		{			
+			var value_pref = $(this).val();
+			var module_pref = $(this).attr('name');
+			module_pref = module_pref.substring(2, module_pref.length);
 
+			$.ajax({
+				type:"POST",
+				url : ajaxCurrentIndex,
+				async: true,
+				data : {
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "saveTabModulePreferences",
+					module_pref : module_pref,
+					value_pref : value_pref
+				},
+				success : function(data)
+				{
+					// res.status  = cache or refresh
+					if (data == 'OK')
+						$('#r_' + module_pref).html(confirmPreferencesSaved);
+				},
+				error: function(res,textStatus,jqXHR)
+				{
+					//jAlert("TECHNICAL ERROR"+res);
+				}
+
+			});
+		});
+		
 		// Method to save favorites preferences
 		$('.moduleFavorite').change(function()
 		{

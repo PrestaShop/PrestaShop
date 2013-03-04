@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <input type="hidden" name="submitted_tabs[]" value="Shipping" />
 <h4 class="tab">1. {l s='Info.'}</h4>
-<h4>{l s='Shipping'}</h4>
+<h4>{l s='Shipping:'}</h4>
 
 {if isset($display_common_field) && $display_common_field}
 	<div class="hint" style="display: block">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
@@ -60,10 +60,10 @@
 	</tr>
 	<tr>
 		<td class="col-left"><label>{l s='Additional shipping cost (per quantity):'}</label></td>
-		<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
+		<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost" onchange="this.value = this.value.replace(/,/g, '.');"
 				value="{$product->additional_shipping_cost|htmlentities}" />{$currency->suffix}
 			{if $country_display_tax_label}{l s='tax excl.'}{/if}
-			<p class="preference_description">{l s='Carrier tax will be applied.'}</p>
+			<p class="preference_description">{l s='A carrier tax will be applied.'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -78,7 +78,7 @@
 			</select>
 			<br>
 			<button class="button" onclick="unselectAllCarriers(); return false;">{l s='Unselect all'}</button>
-			<p class="preference_description">{l s='If no carrier selected, all carriers could be used to ship this product.'}</p>
+			<p class="preference_description">{l s='If no carrier selected, all carriers can be used to ship this product.'}</p>
 		</td>
 	</tr>
 </table>

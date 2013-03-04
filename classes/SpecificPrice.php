@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -345,7 +345,7 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT `id_product`, `id_product_attribute`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -361,9 +361,9 @@ class SpecificPriceCore extends ObjectModel
 					)
 					AND
 					`reduction` > 0
-		');
+		', false);
 		$ids_product = array();
-		foreach ($results as $row)
+		while ($row = Db::getInstance()->nextRow($result))
 			$ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
 		return $ids_product;
 	}

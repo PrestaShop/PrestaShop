@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,12 +19,10 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-require_once(dirname(__FILE__).'/../images.inc.php');
 
 function bindDatepicker($id, $time)
 {
@@ -265,7 +263,7 @@ function checkingTab($tab)
 	$adminObj = new $tab;
 	if (!$adminObj->viewAccess() AND ($adminObj->table != 'employee' OR Context::getContext()->employee->id != Tools::getValue('id_employee') OR !Tools::isSubmit('updateemployee')))
 	{
-		$adminObj->_errors = array(Tools::displayError('Access denied'));
+		$adminObj->_errors = array(Tools::displayError('Access denied.'));
 		echo $adminObj->displayErrors();
 		return false;
 	}
@@ -431,7 +429,7 @@ function runAdminTab($tab, $ajaxMode = false)
 			$bread = '';
 			foreach ($tabs AS $key => $item)
 			{
-				$bread .= ' <img src="../img/admin/separator_breadcrum.png" style="margin-right:5px" alt="&gt;" />';
+				$bread .= ' <img src="../img/admin/separator_breadcrumb.png" style="margin-right:5px" alt="&gt;" />';
 				if (count($tabs) - 1 > $key)
 					$bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].intval($item['id_tab']).(int)Context::getContext()->employee->id).'">';
 

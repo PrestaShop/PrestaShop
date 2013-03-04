@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,13 +49,13 @@ class AdminPerformanceControllerCore extends AdminController
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
 							'value' => _PS_SMARTY_NO_COMPILE_,
 							'label' => $this->l('Never recompile template files'),
-							'desc' => $this->l('Templates are never recompiled, performance is better and this option should be used in production environment')
+							'desc' => $this->l('This option should be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
 							'label' => $this->l('Recompile templates if the files have been updated'),
-							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
+							'desc' => $this->l('Templates are recompiled when they are updated. If you experience compilation troubles when you update your template files, you should use Force Compile instead of this option. It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
@@ -155,7 +155,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Features'),
+					'label' => $this->l('Features:'),
 					'name' => 'feature',
 					'class' => 't',
 					'is_bool' => true,
@@ -260,7 +260,7 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_1',
 							'value' => 1,
-							'label' => $this->l('Compress inline JavaScript in HTML after "smarty compile" execution')
+							'label' => $this->l('Compress inline JavaScript in HTML after "smarty compile" execution.')
 						),
 						array(
 							'id' => 'PS_JS_HTML_THEME_COMPRESSION_0',
@@ -274,7 +274,7 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Apache optimization'),
 					'name' => 'PS_HTACCESS_CACHE_CONTROL',
 					'class' => 't',
-					'desc' => $this->l('This will add directives to your .htaccess file which should improve caching and compression.'),
+					'desc' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
 					'is_bool' => true,
 					'values' => array(
 						array(
@@ -318,21 +318,21 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Media server #1'),
 					'name' => '_MEDIA_SERVER_1_',
 					'size' => 30,
-					'desc' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #2'),
 					'name' => '_MEDIA_SERVER_2_',
 					'size' => 30,
-					'desc' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #3'),
 					'name' => '_MEDIA_SERVER_3_',
 					'size' => 30,
-					'desc' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.')
 				),
 			)
 		);
@@ -430,7 +430,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable caching system')
+					'desc' => $this->l('Enable or disable caching system.')
 				),
 				array(
 					'type' => 'select',
@@ -474,7 +474,7 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				'desc' => $this->l('Performance matters! Improve speed and conversions the easy way.').'<br />'.
 				$this->l('CloudCache supercharges your site in minutes through its state-of-the-art content delivery network.').'<br /><br />'.
-				$this->l('Subscribe now using the code "presta25" and get an exclusive discount of 25% per month on every available package.').'<br /><br />
+				$this->l('Subscribe now using the code "presta25" and get an exclusive 25% monthly discount on every available package.').'<br /><br />
 			<a style="color: blue" href="index.php?controller=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&filtername=cloudcache" id="installCloudCache">&gt; '.$this->l('Click here to install the CloudCache module for PrestaShop').'</a><br />'
 		);
 	}
@@ -585,7 +585,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
-		$redirecAdmin = false;
+		$redirectAdmin = false;
 		if ((bool)Tools::getValue('smarty_up'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -593,7 +593,7 @@ class AdminPerformanceControllerCore extends AdminController
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -606,7 +606,7 @@ class AdminPerformanceControllerCore extends AdminController
 				if (!Combination::isCurrentlyUsed())
 					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
 				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
-				$redirecAdmin = true;
+				$redirectAdmin = true;
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -624,7 +624,7 @@ class AdminPerformanceControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
 				{
-					$redirecAdmin = true;
+					$redirectAdmin = true;
 					if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
 						Tools::generateHtaccess();
 				}
@@ -654,7 +654,7 @@ class AdminPerformanceControllerCore extends AdminController
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					$redirecAdmin = true;
+					$redirectAdmin = true;
 				}
 			}
 			else
@@ -705,7 +705,7 @@ class AdminPerformanceControllerCore extends AdminController
 					))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
-						$redirecAdmin = true;
+						$redirectAdmin = true;
 					}
 					else
 						$this->errors[] = Tools::displayError('Cannot overwrite settings file.');
@@ -725,6 +725,7 @@ class AdminPerformanceControllerCore extends AdminController
 					$cache_active = 0;
 				else
 					$cache_active = 1;
+
 				if (!$caching_system = Tools::getValue('caching_system'))
 					$this->errors[] = Tools::displayError('Caching system is missing');
 				else
@@ -733,6 +734,7 @@ class AdminPerformanceControllerCore extends AdminController
 						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
 						$new_settings
 					);
+					
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 						<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
@@ -759,7 +761,7 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
 					}
 				}
-				else if ($caching_system == 'MCached' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'MCached')
+				else if ($caching_system == 'CacheMemcache' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
 					Cache::getInstance()->flush();
 
 				if (!count($this->errors))
@@ -770,7 +772,7 @@ class AdminPerformanceControllerCore extends AdminController
 						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
 						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
 					))
-						$redirecAdmin = true;
+						$redirectAdmin = true;
 					else
 						$this->errors[] = Tools::displayError('Cannot overwrite settings file.');
 				}
@@ -778,8 +780,7 @@ class AdminPerformanceControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-
-		if ($redirecAdmin)
+		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 		else
 			return parent::postProcess();

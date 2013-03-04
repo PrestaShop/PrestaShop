@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -221,12 +221,12 @@ class AdminLocalizationControllerCore extends AdminController
 			array(
 				'id' => 'taxes',
 				'val' => 'taxes',
-				'name' => $this->l('Taxes')
+				'name' => $this->l('Taxes:')
 			),
 			array(
 				'id' => 'currencies',
 				'val' => 'currencies',
-				'name' => $this->l('Currencies')
+				'name' => $this->l('Currencies:')
 			),
 			array(
 				'id' => 'languages',
@@ -243,7 +243,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => $this->l('Import localization pack'),
+				'title' => $this->l('Import a localization pack'),
 				'image' => '../img/admin/localization.gif'
 			),
 			'input' => array(
@@ -270,7 +270,7 @@ class AdminLocalizationControllerCore extends AdminController
 				)
 			),
 			'submit' => array(
-				'title' => $this->l('   Import   '),
+				'title' => $this->l('Import   '),
 				'class' => 'button',
 				'name' => 'submitLocalizationPack'
 			)

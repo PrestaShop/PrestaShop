@@ -1,5 +1,5 @@
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -26,6 +26,16 @@
 $(document).ready(function() {
 	initTableDnD();
 });
+
+function objToString(obj) {
+    var str = '';
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            str += p + '=' + obj[p] + '&';
+        }
+    }
+    return str;
+}
 
 function initTableDnD(table)
 {
@@ -119,9 +129,10 @@ function initTableDnD(table)
 
 				$.ajax({
 					type: 'POST',
+					headers: { "cache-control": "no-cache" },
 					async: false,
-					url: currentIndex + '&token=' + token + '&' + $.tableDnD.serialize(),
-					data: params,
+					url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+					data: $.tableDnD.serialize() + '&' + objToString(params) ,
 					success: function(data) {
 						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
 

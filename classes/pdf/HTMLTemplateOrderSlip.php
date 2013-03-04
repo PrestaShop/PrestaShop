@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -142,10 +142,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 	 */
 	public function getTaxTabContent()
 	{
-		$invoice_address = new Address((int)$this->order->id_address_invoice);
+		$address = new Address((int)$this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-			&& !empty($invoice_address->vat_number)
-			&& $invoice_address->id_country != Configuration::get('VATNUMBER_COUNTRY');
+							&& !empty($address->vat_number)
+							&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
 		$this->smarty->assign(array(
 			'tax_exempt' => $tax_exempt,

@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -43,7 +43,13 @@
 					<tbody>
 					{foreach from=$modules item=module}
 						<tr>
-							<td><input type="checkbox" name="modules" value="{$module->name}" {if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if} class="noborder"></td>
+							<td>
+								{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
+								<input type="checkbox" name="modules" value="{$module->name}"
+									{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
+									class="noborder">
+								{/if}
+							</td>
 							<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
@@ -68,7 +74,7 @@
 										<dl class="">
 											<dt>{l s='Version'} :</dt>
 											<dd>{$module->version} 
-												{if isset($module->version_addons)}({l s='Update'} {$module->version_addons} {l s='available on PrestaShop Addons'}){/if}
+												{if isset($module->version_addons)}({l s='Update'} {$module->version_addons} {l s='Available on PrestaShop Addons'}){/if}
 											</dd>|
 										</dl>
 										<dl class="">
@@ -87,7 +93,7 @@
 								<ul id="list-action-button">
 									{if isset($module->type) && $module->type == 'addonsMustHave'}
 										<li>
-											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
+											<a href="{$module->addons_buy_url}" target="_blank" class="button updated"><span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}</span></a>
 										</li>
 									{else}
 										{if $module->id && isset($module->version_addons) && $module->version_addons}

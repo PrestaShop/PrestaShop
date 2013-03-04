@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,11 +26,10 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 {if !$shop_context}
-	<div class="warn">{l s='You have more than one shop. You need to select one to configure payment.'}</div>
+	<div class="warn">{l s='You have more than one shop and must select one to configure payment.'}</div>
 {else}
-		<h2 class="space">{l s='Payment modules list'}</h2>
-		{if isset($url_modules)}
-			<input type="button" class="button" onclick="document.location='{$url_modules}'" value="{l s='Click to see the list of payment modules.'}" /><br>
+		{if isset($modules_list)}
+			{$modules_list}
 		{/if}
 	
 		<br />

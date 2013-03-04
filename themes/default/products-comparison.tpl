@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -76,7 +76,7 @@
 								{if $allow_oosp}
 									{$product->available_later|escape:'htmlall':'UTF-8'}
 								{else}
-									{l s='This product is no longer in stock'}
+									{l s='This product is no longer in stock.'}
 								{/if}
 							{else}
 								{$product->available_now|escape:'htmlall':'UTF-8'}
@@ -101,7 +101,7 @@
 
 		<tr class="comparison_header">
 			<td>
-				{l s='Features'}
+				{l s='Features:'}
 			</td>
 			{section loop=$products|count step=1 start=0 name=td}
 			<td></td>
@@ -139,6 +139,6 @@
 	</table>
 </div>
 {else}
-	<p class="warning">{l s='There are no products selected for comparison'}</p>
+	<p class="warning">{l s='There are no products selected for comparison.'}</p>
 {/if}
 

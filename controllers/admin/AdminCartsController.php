@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class AdminCartsControllerCore extends AdminController
 
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
+		$this->allow_export = true;
 
 		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
@@ -113,8 +114,18 @@ class AdminCartsControllerCore extends AdminController
 		/* Display order information */
 		$id_order = (int)Order::getOrderByCartId($cart->id);
 		$order = new Order($id_order);
-
-		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+		if (Validate::isLoadedObject($order))
+		{
+			$tax_calculation_method = $order->getTaxCalculationMethod();
+			$id_shop = (int)$order->id_shop;
+		}
+		else
+		{
+			$id_shop = (int)$cart->id_shop;
+			$tax_calculation_method = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+		}
+		
+		if ($tax_calculation_method == PS_TAX_EXC)
 		{
 			$total_products = $summary['total_products'];
 			$total_discounts = $summary['total_discounts_tax_exc'];
@@ -132,7 +143,7 @@ class AdminCartsControllerCore extends AdminController
 		}
 		foreach ($products as $k => &$product)
 		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
+			if ($tax_calculation_method == PS_TAX_EXC)
 			{
 				$product['product_price'] = $product['price'];
 				$product['product_total'] = $product['total'];
@@ -153,7 +164,7 @@ class AdminCartsControllerCore extends AdminController
 																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
 			$product_obj = new Product($product['id_product']);
-			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$order->id_shop);
+			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$id_shop);
 
 			$image_product = new Image($image['id_image']);
 			$product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
@@ -189,6 +200,13 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart)
 				$id_cart = $customer->getLastCart(false);
 			$this->context->cart = new Cart((int)$id_cart);
+
+			if (!$this->context->cart->id)
+			{
+				$this->context->cart->recyclable = 0;
+				$this->context->cart->gift = 0;
+			}
+
 			if (!$this->context->cart->id_customer)
 				$this->context->cart->id_customer = $id_customer;
 			if ($this->context->cart->OrderExists())
@@ -461,7 +479,7 @@ class AdminCartsControllerCore extends AdminController
 			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
 			{
 				$cart_rule = new CartRule();
-				$cart_rule->code = 'BO_ORDER_'.(int)$this->context->cart->id;
+				$cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
 				$cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->l('Free Shipping', 'AdminTab', false, false));
 				$cart_rule->id_customer = (int)$this->context->cart->id_customer;
 				$cart_rule->free_shipping = true;
@@ -570,7 +588,7 @@ class AdminCartsControllerCore extends AdminController
 		if (isset($summary['gift_products']) && count($summary['gift_products']))
 			foreach ($summary['gift_products'] as &$product)
 			{
-				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
+				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
 				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}
@@ -728,5 +746,15 @@ class AdminCartsControllerCore extends AdminController
 	public static function replaceZeroByShopName($echo, $tr)
 	{
 		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
+	}
+	
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		// don't display ordered carts
+		foreach ($this->_list as $row)
+			if ($row['id_cart'] == $id && isset($row['id_order']) && $row['id_order'])
+				return ;
+		
+		return $this->helper->displayDeleteLink($token, $id, $name);
 	}
 }

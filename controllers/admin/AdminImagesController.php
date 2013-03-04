@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,20 +40,20 @@ class AdminImagesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 300),
+			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
 			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
-			'products' => array('title' => $this->l('Products'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'categories' => array('title' => $this->l('Categories'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'manufacturers' => array('title' => $this->l('Manufacturers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'suppliers' => array('title' => $this->l('Suppliers'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'products' => array('title' => $this->l('Products:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'categories' => array('title' => $this->l('Categories:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'manufacturers' => array('title' => $this->l('Manufacturers:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
+			'suppliers' => array('title' => $this->l('Suppliers:'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'scenes' => array('title' => $this->l('Scenes'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'stores' => array('title' => $this->l('Stores'), 'width' => 50, 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
 
 		$this->fields_options = array(
 			'images' => array(
-				'title' =>	$this->l('Images'),
+				'title' =>	$this->l('images'),
 				'icon' =>	'tab-orders',
 				'top' => '',
 				'bottom' => '',
@@ -65,11 +65,11 @@ class AdminImagesControllerCore extends AdminController
 						'show' => true,
 						'required' => true,
 						'type' => 'radio',
-						'choices' => array('jpg' => $this->l('Use JPEG'), 'png' => $this->l('Use PNG only if the base image is in PNG format'), 'png_all' => $this->l('Use PNG for all images'))
+						'choices' => array('jpg' => $this->l('Use JPEG'), 'png' => $this->l('Use PNG only if the base image is in PNG format.'), 'png_all' => $this->l('Use PNG for all images'))
 					),
 					'PS_JPEG_QUALITY' => array(
 						'title' => $this->l('JPEG quality'),
-						'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file)'),
+						'desc' => $this->l('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).'),
 						'validation' => 'isUnsignedId',
 						'required' => true,
 						'cast' => 'intval',
@@ -77,7 +77,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 		 			'PS_PNG_QUALITY' => array(
 						 'title' => $this->l('PNG quality'),
-						 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file)'),
+						 'desc' => $this->l('Ranges from 9 (worst quality, smallest file) to 0 (best quality, biggest file).'),
 						 'validation' => 'isUnsignedId',
 						 'required' => true,
 						 'cast' => 'intval',
@@ -114,7 +114,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
 						'title' => $this->l('Maximum size of product pictures'),
-						'desc' => $this->l('The maximum size of pictures uploadable by customers (in Bytes)'),
+						'desc' => $this->l('The maximum size of pictures uploadable by customers (in Bytes).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -124,7 +124,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_WIDTH' => array(
 						'title' => $this->l('Product picture width'),
-						'desc' => $this->l('The maximum width of pictures uploadable by customers'),
+						'desc' => $this->l('The maximum width of pictures uploadable by customers.'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -134,7 +134,7 @@ class AdminImagesControllerCore extends AdminController
 					),
 					'PS_PRODUCT_PICTURE_HEIGHT' => array(
 						'title' => $this->l('Product picture height'),
-						'desc' => $this->l('The maximum height of pictures uploadable by customers'),
+						'desc' => $this->l('The maximum height of pictures uploadable by customers.'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -143,8 +143,8 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_LEGACY_IMAGES' => array(
-						'title' => $this->l('Use the legacy image filesystem'),
-						'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu'),
+						'title' => $this->l('Use the legacy image filesystem.'),
+						'desc' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -152,13 +152,13 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
+				'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
 			),
 		);
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Images'),
+				'title' => $this->l('images'),
 				'image' => '../img/admin/picture.gif'
 			),
 			'input' => array(
@@ -215,7 +215,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be applied to Category images'),
+					'desc' => $this->l('This type will be applied to Category images.'),
 					'values' => array(
 						array(
 							'id' => 'categories_on',
@@ -236,7 +236,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be applied to Manufacturer images'),
+					'desc' => $this->l('This type will be applied to Manufacturer images.'),
 					'values' => array(
 						array(
 							'id' => 'manufacturers_on',
@@ -257,7 +257,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Supplier images'),
+					'desc' => $this->l('This type will be used for Supplier images.'),
 					'values' => array(
 						array(
 							'id' => 'suppliers_on',
@@ -278,7 +278,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Scene images'),
+					'desc' => $this->l('This type will be used for Scene images.'),
 					'values' => array(
 						array(
 							'id' => 'scenes_on',
@@ -299,7 +299,7 @@ class AdminImagesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('This type will be used for Store images'),
+					'desc' => $this->l('This type will be used for Store images.'),
 					'values' => array(
 						array(
 							'id' => 'stores_on',
@@ -315,7 +315,7 @@ class AdminImagesControllerCore extends AdminController
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -329,7 +329,7 @@ class AdminImagesControllerCore extends AdminController
 		// When moving images, if duplicate images were found they are moved to a folder named duplicates/
 		if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
 		{
-			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder ').
+			$this->warnings[] = $this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder').
 				_PS_PROD_IMG_DIR_.'duplicates/'.
 				$this->l('only contains demonstration images, and then delete this folder.');
 		}
@@ -396,11 +396,11 @@ class AdminImagesControllerCore extends AdminController
 	public function initRegenerate()
 	{
 		$types = array(
-			'categories' => $this->l('Categories'),
-			'manufacturers' => $this->l('Manufacturers'),
-			'suppliers' => $this->l('Suppliers'),
+			'categories' => $this->l('Categories:'),
+			'manufacturers' => $this->l('Manufacturers:'),
+			'suppliers' => $this->l('Suppliers:'),
 			'scenes' => $this->l('Scenes'),
-			'products' => $this->l('Products'),
+			'products' => $this->l('Products:'),
 			'stores' => $this->l('Stores')
 		);
 

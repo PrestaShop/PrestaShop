@@ -30,7 +30,7 @@
 <div id="apply_discount_amount_div">
 	<label>{l s='Amount'}</label>
 	<div class="margin-form">
-		<input type="text" id="reduction_amount" name="reduction_amount" value="{$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval}" />
+		<input type="text" id="reduction_amount" name="reduction_amount" value="{$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval}" onchange="this.value = this.value.replace(/,/g, '.');" />
 		<select name="reduction_currency">
 		{foreach from=$currencies item='currency'}
 			<option value="{$currency.id_currency|intval}" {if $currentTab->getFieldValue($currentObject, 'reduction_currency') == $currency.id_currency || (!$currentTab->getFieldValue($currentObject, 'reduction_currency') && $currency.id_currency == $defaultCurrency)}selected="selected"{/if}>{$currency.iso_code}</option>
@@ -43,7 +43,7 @@
 	</div>
 </div>
 <div id="apply_discount_to_div">
-	<label>{l s='Apply discount to'}</label>
+	<label>{l s='Apply a discount to'}</label>
 	<div class="margin-form">
 		&nbsp;&nbsp;
 		<input type="radio" name="apply_discount_to" id="apply_discount_to_order" value="order" {if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == 0}checked="checked"{/if} />

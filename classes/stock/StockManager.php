@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -473,7 +473,7 @@ class StockManagerCore implements StockManagerInterface
 		$query->where('od.product_id = '.(int)$id_product);
 		if (0 != $id_product_attribute)
 			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-		$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.date_add = o.date_upd');
+		$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
 		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
 		$query->where('os.shipped != 1');
 		$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'

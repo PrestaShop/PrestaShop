@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$this->step = (int)(Tools::getValue('step'));
 		if (!$this->nbProducts)
-			$this->step = -1;
+			$this->step = -1;		
 
 		// If some products have disappear
 		if (!$this->context->cart->checkQuantities())
@@ -54,7 +54,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$orderTotal = $this->context->cart->getOrderTotal();
 		$minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step != -1)
+		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step > 0)
 		{
 			$this->step = 0;
 			$this->errors[] = sprintf(
@@ -251,37 +251,36 @@ class OrderControllerCore extends ParentOrderController
 			$this->context->cart->setNoMultishipping();
 			
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
-			|| (Tools::isSubmit('same') && !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
-			$this->errors[] = Tools::displayError('Invalid address');
+			|| (!Tools::isSubmit('same') && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
+				&& !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
+			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
+			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+			
+			CartRule::autoRemoveFromCart($this->context);
+			CartRule::autoAddToCart($this->context);
+			
+			if (!$this->context->cart->update())
+				$this->errors[] = Tools::displayError('An error occurred while updating your cart.', !Tools::getValue('ajax'));
+
+			if (!$this->context->cart->isMultiAddressDelivery())
+				$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
+
+			if (Tools::isSubmit('message'))
+				$this->_updateMessage(Tools::getValue('message'));
+						
 			// Add checking for all addresses
 			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
-			if (count($address_without_carriers))
+			if (count($address_without_carriers) && !$this->context->cart->isVirtualCart())
 			{
 				if (count($address_without_carriers) > 1)
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.', !Tools::getValue('ajax')));
 				elseif ($this->context->cart->isMultiAddressDelivery())
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.', !Tools::getValue('ajax')));
 				else
-					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.'));
-			}
-			else
-			{
-				$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
-				$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
-				
-				CartRule::autoRemoveFromCart($this->context);
-				CartRule::autoAddToCart($this->context);
-				
-				if (!$this->context->cart->update())
-					$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
-
-				if (!$this->context->cart->isMultiAddressDelivery())
-					$this->context->cart->setNoMultishipping(); // If there is only one delivery address, set each delivery address lines with the main delivery address
-
-				if (Tools::isSubmit('message'))
-					$this->_updateMessage(Tools::getValue('message'));
+					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.', !Tools::getValue('ajax')));
 			}
 		}
 		
@@ -341,19 +340,10 @@ class OrderControllerCore extends ParentOrderController
 		parent::_assignCarrier();
 		// Assign wrapping and TOS
 		$this->_assignWrappingAndTOS();
-		
-		// If a rule offer free-shipping, force hidding shipping prices
-		$free_shipping = false;
-		foreach ($this->context->cart->getCartRules() as $rule)
-			if ($rule['free_shipping'])
-			{
-				$free_shipping = true;
-				break;
-			}
-		
+
 		$this->context->smarty->assign(
 			array(
-				'free_shipping' => $free_shipping,
+				'free_shipping' => false, // Deprecated since a cart rule can be applied the specific carriers only
 				'is_guest' => (isset($this->context->customer->is_guest) ? $this->context->customer->is_guest : 0)
 			));
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,13 +51,16 @@ class CartCore extends ObjectModel
 	public $id_lang;
 
 	/** @var boolean True if the customer wants a recycled package */
-	public $recyclable = 1;
+	public $recyclable = 0;
 
 	/** @var boolean True if the customer wants a gift wrapping */
 	public $gift = 0;
 
 	/** @var string Gift message if specified */
 	public $gift_message;
+
+	/** @var boolean Mobile Theme */
+	public $mobile_theme;
 
 	/** @var string Object creation date */
 	public $date_add;
@@ -109,6 +112,7 @@ class CartCore extends ObjectModel
 			'recyclable' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'gift_message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+			'mobile_theme' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'delivery_option' => 		array('type' => self::TYPE_STRING),
 			'secure_key' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'allow_seperated_package' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -119,12 +123,12 @@ class CartCore extends ObjectModel
 
 	protected $webserviceParameters = array(
 		'fields' => array(
-		'id_address_delivery' => array('xlink_resource' => 'addresses'),
-		'id_address_invoice' => array('xlink_resource' => 'addresses'),
-		'id_currency' => array('xlink_resource' => 'currencies'),
-		'id_customer' => array('xlink_resource' => 'customers'),
-		'id_guest' => array('xlink_resource' => 'guests'),
-		'id_lang' => array('xlink_resource' => 'languages'),
+			'id_address_delivery' => array('xlink_resource' => 'addresses'),
+			'id_address_invoice' => array('xlink_resource' => 'addresses'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'id_customer' => array('xlink_resource' => 'customers'),
+			'id_guest' => array('xlink_resource' => 'guests'),
+			'id_lang' => array('xlink_resource' => 'languages'),
 		),
 		'associations' => array(
 			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
@@ -423,8 +427,8 @@ class CartCore extends ObjectModel
 						p.`id_manufacturer`, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`, product_shop.`available_for_order`, product_shop.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, product_shop.`active`, p.`date_add`,
 						p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery,
-						product_shop.`wholesale_price`, product_shop.advanced_stock_management');
+						CONCAT(cp.`id_product`, IFNULL(cp.`id_product_attribute`, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
+						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -436,12 +440,13 @@ class CartCore extends ObjectModel
 			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
 		);
-		
 
 		$sql->leftJoin('category_lang', 'cl', '
 			product_shop.`id_category_default` = cl.`id_category`
 			AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
 		);
+
+		$sql->leftJoin('product_supplier', 'ps', 'ps.id_product=cp.id_product AND ps.id_product_attribute=cp.id_product_attribute AND ps.id_supplier=p.id_supplier');
 
 		// @todo test if everything is ok, then refactorise call of this method
 		$sql->join(Product::sqlStock('cp', 'cp'));
@@ -472,7 +477,6 @@ class CartCore extends ObjectModel
 			$sql->select('
 				product_attribute_shop.`price` AS price_attribute, product_attribute_shop.`ecotax` AS ecotax_attr,
 				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-				IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
 				(p.`weight`+ pa.`weight`) weight_attribute,
 				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
 				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
@@ -487,7 +491,7 @@ class CartCore extends ObjectModel
 		}
 		else
 			$sql->select(
-				'p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`,
+				'p.`reference` AS reference, p.`ean13`,
 				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity'
 			);
 		$result = Db::getInstance()->executeS($sql);
@@ -1191,6 +1195,7 @@ class CartCore extends ObjectModel
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
 			CartRule::autoRemoveFromCart();
+			CartRule::autoAddToCart();
 			
 			return $return;
 		}
@@ -1331,6 +1336,9 @@ class CartCore extends ObjectModel
 		else
 			$shipping_fees = 0;
 
+		if ($type == Cart::ONLY_SHIPPING)
+			return $shipping_fees;
+
 		if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
 			$type = Cart::ONLY_PRODUCTS;
 
@@ -1455,12 +1463,14 @@ class CartCore extends ObjectModel
 		$wrapping_fees = 0;
 		if ($this->gift)
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), 2), Currency::getCurrencyInstance((int)$this->id_currency));
+		if ($type == Cart::ONLY_WRAPPING)
+			return $wrapping_fees;
 
 		$order_total_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
 		{
 			// First, retrieve the cart rules associated to this "getOrderTotal"
-			if ($with_shipping)
+			if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 				$cart_rules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
 			else
 			{
@@ -1486,7 +1496,7 @@ class CartCore extends ObjectModel
 			foreach ($cart_rules as $cart_rule)
 			{
 				// If the cart rule offers free shipping, add the shipping cost
-				if ($with_shipping && $cart_rule['obj']->free_shipping)
+				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), 2);
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
@@ -1507,18 +1517,10 @@ class CartCore extends ObjectModel
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), 2);
-
 			}
-			
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
-
-		if ($type == Cart::ONLY_SHIPPING)
-			return $shipping_fees;
-
-		if ($type == Cart::ONLY_WRAPPING)
-			return $wrapping_fees;
 
 		if ($type == Cart::BOTH)
 			$order_total += $shipping_fees + $wrapping_fees;
@@ -1687,7 +1689,7 @@ class CartCore extends ObjectModel
 			{
 				$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
 				if (in_array((int)$id_war, $product['warehouse_list']) && $id_warehouse == 0)
-					$id_warehouse = $id_war;
+					$id_warehouse = (int)$id_war;
 			}
 
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
@@ -2324,11 +2326,12 @@ class CartCore extends ObjectModel
 	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
 	* @return array delivery option
 	*/
-	public function getDeliveryOption($default_country = null, $dontAutoSeletectOptions = false, $use_cache = true)
+	public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
 	{
-		static $cache = array(0 => false, 1 => false);
-		if ($cache[(int)$dontAutoSeletectOptions] !== false && $use_cache)
-			return $cache[(int)$dontAutoSeletectOptions];
+		static $cache = array();
+		$cache_id = (int)(is_object($default_country) ? $default_country->id : 0).'-'.(int)$dontAutoSelectOptions;
+		if (isset($cache[$cache_id]) && $use_cache)
+			return $cache[$cache_id];
 		
 		$delivery_option_list = $this->getDeliveryOptionList($default_country);
 
@@ -2346,12 +2349,12 @@ class CartCore extends ObjectModel
 
 			if ($validated)
 			{
-				$cache[(int)$dontAutoSeletectOptions] = $delivery_option;
+				$cache[$cache_id] = $delivery_option;
 				return $delivery_option;
 			}
 		}
 		
-		if ($dontAutoSeletectOptions)
+		if ($dontAutoSelectOptions)
 			return false;
 
 		// No delivery option selected or delivery option selected is not valid, get the better for all options
@@ -2380,7 +2383,7 @@ class CartCore extends ObjectModel
 				$delivery_option[$id_address] = key($options);
 		}
 		
-		$cache[(int)$dontAutoSeletectOptions] = $delivery_option;
+		$cache[$cache_id] = $delivery_option;
 
 		return $delivery_option;
 	}
@@ -2395,11 +2398,13 @@ class CartCore extends ObjectModel
 	*/
 	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
 	{
+		if(isset(Context::getContext()->cookie->id_country))		
+			$default_country = new Country(Context::getContext()->cookie->id_country);
 		if (is_null($delivery_option))
 			$delivery_option = $this->getDeliveryOption($default_country, false, false);
 
 		$total_shipping = 0;
-		$delivery_option_list = $this->getDeliveryOptionList();
+		$delivery_option_list = $this->getDeliveryOptionList($default_country);
 		foreach ($delivery_option as $id_address => $key)
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
@@ -2467,7 +2472,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @return float Shipping total
 	 */
-	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
+	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
 	{
 		if ($this->isVirtualCart())
 			return 0;
@@ -2513,19 +2518,22 @@ class CartCore extends ObjectModel
 			return $shipping_cost;
 		}
 
-		// Get id zone
-		if (!$this->isMultiAddressDelivery()
-			&& isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
-			&& $this->id_address_delivery
-			&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
-		))
-			$id_zone = Address::getZoneById((int)$this->id_address_delivery);
-		else
+		if(!isset($id_zone))
 		{
-			if (!Validate::isLoadedObject($default_country))
-				$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-
-			$id_zone = (int)$default_country->id_zone;
+			// Get id zone
+			if (!$this->isMultiAddressDelivery()
+				&& isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
+				&& $this->id_address_delivery
+				&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
+			))
+				$id_zone = Address::getZoneById((int)$this->id_address_delivery);
+			else
+			{
+				if (!Validate::isLoadedObject($default_country))
+					$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+	
+				$id_zone = (int)$default_country->id_zone;
+			}
 		}
 
 		if ($id_carrier && !$this->isCarrierInRange((int)$id_carrier, (int)$id_zone))
@@ -2604,8 +2612,12 @@ class CartCore extends ObjectModel
 
 		$carrier = self::$_carriers[$id_carrier];
 
+		// No valid Carrier or $id_carrier <= 0 ?
 		if (!Validate::isLoadedObject($carrier))
-			die(Tools::displayError('Fatal error: "no default carrier"'));
+		{
+			Cache::store($cache_id, 0);
+			return 0;
+		}
 
 		if (!$carrier->active)
 		{
@@ -2656,13 +2668,16 @@ class CartCore extends ObjectModel
 		// Get shipping cost using correct method
 		if ($carrier->range_behavior)
 		{
-			// Get id zone
-			if (isset($this->id_address_delivery)
-				&& $this->id_address_delivery
-				&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
-				$id_zone = Address::getZoneById((int)$this->id_address_delivery);
-			else
-				$id_zone = (int)$default_country->id_zone;
+			if(!isset($id_zone))
+			{
+				// Get id zone
+				if (isset($this->id_address_delivery)
+					&& $this->id_address_delivery
+					&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
+					$id_zone = Address::getZoneById((int)$this->id_address_delivery);
+				else
+					$id_zone = (int)$default_country->id_zone;
+			}
 
 			$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight((int)$carrier->id, $this->getTotalWeight(), (int)$id_zone);
 
@@ -2827,8 +2842,8 @@ class CartCore extends ObjectModel
 		$invoice = new Address((int)$this->id_address_invoice);
 
 		// New layout system with personalization fields
+		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);		
 		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
-		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);
 
 		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
 
@@ -2851,10 +2866,12 @@ class CartCore extends ObjectModel
 		foreach ($cart_rules as &$cart_rule)
 		{
 			// If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
-			if ($cart_rule['free_shipping'] && empty($cart_rule['code']))
+			if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code'])))
 			{
 				$cart_rule['value_real'] -= $total_shipping;
-				$cart_rule['value_tax_exc'] = $total_shipping_tax_exc;
+				$cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
+				$total_discounts -= $total_shipping;
+				$total_discounts_tax_exc -= $total_shipping_tax_exc;
 
 				// Update total shipping
 				$total_shipping = 0;
@@ -2952,7 +2969,7 @@ class CartCore extends ObjectModel
 	{
 		$sql = 'SELECT c.`id_cart`
 				FROM '._DB_PREFIX_.'cart c
-				WHERE c.`id_cart` NOT IN (SELECT o.`id_cart` FROM '._DB_PREFIX_.'orders o)
+				WHERE c.`id_cart` NOT IN (SELECT o.`id_cart` FROM '._DB_PREFIX_.'orders o WHERE o.`id_customer` = '.(int)$id_customer.')
 				AND c.`id_customer` = '.(int)$id_customer.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
@@ -2960,7 +2977,7 @@ class CartCore extends ObjectModel
 		if (!$id_cart = Db::getInstance()->getValue($sql))
 			return false;
 
-		return $id_cart;
+		return (int)$id_cart;
 	}
 
 	/**
