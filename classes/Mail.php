@@ -197,13 +197,13 @@ class MailCore
 			$override_mail = false;
 
 			// get templatePath
-			if (preg_match('#'.__PS_BASE_URI__.'modules/#', $template_path) && preg_match('#modules/([a-z0-9_-]+)/#ui', $template_path, $res))
+			if (preg_match('#'.__PS_BASE_URI__.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
 				$module_name = $res[1];
 
 			if ($module_name !== false && (file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.txt') ||
 				file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.html')))
 				$template_path = $theme_path.'modules/'.$module_name.'/mails/';
-			else if (file_exists($theme_path.'mails/'.$template.'.txt') || file_exists($theme_path.'mails/'.$template.'.html'))
+			elseif (file_exists($theme_path.'mails/'.$template.'.txt') || file_exists($theme_path.'mails/'.$template.'.html'))
 			{
 				$template_path = $theme_path.'mails/';
 				$override_mail  = true;
