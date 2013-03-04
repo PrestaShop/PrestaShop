@@ -68,7 +68,14 @@ class AdminCmsControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		if (!$this->loadObject(true))
+			return;
 		
+		if (Validate::isLoadedObject($this->object))
+			$this->display = 'edit';
+		else
+			$this->display = 'add';
+
 		$this->toolbar_btn['save-and-preview'] = array(
 			'href' => '#',
 			'desc' => $this->l('Save and preview')
@@ -79,14 +86,7 @@ class AdminCmsControllerCore extends AdminController
 			'desc' => $this->l('Save and stay'),
 		);
 		$this->initToolbar();
-		if (!$this->loadObject(true))
-			return;
-		
-		if (Validate::isLoadedObject($this->object))
-			$this->display = 'edit';
-		else
-			$this->display = 'add';
-			
+
 		$categories = CMSCategory::getCategories($this->context->language->id, false);
 		$html_categories = CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($this->object, 'id_cms_category'), 1);
 
