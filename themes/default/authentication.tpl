@@ -100,6 +100,7 @@ $(document).ready(function() {
 				SubmitCreate: 1,
 				ajax: true,
 				email_create: $('#email_create').val(),
+				back: $('input[name=back]').val(),
 				token: token
 			},
 			success: function(jsonData)
