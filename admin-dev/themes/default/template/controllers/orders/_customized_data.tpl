@@ -90,7 +90,7 @@
 				<td align="center">-
 				</td>
 				<td align="center" class="productQuantity">
-					<span class="product_quantity_show">{$customization['quantity']}</span>
+					<span class="product_quantity_show{if (int)$customization['quantity'] > 1} red bold{/if}">{$customization['quantity']}</span>
 					{if $can_edit}
 					<span class="product_quantity_edit" style="display:none;">
 						<input type="text" name="product_quantity[{$customizationId}]" class="edit_product_quantity" value="{$customization['quantity']|htmlentities}" size="2" />
