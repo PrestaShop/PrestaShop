@@ -365,32 +365,32 @@
 {if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
 <div class="order_delivery clearfix">
 	{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
-	{if $delivery->id}
-	<ul id="delivery_address" class="address item">
-		<li class="address_title">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></li>
-		{if $delivery->company}<li class="address_company">{$delivery->company|escape:'htmlall':'UTF-8'}</li>{/if}
-		<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
-		<li class="address_address1">{$delivery->address1|escape:'htmlall':'UTF-8'}</li>
-		{if $delivery->address2}<li class="address_address2">{$delivery->address2|escape:'htmlall':'UTF-8'}</li>{/if}
-		<li class="address_city">{$delivery->postcode|escape:'htmlall':'UTF-8'} {$delivery->city|escape:'htmlall':'UTF-8'}</li>
-		<li class="address_country">{$delivery->country|escape:'htmlall':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'htmlall':'UTF-8'}){/if}</li>
-	</ul>
-	{/if}
-	{if $invoice->id}
-	<ul id="invoice_address" class="address alternate_item">
-		<li class="address_title">{l s='Invoice address'}&nbsp;<span class="address_alias">({$invoice->alias})</span></li>
-		{if $invoice->company}<li class="address_company">{$invoice->company|escape:'htmlall':'UTF-8'}</li>{/if}
-		<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
-		<li class="address_address1">{$invoice->address1|escape:'htmlall':'UTF-8'}</li>
-		{if $invoice->address2}<li class="address_address2">{$invoice->address2|escape:'htmlall':'UTF-8'}</li>{/if}
-		<li class="address_city">{$invoice->postcode|escape:'htmlall':'UTF-8'} {$invoice->city|escape:'htmlall':'UTF-8'}</li>
-		<li class="address_country">{$invoice->country|escape:'htmlall':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'htmlall':'UTF-8'}){/if}</li>
-	</ul>
-	{/if}
+		{if $delivery->id}
+		<ul id="delivery_address" class="address item">
+			<li class="address_title">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></li>
+			{if $delivery->company}<li class="address_company">{$delivery->company|escape:'htmlall':'UTF-8'}</li>{/if}
+			<li class="address_name">{$delivery->firstname|escape:'htmlall':'UTF-8'} {$delivery->lastname|escape:'htmlall':'UTF-8'}</li>
+			<li class="address_address1">{$delivery->address1|escape:'htmlall':'UTF-8'}</li>
+			{if $delivery->address2}<li class="address_address2">{$delivery->address2|escape:'htmlall':'UTF-8'}</li>{/if}
+			<li class="address_city">{$delivery->postcode|escape:'htmlall':'UTF-8'} {$delivery->city|escape:'htmlall':'UTF-8'}</li>
+			<li class="address_country">{$delivery->country|escape:'htmlall':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'htmlall':'UTF-8'}){/if}</li>
+		</ul>
+		{/if}
+		{if $invoice->id}
+		<ul id="invoice_address" class="address alternate_item">
+			<li class="address_title">{l s='Invoice address'}&nbsp;<span class="address_alias">({$invoice->alias})</span></li>
+			{if $invoice->company}<li class="address_company">{$invoice->company|escape:'htmlall':'UTF-8'}</li>{/if}
+			<li class="address_name">{$invoice->firstname|escape:'htmlall':'UTF-8'} {$invoice->lastname|escape:'htmlall':'UTF-8'}</li>
+			<li class="address_address1">{$invoice->address1|escape:'htmlall':'UTF-8'}</li>
+			{if $invoice->address2}<li class="address_address2">{$invoice->address2|escape:'htmlall':'UTF-8'}</li>{/if}
+			<li class="address_city">{$invoice->postcode|escape:'htmlall':'UTF-8'} {$invoice->city|escape:'htmlall':'UTF-8'}</li>
+			<li class="address_country">{$invoice->country|escape:'htmlall':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'htmlall':'UTF-8'}){/if}</li>
+		</ul>
+		{/if}
 	{else}
 		{foreach from=$formattedAddresses key=k item=address}
 			<ul class="address {if $address@last}last_item{elseif $address@first}first_item{/if} {if $address@index % 2}alternate_item{else}item{/if}">
-				<li class="address_title">{if $k eq 'invoice'}{l s='Invoice address'}{elseif $k eq 'delivery'}{l s='Delivery address'}{/if}&nbsp;<span class="address_alias">({$address.object.alias})</span></li>
+				<li class="address_title">{if $k eq 'invoice'}{l s='Invoice address'}{elseif $k eq 'delivery' && $delivery->id}{l s='Delivery address'}{/if}{if isset($address.object.alias)}&nbsp;<span class="address_alias">({$address.object.alias})</span>{/if}</li>
 				{foreach $address.ordered as $pattern}
 					{assign var=addressKey value=" "|explode:$pattern}
 					<li>
@@ -405,7 +405,7 @@
 				{/foreach}
 				</ul>
 		{/foreach}
-		<p class="clear" />
+		<br class="clear"/>
 	{/if}
 </div>
 {/if}
