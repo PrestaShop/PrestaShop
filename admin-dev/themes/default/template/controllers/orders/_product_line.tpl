@@ -49,7 +49,7 @@
 		{/if}
 	</td>
 	<td align="center" class="productQuantity">
-		<span class="product_quantity_show">{$product['product_quantity']}</span>
+		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} red bold{/if}">{$product['product_quantity']}</span>
 		{if $can_edit}
 		<span class="product_quantity_edit" style="display:none;">
 			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}" size="2" />
