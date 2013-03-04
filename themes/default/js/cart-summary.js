@@ -588,7 +588,7 @@ function updateCartSummary(json)
 			current_price = formatCurrency(product_list[i].price_wt, currencyFormat, currencySign, currencyBlank);
 		if (reduction && typeof(initial_price) !== 'undefined')
 		{
-			if (initial_price !== '' && initial_price > current_price)
+			if (initial_price !== '' && product_list[i].price_without_quantity_discount > product_list[i].price)
 				initial_price_text = '<span style="text-decoration:line-through;">'+initial_price+'</span><br />';
 		}
 
