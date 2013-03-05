@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-public function update_customer_default_group()
+function update_customer_default_group()
 {
 	$filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
 	$filename_old = str_replace('.inc.', '.old.', $filename);
