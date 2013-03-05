@@ -100,7 +100,7 @@
 				<td colspan="2" class="price" id="total_product">{displayPrice price=$total_products}</td>
 			</tr>
 		{/if}
-			<tr class="cart_total_voucher" {if $total_wrapping == 0}style="display: none;"{/if}>
+			<tr{if $total_wrapping == 0} style="display: none;"{/if}>
 				<td colspan="5">
 				{if $use_taxes}
 					{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
