@@ -542,8 +542,12 @@ class AdminHomeControllerCore extends AdminController
 			{
 				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
-					@copy(htmlentities((string)$partner->logo), '../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png');
-			
+				{
+					$logo = @Tools::file_get_contents(htmlentities((string)$partner->logo));
+					if (sizeof($logo) > 0)
+						file_put_contents('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png', $logo);
+				}
+
 				// Check if module is not already installed and configured
 				$display = 0;
 				if (file_exists('../config/xml/default_country_modules_list.xml') && filesize('../config/xml/default_country_modules_list.xml') > 10)
