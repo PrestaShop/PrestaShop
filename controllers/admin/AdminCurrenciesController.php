@@ -239,23 +239,62 @@ class AdminCurrenciesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	protected function checkDeletion($object)
+	{
+		if (Validate::isLoadedObject($object))
+		{
+			if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+				$this->errors[] = $this->l('You cannot delete the default currency');
+			else
+				return true;
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while deleting object.').'
+				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+
+		return false;
+	}
+
+	protected function checkDisableStatus($object)
+	{
+		if (Validate::isLoadedObject($object))
+		{
+			if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+				$this->errors[] = $this->l('You cannot disable the default currency');
+			else
+				return true;
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').'
+				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+
+		return false;
+	}
+
 	/**
 	 * @see AdminController::processDelete()
 	 */
 	public function processDelete()
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()))
+		$object = $this->loadObject();
+		if (!$this->checkDeletion($object))
+			return false;
+		return parent::processDelete();
+	}
+	
+	protected function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
 		{
-			if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->errors[] = $this->l('You cannot delete the default currency');
-			else if ($object->delete())
-				Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
-			else
-				$this->errors[] = Tools::displayError('An error occurred during deletion.');
+			foreach ($this->boxes as $id_currency)
+			{
+				$object = new Currency((int)$id_currency);
+				if (!$this->checkDeletion($object))
+					return false;
+			}
 		}
-		else
-			$this->errors[] = Tools::displayError('An error occurred while deleting object.').'
-				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+
+		return parent::processBulkDelete();
 	}
 
 	/**
@@ -263,19 +302,25 @@ class AdminCurrenciesControllerCore extends AdminController
 	 */
 	public function processStatus()
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()))
+		$object = $this->loadObject();
+		if (!$this->checkDisableStatus($object))
+			return false;
+		
+		return parent::processStatus();
+	}
+	
+	protected function processBulkDisableSelection()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
 		{
-			if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->errors[] = $this->l('You cannot disable the default currency');
-			else if ($object->toggleStatus())
-				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
-					(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
-			else
-				$this->errors[] = Tools::displayError('An error occurred while updating status.');
+			foreach ($this->boxes as $id_currency)
+			{
+				$object = new Currency((int)$id_currency);
+				if (!$this->checkDisableStatus($object))
+					return false;
+			}
 		}
-		else
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').'
-				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		return parent::processBulkDisableSelection();
 	}
 
 	/**
