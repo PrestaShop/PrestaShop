@@ -70,7 +70,7 @@
 							<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
 						{else if !isset($module->not_on_disk)}
 							{$module->optionsHtml}
-							<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
+							<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">{l s='Submit'}</a>
 						{else}
 							<a href="{$module->options.install_url}" class="button action_tab_module">{l s='Install'}</a>
 						{/if}
