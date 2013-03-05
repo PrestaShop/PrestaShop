@@ -1,8 +1,8 @@
 /* block top search */
 #search_block_top {
 	position:absolute;
-	top:44px;
-	left:0;
+	right: 26%;
+    top: 34px;
 }
 #search_block_top p {padding:0;}
 #search_block_top #search_query_top {

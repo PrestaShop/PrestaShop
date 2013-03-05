@@ -1,6 +1,5 @@
 {if $MENU != ''}
-	</div>
-
+	
 	<!-- Menu -->
 	<div class="sf-contener clearfix">
 		<ul class="sf-menu clearfix">
@@ -18,7 +17,8 @@
 				</li>
 			{/if}
 		</ul>
-		<div class="sf-right">&nbsp;</div>
+	</div>
+	<div class="sf-right">&nbsp;</div>
 
 	<!--/ Menu -->
 {/if}
