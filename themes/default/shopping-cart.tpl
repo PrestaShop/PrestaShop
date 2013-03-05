@@ -166,7 +166,7 @@
 				{displayPrice price=$total_discounts_negative}
 				</td>
 			</tr>
-			{if $use_taxes}
+			{if $use_taxes && $show_taxes}
 			<tr class="cart_total_price">
 				<td colspan="5">{l s='Total (tax excl.):'}</td>
 				<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
