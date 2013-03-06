@@ -306,10 +306,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								</ul>
 								<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
-								{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
-									<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span><br/>
-								{/foreach}
+								<ul>
+									{foreach from=$group.attributes key=id_attribute item=group_attribute}
+										<li>
+											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
+											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
+										</li>
+									{/foreach}
+								</ul>
 							{/if}
 							</div>
 						</fieldset>
