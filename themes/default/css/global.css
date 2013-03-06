@@ -1967,6 +1967,8 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 .blockcategories_footer {
 	padding:15px 10px;
 }
+.blockcategories_footer .category_footer {float:left;clear:none;}
+.blockcategories_footer .category_footer .list{float:left;}
 .blockcategories_footer ul ul {display:none !important}
 
 
