@@ -542,10 +542,11 @@ class TabCore extends ObjectModel
 				}
 			}
 		
-		//merge tab modules preferences from db with xml  
-		foreach($db_tab_module_list as $m)
-			if (!in_array($m, $modules_list))
-				$modules_list['slider_list'][] = $m['module'];
+		//merge tab modules preferences from db with xml
+		if (is_array($db_tab_module_list))		
+			foreach($db_tab_module_list as $m)
+				if (!in_array($m, $modules_list))
+					$modules_list['slider_list'][] = $m['module'];
 
 		return $modules_list;	
 	}
