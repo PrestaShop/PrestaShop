@@ -30,7 +30,7 @@
 	<div id="{if count($orderProducts) > 5}crossselling{else}crossselling_noscroll{/if}">
 		{if count($orderProducts) > 5}<a id="crossselling_scroll_left" title="{l s='Previous' mod='crossselling'}" href="javascript:{ldelim}{rdelim}">{l s='Previous' mod='crossselling'}</a>{/if}
 		<div id="crossselling_list">
-			<ul class="clearfix">
+			<ul class="clearfix" {if count($orderProducts) > 5}style="width: {math equation="width * nbImages" width=107 nbImages=$orderProducts|@count}px"{/if}>
 				{foreach from=$orderProducts item='orderProduct' name=orderProduct}
 				<li>
 					<a href="{$orderProduct.link}" title="{$orderProduct.name|htmlspecialchars}" class="lnk_img"><img src="{$orderProduct.image}" alt="{$orderProduct.name|htmlspecialchars}" /></a>
