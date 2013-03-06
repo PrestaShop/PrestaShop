@@ -293,19 +293,22 @@ class AuthControllerCore extends FrontController
 				// Add customer to the context
 				$this->context->customer = $customer;
 				
-				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
-				{
-					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
-					$this->context->cart = new Cart((int)$this->context->cookie->id_cart);
-				}					
+				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0) && $id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id))
+					$this->context->cart = new Cart($id_cart);
 				else
 				{
+					$this->context->cart->id_carrier = 0;								
 					$this->context->cart->setDeliveryOption(null);
 					$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));					
 					$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));					
 				}
+				$this->context->cart->id_customer = (int)$customer->id;				
 				$this->context->cart->secure_key = $customer->secure_key;
-				$this->context->cart->update();
+				if ($id_guest = (int)Guest::getFromCustomer($this->context->cart->id_customer))
+					$this->context->cart->id_guest = $id_guest;
+				$this->context->cart->save();				
+				$this->context->cookie->id_cart = (int)$this->context->cart->id;				
+				$this->context->cookie->update();
 				$this->context->cart->autosetProductAddress();
 
 				Hook::exec('actionAuthentication');
