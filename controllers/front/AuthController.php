@@ -304,8 +304,6 @@ class AuthControllerCore extends FrontController
 				}
 				$this->context->cart->id_customer = (int)$customer->id;				
 				$this->context->cart->secure_key = $customer->secure_key;
-				if ($id_guest = (int)Guest::getFromCustomer($this->context->cart->id_customer))
-					$this->context->cart->id_guest = $id_guest;
 				$this->context->cart->save();				
 				$this->context->cookie->id_cart = (int)$this->context->cart->id;				
 				$this->context->cookie->update();
