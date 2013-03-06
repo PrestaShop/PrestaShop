@@ -35,7 +35,7 @@ function update_customer_default_group()
 	preg_match($pattern, $content, $matches);
 	if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_'))
 			define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) AND is_numeric($matches[1]))? (int)$matches[1] : 3));
-	$ps_customer_group = $this->db->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name LIKE "PS_CUSTOMER_GROUP"', false);			
+	$ps_customer_group = DB::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name LIKE "PS_CUSTOMER_GROUP"', false);			
 	$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
 	$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';				
 	$content = str_replace($str_old, $str_new, $content);
