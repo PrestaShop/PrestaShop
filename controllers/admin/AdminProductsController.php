@@ -2876,13 +2876,15 @@ class AdminProductsControllerCore extends AdminController
 				'countries' => $countries,
 				'groups' => $groups,
 				'combinations' => $combinations,
-				'product' => $product,
 				'multi_shop' => Shop::isFeatureActive(),
 				'link' => new Link()
 			));
 		}
 		else
+		{
 			$this->displayWarning($this->l('You must save this product before adding specific pricing'));
+			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
+		}
 
 		// prices part
 		$data->assign(array(
