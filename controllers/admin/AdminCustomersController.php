@@ -59,7 +59,7 @@ class AdminCustomersControllerCore extends AdminController
 		{
 			$gender_file = 'genders/'.$gender->id.'.jpg';
 			if (file_exists(_PS_IMG_DIR_.$gender_file))
-				$genders_icon[$gender->id] = '../'.$gender_file;
+				$genders_icon[$gender->id] = array('src' => '../'.$gender_file, 'alt' => $gender->name);
 			else
 				$genders_icon[$gender->id] = $gender->name;
 			$genders[$gender->id] = $gender->name;
