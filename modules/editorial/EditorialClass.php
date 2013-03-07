@@ -60,7 +60,7 @@ class EditorialClass extends ObjectModel
 			// Lang fields
 			'body_title' =>				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
 			'body_subheading' =>		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
-			'body_paragraph' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'body_paragraph' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
 			'body_logo_subheading' =>	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
 		)
 	);
