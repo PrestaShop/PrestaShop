@@ -54,14 +54,15 @@ class AdminCustomersControllerCore extends AdminController
 		$this->default_form_language = $this->context->language->id;
 
 		$genders = array();
-		$genders_icon = array('default' => 'unknown.gif');
+		$genders_icon = array();
+		$genders_icon[] = array('src' => '../genders/Unknown.jpg', 'alt' => '');		
 		foreach (Gender::getGenders() as $gender)
 		{
 			$gender_file = 'genders/'.$gender->id.'.jpg';
 			if (file_exists(_PS_IMG_DIR_.$gender_file))
 				$genders_icon[$gender->id] = array('src' => '../'.$gender_file, 'alt' => $gender->name);
 			else
-				$genders_icon[$gender->id] = $gender->name;
+				$genders_icon[$gender->id] = array('src' => '../genders/Unknown.jpg', 'alt' => $gender->name);
 			$genders[$gender->id] = $gender->name;
 		}
 
