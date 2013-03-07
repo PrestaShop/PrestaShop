@@ -131,6 +131,7 @@ class Autoload
 		if ((file_exists($filename) && !is_writable($filename)) || !is_writable(dirname($filename)))
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
+			// Cannot use PrestaShopException in this context
 			die('/cache/class_index.php is not writable, please give write permissions (chmod 666) on this file.');
 		}
 		else
@@ -154,7 +155,8 @@ class Autoload
 			if (!$integrity_is_ok)
 			{
 				file_put_contents($filename, '<?php return array(); ?>');
-				throw new PrestaShopException('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
+				// Cannot use PrestaShopException in this context
+				die('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
 			}
 		}
 

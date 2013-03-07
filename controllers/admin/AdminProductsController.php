@@ -2876,13 +2876,16 @@ class AdminProductsControllerCore extends AdminController
 				'countries' => $countries,
 				'groups' => $groups,
 				'combinations' => $combinations,
-				'product' => $product,
 				'multi_shop' => Shop::isFeatureActive(),
 				'link' => new Link()
 			));
 		}
 		else
+		{
 			$this->displayWarning($this->l('You must save this product before adding specific pricing'));
+			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
+			$data->assign('ecotax_tax_excl', 0);
+		}
 
 		// prices part
 		$data->assign(array(
@@ -2893,7 +2896,6 @@ class AdminProductsControllerCore extends AdminController
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
 			'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),
-			'ecotax_tax_excl' => 0
 		));
 
 		$product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
