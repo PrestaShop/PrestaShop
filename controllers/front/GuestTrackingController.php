@@ -156,8 +156,8 @@ class GuestTrackingControllerCore extends FrontController
 			$order->deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($order->address_delivery, $order->dlv_adr_fields);
 			$order->currency = new Currency($order->id_currency);
 			$order->discounts = $order->getCartRules();
-			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)$order->addressInvoice->id_state) : false;
-			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)$order->addressDelivery->id_state) : false;
+			$order->invoiceState = (Validate::isLoadedObject($order->address_invoice) && $order->address_invoice->id_state) ? new State((int)$order->address_invoice->id_state) : false;
+			$order->deliveryState = (Validate::isLoadedObject($order->address_delivery) && $order->address_delivery->id_state) ? new State((int)$order->address_delivery->id_state) : false;
 			$order->products = $order->getProducts();
 			$order->customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 			Product::addCustomizationPrice($order->products, $order->customizedDatas);
