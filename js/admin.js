@@ -741,6 +741,7 @@ function showErrorMessage(msg, delay)
 $(document).ready(function()
 {
 	$('select.chosen').each(function(k, item){
+		$(item).val($(this).find('option[selected=selected]').val());
 		$(item).chosen();
 		if ($(item).hasClass('no-search'))
 			$(item).next().find('.chzn-search').hide();

@@ -4737,7 +4737,8 @@ class ProductCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` la
 				ON (la.`id_attribute` = a.`id_attribute` AND la.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE la.`url_name` IS NOT NULL AND la.`url_name` != \'\'
-			AND pa.`id_product` = '.(int)$id_product);
+			AND pa.`id_product` = '.(int)$id_product.'
+			AND pac.`id_product_attribute` = '.(int)$id_product_attribute);
 
 			if (!empty($nb_custom_values))
 			{
@@ -4780,6 +4781,7 @@ class ProductCore extends ObjectModel
 					ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				WHERE pa.`id_product` = '.(int)$id_product.'
+				AND pac.id_product_attribute = '.(int)$id_product_attribute.'
 				AND a.`id_attribute` NOT IN('.implode(', ', $tab_id_attribute).')');
 				$result = array_merge($values_not_custom, $result);
 			}
@@ -5213,6 +5215,23 @@ class ProductCore extends ObjectModel
 		);
 	}
 	
+	public static function getIdTaxRulesGroupMostUsed()
+	{
+		return Db::getInstance()->getValue('
+					SELECT id_tax_rules_group
+					FROM (
+						SELECT COUNT(*) n, product_shop.id_tax_rules_group
+						FROM '._DB_PREFIX_.'product p
+						'.Shop::addSqlAssociation('product', 'p').'
+						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
+						WHERE trg.active = 1
+						GROUP BY product_shop.id_tax_rules_group
+						ORDER BY n DESC
+						LIMIT 1
+					) most_used'
+				);
+	}
+
 	/**
 	 * For a given ean13 reference, returns the corresponding id
 	 *
