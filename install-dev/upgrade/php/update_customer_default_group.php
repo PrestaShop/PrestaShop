@@ -39,7 +39,9 @@ function update_customer_default_group()
 	$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
 	$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';				
 	$content = str_replace($str_old, $str_new, $content);
-	$result = (bool)file_put_contents($filename, $content);
+	$result = false;
+	if(file_exists($filename) && is_writable($filename))
+		$result = (bool)@file_put_contents($filename, $content);
 	if($result === true && file_exists($filename) && file_exists($filename_old))
 	{
 		@unlink($filename_old);

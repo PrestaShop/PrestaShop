@@ -44,3 +44,5 @@ ALTER TABLE `PREFIX_cart` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0 AFTER
 
 ALTER TABLE `PREFIX_address` CHANGE `phone` `phone` varchar(32) default NULL;
 ALTER TABLE `PREFIX_address` CHANGE `phone_mobile` `phone_mobile` varchar(32) default NULL;
+
+/* PHP:update_genders_images(); */;
