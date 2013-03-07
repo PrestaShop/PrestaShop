@@ -330,6 +330,7 @@ class FrontControllerCore extends Controller
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
 			'roundMode' => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
 			'use_taxes' => (int)Configuration::get('PS_TAX'),
+			'show_taxes' => (int)(Configuration::get('PS_TAX_DISPLAY') == 1 && (int)Configuration::get('PS_TAX')),
 			'display_tax_label' => (bool)$display_tax_label,
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),

@@ -1201,11 +1201,11 @@ class AdminControllerCore extends Controller
 				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
 		
 		$notifications_type = array('errors', 'warnings', 'informations', 'confirmations');
-		foreach($notifications_type as $type)		
+		foreach($notifications_type as $type)
 			if ($this->json)
-				$this->context->smarty->assign($type, Tools::jsonEncode($this->$type));
+				$this->context->smarty->assign($type, Tools::jsonEncode(array_unique($this->$type)));
 			else
-				$this->context->smarty->assign($type, $this->$type);
+				$this->context->smarty->assign($type, array_unique($this->$type));
 
 		if ($this->json)
 			$this->context->smarty->assign('page', Tools::jsonEncode($page));

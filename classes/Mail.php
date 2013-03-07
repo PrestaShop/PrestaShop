@@ -65,7 +65,7 @@ class MailCore
 			'PS_MAIL_SMTP_PORT',
 			'PS_MAIL_METHOD',
 			'PS_MAIL_TYPE'
-		));
+		), null, null, $id_shop);
 		
 		// Returns immediatly if emails are deactivated
 		if ($configuration['PS_MAIL_METHOD'] == 3)
@@ -183,7 +183,7 @@ class MailCore
 
 			if (!$connection)
 				return false;
-			$swift = new Swift($connection, Configuration::get('PS_MAIL_DOMAIN'));
+			$swift = new Swift($connection, Configuration::get('PS_MAIL_DOMAIN', null, null, $id_shop));
 			/* Get templates content */
 			$iso = Language::getIsoById((int)$id_lang);
 			if (!$iso)
@@ -197,13 +197,13 @@ class MailCore
 			$override_mail = false;
 
 			// get templatePath
-			if (preg_match('#'.__PS_BASE_URI__.'modules/#', $template_path) && preg_match('#modules/([a-z0-9_-]+)/#ui', $template_path, $res))
+			if (preg_match('#'.__PS_BASE_URI__.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
 				$module_name = $res[1];
 
 			if ($module_name !== false && (file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.txt') ||
 				file_exists($theme_path.'modules/'.$module_name.'/mails/'.$template.'.html')))
 				$template_path = $theme_path.'modules/'.$module_name.'/mails/';
-			else if (file_exists($theme_path.'mails/'.$template.'.txt') || file_exists($theme_path.'mails/'.$template.'.html'))
+			elseif (file_exists($theme_path.'mails/'.$template.'.txt') || file_exists($theme_path.'mails/'.$template.'.html'))
 			{
 				$template_path = $theme_path.'mails/';
 				$override_mail  = true;
@@ -229,19 +229,19 @@ class MailCore
 				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
 
 			/* Create mail and attach differents parts */
-			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME').'] '.$subject);
+			$message = new Swift_Message('['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject);
 
 			/* Set Message-ID - getmypid() is blocked on some hosting */
 			$message->setId(Mail::generateId());
 
 			$message->headers->setEncoding('Q');
 
-			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL')))
-				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL');
+			if (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop)))
+				$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $id_shop);
 			else
 			{
-				if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
-					$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
+				if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop)))
+					$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
 				else
 					$template_vars['{shop_logo}'] = '';
 			}
@@ -250,12 +250,12 @@ class MailCore
 			if (isset($logo))
 				$template_vars['{shop_logo}'] = $message->attach(new Swift_Message_EmbeddedFile(new Swift_File($logo), null, ImageManager::getMimeTypeByExtension($logo)));
 
-			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME'));
+			$template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $id_shop));
 			$template_vars['{shop_url}'] = Tools::getShopDomain(true, true).__PS_BASE_URI__.'index.php';
 			$template_vars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, Context::getContext()->language->id);
 			$template_vars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, Context::getContext()->language->id);
 			$template_vars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, Context::getContext()->language->id);
-			$template_vars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR'));
+			$template_vars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $id_shop));
 			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $template_vars)), 'decorator');
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
 				$message->attach(new Swift_Message_Part($template_txt, 'text/plain', '8bit', 'utf-8'));

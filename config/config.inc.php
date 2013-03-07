@@ -141,13 +141,6 @@ else
 
 $context->cookie = $cookie;
 
-/* if the language stored in the cookie is not available language, use default language */
-if (isset($cookie->id_lang) && $cookie->id_lang)
-	$language = new Language($cookie->id_lang);
-if (!isset($language) || !Validate::isLoadedObject($language))
-	$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-$context->language = $language;
-
 /* Create employee if in BO, customer else */
 if (defined('_PS_ADMIN_DIR_'))
 {
@@ -158,10 +151,19 @@ if (defined('_PS_ADMIN_DIR_'))
 	if ($employee->id_profile != _PS_ADMIN_PROFILE_)
 		Shop::cacheShops(true);
 
+	$language = new Language($employee->id_lang);
+	$context->language = $language;
 	$cookie->id_lang = (int)$employee->id_lang;
 }
 else
 {
+	/* if the language stored in the cookie is not available language, use default language */
+	if (isset($cookie->id_lang) && $cookie->id_lang)
+		$language = new Language($cookie->id_lang);
+	if (!isset($language) || !Validate::isLoadedObject($language))
+		$language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+	$context->language = $language;
+
 	if (isset($cookie->id_customer) && (int)$cookie->id_customer)
 	{
 		$customer = new Customer($cookie->id_customer);

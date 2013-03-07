@@ -169,7 +169,7 @@ class AdminHomeControllerCore extends AdminController
 			return;
 
 		$shop = Context::getContext()->shop;
-		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
+		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false)
 			$this->displayWarning($this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
 			$this->l('This is different from the main shop domain name set in the "Multistore" page under the "Advanced Parameters" menu:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#conf_id_domain">'.
@@ -542,8 +542,12 @@ class AdminHomeControllerCore extends AdminController
 			{
 				// Cache the logo
 				if (!file_exists('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png'))
-					@copy(htmlentities((string)$partner->logo), '../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png');
-			
+				{
+					$logo = @Tools::file_get_contents(htmlentities((string)$partner->logo));
+					if (sizeof($logo) > 0)
+						file_put_contents('../img/tmp/preactivation_'.htmlentities((string)$partner->module).'.png', $logo);
+				}
+
 				// Check if module is not already installed and configured
 				$display = 0;
 				if (file_exists('../config/xml/default_country_modules_list.xml') && filesize('../config/xml/default_country_modules_list.xml') > 10)
@@ -619,7 +623,7 @@ class AdminHomeControllerCore extends AdminController
 		$firstname = $employee->firstname;
 		$lastname = $employee->lastname;
 		$email = $employee->email;
-		$return = @file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+		$return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
 		die($return);
 	}
 
@@ -632,7 +636,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&ps_version='.urlencode(_PS_VERSION_), false, $stream_context);
+		$content = @Tools::file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&ps_version='.urlencode(_PS_VERSION_), false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
