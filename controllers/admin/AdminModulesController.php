@@ -26,7 +26,6 @@
 
 class AdminModulesControllerCore extends AdminController
 {
-
 	/*
 	** @var array map with $_GET keywords and their callback
 	*/

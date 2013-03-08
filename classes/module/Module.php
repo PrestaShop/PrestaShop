@@ -1164,10 +1164,10 @@ abstract class ModuleCore
 							$item->active = 0;
 							if (isset($modaddons->img))
 							{
-								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-									if (!@copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg'))
-										@copy('../img/404.gif', '../img/tmp/'.md5($modaddons->name).'.jpg');
-								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								if (!file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
+									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
+										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg');
+								if (file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
 							}
 							if ($item->type == 'addonsMustHave')
@@ -1178,10 +1178,10 @@ abstract class ModuleCore
 								foreach ($prices as $currency => $price)
 									if ($id_currency = Currency::getIdByIsoCode($currency))
 									{
-											$item->price = (float)$price;
-											$item->id_currency = (int)$id_currency;
-											if ($id_default_currency == $id_currency)
-												break;
+										$item->price = (float)$price;
+										$item->id_currency = (int)$id_currency;
+										if ($id_default_currency == $id_currency)
+											break;
 									}
 							}
 							$module_list[] = $item;
