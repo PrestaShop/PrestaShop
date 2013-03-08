@@ -51,6 +51,8 @@ class TranslateCore
 		if ($_LANGADM == null)
 		{
 			$iso = Context::getContext()->language->iso_code;
+			if (empty($iso))
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
