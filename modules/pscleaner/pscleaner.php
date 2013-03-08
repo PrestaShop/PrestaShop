@@ -85,7 +85,7 @@ class PSCleaner extends Module
 		
 		// Simple Cascade Delete
 		$queries = array(
-			// 0 => DELETE FROM __table__, 1 => WHERE __id__ NOT IN, 2 => NOT IN __table__, 3 => __id__ used in the "NOT IN" table
+			// 0 => DELETE FROM __table__, 1 => WHERE __id__ NOT IN, 2 => NOT IN __table__, 3 => __id__ used in the "NOT IN" table, 4 => module_name
 			array('access', 'id_profile', 'profile', 'id_profile'),
 			array('access', 'id_tab', 'tab', 'id_tab'),
 			array('accessory', 'id_product_1', 'product', 'id_product'),
@@ -138,7 +138,7 @@ class PSCleaner extends Module
 			array('delivery', 'id_shop_group', 'shop_group', 'id_shop_group'),
 			array('delivery', 'id_carrier', 'carrier', 'id_carrier'),
 			array('delivery', 'id_zone', 'zone', 'id_zone'),
-			array('editorial', 'id_shop', 'shop', 'id_shop'),
+			array('editorial', 'id_shop', 'shop', 'id_shop', 'editorial'),
 			array('favorite_product', 'id_product', 'product', 'id_product'),
 			array('favorite_product', 'id_customer', 'customer', 'id_customer'),
 			array('favorite_product', 'id_shop', 'shop', 'id_shop'),
@@ -244,10 +244,13 @@ class PSCleaner extends Module
 		$queries = self::bulle($queries);
 		foreach ($queries as $query_array)
 		{
-			$query = 'DELETE FROM `'._DB_PREFIX_.$query_array[0].'` WHERE `'.$query_array[1].'` NOT IN (SELECT `'.$query_array[3].'` FROM `'._DB_PREFIX_.$query_array[2].'`)';
-			$db->Execute($query);
-			if ($affected_rows = $db->Affected_Rows())
-				$logs[$query] = $affected_rows;
+			if(!isset($query_array[4]) || (isset($query_array[4]) && Module::isInstalled($query_array[4])))
+			{
+				$query = 'DELETE FROM `'._DB_PREFIX_.$query_array[0].'` WHERE `'.$query_array[1].'` NOT IN (SELECT `'.$query_array[3].'` FROM `'._DB_PREFIX_.$query_array[2].'`)';
+				$db->Execute($query);
+				if ($affected_rows = $db->Affected_Rows())
+					$logs[$query] = $affected_rows;
+			}
 		}
 
 		// _lang table cleaning
@@ -277,7 +280,7 @@ class PSCleaner extends Module
 			$table = str_replace('_shop', '', $table_shop);
 			$id_table = 'id_'.preg_replace('/^'._DB_PREFIX_.'/', '', $table);
 
-			if (in_array($table_shop, array('ps2_carrier_tax_rules_group_shop')))
+			if (in_array($table_shop, array(_DB_PREFIX_.'carrier_tax_rules_group_shop')))
 				continue;
 			
 			$query = 'DELETE FROM `'.bqSQL($table_shop).'` WHERE `'.bqSQL($id_table).'` NOT IN (SELECT `'.bqSQL($id_table).'` FROM `'.bqSQL($table).'`)';
