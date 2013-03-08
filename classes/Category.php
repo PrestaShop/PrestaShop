@@ -1161,7 +1161,7 @@ class CategoryCore extends ObjectModel
 				UPDATE `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 					ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-				SET cs.`position` = '.(int)$i.'
+				SET cs.`position` = '.(int)($i+1).'
 				WHERE c.`id_parent` = '.(int)$id_category_parent.'
 				AND c.`id_category` = '.(int)$result[$i]['id_category'];
 			$return &= Db::getInstance()->execute($sql);
