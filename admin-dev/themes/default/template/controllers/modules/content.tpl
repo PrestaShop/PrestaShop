@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 {if isset($module_content)}
 	{$module_content}
 {else}
