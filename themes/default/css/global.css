@@ -1264,7 +1264,7 @@ a.iframe {font-weight:bold}
 #order-opc #opc_delivery_methods h3 {margin-top:20px;}
 #order-opc #opc_delivery_methods textarea {
 	height:60px;
-	width:755px;
+	width:723px;
 	border:1px solid #ccc
 }
 
@@ -1967,6 +1967,8 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 .blockcategories_footer {
 	padding:15px 10px;
 }
+.blockcategories_footer .category_footer {float:left;clear:none;}
+.blockcategories_footer .category_footer .list{float:left;}
 .blockcategories_footer ul ul {display:none !important}
 
 

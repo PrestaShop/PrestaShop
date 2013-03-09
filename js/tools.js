@@ -290,4 +290,6 @@ $().ready(function()
 	{
 		$(this).find('.hideOnSubmit').hide();
 	});
+	// attribute target="_blank" is not W3C compliant
+	$('a._blank').attr('target', '_blank');
 });

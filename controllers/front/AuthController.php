@@ -43,7 +43,7 @@ class AuthControllerCore extends FrontController
 		parent::init();
 
 		if (!Tools::getIsset('step') && $this->context->customer->isLogged() && !$this->ajax)
-			Tools::redirect('index.php?controller=my-account');
+			Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 
 		if (Tools::getValue('create_account'))
 			$this->create_account = true;
@@ -293,19 +293,20 @@ class AuthControllerCore extends FrontController
 				// Add customer to the context
 				$this->context->customer = $customer;
 				
-				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
-				{
-					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
-					$this->context->cart = new Cart((int)$this->context->cookie->id_cart);
-				}					
+				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0) && $id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id))
+					$this->context->cart = new Cart($id_cart);
 				else
 				{
+					$this->context->cart->id_carrier = 0;								
 					$this->context->cart->setDeliveryOption(null);
 					$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));					
 					$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));					
 				}
+				$this->context->cart->id_customer = (int)$customer->id;				
 				$this->context->cart->secure_key = $customer->secure_key;
-				$this->context->cart->update();
+				$this->context->cart->save();				
+				$this->context->cookie->id_cart = (int)$this->context->cart->id;				
+				$this->context->cookie->update();
 				$this->context->cart->autosetProductAddress();
 
 				Hook::exec('actionAuthentication');
@@ -318,7 +319,7 @@ class AuthControllerCore extends FrontController
 				{
 					if ($back = Tools::getValue('back'))
 						Tools::redirect(html_entity_decode($back));
-					Tools::redirect('index.php?controller=my-account');
+					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 				}
 			}
 		}
@@ -448,12 +449,15 @@ class AuthControllerCore extends FrontController
 							);
 							die(Tools::jsonEncode($return));
 						}
+
+						if ($back = Tools::getValue('back'))
+							Tools::redirect(html_entity_decode($back));
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
 							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 						// else : redirection to the account
 						else
-							Tools::redirect('index.php?controller=my-account');
+							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 					}
 					else
 						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
@@ -591,15 +595,16 @@ class AuthControllerCore extends FrontController
 							// if registration type is in two steps, we redirect to register address
 							if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 								Tools::redirect('index.php?controller=address');
+								
 							if ($back = Tools::getValue('back'))
-								Tools::redirect($back);
-							Tools::redirect('index.php?controller=my-account');
+								Tools::redirect(html_entity_decode($back));								
+
 							// redirection: if cart is not empty : redirection to the cart
 							if (count($this->context->cart->getProducts(true)) > 0)
 								Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 							// else : redirection to the account
 							else
-								Tools::redirect('index.php?controller=my-account');
+								Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 						}
 					}
 				}

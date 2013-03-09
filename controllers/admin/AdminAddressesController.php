@@ -75,10 +75,11 @@ class AdminAddressesControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		$this->toolbar_btn['import'] = array(
-			'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
-			'desc' => $this->l('Import')
-		);
+		if (!$this->display)
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type='.$this->table,
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function renderForm()

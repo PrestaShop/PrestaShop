@@ -553,11 +553,31 @@ class StockAvailableCore extends ObjectModel
 						return true;
 			}
 
-		return Db::getInstance()->execute('
+		$res =  Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'stock_available
 		WHERE id_product = '.(int)$id_product.
 		($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
 		StockAvailable::addSqlShopRestriction(null, $shop));
+		
+		if ($id_product_attribute)
+		{
+			if ($shop === null || !Validate::isLoadedObject($shop))
+			{
+				$shop_datas = array();
+				StockAvailable::addSqlShopParams($shop_datas);
+				$id_shop = (int)$shop_datas['id_shop'];
+			}
+			else
+				$id_shop = (int)$shop->id;
+
+			$stock_available = new StockAvailable();
+			$stock_available->id_product = (int)$id_product;
+			$stock_available->id_product_attribute = (int)$id_product;
+			$stock_available->id_shop = (int)$id_shop;
+			$stock_available->postSave();
+		}
+
+		return $res;
 	}
 
 	/**

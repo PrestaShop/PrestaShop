@@ -12,7 +12,7 @@ UPDATE `PREFIX_customer` c, `PREFIX_orders` o SET c.id_lang = o.id_lang WHERE c.
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCartRules&addcart_rule' WHERE `link` = 'index.php?tab=AdminDiscounts&adddiscount';
 
-ALTER TABLE `PREFIX_order_cart_rule` ADD `free_shipping` BOOLEAN NOT NULL DEFAULT FALSE AFTER `value_tax_excl`;
+ALTER TABLE `PREFIX_order_cart_rule` ADD `free_shipping` tinyint(1) NOT NULL DEFAULT 0 AFTER `value_tax_excl`;
 
 UPDATE `PREFIX_order_cart_rule` ocr, `PREFIX_cart_rule` cr SET ocr.free_shipping = 1 WHERE ocr.id_cart_rule = cr.id_cart_rule AND cr.free_shipping = 1;
 
@@ -37,3 +37,12 @@ ALTER TABLE `PREFIX_stock_available` DROP INDEX `product_sqlstock`;
 ALTER TABLE `PREFIX_stock_available` ADD UNIQUE `product_sqlstock` (`id_product`, `id_product_attribute`, `id_shop`, `id_shop_group`);
 
 UPDATE PREFIX_configuration SET `value` = '8388608' WHERE `name` = 'PS_PRODUCT_PICTURE_MAX_SIZE' AND `value` <= '524288';
+
+ALTER TABLE `PREFIX_guest` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE `PREFIX_orders` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0 AFTER `gift_message`;
+ALTER TABLE `PREFIX_cart` ADD `mobile_theme` tinyint(1) NOT NULL DEFAULT 0 AFTER `gift_message`;
+
+ALTER TABLE `PREFIX_address` CHANGE `phone` `phone` varchar(32) default NULL;
+ALTER TABLE `PREFIX_address` CHANGE `phone_mobile` `phone_mobile` varchar(32) default NULL;
+
+/* PHP:update_genders_images(); */;

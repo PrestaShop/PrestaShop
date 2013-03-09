@@ -237,7 +237,7 @@ class AddressControllerCore extends FrontController
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
-            if (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+            if ((bool)(Tools::getValue('select_address', false)) == true OR Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
             { 
                 $this->context->cart->id_address_invoice = (int)$address->id;
                 $this->context->cart->update();                

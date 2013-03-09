@@ -218,7 +218,7 @@ class AdminEmailsControllerCore extends AdminController
 			$smtpChecked = (trim(Tools::getValue('mailMethod')) == 'smtp');
 			$smtpServer = Tools::getValue('smtpSrv');
 			$content = urldecode(Tools::getValue('testMsg'));
-			$content = utf8_encode(html_entity_decode($content));
+			$content = html_entity_decode($content);
 			$subject = urldecode(Tools::getValue('testSubject'));
 			$type = 'text/html';
 			$to = Tools::getValue('testEmail');

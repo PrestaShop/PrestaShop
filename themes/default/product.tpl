@@ -80,6 +80,7 @@ var stock_management = {$stock_management|intval};
 	{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 {/if}
 
+
 var productPriceWithoutReduction = '{$productPriceWithoutReduction}';
 var productPrice = '{$productPrice}';
 
@@ -200,7 +201,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 					<li id="thumbnail_{$image.id_image}">
 						<a href="{$link->getImageLink($product->link_rewrite, $imageIds, thickbox_default)}" rel="other-views" class="thickbox {if $smarty.foreach.thumbnails.first}shown{/if}" title="{$image.legend|htmlspecialchars}">
-							<img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
+							<img class="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" height="{$mediumSize.height}" width="{$mediumSize.width}" />
 						</a>
 					</li>
 					{/foreach}
@@ -306,10 +307,14 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 								</ul>
 								<input type="hidden" class="color_pick_hidden" name="{$groupName}" value="{$default_colorpicker}" />
 							{elseif ($group.group_type == 'radio')}
-								{foreach from=$group.attributes key=id_attribute item=group_attribute}
-									<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
-									<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span><br/>
-								{/foreach}
+								<ul>
+									{foreach from=$group.attributes key=id_attribute item=group_attribute}
+										<li>
+											<input type="radio" class="attribute_radio" name="{$groupName}" value="{$id_attribute}" {if ($group.default == $id_attribute)} checked="checked"{/if} onclick="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if}">
+											<span>{$group_attribute|escape:'htmlall':'UTF-8'}</span>
+										</li>
+									{/foreach}
+								</ul>
 							{/if}
 							</div>
 						</fieldset>
@@ -373,14 +378,6 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 			{/if}
 
 			<div class="price">
-				{if !$priceDisplay || $priceDisplay == 2}
-					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
-				{elseif $priceDisplay == 1}
-					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-					{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
-				{/if}
-
 				<p class="our_price_display">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display">{convertPrice price=$productPrice}</span>
@@ -535,7 +532,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 	{/if}
 	{if isset($accessories) AND $accessories}
 		<!-- accessories -->
-		<ul id="idTab4" class="bullet">
+		<div id="idTab4" class="bullet">
 			<div class="block products_block accessories_block clearfix">
 				<div class="block_content">
 					<ul>
@@ -568,7 +565,7 @@ var fieldRequired = '{l s='Please fill in all the required fields before saving 
 					</ul>
 				</div>
 			</div>
-		</ul>
+		</div>
 	{/if}
 
 	<!-- Customizable products -->

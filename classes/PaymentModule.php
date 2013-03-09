@@ -227,6 +227,7 @@ abstract class PaymentModuleCore extends Module
 					$order->recyclable = $this->context->cart->recyclable;
 					$order->gift = (int)$this->context->cart->gift;
 					$order->gift_message = $this->context->cart->gift_message;
+					$order->mobile_theme = $this->context->cart->mobile_theme;
 					$order->conversion_rate = $this->context->currency->conversion_rate;
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
@@ -320,7 +321,7 @@ abstract class PaymentModuleCore extends Module
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
-				if (!$order_creation_failed & isset($order->id))
+				if (!$order_creation_failed && isset($order->id))
 				{
 					if (!$secure_key)
 						$message .= '<br />'.Tools::displayError('Warning: the secure key is empty, check your payment account before validation');

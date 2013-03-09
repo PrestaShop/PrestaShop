@@ -82,7 +82,7 @@ class Loyalty extends Module
 		Configuration::updateValue('PS_LOYALTY_VOUCHER_DETAILS', $conf);
 
 		$category_config = '';
-		$categories = Category::getSimpleCategories((int)(Configuration::get('PS_LANG_DEFAULT')));
+		$categories = Category::getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($categories as $category)
 			$category_config .= (int)$category['id_category'].',';
 		$category_config = rtrim($category_config, ',');

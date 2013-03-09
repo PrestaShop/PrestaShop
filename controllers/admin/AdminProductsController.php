@@ -1401,6 +1401,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateProductImageShopAsso()
 	{
+		$id_product = Tools::getValue('id_product');
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
 				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
@@ -1408,18 +1409,33 @@ class AdminProductsControllerCore extends AdminController
 				$res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
 		
 		// Clean covers in image table
-		$count_cover_image = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image i INNER JOIN '._DB_PREFIX_.'image_shop is ON (i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.') WHERE i.cover = 1');
+		$count_cover_image = Db::getInstance()->getValue('
+			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i 
+			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.') 
+			WHERE i.cover = 1 AND `id_product` = '.(int)$id_product);
+		
+		$id_image = Db::getInstance()->getValue('
+			SELECT i.`id_image` FROM '._DB_PREFIX_.'image i 
+			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.') 
+			WHERE `id_product` = '.(int)$id_product);
+		
 		if ($count_cover_image < 1)
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 1 WHERE i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT 1');
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product.' LIMIT 1');
+		
 		if ($count_cover_image > 1)
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i, '._DB_PREFIX_.'image_shop is SET i.cover = 0 WHERE cover = 1 AND i.id_image = is.id_image AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image - 1));
-	
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 0 WHERE i.id_image <> '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product);
+			
 		// Clean covers in image_shop table
-		$count_cover_image_shop = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'image_shop is WHERE is.id_shop = '.(int)$id_shop.' AND is.cover = 1');
+		$count_cover_image_shop = Db::getInstance()->getValue('
+			SELECT COUNT(*) 
+			FROM '._DB_PREFIX_.'image_shop ish 
+			INNER JOIN '._DB_PREFIX_.'image i ON (i.id_image = ish.id_image AND i.`id_product` = '.(int)$id_product.')
+			WHERE ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
+		
 		if ($count_cover_image_shop < 1)
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 1 WHERE is.id_shop =  '.(int)$id_shop.' LIMIT 1');
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
 		if ($count_cover_image_shop > 1)
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop is SET is.cover = 0 WHERE is.cover = 1 AND is.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
 
 		if ($res)
 			$this->jsonConfirmation($this->_conf[27]);
@@ -2860,13 +2876,16 @@ class AdminProductsControllerCore extends AdminController
 				'countries' => $countries,
 				'groups' => $groups,
 				'combinations' => $combinations,
-				'product' => $product,
 				'multi_shop' => Shop::isFeatureActive(),
 				'link' => new Link()
 			));
 		}
 		else
+		{
 			$this->displayWarning($this->l('You must save this product before adding specific pricing'));
+			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
+			$data->assign('ecotax_tax_excl', 0);
+		}
 
 		// prices part
 		$data->assign(array(
@@ -2877,7 +2896,6 @@ class AdminProductsControllerCore extends AdminController
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
 			'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),
-			'ecotax_tax_excl' => 0
 		));
 
 		$product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);

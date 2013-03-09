@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -68,11 +68,13 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/(<[a-zA-Z0-9]+)((\s?[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s?)*)>/',
 				array('Media', 'minifyHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
-			$html_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'));
+			if (trim($minified_content = Minify_HTML::minify($html_content, array('xhtml', 'cssMinifier', 'jsMinifier'))) !=  '')
+				$html_content = $minified_content;
 
 			return $html_content;
 		}
@@ -101,7 +103,8 @@ class MediaCore
 			$html_content = preg_replace_callback(
 				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i',
 				array('Media', 'packJSinHTMLpregCallback'),
-				$html_content);
+				$html_content,
+				Media::getBackTrackLimit());
 
 			// If the string is too big preg_replace return an error
 			// In this case, we don't compress the content
@@ -149,10 +152,10 @@ class MediaCore
 		$current_css_file = $fileuri;
 		if (strlen($css_content) > 0)
 		{
-			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content);
-			$css_content = preg_replace_callback('#url\((?!data:)(?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content); 
+			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, Media::getBackTrackLimit());
+			$css_content = preg_replace_callback('#url\((?!data:)(?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, Media::getBackTrackLimit()); 
 
-			$css_content = preg_replace('#\s+#', ' ', $css_content);
+			$css_content = preg_replace('#\s+#', ' ', $css_content, Media::getBackTrackLimit());
 			$css_content = str_replace("\t", '', $css_content);
 			$css_content = str_replace("\n", '', $css_content);
 			//$css_content = str_replace('}', "}\n", $css_content);
@@ -471,6 +474,18 @@ class MediaCore
 		return $css_files;
 	}
 
+	public static function getBackTrackLimit()
+	{
+		static $limit = null;
+		if ($limit === null)
+		{
+			$limit = @ini_get('pcre.backtrack_limit');
+			if (!$limit)
+				$limit = -1;
+		}
+
+		return $limit;
+	}
 
 	/**
 	* Combine Compress and Cache (ccc) JS calls

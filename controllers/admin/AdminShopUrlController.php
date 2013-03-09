@@ -360,6 +360,10 @@ class AdminShopUrlControllerCore extends AdminController
 	public function processAdd()
 	{
 		$object = $this->loadObject(true);
+				
+		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+			$this->errors[] = Tools::displayError('A shop URL that use this domain and uri already exists');
+		
 		if ($object->id && Tools::getValue('main'))
 			$object->setMain();
 

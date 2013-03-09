@@ -50,6 +50,32 @@ class AdminPreferencesControllerCore extends AdminController
 					'name' => $this->l('classical')
 				)
 			);
+			$activities1 = array(
+				0 => $this->l('-- Please choose your main activity --'),
+				1 => $this->l('Adult'),
+				2 => $this->l('Animals and Pets'),
+				3 => $this->l('Art and Culture'),
+				4 => $this->l('Babies'),
+				5 => $this->l('Beauty and Personal Care'),
+				6 => $this->l('Cars'),
+				7 => $this->l('Computer Hardware and Software'),
+				8 => $this->l('Download'),
+				9 => $this->l('Fashion and accessories'),
+				10 => $this->l('Flowers, Gifts and Crafts'),
+				11 => $this->l('Food and beverage'),
+				12 => $this->l('HiFi, Photo and Video'),
+				13 => $this->l('Home and Garden'),
+				14 => $this->l('Home Appliances'),
+				15 => $this->l('Jewelry'),
+				16 => $this->l('Mobile and Telecom'),
+				17 => $this->l('Services'),
+				18 => $this->l('Shoes and accessories'),
+				19 => $this->l('Sport and Entertainment'),
+				20 => $this->l('Travel')
+			);
+			$activities2 = array();
+			foreach ($activities1 as $value => $name)
+				$activities2[] = array('value' => $value, 'name' => $name);
 
 			$fields = array(
 				'PS_SSL_ENABLED' => array(
@@ -92,6 +118,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'cast' => 'intval',
 					'type' => 'bool',
 					'visibility' => Shop::CONTEXT_ALL
+				),
+				'PS_SHOP_ACTIVITY' => array(
+					'title' => $this->l('Main Shop Activity'),
+					'validation' => 'isInt',
+					'cast' => 'intval',
+					'type' => 'select',
+					'list' => $activities2,
+					'identifier' => 'value'
 				),
 			);
 
