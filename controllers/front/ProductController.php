@@ -26,6 +26,7 @@
 
 class ProductControllerCore extends FrontController
 {
+	public $php_self = 'product';
 	/**
 	 * @var Product
 	 */
