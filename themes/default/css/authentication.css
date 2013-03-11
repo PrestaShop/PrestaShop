@@ -68,14 +68,9 @@
 	font-size: 12px;
 	color:#666;
 }
-#account-creation_form span.form_info {
+#account-creation_form span.form_info, #account-creation_form p.inline-infos {
 	display:block;
-	margin:5px 0 0 265px;
-	color:#666;
-}
-#account-creation_form p.inline-infos {
-	margin:0 0 0 100px !important;
-	font-size:12px;
+	margin:5px 0 0 265px!important;
 	color:#666;
 }
 #account-creation_form .id_state, #account-creation_form .dni, #account-creation_form .postcode {
