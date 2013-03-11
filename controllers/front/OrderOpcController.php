@@ -321,9 +321,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'errorTOS' => Tools::displayError('You must accept the Terms of Service before', false),
 			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) && $_GET['isPaymentStep']),
 			'genders' => Gender::getGenders(),
-		));
-		/* Call a hook to display more information on form */
-		$this->context->smarty->assign(array(
+			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
 			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 		));
