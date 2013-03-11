@@ -134,8 +134,8 @@ class CombinationCore extends ObjectModel
 
 	public function setAttributes($ids_attribute)
 	{
-		if ($this->deleteAssociations())
-		{
+		$result = $this->deleteAssociations();
+		if ($result && !empty($ids_attribute)) {
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
 				$sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
@@ -144,10 +144,8 @@ class CombinationCore extends ObjectModel
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sql_values)
 			);
-
-			return $result;
 		}
-		return false;
+		return $result;
 	}
 
 	public function setWsProductOptionValues($values)
