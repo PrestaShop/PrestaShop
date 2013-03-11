@@ -551,8 +551,8 @@ $(document).ready(function() {
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
-		<p class="text">
-			<label for="phone_mobile">{l s='Mobile phone'} {if $one_phone_at_least}<sup>*</sup>{/if}</label>
+		<p class="{if $one_phone_at_least}required {/if} text">
+			<label for="phone_mobile">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">

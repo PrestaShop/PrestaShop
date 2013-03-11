@@ -70,9 +70,9 @@
 	color:#666
 }
 #new_account_form span.form_info,
-#new_account_form span.inline-infos {
+#new_account_form span.inline-infos, #new_account_form p.inline-infos {
 	display:block;
-	margin:5px 0 0 265px;
+	margin:5px 0 0 265px!important;
 	color:#666
 }
 #new_account_form .id_state, #new_account_form .dni, #new_account_form .postcode {
