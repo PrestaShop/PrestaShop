@@ -53,31 +53,67 @@ class PSCleaner extends Module
 		if (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
-			$html .= $this->l('Catalog truncated').'<br /><br />';
+			$html .= '<div class="conf">'.$this->l('Catalog truncated').'</div>';
 		}
 		if (Tools::isSubmit('submitTruncateSales'))
 		{
 			self::truncate('sales');
-			$html .= $this->l('Orders and customers truncated').'<br /><br />';
+			$html .= '<div class="conf">'.$this->l('Orders and customers truncated').'</div>';
 		}
 
 		$html .= '
-		<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend>'.$this->l('Functional integrity constraints').'</legend>
-				<input type="submit" class="button" name="submitCheckAndFix" value="'.$this->l('Check & fix').'" />
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#submitTruncateCatalog").submit(function(){
+					if (!$(\'#checkTruncateCatalog\').attr(\'checked\'))
+						alert(\''.addslashes($this->l('Please tick the checkbox above')).'\');
+					else if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all catalog data?')).'\'))
+						return true; 
+					return false;
+				});
+				$("#submitTruncateSales").submit(function(){
+					if (!$(\'#checkTruncateSales\').attr(\'checked\'))
+						alert(\''.addslashes($this->l('Please tick the checkbox above')).'\');
+					else if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all sales data?')).'\'))
+						return true; 
+					return false;
+				});
+			});
+		</script>
+		<form id="submitTruncateCatalog" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
+			<fieldset><legend>'.$this->l('Catalog').'</legend>
+				<p>
+					<label style="float:none;width:auto">
+						<input id="checkTruncateCatalog" type="checkbox" />
+						'.$this->l('I understand that all the catalog data will be removed without possible rollback:').'
+						'.$this->l('products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...').'
+					</label>
+				</p>
+				<input type="submit" class="button" name="submitTruncateCatalog" value="'.$this->l('Delete catalog').'" />
+			</fieldset>
+		</form>
+		<br /><br />
+		<form id="submitTruncateSales" action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
+			<fieldset><legend>'.$this->l('Orders and customers').'</legend>
+				<p>
+					<label style="float:none;width:auto">
+						<input id="checkTruncateSales" type="checkbox" />
+						'.$this->l('I understand that all the orders and customers will be removed without possible rollback:').'
+						'.$this->l('customers, carts, orders, connections, guests, messages, stats...').'
+					</label>
+				</p>
+				<input type="submit" class="button" id="submitTruncateSales" name="submitTruncateSales" value="'.$this->l('Delete orders & customers').'"/>
 			</fieldset>
 		</form>
 		<br /><br />
 		<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset><legend>'.$this->l('Data').'</legend>
-				<input type="submit" class="button" name="submitTruncateCatalog" value="'.$this->l('Delete catalog').'" />
-				<br /><br />
-				<input type="submit" class="button" name="submitTruncateSales" value="'.$this->l('Delete orders & customers').'" />
+			<fieldset><legend>'.$this->l('Functional integrity constraints').'</legend>
+				<input type="submit" class="button" name="submitCheckAndFix" value="'.$this->l('Check & fix').'" />
 			</fieldset>
 		</form>';
 		return $html;
 	}
-	
+
 	public static function checkAndFix()
 	{
 		$db = Db::getInstance();
