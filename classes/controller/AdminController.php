@@ -1069,6 +1069,7 @@ class AdminControllerCore extends Controller
 						'desc' => $this->l('Export')
 					);
 		}
+		$this->addToolBarModulesListButton();
 	}
 
 	/**
@@ -1466,6 +1467,7 @@ class AdminControllerCore extends Controller
 			$this->filter_modules_list = $this->tab_modules_list['default_list'];	
 		elseif (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 		{
+			$this->addToolBarModulesListButton();
 			$this->context->smarty->assign(array(
 				'tab_modules_list' => implode(',', $this->tab_modules_list['slider_list']),
 				'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules'),
@@ -1473,6 +1475,15 @@ class AdminControllerCore extends Controller
 				'tab_modules_open' => (int)Tools::getValue('tab_modules_open')
 			));
 		}
+	}
+	
+	protected function addToolBarModulesListButton()
+	{
+		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
+			$this->toolbar_btn['modules-list'] = array(
+					'href' => '#',
+					'desc' => $this->l('Modules List')
+				);
 	}
 
 	/**

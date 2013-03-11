@@ -199,7 +199,7 @@ a.module_toggle_all{color: #268CCD;}
 
 /*toolbarBox*/
 .toolbar-placeholder {position:relative}
-.toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative;width: auto !important;}
+.toolbarBox {background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 5px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;-o-border-radius:3px;position:relative}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
 .toolbarBox .pageTitle h3 {font-size: 1.6em; font-weight: normal; line-height: 52px; margin: 0; padding: 0; text-shadow:0 1px 0 #fff;}
 .toolbarBox ul.cc_button {float:right;margin:0 5px 0 0;padding:0;}
@@ -243,7 +243,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarReduced {margin-right:221px}
 #modules_list_button {width:211px;height:63px;border:none;position:absolute;top:0;right:0;background-image:url('../img/modules_list_button.png');font-size: 1.6em;cursor:pointer;padding-left:45px}
 
-#modules_list_container {
+.toolbarBox #modules_list_container {
 	background: none repeat scroll 0 0 #FFF;
 	border: solid 1px #CCC;
 	display: block;
@@ -252,7 +252,7 @@ a.module_toggle_all{color: #268CCD;}
 	width: 300px;
 	position: absolute;
 	right: 13px;
-	top: 83px;
+	top: 63px;
 	z-index: 100;
 	padding: 10px;
 	box-shadow: 1px 5px 5px #CCCCCC;
@@ -261,29 +261,29 @@ a.module_toggle_all{color: #268CCD;}
 	opacity: 1;
 
 }
-#modules_list_container #modules_list_container_content
+.toolbarBox #modules_list_container #modules_list_container_content
 {
 	max-height: 500px;
     overflow: auto;
 
 }
 
-#modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
-#modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
-#modules_list_container #modules_list_container_tab tr { height: auto}
-#modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
-#modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
-#modules_list_container #modules_list_loader {margin-top: 10px}
-#modules_list_container .nav-tabs-modules:after {clear:both}
-#modules_list_container .nav-tabs-modules > li {height: 19px;float:left}
-#modules_list_container .nav-tabs-modules > li > a {
+.toolbarBox #modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
+.toolbarBox #modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
+.toolbarBox #modules_list_container #modules_list_container_tab tr { height: auto}
+.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
+.toolbarBox #modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
+.toolbarBox #modules_list_container #modules_list_loader {margin-top: 10px}
+.toolbarBox #modules_list_container .nav-tabs-modules:after {clear: both;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li {height: 19px;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
   padding-right: 12px;
   padding-left: 12px;
   margin-right: 2px;
   line-height: 14px;
 }
 
-#modules_list_container .nav-tabs-modules > li > a {
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {
   padding-top: 8px;
   padding-bottom: 7px;
   border: 1px solid transparent;
@@ -293,15 +293,15 @@ a.module_toggle_all{color: #268CCD;}
           border-radius: 4px 4px 0 0;
 }
 
-#modules_list_container .nav-tabs-modules > li > a:hover {
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a:hover {
   border-color: #C0C0C0;
   background-color: #ffffff;
 }
 
-#modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
+.toolbarBox #modules_list_container .nav-tabs-modules > li > a {border: 1px solid #ddd;border-bottom:none;}
 
-#modules_list_container .nav-tabs-modules > .active > a,
-#modules_list_container .nav-tabs-modules > .active > a:hover {
+.toolbarBox #modules_list_container .nav-tabs-modules > .active > a,
+.toolbarBox #modules_list_container .nav-tabs-modules > .active > a:hover {
   color: #555555;
   cursor: default;
   background-color: #EEE;
@@ -312,7 +312,7 @@ a.module_toggle_all{color: #268CCD;}
 
 
 
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;width:90% !important;margin:auto}
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:500;margin:auto}
 
 /*button upload files*/
 #content .qq-upload-button {
