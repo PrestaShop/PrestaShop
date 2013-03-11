@@ -174,19 +174,19 @@ function getCarrierListAndUpdate()
 		data: 'ajax=true&method=getCarrierList&token=' + static_token,
 		success: function(jsonData)
 		{
-				if (jsonData.hasError)
-				{
-					var errors = '';
-					for(var error in jsonData.errors)
-						//IE6 bug fix
-						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
-					alert(errors);
-				}
-				else
-					updateCarrierList(jsonData);
-				$('#opc_delivery_methods-overlay').fadeOut('slow');
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(var error in jsonData.errors)
+					//IE6 bug fix
+					if(error !== 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
 			}
+			else
+				updateCarrierList(jsonData);
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+		}
 	});
 }
 

@@ -52,11 +52,8 @@ var ajaxCart = {
 			var customizationId = 0;
 			var productId = 0;
 			var productAttributeId = 0;
-			if ($($(this).parent().parent()).attr('name') == 'customization')
-				// Reverse two levels: a >> div >> li
-				var customizableProductDiv = $($(this).parent().parent()).find("div[id^=deleteCustomizableProduct_]");
-			else
-				var customizableProductDiv = $($(this).parent()).find("div[id^=deleteCustomizableProduct_]");
+			var customizableProductDiv = $($(this).parent().parent()).find("div[id^=deleteCustomizableProduct_]");
+
 			if (customizableProductDiv && $(customizableProductDiv).length)
 			{
 				$(customizableProductDiv).each(function(){
@@ -185,7 +182,7 @@ var ajaxCart = {
 			return ;
 		}
 		emptyCustomizations();
-		//disabled the button when adding to do not double add if user double click
+		//disabled the button when adding to not double add if user double click
 		if (addedFromProductPage)
 		{
 			$('#add_to_cart input').attr('disabled', true).removeClass('exclusive').addClass('exclusive_disabled');
@@ -466,9 +463,10 @@ var ajaxCart = {
 				//else update the product's line
 				else
 				{
-					var jsonProduct = this;
-					if($('#cart_block_product_' + domIdProduct + ' .quantity').text() != jsonProduct.quantity || $('dt#cart_block_product_' + domIdProduct + ' .price').text() != jsonProduct.priceByLine)
+					var jsonProduct = this;						
+					if($.trim($('#cart_block_product_' + domIdProduct + ' .quantity').text()) != jsonProduct.quantity || $.trim($('dt#cart_block_product_' + domIdProduct + ' .price').text()) != jsonProduct.priceByLine)
 					{
+				
 						// Usual product
 						if (!this.is_gift)
 							$('#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
@@ -521,11 +519,12 @@ var ajaxCart = {
 				content += '<ul class="cart_block_customizations" id="customization_' + productId + '_' + productAttributeId + '">';
 		}
 
-		$(product.customizedDatas).each(function(){
+		$(product.customizedDatas).each(function()
+		{
 			var done = 0;
 			customizationId = parseInt(this.customizationId);
 			productAttributeId = typeof(product.idCombination) == 'undefined' ? 0 : parseInt(product.idCombination);
-			content += '<li name="customization"><div class="deleteCustomizableProduct" id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a  rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"> </a></div><span class="quantity-formated"><span class="quantity">' + parseInt(this.quantity) + '</span>x</span>';
+			content += '<li name="customization"><div class="deleteCustomizableProduct" id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"></a></div><span class="quantity-formated"><span class="quantity">' + parseInt(this.quantity) + '</span>x</span>';
 
 			// Give to the customized product the first textfield value as name
 			$(this.datas).each(function(){
@@ -595,7 +594,7 @@ var ajaxCart = {
 
 	//update general cart informations everywhere in the page
 	updateCartEverywhere : function(jsonData) {
-		$('.ajax_cart_total').text(jsonData.productTotal);
+		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
 		
 		if (parseFloat(jsonData.shippingCostFloat) > 0 || jsonData.nbTotalProducts < 1)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);

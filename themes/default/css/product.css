@@ -490,7 +490,10 @@ ul#uploadable_files,ul#text_fields {
 .customizationUploadLine {
 	padding-bottom:10px;
 }
-
+.customizationUploadBrowse img + a {
+	position: relative;
+	top: -51px;
+}
 .customizationUploadLine label {
 	display:inline-block;
 	width:150px;
