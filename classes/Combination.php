@@ -135,7 +135,8 @@ class CombinationCore extends ObjectModel
 	public function setAttributes($ids_attribute)
 	{
 		$result = $this->deleteAssociations();
-		if ($result && !empty($ids_attribute)) {
+		if ($result && !empty($ids_attribute)) 
+		{
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
 				$sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
