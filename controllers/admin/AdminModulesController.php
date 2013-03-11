@@ -599,7 +599,7 @@ class AdminModulesControllerCore extends AdminController
 					}
 
 					// If Addons module, download and unzip it before installing it
-					if (!is_dir('../modules/'.$name.'/'))
+					if (!file_exists('../modules/'.$name.'/'.$name.'.php'))
 					{
 						$filesList = array(
 							array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
@@ -623,6 +623,7 @@ class AdminModulesControllerCore extends AdminController
 									}
 							}
 					}
+
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
