@@ -244,13 +244,14 @@ class PSCleaner extends Module
 		$queries = self::bulle($queries);
 		foreach ($queries as $query_array)
 		{
-			if(!isset($query_array[4]) || (isset($query_array[4]) && Module::isInstalled($query_array[4])))
-			{
-				$query = 'DELETE FROM `'._DB_PREFIX_.$query_array[0].'` WHERE `'.$query_array[1].'` NOT IN (SELECT `'.$query_array[3].'` FROM `'._DB_PREFIX_.$query_array[2].'`)';
-				$db->Execute($query);
-				if ($affected_rows = $db->Affected_Rows())
-					$logs[$query] = $affected_rows;
-			}
+			// If this is a module and the module is not installed, we continue
+			if (isset($query_array[4]) && !Module::isInstalled($query_array[4]))
+				continue;
+
+			$query = 'DELETE FROM `'._DB_PREFIX_.$query_array[0].'` WHERE `'.$query_array[1].'` NOT IN (SELECT `'.$query_array[3].'` FROM `'._DB_PREFIX_.$query_array[2].'`)';
+			$db->Execute($query);
+			if ($affected_rows = $db->Affected_Rows())
+				$logs[$query] = $affected_rows;
 		}
 
 		// _lang table cleaning
