@@ -331,8 +331,6 @@ class LocalizationPackCore
 						$this->_errors[] = Tools::displayError('Server does not have permissions for writing.');
 				}
 			}
-		}
-
 		// change the default language if there is only one language in the localization pack
 		if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->languages->language) == 1)
 			$this->iso_code_lang = $attributes['iso_code'];
