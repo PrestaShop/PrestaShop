@@ -126,7 +126,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'phone_mobile',
 					'size' => 33,
 					'required' => false,
-					'desc' => sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>')
+					'desc' => Configuration::get('PS_ONE_PHONE_AT_LEAST')? sprintf($this->l('You must register at least one phone number %s'), '<sup>*</sup>') : ''
 				),
 				array(
 					'type' => 'textarea',
@@ -366,6 +366,9 @@ class AdminAddressesControllerCore extends AdminController
 			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
 				$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
 		}
+
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))		
+			$this->errors[] = Tools::displayError('You must register at least one phone number');
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)
 		** we delete its id_address to force the creation of a new one */
