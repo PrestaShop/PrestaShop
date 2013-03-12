@@ -1735,6 +1735,19 @@ class AdminProductsControllerCore extends AdminController
 		return false;
 	}
 
+	public function processStatus()
+	{
+		$this->loadObject(true);
+		if (!Validate::isLoadedObject($this->object))
+			return false;
+		if (($error = $this->object->validateFields(false, true)) !== true)
+			$this->errors[] = $error;
+		if (($error = $this->object->validateFieldsLang(false, true)) !== true)
+			$this->errors[] = $error;
+
+		return !count($this->errors) ? parent::processStatus() : false;
+	}
+	
 	public function processUpdate()
 	{
 		$this->checkProduct();
