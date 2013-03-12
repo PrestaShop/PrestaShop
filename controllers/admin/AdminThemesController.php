@@ -550,7 +550,7 @@ class AdminThemesControllerCore extends AdminController
 			unset($_POST['submitThemes'.$this->table]);
 		Tools::clearCache($this->context->smarty);
 
-		parent::postProcess();
+		return parent::postProcess();
 	}
 
 	/**
