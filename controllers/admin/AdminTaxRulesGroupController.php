@@ -356,21 +356,21 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete_tax_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else if (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add this.');
 		}
 		else
 			parent::initProcess();
@@ -449,7 +449,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 				if (count($this->errors) == 0)
 					if (!$tr->save())
-						$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current tax rule');
+						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
 			}
 		}
 

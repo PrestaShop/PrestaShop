@@ -114,7 +114,7 @@ class BlockCategories extends Module
 					<label class="t" for="dhtml_on"> <img src="../img/admin/enabled.gif" alt="'.$this->l('Enabled').'" title="'.$this->l('Enabled').'" /></label>
 					<input type="radio" name="dhtml" id="dhtml_off" value="0" '.(!Tools::getValue('dhtml', Configuration::get('BLOCK_CATEG_DHTML')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="dhtml_off"> <img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" /></label>
-					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels').'</p>
+					<p class="clear">'.$this->l('Activate dynamic (animated) mode for sublevels.').'</p>
 				</div>
 				<label>'.$this->l('Sort').'</label>
 
@@ -128,10 +128,10 @@ class BlockCategories extends Module
 						<option value="1" '.(Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Descending').'</option>
 					</select>
 				</div>
-				<label>'.$this->l('Footer columns number').'</label>
+				<label>'.$this->l('How many footer columns would you like?').'</label>
 				<div class="margin-form">
 					<input type="text" name="nbrColumns" value="'.(int)Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER').'" />
-					<p class="clear">'.$this->l('Set the number of footer columns').'</p>
+					<p class="clear">'.$this->l('Define the number of footer columns.').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockCategories" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>

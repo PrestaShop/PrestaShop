@@ -59,7 +59,7 @@
 						<td>{$currency->name} ({$currency->sign})</td>
 					</tr>
 					<tr>
-						<td>{l s='Products:'}</td>
+						<td>{l s='Products'}</td>
 						<td>{$warehouse_num_products} {l s='References:'}</td>
 					</tr>
 					<tr>

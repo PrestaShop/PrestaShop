@@ -3,9 +3,9 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{blocksearch}prestashop>blocksearch-top_24c29702dc9c63dedb98e92f3028e068'] = 'Suche';
-$_MODULE['<{blocksearch}prestashop>blocksearch_34d1f91fb2e514b8576fab1a75a89a6b'] = 'los';
-$_MODULE['<{blocksearch}prestashop>blocksearch_99e20473c0bf3c22d7420eff03ce66c3'] = 'Fügt einen Block mit einem Quick Search Feld hinzu';
-$_MODULE['<{blocksearch}prestashop>blocksearch_24c29702dc9c63dedb98e92f3028e068'] = 'Suche';
-$_MODULE['<{blocksearch}prestashop>blocksearch_52d578d063d6101bbdae388ece037e60'] = 'Geben Sie einen Produktnamen ein';
-$_MODULE['<{blocksearch}prestashop>blocksearch_31a0c03d7fbd1dc61d3b8e02760e703b'] = 'Quick Search Block';
+$_MODULE['<{blocksearch}prestashop>blocksearch-top_13348442cc6a27032d2b4aa28b75a5d3'] = 'Suche';
+$_MODULE['<{blocksearch}prestashop>blocksearch_1fb103afe92d693ae23d0463b185a9a7'] = 'los';
+$_MODULE['<{blocksearch}prestashop>blocksearch_be305c865235f417d9b4d22fcdf9f1c5'] = 'Fügt einen Block mit einem Quick Search Feld hinzu';
+$_MODULE['<{blocksearch}prestashop>blocksearch_13348442cc6a27032d2b4aa28b75a5d3'] = 'Suche';
+$_MODULE['<{blocksearch}prestashop>blocksearch_3d4999b5a4129d6c189f50d6f977b846'] = 'Geben Sie einen Produktnamen ein';
+$_MODULE['<{blocksearch}prestashop>blocksearch_e2ca130372651672ba285abd796412ed'] = 'Quick Search Block';

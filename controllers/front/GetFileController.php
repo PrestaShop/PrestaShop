@@ -296,8 +296,8 @@ class GetFileControllerCore extends FrontController
 		'This file no longer exists.'	=> Tools::displayError('This file no longer exists.'),
         'This product has been refunded.' => Tools::displayError('This product has been refunded.'),
 		'The product deadline is in the past.' => Tools::displayError('The product deadline is in the past.'),
-		'Expiration date exceeded' => Tools::displayError('Expiration date has passed, you cannot download this product'),
-		'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of allowed downloads.'));
+		'Expiration date exceeded' => Tools::displayError('The product expiration date has passed, preventing you from download this product.'),
+		'You have reached the maximum number of allowed downloads.' => Tools::displayError('You have reached the maximum number of downloads allowed.'));
 		?>
 		<script type="text/javascript">
 		//<![CDATA[

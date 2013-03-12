@@ -34,7 +34,7 @@ class AdminSearchControllerCore extends AdminController
 		/* Handle empty search field */
 		if (empty($this->query))
 		{
-			$this->errors[] = Tools::displayError('Please fill in search form first.');
+			$this->errors[] = Tools::displayError('Please complete the search form first.');
 			return;
 		}
 		else
@@ -111,7 +111,7 @@ class AdminSearchControllerCore extends AdminController
 						}
 					}
 					elseif ($searchType == 3)
-						$this->errors[] = Tools::displayError('No order found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+						$this->errors[] = Tools::displayError('No order was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
 				}
 			}
 
@@ -120,7 +120,7 @@ class AdminSearchControllerCore extends AdminController
 			{
 				if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($invoice = Order::getInvoice((int)$this->query)))
 					Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice['id_order']));
-				$this->errors[] = Tools::displayError('No invoice found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+				$this->errors[] = Tools::displayError('No invoice was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
 			}
 
 			/* Cart */
@@ -128,7 +128,7 @@ class AdminSearchControllerCore extends AdminController
 			{
 				if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart))
 					Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int)($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id));
-				$this->errors[] = Tools::displayError('No cart found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+				$this->errors[] = Tools::displayError('No cart was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
 			}
 			/* IP */
 			// 6 - but it is included in the customer block
@@ -152,7 +152,7 @@ class AdminSearchControllerCore extends AdminController
 	{
 		if (!ip2long(trim($this->query)))
 		{
-			$this->errors[] = Tools::displayError('It seems that this is not an IP address:').' '.Tools::htmlentitiesUTF8($this->query);
+			$this->errors[] = Tools::displayError('This is not a valid IP address:').' '.Tools::htmlentitiesUTF8($this->query);
 			return;
 		}
 		$this->_list['customers'] = Customer::searchByIp($this->query);

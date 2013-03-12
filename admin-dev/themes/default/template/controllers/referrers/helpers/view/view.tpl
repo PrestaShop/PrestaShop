@@ -116,7 +116,7 @@
 				</select>
 			</div>
 			<br class="clear" />
-			<label>{l s='Search:'}</label>
+			<label>{l s='Search'}</label>
 			<div class="margin-left">
 				<input type="text" size="34" id="filterProduct" name="filterProduct" onkeyup="fillProducts();" />
 			</div>
