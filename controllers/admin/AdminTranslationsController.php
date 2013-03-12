@@ -1068,7 +1068,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 			case 'errors':
 					// Parsing file for all errors syntax
-					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(,\s*(true|false))?\)/U';
+					$regex = '/Tools::displayError\(\''._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
 				break;
 
 			case 'modules':
