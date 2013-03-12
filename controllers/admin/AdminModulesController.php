@@ -79,7 +79,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
 		$this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
-		$this->list_modules_categories['emailing']['name'] = $this->l('E-mailing');
+		$this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
 		$this->list_modules_categories['front_office_features']['name'] = $this->l('Front Office Features');
 		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
 		$this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandizing');
@@ -363,13 +363,13 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 		if (!$success)
-				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+				$this->errors[] = Tools::displayError('There was an error while extracting the module (file may be corrupted).');
 		
 		//check if it's a real module
 		foreach($zip_folders as $folder)
 			if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder))
 			{
-				$this->errors[] = Tools::displayError('The module '.$folder.' you uploaded is not a module');
+				$this->errors[] = Tools::displayError('The \'.$folder.\' you uploaded is not a module');
 				$this->recursiveDeleteOnDisk(_PS_MODULE_DIR_.$folder);
 			}
 			
@@ -465,24 +465,24 @@ class AdminModulesControllerCore extends AdminController
 			if (Validate::isLoadedObject($module))
 			{
 				if (!$module->getPermission('configure'))
-					$this->errors[] = Tools::displayError('You do not have the permission to use this module');
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
 				else
 				{
 					if ($module->uninstall())
 						if ($module->install())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name));
 						else
-							$this->errors[] = Tools::displayError('Cannot install module');
+							$this->errors[] = Tools::displayError('Cannot install this module.');
 					else
-						$this->errors[] = Tools::displayError('Cannot uninstall module');
+						$this->errors[] = Tools::displayError('Cannot uninstall this module.');
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot load module object');
+				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
 			$this->errors = array_merge($this->errors, $module->getErrors());
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
 	}
 
 	public function postProcessDownload()
@@ -508,14 +508,14 @@ class AdminModulesControllerCore extends AdminController
 				$this->errors[] = $this->l('No file has been selected');
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
-				$this->errors[] = Tools::displayError('Unknown archive type');
+				$this->errors[] = Tools::displayError('Unknown archive type.');
 			elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
-				$this->errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
+				$this->errors[] = Tools::displayError('An error occurred while copying archive to the module directory.');
 			else
 				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
 	}
 
 	public function postProcessEnable()
@@ -526,7 +526,7 @@ class AdminModulesControllerCore extends AdminController
 			if (Validate::isLoadedObject($module))
 			{
 				if (!$module->getPermission('configure'))
-					$this->errors[] = Tools::displayError('You do not have the permission to use this module');
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
 				else
 				{
 					if (Tools::getValue('enable'))
@@ -537,10 +537,10 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot load module object');
+				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
 	}
 
 	public function postProcessDelete()
@@ -551,7 +551,7 @@ class AdminModulesControllerCore extends AdminController
 				{
 					$module = Module::getInstanceByName(Tools::getValue('module_name'));
 					if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
-						$this->errors[] = Tools::displayError('You do not have the permission to use this module');
+						$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
 					else
 					{
 						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
@@ -563,7 +563,7 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
 	public function postProcessCallback()
@@ -628,7 +628,7 @@ class AdminModulesControllerCore extends AdminController
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
-						$this->errors[] = Tools::displayError('You do not have permission to install a module.');
+						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
 					elseif ($key == 'uninstall' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
 					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name))))
@@ -636,9 +636,9 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'install' && Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
 					else if ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module need to be installed to be updated:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module need to be installed in order to be updated:').' '.$module->name;
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -677,7 +677,7 @@ class AdminModulesControllerCore extends AdminController
 									<th>'.$this->l('Module').' <span style="color: green;">'.$module->name.'</span></th>
 									<th><a href="'.$backlink.'" style="padding:5px 10px">'.$this->l('Back').'</a></th>
 									<th><a href="'.$hooklink.'" style="padding:5px 10px">'.$this->l('Manage hooks').'</a></th>
-									<th style="padding:5px 10px">'.$this->l('Manage translations:').' ';
+									<th style="padding:5px 10px">'.$this->l('Manage translations').' ';
 									foreach (Language::getLanguages(false) as $language)
 										$toolbar .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" style="margin-left:5px"><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
 							$toolbar .= '</th></tr>';

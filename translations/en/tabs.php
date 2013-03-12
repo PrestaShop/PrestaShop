@@ -1,5 +1,5 @@
 <?php
-	$tabs = array();
-	return $tabs;
 
-?>
+$tabs = array();
+
+return $tabs;

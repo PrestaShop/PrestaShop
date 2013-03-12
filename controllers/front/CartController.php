@@ -128,7 +128,7 @@ class CartControllerCore extends FrontController
 		if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery)))
 			die(Tools::jsonEncode(array(
 				'hasErrors' => true,
-				'error' => Tools::displayError('It\'s not possible to deliver this product to the selected address.', false),
+				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
 		
 		$this->context->cart->setProductAddressDelivery(
@@ -177,14 +177,14 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity');
+			$this->errors[] = Tools::displayError('Null quantity.');
 		else if (!$this->id_product)
 			$this->errors[] = Tools::displayError('Product not found');
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
 		if (!$product->id || !$product->active)
 		{
-			$this->errors[] = Tools::displayError('Product is no longer available.', false);
+			$this->errors[] = Tools::displayError('This product is no longer available.', false);
 			return;
 		}
 
@@ -192,7 +192,7 @@ class CartControllerCore extends FrontController
 		if ($this->id_product_attribute)
 		{
 			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
 		else if ($product->hasAttributes())
 		{
@@ -202,10 +202,10 @@ class CartControllerCore extends FrontController
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
 			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $this->qty))
-				$this->errors[] = Tools::displayError('There is not enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 		}
 		else if (!$product->checkQty($this->qty))
-			$this->errors[] = Tools::displayError('There is not enough product in stock.');
+			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
 
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
@@ -225,7 +225,7 @@ class CartControllerCore extends FrontController
 
 			// Check customizable fields
 			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
-				$this->errors[] = Tools::displayError('Please fill in all required fields, then save the customization.');
+				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.');
 
 			if (!$this->errors)
 			{

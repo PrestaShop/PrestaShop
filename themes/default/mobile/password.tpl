@@ -35,7 +35,7 @@
 	<p>{l s='Please enter the email address you used to register. We will then send you a new password. '}</p>
 	<form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 		<fieldset>
-			<label for="email">{l s='Email:'}</label>
+			<label for="email">{l s='Email'}</label>
 			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
 			<input type="submit" class="button" data-theme="a" value="{l s='Retrieve Password'}" />
 		</fieldset>

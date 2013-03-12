@@ -58,7 +58,7 @@
 	<h3 class="bg">{l s='Terms of service'}</h3>
 	<fieldset data-role="fieldcontain" id="cgv_checkbox">
 		<input type="checkbox" value="1" id="cgv" name="cgv" {if $checkedTOS}checked="checked"{/if} />
-		<label for="cgv">{l s='I agree to the Terms of Service and will adhere to them unconditionally.'}</label>
+		<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
 	</fieldset>
 	<p class="lnk_CGV"><a href="{$link_conditions}" data-ajax="false">{l s='(Read Terms of Service)'}</a></p>
 </div>

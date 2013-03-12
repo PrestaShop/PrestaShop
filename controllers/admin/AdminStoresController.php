@@ -163,7 +163,7 @@ class AdminStoresControllerCore extends AdminController
 					'size' => 33,
 					'required' => false,
 					'hint' => sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
-					'desc' => $this->l('Store name (e.g. Citycentre Mall Store)')
+					'desc' => $this->l('Store name (e.g. City Center Mall Store)')
 				),
 				array(
 					'type' => 'text',
@@ -343,7 +343,7 @@ class AdminStoresControllerCore extends AdminController
 			$country = new Country((int)$id_country);
 
 			if ($id_country && $country && !(int)$country->contains_states && $id_state)
-				$this->errors[] = Tools::displayError('You have selected a state for a country that does not contain states.');
+				$this->errors[] = Tools::displayError('You\'ve selected a state for a country that does not contain states.');
 
 			/* If the selected country contains states, then a state have to be selected */
 			if ((int)$country->contains_states && !$id_state)
@@ -368,7 +368,7 @@ class AdminStoresControllerCore extends AdminController
 					$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
 					$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
 					if (!preg_match($zip_regexp, $postcode))
-						$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.').'<br />'.Tools::displayError('Must be typed as follows:').' '.
+						$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.
 											str_replace(
 												'C',
 												$country->iso_code,
@@ -384,9 +384,9 @@ class AdminStoresControllerCore extends AdminController
 											);
 				}
 				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('Postal Code/Zip Code required.');
+					$this->errors[] = Tools::displayError('A Postal / Zip Code required.');
 				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Your Postal Code/Zip Code is incorrect.');
+					$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.');
 			}
 
 			/* Store hours */
@@ -557,7 +557,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
 			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
-				$this->errors[] = Tools::displayError('This state is not in this country.');
+				$this->errors[] = Tools::displayError('The state specified is not located in this country.');
 		}
 	}
 

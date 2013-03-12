@@ -56,7 +56,7 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval'
 					),
 					'PS_INVOICE_FREE_TEXT' => array(
-						'title' => $this->l('Footer Text:'),
+						'title' => $this->l('Footer text:'),
 						'desc' => $this->l('This text will appear at the bottom of the invoice'),
 						'size' => 6,
 						'type' => 'textareaLang',
@@ -71,7 +71,7 @@ class AdminInvoicesControllerCore extends AdminController
 						'list' => $this->getInvoicesModels()
 					),
 					'PS_PDF_USE_CACHE' => array(
-						'title' => $this->l('Use disk as cache for PDF invoices'),
+						'title' => $this->l('Use disk as cache for PDF invoices:'),
 						'desc' => $this->l('Saves memory but slows down the rendering process.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -215,10 +215,10 @@ class AdminInvoicesControllerCore extends AdminController
 		if (Tools::getValue('submitAddinvoice_date'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->errors[] = $this->l('Invalid "From:" date');
+				$this->errors[] = $this->l('Invalid "From" date');
 
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->errors[] = $this->l('Invalid "To:" date');
+				$this->errors[] = $this->l('Invalid "To" date');
 
 			if (!count($this->errors))
 			{

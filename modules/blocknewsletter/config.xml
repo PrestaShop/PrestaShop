@@ -6,7 +6,7 @@
             <description><![CDATA[Adds a block for newsletter subscription.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>
-	<confirmUninstall>Are you sure you want to delete all your contacts ?</confirmUninstall>
+	<confirmUninstall>Are you sure that you want to delete all of your contacts?</confirmUninstall>
             <is_configurable>1</is_configurable>
             <need_instance>0</need_instance>
 	<limited_countries></limited_countries>

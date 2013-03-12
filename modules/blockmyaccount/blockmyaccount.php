@@ -40,7 +40,7 @@ class BlockMyAccount extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('My Account block');
-		$this->description = $this->l('Displays a block with links relative to user account.');
+		$this->description = $this->l('Displays a block with links relative to a user\'s account.');
 	}
 
 	public function install()

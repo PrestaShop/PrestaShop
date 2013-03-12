@@ -43,7 +43,7 @@
 		</dl>
 		<p><a href="{$link->getPageLink('new-products')}" title="{l s='All new products' mod='blocknewproducts'}" class="button_large">&raquo; {l s='All new products' mod='blocknewproducts'}</a></p>
 	{else}
-		<p>&raquo; {l s='No new products at this time' mod='blocknewproducts'}</p>
+		<p>&raquo; {l s='Do not allow new products at this time.' mod='blocknewproducts'}</p>
 	{/if}
 	</div>
 </div>

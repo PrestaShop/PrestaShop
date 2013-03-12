@@ -174,7 +174,7 @@ class HelperCore
 									   $use_shop_context = false)
 	{
 		$translations = array(
-			'selected' => $this->l('selected'),
+			'selected' => $this->l('Selected'),
 			'Collapse All' => $this->l('Collapse All'),
 			'Expand All' => $this->l('Expand All'),
 			'Check All' => $this->l('Check All'),

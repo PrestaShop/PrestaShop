@@ -166,21 +166,21 @@ class AdminCarriersControllerCore extends AdminController
 				<li>'.$this->l('Fill in the fields and click "Save."').'</li>
 				<li>'.
 					$this->l('You need to set a price range -- or weight range -- for which the new carrier will be available.').' '.
-					$this->l('Under the "Shipping" menu, click either "Price Ranges" or "Weight Ranges".').'
+					$this->l('Under the "Shipping" menu, click either "Price ranges" or "Weight ranges.".').'
 				</li>
 				<li>'.$this->l('Click "Add New."').'</li>
 				<li>'.
 					$this->l('Select the name of the carrier before defining the price or weight range.').' '.
 					$this->l('For example, the carrier can be made available for a weight range between 0 and 5lbs. Another carrier can have a range between 5 and 10lbs.').'
 				</li>
-				<li>'.$this->l('When you are done, click "Save."').'</li>
+				<li>'.$this->l('When you\'re done, click "Save."').'</li>
 				<li>'.$this->l('Click on the "Shipping" menu.').'</li>
 				<li>'.
 					$this->l('You need to set the fees that will be applied for this carrier.').' '.
 					$this->l('At the bottom on the page -- in the "Fees" section -- select the name of the carrier.').'
 				</li>
 				<li>'.$this->l('For each zone, enter a price and then click "Save."').'</li>
-				<li>'.$this->l('You\'re all set! The new carrier will be displayed to your customers.').'</li>
+				<li>'.$this->l('You\'re all set! The new carrier will now be displayed to customers.').'</li>
 			</ul>'
 		);
 		$this->_select = 'b.*';
@@ -501,10 +501,10 @@ class AdminCarriersControllerCore extends AdminController
 								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
 							}
 							else
-								$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+								$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b>';
 						}
 						else
-							$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+							$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 					} catch (PrestaShopException $e) {
 						$this->errors[] = $e->getMessage();
 					}
@@ -531,10 +531,10 @@ class AdminCarriersControllerCore extends AdminController
 							}
 						}
 						else
-							$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+							$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
 					}
 					else
-						$this->errors[] = Tools::displayError('You do not have permission to add here.');
+						$this->errors[] = Tools::displayError('You do not have permission to add this.');
 				}
 			}
 			parent::postProcess();
@@ -544,12 +544,12 @@ class AdminCarriersControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->errors[] = Tools::displayError('You cannot disable the default carrier, please change your default carrier first.');
+					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your defeault carrier. ');
 				else
 					parent::postProcess();
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		else
 		{
@@ -646,7 +646,7 @@ class AdminCarriersControllerCore extends AdminController
 	{
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
-			die (Tools::displayError('Object cannot be loaded'));
+			die (Tools::displayError('The object cannot be loaded.'));
 		$zones = Zone::getZones(false);
 		foreach ($zones as $zone)
 			if (count($carrier->getZone($zone['id_zone'])))

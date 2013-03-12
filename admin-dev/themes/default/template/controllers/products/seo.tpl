@@ -84,7 +84,7 @@
 			<p class="clear" style="padding:10px 0 0 0">
 			<a style="cursor:pointer" class="button"
 			onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;
-			{l s='Friendly URL. From the product name.'}<br /><br />
+			{l s='friendly URL from the product name.'}<br /><br />
 			{l s='The product link will look like this:'}
 			{$curent_shop_url|escape:'htmlall':'UTF-8'}lang/{if isset($product->id)}{$product->id}{else}<b>id_product</b>{/if}-<span id="friendly-url">{$product->link_rewrite[$default_language]}</span>.html</p>
 		</td>

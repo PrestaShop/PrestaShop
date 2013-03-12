@@ -10,8 +10,8 @@ $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_9e65b51e82f2a9b9f72ebe3e08358
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_a0623b78a5f2cfe415d9dbbd4428ea40'] = 'Il tuo account';
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_a2e9cd952cda8ba167e62b25a496c6c1'] = 'Blocco info utente';
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_970a31aa19d205f92ccfd1913ca04dc0'] = 'Aggiungi un blocco che visualizza le informazioni sul cliente';
-$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_f5bf48aa40cad7891eb709fcf1fde128'] = 'prodotto';
-$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_86024cad1e83101d97359d7351051156'] = 'prodotti';
-$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_bffe9a3c9a7e00ba00a11749e022d911'] = 'Entra';
-$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_7fc68677a16caa0f02826182468617e6'] = 'Carrello:';
+$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_deb10517653c255364175796ace3553f'] = 'prodotto';
+$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_068f80c7519d0528fb08e82137a72131'] = 'prodotti';
+$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_99dea78007133396a7b8ed70578ac6ae'] = 'Entra';
+$_MODULE['<{blockuserinfo}prestashop>blockuserinfo_a85eba4c6c699122b2bb1387ea4813ad'] = 'Carrello:';
 $_MODULE['<{blockuserinfo}prestashop>blockuserinfo_4b877ba8588b19f1b278510bf2b57ebb'] = 'Fammi uscire';
