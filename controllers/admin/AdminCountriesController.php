@@ -216,7 +216,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Need zip/postal code'),
+					'label' => $this->l('Need zip/postal code:'),
 					'name' => 'need_zip_code',
 					'required' => false,
 					'class' => 't',
@@ -236,7 +236,7 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Zip/post code format'),
+					'label' => $this->l('Zip/post code format:'),
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
@@ -270,7 +270,7 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display this country to your customer (the country will always be displayed in the back office)')
+					'desc' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office)')
 				),
 				array(
 					'type' => 'radio',
@@ -354,13 +354,13 @@ class AdminCountriesControllerCore extends AdminController
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
 		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two country with the same ISO code');
+				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
 
 		if (!count($this->errors))

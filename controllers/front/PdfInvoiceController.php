@@ -47,13 +47,13 @@ class PdfInvoiceControllerCore extends FrontController
 			$order = new Order((int)$id_order);
 
 		if (!isset($order) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invoice not found'));
+			die(Tools::displayError('The invoice was not found.'));
 
 		if ((isset($this->context->customer->id) && $order->id_customer != $this->context->customer->id) || (Tools::isSubmit('secure_key') && $order->secure_key != Tools::getValue('secure_key')))
-			die(Tools::displayError('Invoice not found'));
+			die(Tools::displayError('The invoice was not found.'));
 
 		if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number)
-			die(Tools::displayError('No invoice available'));
+			die(Tools::displayError('No invoice is available.'));
 
 		$this->order = $order;
 	}

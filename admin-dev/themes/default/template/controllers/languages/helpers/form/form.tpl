@@ -39,7 +39,7 @@
 		var langPackOk = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='A language pack is available for this ISO.'}";
 		var langPackVersion = "{l s='The Prestashop version compatible with this language and your system is:'}";
 		var langPackInfo = "{l s='After creating the language, you can import the content of the language pack, which you can download under "Localization -- Translations."'}";
-		var noLangPack = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='No language pack available on prestashop.com for this ISO code'}";
+		var noLangPack = "<img src=\"{$smarty.const._PS_IMG_}admin/information.png\" alt=\"\" /> {l s='No language pack is available on prestashop.com for this ISO code'}";
 		var download = "{l s='Download'}";
 
 	$(document).ready(function() {

@@ -40,7 +40,7 @@ class BlockCurrencies extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Currency block');
-		$this->description = $this->l('Adds a block for selecting a currency.');
+		$this->description = $this->l('Adds a block allowing customers to choose their preferred shopping currency.');
 	}
 
 	public function install()

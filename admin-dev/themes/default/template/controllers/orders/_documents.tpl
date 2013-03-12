@@ -128,7 +128,7 @@
 	{foreachelse}
 	<tr>
 		<td colspan="5" class="center">
-			<h3>{l s='No document is available'}</h3>
+			<h3>{l s='No documents are available'}</h3>
 			{if isset($invoice_management_active) && $invoice_management_active}
 			<p><a class="button" href="{$current_index}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
 			{/if}

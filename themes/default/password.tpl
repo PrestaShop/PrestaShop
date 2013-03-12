@@ -39,7 +39,7 @@
 <form action="{$request_uri|escape:'htmlall':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 	<fieldset>
 		<p class="text">
-			<label for="email">{l s='Email:'}</label>
+			<label for="email">{l s='Email'}</label>
 			<input type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'|stripslashes}{/if}" />
 		</p>
 		<p class="submit">

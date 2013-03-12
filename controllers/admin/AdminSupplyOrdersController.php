@@ -846,7 +846,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
 			return false;
 		}
 		// Manage the add stock form
@@ -998,7 +998,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 							$error_str = '<ul>';
 							foreach ($errors as $e)
-								$error_str .= '<li>'.$this->l('field').$e.'</li>';
+								$error_str .= '<li>'.$this->l('Field').$e.'</li>';
 							$error_str .= '</ul>';
 
 							$this->errors[] = Tools::displayError($this->l('Please verify the product information:').$entry->name.' '.$error_str);
@@ -1021,9 +1021,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// Checks access
 		if (Tools::isSubmit('submitAddsupply_order') && !($this->tabAccess['add'] === '1'))
-			$this->errors[] = Tools::displayError($this->l('You do not have the required permission to add a supply order.'));
+			$this->errors[] = Tools::displayError($this->l('You do not have permission to add a supply order.'));
 		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1'))
-			$this->errors[] = Tools::displayError($this->l('You do not have the required permission to edit an order.'));
+			$this->errors[] = Tools::displayError($this->l('You do not have permission to edit an order.'));
 
 		// Trick to use both Supply Order as template and actual orders
 		if (Tools::isSubmit('is_template'))
@@ -2173,7 +2173,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to use this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
 			return false;
 		}
 		parent::initProcess();	
