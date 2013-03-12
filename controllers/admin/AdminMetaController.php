@@ -449,7 +449,7 @@ class AdminMetaControllerCore extends AdminController
 
 		$rule = Tools::getValue('PS_ROUTE_'.$route_id);
 		if (!Validate::isRoutePattern($rule))
-			$this->errors[] = sprintf('The route %s is not valide', htmlspecialchars($rule));
+			$this->errors[] = sprintf('The route %s is not valid', htmlspecialchars($rule));
 		else
 		{
 			if (!$rule || $rule == $default_routes[$route_id]['rule'])
