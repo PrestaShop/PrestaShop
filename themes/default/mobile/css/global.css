@@ -67,8 +67,12 @@
 
 /* JQUERY MOBILE */
 .ui-content {
-	margin: 20px;
 	overflow-y:hidden;
+	background:none !important;
+}
+
+.ui-page > .ui-content {
+	padding:15px !important;
 }
 
 section .ui-content {
