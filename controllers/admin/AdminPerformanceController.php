@@ -548,7 +548,6 @@ class AdminPerformanceControllerCore extends AdminController
 			return;
 		}
 
-		Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
 		if (Tools::isSubmit('submitAddServer'))
 		{
 			if ($this->tabAccess['add'] === '1')
@@ -743,13 +742,16 @@ class AdminPerformanceControllerCore extends AdminController
 				if ($cache_active && $caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 					$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 						<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
-				elseif ($cache_active && $caching_system == 'CacheApc' && !extension_loaded('apc'))
+				else if ($cache_active && $caching_system == 'CacheApc' && !extension_loaded('apc'))
 					$this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 						<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
-				elseif ($cache_active && $caching_system == 'CacheXcache' && !extension_loaded('xcache'))
+				else if ($cache_active && $caching_system == 'CacheXcache' && !extension_loaded('xcache'))
 					$this->errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').'
 						<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
-				elseif ($cache_active && $caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
+				else if ($cache_active && $caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
+					$this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
+						<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';							
+				else if ($cache_active && $caching_system == 'CacheFs' && !is_writable(_PS_CACHEFS_DIRECTORY_))
 					$this->errors[] = sprintf(
 						Tools::displayError('To use CacheFS the directory %s must be writable.'),
 						realpath(_PS_CACHEFS_DIRECTORY_)
@@ -766,7 +768,7 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
 					}
 				}
-				elseif ($caching_system == 'CacheMemcache' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
+				else if ($caching_system == 'CacheMemcache' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
 					Cache::getInstance()->flush();
 
 				if (!count($this->errors))
@@ -786,10 +788,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
-		{
-			Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
 			Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
-		}
 		else
 			return parent::postProcess();
 	}
