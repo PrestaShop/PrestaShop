@@ -24,7 +24,7 @@
 *}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6 " lang="{$lang_iso}"> <![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{$lang_iso}"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7" lang="{$lang_iso}"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9 ie8" lang="{$lang_iso}"> <![endif]-->
 <!--[if gt IE 8]> <html class="no-js ie9" lang="{$lang_iso}"> <![endif]-->
