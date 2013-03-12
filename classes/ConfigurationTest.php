@@ -311,7 +311,7 @@ class ConfigurationTestCore
 		if (!$path = @ini_get('session.save_path'))
 			return true;
 
-		return ConfigurationTest::test_dir($path);
+		return is_writable($path);
 	}
 	public static function test_dom()
 	{
