@@ -1,6 +1,6 @@
 <div data-role="content" id="content">
 	
-	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std login_form">
+	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std login_form" data-ajax="false">
 		<h2>{l s='Create an account'}</h2>
 		<div class="form_content clearfix">
 			<p class="title_block">{l s='Enter your email address to create an account'}.</p>
