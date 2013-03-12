@@ -705,7 +705,7 @@ class AdminPerformanceControllerCore extends AdminController
 					// If there is not settings file modification or if the backup and replacement of the settings file worked
 					if ($new_settings == $prev_settings || (
 						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
-						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+						&& (bool)file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
 					))
 					{
 						Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
@@ -774,7 +774,7 @@ class AdminPerformanceControllerCore extends AdminController
 					// If there is not settings file modification or if the backup and replacement of the settings file worked
 					if ($new_settings == $prev_settings || (
 						copy(dirname(__FILE__).'/../../config/settings.inc.php', dirname(__FILE__).'/../../config/settings.old.php')
-						&& file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
+						&& (bool)file_put_contents(dirname(__FILE__).'/../../config/settings.inc.php', $new_settings)
 					))
 						$redirectAdmin = true;
 					else
