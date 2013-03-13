@@ -82,7 +82,9 @@
 					{elseif isset($params.image)}
 						{$tr.$key}
 					{elseif isset($params.icon)}
-						<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
+						{if is_array($tr[$key])}
+							<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
+						{/if}
 					{elseif isset($params.price)}
 						{$tr.$key}
 					{elseif isset($params.float)}
