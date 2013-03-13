@@ -35,7 +35,7 @@ $(document).ready(function()
 	}
 	
 	$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
-	
+
 	cleanSelectAddressDelivery();
 });
 
@@ -134,12 +134,12 @@ function changeAddressDelivery(obj)
 			}
 		});
 	}
-	else if (new_id_address_delivery === -1) // Adding a new address
-			window.location = $($('.address_add a')[0]).attr('href');
-	else if (new_id_address_delivery === -2) // Add a new line for this product
+	else if (new_id_address_delivery == -1) // Adding a new address
+		window.location = $($('.address_add a')[0]).attr('href');
+	else if (new_id_address_delivery == -2) // Add a new line for this product
 	{
 		// This test is will not usefull in the future
-		if (old_id_address_delivery === 0)
+		if (old_id_address_delivery == 0)
 		{
 			alert(txtSelectAnAddressFirst);
 			return false;
