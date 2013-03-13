@@ -32,7 +32,7 @@
 </colgroup>
 	<thead>
 	<tr>
-		<th>{l s='Date:'}</th>
+		<th>{l s='Date'}</th>
 		<th>{l s='Type'}</th>
 		<th>{l s='Carrier'}</th>
 		<th>{l s='Weight'}</th>

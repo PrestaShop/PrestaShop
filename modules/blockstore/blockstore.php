@@ -39,8 +39,8 @@ class BlockStore extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stores block');
-		$this->description = $this->l('Displays a block with a link to the store locator.');
+		$this->displayName = $this->l('Store locator block');
+		$this->description = $this->l('Displays a store locator link directly on your webiste.');
 	}
 
 	public function install()
@@ -89,18 +89,18 @@ class BlockStore extends Module
 			if (isset($_FILES['store_img']) && isset($_FILES['store_img']['tmp_name']) && !empty($_FILES['store_img']['tmp_name']))
 			{
 				if ($error = ImageManager::validateUpload($_FILES['store_img'], 4000000))
-					return $this->displayError($this->l('invalid image'));
+					return $this->displayError($this->l('Invalid image'));
 				else
 				{
 					if (!move_uploaded_file($_FILES['store_img']['tmp_name'], dirname(__FILE__).'/'.$_FILES['store_img']['name']))
-						return $this->displayError($this->l('an error occurred on uploading file'));
+						return $this->displayError($this->l('An error occurred while attempting to upload the file.'));
 					else
 					{
 						if (Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::getContext()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
 							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
 						Configuration::updateValue('BLOCKSTORE_IMG', $_FILES['store_img']['name']);
 						$this->_clearCache('blockstore.tpl');
-						return $this->displayConfirmation($this->l('Settings are updated'));
+						return $this->displayConfirmation($this->l('The settings have been updated.'));
 					}
 				}
 			}
@@ -113,13 +113,13 @@ class BlockStore extends Module
 		$output = $this->postProcess().'
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset>
-				<legend>'.$this->l('Store block configuration').'</legend>';
+				<legend>'.$this->l('Store locator block configuration').'</legend>';
 		if (Configuration::get('BLOCKSTORE_IMG'))
 			$output .= '<div class="margin-form"><img src="'.Tools::getProtocol().Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.Configuration::get('BLOCKSTORE_IMG').'" alt="'.$this->l('Store image').'" style="height:115px;margin-left: 100px;width:174px"/></div>';
 		$output .= '
 				<label for="store_img">'.$this->l('Change image').'</label>
 				<div class="margin-form">
-					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('image will be displayed as 174x115').' )
+					<input id="store_img" type="file" name="store_img" /> ( '.$this->l('The selected image will be displayed as 174x115').' )
 				</div>
 
 				<p class="center">

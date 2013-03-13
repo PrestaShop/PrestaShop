@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Bank wire payment' mod='bankwire'}{/capture}
+{capture name=path}{l s='Bank-wire payment.' mod='bankwire'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='bankwire'}</h2>
@@ -35,10 +35,10 @@
 	<p class="warning">{l s='Your shopping cart is empty.' mod='bankwire'}</p>
 {else}
 
-<h3>{l s='Bank wire payment' mod='bankwire'}</h3>
+<h3>{l s='Bank-wire payment.' mod='bankwire'}</h3>
 <form action="{$link->getModuleLink('bankwire', 'validation', [], true)}" method="post">
 <p>
-	<img src="{$this_path}bankwire.jpg" alt="{l s='bank wire' mod='bankwire'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
+	<img src="{$this_path}bankwire.jpg" alt="{l s='Bank wire' mod='bankwire'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
 	{l s='You have chosen to pay by bank wire.' mod='bankwire'}
 	<br/><br />
 	{l s='Here is a short summary of your order:' mod='bankwire'}
@@ -53,7 +53,7 @@
 <p>
 	-
 	{if $currencies|@count > 1}
-		{l s='We accept several currencies to be sent by bank wire.' mod='bankwire'}
+		{l s='We allow several currencies to be sent via bank wire.' mod='bankwire'}
 		<br /><br />
 		{l s='Choose one of the following:' mod='bankwire'}
 		<select id="currency_payement" name="currency_payement" onchange="setCurrency($('#currency_payement').val());">
@@ -62,17 +62,17 @@
 			{/foreach}
 		</select>
 	{else}
-		{l s='We accept the following currency to be sent by bank wire:' mod='bankwire'}&nbsp;<b>{$currencies.0.name}</b>
+		{l s='We allow the following currency to be sent via bank wire:' mod='bankwire'}&nbsp;<b>{$currencies.0.name}</b>
 		<input type="hidden" name="currency_payement" value="{$currencies.0.id_currency}" />
 	{/if}
 </p>
 <p>
 	{l s='Bank wire account information will be displayed on the next page.' mod='bankwire'}
 	<br /><br />
-	<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='bankwire'}.</b>
+	<b>{l s='Please confirm your order by clicking "Place my order."' mod='bankwire'}.</b>
 </p>
 <p class="cart_navigation">
-	<input type="submit" name="submit" value="{l s='I confirm my order' mod='bankwire'}" class="exclusive_large" />
+	<input type="submit" name="submit" value="{l s='Place my order' mod='bankwire'}" class="exclusive_large" />
 	<a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Other payment methods' mod='bankwire'}</a>
 </p>
 </form>

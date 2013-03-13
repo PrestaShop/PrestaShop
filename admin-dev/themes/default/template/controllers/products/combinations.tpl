@@ -46,9 +46,9 @@
 	{/foreach}
 	</script>
 	<h4>{l s='Add or modify combinations for this product.'}</h4>
-	<div class="separation"></div> {l s='or use the'}
+	<div class="separation"></div> {l s='Or use the'}
 		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a> 
-		{l s='in order to automatically create a set of combinations'}
+		{l s='in order to automatically create a set of combinations.'}
 	{if $combination_exists}
 	<div class="warn" style="display:block">
 		<ul>
@@ -131,7 +131,7 @@
 				<td style="padding-bottom:5px;">
 					{if $currency->format % 2 != 0}{$currency->sign}{/if}
 					<input type="text" size="6"  name="attribute_wholesale_price" id="attribute_wholesale_price" value="" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='leave blank if the price does not change'})</span>
+					{if $currency->format % 2 == 0} {$currency->sign} {/if}<span id="attribute_wholesale_price_blank">({l s='Leave blank if the price does not change'})</span>
 					<span style="display:none" id="attribute_wholesale_price_full">({l s='Overrides wholesale price on "Information" tab'})</span>
 				</td>
 			</tr>

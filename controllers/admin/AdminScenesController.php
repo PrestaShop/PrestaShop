@@ -196,10 +196,10 @@ class AdminScenesControllerCore extends AdminController
 
 		$image_to_map_desc = '';
 		$image_to_map_desc .= $this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
-				.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
-				.sprintf($this->l('If larger than the image size setting, the image will be reduced to %1$d x %2$dpx (width x height).'),
+				.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
+				.sprintf($this->l('If an image is too large, it will be reduced to %1$d x %2$dpx (width x height).'),
 				$large_scene_image_type['width'], $large_scene_image_type['height'])
-				.$this->l('If smaller than the image size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
+				.$this->l('If an image is deemed too small, a white background will be added in order to achieve the correct image size.').'<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg'))
 		{
@@ -211,7 +211,7 @@ class AdminScenesControllerCore extends AdminController
 
 			$image_to_map_desc .= '
 						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
-							'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'
+							'.$this->l('Begin typing the first few letters of the product name, then select the product you are looking for from the drop-down list:').'
 								<br /><input type="text" value="" id="product_autocomplete_input" /> 
 								<input type="button" class="button" value="'.$this->l('OK').'" onclick="$(this).prev().search();" />
 								<input type="button" class="button" value="'.$this->l('Delete').'" onclick="undoEdit();" />
@@ -226,7 +226,7 @@ class AdminScenesControllerCore extends AdminController
 			$img_alt_desc = '';
 			$img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
 				.'<br />'.$this->l('Format:').' JPG, GIF, PNG. '
-				.$this->l('Filesize:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('kB max.').' '
+				.$this->l('File size:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
 				.sprintf($this->l('Automatically resized to %1$d x %2$dpx (width x height).'),
 				$thumb_scene_image_type['width'], $thumb_scene_image_type['height']).'.<br />'
 				.$this->l('Note: To change image dimensions, please change the \'thumb_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
@@ -255,7 +255,7 @@ class AdminScenesControllerCore extends AdminController
 			$root_category = array('id_category' => (int)$root_category->id, 'name' => $root_category->name);
 			$trads = array(
 							'Root' => $root_category,
-							'selected' => $this->l('selected'),
+							'selected' => $this->l('Selected'),
 							'Check all' => $this->l('Check all'),
 							'Check All' => $this->l('Check All'),
 							'Uncheck All'  => $this->l('Uncheck All'),
@@ -266,7 +266,7 @@ class AdminScenesControllerCore extends AdminController
 						);
 			$this->fields_form['input'][] = array(
 					'type' => 'categories',
-					'label' => $this->l('Categories:'),
+					'label' => $this->l('Categories'),
 					'name' => 'categories',
 					'values' => array('trads' => $trads,
 						'selected_cat' => $selected_cat,
@@ -308,9 +308,9 @@ class AdminScenesControllerCore extends AdminController
 		if (Tools::isSubmit('save_image_map'))
 		{
 			if (!Tools::isSubmit('categories') || !count(Tools::getValue('categories')))
-				$this->errors[] = Tools::displayError('You should select at least one category');
+				$this->errors[] = Tools::displayError('You should select at least one category.');
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
-				$this->errors[] = Tools::displayError('You should make at least one zone');
+				$this->errors[] = Tools::displayError('You should create at least one zone.');
 		}
 
 		parent::postProcess();

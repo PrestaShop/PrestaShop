@@ -59,10 +59,10 @@ class AdminLoginControllerCore extends AdminController
 			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
-				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to use unsecure mode (Maintenance or local IP).');
+				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
 			else
 			{
-				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following url to log in in secure mode (https).');
+				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following URL to log into secure mode (https://).');
 				$warningSslMessage .= '<a href="https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'">https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']).'</a>';
 				$this->context->smarty->assign(array('warningSslMessage' => $warningSslMessage));
 			}
@@ -134,14 +134,14 @@ class AdminLoginControllerCore extends AdminController
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
 		if (empty($email))
-			$this->errors[] = Tools::displayError('E-mail is empty');
+			$this->errors[] = Tools::displayError('Email is empty.');
 		elseif (!Validate::isEmail($email))
-			$this->errors[] = Tools::displayError('Invalid e-mail address');
+			$this->errors[] = Tools::displayError('Invalid email address.');
 
 		if (empty($passwd))
-			$this->errors[] = Tools::displayError('Password is blank');
+			$this->errors[] = Tools::displayError('The password field is blank.');
 		elseif (!Validate::isPasswd($passwd))
-			$this->errors[] = Tools::displayError('Invalid password');
+			$this->errors[] = Tools::displayError('Invalid password.');
 			
 		if (!count($this->errors))
 		{
@@ -151,12 +151,12 @@ class AdminLoginControllerCore extends AdminController
 			$employee_associated_shop = $this->context->employee->getAssociatedShops();
 			if (!$is_employee_loaded)
 			{
-				$this->errors[] = Tools::displayError('Employee does not exist or password is incorrect.');
+				$this->errors[] = Tools::displayError('The Employee does not exist, or the password provided is incorrect.');
 				$this->context->employee->logout();
 			}
 			elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin())
 			{
-				$this->errors[] = Tools::displayError('Employee does not manage any shop anymore (shop has been deleted or permissions have been removed).');
+				$this->errors[] = Tools::displayError('This employee does not manage the shop anymore (Either the shop has been deleted or permissions have been revoked).');
 				$this->context->employee->logout();
 			}
 			else
@@ -195,14 +195,14 @@ class AdminLoginControllerCore extends AdminController
 		if (_PS_MODE_DEMO_)
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 		elseif (!($email = trim(Tools::getValue('email_forgot'))))
-			$this->errors[] = Tools::displayError('E-mail is empty');
+			$this->errors[] = Tools::displayError('Email is empty.');
 		elseif (!Validate::isEmail($email))
-			$this->errors[] = Tools::displayError('Invalid e-mail address');
+			$this->errors[] = Tools::displayError('Invalid email address.');
 		else
 		{
 			$employee = new Employee();
 			if (!$employee->getByEmail($email) || !$employee)
-				$this->errors[] = Tools::displayError('This account does not exist');
+				$this->errors[] = Tools::displayError('This account does not exist.');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
 				$this->errors[] = sprintf(
 					Tools::displayError('You can regenerate your password only every %d minute(s)'),
@@ -228,7 +228,7 @@ class AdminLoginControllerCore extends AdminController
 				// Update employee only if the mail can be sent
 				$result = $employee->update();
 				if (!$result)
-					$this->errors[] = Tools::displayError('An error occurred during your password change.');
+					$this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
 				else
 					die(Tools::jsonEncode(array(
 						'hasErrors' => false,
@@ -238,7 +238,7 @@ class AdminLoginControllerCore extends AdminController
 			else
 				die(Tools::jsonEncode(array(
 					'hasErrors' => true,
-					'errors' => array(Tools::displayError('An error occurred during your password change.'))
+					'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
 				)));
 		
 		}

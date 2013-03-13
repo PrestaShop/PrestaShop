@@ -41,10 +41,10 @@ class PdfOrderSlipControllerCore extends FrontController
 			$this->order_slip = new OrderSlip($_GET['id_order_slip']);
 
 		if (!isset($this->order_slip) || !Validate::isLoadedObject($this->order_slip))
-			die(Tools::displayError('Order return not found'));
+			die(Tools::displayError('Order return not found.'));
 
 		else if ($this->order_slip->id_customer != $this->context->customer->id)
-			die(Tools::displayError('Order return not found'));
+			die(Tools::displayError('Order return not found.'));
 
 	}
 

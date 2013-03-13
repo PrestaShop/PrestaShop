@@ -500,7 +500,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'select',
-							'label' => $this->l('Destination Warehouse:'),
+							'label' => $this->l('Destination warehouse:'),
 							'name' => 'id_warehouse_to',
 							'required' => true,
 							'options' => array(
@@ -555,7 +555,7 @@ class AdminStockManagementControllerCore extends AdminController
 		if (Tools::isSubmit('addStock') && !($this->tabAccess['add'] === '1'))
 			$this->errors[] = Tools::displayError('You do not have the required permission to add stock.');
 		if (Tools::isSubmit('removeStock') && !($this->tabAccess['delete'] === '1'))
-			$this->errors[] = Tools::displayError('You do not have the required permission to delete stock.');
+			$this->errors[] = Tools::displayError('You do not have the required permission to delete stock');
 		if (Tools::isSubmit('transferStock') && !($this->tabAccess['edit'] === '1'))
 			$this->errors[] = Tools::displayError('You do not have the required permission to transfer stock.');
 
@@ -680,11 +680,11 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
 					$not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
 					if ($usable_quantity_in_stock < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Could not remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
 					else if ($not_usable_quantity < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough quantity (not usable). Could not remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
 					else
-						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity or an error occurred. No stock was removed.');
+						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity. Therefore no stock was removed.');
 				}
 			}
 		}
@@ -704,13 +704,13 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in source warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehous(es) is ready for sale.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in destination warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehous(es) is ready for sale.');
 			$usable_to = (bool)$usable_to;
 
 			// if we can process stock transfers
@@ -732,7 +732,7 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($is_transfer)
 					Tools::redirectAdmin($redirect.'&conf=3');
 				else
-					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity, or an error occurred. No stock was transferred.');
+					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity. No stock was transferred.');
 			}
 		}
 	}
@@ -1071,7 +1071,7 @@ class AdminStockManagementControllerCore extends AdminController
 					));
 				}
 				else
-					$this->errors[] = Tools::displayError('The specified product is not valid');
+					$this->errors[] = Tools::displayError('The product specified is not valid.');
 			}
 		}
 		else

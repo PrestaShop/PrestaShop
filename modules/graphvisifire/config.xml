@@ -3,7 +3,7 @@
             <name>graphvisifire</name>
             <displayName><![CDATA[Visifire]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Visifire is a set of open source data visualization components - powered by Microsoft Silverlight 2 beta 2.]]></description>
+            <description><![CDATA[Visifire is a set of open-source data visualization components -- Powered by Microsoft Silverlight 2 (beta 2).]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
             <is_configurable>0</is_configurable>
