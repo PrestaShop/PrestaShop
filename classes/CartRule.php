@@ -445,8 +445,9 @@ class CartRuleCore extends ObjectModel
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_carrier crc
+			INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crc.id_carrier AND c.deleted = 0)
 			WHERE crc.id_cart_rule = '.(int)$this->id.'
-			AND crc.id_carrier = '.(int)$context->cart->id_carrier);
+			AND c.id_carrier = '.(int)$context->cart->id_carrier);
 			if (!$id_cart_rule)
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with this carrier');
 		}
@@ -762,10 +763,11 @@ class CartRuleCore extends ObjectModel
 			else
 			{
 				$data = Db::getInstance()->executeS('
-					SELECT crc.id_cart_rule, crc.id_carrier
+					SELECT crc.id_cart_rule, c.id_carrier
 					FROM '._DB_PREFIX_.'cart_rule_carrier crc
+					INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crc.id_carrier AND c.deleted = 0)					
 					WHERE crc.id_cart_rule = '.(int)$this->id.'
-					AND crc.id_carrier = '.(int)$context->cart->id_carrier);
+					AND c.id_carrier = '.(int)$context->cart->id_carrier);
 
 				if ($data)
 					foreach ($data as $cart_rule)
@@ -1032,9 +1034,10 @@ class CartRuleCore extends ObjectModel
 				SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
 				FROM `'._DB_PREFIX_.$type.'` t
 				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
-				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
+				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.($type == 'carrier' ? 'reference' : $type).' = crt.id_'.$type.'
 				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
-				$shop_list.
+				$shop_list
+				.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
 				' ORDER BY name ASC',
 				false);
 				while ($row = Db::getInstance()->nextRow($resource))
@@ -1081,6 +1084,7 @@ class CartRuleCore extends ObjectModel
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
+		'.($context->cart->id_carrier ? 'INNER JOIN '._DB_PREFIX_.'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '').'		
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
 		WHERE cr.active = 1
 		AND cr.code = ""
@@ -1093,7 +1097,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.carrier_restriction = 0
-			'.($context->cart->id_carrier ? 'OR crca.id_carrier = '.(int)$context->cart->id_carrier : '').'
+			'.($context->cart->id_carrier ? 'OR c.id_carrier = '.(int)$context->cart->id_carrier : '').'
 		)
 		AND (
 			cr.shop_restriction = 0

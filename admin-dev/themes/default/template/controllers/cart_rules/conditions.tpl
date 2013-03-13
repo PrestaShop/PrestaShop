@@ -98,7 +98,7 @@
 				<p><strong>{l s='Unselected carriers'}</strong></p>
 				<select id="carrier_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.unselected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a
@@ -112,7 +112,7 @@
 				<p><strong>{l s='Selected carriers'}</strong></p>
 				<select name="carrier_select[]" id="carrier_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.selected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a
