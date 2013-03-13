@@ -60,7 +60,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_CART_REDIRECT' => array(
-						'title' => $this->l('Redirect after adding product to cart.'),
+						'title' => $this->l('Redirect after adding product to cart'),
 						'desc' => $this->l('Only for non-AJAX versions of the cart.'),
 						'cast' => 'intval',
 						'show' => true,
@@ -68,8 +68,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'radio',
 						'validation' => 'isBool',
 						'choices' => array(
-							0 => $this->l('previous page'),
-							1 => $this->l('cart summary')
+							0 => $this->l('Previous page'),
+							1 => $this->l('Cart summary')
 						)
 					),
 					'PS_PRODUCT_SHORT_DESC_LIMIT' => array(
@@ -142,7 +142,7 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Product page'),
 				'fields' =>	array(
 					'PS_DISPLAY_QTIES' => array(
-						'title' => $this->l('Display available quantities on the product page.'),
+						'title' => $this->l('Display available quantities on the product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -158,7 +158,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page.'),
+						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -166,7 +166,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_DISP_UNAVAILABLE_ATTR' => array(
-						'title' => $this->l('Display unavailable product attributes on the product page.'),
+						'title' => $this->l('Display unavailable product attributes on the product page'),
 						'desc' => '',
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -174,7 +174,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_ATTRIBUTE_CATEGORY_DISPLAY' => array(
-						'title' => $this->l('Display the "add to cart" button when a product has attributes.'),
+						'title' => $this->l('Display the "add to cart" button when a product has attributes'),
 						'desc' => $this->l('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
@@ -206,7 +206,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-						'title' => $this->l('Enable advanced stock management'),
+						'title' => $this->l('Enable advanced-stock management'),
 						'desc' => $this->l('Allows you to manage physical stock, warehouses and supply orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',

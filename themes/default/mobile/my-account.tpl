@@ -32,9 +32,9 @@
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
 			{if $has_customer_an_address}
 			<li>
-				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address.'}" data-ajax="false">
+				<a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}" data-ajax="false">
 					<img src="{$img_mobile_dir}icon/addrbook.png" alt="{l s='Addresses'}" class="ui-li-icon ui-li-thumb" />
-					{l s='Add my first address.'}
+					{l s='Add my first address'}
 				</a>
 			</li>
 			{/if}

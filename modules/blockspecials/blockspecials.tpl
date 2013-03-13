@@ -54,7 +54,7 @@
 			<a href="{$link->getPageLink('prices-drop')}" title="{l s='All specials' mod='blockspecials'}">&raquo; {l s='All specials' mod='blockspecials'}</a>
 		</p>
 {else}
-		<p>{l s='No specials at this time' mod='blockspecials'}</p>
+		<p>{l s='No product specials are available at this time.' mod='blockspecials'}</p>
 {/if}
 	</div>
 </div>

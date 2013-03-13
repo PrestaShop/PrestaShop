@@ -233,7 +233,7 @@ class AdminShopControllerCore extends AdminController
 			AND id_shop_group = '.(int)Tools::getValue('id_shop_group').'
 			'.(Tools::getValue('id_shop') ? 'AND id_shop != '.(int)Tools::getValue('id_shop') : ''));
 			if ($same_name)
-				$this->errors[] = Tools::displayError('You cannot have 2 shops with the same name in the same group');
+				$this->errors[] = Tools::displayError('You cannot have two shops with the same name in the same group.');
 		}
 
 		if (count($this->errors))
@@ -258,7 +258,7 @@ class AdminShopControllerCore extends AdminController
 			return $result;
 		}
 		else
-			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
+			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency).');
 
 		return false;
 	}
@@ -325,7 +325,7 @@ class AdminShopControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Shop name:'),
 					'desc' => $this->l('This field does not refer to the shop name visible in the front office.').' '.
-						sprintf($this->l('Follow %sthis link%s to edit the shop name used on the front office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'">', '</a>'),
+						sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'">', '</a>'),
 					'name' => 'name',
 					'required' => true,
 				)
@@ -357,7 +357,7 @@ class AdminShopControllerCore extends AdminController
 			if ($this->display == 'add')
 				$group_desc = $this->l('Warning: You won\'t be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.');
 			else
-				$group_desc = $this->l('You can only move your shop to a shop group with all "share" options disabled or to a shop group with no customers/orders.');
+				$group_desc = $this->l('You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.');
 
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
@@ -391,7 +391,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root:'),
-			'desc' => $this->l('This is the root category of the store that you create. To define a new root category for your store').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot">'.$this->l('Click here').'</a>',
+			'desc' => $this->l('This is the root category of the store that you\'ve created. To define a new root category for your store,').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot">'.$this->l('Please click here').'</a>',
 			'name' => 'id_category',
 			'options' => array(
 				'query' => $categories,
@@ -484,10 +484,10 @@ class AdminShopControllerCore extends AdminController
 			'warehouse' => $this->l('Warehouse'),
 			'webservice_account' => $this->l('Webservice accounts'),
 			'attribute_group' => $this->l('Attribute groups'),
-			'feature' => $this->l('Features:'),
+			'feature' => $this->l('Features'),
 			'group' => $this->l('Customer groups'),
 			'tax_rules_group' => $this->l('Tax rules groups'),
-			'supplier' => $this->l('Suppliers:'),
+			'supplier' => $this->l('Suppliers'),
 			'referrer' => $this->l('Referrers'),
 			'zone' => $this->l('Zones'),
 			'cart_rule' => $this->l('Cart rules'),
@@ -573,7 +573,7 @@ class AdminShopControllerCore extends AdminController
 			$this->beforeAdd($object);
 			if (!$object->add())
 			{
-				$this->errors[] = Tools::displayError('An error occurred while creating object.').
+				$this->errors[] = Tools::displayError('An error occurred while creating an object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			/* voluntary do affectation here */
@@ -661,7 +661,7 @@ class AdminShopControllerCore extends AdminController
 			if (!isset($tree[$id_shop_group]))
 				$tree[$id_shop_group] = array(
 					'data' => array(
-						'title' => '<b>'.$this->l('Group:').'</b> '.$row['group_name'],
+						'title' => '<b>'.$this->l('Group').'</b> '.$row['group_name'],
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,

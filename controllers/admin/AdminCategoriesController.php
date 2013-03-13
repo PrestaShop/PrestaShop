@@ -304,7 +304,7 @@ class AdminCategoriesControllerCore extends AdminController
 					$this->display = 'add';
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		parent::initProcess();
@@ -599,7 +599,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processDelete()
@@ -608,7 +608,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($this->tabAccess['delete'] === '1')
 		{
 			if ($category->isRootCategoryForAShop())
-				$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
 			else if (parent::processDelete())
 			{
 				$this->setDeleteMode();
@@ -619,7 +619,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processFatherlessProducts($id_parent)
@@ -652,9 +652,9 @@ class AdminCategoriesControllerCore extends AdminController
 	public function processPosition()
 	{
 		if ($this->tabAccess['edit'] !== '1')
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');

@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_4f29d8c727dcf2022ac241cb96c31083'] = 'Devolución de recordset vacío';
+$_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_b5f5c19c8729b639d4d2a256fcb01a10'] = 'Devolución de recordset vacío';
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_f5c493141bb4b2508c5938fd9353291a'] = 'Mostrando %1$s de %2$s';
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_49ee3087348e8d44e1feda1917443987'] = 'Nombre';
 $_MODULE['<{statsbestsuppliers}prestashop>statsbestsuppliers_cc3eb9ba7d0e236f33023a4744d0693a'] = 'Mejores proveedores';

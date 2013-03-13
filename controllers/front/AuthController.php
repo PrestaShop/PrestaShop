@@ -266,19 +266,19 @@ class AuthControllerCore extends FrontController
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
 		if (empty($email))
-			$this->errors[] = Tools::displayError('E-mail address required');
+			$this->errors[] = Tools::displayError('An email address required.');
 		elseif (!Validate::isEmail($email))
-			$this->errors[] = Tools::displayError('Invalid e-mail address');
+			$this->errors[] = Tools::displayError('Invalid email address.');
 		elseif (empty($passwd))
-			$this->errors[] = Tools::displayError('Password is required');
+			$this->errors[] = Tools::displayError('Password is required.');
 		elseif (!Validate::isPasswd($passwd))
-			$this->errors[] = Tools::displayError('Invalid password');
+			$this->errors[] = Tools::displayError('Invalid password.');
 		else
 		{
 			$customer = new Customer();
 			$authentication = $customer->getByEmail(trim($email), trim($passwd));
 			if (!$authentication || !$customer->id)
-				$this->errors[] = Tools::displayError('Authentication failed');
+				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
 			{
 				$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
@@ -368,7 +368,7 @@ class AuthControllerCore extends FrontController
 			$this->context->smarty->assign('email_create', 1);
 		// New Guest customer
 		if (!Tools::getValue('is_new_customer', 1) && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
-			$this->errors[] = Tools::displayError('You cannot create a guest account.');
+			$this->errors[] = Tools::displayError('You cannot create a guest account..');
 		if (!Tools::getValue('is_new_customer', 1))
 			$_POST['passwd'] = md5(time()._COOKIE_KEY_);
 		if (isset($_POST['guest_email']) && $_POST['guest_email'])
@@ -376,7 +376,7 @@ class AuthControllerCore extends FrontController
 		// Checked the user address in case he changed his email address
 		if (Validate::isEmail($email = Tools::getValue('email')) && !empty($email))
 			if (Customer::customerExists($email))
-				$this->errors[] = Tools::displayError('An account is already registered with this e-mail.', false);
+				$this->errors[] = Tools::displayError('An account using this email address has already been registered.', false);
 		// Preparing customer
 		$customer = new Customer();
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
@@ -400,7 +400,7 @@ class AuthControllerCore extends FrontController
 		}
 
 		if ($error_phone)
-			$this->errors[] = Tools::displayError('You must register at least one phone number');
+			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 		
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
 
@@ -416,7 +416,7 @@ class AuthControllerCore extends FrontController
 
 				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 				if (!Validate::isBirthDate($customer->birthday))
-					$this->errors[] = Tools::displayError('Invalid birthday.');
+					$this->errors[] = Tools::displayError('Invalid date of birth.');
 
 				// New Guest customer
 				$customer->is_guest = (Tools::isSubmit('is_new_customer') ? !Tools::getValue('is_new_customer', 1) : 0);
@@ -428,7 +428,7 @@ class AuthControllerCore extends FrontController
 					{
 						if (!$customer->is_guest)
 							if (!$this->sendConfirmationMail($customer))
-								$this->errors[] = Tools::displayError('Cannot send e-mail');
+								$this->errors[] = Tools::displayError('The email cannot be sent.');
 
 						$this->updateContext($customer);
 
@@ -461,7 +461,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? url_encode($this->authRedirection) : 'my-account'));
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
 				}
 			}
 
@@ -493,18 +493,18 @@ class AuthControllerCore extends FrontController
 				{
 					if (!$country->checkZipCode($postcode))
 						$this->errors[] = sprintf(
-							Tools::displayError('Zip/Postal code is invalid. Must be typed as follows: %s'),
+							Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'),
 							str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
 						);
 				}
 				elseif ($country->zip_code_format)
-					$this->errors[] = Tools::displayError('Zip/Postal code is required.');
+					$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
 				elseif ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Zip/Postal code is invalid.');
+					$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 			}
 
 			if ($country->need_identification_number && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
-				$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
+				$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 			elseif (!$country->need_identification_number)
 				$address->dni = null;
 		}
@@ -515,13 +515,13 @@ class AuthControllerCore extends FrontController
 		if (!count($this->errors))
 		{
 			if (Customer::customerExists(Tools::getValue('email')))
-				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please enter your password or request a new one.', false);
+				$this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
 			if (Tools::isSubmit('newsletter'))
 				$this->processCustomerNewsletter($customer);
 
 			$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
 			if (!Validate::isBirthDate($customer->birthday))
-					$this->errors[] = Tools::displayError('Invalid birthday.');
+					$this->errors[] = Tools::displayError('Invalid date of birth');
 
 			if (!count($this->errors))
 			{
@@ -532,7 +532,7 @@ class AuthControllerCore extends FrontController
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
 				if (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && $contains_state && !$id_state)
-					$this->errors[] = Tools::displayError('This country requires a state selection.');
+					$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 				else
 				{
 					$customer->active = 1;
@@ -542,7 +542,7 @@ class AuthControllerCore extends FrontController
 					else
 						$customer->is_guest = 0;
 					if (!$customer->add())
-						$this->errors[] = Tools::displayError('An error occurred while creating your account.');
+						$this->errors[] = Tools::displayError('An error occurred while creating your account..');
 					else
 					{
 						$address->id_customer = (int)$customer->id;
@@ -558,7 +558,7 @@ class AuthControllerCore extends FrontController
 								// we add the guest customer in the default customer group
 								$customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
 								if (!$this->sendConfirmationMail($customer))
-									$this->errors[] = Tools::displayError('Cannot send e-mail');
+									$this->errors[] = Tools::displayError('The email cannot be sent.');
 							}
 							else
 							{
@@ -640,10 +640,10 @@ class AuthControllerCore extends FrontController
 	protected function processSubmitCreate()
 	{
 		if (!Validate::isEmail($email = Tools::getValue('email_create')) || empty($email))
-			$this->errors[] = Tools::displayError('Invalid e-mail address');
+			$this->errors[] = Tools::displayError('Invalid email address.');
 		elseif (Customer::customerExists($email))
 		{
-			$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please enter your password or request a new one.', false);
+			$this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
 			$_POST['email'] = $_POST['email_create'];
 			unset($_POST['email_create']);
 		}

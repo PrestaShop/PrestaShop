@@ -13,8 +13,8 @@ $_MODULE['<{statsstock}prestashop>statsstock_689202409e48743b914713f96d93947c'] 
 $_MODULE['<{statsstock}prestashop>statsstock_1b2379801de373b6b563c347014fb34b'] = 'Su catálogo está vacío';
 $_MODULE['<{statsstock}prestashop>statsstock_7d74f3b92b19da5e606d737d339a9679'] = 'Artículo';
 $_MODULE['<{statsstock}prestashop>statsstock_88940d60e75cf4ff38ce27db4efc83b2'] = 'Precio*';
-$_MODULE['<{statsstock}prestashop>statsstock_40cfe6142794ce67fbee8431434905e2'] = 'Corresponde al precio de venta al por mayor defecto de acuerdo con el proveedor por defecto para el producto. Un precio medio se utiliza cuando el producto tiene atributos.';
-$_MODULE['<{statsstock}prestashop>statsstock_f1c1f40589b2e7f12e0333b8f725fc0f'] = 'Estadísticas de las cantidades disponibles';
-$_MODULE['<{statsstock}prestashop>statsstock_b840d120e539d6d41af11c6d00df8e8d'] = 'Cantidades disponibles para la valoración de la venta';
+$_MODULE['<{statsstock}prestashop>statsstock_a9873f90f06f9e2cfa3d048298ecca8c'] = 'Corresponde al precio de venta al por mayor defecto de acuerdo con el proveedor por defecto para el producto. Un precio medio se utiliza cuando el producto tiene atributos.';
+$_MODULE['<{statsstock}prestashop>statsstock_4416eb048e458e909c65b5210cee2b83'] = 'Estadísticas de las cantidades disponibles';
+$_MODULE['<{statsstock}prestashop>statsstock_f27f89ed1aeb8108c091677cf7b99c28'] = 'Cantidades disponibles para la valoración de la venta';
 $_MODULE['<{statsstock}prestashop>statsstock_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Todas';
 $_MODULE['<{statsstock}prestashop>statsstock_4364f8c09d7bf97996a20840900e7b30'] = 'Precio medio';

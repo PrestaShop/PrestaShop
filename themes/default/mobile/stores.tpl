@@ -37,10 +37,10 @@
 		var defaultLong = '{$defaultLong}';
 		
 		var translation_1 = '{l s='No stores were found. Please try selecting a wider radius.' js=1}';
-		var translation_2 = '{l s='store found - see details:' js=1}';
-		var translation_3 = '{l s='stores found - see all results:' js=1}';
+		var translation_2 = '{l s='store found -- see details:' js=1}';
+		var translation_3 = '{l s='stores found -- view all results:' js=1}';
 		var translation_4 = '{l s='Phone:' js=1}';
-		var translation_5 = '{l s='Get Directions' js=1}';
+		var translation_5 = '{l s='Get directions' js=1}';
 		var translation_6 = '{l s='Not found' js=1}';
 		
 		var hasStoreIcon = '{$hasStoreIcon}';
@@ -68,7 +68,7 @@
 	
 	<div id="stores_search_block">
 		<button type="submit" data-theme="a" name="submit" value="submit-value" class="ui-btn-hidden" aria-disabled="false">
-			{l s='Search:'}
+			{l s='Search'}
 		</button>
 	</div>
 	

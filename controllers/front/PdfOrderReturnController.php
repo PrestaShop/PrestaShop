@@ -38,11 +38,11 @@ class PdfOrderReturnControllerCore extends FrontController
 			$this->orderReturn = new OrderReturn(Tools::getValue('id_order_return'));
 
 		if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn))
-			die(Tools::displayError('Order return not found'));
+			die(Tools::displayError('Order return not found.'));
 		else if ($this->orderReturn->id_customer != $this->context->customer->id)
-			die(Tools::displayError('Order return not found'));
+			die(Tools::displayError('Order return not found.'));
 		else if ($this->orderReturn->state < 2)
-			die(Tools::displayError('Order return not confirmed'));
+			die(Tools::displayError('Order return not confirmed.'));
 
 	}
 

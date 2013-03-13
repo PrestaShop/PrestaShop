@@ -185,15 +185,15 @@ class AdminShippingControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&conf=6&id_carrier='.$carrier->id.'&token='.$this->token);
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
+						$this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
 				}
 				elseif (isset($id_carrier2))
 					$_POST['id_carrier'] = $id_carrier2;
 				else
-					$this->errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
+					$this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		else
 			return parent::postProcess();

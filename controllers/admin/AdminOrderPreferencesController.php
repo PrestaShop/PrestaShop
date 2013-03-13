@@ -49,7 +49,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 			),
 			array(
 				'value' => PS_ORDER_PROCESS_OPC,
-				'name' => $this->l('One page checkout')
+				'name' => $this->l('One-page checkout')
 			)
 		);
 
@@ -75,7 +75,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_PURCHASE_MINIMUM' => array(
-						'title' => $this->l('Minimum purchase total required in order to validate the order.'),
+						'title' => $this->l('Minimum purchase total required in order to validate the order'),
 						'desc' => $this->l('Set to 0 to disable this feature'),
 						'validation' => 'isFloat',
 						'cast' => 'floatval',
@@ -83,7 +83,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
-						'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
+						'desc' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -107,7 +107,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						)
 					),
 					'PS_CONDITIONS_CMS_ID' => array(
-						'title' => $this->l('Conditions of use for the CMS page.'),
+						'title' => $this->l('Conditions of use for the CMS page'),
 						'desc' => $this->l('Choose the conditions of use for the CMS page.'),
 						'validation' => 'isInt',
 						'type' => 'select',
