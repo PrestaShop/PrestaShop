@@ -42,12 +42,12 @@
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-	<p class="preference_description">{l s='The cart rule will be applied to the first X customers only.'}</p>
+	<p class="preference_description">{l s='The cart rule will be applied to the first "X" customers only.'}</p>
 </div>
 <label>{l s='Total available for each user.'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
-	<p class="preference_description">{l s='A customer will only be able to use the cart rule X time(s).'}</p>
+	<p class="preference_description">{l s='A customer will only be able to use the cart rule "X" time(s).'}</p>
 </div>
 {if $countries.unselected|@count + $countries.selected|@count > 1}
 <br />

@@ -46,8 +46,8 @@
 
 
 <ul class="info-order" data-role="listview">
-	{if $carrier->id}<li><strong>{l s='Carrier:'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
-	<li><strong>{l s='Payment method:'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
+	{if $carrier->id}<li><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</li>{/if}
+	<li><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></li>
 	{if $invoice AND $invoiceAllowed}
 	<li>
 		<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
@@ -59,7 +59,7 @@
 	{/if}
 	{if $order->gift}
 		<li><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You have requested gift wrapping for this order.'}</li>
-		<li>{l s='Message:'} {$order->gift_message|nl2br}</li>
+		<li>{l s='Message'} {$order->gift_message|nl2br}</li>
 	{/if}
 </ul><!-- .info-order -->
 
@@ -103,7 +103,7 @@
 {/if}
 {if $order->gift}
 	<p><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You have requested gift wrapping for this order.'}</p>
-	<p>{l s='Message:'} {$order->gift_message|nl2br}</p>
+	<p>{l s='Message'} {$order->gift_message|nl2br}</p>
 {/if}
 {* / TO CHECK ==========================*}
 
@@ -161,7 +161,7 @@
 {foreach from=$discounts item=discount}
 	<li class="item">
 		<h3>{$discount.name|escape:'htmlall':'UTF-8'}</h3>
-		<p>{l s='Voucher:'} {$discount.name|escape:'htmlall':'UTF-8'}</p>
+		<p>{l s='Voucher'} {$discount.name|escape:'htmlall':'UTF-8'}</p>
 		<p><span class="order_qte_span editable">1</span></p>
 		<p>&nbsp;</p>
 		<p>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</p>
@@ -173,7 +173,7 @@
 {* / TO CHECK ==========================*}
 	{if $priceDisplay && $use_tax}
 		<li data-theme="b" class="item">
-			{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
+			{l s='Total products (tax excl.)'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
 		</tr>
 	{/if}
 	<li data-theme="b" class="item">
@@ -193,7 +193,7 @@
 		{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
 	</li>
 	<li data-theme="a" class="totalprice item">
-		{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
+		{l s='Total'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
 	</li>
 </ul>
 <!-- /order details -->
@@ -274,7 +274,7 @@
 	{/if}
 	{* / TO CHECK ==========================*}
 	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
-		<h3 class="bg">{l s='Add a message:'}</h3>
+		<h3 class="bg">{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<fieldset>
 			<label for="id_product">{l s='Product'}</label>

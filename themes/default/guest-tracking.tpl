@@ -66,7 +66,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 	
 	{if isset($transformSuccess)}
-		<p class="success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in on this'} <a href="{$link->getPageLink('authentication', true)}">{l s='page.'}</a></p>
+		<p class="success">{l s='Your guest account has been successfully transformed into a customer account. You can now login as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)}">{l s='page.'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box">
@@ -104,7 +104,7 @@
 			</p>
 
 			<p class="text">
-				<label>{l s='Email:'}</label>
+				<label>{l s='Email'}</label>
 				<input type="text" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'htmlall':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 			</p>
 

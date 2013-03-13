@@ -101,22 +101,22 @@
 				<div class="ui-bar ui-bar-c">
 					{if $use_taxes}
 						{if $priceDisplay}
-							<h3>{if $display_tax_label}{l s='Total products (tax excl.):'}{else}{l s='Total products:'}{/if}</h3>
+							<h3>{if $display_tax_label}{l s='Total products (tax excl.)'}{else}{l s='Total products'}{/if}</h3>
 							<p><span class="price" id="total_product">{displayPrice price=$total_products}</span></p>
 						{else}
-							<h3>{if $display_tax_label}{l s='Total products (tax incl.):'}{else}{l s='Total products:'}{/if}</h3>
+							<h3>{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</h3>
 							<p><span class="price" id="total_product">{displayPrice price=$total_products_wt}</span></p>
 						{/if}
 					{else}
-						<h3>{l s='Total products:'}</h3>
+						<h3>{l s='Total products'}</h3>
 						<p><span class="price" id="total_product">{displayPrice price=$total_products}</span></p>
 					{/if}
 
 					<div {if $total_discounts == 0}class="hide"{/if}>
 						{if $use_taxes && $display_tax_label}
-							<h3>{l s='Total vouchers (tax excl.):'}</h3>
+							<h3>{l s='Total vouchers (tax excl.)'}</h3>
 						{else}
-							<h3>{l s='Total vouchers:'}</h3>
+							<h3>{l s='Total vouchers'}</h3>
 						{/if}
 
 						{if $use_taxes && !$priceDisplay}
@@ -150,35 +150,35 @@
 
 					{if $use_taxes}
 						{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
-							<h3>{l s='Shipping:'}</h3>
+							<h3>{l s='Shipping'}</h3>
 							<p><span class="price" id="total_shipping">{l s='Free Shipping!'}</span></p>
 						{else}
 							{if $priceDisplay}
 								<div {if $total_shipping_tax_exc <= 0}class="hide"{/if}>
-									<h3>{if $display_tax_label}{l s='Total shipping (tax excl.):'}{else}{l s='Total shipping:'}{/if}</h3>
+									<h3>{if $display_tax_label}{l s='Total shipping (tax excl.)'}{else}{l s='Total shipping'}{/if}</h3>
 									<p><span class="price" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</span></p>
 								</div>
 							{else}
 								<div {if $total_shipping <= 0}class="hide"{/if}>
-									<h3>{if $display_tax_label}{l s='Total shipping (tax incl.):'}{else}{l s='Total shipping:'}{/if}</h3>
+									<h3>{if $display_tax_label}{l s='Total shipping (tax incl.)'}{else}{l s='Total shipping'}{/if}</h3>
 									<p><span class="price" id="total_shipping">{displayPrice price=$total_shipping}</span></p>
 								</div>
 							{/if}
 						{/if}
 					{else}
 						<div {if $total_shipping_tax_exc <= 0}class="hide"{/if}>
-							<h3>{l s='Total shipping:'}</h3>
+							<h3>{l s='Total shipping'}</h3>
 							<p><span class="price" id="total_shipping">{displayPrice price=$total_shipping_tax_exc}</span></p>
 						</div>
 					{/if}
 					{if $use_taxes}
-						<h3>{l s='Total (tax excl.):'}</h3>
+						<h3>{l s='Total (tax excl.)'}</h3>
 						<p><span class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</span></p>
 	
-						<h3>{l s='Total tax:'}</h3>
+						<h3>{l s='Total tax'}</h3>
 						<p><span class="price" id="total_tax">{displayPrice price=$total_tax}</span></p>
 					{/if}
-					<h3>{l s='Total:'}</h3>
+					<h3>{l s='Total'}</h3>
 					{if $use_taxes}
 						<p><span class="price" id="total_price">{displayPrice price=$total_price}</span></p>
 					{else}

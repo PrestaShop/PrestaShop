@@ -70,7 +70,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Suppliers:'),
+				'title' => $this->l('Suppliers'),
 				'image' => '../img/admin/suppliers.gif'
 			),
 			'input' => array(
@@ -80,7 +80,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'size' => 40,
 					'required' => true,
@@ -349,7 +349,7 @@ class AdminSuppliersControllerCore extends AdminController
 		// checks access
 		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
 		{
-			$this->errors[] = Tools::displayError('You do not have the required permissions to add suppliers.');
+			$this->errors[] = Tools::displayError('You do not have permission to add suppliers.');
 			return parent::postProcess();
 		}
 
@@ -382,7 +382,7 @@ class AdminSuppliersControllerCore extends AdminController
 			{
 				foreach ($validation as $item)
 					$this->errors[] = $item;
-				$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+				$this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
 			}
 			else
 			{

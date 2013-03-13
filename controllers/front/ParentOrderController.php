@@ -79,9 +79,9 @@ class ParentOrderControllerCore extends FrontController
 			$oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
 			$duplication = $oldCart->duplicate();
 			if (!$duplication || !Validate::isLoadedObject($duplication['cart']))
-				$this->errors[] = Tools::displayError('Sorry, we cannot renew your order.');
+				$this->errors[] = Tools::displayError('Sorry. We cannot renew your order.');
 			else if (!$duplication['success'])
-				$this->errors[] = Tools::displayError('Some items are not available, we are unable to renew your order');
+				$this->errors[] = Tools::displayError('Some items are no longer available, and we are unable to renew your order.');
 			else
 			{
 				$this->context->cookie->id_cart = $duplication['cart']->id;
@@ -99,9 +99,9 @@ class ParentOrderControllerCore extends FrontController
 				if (Tools::isSubmit('submitAddDiscount'))
 				{
 					if (!($code = trim(Tools::getValue('discount_name'))))
-						$this->errors[] = Tools::displayError('You must enter a voucher code');
+						$this->errors[] = Tools::displayError('You must enter a voucher code.');
 					elseif (!Validate::isCleanHtml($code))
-						$this->errors[] = Tools::displayError('Voucher code invalid');
+						$this->errors[] = Tools::displayError('The voucher code is invalid.');
 					else
 					{
 						if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
@@ -115,7 +115,7 @@ class ParentOrderControllerCore extends FrontController
 							}
 						}
 						else
-							$this->errors[] = Tools::displayError('This voucher does not exists');
+							$this->errors[] = Tools::displayError('This voucher does not exists.');
 					}
 					$this->context->smarty->assign(array(
 						'errors' => $this->errors,
@@ -211,7 +211,7 @@ class ParentOrderControllerCore extends FrontController
 		if ((int)(Tools::getValue('gift')))
 		{
 			if (!Validate::isMessage($_POST['gift_message']))
-				$this->errors[] = Tools::displayError('Invalid gift message');
+				$this->errors[] = Tools::displayError('Invalid gift message.');
 			else
 				$this->context->cart->gift_message = strip_tags($_POST['gift_message']);
 		}
@@ -220,7 +220,7 @@ class ParentOrderControllerCore extends FrontController
 		{
 			$address = new Address((int)($this->context->cart->id_address_delivery));
 			if (!($id_zone = Address::getZoneById($address->id)))
-				$this->errors[] = Tools::displayError('No zone matches your address');
+				$this->errors[] = Tools::displayError('No zone matches your address.');
 		}
 		else
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));

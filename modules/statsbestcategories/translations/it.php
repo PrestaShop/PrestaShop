@@ -11,4 +11,4 @@ $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_a2e1fa19a6a3405a4
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_998e4c5c80f27dec552e99dfed34889a'] = 'Esporta CSV';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_49ee3087348e8d44e1feda1917443987'] = 'Nome';
 $_MODULE['<{statsbestcategories}prestashop>statsbestcategories_eebfd2d9a7ea25b9e61e8260bcd4849c'] = 'Quantità totali vendute';
-$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_411919c5d99ff5d0f9770e96ffe22a01'] = 'Prezzo totale venduto';
+$_MODULE['<{statsbestcategories}prestashop>statsbestcategories_f3547ae5e06426d87312eff7dda775aa'] = 'Prezzo totale venduto';

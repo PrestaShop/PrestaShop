@@ -138,13 +138,13 @@
 			{/if}
 		{/foreach}
 		<tr class="cart_total_product">
-			<td colspan="5">{l s='Total products:'}</td>
+			<td colspan="5">{l s='Total cost of products:'}</td>
 			<td class="price bold right">{displayWtPriceWithCurrency price=$total_products currency=$currency}</td>
 		</tr>
 	
 		{if $total_discounts != 0}
 			<tr class="cart_total_voucher">
-				<td colspan="5">{l s='Total vouchers:'}</td>
+				<td colspan="5">{l s='Total value of vouchers:'}</td>
 				<td class="price-discount bold right">{displayWtPriceWithCurrency price=$total_discounts currency=$currency}</td>
 			</tr>
 		{/if}
@@ -156,7 +156,7 @@
 		{/if}
 		{if $cart->getOrderTotal(true, Cart::ONLY_SHIPPING) > 0}
 			<tr class="cart_total_delivery">
-				<td colspan="5">{l s='Total shipping:'}</td>
+				<td colspan="5">{l s='Total cost of shipping:'}</td>
 				<td class="price bold right">{displayWtPriceWithCurrency price=$total_shipping currency=$currency}</td>
 			</tr>
 		{/if}

@@ -2,8 +2,8 @@
         <module>
             <name>pagesnotfound</name>
             <displayName><![CDATA[Pages not found]]></displayName>
-            <version><![CDATA[1]]></version>
-            <description><![CDATA[Display the pages requested by your visitors but not found.]]></description>
+            <version><![CDATA[1.1]]></version>
+            <description><![CDATA[Display the pages requested by your visitors that have not been found.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[analytics_stats]]></tab>
             <is_configurable>0</is_configurable>
