@@ -92,10 +92,27 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->specificConfirmDelete = false;
 		
 		parent::__construct();
-		
+	}
+
+	public function init()
+	{
+		parent::init();
+
+		// context->shop is set in the init() function, so we move the _category instanciation after that
+		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
+			$this->_category = new Category($id_category);
+		else
+		{
+			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
+				$this->_category = new Category($this->context->shop->id_category);
+			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
+				$this->_category = Category::getTopCategory();
+			else
+				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
+		}
+
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$top_category = Category::getTopCategory();
-		
 		if (Tools::isSubmit('id_category'))
 			$id_parent = $this->_category->id;
 		elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1)
@@ -124,22 +141,7 @@ class AdminCategoriesControllerCore extends AdminController
 		// we add restriction for shop
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive())
 			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
-	}
 
-	public function init()
-	{
-		parent::init();
-
-		// context->shop is set in the init() function, so we move the _category instanciation after that
-		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
-			$this->_category = new Category($id_category);
-		else
-			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
-				$this->_category = new Category($this->context->shop->id_category);
-			else if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
-				$this->_category = Category::getTopCategory();
-			else
-				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
 		// if we are not in a shop context, we remove the position column
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
