@@ -702,7 +702,7 @@ class AdminManufacturersControllerCore extends AdminController
 		}
 
 		if (!$res)
-			$this->errors[] = Tools::displayError('Unable to resize one or more pictures');
+			$this->errors[] = Tools::displayError('Unable to resize one or more of your pictures.');
 
 		return $res;
 	}

@@ -283,7 +283,7 @@ class AdminLanguagesControllerCore extends AdminController
 		if (!$this->checkDeletion($object))
 			return false;
 		if (!$this->deleteNoPictureImages((int)$object->id))
-			$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> ';
+			$this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> ';
 
 		return parent::processDelete();
 	}
@@ -300,7 +300,7 @@ class AdminLanguagesControllerCore extends AdminController
 					return false;
 				if (!$this->deleteNoPictureImages((int)$object->id))
 				{
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> ';
+					$this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> ';
 					return false;
 				}
 			}
@@ -315,7 +315,7 @@ class AdminLanguagesControllerCore extends AdminController
 			if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
 				$this->errors[] = $this->l('You cannot delete the default language.');
 			elseif ($object->id == $this->context->language->id)
-				$this->errors[] = $this->l('You cannot delete the language currently in use. Please change languages before deleting.');
+				$this->errors[] = $this->l('You cannot delete the language currently in use. Please select a different language.');
 			else
 				return true;
 		}
@@ -328,7 +328,7 @@ class AdminLanguagesControllerCore extends AdminController
 	protected function checkDisableStatus($object)
 	{
 		if (!Validate::isLoadedObject($object))
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		else
 		{
 			if ($object->id == (int)Configuration::get('PS_LANG_DEFAULT'))
@@ -416,11 +416,11 @@ class AdminLanguagesControllerCore extends AdminController
 				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
 					return false;
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your product folder.');
+					$this->errors[] = Tools::displayError('An error occurred while copying "No Picture" image to your product folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your category folder.');
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your manufacturer folder');
+					$this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your manufacturer folder.');
 				else
 				{
 					$images_types = ImageType::getImagesTypes('products');
@@ -454,11 +454,11 @@ class AdminLanguagesControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 				if (file_exists($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg'))
 					if (!unlink($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg'))
-						$this->errors[] = Tools::displayError('An error occurred during image deletion.');
+						$this->errors[] = Tools::displayError('An error occurred during image deletion process.');
 
 			if (file_exists($dir.$language.'.jpg'))
 				if (!unlink($dir.$language.'.jpg'))
-					$this->errors[] = Tools::displayError('An error occurred during image deletion.');
+					$this->errors[] = Tools::displayError('An error occurred during image deletion process.');
 		}
 
 		return !count($this->errors) ? true : false;

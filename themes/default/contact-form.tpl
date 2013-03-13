@@ -80,7 +80,7 @@
 		{if !$PS_CATALOG_MODE}
 			{if (!isset($customerThread.id_order) || $customerThread.id_order > 0)}
 			<p class="text select">
-				<label for="id_order">{l s='Order Reference'}</label>
+				<label for="id_order">{l s='Order reference'}</label>
 				{if !isset($customerThread.id_order) && isset($isLogged) && $isLogged == 1}
 					<select name="id_order" >
 						<option value="0">{l s='-- Choose --'}</option>

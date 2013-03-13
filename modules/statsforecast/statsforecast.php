@@ -125,7 +125,7 @@ class StatsForecast extends Module
 		$this->_html .= '<div>
 			<div class="blocStats">
 			<h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-			<p>'.$this->l('All amounts are without taxes.').'</p>
+			<p>'.$this->l('All amounts listed do not include tax.').'</p>
 			<form id="granularity" action="'.Tools::safeOutput($ru).'#granularity" method="post">
 				<input type="hidden" name="submitGranularity" value="1" />
 				'.$this->l('Mode:').' <select name="stats_granularity" onchange="this.form.submit();" style="width:100px">
@@ -367,7 +367,7 @@ class StatsForecast extends Module
 		$this->_html .= '	</select>
 			</form>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
-				<tr><th style="width:50px">'.$this->l('Category').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th><th>'.$this->l('Avg price').'</th></tr>';
+				<tr><th style="width:50px">'.$this->l('Category').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th><th>'.$this->l('Avgerage price').'</th></tr>';
 			foreach ($ca['cat'] as $catrow)
 				$this->_html .= '
 				<tr>

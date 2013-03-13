@@ -65,7 +65,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$profiles = Profile::getProfiles($this->context->language->id);
 		if (!$profiles)
-			$this->errors[] = Tools::displayError('No profile');
+			$this->errors[] = Tools::displayError('No profile.');
 		else
 			foreach ($profiles as $profile)
 				$this->profiles_array[$profile['name']] = $profile['name'];
@@ -85,7 +85,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_PASSWD_TIME_BACK' => array(
 						'title' => $this->l('Password regeneration'),
-						'desc' => $this->l('Security: Minimum time to wait between two password changes'),
+						'desc' => $this->l('Security: Minimum time to wait between two password changes.'),
 						'cast' => 'intval',
 						'size' => 5,
 						'type' => 'text',
@@ -93,7 +93,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
-						'title' => $this->l('Memorize the language used in Admin panel forms.'),
+						'title' => $this->l('Memorize the language used in Admin panel forms'),
 						'desc' => $this->l('Allow employees to select a specific language for the Admin panel form.'),
 						'cast' => 'intval',
 						'type' => 'select',
@@ -158,7 +158,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		if ($obj->id_profile == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
 		{
-			$this->errors[] = Tools::displayError('You cannot edit SuperAdmin profile.');
+			$this->errors[] = Tools::displayError('You cannot edit the SuperAdmin profile.');
 			return parent::renderForm();
 		}
 
@@ -170,14 +170,14 @@ class AdminEmployeesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('First name:'),
+					'label' => $this->l('First Name:'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Last name:'),
+					'label' => $this->l('Last Name:'),
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true
@@ -241,7 +241,7 @@ class AdminEmployeesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Show screencast at log in:'),
+					'label' => $this->l('Show screencast at login:'),
 					'name' => 'bo_show_screencast',
 					'desc' => $this->l('Display the welcome video in the Admin panel dashboard at log in.'),
 					'required' => false,
@@ -342,9 +342,9 @@ class AdminEmployeesControllerCore extends AdminController
 			return false;
 		$email = $this->getFieldValue($obj, 'email');
 		if (!Validate::isEmail($email))
-	 		$this->errors[] = Tools::displayError('Invalid e-mail');
+	 		$this->errors[] = Tools::displayError('Invalid email address.');
 		elseif (Employee::employeeExists($email) && (!Tools::getValue('id_employee') ||  ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
-			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$email;
+			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
 	}
 
 	public function postProcess()
@@ -367,7 +367,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$employee = new Employee(Tools::getValue('id_employee'));
 			if ($employee->isLastAdmin())
 			{
-				$this->errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
+				$this->errors[] = Tools::displayError('You cannot disable or delete the administrator account.');
 				return false;
 			}
 
@@ -436,21 +436,21 @@ class AdminEmployeesControllerCore extends AdminController
 
 				if (Tools::getvalue('active') == 0)
 				{
-					$this->errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
+					$this->errors[] = Tools::displayError('You cannot disable or delete the administrator account.');
 					return false;
 				}
 			}
 
 			if (!in_array(Tools::getValue('bo_theme'), $this->themes))
 			{
-				$this->errors[] = Tools::displayError('Invalid theme.');
+				$this->errors[] = Tools::displayError('Invalid theme');
 				return false;
 			}
 
 			$assos = $this->getSelectedAssoShop($this->table);
 			if (!$assos && $this->table = 'employee')
 				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])
-					$this->errors[] = Tools::displayError('The employee must be associated with at least one shop');
+					$this->errors[] = Tools::displayError('The employee must be associated with at least one shop.');
 		}
 		return parent::postProcess();
 	}

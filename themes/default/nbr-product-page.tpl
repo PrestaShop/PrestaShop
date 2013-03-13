@@ -44,7 +44,7 @@
 			<p>
 				{if isset($search_query) AND $search_query}<input type="hidden" name="search_query" value="{$search_query|escape:'htmlall':'UTF-8'}" />{/if}
 				{if isset($tag) AND $tag AND !is_array($tag)}<input type="hidden" name="tag" value="{$tag|escape:'htmlall':'UTF-8'}" />{/if}
-				<label for="nb_item">{l s='Show:'}</label>
+				<label for="nb_item">{l s='Show'}</label>
 				{if is_array($requestNb)}
 					{foreach from=$requestNb item=requestValue key=requestKey}
 						{if $requestKey != 'requestUrl'}

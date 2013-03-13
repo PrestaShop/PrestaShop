@@ -94,7 +94,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
-						'suffix' => $this->l('Megabytes:'),
+						'suffix' => $this->l('megabytes'),
 						'default' => '2'
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
@@ -103,7 +103,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
-						'suffix' => $this->l('Megabytes:'),
+						'suffix' => $this->l('megabytes'),
 						'default' => '1'
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
@@ -112,7 +112,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
-						'suffix' => $this->l('Megabytes:'),
+						'suffix' => $this->l('megabytes'),
 						'default' => '1'
 					),
 				),

@@ -70,7 +70,7 @@
 	</script>
 
 	<fieldset>
-		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Configuration Information'}</legend>
+		<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Configuration information'}</legend>
 		<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
 	</fieldset>
 	<br />
@@ -113,7 +113,7 @@
 		<hr />
 		<h3>{l s='Store information'}</h3>
 		<p>
-			<b>{l s='Prestashop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
+			<b>{l s='PrestaShop version'}:</b> {$shop.ps|escape:'htmlall':'UTF-8'}
 		</p>
 		<p>
 			<b>{l s='Shop URL'}:</b> {$shop.url|escape:'htmlall':'UTF-8'}

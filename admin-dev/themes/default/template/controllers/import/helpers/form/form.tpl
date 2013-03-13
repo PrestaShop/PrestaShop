@@ -50,7 +50,7 @@
 				console.log(truncateAuthorized);
 				if (truncateAuthorized)
 				{
-					if (!confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
+					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
 					{
 						e.preventDefault();
 					}
@@ -126,7 +126,7 @@
 				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
 			<div style="width:50%; margin: 0 auto;">
-				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to see our samples import csv files.'}</a>
+				<a href="#" onclick="$('#sample_files_import').slideToggle(); return false;">{l s='Click to view our sample import csv files.'}</a>
 				<ul id="sample_files_import" style="display:none">
 					<li><a href="../docs/csv_import/categories_import.csv">{l s='Sample Categories file'}</a></li>
 					<li><a href="../docs/csv_import/products_import.csv">{l s='Sample Products file'}</a></li>
@@ -190,14 +190,14 @@
 			</div>
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button" {if empty($files_to_import)}disabled{/if}/>
-				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file for go to the next step.'}</span>{/if}
+				{if empty($files_to_import)}<span style="color:red;">{l s='You must upload a file in order to proceed to the next step'}</span>{/if}
 			</div>
 			<div class="warn import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have several products with the same reference.'}</p>
 			</div>
 			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
-				<p>{l s='Importing Supply Order Details will first reset the products ordered, if any.'}</p>
+				<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
@@ -222,7 +222,7 @@
 	</div>
 
 	<div class="clear">
-		<br /><br />{l s='*Required field'}
+		<br /><br />{l s='* Required field'}
 	</div>
 
 </fieldset>

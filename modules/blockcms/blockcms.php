@@ -211,7 +211,7 @@ class BlockCms extends Module
 					'label' => $this->l('Footer links:'),
 					'name' => 'footerBox[]',
 					'values' => BlockCMSModel::getAllCMSStructure(),
-					'desc' => $this->l('Mark all pages you want to display in the footer CMS block')
+					'desc' => $this->l('Please mark every page that you want to display in the footer CMS block.')
 				),
 				array(
 					'type' => 'textarea',
@@ -228,7 +228,7 @@ class BlockCms extends Module
 						'query' => array(
 							array(
 								'id' => 'on',
-								'name' => $this->l('Display "Powered by Prestashop"'),
+								'name' => $this->l('Display "Powered by PrestaShop"'),
 								'val' => '1'
 							),
 						),
@@ -239,7 +239,7 @@ class BlockCms extends Module
 			),
 			'submit' => array(
 				'name' => 'submitFooterCMS',
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -287,16 +287,16 @@ class BlockCms extends Module
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
-				'title' => isset($cmsBlock) ? $this->l('Edit CMS block') : $this->l('New CMS block'),
+				'title' => isset($cmsBlock) ? $this->l('Edit the CMS block.') : $this->l('New CMS block.'),
 				'image' => isset($cmsBlock) ? _PS_ADMIN_IMG_.'edit.gif' : _PS_ADMIN_IMG_.'add.gif'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name of block :'),
+					'label' => $this->l('Name of the CMS block :'),
 					'name' => 'block_name',
 					'lang' => true,
-					'desc' => $this->l('If you leave this field empty, the block name will use the category name')
+					'desc' => $this->l('If you leave this field empty, the block name will use the category name by default.')
 				),
 				array(
 					'type' => 'select_category',
@@ -342,19 +342,19 @@ class BlockCms extends Module
 							'value' => 0,
 							'label' => $this->l('No')),
 					),
-					'desc' => $this->l('Display "our stores" at the end of the block')
+					'desc' => $this->l('Display "our stores" at the end of the block.')
 				),
 				array(
 					'type' => 'cms_pages',
 					'label' => $this->l('CMS content:'),
 					'name' => 'cmsBox[]',
 					'values' => BlockCMSModel::getAllCMSStructure(),
-					'desc' => $this->l('Mark all pages you want to display in this block')
+					'desc' => $this->l('Please mark every page that you want to display in this block.')
 				),
 			),
 			'submit' => array(
 				'name' => 'submitBlockCMS',
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save   '),
 				'class' => 'button'
 			)
 		);
@@ -468,19 +468,19 @@ class BlockCms extends Module
 			$cmsBoxes = Tools::getValue('cmsBox');
 
 			if (!Validate::isInt(Tools::getValue('display_stores')) || (Tools::getValue('display_stores') != 0 && Tools::getValue('display_stores') != 1))
-				$this->_errors[] = $this->l('Invalid store display value');
+				$this->_errors[] = $this->l('Invalid store display value.');
 			if (!Validate::isInt(Tools::getValue('block_location')) || (Tools::getValue('block_location') != BlockCMSModel::LEFT_COLUMN && Tools::getValue('block_location') != BlockCMSModel::RIGHT_COLUMN))
-				$this->_errors[] = $this->l('Invalid block location');
+				$this->_errors[] = $this->l('Invalid block location.');
 			if (!is_array($cmsBoxes))
-				$this->_errors[] = $this->l('You must choose at least one page or subcategory to create a CMS block.');
+				$this->_errors[] = $this->l('You must choose at least one page -- or subcategory -- in order to create a CMS block.');
 			else
 			{
 				foreach ($cmsBoxes as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->_errors[] = $this->l('Invalid CMS page or category');
+						$this->_errors[] = $this->l('Invalid CMS page and/or category.');
 				foreach ($this->context->controller->_languages as $language)
 					if (strlen(Tools::getValue('block_name_'.$language['id_lang'])) > 40)
-						$this->_errors[] = $this->l('Block name is too long');
+						$this->_errors[] = $this->l('The block name is too long.');
 			}
 		}
 		else if (Tools::isSubmit('deleteBlockCMS') && !Validate::isInt(Tools::getValue('id_cms_block')))
@@ -493,7 +493,7 @@ class BlockCms extends Module
 			{
 				foreach (Tools::getValue('footerBox') as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->_errors[] = $this->l('Invalid CMS page or category');
+						$this->_errors[] = $this->l('Invalid CMS page and/or category.');
 			}
 
 			$empty_footer_text = true;
@@ -516,7 +516,7 @@ class BlockCms extends Module
 			}
 
 			if (!$empty_footer_text && empty($footer_text[(int)Configuration::get('PS_LANG_DEFAULT')]))
-				$this->_errors[] = $this->l('Please provide footer text for the default language');
+				$this->_errors[] = $this->l('Please provide footer text for the default language.');
 			else
 			{
 				foreach ($this->context->controller->_languages as $language)
@@ -524,7 +524,7 @@ class BlockCms extends Module
 			}
 
 			if ((Tools::getValue('cms_footer_on') != 0) && (Tools::getValue('cms_footer_on') != 1))
-				$this->_errors[] = $this->l('Invalid activation footer');
+				$this->_errors[] = $this->l('Invalid activation footer.');
 		}
 		if (count($this->_errors))
 		{
@@ -565,7 +565,7 @@ class BlockCms extends Module
 						BlockCMSModel::insertCMSBlockShop($id_cms_block, $shop);
 				}
 
-				$this->_errors[] = $this->l('New block cannot be created!');
+				$this->_errors[] = $this->l('A new block cannot be created!');
 			}
 			elseif (Tools::isSubmit('editBlockCMS'))
 			{
@@ -615,7 +615,7 @@ class BlockCms extends Module
 				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
 			}
 			else
-				$this->_html .= $this->displayError($this->l('Error: you are trying to delete a non-existent block cms'));
+				$this->_html .= $this->displayError($this->l('Error: You are trying to delete a non-existing CMS blocks. '));
 		}
 		elseif (Tools::isSubmit('submitFooterCMS'))
 		{
@@ -627,12 +627,12 @@ class BlockCms extends Module
 			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by);
 			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation);
 
-			$this->_html .= $this->displayConfirmation($this->l('Footer\'s information updated'));
+			$this->_html .= $this->displayConfirmation($this->l('Update your footer\'s information.'));
 		}
 		elseif (Tools::isSubmit('addBlockCMSConfirmation'))
-			$this->_html .= $this->displayConfirmation($this->l('Block CMS added'));
+			$this->_html .= $this->displayConfirmation($this->l('CMS block added.'));
 		elseif (Tools::isSubmit('editBlockCMSConfirmation'))
-			$this->_html .= $this->displayConfirmation($this->l('Block CMS edited'));
+			$this->_html .= $this->displayConfirmation($this->l('CMS block edited.'));
 		elseif (Tools::isSubmit('deleteBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Deletion successful'));
 		elseif (Tools::isSubmit('id_cms_block') && Tools::isSubmit('way') && Tools::isSubmit('position') && Tools::isSubmit('location'))

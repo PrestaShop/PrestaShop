@@ -98,7 +98,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				$this->id_object = $id_cms_category;
 				if (!CMSCategory::checkBeforeMove($id_cms_category, (int)Tools::getValue('id_parent')))
 				{
-					$this->errors[] = Tools::displayError('CMS Category cannot be moved here');
+					$this->errors[] = Tools::displayError('The CMS Category cannot be moved here.');
 					return false;
 				}
 			}
@@ -120,14 +120,14 @@ class AdminCmsCategoriesControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.$identifier.'&token='.Tools::getValue('token'));
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while updating status.');
+						$this->errors[] = Tools::displayError('An error occurred while updating the status.');
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+					$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
 						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		/* Delete object */
 		elseif (Tools::isSubmit('delete'.$this->table))
@@ -155,19 +155,19 @@ class AdminCmsCategoriesControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.')
+					$this->errors[] = Tools::displayError('An error occurred while deleting the object.')
 						.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		elseif (Tools::isSubmit('position'))
 		{
 			$object = new CMSCategory((int)Tools::getValue($this->identifier, Tools::getValue('id_cms_category_to_move', 1)));
 			if ($this->tabAccess['edit'] !== '1')
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.')
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.')
 					.' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			elseif (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
@@ -196,14 +196,14 @@ class AdminCmsCategoriesControllerCore extends AdminController
 						$token = Tools::getAdminTokenLite('AdminCmsContent');
 						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.$token.'&id_cms_category='.(int)Tools::getValue('id_cms_category'));
 					}
-					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
+					$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
 
 				}
 				else
 					$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		parent::postProcess();
 	}

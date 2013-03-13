@@ -46,7 +46,7 @@ class GridHtml extends ModuleGridEngine
 			
 			Module::__construct();
 			
-			$this->displayName = $this->l('Simple HTML table display');
+			$this->displayName = $this->l('Simple HTML table display.');
 			$this->description = '';
 		}
 	}
