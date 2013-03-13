@@ -1701,7 +1701,7 @@ class CartCore extends ObjectModel
 			if (!$this->allow_seperated_package)
 				$key = 'in_stock';
 			else
-				$key = (!$product['out_of_stock']) ? 'in_stock' : 'out_of_stock';
+				$key = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
 
 			if (empty($product['carrier_list']))
 				$product['carrier_list'] = array(0);
