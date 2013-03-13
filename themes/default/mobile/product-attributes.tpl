@@ -24,7 +24,7 @@
 *}
 {if isset($groups)}
 <hr width="99%" align="center" size="2" class="margin_less"/>
-{debug}
+
 <div id="attributes">
 {foreach from=$groups key=id_attribute_group item=group}
 	{if $group.attributes|@count}
