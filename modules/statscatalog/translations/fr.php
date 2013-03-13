@@ -21,6 +21,6 @@ $_MODULE['<{statscatalog}prestashop>statscatalog_0173374ac20f5843d58b553d5b226ef
 $_MODULE['<{statscatalog}prestashop>statscatalog_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Toutes';
 $_MODULE['<{statscatalog}prestashop>statscatalog_1099377f1598a0856e2457a5145d89c2'] = 'Prix moyen (HT) :';
 $_MODULE['<{statscatalog}prestashop>statscatalog_c09d09e371989d89847049c9574b6b8e'] = 'Images disponibles :';
-$_MODULE['<{statscatalog}prestashop>statscatalog_64de80ec5f50aefd6ab2b9260a1f4055'] = 'Taux de transformation moyen pour une page produit. Un produit pouvant être acheté sans passer par sa page dédiée, cet indicateur peut être supérieur à 1.';
+$_MODULE['<{statscatalog}prestashop>statscatalog_0468e0edbf9f5807c25c106248bd7401'] = 'Taux de transformation moyen pour une page produit. Un produit pouvant être acheté sans passer par sa page dédiée, cet indicateur peut être supérieur à 1.';
 $_MODULE['<{statscatalog}prestashop>statscatalog_49ee3087348e8d44e1feda1917443987'] = 'Nom';
 $_MODULE['<{statscatalog}prestashop>statscatalog_8e7c9a35104a5a68199678bd6bc5d187'] = 'Modifier / Voir';

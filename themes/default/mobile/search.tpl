@@ -24,7 +24,7 @@
 *}
 
 {capture assign='page_title'}
-	{l s='Search:'}
+	{l s='Search'}
 	{if $nbProducts > 0}
 		"{if isset($search_query) && $search_query}{$search_query|escape:'htmlall':'UTF-8'}{elseif $search_tag}{$search_tag|escape:'htmlall':'UTF-8'}{elseif $ref}{$ref|escape:'htmlall':'UTF-8'}{/if}"
 	{/if}

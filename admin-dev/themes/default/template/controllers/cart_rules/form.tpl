@@ -20,17 +20,17 @@
 	{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 	<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 	<div id="cart_rule_informations" class="cart_rule_tab">
-		<h4>{l s='Cart rule information'}</h4>
+		<h4>{l s='Cart-rule information'}</h4>
 		<div class="separation"></div>
 		{include file='controllers/cart_rules/informations.tpl'}
 	</div>
 	<div id="cart_rule_conditions" class="cart_rule_tab">
-		<h4>{l s='Cart rule conditions'}</h4>
+		<h4>{l s='Cart-rule conditions'}</h4>
 		<div class="separation"></div>
 		{include file='controllers/cart_rules/conditions.tpl'}
 	</div>
 	<div id="cart_rule_actions" class="cart_rule_tab">
-		<h4>{l s='Cart rule actions'}</h4>
+		<h4>{l s='Cart-rule actions'}</h4>
 		<div class="separation"></div>
 		{include file='controllers/cart_rules/actions.tpl'}
 	</div>

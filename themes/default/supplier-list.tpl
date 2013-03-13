@@ -92,7 +92,7 @@
 
 			<div class="right_side">
 			{if $supplier.nb_products > 0}
-				<a class="button" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">{l s='view products'}</a>
+				<a class="button" href="{$link->getsupplierLink($supplier.id_supplier, $supplier.link_rewrite)|escape:'htmlall':'UTF-8'}">{l s='View products'}</a>
 			{/if}
 			</div>
 		</li>

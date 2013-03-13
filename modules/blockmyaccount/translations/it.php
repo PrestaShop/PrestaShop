@@ -4,7 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 
 $_MODULE['<{blockmyaccount}prestashop>blockmyaccount_ecf3e4f8f34a293099620cc25d5b4d93'] = 'Blocco del mio account';
-$_MODULE['<{blockmyaccount}prestashop>blockmyaccount_0b9bc7f3bb601ef8959509352aea493b'] = 'Visualizza un blocco con i link relativi all\'account utente';
+$_MODULE['<{blockmyaccount}prestashop>blockmyaccount_ecf2ffd31994b3edea4b916011b08bfa'] = 'Visualizza un blocco con i link relativi all\'account utente';
 $_MODULE['<{blockmyaccount}prestashop>blockmyaccount_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Il mio account';
 $_MODULE['<{blockmyaccount}prestashop>blockmyaccount_9132bc7bac91dd4e1c453d4e96edf219'] = 'Le mie note di credito';
 $_MODULE['<{blockmyaccount}prestashop>blockmyaccount_95d2137c196c7f84df5753ed78f18332'] = 'I miei buoni';

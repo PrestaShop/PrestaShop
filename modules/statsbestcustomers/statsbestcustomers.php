@@ -55,13 +55,13 @@ class StatsBestCustomers extends ModuleGrid
 		$this->_columns = array(
 			array(
 				'id' => 'lastname',
-				'header' => $this->l('Lastname'),
+				'header' => $this->l('Last Name'),
 				'dataIndex' => 'lastname',
 				'width' => 50
 			),
 			array(
 				'id' => 'firstname',
-				'header' => $this->l('Firstname'),
+				'header' => $this->l('First Name'),
 				'dataIndex' => 'firstname',
 				'width' => 50
 			),
@@ -86,7 +86,7 @@ class StatsBestCustomers extends ModuleGrid
 		);
 
 		$this->displayName = $this->l('Best customers');
-		$this->description = $this->l('A list of the best customers');
+		$this->description = $this->l('A list of best customers.');
 	}
 
 	public function install()
@@ -115,16 +115,16 @@ class StatsBestCustomers extends ModuleGrid
 		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2 >'.$this->l('Develop clients\' loyalty').'</h2>
 			<p class="space">
-				'.$this->l('Keeping a client is more profitable than gaining a new one. Thus, it is necessary to develop their loyalty, in other words to make them want to come back to your webshop.').' <br />
-				'.$this->l('Word of mouth is also a means to of getting new, satisfied clients; a dissatisfied one won\'t attract new clients.').'<br />
-				'.$this->l('In order to achieve this goal you can organize: ').'
+				'.$this->l('Keeping a client is more profitable than gaining a new one. That is one of the many reasons it is necessary to cultivate customer loyalty.').' <br />
+				'.$this->l('Word of mouth is also a means for getting new, satisfied clients. A dissatisfied customer can hurt your e-reputation and obstruct future sales goals.').'<br />
+				'.$this->l('In order to achieve this goal, you can organize: ').'
 				<ul>
 					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered),
 						non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
 					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client,
 						 but also offer advantages to clients (private offers, discounts).').'</li>
 				</ul>
-				'.$this->l('These operations encourage clients to buy products and visit your webshop regularly.').' <br />
+				'.$this->l('These operations encourage clients to buy products and visit your e-store regularly.').' <br />
 			</p><br />
 		</div>';
 		return $this->_html;

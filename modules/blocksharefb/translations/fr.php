@@ -3,6 +3,6 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_3e0fa00ee2fba747e8419e80c1da2d72'] = 'Partager sur Facebook';
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_16ccb12664ffe3713264cc592c98f710'] = 'Bloc Partager sur Facebook';
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_feb5ea2f87814eb831ecb334749c9305'] = 'Ajoute un bloc permettant d\'avoir un lien \\"Partager sur Facebook\\"  sur les pages produits.';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_353005a70db1e1dac3aadedec7596bd7'] = 'Partager sur Facebook';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_cbe5bf6cf027e9f9e6cc0e8d725ebfa6'] = 'Bloc Partager sur Facebook';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_f96f72b5ba39796e728cc55ddd1672cb'] = 'Ajoute un bloc permettant d\'avoir un lien \\"Partager sur Facebook\\"  sur les pages produits.';

@@ -203,7 +203,7 @@ class StatsCatalog extends Module
 			</table>
 			<div style="margin-top: 20px;">
 				<span style="color:red;font-weight:bold">*</span> 
-				'.$this->l('Average conversion rate for the product page. It is possible to purchase a product without viewing the product page, so this rate can be greater than 1.').'
+				'.$this->l('Define the average conversion rate for the product page (It is possible to purchase a product without viewing the product page, so this rate can be greater than 1).').'
 			</div>
 		</div>';
 

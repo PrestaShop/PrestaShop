@@ -53,7 +53,7 @@
                         <thead>
                             <tr class="nodrag nodrop">
                                 <th>{l s='ID' mod='blockcms'}</th>
-                                <th>{l s='Name of block' mod='blockcms'}</th>
+                                <th>{l s='Name of the block' mod='blockcms'}</th>
                                 <th>{l s='Category name' mod='blockcms'}</th>
                                 <th>{l s='Position' mod='blockcms'}</th>
                                 <th>{l s='Actions' mod='blockcms'}</th>
@@ -164,7 +164,7 @@
 
             </table>
             {else}
-            <p>{l s='No pages created' mod='blockcms'}</p>
+            <p>{l s='No pages have been created.' mod='blockcms'}</p>
         {/if}
 	{else}
 		{$smarty.block.parent}
