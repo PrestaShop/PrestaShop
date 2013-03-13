@@ -52,7 +52,7 @@ class IdentityControllerCore extends FrontController
 		{
 			if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) &&
 				!(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == ''))
-				$this->errors[] = Tools::displayError('Invalid date of birth');
+				$this->errors[] = Tools::displayError('Invalid date of birth.');
 			else
 			{
 				$email = trim(Tools::getValue('email'));
@@ -60,13 +60,13 @@ class IdentityControllerCore extends FrontController
 				$_POST['old_passwd'] = trim($_POST['old_passwd']);
 				
 				if (!Validate::isEmail($email))
-					$this->errors[] = Tools::displayError('This e-mail address is not valid');
+					$this->errors[] = Tools::displayError('This email address is not valid');
 				elseif ($this->customer->email != $email && Customer::customerExists($email, true))
-					$this->errors[] = Tools::displayError('An account is already registered with this e-mail.');
+					$this->errors[] = Tools::displayError('An account using this email address has already been registered.');
 				elseif (empty($_POST['old_passwd']) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
-					$this->errors[] = Tools::displayError('Your password is incorrect.');
+					$this->errors[] = Tools::displayError('The password you entered is incorrect.');
 				elseif ($_POST['passwd'] != $_POST['confirmation'])
-					$this->errors[] = Tools::displayError('Password and confirmation do not match');
+					$this->errors[] = Tools::displayError('The password and confirmation do not match.');
 				else
 				{
 					$prev_id_default_group = $this->customer->id_default_group;
@@ -98,7 +98,7 @@ class IdentityControllerCore extends FrontController
 						$this->context->smarty->assign('confirmation', 1);
 					}
 					else
-						$this->errors[] = Tools::displayError('Cannot update information');
+						$this->errors[] = Tools::displayError('The information cannot be updated.');
 				}
 			}
 		}

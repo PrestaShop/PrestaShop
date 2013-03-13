@@ -58,7 +58,7 @@ class Blocktopmenu extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Top horizontal menu');
-		$this->description = $this->l('Add a new menu on top of your shop.');
+		$this->description = $this->l('Add a new horizontal menu to the top of your e-commerce website.');
 	}
 
 	public function install()
@@ -137,9 +137,9 @@ class Blocktopmenu extends Module
 		if (Tools::isSubmit('submitBlocktopmenu'))
 		{
 			if (Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', Tools::getValue('items')))
-				$this->_html .= $this->displayConfirmation($this->l('Settings Updated'));
+				$this->_html .= $this->displayConfirmation($this->l('The settings have been updated.'));
 			else
-				$this->_html .= $this->displayError($this->l('Unable to update settings'));
+				$this->_html .= $this->displayError($this->l('Unable to update settings.'));
 			Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', (bool)Tools::getValue('search'));
 			$update_cache = true;
 		}
@@ -149,15 +149,15 @@ class Blocktopmenu extends Module
 			if ((!count($links_label)) && (!count($labels)))
 				;
 			else if (!count($links_label))
-				$this->_html .= $this->displayError($this->l('Please, fill the "Link" field'));
+				$this->_html .= $this->displayError($this->l('Please complete the "link" field.'));
 			else if (!count($labels))
 				$this->_html .= $this->displayError($this->l('Please add a label'));
 			else if (!isset($labels[$default_language]))
-				$this->_html .= $this->displayError($this->l('Please add a label for your default language'));
+				$this->_html .= $this->displayError($this->l('Please add a label for your default language.'));
 			else
 			{
 				MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)Shop::getContextShopID());
-				$this->_html .= $this->displayConfirmation($this->l('The link has been added'));
+				$this->_html .= $this->displayConfirmation($this->l('The link has been added.'));
 			}
 			$update_cache = true;
 		}
@@ -195,7 +195,7 @@ class Blocktopmenu extends Module
 		$this->_html .= '
 		<fieldset>
 			<div class="multishop_info">
-			'.$this->l('The modifications will be applied to').' '.(Shop::getContext() == Shop::CONTEXT_SHOP ? $this->l('shop:').' '.$this->context->shop->name : $this->l('all shops')).'.
+			'.$this->l('The modifications will be applied to').' '.(Shop::getContext() == Shop::CONTEXT_SHOP ? $this->l('shop').' '.$this->context->shop->name : $this->l('all shops')).'.
 			</div>
 			<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
@@ -233,14 +233,14 @@ class Blocktopmenu extends Module
 		$this->_html .= '</optgroup>';
 
 		// BEGIN Categories
-		$this->_html .= '<optgroup label="'.$this->l('Categories:').'">';
+		$this->_html .= '<optgroup label="'.$this->l('Categories').'">';
 		$this->getCategoryOption(1, (int)$id_lang, (int)Shop::getContextShopID());
 		$this->_html .= '</optgroup>';
 		
 		// BEGIN Shops
 		if (Shop::isFeatureActive())
 		{
-			$this->_html .= '<optgroup label="'.$this->l('Shops:').'">';
+			$this->_html .= '<optgroup label="'.$this->l('Shops').'">';
 			$shops = Shop::getShopsCollection();
 			foreach ($shops as $shop)
 			{
@@ -252,8 +252,8 @@ class Blocktopmenu extends Module
 		}
 		
 		// BEGIN Products
-		$this->_html .= '<optgroup label="'.$this->l('Products:').'">';
-		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose ID product').'</option>';
+		$this->_html .= '<optgroup label="'.$this->l('Products').'">';
+		$this->_html .= '<option value="PRODUCT" style="font-style:italic">'.$spacer.$this->l('Choose product ID').'</option>';
 		$this->_html .= '</optgroup>';
 
 		// BEGIN Menu Top Links
@@ -334,7 +334,7 @@ class Blocktopmenu extends Module
 					<input type="checkbox" name="search" id="s" value="1"'.((Configuration::get('MOD_BLOCKTOPMENU_SEARCH')) ? ' checked=""': '').'/>
 				</div>
 				<p class="center">
-					<input type="submit" name="submitBlocktopmenu" value="'.$this->l('	Save	').'" class="button" />
+					<input type="submit" name="submitBlocktopmenu" value="'.$this->l('Save	').'" class="button" />
 				</p>
 			</form>
 		</fieldset><br />';
@@ -379,7 +379,7 @@ class Blocktopmenu extends Module
 			$this->_html .= '<input type="submit" name="submitBlocktopmenuEdit" value="'.$this->l('Edit').'" class="button" />';
 
 		$this->_html .= '
-					<input type="submit" name="submitBlocktopmenuLinks" value="'.$this->l('	Add	').'" class="button" />
+					<input type="submit" name="submitBlocktopmenuLinks" value="'.$this->l('Add	').'" class="button" />
 </div>
 
 			</form>

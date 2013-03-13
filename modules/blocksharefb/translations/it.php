@@ -3,6 +3,6 @@
 global $_MODULE;
 $_MODULE = array();
 
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_3e0fa00ee2fba747e8419e80c1da2d72'] = 'Condividi su Facebook';
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_16ccb12664ffe3713264cc592c98f710'] = 'Blocco condividi su FaceBook';
-$_MODULE['<{blocksharefb}prestashop>blocksharefb_feb5ea2f87814eb831ecb334749c9305'] = 'Aggiungi un blocco per visualizzare un link “Condividi su FaceBook” nella pagina prodotto.';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_353005a70db1e1dac3aadedec7596bd7'] = 'Condividi su Facebook';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_cbe5bf6cf027e9f9e6cc0e8d725ebfa6'] = 'Blocco condividi su FaceBook';
+$_MODULE['<{blocksharefb}prestashop>blocksharefb_f96f72b5ba39796e728cc55ddd1672cb'] = 'Aggiungi un blocco per visualizzare un link “Condividi su FaceBook” nella pagina prodotto.';

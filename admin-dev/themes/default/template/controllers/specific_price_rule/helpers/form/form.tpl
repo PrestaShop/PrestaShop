@@ -37,7 +37,7 @@
 	<div id="condition_list">
 		<h3>{l s='Conditions'}</h3>
 		<div class="row">
-			<label for="id_category">{l s='Category:'}</label>
+			<label for="id_category">{l s='Category'}</label>
 				<div class="margin-form">
 					<select id="id_category" name="id_category">
 						{foreach from=$categories item='category'}
@@ -52,7 +52,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_manufacturer">{l s='Manufacturer:'}</label>
+		<label for="id_manufacturer">{l s='Manufacturer'}</label>
 		<div class="margin-form">
 			<select id="id_manufacturer" name="id_manufacturer">
 				{foreach from=$manufacturers item='manufacturer'}
@@ -67,7 +67,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_supplier">{l s='Supplier:'}</label>
+		<label for="id_supplier">{l s='Supplier'}</label>
 		<div class="margin-form">
 			<select id="id_supplier" name="id_supplier">
 				{foreach from=$suppliers item='supplier'}
@@ -82,7 +82,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_attribute">{l s='Attributes:'}</label>
+		<label for="id_attribute">{l s='Attributes'}</label>
 		<div class="margin-form">
 			<select id="id_attribute_group">
 				{foreach from=$attributes_group item='attribute_group'}
@@ -105,7 +105,7 @@
 		</div>
 		
 		<div class="row">
-		<label for="id_attribute">{l s='Features:'}</label>
+		<label for="id_attribute">{l s='Features'}</label>
 		<div class="margin-form">
 			<select id="id_feature">
 				{foreach from=$features item='feature'}

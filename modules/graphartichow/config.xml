@@ -3,7 +3,7 @@
             <name>graphartichow</name>
             <displayName><![CDATA[Artichow]]></displayName>
             <version><![CDATA[1]]></version>
-            <description><![CDATA[Artichow is a library which enables the display of simple picture-based graphs using PHP and GD.]]></description>
+            <description><![CDATA[Artichow is a library that enables the display of simple picture-based graphs using PHP and GD.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>
             <is_configurable>0</is_configurable>

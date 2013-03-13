@@ -19,7 +19,7 @@ $_MODULE['<{statscatalog}prestashop>statscatalog_8725647ef741e5d48c1e6f652ce80b5
 $_MODULE['<{statscatalog}prestashop>statscatalog_74cda5a02df704cc5c3e8fee7fc0f7bc'] = '(1 gekauft / %d Besuche)';
 $_MODULE['<{statscatalog}prestashop>statscatalog_0173374ac20f5843d58b553d5b226ef6'] = 'Wählen Sie eine Kategorie';
 $_MODULE['<{statscatalog}prestashop>statscatalog_c09d09e371989d89847049c9574b6b8e'] = 'Bilder zur Verfügung:';
-$_MODULE['<{statscatalog}prestashop>statscatalog_64de80ec5f50aefd6ab2b9260a1f4055'] = 'Durchschnittliche Umwandlungsrate für die Produktseite. Man kann ein Produkt kaufen, ohne die Produktseite anzusehen. In dem Fall kann diese Rate größer als 1 sein.';
+$_MODULE['<{statscatalog}prestashop>statscatalog_0468e0edbf9f5807c25c106248bd7401'] = 'Durchschnittliche Umwandlungsrate für die Produktseite. Man kann ein Produkt kaufen, ohne die Produktseite anzusehen. In dem Fall kann diese Rate größer als 1 sein.';
 $_MODULE['<{statscatalog}prestashop>statscatalog_49ee3087348e8d44e1feda1917443987'] = 'Name';
 $_MODULE['<{statscatalog}prestashop>statscatalog_8e7c9a35104a5a68199678bd6bc5d187'] = 'Bearbeiten/ Ansehen';
 $_MODULE['<{statscatalog}prestashop>statscatalog_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Alle';

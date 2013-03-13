@@ -37,8 +37,8 @@ class blocksocial extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block social');
-		$this->description = $this->l('Allows you to add extra information about social networks');
+		$this->displayName = $this->l('Social networking block');
+		$this->description = $this->l('Allows you to add information about your brand\'s social networking sites.');
 	}
 	
 	public function install()

@@ -29,7 +29,7 @@
 
 	<h2>{$manufacturer->name}</h2>
 
-	<h3>{l s='Total addresses:'} {count($addresses)}</h3>
+	<h3>{l s='Total addresses'} {count($addresses)}</h3>
 	<hr />
 
 	{if !count($addresses)}
@@ -60,7 +60,7 @@
 		{/foreach}
 	{/if}
 
-	<h3>{l s='Total products:'} {count($products)}</h3>
+	<h3>{l s='Total products'} {count($products)}</h3>
 	{foreach $products AS $product}
 		<hr />
 		{if !$product->hasAttributes()}

@@ -532,7 +532,7 @@ class AdminWarehousesControllerCore extends AdminController
 		{
 			foreach ($validation as $item)
 				$this->errors[] = $item;
-			$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			$this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
 		}
 		else // valid
 		{

@@ -129,7 +129,7 @@ class AdminStatesControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name',
 					),
-					'desc' => $this->l('Country where state, region or city is located')
+					'desc' => $this->l('Country where the state, region or city is located')
 				),
 				array(
 					'type' => 'select',
@@ -187,13 +187,13 @@ class AdminStatesControllerCore extends AdminController
 		if (!Tools::getValue('id_'.$this->table))
 		{
 			if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country')))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two states with the same ISO code in the same country');
+				$this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
 		}
 		else if (Validate::isStateIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
 			if ($id_state && $id_state != Tools::getValue('id_'.$this->table))
-				$this->errors[] = Tools::displayError('This ISO code already exists, you cannot create two states with the same ISO code in the same country');
+				$this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
 		}
 
 		/* Delete object */
@@ -225,13 +225,13 @@ class AdminStatesControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('This state was used in at least one address, it cannot be removed');
+						$this->errors[] = Tools::displayError('This state was used in at least one address. It cannot be removed.');
 				}
 				else
-					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		else
 			parent::postProcess();

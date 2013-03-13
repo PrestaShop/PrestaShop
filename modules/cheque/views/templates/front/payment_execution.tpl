@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Cheque payment' mod='cheque'}{/capture}
+{capture name=path}{l s='Check payment' mod='cheque'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='cheque'}</h2>
@@ -35,16 +35,16 @@
 	<p class="warning">{l s='Your shopping cart is empty.'}</p>
 {else}
 
-<h3>{l s='Cheque payment' mod='cheque'}</h3>
+<h3>{l s='Check payment' mod='cheque'}</h3>
 <form action="{$link->getModuleLink('cheque', 'validation', [], true)}" method="post">
 	<p>
-		<img src="{$this_path}cheque.jpg" alt="{l s='cheque' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
-		{l s='You have chosen to pay by cheque.' mod='cheque'}
+		<img src="{$this_path}cheque.jpg" alt="{l s='Check' mod='cheque'}" width="86" height="49" style="float:left; margin: 0px 10px 5px 0px;" />
+		{l s='You have chosen to pay by check.' mod='cheque'}
 		<br/><br />
 		{l s='Here is a short summary of your order:' mod='cheque'}
 	</p>
 	<p style="margin-top:20px;">
-		- {l s='The total amount of your order is' mod='cheque'}
+		- {l s='The total amount of your order comes to:' mod='cheque'}
 		<span id="amount" class="price">{displayPrice price=$total}</span>
 		{if $use_taxes == 1}
 			{l s='(tax incl.)' mod='cheque'}
@@ -53,7 +53,7 @@
 	<p>
 		-
 		{if isset($currencies) && $currencies|@count > 1}
-			{l s='We accept several currencies for cheques.' mod='cheque'}
+			{l s='We accept several currencies to receive payments by check.' mod='cheque'}
 			<br /><br />
 			{l s='Choose one of the following:' mod='cheque'}
 			<select id="currency_payement" name="currency_payement" onchange="setCurrency($('#currency_payement').val());">
@@ -62,12 +62,12 @@
 			{/foreach}
 			</select>
 		{else}
-			{l s='We accept the following currency to be sent by cheque:' mod='cheque'}&nbsp;<b>{$currencies.0.name}</b>
+			{l s='We allow the following currencies to be sent by check:' mod='cheque'}&nbsp;<b>{$currencies.0.name}</b>
 			<input type="hidden" name="currency_payement" value="{$currencies.0.id_currency}" />
 		{/if}
 	</p>
 	<p>
-		{l s='Cheque owner and address information will be displayed on the next page.' mod='cheque'}
+		{l s='Check owner and address information will be displayed on the next page.' mod='cheque'}
 		<br /><br />
 		<b>{l s='Please confirm your order by clicking \'I confirm my order\'' mod='cheque'}.</b>
 	</p>
