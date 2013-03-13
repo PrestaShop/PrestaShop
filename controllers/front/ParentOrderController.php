@@ -460,7 +460,7 @@ class ParentOrderControllerCore extends FrontController
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$checked = $this->context->cart->simulateCarrierSelectedOutput();
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
-		$this->setDefaultCarrierSelection($this->context->cart->getDeliveryOptionList());
+		$this->setDefaultCarrierSelection($delivery_option_list);
 		
 		$this->context->smarty->assign(array(
 			'address_collection' => $this->context->cart->getAddressCollection(),
