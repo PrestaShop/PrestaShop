@@ -289,6 +289,17 @@ class OrderOpcControllerCore extends ParentOrderController
 	public function initContent()
 	{
 		parent::initContent();
+		
+		/* id_carrier is not defined in database before choosing a carrier, set it to a default one to match a potential cart _rule */
+		if (empty($this->context->cart->id_carrier))
+		{
+			$checked = $this->context->cart->simulateCarrierSelectedOutput();
+			$checked = ((int)Cart::desintifier($checked));
+			$this->context->cart->id_carrier = $checked;
+			$this->context->cart->update();
+			CartRule::autoRemoveFromCart($this->context);
+			CartRule::autoAddToCart($this->context);
+		}				
 
 		// SHOPPING CART
 		$this->_assignSummaryInformations();
@@ -337,9 +348,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		/* Load guest informations */
 		if ($this->isLogged && $this->context->cookie->is_guest)
 			$this->context->smarty->assign('guestInformations', $this->_getGuestInformations());
-
+		// ADDRESS
 		if ($this->isLogged)
-			$this->_assignAddress(); // ADDRESS
+			$this->_assignAddress(); 
 		// CARRIER
 		$this->_assignCarrier();
 		// PAYMENT
