@@ -92,6 +92,38 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->specificConfirmDelete = false;
 		
 		parent::__construct();
+		
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
+		$top_category = Category::getTopCategory();
+		
+		if (Tools::isSubmit('id_category'))
+			$id_parent = $this->_category->id;
+		elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1)
+			$id_parent = $top_category->id;
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent == 1)
+			$id_parent = Configuration::get('PS_HOME_CATEGORY');
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
+		{
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
+				$id_parent = $this->context->shop->id_category;
+			else
+				$id_parent = $top_category->id;
+		}
+		else
+			$id_parent = $this->context->shop->id_category;
+
+		$this->_select = 'sa.position position';
+		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+		else
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+
+
+		// we add restriction for shop
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive())
+			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
 	}
 
 	public function init()
@@ -145,41 +177,12 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('add');
 		$this->addRowAction('view');
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
-		$is_multishop = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-		$top_category = Category::getTopCategory();
-
-		if (Tools::isSubmit('id_category'))
-			$id_parent = $this->_category->id;
-		else if (!$is_multishop && $count_categories_without_parent > 1)
-			$id_parent = $top_category->id;
-		else if ($is_multishop && $count_categories_without_parent == 1)
-			$id_parent = Configuration::get('PS_HOME_CATEGORY');
-		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
-			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
-				$id_parent = $this->context->shop->id_category;
-			else
-				$id_parent = $top_category->id;
-		else
-			$id_parent = $this->context->shop->id_category;
-
-		$this->_select = 'sa.position position';
-		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-
-		if (Shop::getContext() == Shop::CONTEXT_SHOP)
-			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
-		else
-			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
-
-
-		// we add restriction for shop
-		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
-			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
-
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
 		$categories_tree = $this->_category->getParentsCategories();
+
 		if (empty($categories_tree)
 			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
-			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !$is_multishop && $count_categories_without_parent > 1))
+			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
 		asort($categories_tree);
