@@ -1418,13 +1418,11 @@ class ToolsCore
 	public static function replaceByAbsoluteURL($matches)
 	{
 		global $current_css_file;
-
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
-
-		if (array_key_exists(1, $matches))
+		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
 		{
-			$tmp = dirname($current_css_file).'/'.$matches[1];
-			return 'url(\''.$protocol_link.Tools::getMediaServer($tmp).$tmp.'\')';
+			$tmp = dirname($current_css_file).'/'.$matches[2];
+			return $matches[1].$protocol_link.Tools::getMediaServer($tmp).$tmp;
 		}
 		return false;
 	}
@@ -1621,7 +1619,7 @@ class ToolsCore
 					fwrite($write_fd, $media_domains);
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
-				}
+				}			
 
 				if ($rewrite_settings)
 				{
@@ -1658,6 +1656,10 @@ class ToolsCore
 					fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
 				}
+				
+				fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
+				fwrite($write_fd, $domain_rewrite_cond);
+				fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]'."\n");
 			}
 			// Redirections to dispatcher
 			if ($rewrite_settings)
