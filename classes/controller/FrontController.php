@@ -452,7 +452,8 @@ class FrontControllerCore extends Controller
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Media::cccJs($this->js_files);
+				if ($js_files = Media::cccJs($this->js_files))
+					$this->js_files = $js_files;
 		}
 
 		// Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
@@ -515,7 +516,8 @@ class FrontControllerCore extends Controller
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Media::cccJs($this->js_files);
+				if ($js_files = Media::cccJs($this->js_files))
+					$this->js_files = $js_files;
 		}
 
 		$this->context->smarty->assign('css_files', $this->css_files);
