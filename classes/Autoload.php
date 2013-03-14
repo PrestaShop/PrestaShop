@@ -142,7 +142,7 @@ class Autoload
 			do
 			{
 				$integrity_is_ok = false;
-				file_put_contents($filename, $content);
+				file_put_contents($filename, $content, LOCK_EX);
 				if ($loop_protection++ > 10)
 					break;
 
@@ -154,7 +154,7 @@ class Autoload
 
 			if (!$integrity_is_ok)
 			{
-				file_put_contents($filename, '<?php return array(); ?>');
+				file_put_contents($filename, '<?php return array(); ?>', LOCK_EX);
 				// Cannot use PrestaShopException in this context
 				die('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
 			}
