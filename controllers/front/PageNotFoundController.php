@@ -41,7 +41,7 @@ class PageNotFoundControllerCore extends FrontController
 		if (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('png', 'jpg', 'gif')))
 		{
 			header('Content-Type: image/gif');
-			readfile(_PS_IMG_DIR_.'img/404.gif');
+			readfile(_PS_IMG_DIR_.'404.gif');
 			exit;
 		}
 		elseif (in_array(Tools::strtolower(substr($_SERVER['REQUEST_URI'], -3)), array('.js', 'css')))
