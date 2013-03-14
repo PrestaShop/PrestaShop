@@ -27,7 +27,7 @@
 define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
-require_once(dirname(__FILE__).'/init.php');
+require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $context = Context::getContext();
 

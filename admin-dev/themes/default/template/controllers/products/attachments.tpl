@@ -48,7 +48,7 @@
 			{/foreach}
 		</div>
 		<div class="clear">&nbsp;</div>
-		<label>{l s='File'}</label>
+		<label>{l s='File:'}</label>
 		<div class="margin-form">
 			<p><input type="file" name="attachment_file" /></p>
 			<p class="preference_description">{l s='Upload a file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE|string_format:"%.2f"} {l s='MB max.'})</p>

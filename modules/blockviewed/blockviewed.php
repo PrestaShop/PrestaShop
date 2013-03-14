@@ -42,8 +42,8 @@ class BlockViewed extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Viewed products block');
-		$this->description = $this->l('Adds a block displaying last-viewed products.');
+		$this->displayName = $this->l('Viewed products block.');
+		$this->description = $this->l('Adds a block displaying recently viewed products.');
 	}
 
 	public function install()
@@ -82,7 +82,7 @@ class BlockViewed extends Module
 				<label>'.$this->l('Products displayed').'</label>
 				<div class="margin-form">
 					<input type="text" name="productNbr" value="'.(int)Configuration::get('PRODUCTS_VIEWED_NBR').'" />
-					<p class="clear">'.$this->l('Define the number of products displayed in this block').'</p>
+					<p class="clear">'.$this->l('Define the number of products displayed in this block.').'</p>
 				</div>
 				<center><input type="submit" name="submitBlockViewed" value="'.$this->l('Save').'" class="button" /></center>
 			</fieldset>

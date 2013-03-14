@@ -50,7 +50,7 @@
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 						{else}
 							{if $input.name == 'id_state'}
-								<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
+								<div id="contains_states" {if !$contains_states}style="display:none;"{/if}>
 							{/if}
 							{block name="label"}
 								{if isset($input.label)}<label>{$input.label} </label>{/if}
@@ -318,7 +318,7 @@
 								{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
 								{/block}{* end block input *}
 								{block name="description"}
-									{if isset($input.desc)}
+									{if isset($input.desc) && !empty($input.desc)}
 										<p class="preference_description">
 											{if is_array($input.desc)}
 												{foreach $input.desc as $p}

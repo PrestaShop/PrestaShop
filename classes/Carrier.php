@@ -1195,7 +1195,7 @@ class CarrierCore extends ObjectModel
 			$carrier_list = $available_carrier_list;
 			 								
 		if (isset($warehouse_carrier_list))
-			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);						
+			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{

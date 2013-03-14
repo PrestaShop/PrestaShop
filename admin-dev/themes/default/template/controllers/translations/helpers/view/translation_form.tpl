@@ -34,7 +34,7 @@
 
 			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin post and request a limit of'}
+			{l s='Please ask your hosting provider to increase the suhosin limit to'}
 		{else}
 			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
@@ -46,7 +46,7 @@
 
 		<div class="hint" style="display:block;">
 			<ul style="margin-left:30px;list-style-type:disc;">
-				<li>{l s='Click on the titles to open fieldsets'}.</li>
+				<li>{l s='Click on titles to open fieldsets'}.</li>
 				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
 			</ul>
 		</div><br /><br />

@@ -261,9 +261,9 @@ class AdminTabsControllerCore extends AdminController
 		elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table))
 		{
 			if ($this->tabAccess['edit'] !== '1')
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier))))
-				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
+				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
 					' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->errors[] = Tools::displayError('Failed to update the position.');
@@ -271,7 +271,7 @@ class AdminTabsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
 		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
-			$this->errors[] = Tools::displayError('You can\'t put this menu in itself');
+			$this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
 		else
 		{
 			// Temporary add the position depend of the selection of the parent category

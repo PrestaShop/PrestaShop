@@ -42,12 +42,12 @@
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-	<p class="preference_description">{l s='The cart rule will be applied to the first X customers only.'}</p>
+	<p class="preference_description">{l s='The cart rule will be applied to the first "X" customers only.'}</p>
 </div>
 <label>{l s='Total available for each user.'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
-	<p class="preference_description">{l s='A customer will only be able to use the cart rule X time(s).'}</p>
+	<p class="preference_description">{l s='A customer will only be able to use the cart rule "X" time(s).'}</p>
 </div>
 {if $countries.unselected|@count + $countries.selected|@count > 1}
 <br />
@@ -98,7 +98,7 @@
 				<p><strong>{l s='Unselected carriers'}</strong></p>
 				<select id="carrier_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.unselected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a
@@ -112,7 +112,7 @@
 				<p><strong>{l s='Selected carriers'}</strong></p>
 				<select name="carrier_select[]" id="carrier_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
 					{foreach from=$carriers.selected item='carrier'}
-						<option value="{$carrier.id_carrier|intval}">&nbsp;{$carrier.name|escape}</option>
+						<option value="{$carrier.id_reference|intval}">&nbsp;{$carrier.name|escape}</option>
 					{/foreach}
 				</select><br /><br />
 				<a

@@ -70,8 +70,8 @@ function updatePaymentMethodsDisplay()
 
 function updateAddressSelection()
 {
-	var idAddress_delivery = ($('#opc_id_address_delivery').length === 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
-	var idAddress_invoice = ($('#opc_id_address_invoice').length === 1 ? $('#opc_id_address_invoice').val() : ($('#addressesAreEquals:checked').length === 1 ? idAddress_delivery : ($('#id_address_invoice').length === 1 ? $('#id_address_invoice').val() : idAddress_delivery)));
+	var idAddress_delivery = ($('#opc_id_address_delivery').length == 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
+	var idAddress_invoice = ($('#opc_id_address_invoice').length == 1 ? $('#opc_id_address_invoice').val() : ($('#addressesAreEquals:checked').length == 1 ? idAddress_delivery : ($('#id_address_invoice').length == 1 ? $('#id_address_invoice').val() : idAddress_delivery)));
 
 	$('#opc_account-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay').fadeIn('slow');
@@ -148,7 +148,7 @@ function updateAddressSelection()
 				updateCartSummary(jsonData.summary);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-				if ($('#gift-price').length === 1)
+				if ($('#gift-price').length == 1)
 					$('#gift-price').html(jsonData.gift_price);
 				$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 			}
@@ -174,19 +174,19 @@ function getCarrierListAndUpdate()
 		data: 'ajax=true&method=getCarrierList&token=' + static_token,
 		success: function(jsonData)
 		{
-				if (jsonData.hasError)
-				{
-					var errors = '';
-					for(var error in jsonData.errors)
-						//IE6 bug fix
-						if(error !== 'indexOf')
-							errors += jsonData.errors[error] + "\n";
-					alert(errors);
-				}
-				else
-					updateCarrierList(jsonData);
-				$('#opc_delivery_methods-overlay').fadeOut('slow');
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(var error in jsonData.errors)
+					//IE6 bug fix
+					if(error !== 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
 			}
+			else
+				updateCarrierList(jsonData);
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+		}
 	});
 }
 
@@ -202,7 +202,7 @@ function updateCarrierSelectionAndGift()
 		if ($(this).prop('checked'))
 			delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
 	});
-	if (delivery_option_params === '&')
+	if (delivery_option_params == '&')
 		delivery_option_params = '&delivery_option=&';
 
 	if ($('input#recyclable:checked').length)
@@ -270,7 +270,7 @@ function confirmFreeOrder()
 		success: function(html)
 		{
 			var array_split = html.split(':');
-			if (array_split[0] === 'freeorder')
+			if (array_split[0] == 'freeorder')
 			{
 				if (isGuest)
 					document.location.href = guestTrackingUrl+'?id_order='+encodeURIComponent(array_split[1])+'&email='+encodeURIComponent(array_split[2]);
@@ -290,24 +290,24 @@ function saveAddress(type)
 	if (type !== 'delivery' && type !== 'invoice')
 		return false;
 	
-	var params = 'firstname='+encodeURIComponent($('#firstname'+(type === 'invoice' ? '_invoice' : '')).val())+'&lastname='+encodeURIComponent($('#lastname'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'company='+encodeURIComponent($('#company'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'vat_number='+encodeURIComponent($('#vat_number'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'dni='+encodeURIComponent($('#dni'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'address1='+encodeURIComponent($('#address1'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'address2='+encodeURIComponent($('#address2'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'postcode='+encodeURIComponent($('#postcode'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'city='+encodeURIComponent($('#city'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
+	var params = 'firstname='+encodeURIComponent($('#firstname'+(type == 'invoice' ? '_invoice' : '')).val())+'&lastname='+encodeURIComponent($('#lastname'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'company='+encodeURIComponent($('#company'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'vat_number='+encodeURIComponent($('#vat_number'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'dni='+encodeURIComponent($('#dni'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'address1='+encodeURIComponent($('#address1'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'address2='+encodeURIComponent($('#address2'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'postcode='+encodeURIComponent($('#postcode'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'city='+encodeURIComponent($('#city'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
 	params += 'id_country='+encodeURIComponent($('#id_country').val())+'&';
-	if ($('#id_state'+(type === 'invoice' ? '_invoice' : '')).val())
-		params += 'id_state='+encodeURIComponent($('#id_state'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'other='+encodeURIComponent($('#other'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'phone='+encodeURIComponent($('#phone'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'phone_mobile='+encodeURIComponent($('#phone_mobile'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'alias='+encodeURIComponent($('#alias'+(type === 'invoice' ? '_invoice' : '')).val())+'&';
-	if (type === 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
+	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())
+		params += 'id_state='+encodeURIComponent($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'other='+encodeURIComponent($('#other'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'phone='+encodeURIComponent($('#phone'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'phone_mobile='+encodeURIComponent($('#phone_mobile'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	params += 'alias='+encodeURIComponent($('#alias'+(type == 'invoice' ? '_invoice' : '')).val())+'&';
+	if (type == 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
 		params += 'opc_id_address_delivery='+encodeURIComponent($('#opc_id_address_delivery').val())+'&';
-	if (type === 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)			
+	if (type == 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)			
 		params += 'opc_id_address_invoice='+encodeURIComponent($('#opc_id_address_invoice').val())+'&';		
 	// Clean the last &
 	params = params.substr(0, params.length-1);
@@ -377,13 +377,13 @@ function updateNewAccountToAddressBlock()
 		success: function(json)
 		{
 			isLogged = 1;
-			if (json.no_address === 1)
+			if (json.no_address == 1)
 				document.location.href = addressUrl;
 			
 			$('#opc_new_account').fadeOut('fast', function() {
 				$('#opc_new_account').html(json.order_opc_adress);
 				// update block user info
-				if (json.block_user_info !== '' && $('#header_user').length === 1)
+				if (json.block_user_info !== '' && $('#header_user').length == 1)
 				{
 					$('#header_user').fadeOut('slow', function() {
 						$(this).attr('id', 'header_user_old').after(json.block_user_info).fadeIn('slow');
@@ -402,7 +402,7 @@ function updateNewAccountToAddressBlock()
 					updateCarrierList(json.carrier_data);
 					updateCarrierSelectionAndGift();
 					updatePaymentMethods(json);
-					if ($('#gift-price').length === 1)
+					if ($('#gift-price').length == 1)
 						$('#gift-price').html(json.gift_price);
 					$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 				});
@@ -524,7 +524,7 @@ $(function() {
 			var callingFile = '';
 			var params = '';
 
-			if (parseInt($('#opc_id_customer').val()) === 0)
+			if (parseInt($('#opc_id_customer').val()) == 0)
 			{
 				callingFile = authenticationUrl;
 				params = 'submitAccount=true&';
@@ -596,7 +596,7 @@ $(function() {
 						});
 					}
 
-					isGuest = parseInt($('#is_new_customer').val()) === 1 ? 0 : 1;
+					isGuest = parseInt($('#is_new_customer').val()) == 1 ? 0 : 1;
 					// update addresses id
 					if(jsonData.id_address_delivery !== undefined && jsonData.id_address_delivery > 0)
 						$('#opc_id_address_delivery').val(jsonData.id_address_delivery);
@@ -629,7 +629,7 @@ $(function() {
 						
 						// force to refresh carrier list
 						if (isGuest)
-						{						
+						{
 							isLogged = 1;
 							$('#opc_account_saved').fadeIn('slow');
 							$('#submitAccount').hide();
@@ -668,7 +668,7 @@ function bindCheckbox()
 	if ($('#invoice_address:checked').length > 0)
 	{
 		$('#opc_invoice_address').slideDown('slow');
-		if ($('#company_invoice').val() === '')
+		if ($('#company_invoice').val() == '')
 			$('#vat_number_block_invoice').hide();
 		updateState('invoice');
 		updateNeedIDNumber('invoice');

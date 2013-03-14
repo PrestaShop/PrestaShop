@@ -227,7 +227,7 @@ function updateDisplay()
 			$('#availability_value').text(doesntExist).addClass('warning_inline');
 			$('#oosHook').hide();
 		}
-		if(stock_management == 1)
+		if(stock_management == 1 && !allowBuyWhenOutOfStock)
 			$('#availability_statut:hidden').show();
 
 		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)

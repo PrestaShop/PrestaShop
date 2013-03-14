@@ -56,7 +56,7 @@
 				<input type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
 			</p>
 			<p class="required text">
-				<label for="email">{l s='Email:'} <sup>*</sup></label>
+				<label for="email">{l s='Email'} <sup>*</sup></label>
 				<input type="text" name="email" id="email" value="{$smarty.post.email}" />
 			</p>
 			<p class="required text">

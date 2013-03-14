@@ -43,7 +43,7 @@ class Gsitemap extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Google sitemap');
-		$this->description = $this->l('Generate your Google sitemap file');
+		$this->description = $this->l('Generate your Google sitemap file.');
 
 		if (!defined('GSITEMAP_FILE'))
 			define('GSITEMAP_FILE', dirname(__FILE__).'/../../sitemap.xml');
@@ -59,7 +59,7 @@ class Gsitemap extends Module
 	{
 		file_put_contents(GSITEMAP_FILE, '');
 		if (!($fp = fopen(GSITEMAP_FILE, 'w')))
-			$this->_postErrors[] = sprintf($this->l('Cannot create %ssitemap.xml file.'), realpath(dirname(__FILE__.'/../..')).'/');
+			$this->_postErrors[] = sprintf($this->l('Cannot create %ssitemap.xml file..'), realpath(dirname(__FILE__.'/../..')).'/');
 		else
 			fclose($fp);
 	}
@@ -84,7 +84,7 @@ class Gsitemap extends Module
 			$res = $this->generateSitemap(Configuration::get('PS_SHOP_DEFAULT'), GSITEMAP_FILE);
 
 		$this->_html .= '<h3 class="'. ($res ? 'conf confirm' : 'alert error') .'" style="margin-bottom: 20px">';
-		$this->_html .= $res ? $this->l('Sitemap file generated') : $this->l('Error while creating sitemap file');
+		$this->_html .= $res ? $this->l('Sitemap file generated.') : $this->l('Error while creating sitemap file.');
 		$this->_html .= '</h3>';
 	}
 
@@ -415,13 +415,13 @@ XML;
 		$this->_html .= '
 			<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 				<div style="margin:0 0 20px 0;">
-					<input type="checkbox" name="GSITEMAP_ALL_PRODUCTS" id="GSITEMAP_ALL_PRODUCTS" style="vertical-align: middle;" value="1" '.(Configuration::get('GSITEMAP_ALL_PRODUCTS') ? 'checked="checked"' : '').' /> <label class="t" for="GSITEMAP_ALL_PRODUCTS">'.$this->l('Sitemap also includes products from inactive categories').'</label>
+					<input type="checkbox" name="GSITEMAP_ALL_PRODUCTS" id="GSITEMAP_ALL_PRODUCTS" style="vertical-align: middle;" value="1" '.(Configuration::get('GSITEMAP_ALL_PRODUCTS') ? 'checked="checked"' : '').' /> <label class="t" for="GSITEMAP_ALL_PRODUCTS">'.$this->l('Sitemap also includes products from inactive categories.').'</label>
 				</div>
 				<div style="margin:0 0 20px 0;">
-					<input type="checkbox" name="GSITEMAP_ALL_CMS" id="GSITEMAP_ALL_CMS" style="vertical-align: middle;" value="1" '.(Configuration::get('GSITEMAP_ALL_CMS') ? 'checked="checked"' : '').' /> <label class="t" for="GSITEMAP_ALL_CMS">'.$this->l('Sitemap also includes CMS pages which are not in a CMS block').'</label>
+					<input type="checkbox" name="GSITEMAP_ALL_CMS" id="GSITEMAP_ALL_CMS" style="vertical-align: middle;" value="1" '.(Configuration::get('GSITEMAP_ALL_CMS') ? 'checked="checked"' : '').' /> <label class="t" for="GSITEMAP_ALL_CMS">'.$this->l('Sitemap also includes CMS pages not found in a CMS block.').'</label>
 				</div>
 				<input name="btnSubmit" class="button" type="submit"
-				value="'.((!file_exists(GSITEMAP_FILE)) ? $this->l('Generate sitemap file') : $this->l('Update sitemap file')).'" />
+				value="'.((!file_exists(GSITEMAP_FILE)) ? $this->l('Generate a sitemap file.') : $this->l('Update the sitemap file.')).'" />
 			</form><br />
 			<h2>'.$this->l('Use cron job to re-build the sitemap:').'</h2>
 			<p>
@@ -443,10 +443,10 @@ XML;
 
 		$this->_html .= '
 			<fieldset>
-				<legend>'.$this->l('Search Engine Optimization').'</legend>
+				<legend>'.$this->l('Search Engine Optimization (SEO).').'</legend>
 				<br />
 				'.$this->l('See').' <a href="http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156184&from=40318&rd=1" style="font-weight:bold;text-decoration:underline;" target="_blank">
-				'.$this->l('this page').'</a> '.$this->l('for more information').'
+				'.$this->l('This page').'</a> '.$this->l('For more information').'
 				<br />';
 
 		$this->_displaySitemap();

@@ -95,7 +95,7 @@ class AdminReturnControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'state',
 					'required' => false,
 					'options' => array(
@@ -107,7 +107,7 @@ class AdminReturnControllerCore extends AdminController
 				),
 				array(
 					'type' => 'list_products',
-					'label' => $this->l('Products:'),
+					'label' => $this->l('Products'),
 					'name' => '',
 					'size' => '',
 					'required' => false,
@@ -184,7 +184,7 @@ class AdminReturnControllerCore extends AdminController
 							if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0))))
 								Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
 							else
-								$this->errors[] = Tools::displayError('An error occurred while deleting details of your order return.');
+								$this->errors[] = Tools::displayError('An error occurred while deleting the details of your order return.');
 						}
 						else
 							$this->errors[] = Tools::displayError('You need at least one product.');
@@ -196,7 +196,7 @@ class AdminReturnControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('The order return content is invalid.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
 		elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay'))
 		{
@@ -227,10 +227,10 @@ class AdminReturnControllerCore extends AdminController
 					}
 				}
 				else
-					$this->errors[] = Tools::displayError('No order return ID.');
+					$this->errors[] = Tools::displayError('No order return ID has been specified.');
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		parent::postProcess();
 	}

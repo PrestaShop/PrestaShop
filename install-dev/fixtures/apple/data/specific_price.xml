@@ -18,6 +18,6 @@
     <field name="to"/>
   </fields>
   <entities>
-    <specific_price id="specific_price_1" id_cart="" id_product="iPod_Nano" id_shop="0" id_shop_group="0" id_currency="0" id_country="" id_group="" id_customer="" id_product_attribute="" price="124.58" from_quantity="1" reduction="0.050000" reduction_type="percentage" from="0000-00-00 00:00:00" to="0000-00-00 00:00:00"/>
+    <specific_price id="specific_price_1" id_cart="" id_product="iPod_Nano" id_shop="0" id_shop_group="0" id_currency="0" id_country="" id_group="" id_customer="" id_product_attribute="" price="-1" from_quantity="1" reduction="0.050000" reduction_type="percentage" from="0000-00-00 00:00:00" to="0000-00-00 00:00:00"/>
   </entities>
 </entity_specific_price>

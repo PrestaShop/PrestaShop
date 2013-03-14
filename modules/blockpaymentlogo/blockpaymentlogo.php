@@ -39,8 +39,8 @@ class BlockPaymentLogo extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Block payment logo');
-		$this->description = $this->l('Adds a block to display all payment logos.');
+		$this->displayName = $this->l('Payment logo block.');
+		$this->description = $this->l('This block will display all of your payment logos.');
 	}
 
 	public function install()
@@ -64,7 +64,7 @@ class BlockPaymentLogo extends Module
 	public function getContent()
 	{
 		$html = '
-		<h2>'.$this->l('Payment logo').'</h2>
+		<h2>'.$this->l('Payment logo.').'</h2>
 		';
 
 		if (Tools::isSubmit('submitConfiguration'))
@@ -72,13 +72,13 @@ class BlockPaymentLogo extends Module
 			{
 				Configuration::updateValue('PS_PAYMENT_LOGO_CMS_ID', (int)(Tools::getValue('id_cms')));
 				$this->_clearCache('blockpaymentlogo.tpl');
-				$html .= $this->displayConfirmation($this->l('Settings are updated'));
+				$html .= $this->displayConfirmation($this->l('The settings have been updated.'));
 			}
 
 		$cmss = CMS::listCms($this->context->language->id);
 
 		if (!count($cmss))
-			$html .= $this->displayError($this->l('No CMS page is available'));
+			$html .= $this->displayError($this->l('No CMS page is available.'));
 		else
 		{
 			$html .= '

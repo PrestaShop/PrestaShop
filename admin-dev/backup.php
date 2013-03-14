@@ -33,15 +33,15 @@ if (!Context::getContext()->employee->isLoggedBack())
 $tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminBackup'));
 
 if ($tabAccess['view'] !== '1')
-	die (Tools::displayError('You do not have permission to view here'));
+	die (Tools::displayError('You do not have permission to view this.'));
 
 $backupdir = realpath(_PS_ADMIN_DIR_ . '/backups/');
 
 if ($backupdir === false)
-	die (Tools::displayError('"Backup" directory does not exist.'));
+	die (Tools::displayError('A "Backup" directory does not exist.'));
 
 if (!$backupfile = Tools::getValue('filename'))
-	die (Tools::displayError('No file specified'));
+	die (Tools::displayError('No file has been specified.'));
 
 // Check the realpath so we can validate the backup file is under the backup directory
 $backupfile = realpath($backupdir.'/'.$backupfile);
@@ -58,7 +58,7 @@ else
 $fp = @fopen($backupfile, 'r');
 
 if ($fp === false)
-	die (Tools::displayError('Unable to open backup file').' "'.addslashes($backupfile).'"');
+	die (Tools::displayError('Unable to open backup file(s).').' "'.addslashes($backupfile).'"');
 
 // Add the correct headers, this forces the file is saved
 header('Content-Type: '.$contentType);
@@ -70,4 +70,4 @@ $ret = @fpassthru($fp);
 fclose($fp);
 
 if ($ret === false)
-	die (Tools::displayError('Unable to display backup file').' "'.addslashes($backupfile).'"');
+	die (Tools::displayError('Unable to display backup file(s).').' "'.addslashes($backupfile).'"');
