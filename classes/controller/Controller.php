@@ -327,15 +327,19 @@ abstract class ControllerCore
 			foreach ($name as $plugin)
 			{
 				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
-				$this->addJS($plugin_path['js']);
-				$this->addCSS($plugin_path['css']);
+				if(!empty($plugin_path['js']))
+					$this->addJS($plugin_path['js']);
+				if(!empty($plugin_path['css']))		
+					$this->addCSS($plugin_path['css']);
 			}
 		}
 		else
 			$plugin_path = Media::getJqueryPluginPath($name, $folder);
 
-		$this->addCSS($plugin_path['css']);
-		$this->addJS($plugin_path['js']);
+		if(!empty($plugin_path['css']))
+			$this->addCSS($plugin_path['css']);
+		if(!empty($plugin_path['js']))
+			$this->addJS($plugin_path['js']);
 	}
 
 	/**
