@@ -2795,8 +2795,7 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 		// Prepare Categories tree for display in Associations tab
 		$root = Category::getRootCategory();
-		$default_category = Tools::getValue('id_category', Context::getContext()->shop->id_category);
-
+		$default_category = $this->context->cookie->id_category_products_filter ? $this->context->cookie->id_category_products_filter : Context::getContext()->shop->id_category;
 		if (!$product->id || !$product->isAssociatedToShop())
 			$selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
 		else
