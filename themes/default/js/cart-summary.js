@@ -56,8 +56,8 @@ function cleanSelectAddressDelivery()
 			
 			$.each(options, function(i) {
 				if ($(options[i]).val() > 0
-					&& ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length === 0 // Check the address is not already used for a similare products
-						|| id_address_delivery === $(options[i]).val()
+					&& ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0 // Check the address is not already used for a similare products
+						|| id_address_delivery == $(options[i]).val()
 					)
 				)
 					address_count++;
@@ -66,7 +66,7 @@ function cleanSelectAddressDelivery()
 			// Need at least two address to allow skipping products to multiple address
 			if (address_count < 2)
 				$($(item).find('option[value=-2]')).remove();
-			else if($($(item).find('option[value=-2]')).length === 0)
+			else if($($(item).find('option[value=-2]')).length == 0)
 				$(item).append($('<option value="-2">' + ShipToAnOtherAddress + '</option>'));
 		});
 	}
@@ -79,8 +79,8 @@ function changeAddressDelivery(obj)
 	var id_product_attribute = ids[4];
 	var old_id_address_delivery = ids[5];
 	var new_id_address_delivery = obj.val();
-	
-	if (new_id_address_delivery === old_id_address_delivery)
+
+	if (new_id_address_delivery == old_id_address_delivery)
 		return;
 	
 	if (new_id_address_delivery > 0) // Change the delivery address
@@ -92,7 +92,7 @@ function changeAddressDelivery(obj)
 			async: true,
 			cache: false,
 			dataType: 'json',
-			data: 'controller=cart&ajax=true&changeAddressDelivery&summary&id_product='+id_product
+			data: 'controller=cart&ajax=true&changeAddressDelivery=1&summary=1&id_product='+id_product
 				+'&id_product_attribute='+id_product_attribute
 				+'&old_id_address_delivery='+old_id_address_delivery
 				+'&new_id_address_delivery='+new_id_address_delivery
@@ -100,7 +100,7 @@ function changeAddressDelivery(obj)
 				+'&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (typeof(jsonData.hasErrors) !== 'undefined' && jsonData.hasErrors)
+				if (typeof(jsonData.hasErrors) != 'undefined' && jsonData.hasErrors)
 				{
 					alert(jsonData.error);
 					// Reset the old address
@@ -126,7 +126,7 @@ function changeAddressDelivery(obj)
 						$('.product_'+id_product+'_'+id_product_attribute+'_0_'+old_id_address_delivery).remove();
 					}
 					
-					if (window.ajaxCart !== undefined)
+					if (window.ajaxCart != undefined)
 						ajaxCart.refresh();
 					updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
 					cleanSelectAddressDelivery();
@@ -150,7 +150,7 @@ function changeAddressDelivery(obj)
 		var options = $('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery+' option');
 		$.each(options, function(i) {
 			if ($(options[i]).val() > 0 && $(options[i]).val() !== old_id_address_delivery
-				&& $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length === 0 // Check the address is not already used for a similare products
+				&& $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0 // Check the address is not already used for a similare products
 			)
 			{
 				id_address_delivery = $(options[i]).val();
@@ -208,7 +208,7 @@ function changeAddressDelivery(obj)
 
 function updateAddressId(id_product, id_product_attribute, old_id_address_delivery, id_address_delivery, line)
 {
-	if (typeof(line) === 'undefined')
+	if (typeof(line) == 'undefined')
 		line = $('#product_' + id_product+'_' + id_product_attribute + '_0_' + old_id_address_delivery);
 	
 	line.attr('id', 'product_' + id_product+'_' + id_product_attribute + '_0_' + id_address_delivery);
@@ -230,7 +230,7 @@ function updateQty(val, cart, el)
 {
 	var prefix = "";
 	
-	if (typeof(cart) === 'undefined' || cart)
+	if (typeof(cart) == 'undefined' || cart)
 		prefix = '#order-detail-content ';
 	else
 		prefix = '#fancybox-content ';
@@ -238,7 +238,7 @@ function updateQty(val, cart, el)
 	var id = $(el).attr('name');
 	var exp = new RegExp("^[0-9]+$");
 
-	if (exp.test(val) === true)
+	if (exp.test(val) == true)
 	{
 		var hidden = $(prefix+'input[name='+ id +'_hidden]').val();
 		var input = $(prefix+'input[name='+ id +']').val();
@@ -300,9 +300,9 @@ function deleteProductFromSummary(id)
 			{
 				if (jsonData.refresh)
 					location.reload();
-				if (parseInt(jsonData.summary.products.length) === 0)
+				if (parseInt(jsonData.summary.products.length) == 0)
 				{
-					if (typeof(orderProcess) === 'undefined' || orderProcess !== 'order-opc')
+					if (typeof(orderProcess) == 'undefined' || orderProcess !== 'order-opc')
 						document.location.href = document.location.href; // redirection
 					else
 					{
@@ -329,9 +329,9 @@ function deleteProductFromSummary(id)
 
 					var exist = false;
 					for (i=0;i<jsonData.summary.products.length;i++)
-						if (jsonData.summary.products[i].id_product === productId
-							&& jsonData.summary.products[i].id_product_attribute === productAttributeId
-							&& jsonData.summary.products[i].id_address_delivery === id_address_delivery)
+						if (jsonData.summary.products[i].id_product == productId
+							&& jsonData.summary.products[i].id_product_attribute == productAttributeId
+							&& jsonData.summary.products[i].id_address_delivery == id_address_delivery)
 							exist = true;
 
 					// if all customization removed => delete product line
@@ -363,7 +363,7 @@ function refreshOddRow()
 	var even_class = 'even';
 	$.each($('.cart_item'), function(i, it)
 	{
-		if (i === 0) // First item
+		if (i == 0) // First item
 		{
 			if ($(this).hasClass('even'))
 			{
@@ -382,7 +382,7 @@ function refreshOddRow()
 
 function upQuantity(id, qty)
 {
-	if (typeof(qty) === 'undefined' || !qty)
+	if (typeof(qty) == 'undefined' || !qty)
 		qty = 1;
 	var customizationId = 0;
 	var productId = 0;
@@ -453,7 +453,7 @@ function downQuantity(id, qty)
 {
 	var val = $('input[name=quantity_'+id+']').val();
 	var newVal = val;
-	if(typeof(qty) === 'undefined' || !qty)
+	if(typeof(qty) == 'undefined' || !qty)
 	{
 		qty = 1;
 		newVal = val - 1;
@@ -519,7 +519,7 @@ function downQuantity(id, qty)
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 					
-					if (newVal === 0)
+					if (newVal == 0)
 						$('#product_'+id).hide();
 					
 					if (typeof(getCarrierListAndUpdate) !== 'undefined')
@@ -547,7 +547,7 @@ function updateCartSummary(json)
 	var i;
 	var nbrProducts = 0;
 
-	if (typeof json === 'undefined')
+	if (typeof json == 'undefined')
 		return;
 		
 	$('div.error').fadeOut();		
@@ -570,7 +570,7 @@ function updateCartSummary(json)
 	{
 		for (i=0;i<json.gift_products.length;i++)
 		{
-			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) === 'undefined')
+			if (typeof(product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery]) == 'undefined')
 				product_list[json.gift_products[i].id_product+'_'+json.gift_products[i].id_product_attribute+'_'+json.gift_products[i].id_address_delivery] = json.gift_products[i];
 		}
 	}
@@ -624,14 +624,14 @@ function updateCartSummary(json)
 	}
 
 	// Update discounts
-	if (json.discounts.length === 0)
+	if (json.discounts.length == 0)
 	{
 		$('.cart_discount').each(function(){$(this).remove();});
 		$('.cart_total_voucher').remove();
 	}
 	else
 	{
-		if ($('.cart_discount').length === 0)
+		if ($('.cart_discount').length == 0)
 			location.reload();
 
 		if (priceDisplayMethod !== 0)
@@ -645,7 +645,7 @@ function updateCartSummary(json)
 
 			for (i=0;i<json.discounts.length;i++)
 			{
-				if (json.discounts[i].id_discount === idElmt)
+				if (json.discounts[i].id_discount == idElmt)
 				{
 					if (json.discounts[i].value_real !== '!')
 					{
@@ -767,7 +767,7 @@ function refreshDeliveryOptions()
 	$.each($('.delivery_option_radio'), function() {
 		if ($(this).prop('checked'))
 		{
-			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length === 0)
+			if ($(this).parent().find('.delivery_option_carrier.not-displayable').length == 0)
 				$(this).parent().find('.delivery_option_carrier').show();
 			var carrier_id_list = $(this).val().split(',');
 			carrier_id_list.pop();
