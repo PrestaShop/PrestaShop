@@ -285,6 +285,8 @@ class Editorial extends Module
 		{
 			$id_shop = (int)$this->context->shop->id;
 			$editorial = EditorialClass::getByIdShop($id_shop);
+			if (!$editorial)
+				return;			
 			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
 			if (!$editorial)
 				return;
