@@ -52,7 +52,7 @@ class Tools extends ToolsCore
 	* @param string $url Desired URL
 	* @param string $baseUri Base URI (optional)
 	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__, Link $link = null)
+	public static function redirect($url, $baseUri = __PS_BASE_URI__, Link $link = null, $headers = null)
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
