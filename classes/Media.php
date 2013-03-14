@@ -129,24 +129,20 @@ class MediaCore
 	}
 
 
-	public static function packJS($js_files)
+	public static function packJS($js_content)
 	{
-		if (count($js_files))
+		if (!empty($js_content))
 		{
-			try
-			{
-				require_once(_PS_TOOL_DIR_.'closure/closure.php');
-				$closure = new PhpClosure($js_files);
-				return $closure->getCompiledCode();
-			}
-			catch (Exception $e)
-			{
-				if (_PS_MODE_DEV_ === true)
+			require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
+			try {
+				$js_content = JSMin::minify($js_content);
+			} catch (Exception $e) {
+				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
-				return false;
+				return $js_content;
 			}
 		}
-		return null;
+		return $js_content;
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
@@ -539,10 +535,16 @@ class MediaCore
 		// aggregate and compress js files content, write new caches files
 		if ($js_files_date > $compressed_js_file_date)
 		{
-			$content = Media::packJS($js_files_infos);
-			if ($content === false)
-				return false;
-			
+			$content = '';
+			foreach ($js_files_infos as $file_infos)
+			{
+				if (file_exists($file_infos['path']))
+					$content .= file_get_contents($file_infos['path']).';';
+				else
+					$compressed_js_files_not_found[] = $file_infos['path'];
+			}
+			$content = Media::packJS($content);
+
 			if (!empty($compressed_js_files_not_found))
 				$content = '/* WARNING ! file(s) not found : "'.
 					implode(',', $compressed_js_files_not_found).
