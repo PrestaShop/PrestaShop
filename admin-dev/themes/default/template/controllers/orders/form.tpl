@@ -971,7 +971,6 @@
 				},
 			success : function(res)
 			{
-				displaySummary(res);
 				updateDeliveryOption();
 			}
 		});
