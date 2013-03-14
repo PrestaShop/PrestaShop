@@ -629,7 +629,7 @@ $(function() {
 						
 						// force to refresh carrier list
 						if (isGuest)
-						{						
+						{
 							isLogged = 1;
 							$('#opc_account_saved').fadeIn('slow');
 							$('#submitAccount').hide();
