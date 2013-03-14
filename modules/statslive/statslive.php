@@ -121,7 +121,7 @@ class StatsLive extends Module
 		</script>';
 		if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS'))
 			$this->html .= '<div class="warn">'.
-				$this->l('You must activate the option "pages views for each customer" in the "Stats datamining" module in order to see the pages currently viewed by your customers.').'
+				$this->l('You must activate the option "pages viewed for each customer" in the "Stats data-mining" module in order to see the pages viewed by your customers.').'
 			</div>';
 		$this->html .= '
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Customers online').'</legend>';
@@ -146,7 +146,7 @@ class StatsLive extends Module
 			$this->html .= '</table>';
 		}
 		else
-			$this->html .= $this->l('There are no customers online.');
+			$this->html .= $this->l('Currently, there are no customers online.');
 		$this->html .= '</fieldset>
 		<br />
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Visitors online').'</legend>';
@@ -162,7 +162,7 @@ class StatsLive extends Module
 					<td style="width: 80px;">'.long2ip($visitor['ip_address']).'</td>
 					<td style="width: 100px;">'.substr($visitor['date_add'], 11).'</td>
 					<td style="width: 200px;">'.(isset($visitor['page']) ? $visitor['page'] : $this->l('Undefined')).'</td>
-					<td style="width: 200px;">'.(empty($visitor['http_referer']) ? $this->l('none') : parse_url($visitor['http_referer'], PHP_URL_HOST)).'</td>
+					<td style="width: 200px;">'.(empty($visitor['http_referer']) ? $this->l('None') : parse_url($visitor['http_referer'], PHP_URL_HOST)).'</td>
 				</tr>';
 			$this->html .= '</table></div>';
 		}

@@ -48,15 +48,15 @@ class ContactControllerCore extends FrontController
 			}
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
-				$this->errors[] = Tools::displayError('Invalid e-mail address');
+				$this->errors[] = Tools::displayError('Invalid email address.');
 			else if (!$message)
-				$this->errors[] = Tools::displayError('Message cannot be blank');
+				$this->errors[] = Tools::displayError('The message cannot be blank.');
 			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
 			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
-				$this->errors[] = Tools::displayError('Please select a subject from the list.');
+				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
 			else if (!empty($_FILES['fileUpload']['name']) && $_FILES['fileUpload']['error'] != 0)
-				$this->errors[] = Tools::displayError('An error occurred during the file upload');
+				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
 			else if (!empty($_FILES['fileUpload']['name']) && !in_array(substr($_FILES['fileUpload']['name'], -4), $extension) && !in_array(substr($_FILES['fileUpload']['name'], -5), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
@@ -157,10 +157,10 @@ class ContactControllerCore extends FrontController
 						$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 						if (!$cm->add())
-							$this->errors[] = Tools::displayError('An error occurred while sending message.');
+							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 					else
-						$this->errors[] = Tools::displayError('An error occurred while sending message.');
+						$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 				}
 
 				if (!count($this->errors))
@@ -201,7 +201,7 @@ class ContactControllerCore extends FrontController
 							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
 									$fileAttachment) ||
 								!Mail::Send($this->context->language->id, 'contact_form', $subject, $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
-									$this->errors[] = Tools::displayError('An error occurred while sending message.');
+									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 				}
 				

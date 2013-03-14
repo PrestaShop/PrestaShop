@@ -37,6 +37,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public function initContent()
 	{
 		$this->initTabModuleList();
+		$this->addToolBarModulesListButton();
 		$this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
 		if ($this->display == 'view')
 		{
@@ -183,7 +184,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
-				$this->errors[] = Tools::displayError('Specified date is invalid');
+				$this->errors[] = Tools::displayError('The specified date is invalid.');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -235,7 +236,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 	}
 

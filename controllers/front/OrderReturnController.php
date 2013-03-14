@@ -64,10 +64,10 @@ class OrderReturnControllerCore extends FrontController
 					));
 				}
 				else
-					$this->errors[] = Tools::displayError('Cannot find this order return');
+					$this->errors[] = Tools::displayError('Cannot find the order return.');
 			}
 			else
-				$this->errors[] = Tools::displayError('Cannot find this order return');
+				$this->errors[] = Tools::displayError('Cannot find the order return.');
 		}
 	}
 

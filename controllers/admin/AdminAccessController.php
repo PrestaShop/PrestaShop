@@ -134,7 +134,7 @@ class AdminAccessControllerCore extends AdminController
 		if (_PS_MODE_DEMO_)
 			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('submitAddAccess'))
 		{
@@ -194,7 +194,7 @@ class AdminAccessControllerCore extends AdminController
 		if (_PS_MODE_DEMO_)
 			throw new PrestaShopException(Tools::displayError('This functionality has been disabled.'));
 		if ($this->tabAccess['edit'] != '1')
-			throw new PrestaShopException(Tools::displayError('You do not have permission to edit here.'));
+			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('changeModuleAccess'))
 		{

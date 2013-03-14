@@ -74,7 +74,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 					),
 					'PS_PASSWD_TIME_FRONT' => array(
 						'title' => $this->l('Regenerate password'),
-						'desc' => $this->l('Minimum time requirted to to regenerate a password.'),
+						'desc' => $this->l('Minimum time required to regenerate a password.'),
 						'validation' => 'isUnsignedInt',
 						'cast' => 'intval',
 						'size' => 5,

@@ -47,6 +47,7 @@ class ConfigurationTestCore
 			'upload' => false,
 			'gd' => false,
 			'mysql_support' => false,
+			'sessions' => false,
 			'config_dir' => 'config',
 			'cache_dir' => 'cache',
 			'sitemap' => 'sitemap.xml',
@@ -305,6 +306,13 @@ class ConfigurationTestCore
 		return function_exists('mcrypt_encrypt');
 	}
 
+	public static function test_sessions()
+	{
+		if (!$path = @ini_get('session.save_path'))
+			return true;
+
+		return is_writable($path);
+	}
 	public static function test_dom()
 	{
 		return extension_loaded('Dom');

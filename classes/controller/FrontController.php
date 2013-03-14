@@ -452,7 +452,8 @@ class FrontControllerCore extends Controller
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Media::cccJs($this->js_files);
+				if ($js_files = Media::cccJs($this->js_files))
+					$this->js_files = $js_files;
 		}
 
 		// Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
@@ -515,7 +516,8 @@ class FrontControllerCore extends Controller
 				$this->css_files = Media::cccCSS($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Media::cccJs($this->js_files);
+				if ($js_files = Media::cccJs($this->js_files))
+					$this->js_files = $js_files;
 		}
 
 		$this->context->smarty->assign('css_files', $this->css_files);
@@ -701,13 +703,13 @@ class FrontControllerCore extends Controller
 	public function setMobileMedia()
 	{
 		$this->addjquery();
-		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.2.0.js');
+		$this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.3.0.min.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 		$this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
 			$this->addjqueryPlugin('fancybox');
 
-		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.2.0.min.css', 'all');
+		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
 		$this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
 	}

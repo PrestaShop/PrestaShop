@@ -45,18 +45,6 @@ class DispatcherCore
 	 * @var array List of default routes
 	 */
 	public $default_routes = array(
-		'layered_rule' => array(
-			'controller' =>	'category',
-			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
-			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
-				/* Selected filters is used by the module blocklayered */
-				'selected_filters' =>		array('regexp' => '.*', 'param' => 'selected_filters'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-			),
-		),
 		'category_rule' => array(
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}',
@@ -134,6 +122,19 @@ class DispatcherCore
 				'supplier' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'price' =>			array('regexp' => '[0-9\.,]*'),
 				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
+			),
+		),
+		// Must be after the product and category rules in order to avoid conflict
+		'layered_rule' => array(
+			'controller' =>	'category',
+			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
+			'keywords' => array(
+				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
+				/* Selected filters is used by the module blocklayered */
+				'selected_filters' =>		array('regexp' => '.*', 'param' => 'selected_filters'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
 		),
 	);

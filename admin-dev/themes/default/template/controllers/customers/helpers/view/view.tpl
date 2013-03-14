@@ -70,7 +70,7 @@
 		<br /><br />
 		{l s='ID:'} {$customer->id|string_format:"%06d"}<br />
 		{l s='Registration date:'} {$registration_date}<br />
-		{l s='Last visit:'} {if $customer_stats['last_visit']}{$last_visit}{else}{l s='never'}{/if}<br />
+		{l s='Last visit:'} {if $customer_stats['last_visit']}{$last_visit}{else}{l s='Never'}{/if}<br />
 		{if $count_better_customers != '-'}{l s='Rank: #'} {$count_better_customers}<br />{/if}
 		{if $shop_is_feature_active}{l s='Shop:'} {$name_shop}<br />{/if}
 	</div>
@@ -84,17 +84,17 @@
 		{l s='Language:'} {if isset($customerLanguage)}{$customerLanguage->name}{else}{l s='undefined'}{/if}<br />
 		{l s='Newsletter:'} {if $customer->newsletter}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
 		{l s='Opt in:'} {if $customer->optin}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}<br />
-		{l s='Age:'} {$customer_stats['age']} {if isset($customer->birthday['age'])}({$customer_birthday}){else}{l s='unknown'}{/if}<br /><br />
+		{l s='Age:'} {$customer_stats['age']} {if isset($customer->birthday['age'])}({$customer_birthday}){else}{l s='Unknown'}{/if}<br /><br />
 		{l s='Last update:'} {$last_update}<br />
 		{l s='Status:'} {if $customer->active}<img src="../img/admin/enabled.gif" />{else}<img src="../img/admin/disabled.gif" />{/if}
 	
 		{if $customer->isGuest()}
 			<div>
-				{l s='This customer is registered as.'} <b>{l s='guest'}</b>
+				{l s='This customer is registered as.'} <b>{l s='Guest'}</b>
 				{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
-						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer account'}" /></p>
+						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to a customer account'}" /></p>
 						{l s='This feature generates a random password before sending an email to your customer.'}
 					</form>
 				{else}
