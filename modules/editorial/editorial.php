@@ -40,7 +40,7 @@ class Editorial extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Home text editor');
-		$this->description = $this->l('A text editor module for your homepage.');
+		$this->description = $this->l('A text-edit module for your homepage.');
 		$path = dirname(__FILE__);
 		if (strpos(__FILE__, 'Module.php') !== false)
 			$path .= '/../modules/'.$this->name;
@@ -138,7 +138,7 @@ class Editorial extends Module
 			),
 			'submit' => array(
 				'name' => 'submitUpdateEditorial',
-				'title' => $this->l('   Save   '),
+				'title' => $this->l('Save '),
 				'class' => 'button'
 			),
 			'input' => array(
@@ -148,7 +148,7 @@ class Editorial extends Module
 					'name' => 'body_title',
 					'lang' => true,
 					'size' => 64,
-					'hint' => $this->l('Appears along top of homepage'),
+					'hint' => $this->l('Appears along top of your homepage'),
 				),
 				array(
 					'type' => 'text',
@@ -163,7 +163,7 @@ class Editorial extends Module
 					'name' => 'body_paragraph',
 					'lang' => true,
 					'autoload_rte' => true,
-					'hint' => $this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.'),
+					'hint' => $this->l('For example... explain your mission, highlight a new product, or describe a recent event.'),
 					'cols' => 60,
 					'rows' => 30
 				),
@@ -234,7 +234,7 @@ class Editorial extends Module
 		if (Tools::isSubmit('deleteImage'))
 		{
 			if (!file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
-				$errors .= $this->displayError($this->l('This action cannot be taken.'));
+				$errors .= $this->displayError($this->l('This action cannot be made.'));
 			else
 			{
 				unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
@@ -263,11 +263,11 @@ class Editorial extends Module
 				elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
 					return false;
 				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
-					$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
+					$errors .= $this->displayError($this->l('An error occurred while attempting to upload the image.'));
 				if (isset($tmpName))
 					unlink($tmpName);
 			}
-			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully')) : $errors;
+			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully.')) : $errors;
 			if (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 			{
 				list($width, $height, $type, $attr) = getimagesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');

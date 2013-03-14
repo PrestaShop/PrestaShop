@@ -34,8 +34,8 @@
 </form>
 
 <div class="info-order">
-{if $carrier->id}<p><strong>{l s='Carrier:'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</p>{/if}
-<p><strong>{l s='Payment method:'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></p>
+{if $carrier->id}<p><strong>{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'htmlall':'UTF-8'}{else}{$carrier->name|escape:'htmlall':'UTF-8'}{/if}</p>{/if}
+<p><strong>{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'htmlall':'UTF-8'}</span></p>
 {if $invoice AND $invoiceAllowed}
 <p>
 	<img src="{$img_dir}icon/pdf.gif" alt="" class="icon" />
@@ -47,7 +47,7 @@
 {/if}
 {if $order->gift}
 	<p><img src="{$img_dir}icon/gift.gif" alt="" class="icon" />&nbsp;{l s='You have requested gift wrapping for this order.'}</p>
-	<p>{l s='Message:'} {$order->gift_message|nl2br}</p>
+	<p>{l s='Message'} {$order->gift_message|nl2br}</p>
 {/if}
 </div>
 
@@ -127,7 +127,7 @@
 			{if $priceDisplay && $use_tax}
 				<tr class="item">
 					<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
-						{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
+						{l s='Total products (tax excl.)'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
 					</td>
 				</tr>
 			{/if}
@@ -157,7 +157,7 @@
 			</tr>
 			<tr class="totalprice item">
 				<td colspan="{if $return_allowed || $order->hasProductReturned()}{if $order->hasProductReturned() && $return_allowed}7{else}6{/if}{else}5{/if}">
-					{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
+					{l s='Total'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
 				</td>
 			</tr>
 		</tfoot>
@@ -298,7 +298,7 @@
 		{foreach from=$discounts item=discount}
 			<tr class="item">
 				<td>{$discount.name|escape:'htmlall':'UTF-8'}</td>
-				<td>{l s='Voucher:'} {$discount.name|escape:'htmlall':'UTF-8'}</td>
+				<td>{l s='Voucher'} {$discount.name|escape:'htmlall':'UTF-8'}</td>
 				<td><span class="order_qte_span editable">1</span></td>
 				<td>&nbsp;</td>
 				<td>{if $discount.value != 0.00}-{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</td>
@@ -398,7 +398,7 @@
 		</div>
 	{/if}
 	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
-		<h3>{l s='Add a message:'}</h3>
+		<h3>{l s='Add a message'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
 		<p>
 		<label for="id_product">{l s='Product'}</label>

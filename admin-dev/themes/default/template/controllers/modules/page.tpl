@@ -36,7 +36,7 @@
 		<!--start sidebar module-->
 		<div class="sidebar">
 			<div class="categorieTitle">
-				<h3>{l s='Categories:'}</h3>
+				<h3>{l s='Categories'}</h3>
 				<div class="subHeadline">&nbsp;</div>
 				<ul class="categorieList">
 					<li {if isset($categoryFiltered.favorites)}style="background-color:#EBEDF4"{/if} class="categoryModuleFilterLink">

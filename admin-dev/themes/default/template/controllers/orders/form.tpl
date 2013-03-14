@@ -34,7 +34,7 @@
 	var id_currency = '';
 	var id_lang = '';
 	var txt_show_carts = '{l s='Show carts and orders for this customer.'}';
-	var txt_hide_carts = '{l s='Hide carts and orders for this customer'}';
+	var txt_hide_carts = '{l s='Hide carts and orders for this customer.'}';
 	var defaults_order_state = new Array();
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
@@ -560,7 +560,7 @@
 						customization_errors = false;
 					$('#products_found').show();
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="display_product_attributes();display_product_customizations();">';
-					attributes_html += '<label>{l s='Combination:'}</label>';
+					attributes_html += '<label>{l s='Combination'}</label>';
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
@@ -971,7 +971,6 @@
 				},
 			success : function(res)
 			{
-				displaySummary(res);
 				updateDeliveryOption();
 			}
 		});
@@ -983,7 +982,7 @@
 
 <fieldset id="customer_part">
 	<legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
-	<label>{l s='Search customers:'}</label>
+	<label>{l s='Search customers'}</label>
 	<div class="margin-form">
 		<input type="text" id="customer" value="" />
 		<p>{l s='Search a customer by tapping the first letters of his/her name'}</p>
@@ -997,7 +996,7 @@
 <form action="{$link->getAdminLink('AdminOrders')|escape:'htmlall':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
 <fieldset id="products_part" style="display:none;"><legend><img src="../img/t/AdminCatalog.gif" />{l s='Cart'}</legend>
 	<div>
-		<label>{l s='Search a product:'} </label>
+		<label>{l s='Search for a product'} </label>
 		<div class="margin-form">
 			<input type="hidden" value="" id="id_cart" name="id_cart" />
 			<input type="text" id="product" value="" />
@@ -1021,7 +1020,7 @@
 				</body>
 				</html>
 			</iframe>
-			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
+			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock'}</b>&nbsp;<span id="qty_in_stock"></span></p>
 			<div class="margin-form">
 				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 			</div>
@@ -1054,7 +1053,7 @@
 		<p><b>{l s='The prices are without taxes.'}</b></p>
 	</div>
 	<div>
-		<p><label for="id_currency">{l s='Currency:'}</label>
+		<p><label for="id_currency">{l s='Currency'}</label>
 			<script type="text/javascript">
 				{foreach from=$currencies item='currency'}
 					currencies['{$currency.id_currency}'] = '{$currency.sign}';
@@ -1067,7 +1066,7 @@
 			</select>
 		</p>
 		<p>
-		<label for="id_lang">{l s='Language:'}</label>
+		<label for="id_lang">{l s='Language'}</label>
 		<select id="id_lang" name="id_lang">
 			{foreach from=$langs item='lang'}
 				<option value="{$lang.id_lang}">{$lang.name}</option>
@@ -1080,7 +1079,7 @@
 		<p><a href="#" id="show_old_carts" class="button"></a></p>
 		<div id="old_carts_orders">
 			<div id="nonOrderedCarts">
-				<h3>{l s='Carts:'}</h3>
+				<h3>{l s='Carts'}</h3>
 				<table cellspacing="0" cellpadding="0" class="table  width5">
 					<colgroup>
 						<col width="10px">
@@ -1101,7 +1100,7 @@
 				</table>
 			</div>
 			<div id="lastOrders">
-				<h3>{l s='Orders:'}</h3>
+				<h3>{l s='Orders'}</h3>
 				<table cellspacing="0" cellpadding="0" class="table  width5">
 					<colgroup>
 						<col width="10px">
@@ -1159,14 +1158,14 @@
 	<legend><img src="../img/t/AdminAddresses.gif" />{l s='Addresses'}</legend>
 	<div id="addresses_err" class="warn" style="display:none;"></div>
 	<div id="address_delivery">
-		<h3>{l s='Delivery:'}</h3>
+		<h3>{l s='Delivery'}</h3>
 		<select id="id_address_delivery" name="id_address_delivery">
 		</select>
 		<div id="address_delivery_detail">
 		</div>
 	</div>
 	<div id="address_invoice">
-		<h3>{l s='Invoice:'}</h3>
+		<h3>{l s='Invoice'}</h3>
 		<select id="id_address_invoice" name="id_address_invoice">
 		</select>
 		<div id="address_invoice_detail">
@@ -1176,20 +1175,20 @@
 </fieldset>
 <br />
 <fieldset id="carriers_part" style="display:none;">
-	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping:'}</legend>
+	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
 	<div id="carriers_err" style="display:none;" class="warn"></div>
 	<div id="carrier_form">
 		<div>
 			<p>
-				<label>{l s='Delivery option:'} </label>
+				<label>{l s='Delivery option'} </label>
 				<select name="delivery_option" id="delivery_option">
 				</select>
 			</p>
 			<p>
-				<label for="shipping_price">{l s='Shipping price:'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
+				<label for="shipping_price">{l s='Shipping price'}</label> <span id="shipping_price"  name="shipping_price"></span>&nbsp;<span class="currency_sign"></span>&nbsp;
 			</p>
 			<p>
-				<label for="free_shipping">{l s='Free shipping:'}</label>
+				<label for="free_shipping">{l s='Free shipping'}</label>
 				<input type="checkbox" id="free_shipping" name="free_shipping" value="1" />
 			</p>
 		</div>
@@ -1199,7 +1198,7 @@
 			{/if}
 			{if $gift_wrapping}
 				<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
-				<p><label for="gift_message">{l s='Gift message:'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
+				<p><label for="gift_message">{l s='Gift message'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
 			{/if}
 		</div>
 	</div>
@@ -1210,16 +1209,16 @@
 	<div id="send_email_feedback"></div>
 	<div id="cart_summary" style="clear:both;float:left;">
 		<ul>
-			<li><span class="total_cart">{l s='Total products:'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total vouchers:'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total shipping:'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total taxes:'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total without taxes:'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
-			<li><span class="total_cart">{l s='Total with taxes:'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total products'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total vouchers'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total shipping'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total taxes'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total without taxes'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total with taxes'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
 		</ul>
 	</div>
 	<div class="order_message_right">
-		<label for="order_message">{l s='Order message:'}</label>
+		<label for="order_message">{l s='Order message'}</label>
 		<div class="margin-form">
 			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 		</div>
@@ -1229,7 +1228,7 @@
 		<div class="margin-form">
 			<a target="_blank" id="go_order_process" href="" class="button">{l s='Go on payment page to process the payment.'}</a>
 		</div>
-		<label>{l s='Payment:'}</label>
+		<label>{l s='Payment'}</label>
 		<div class="margin-form">
 			<select name="payment_module_name" id="payment_module_name">
 				{foreach from=$payment_modules item='module'}
@@ -1237,7 +1236,7 @@
 				{/foreach}
 			</select>
 		</div>
-		<label>{l s='Order status:'}</label>
+		<label>{l s='Order status'}</label>
 		<div class="margin-form">
 			<select name="id_order_state" id="id_order_state">
 				{foreach from=$order_states item='order_state'}

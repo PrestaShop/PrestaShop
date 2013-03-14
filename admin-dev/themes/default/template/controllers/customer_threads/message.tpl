@@ -49,7 +49,7 @@
 			<dl>
 				<dt>{l s='Customer ID:'}</dd> 
 				<dd><a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
-					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a>
 				</dd>
 			</dl>
@@ -73,7 +73,7 @@
 				<dt>{l s='File attachment'}</dt> 
 				<dd><a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
 					title="{l s='View file'}">
-						<img src="../img/admin/search.gif" alt="{l s='view'}" />
+						<img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a>
 				</dd>
 			</dl>
@@ -83,7 +83,7 @@
 				<dl>
 					<dt>{l s='Order #'}</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
-					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a></dd>
 				</dl>
 			{/if}
@@ -92,7 +92,7 @@
 				<dl>
 					<dt>{l s='Product #'}</dt> 
 					<dd><a href="index.php?tab=AdminProducts&id_product={$message.id_product}&updateproduct&token={getAdminToken tab='AdminProducts'}" title="{l s='View order'}">
-					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='view'}" />
+					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='View'}" />
 				</a></dd>
 				</dl>
 			{/if}

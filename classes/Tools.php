@@ -1799,20 +1799,14 @@ exit;
 	 */
 	public static function displayAsDeprecated($message = null)
 	{
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
 			$backtrace = debug_backtrace();
 			$callee = next($backtrace);
-			if ($message)
-				trigger_error($message, E_USER_WARNING);
-			else
-			{
-				trigger_error('Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />', E_USER_WARNING);
-				$message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
-			}
 			$class = isset($callee['class']) ? $callee['class'] : null;
-			Logger::addLog($message, 3, $class);
-		}
+			if ($message === null)
+				$message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
+			$error = 'Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />';
+
+			Tools::throwDeprecated($error, $message, $class);
 	}
 
 	/**
@@ -1824,9 +1818,8 @@ exit;
 		$callee = next($backtrace);
 		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
 		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
-
-		trigger_error($message, E_WARNING);
 		$class = isset($callee['class']) ? $callee['class'] : null;
+
 		Tools::throwDeprecated($error, $message, $class);
 	}
 
@@ -1836,8 +1829,8 @@ exit;
 		$callee = current($backtrace);
 		$error = 'File <b>'.$callee['file'].'</b> is deprecated<br />';
 		$message = 'The file '.$callee['file'].' is deprecated and will be removed in the next major version.';
-
 		$class = isset($callee['class']) ? $callee['class'] : null;
+		
 		Tools::throwDeprecated($error, $message, $class);
 	}
 
@@ -1845,7 +1838,7 @@ exit;
 	{
 		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
 		{
-//			trigger_error($error, E_USER_WARNING);
+			trigger_error($error, E_USER_WARNING);
 			Logger::addLog($message, 3, $class);
 		}
 	}

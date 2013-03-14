@@ -46,7 +46,7 @@ class OrderControllerCore extends ParentOrderController
 		if (!$this->context->cart->checkQuantities())
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity, you cannot proceed with your order.');
+			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.');
 		}
 
 		// Check minimal amount
@@ -249,15 +249,19 @@ class OrderControllerCore extends ParentOrderController
 	{
 		if (!Tools::getValue('multi-shipping'))
 			$this->context->cart->setNoMultishipping();
-			
+		
+		$same = Tools::isSubmit('same');
+		if(!Tools::getValue('id_address_invoice', false) && !$same)
+			$same = true;
+
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
-			|| (!Tools::isSubmit('same') && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
+			|| (!$same && Tools::getValue('id_address_delivery') != Tools::getValue('id_address_invoice')
 				&& !Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_invoice'))))
 			$this->errors[] = Tools::displayError('Invalid address', !Tools::getValue('ajax'));
 		else
 		{
 			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
-			$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
+			$this->context->cart->id_address_invoice = $same ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
 			
 			CartRule::autoRemoveFromCart($this->context);
 			CartRule::autoAddToCart($this->context);

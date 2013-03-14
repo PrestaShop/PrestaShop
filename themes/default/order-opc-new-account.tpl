@@ -20,7 +20,7 @@
 				</div>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
+					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Login'}" />
 				</p>
 			</div>
 		</fieldset>
@@ -108,7 +108,7 @@
 				<input type="hidden" id="opc_id_address_delivery" name="opc_id_address_delivery" value="{if isset($guestInformations) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
 				<input type="hidden" id="opc_id_address_invoice" name="opc_id_address_invoice" value="{if isset($guestInformations) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
 				<p class="required text">
-					<label for="email">{l s='Email:'} <sup>*</sup></label>
+					<label for="email">{l s='Email'} <sup>*</sup></label>
 					<input type="text" class="text" id="email" name="email" value="{if isset($guestInformations) && $guestInformations.email}{$guestInformations.email}{/if}" />
 				</p>
 				<p class="required password is_customer_param">
@@ -259,12 +259,15 @@
 					<label for="other">{l s='Additional information'}</label>
 					<textarea name="other" id="other" cols="26" rows="3"></textarea>
 				</p>
-				<p class="required text">
+				{if $one_phone_at_least}
+					<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
+				{/if}								
+				<p class="text is_customer_param">
 					<label for="phone">{l s='Home phone'}</label>
 					<input type="text" class="text" name="phone" id="phone" value="{if isset($guestInformations) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
 				</p>
-				<p class="text is_customer_param">
-					<label for="phone_mobile">{l s='Mobile phone'}</label>
+				<p class="{if $one_phone_at_least}required {/if}text">
+					<label for="phone_mobile">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
 					<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="" />
 				</p>
 				<input type="hidden" name="alias" id="alias" value="{l s='My address'}" />
@@ -357,12 +360,15 @@
 						<label for="other_invoice">{l s='Additional information'}</label>
 						<textarea name="other_invoice" id="other_invoice" cols="26" rows="3"></textarea>
 					</p>
-					<p class="required text">
+					{if $one_phone_at_least}
+						<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
+					{/if}					
+					<p class="text">
 						<label for="phone_invoice">{l s='Home phone'}</label>
 						<input type="text" class="text" name="phone_invoice" id="phone_invoice" value="" />
 					</p>
-					<p class="text is_customer_param">
-						<label for="phone_mobile_invoice">{l s='Mobile phone'}</label>
+					<p class="{if $one_phone_at_least}required {/if}text is_customer_param">
+						<label for="phone_mobile_invoice">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
 						<input type="text" class="text" name="phone_mobile_invoice" id="phone_mobile_invoice" value="" />
 					</p>
 					<input type="hidden" name="alias_invoice" id="alias_invoice" value="{l s='My Invoice address'}" />

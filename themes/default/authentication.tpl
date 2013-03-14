@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Login:'}{/capture}
+{capture name=path}{l s='Login'}{/capture}
 {include file="$tpl_dir./breadcrumb.tpl"}
 
 <script type="text/javascript">
@@ -193,7 +193,7 @@ $(document).ready(function() {
 	{if isset($inOrderProcess) && $inOrderProcess && $PS_GUEST_CHECKOUT_ENABLED}
 	<form action="{$link->getPageLink('authentication', true, NULL, "back=$back")}" method="post" id="new_account_form" class="std clearfix">
 		<fieldset>
-			<h3>{l s='Instant Checkout'}</h3>
+			<h3>{l s='Instant checkout'}</h3>
 			<div id="opc_account_form" style="display: block; ">
 				<!-- Account -->
 				<p class="required text">
@@ -385,7 +385,7 @@ $(document).ready(function() {
 			<input onkeyup="$('#lastname').val(this.value);" type="text" class="text" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.customer_lastname)}{$smarty.post.customer_lastname}{/if}" />
 		</p>
 		<p class="required text">
-			<label for="email">{l s='Email:'} <sup>*</sup></label>
+			<label for="email">{l s='Email'} <sup>*</sup></label>
 			<input type="text" class="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
 		</p>
 		<p class="required password">
@@ -490,7 +490,7 @@ $(document).ready(function() {
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, company name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. Box, Company name, etc.'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">
@@ -551,8 +551,8 @@ $(document).ready(function() {
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" class="text" name="phone" id="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{/if}" />
 		</p>
-		<p class="text">
-			<label for="phone_mobile">{l s='Mobile phone'} {if $one_phone_at_least}<sup>*</sup>{/if}</label>
+		<p class="{if $one_phone_at_least}required {/if} text">
+			<label for="phone_mobile">{l s='Mobile phone'}{if $one_phone_at_least} <sup>*</sup>{/if}</label>
 			<input type="text" class="text" name="phone_mobile" id="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{/if}" />
 		</p>
 		<p class="required text" id="address_alias">

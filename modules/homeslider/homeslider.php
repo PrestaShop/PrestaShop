@@ -49,7 +49,7 @@ class HomeSlider extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Image slider for your homepage');
+		$this->displayName = $this->l('Image slider for your homepage.');
 		$this->description = $this->l('Adds an image slider to your homepage.');
 	}
 
@@ -272,7 +272,7 @@ class HomeSlider extends Module
 
 		/* Display notice if there are no slides yet */
 		if (!$slides)
-			$this->_html .= '<p style="margin-left: 40px;">'.$this->l('You have not added any slides yet.').'</p>';
+			$this->_html .= '<p style="margin-left: 40px;">'.$this->l('You have not yet added any slides.').'</p>';
 		else /* Display slides */
 		{
 			$this->_html .= '
@@ -305,7 +305,7 @@ class HomeSlider extends Module
 			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
 		/* Checks if directory is writable */
 		if (!is_writable('.'))
-			$this->adminDisplayWarning(sprintf($this->l('modules %s must be writable (CHMOD 755 / 777)'), $this->name));
+			$this->adminDisplayWarning(sprintf($this->l('Modules %s must be writable (CHMOD 755 / 777)'), $this->name));
 
 		/* Gets languages and sets which div requires translations */
 		$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -464,15 +464,15 @@ class HomeSlider extends Module
 			foreach ($languages as $language)
 			{
 				if (Tools::strlen(Tools::getValue('title_'.$language['id_lang'])) > 255)
-					$errors[] = $this->l('Title is too long');
+					$errors[] = $this->l('The title is too long.');
 				if (Tools::strlen(Tools::getValue('legend_'.$language['id_lang'])) > 255)
-					$errors[] = $this->l('Legend is too long');
+					$errors[] = $this->l('The legend is too long.');
 				if (Tools::strlen(Tools::getValue('url_'.$language['id_lang'])) > 255)
-					$errors[] = $this->l('URL is too long');
+					$errors[] = $this->l('The URL is too long.');
 				if (Tools::strlen(Tools::getValue('description_'.$language['id_lang'])) > 4000)
-					$errors[] = $this->l('Description is too long');
+					$errors[] = $this->l('The description is too long.');
 				if (Tools::strlen(Tools::getValue('url_'.$language['id_lang'])) > 0 && !Validate::isUrl(Tools::getValue('url_'.$language['id_lang'])))
-					$errors[] = $this->l('URL format is not correct');
+					$errors[] = $this->l('The URL format is not correct.');
 				if (Tools::getValue('image_'.$language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_'.$language['id_lang'])))
 					$errors[] = $this->l('Invalid filename');
 				if (Tools::getValue('image_old_'.$language['id_lang']) != null && !Validate::isFileName(Tools::getValue('image_old_'.$language['id_lang'])))
@@ -482,15 +482,15 @@ class HomeSlider extends Module
 			/* Checks title/url/legend/description for default lang */
 			$id_lang_default = (int)Configuration::get('PS_LANG_DEFAULT');
 			if (Tools::strlen(Tools::getValue('title_'.$id_lang_default)) == 0)
-				$errors[] = $this->l('Title is not set');
+				$errors[] = $this->l('The title is not set.');
 			if (Tools::strlen(Tools::getValue('legend_'.$id_lang_default)) == 0)
-				$errors[] = $this->l('Legend is not set');
+				$errors[] = $this->l('The legend is not set.');
 			if (Tools::strlen(Tools::getValue('url_'.$id_lang_default)) == 0)
-				$errors[] = $this->l('URL is not set');
+				$errors[] = $this->l('The URL is not set.');
 			if (!Tools::isSubmit('has_picture') && (!isset($_FILES['image_'.$id_lang_default]) || empty($_FILES['image_'.$id_lang_default]['tmp_name'])))
-				$errors[] = $this->l('Image is not set');
+				$errors[] = $this->l('The image is not set.');
 			if (Tools::getValue('image_old_'.$id_lang_default) && !Validate::isFileName(Tools::getValue('image_old_'.$id_lang_default)))
-				$errors[] = $this->l('Image is not set');
+				$errors[] = $this->l('The image is not set.');
 		} /* Validation for deletion */
 		elseif (Tools::isSubmit('delete_id_slide') && (!Validate::isInt(Tools::getValue('delete_id_slide')) || !$this->slideExists((int)Tools::getValue('delete_id_slide'))))
 			$errors[] = $this->l('Invalid id_slide');
@@ -520,7 +520,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_LOOP', (int)Tools::getValue('HOMESLIDER_LOOP'));
 			$this->clearCache();			
 			if (!$res)
-				$errors[] = $this->displayError($this->l('Configuration could not be updated'));
+				$errors[] = $this->displayError($this->l('The configuration could not be updated.'));
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
 		} /* Process Slide status */
 		elseif (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
@@ -532,7 +532,7 @@ class HomeSlider extends Module
 				$slide->active = 0;
 			$res = $slide->update();
 			$this->clearCache();
-			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayError($this->l('Configuration could not be updated')));
+			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayError($this->l('The configuration could not be updated.')));
 		}
 		/* Processes Slide */
 		elseif (Tools::isSubmit('submitSlide'))
@@ -581,7 +581,7 @@ class HomeSlider extends Module
 					elseif (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
 					elseif (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).'.'.$type, null, null, $type))
-						$errors[] = $this->displayError($this->l('An error occurred during the image upload.'));
+						$errors[] = $this->displayError($this->l('An error occurred during the image upload process.'));
 					if (isset($temp_name))
 						@unlink($temp_name);
 					$slide->image[$language['id_lang']] = Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).'.'.$type;
@@ -597,11 +597,11 @@ class HomeSlider extends Module
 				if (!Tools::getValue('id_slide'))
 				{
 					if (!$slide->add())
-						$errors[] = $this->displayError($this->l('Slide could not be added'));
+						$errors[] = $this->displayError($this->l('The slide could not be added.'));
 				}
 				/* Update */
 				elseif (!$slide->update())
-					$errors[] = $this->displayError($this->l('Slide could not be updated'));
+					$errors[] = $this->displayError($this->l('The slide could not be updated.'));
 				$this->clearCache();
 			}
 		} /* Deletes */

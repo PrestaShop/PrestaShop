@@ -23,10 +23,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<p>{l s='Choose the delivery addresses:'}</p>
+<p>{l s='Choose the delivery addresses'}</p>
 <script type="text/javascript">
 	CloseTxt = '{l s='Submit' js=1}';
-	QtyChanged = '{l s='Some product quantities have changed. Please check them.' js=1}';
+	QtyChanged = '{l s='Some product quantities have changed. Please check them' js=1}';
 	ShipToAnOtherAddress = '{l s='Ship to multiple addresses' js=1}';
 </script>
 <div id="order-detail-content" class="table_block">

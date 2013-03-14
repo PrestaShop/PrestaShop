@@ -127,7 +127,7 @@ class ProductControllerCore extends FrontController
 						default:
 							header('HTTP/1.1 404 Not Found');
 							header('Status: 404 Not Found');
-							$this->errors[] = Tools::displayError('Product is no longer available.');
+							$this->errors[] = Tools::displayError('This product is no longer available.');
 						break;
 					}
 				}
@@ -198,7 +198,7 @@ class ProductControllerCore extends FrontController
 				$this->formTargetFormat();
 			}
 			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
-				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
+				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture.');
 
 			
 			$pictures = array();
@@ -473,7 +473,7 @@ class ProductControllerCore extends FrontController
 		$attributes_combinations = Product::getAttributesInformationsByProduct($this->product->id);
 		foreach ($attributes_combinations as &$ac)
 			foreach ($ac as &$val)
-				$val = str_replace('-', '_', Tools::link_rewrite($val));
+				$val = str_replace('-', '_', Tools::link_rewrite(str_replace(array(',', '.'), '-', $val)));
 		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
 	}
 
@@ -544,12 +544,12 @@ class ProductControllerCore extends FrontController
 					return false;
 				/* Original file */
 				if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
-					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
+					$this->errors[] = Tools::displayError('An error occurred during the image upload process.');
 				/* A smaller one */
 				elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height))
-					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
+					$this->errors[] = Tools::displayError('An error occurred during the image upload process.');
 				elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
-					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
+					$this->errors[] = Tools::displayError('An error occurred during the image upload process.');
 				else
 					$this->context->cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
 				unlink($tmp_name);

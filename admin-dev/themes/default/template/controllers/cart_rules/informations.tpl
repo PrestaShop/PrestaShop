@@ -33,7 +33,7 @@
 				<input type="radio" name="highlight" id="highlight_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'highlight')|intval}checked="checked"{/if} />
 				<label class="t" for="highlight_off"> <img src="../img/admin/disabled.gif" alt="{l s='No'}" title="{l s='No'}" style="cursor:pointer" /></label>
 				<p class="preference_description">
-					{l s='If the voucher is not yet in the cart, it will be displayed under the cart in the cart summary.'}
+					{l s='If the voucher is not yet in the cart, it will be displayed in the cart summary.'}
 				</p>
 			</div>
 			<label>{l s='Partial use'}</label>

@@ -102,12 +102,46 @@ class AdminCategoriesControllerCore extends AdminController
 		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
 			$this->_category = new Category($id_category);
 		else
+		{
 			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
-			else if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
+			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();
 			else
 				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
+		}
+
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
+		$top_category = Category::getTopCategory();
+		if (Tools::isSubmit('id_category'))
+			$id_parent = $this->_category->id;
+		elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1)
+			$id_parent = $top_category->id;
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent == 1)
+			$id_parent = Configuration::get('PS_HOME_CATEGORY');
+		elseif (Shop::isFeatureActive() && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
+		{
+			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
+				$id_parent = $this->context->shop->id_category;
+			else
+				$id_parent = $top_category->id;
+		}
+		else
+			$id_parent = $this->context->shop->id_category;
+
+		$this->_select = 'sa.position position';
+		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+		else
+			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+
+
+		// we add restriction for shop
+		if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive())
+			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
+
 		// if we are not in a shop context, we remove the position column
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
 			unset($this->fields_list['position']);
@@ -145,41 +179,12 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('add');
 		$this->addRowAction('view');
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
-		$is_multishop = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-		$top_category = Category::getTopCategory();
-
-		if (Tools::isSubmit('id_category'))
-			$id_parent = $this->_category->id;
-		else if (!$is_multishop && $count_categories_without_parent > 1)
-			$id_parent = $top_category->id;
-		else if ($is_multishop && $count_categories_without_parent == 1)
-			$id_parent = Configuration::get('PS_HOME_CATEGORY');
-		else if ($is_multishop && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
-			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
-				$id_parent = $this->context->shop->id_category;
-			else
-				$id_parent = $top_category->id;
-		else
-			$id_parent = $this->context->shop->id_category;
-
-		$this->_select = 'sa.position position';
-		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-
-		if (Shop::getContext() == Shop::CONTEXT_SHOP)
-			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
-		else
-			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
-
-
-		// we add restriction for shop
-		if (Shop::getContext() == Shop::CONTEXT_SHOP && $is_multishop)
-			$this->_where = ' AND sa.`id_shop` = '.(int)Context::getContext()->shop->id;
-
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
 		$categories_tree = $this->_category->getParentsCategories();
+
 		if (empty($categories_tree)
 			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
-			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !$is_multishop && $count_categories_without_parent > 1))
+			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
 		asort($categories_tree);
@@ -299,7 +304,7 @@ class AdminCategoriesControllerCore extends AdminController
 					$this->display = 'add';
 			}
 			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 
 		parent::initProcess();
@@ -594,7 +599,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processDelete()
@@ -603,7 +608,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($this->tabAccess['delete'] === '1')
 		{
 			if ($category->isRootCategoryForAShop())
-				$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
 			else if (parent::processDelete())
 			{
 				$this->setDeleteMode();
@@ -614,7 +619,7 @@ class AdminCategoriesControllerCore extends AdminController
 				return false;
 		}
 		else
-			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 	
 	public function processFatherlessProducts($id_parent)
@@ -647,9 +652,9 @@ class AdminCategoriesControllerCore extends AdminController
 	public function processPosition()
 	{
 		if ($this->tabAccess['edit'] !== '1')
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
-			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
+			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');

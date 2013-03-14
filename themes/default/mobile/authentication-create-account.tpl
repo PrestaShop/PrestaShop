@@ -123,7 +123,7 @@
 				<p class="required text">
 					<label for="address1">{l s='Address'} <sup>*</sup></label>
 					<input type="text" class="text" name="address1" id="address1" value="{if isset($smarty.post.address1)}{$smarty.post.address1}{/if}" />
-					<span class="inline-infos">{l s='Street address, P.O. box, compagny name, c/o'}</span>
+					<span class="inline-infos">{l s='Street address, P.O. Box, company name, etc.'}</span>
 				</p>
 			{elseif $field_name eq "address2"}
 				<p class="text">

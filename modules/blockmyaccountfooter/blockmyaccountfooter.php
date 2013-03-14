@@ -39,8 +39,8 @@ class Blockmyaccountfooter extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('My Account block on footer');
-		$this->description = $this->l('Displays a block with links relative to user account.');
+		$this->displayName = $this->l('My account block for your website\'s footer');
+		$this->description = $this->l('Displays a block with links relative to user accounts.');
 	}
 
 	public function install()
