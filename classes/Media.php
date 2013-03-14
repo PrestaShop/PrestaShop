@@ -152,31 +152,20 @@ class MediaCore
 		$current_css_file = $fileuri;
 		if (strlen($css_content) > 0)
 		{
-			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, Media::getBackTrackLimit());
-			$css_content = preg_replace_callback('#url\((?!data:)(?:\'|")?([^\)\'"]*)(?:\'|")?\)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, Media::getBackTrackLimit()); 
-
-			$css_content = preg_replace('#\s+#', ' ', $css_content, Media::getBackTrackLimit());
-			$css_content = str_replace("\t", '', $css_content);
-			$css_content = str_replace("\n", '', $css_content);
-			//$css_content = str_replace('}', "}\n", $css_content);
-
-			$css_content = str_replace('; ', ';', $css_content);
-			$css_content = str_replace(': ', ':', $css_content);
-			$css_content = str_replace(' {', '{', $css_content);
-			$css_content = str_replace('{ ', '{', $css_content);
+			$limit  = Media::getBackTrackLimit();
+			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
+			$css_content = preg_replace_callback('#(url\((?!data:)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
+			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);		
+			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
+			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
+			$css_content = str_replace(array(' {', '{ '), '{', $css_content);
 			$css_content = str_replace(', ', ',', $css_content);
-			$css_content = str_replace('} ', '}', $css_content);
-			$css_content = str_replace(' }', '}', $css_content);
-			$css_content = str_replace(';}', '}', $css_content);
-			$css_content = str_replace(':0px', ':0', $css_content);
-			$css_content = str_replace(' 0px', ' 0', $css_content);
-			$css_content = str_replace(':0em', ':0', $css_content);
-			$css_content = str_replace(' 0em', ' 0', $css_content);
-			$css_content = str_replace(':0pt', ':0', $css_content);
-			$css_content = str_replace(' 0pt', ' 0', $css_content);
-			$css_content = str_replace(':0%', ':0', $css_content);
-			$css_content = str_replace(' 0%', ' 0', $css_content);
-
+			$css_content = str_replace(array('} ', ' }', ';}'), '}', $css_content);
+			$css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
+			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
+			$css_content = str_replace('\'images_ie/', '\'images/', $css_content);
+			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+						
 			// Store all import url
 			preg_match_all('#@import .*?;#i', $css_content, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
