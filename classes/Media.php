@@ -150,7 +150,7 @@ class MediaCore
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
-	{	
+	{
 		global $current_css_file;
 
 		$current_css_file = $fileuri;
