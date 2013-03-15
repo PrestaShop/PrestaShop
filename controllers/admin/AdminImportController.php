@@ -2053,11 +2053,11 @@ class AdminImportControllerCore extends AdminController
 							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
 							Db::getInstance()->getMsgError(),
 							$customer->email,
-							(int)$address->customer_id
+							(int)$address->id_customer
 						);
 				}
 				else
-					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in the database (ID: %d) cannot be saved'), $address->customer_id);
+					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in the database (ID: %d) cannot be saved'), $address->id_customer);
 			}
 			else
 			{
