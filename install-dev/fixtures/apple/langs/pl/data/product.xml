@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<entity_product>
+  <product id="iPod_Nano" id_shop="1">
+    <description>&lt;p&gt;&lt;strong&gt;&lt;span style="font-size: small;"&gt;Curved ahead of the curve.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;For those about to rock, we give you nine amazing colors. But that's only part of the story. Feel the curved, all-aluminum and glass design and you won't want to put iPod nano down.&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;strong&gt;&lt;span style="font-size: small;"&gt;Great looks. And brains, too.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;The new Genius feature turns iPod nano into your own highly intelligent, personal DJ. It creates playlists by finding songs in your library that go great together.&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;strong&gt;&lt;span style="font-size: small;"&gt;Made to move with your moves.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;The accelerometer comes to iPod nano. Give it a shake to shuffle your music. Turn it sideways to view Cover Flow. And play games designed with your moves in mind.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;New design. New features. Now in 8GB and 16GB. iPod nano rocks like never before.&lt;/p&gt;</description_short>
+    <link_rewrite>ipod-nano</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod Nano</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="iPod_shuffle" id_shop="1">
+    <description>&lt;p&gt;&lt;span style="font-size: small;"&gt;&lt;strong&gt;Instant attachment.&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Wear up to 500 songs on your sleeve. Or your belt. Or your gym shorts. iPod shuffle is a badge of musical devotion. Now in new, more brilliant colors.&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;span style="font-size: small;"&gt;&lt;strong&gt;Feed your iPod shuffle.&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;iTunes is your entertainment superstore. It&#x2019;s your ultra-organized music collection and jukebox. And it&#x2019;s how you load up your iPod shuffle in one click.&lt;/p&gt;&#xD;
+&lt;p&gt;&lt;span style="font-size: small;"&gt;&lt;strong&gt;Beauty and the beat.&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
+&lt;p&gt;Intensely colorful anodized aluminum complements the simple design of iPod shuffle. Now in blue, green, pink, red, and original silver.&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;iPod shuffle, the world&#x2019;s most wearable music player, now clips on in more vibrant blue, green, pink, and red.&lt;/p&gt;</description_short>
+    <link_rewrite>ipod-shuffle</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod shuffle</name>
+    <available_now>In stock</available_now>
+    <available_later/>
+  </product>
+  <product id="MacBook_Air" id_shop="1">
+    <description>&lt;p&gt;MacBook Air is nearly as thin as your index finger. Practically every detail that could be streamlined has been. Yet it still has a 13.3-inch widescreen LED display, full-size keyboard, and large multi-touch trackpad. It&#x2019;s incomparably portable without the usual ultraportable screen and keyboard compromises.&lt;/p&gt;&lt;p&gt;The incredible thinness of MacBook Air is the result of numerous size- and weight-shaving innovations. From a slimmer hard drive to strategically hidden I/O ports to a lower-profile battery, everything has been considered and reconsidered with thinness in mind.&lt;/p&gt;&lt;p&gt;MacBook Air is designed and engineered to take full advantage of the wireless world. A world in which 802.11n Wi-Fi is now so fast and so available, people are truly living untethered &#x2014; buying and renting movies online, downloading software, and sharing and storing files on the web. &lt;/p&gt;</description>
+    <description_short>MacBook Air is ultrathin, ultraportable, and ultra unlike anything else. But you don&#x2019;t lose inches and pounds overnight. It&#x2019;s the result of rethinking conventions. Of multiple wireless innovations. And of breakthrough design. With MacBook Air, mobile computing suddenly has a new standard.</description_short>
+    <link_rewrite>macbook-air</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>MacBook Air</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="MacBook" id_shop="1">
+    <description>Every MacBook has a larger hard drive, up to 250GB, to store growing media collections and valuable data.&lt;br /&gt;&lt;br /&gt;The 2.4GHz MacBook models now include 2GB of memory standard &#x2014; perfect for running more of your favorite applications smoothly.</description>
+    <description_short>MacBook makes it easy to hit the road thanks to its tough polycarbonate case, built-in wireless technologies, and innovative MagSafe Power Adapter that releases automatically if someone accidentally trips on the cord.</description_short>
+    <link_rewrite>macbook</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>MacBook</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="iPod_touch" id_shop="1">
+    <description>&lt;h3&gt;Five new hands-on applications&lt;/h3&gt;&#xD;
+&lt;p&gt;View rich HTML email with photos as well as PDF, Word, and Excel attachments. Get maps, directions, and real-time traffic information. Take notes and read stock and weather reports.&lt;/p&gt;&#xD;
+&lt;h3&gt;Touch your music, movies, and more&lt;/h3&gt;&#xD;
+&lt;p&gt;The revolutionary Multi-Touch technology built into the gorgeous 3.5-inch display lets you pinch, zoom, scroll, and flick with your fingers.&lt;/p&gt;&#xD;
+&lt;h3&gt;Internet in your pocket&lt;/h3&gt;&#xD;
+&lt;p&gt;With the Safari web browser, see websites the way they were designed to be seen and zoom in and out with a tap.&lt;sup&gt;2&lt;/sup&gt; And add Web Clips to your Home screen for quick access to favorite sites.&lt;/p&gt;&#xD;
+&lt;h3&gt;What's in the box&lt;/h3&gt;&#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;iPod touch&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Earphones&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;USB 2.0 cable&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Dock adapter&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Polishing cloth&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Stand&lt;/li&gt;&#xD;
+&lt;li&gt;&lt;span&gt;&lt;/span&gt;Quick Start guide&lt;/li&gt;&#xD;
+&lt;/ul&gt;</description>
+    <description_short>&lt;ul&gt;&#xD;
+&lt;li&gt;Revolutionary Multi-Touch interface&lt;/li&gt;&#xD;
+&lt;li&gt;3.5-inch widescreen color display&lt;/li&gt;&#xD;
+&lt;li&gt;Wi-Fi (802.11b/g)&lt;/li&gt;&#xD;
+&lt;li&gt;8 mm thin&lt;/li&gt;&#xD;
+&lt;li&gt;Safari, YouTube, Mail, Stocks, Weather, Notes, iTunes Wi-Fi Music Store, Maps&lt;/li&gt;&#xD;
+&lt;/ul&gt;</description_short>
+    <link_rewrite>ipod-touch</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>iPod touch</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" id_shop="1">
+    <description>&lt;p&gt;Lorem ipsum&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Lorem ipsum&lt;/p&gt;</description_short>
+    <link_rewrite>belkin-leather-folio-for-ipod-nano-black-chocolate</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Belkin Leather Folio for iPod nano - Black / Chocolate</name>
+    <available_now/>
+    <available_later/>
+  </product>
+  <product id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_shop="1">
+    <description>&lt;div class="product-overview-full"&gt;Using Hi-Definition MicroSpeakers to deliver full-range audio, the ergonomic and lightweight design of the SE210 earphones is ideal for premium on-the-go listening on your iPod or iPhone. They offer the most accurate audio reproduction from both portable and home stereo audio sources--for the ultimate in precision highs and rich low end. In addition, the flexible design allows you to choose the most comfortable fit from a variety of wearing positions. &lt;br /&gt; &lt;br /&gt; &lt;strong&gt;Features &lt;/strong&gt; &lt;br /&gt; &#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Sound-isolating design &lt;/li&gt;&#xD;
+&lt;li&gt; Hi-Definition MicroSpeaker with a single balanced armature driver &lt;/li&gt;&#xD;
+&lt;li&gt; Detachable, modular cable so you can make the cable longer or shorter depending on your activity &lt;/li&gt;&#xD;
+&lt;li&gt; Connector compatible with earphone ports on both iPod and iPhone &lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;strong&gt;Specifications &lt;/strong&gt;&lt;br /&gt; &#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Speaker type: Hi-Definition MicroSpeaker &lt;/li&gt;&#xD;
+&lt;li&gt; Frequency range: 25Hz-18.5kHz &lt;/li&gt;&#xD;
+&lt;li&gt; Impedance (1kHz): 26 Ohms &lt;/li&gt;&#xD;
+&lt;li&gt; Sensitivity (1mW): 114 dB SPL/mW &lt;/li&gt;&#xD;
+&lt;li&gt; Cable length (with extension): 18.0 in./45.0 cm (54.0 in./137.1 cm) &lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+&lt;strong&gt;In the box&lt;/strong&gt;&lt;br /&gt; &#xD;
+&lt;ul&gt;&#xD;
+&lt;li&gt;Shure SE210 earphones &lt;/li&gt;&#xD;
+&lt;li&gt; Extension cable (36.0 in./91.4 cm) &lt;/li&gt;&#xD;
+&lt;li&gt; Three pairs foam earpiece sleeves (small, medium, large) &lt;/li&gt;&#xD;
+&lt;li&gt; Three pairs soft flex earpiece sleeves (small, medium, large) &lt;/li&gt;&#xD;
+&lt;li&gt; One pair triple-flange earpiece sleeves &lt;/li&gt;&#xD;
+&lt;li&gt; Carrying case &lt;/li&gt;&#xD;
+&lt;/ul&gt;&#xD;
+Warranty&lt;br /&gt; Two-year limited &lt;br /&gt;(For details, please visit &lt;br /&gt;www.shure.com/PersonalAudio/CustomerSupport/ProductReturnsAndWarranty/index.htm.) &lt;br /&gt;&lt;br /&gt; Mfr. Part No.: SE210-A-EFS &lt;br /&gt;&lt;br /&gt;Note: Products sold through this website that do not bear the Apple Brand name are serviced and supported exclusively by their manufacturers in accordance with terms and conditions packaged with the products. Apple's Limited Warranty does not apply to products that are not Apple-branded, even if packaged or sold with Apple products. Please contact the manufacturer directly for technical support and customer service.&lt;/div&gt;</description>
+    <description_short>&lt;p&gt;Evolved from personal monitor technology road-tested by pro musicians and perfected by Shure engineers, the lightweight and stylish SE210 delivers full-range audio that's free from outside noise.&lt;/p&gt;</description_short>
+    <link_rewrite>ecouteurs-a-isolation-sonore-shure-se210-blanc</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Shure SE210 Sound-Isolating Earphones for iPod and iPhone</name>
+    <available_now/>
+    <available_later/>
+  </product>
+</entity_product>
