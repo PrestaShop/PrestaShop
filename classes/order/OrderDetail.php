@@ -249,7 +249,17 @@ class OrderDetailCore extends ObjectModel
 			$context = Context::getContext();
 		$this->context = $context->cloneContext();
 	}
-	
+
+	public function delete()
+	{
+		if(!$res = parent::delete())
+			return false;
+
+		Db::getInstance()->delete('order_detail_tax', 'id_order_detail='.(int)$this->id);
+
+		return $res;
+	}
+
 	protected function setContext($id_shop)
 	{
 		if ($this->context->shop->id != $id_shop)
