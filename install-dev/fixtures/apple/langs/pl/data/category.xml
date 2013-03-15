@@ -2,7 +2,7 @@
 <entity_category>
   <category id="iPods" id_shop="1">
     <name>iPod</name>
-    <description>Teraz mo¿esz kupiæ filmy na ITunes, a nastêpnie zsynchronizowaæ je ze swoim iPod, ca³y œwiat to Twój wielki teatr.</description>
+    <description>Teraz moÅ¼esz kupiÄ‡ filmy na ITunes, a nastÄ™pnie zsynchronizowaÄ‡ je ze swoim iPod, caÅ‚y Å›wiat to TwÃ³j wielki teatr.</description>
     <link_rewrite>muzyczne-ipod</link_rewrite>
     <meta_title/>
     <meta_keywords/>
@@ -18,10 +18,10 @@
   </category>
   <category id="Laptops" id_shop="1">
     <name>Laptopy</name>
-    <description>Najnowoczeœniejsze laptopy od Apple</description>
+    <description>NajnowoczeÅ›niejsze laptopy od Apple</description>
     <link_rewrite>laptopy</link_rewrite>
     <meta_title>Laptoty Apple</meta_title>
     <meta_keywords>Apple Laptopy MacBook Air</meta_keywords>
-    <meta_description>Piêkne i szybkie laptopy Apple Mac Book Air</meta_description>
+    <meta_description>PiÄ™kne i szybkie laptopy Apple Mac Book Air</meta_description>
   </category>
 </entity_category>
