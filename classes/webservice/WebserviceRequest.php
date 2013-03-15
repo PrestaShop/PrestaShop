@@ -228,6 +228,7 @@ class WebserviceRequestCore
 			'categories' => array('description' => 'The product categories','class' => 'Category'),
 			'combinations' => array('description' => 'The product combinations','class' => 'Combination'),
 			'configurations' => array('description' => 'Shop configuration', 'class' => 'Configuration'),
+			'contacts' => array('description' => 'Shop contacts','class' => 'Contact'),
 			'countries' => array('description' => 'The countries','class' => 'Country'),
 			'currencies' => array('description' => 'The currencies', 'class' => 'Currency'),
 			'customers' => array('description' => 'The e-shop\'s customers','class' => 'Customer'),
