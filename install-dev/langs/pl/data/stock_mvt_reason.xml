@@ -22,6 +22,6 @@
     <name>Przeniesienie z innego magazynu</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Supply_Order">
-    <name>Zamówienie dostawy</name>
+    <name>Zamówienie dostawcy</name>
   </stock_mvt_reason>
 </entity_stock_mvt_reason>
