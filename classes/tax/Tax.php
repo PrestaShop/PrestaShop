@@ -165,6 +165,13 @@ class TaxCore extends ObjectModel
 		static $ps_tax = null;
 		if ($ps_tax === null)
 			$ps_tax = Configuration::get('PS_TAX');
+		
+		if($ps_tax)
+		{
+			$id_group = Group::getCurrent();
+			$group = new Group($id_group);
+			$ps_tax = $group->price_display_method;
+		}
 
 		return !$ps_tax;
 	}
