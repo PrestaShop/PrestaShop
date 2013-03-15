@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <entity_order_message>
   <order_message id="Delay">
-    <name>OpóŸnienie</name>
+    <name>OpÃ³Åºnienie</name>
     <message>Witamy,
-Niestety jeden z produktów wybranych przez Ciebie w zamówieniu aktualnie nie jest dostêpny. To mo¿e opóŸniæ odrobinê dostawê Twojego zamówienia. 
-Przepraszamy za zaistnia³¹ sytuacjê i zrobimy wszystko co w naszej mocy by zamówienie dotar³o do Pañstwa jak najszybciej.
+Niestety jeden z produktÃ³w wybranych przez Ciebie w zamÃ³wieniu aktualnie nie jest dostÄ™pny. To moÅ¼e opÃ³ÅºniÄ‡ odrobinÄ™ dostawÄ™ Twojego zamÃ³wienia.
+Przepraszamy za zaistniaÅ‚Ä… sytuacjÄ™ i zrobimy wszystko co w naszej mocy by zamÃ³wienie dotarÅ‚o do PaÅ„stwa jak najszybciej.
 
 Pozdrawiamy,</message>
   </order_message>
