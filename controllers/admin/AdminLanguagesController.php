@@ -485,10 +485,10 @@ class AdminLanguagesControllerCore extends AdminController
 			$this->status = 'error';
 			$this->errors[] = '[TECHNICAL ERROR] ps_version not set or empty';
 		}
-		if (@fsockopen('www.prestashop.com', 80))
+
+		// Get all iso code available
+		if($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']))
 		{
-			// Get all iso code available
-			$lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']);
 			$result = Tools::jsonDecode($lang_packs);
 			if ($lang_packs !== '' && $result && !isset($result->error))
 			{
@@ -510,7 +510,7 @@ class AdminLanguagesControllerCore extends AdminController
 			$this->errors[] = '[TECHNICAL ERROR] Server unreachable';
 		}
 	}
-	
+
 	protected function checkEmployeeIdLang($current_id_lang)
 	{
 		//update employee lang if current id lang is disabled
