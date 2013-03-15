@@ -320,7 +320,7 @@ class LocalizationPackCore
 							AdminTranslationsController::checkAndAddMailsFiles($attributes['iso_code'], $files_list);
 							AdminTranslationsController::addNewTabs($attributes['iso_code'], $files_list);
 						}
-						if (!Language::checkAndAddLanguage((string)$attributes['iso_code']))
+						if (!Language::checkAndAddLanguage((string)$attributes['iso_code'], $lang_pack))
 						{
 							$this->_errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$attributes['iso_code'];
 							return false;
