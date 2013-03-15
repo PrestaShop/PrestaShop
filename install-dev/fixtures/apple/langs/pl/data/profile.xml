@@ -4,12 +4,12 @@
     <name>Administrator</name>
   </profile>
   <profile id="Logistician">
-    <name>Logistician</name>
+    <name>Logistyk</name>
   </profile>
   <profile id="Translator">
-    <name>Translator</name>
+    <name>T³umacz</name>
   </profile>
   <profile id="Salesman">
-    <name>Salesman</name>
+    <name>Sprzedawca</name>
   </profile>
 </entity_profile>

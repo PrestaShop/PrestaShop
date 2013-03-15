@@ -5,7 +5,7 @@
     <template>cheque</template>
   </order_state>
   <order_state id="Payment_accepted">
-    <name>Płatność została zaakceptowana</name>
+    <name>Płatność zaakceptowana</name>
     <template>payment</template>
   </order_state>
   <order_state id="Preparation_in_progress">
@@ -25,15 +25,15 @@
     <template>order_canceled</template>
   </order_state>
   <order_state id="Refund">
-    <name>Spłacać</name>
+    <name>Zwrot</name>
     <template>refund</template>
   </order_state>
   <order_state id="Payment_error">
-    <name>Wystąpił błąd podczas płatności</name>
+    <name>Błąd płatonści</name>
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder">
-    <name>Backorder</name>
+    <name>Brak towaru</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="Awaiting_bank_wire_payment">
@@ -41,11 +41,11 @@
     <template>bankwire</template>
   </order_state>
   <order_state id="Awaiting_PayPal_payment">
-    <name>Oczekiwanie płatności Paypal</name>
+    <name>Oczekiwanie na płatność Paypal</name>
     <template/>
   </order_state>
   <order_state id="Payment_remotely_accepted">
-    <name>Płatność na odległość jest akceptowana</name>
+    <name>Płatność przyjęta</name>
     <template>payment</template>
   </order_state>
 </entity_order_state>

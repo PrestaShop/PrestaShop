@@ -10,7 +10,7 @@
 		<name><![CDATA[W oczekiwaniu]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Order_received_in_part">
-		<name><![CDATA[Zamówienie zostało otrzymane w ramach]]></name>
+		<name><![CDATA[Zamówienie zostało otrzymane w częściach]]></name>
 	</supplier_order_state>
 	<supplier_order_state id="Order_received_completely">
 		<name><![CDATA[Otrzymano zamówienie]]></name>

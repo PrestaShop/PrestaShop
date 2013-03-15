@@ -10,13 +10,13 @@
     <title>Najczęściej kupowane</title>
     <description>Nasze najlepsze sprzedaże</description>
     <keywords>Najczęściej kupowane</keywords>
-    <url_rewrite>najczęściej-kupowane</url_rewrite>
+    <url_rewrite>najczesciej-kupowane</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
     <title>Skontaktuj się z nami</title>
     <description>Skorzystaj z formularza kontaktowego</description>
     <keywords>kontakt,e-mail</keywords>
-    <url_rewrite>kontakt-z-nami</url_rewrite>
+    <url_rewrite>kontakt</url_rewrite>
   </meta>
   <meta id="index" id_shop="1">
     <title/>
@@ -40,25 +40,25 @@
     <title>Przypomnienie hasła</title>
     <description>Wpisz swój adres e-mail w celu uzyskania nowego hasła</description>
     <keywords>przypomnienie, hasło, e-mail, nowy</keywords>
-    <url_rewrite>odzyskiwanie-hasła</url_rewrite>
+    <url_rewrite>odzyskiwanie-hasla</url_rewrite>
   </meta>
   <meta id="prices-drop" id_shop="1">
-    <title>Spadek cen</title>
-    <description>Nasze specjalne produkty</description>
-    <keywords>specjalne, spadek ceny</keywords>
-    <url_rewrite>spadek-cen</url_rewrite>
+    <title>Promocje</title>
+    <description>Produkty w promocji</description>
+    <keywords>promocje, specjalne, spadek ceny</keywords>
+    <url_rewrite>promocje</url_rewrite>
   </meta>
   <meta id="sitemap" id_shop="1">
-    <title>Sitemap</title>
+    <title>Mapa strony</title>
     <description>Zagubiłeś się? Znajdź to, czego szukasz!</description>
-    <keywords>sitemap</keywords>
-    <url_rewrite>sitemap</url_rewrite>
+    <keywords>mapa strony</keywords>
+    <url_rewrite>mapa-strony</url_rewrite>
   </meta>
   <meta id="supplier" id_shop="1">
     <title>Dostawcy</title>
     <description>Lista dostawców</description>
     <keywords>dostawca</keywords>
-    <url_rewrite>dostawca</url_rewrite>
+    <url_rewrite>dostawcy</url_rewrite>
   </meta>
   <meta id="address" id_shop="1">
     <title>Adres</title>
@@ -73,34 +73,34 @@
     <url_rewrite>adresy</url_rewrite>
   </meta>
   <meta id="authentication" id_shop="1">
-    <title>uwierzytelnianie</title>
+    <title>Logowanie</title>
     <description/>
     <keywords/>
-    <url_rewrite>uwierzytelnianie</url_rewrite>
+    <url_rewrite>logowanie</url_rewrite>
   </meta>
   <meta id="cart" id_shop="1">
-    <title>koszyk</title>
+    <title>Koszyk</title>
     <description/>
     <keywords/>
     <url_rewrite>koszyk</url_rewrite>
   </meta>
   <meta id="discount" id_shop="1">
-    <title>Zniżka</title>
+    <title>Rabaty</title>
     <description/>
     <keywords/>
-    <url_rewrite>zniżka</url_rewrite>
+    <url_rewrite>rabaty</url_rewrite>
   </meta>
   <meta id="history" id_shop="1">
     <title>Historia zamówień</title>
     <description/>
     <keywords/>
-    <url_rewrite>historia-zamówień</url_rewrite>
+    <url_rewrite>historia-zamowien</url_rewrite>
   </meta>
   <meta id="identity" id_shop="1">
-    <title>Identyfikacja</title>
+    <title>Dane osobiste</title>
     <description/>
     <keywords/>
-    <url_rewrite>identyfikacja-tożsamość</url_rewrite>
+    <url_rewrite>dane-osobiste</url_rewrite>
   </meta>
   <meta id="my-account" id_shop="1">
     <title>Moje konto</title>
@@ -112,19 +112,19 @@
     <title>Śledzenie zamówienia</title>
     <description/>
     <keywords/>
-    <url_rewrite>śledzenie-zamówienia</url_rewrite>
+    <url_rewrite>sledzenie-zamowienia</url_rewrite>
   </meta>
   <meta id="order-slip" id_shop="1">
-    <title>Order slip</title>
+    <title>Pokwitowania</title>
     <description/>
     <keywords/>
-    <url_rewrite>order-slip</url_rewrite>
+    <url_rewrite>pokwitowania</url_rewrite>
   </meta>
   <meta id="order" id_shop="1">
     <title>Zamówienie</title>
     <description/>
     <keywords/>
-    <url_rewrite>zamówienie</url_rewrite>
+    <url_rewrite>zamowienie</url_rewrite>
   </meta>
   <meta id="search" id_shop="1">
     <title>Szukaj</title>
@@ -142,18 +142,18 @@
     <title>Zamówienie</title>
     <description/>
     <keywords/>
-    <url_rewrite>zamów-szybko</url_rewrite>
+    <url_rewrite>szybkie-zakupy</url_rewrite>
   </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>Śledzenie zamówień gości</title>
     <description/>
     <keywords/>
-    <url_rewrite>śledzenie-gości</url_rewrite>
+    <url_rewrite>sledzenie-zamowienia-gosc</url_rewrite>
   </meta>
   <meta id="order-confirmation" id_shop="1">
     <title>Potwierdzenie zamówienia</title>
     <description/>
     <keywords/>
-    <url_rewrite>potwierdzenie-zamówienia</url_rewrite>
+    <url_rewrite>potwierdzenie-zamowienia</url_rewrite>
   </meta>
 </entity_meta>
