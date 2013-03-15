@@ -31,6 +31,7 @@ class AdminTabsControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
+		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->table = 'tab';
 		$this->className = 'Tab';
 		$this->lang = true;
