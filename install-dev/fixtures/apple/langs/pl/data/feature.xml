@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <entity_feature>
   <feature id="Height">
-    <name>Wysokoœæ</name>
+    <name>WysokoÅ›Ä‡</name>
   </feature>
   <feature id="Width">
-    <name>Szerokoœæ</name>
+    <name>SzerokoÅ›Ä‡</name>
   </feature>
   <feature id="Depth">
-    <name>G³êbokoœæ</name>
+    <name>GÅ‚Ä™bokoÅ›Ä‡</name>
   </feature>
   <feature id="Weight">
     <name>Waga</name>
   </feature>
   <feature id="Headphone">
-    <name>S³uchawki</name>
+    <name>SÅ‚uchawki</name>
   </feature>
 </entity_feature>

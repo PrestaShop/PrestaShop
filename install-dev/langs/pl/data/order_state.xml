@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <entity_order_state>
   <order_state id="Awaiting_cheque_payment">
     <name>Oczekiwanie płatności czekiem</name>
