@@ -681,66 +681,61 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess();
 	}
 
-	public static function checkAndAddLanguage($iso_code)
+	public static function checkAndAddLanguage($iso_code, $lang_pack = false)
 	{
 		if (Language::getIdByIso($iso_code))
 			return true;
-		else
+
+		$lang = new Language();
+		$lang->iso_code = $iso_code;
+		$lang->active = true;
+
+		if (!$lang_pack)
+			$lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code));
+
+		if ($lang_pack)
 		{
-			if (@fsockopen('www.prestashop.com', 80))
+			if (isset($lang_pack->name)
+				&& isset($lang_pack->version)
+				&& isset($lang_pack->iso_code))
+					$lang->name = $lang_pack->name;
+		}
+		else
+			return false;
+		
+		if (!$lang->add())
+			return false;
+
+		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
+		if ($flag != null && !preg_match('/<body>/', $flag))
+		{
+			$file = fopen(dirname(__FILE__).'/../img/l/'.(int)$lang->id.'.jpg', 'w');
+			if ($file)
 			{
-				$lang = new Language();
-				$lang->iso_code = $iso_code;
-				$lang->active = true;
-
-				if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso_code)))
-				{
-					if (isset($lang_pack->name)
-					&& isset($lang_pack->version)
-					&& isset($lang_pack->iso_code))
-						$lang->name = $lang_pack->name;
-				}
-				if (!$lang->name || !$lang->add())
-					return false;
-				$insert_id = (int)$lang->id;
-
-				if ($lang_pack)
-				{
-					$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
-					if ($flag != null && !preg_match('/<body>/', $flag))
-					{
-						$file = fopen(dirname(__FILE__).'/../img/l/'.$insert_id.'.jpg', 'w');
-						if ($file)
-						{
-							fwrite($file, $flag);
-							fclose($file);
-						}
-						else
-							Language::_copyNoneFlag($insert_id);
-					}
-					else
-						Language::_copyNoneFlag($insert_id);
-				}
-				else
-					Language::_copyNoneFlag($insert_id);
-
-				$files_copy = array(
-					'/en.jpg',
-					'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('home').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('large').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('small').'.jpg',
-					'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
-				);
-				foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
-					foreach ($files_copy as $file)
-						@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));
-				return true;
+				fwrite($file, $flag);
+				fclose($file);
 			}
 			else
-				return false;
+				Language::_copyNoneFlag((int)$lang->id);
 		}
+		else
+			Language::_copyNoneFlag((int)$lang->id);
+	
+		$files_copy = array(
+			'/en.jpg',
+			'/en-default-'.ImageType::getFormatedName('thickbox').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('home').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('large').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('medium').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('small').'.jpg',
+			'/en-default-'.ImageType::getFormatedName('scene').'.jpg'
+		);
+		
+		foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to)
+			foreach ($files_copy as $file)
+				@copy(dirname(__FILE__).'/../img/l'.$file, $to.str_replace('/en', '/'.$iso_code, $file));
+
+		return true;
 	}
 
 	protected static function _copyNoneFlag($id)
