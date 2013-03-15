@@ -39,9 +39,9 @@
 			{if $HOOK_PAYMENT}
 				{if !$opc}
 			<div id="order-detail-content" class="table_block">
-				<table id="cart_summary" class="std ui-responsive table-stroke" data-role="table" data-mode="reflow">
+				<table id="cart_summary" data-role="table" class="ui-body-d ui-shadow ui-responsive table-stroke" data-mode="reflow">
 					<thead>
-						<tr>
+						<tr class="ui-bar-a">
 							<th class="cart_product first_item">{l s='Product'}</th>
 							<th class="cart_description item">{l s='Description'}</th>
 							<th class="cart_availability item">{l s='Avail.'}</th>
