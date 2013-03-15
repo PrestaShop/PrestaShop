@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_cms_category>
   <cms_category id="Home">
-    <name>G³ówna</name>
+    <name>GÅ‚Ã³wna</name>
     <description/>
     <link_rewrite>glowna</link_rewrite>
     <meta_title/>
