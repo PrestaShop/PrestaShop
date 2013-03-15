@@ -4,10 +4,10 @@
     <name>Oczekiwanie na potwierdzenie</name>
   </order_return_state>
   <order_return_state id="Waiting_for_package">
-    <name>Oczekiwanie paczki</name>
+    <name>Oczekiwanie na paczkę</name>
   </order_return_state>
   <order_return_state id="Package_received">
-    <name>Paczka została dostarczona</name>
+    <name>Paczka została odebrana</name>
   </order_return_state>
   <order_return_state id="Return_denied">
     <name>Brak akceptacji zwrotu</name>

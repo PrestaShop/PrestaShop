@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0"?>
 <entity_category>
   <category id="Root" id_shop="1">
-    <name>Źródło</name>
+    <name>Bazowa</name>
     <description/>
-    <link_rewrite>zrodlo</link_rewrite>
+    <link_rewrite>bazowa</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
   <category id="Home" id_shop="1">
-    <name>Strona główna</name>
+    <name>Główna</name>
     <description/>
-    <link_rewrite>strona-glowna</link_rewrite>
+    <link_rewrite>glowna</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>

@@ -10,7 +10,7 @@
     <name>3 - W oczekiwaniu </name>
   </supply_order_state>
   <supply_order_state id="supply_order_state_4">
-    <name>4 - Zamówienie zostało otrzymane w ramach</name>
+    <name>4 - Zamówienie zostało otrzymane w częściach</name>
   </supply_order_state>
   <supply_order_state id="supply_order_state_5">
     <name>5 - Otrzymano zamówienie </name>
