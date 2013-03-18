@@ -45,7 +45,7 @@
 	<tr>
 		<td>{dateFormat date=$line.date_add full=true}</td>
 		<td>{$line.type}</td>
-		<td>{$line.state_name}</td>
+		<td>{$line.carrier_name}</td>
 		<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
 		<td>
 			{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
