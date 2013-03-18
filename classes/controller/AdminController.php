@@ -583,7 +583,7 @@ class AdminControllerCore extends Controller
 
 		$headers = array();
 		foreach ($this->fields_list as $datas)
-			$headers[] = $datas['title'];
+			$headers[] = html_entity_decode($datas['title'], ENT_QUOTES, "UTF-8");
 
 		$content = array();
 		foreach ($this->_list as $i => $row)
@@ -595,6 +595,7 @@ class AdminControllerCore extends Controller
 				
 		}
 		$this->context->smarty->assign(array(
+			'export_precontent' => "\xEF\xBB\xBF",
 			'export_headers' => $headers,
 			'export_content' => $content
 			)
