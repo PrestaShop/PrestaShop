@@ -5188,6 +5188,3 @@ class ProductCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }
-
-= '.(int)$interval['nright']);
-		$sql-
