@@ -320,7 +320,7 @@ class FeatureCore extends ObjectModel
 			JOIN (SELECT @i :=1) dummy
 			ORDER by position
 		) AS f2
-		USING id_feature
+		USING (id_feature)
 		SET f.position = f2.rank - 1');
 	}
 
