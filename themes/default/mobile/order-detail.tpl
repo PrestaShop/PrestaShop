@@ -203,7 +203,7 @@
 <ul data-role="listview" >
 	{foreach from=$order->getShipping() item=line}
 	<li>
-		<h3>{$line.state_name}</h3>
+		<h3>{$line.carrier_name}</h3>
 		<p><strong>{l s='Weight'}</strong> {$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</p>
 		<p><strong>{l s='Shipping cost'}</strong> {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</p>
 		<p><strong>{l s='Tracking number'}</strong> {if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}" data-ajax="false">{$line.tracking_number}</a>{elseif $line.tracking_number != ''}{$line.tracking_number}{else}----{/if}</p>
