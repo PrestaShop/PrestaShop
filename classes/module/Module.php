@@ -60,7 +60,7 @@ abstract class ModuleCore
 	/** @var int need_instance */
 	public $need_instance = 1;
 
-	/** @var string Admin tab correponding to the module */
+	/** @var string Admin tab corresponding to the module */
 	public $tab = null;
 
 	/** @var boolean Status */
