@@ -26,6 +26,34 @@
 {capture assign='page_title'}{l s='Shipping:'}{/capture}
 {include file='./page-title.tpl'}
 
+
+<script type="text/javascript">
+	// <![CDATA[
+	var orderProcess = 'order';
+	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
+	var currencyRate = '{$currencyRate|floatval}';
+	var currencyFormat = '{$currencyFormat|intval}';
+	var currencyBlank = '{$currencyBlank|intval}';
+	var txtProduct = "{l s='product' js=1}";
+	var txtProducts = "{l s='products' js=1}";
+	var orderUrl = '{$link->getPageLink("order", true)}';
+
+	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
+	{literal}
+	function acceptCGV()
+	{
+		if ($('#cgv').length && !$('input#cgv:checked').length)
+		{
+			alert(msg);
+			return false;
+		}
+		else
+			return true;
+	}
+	{/literal}
+	//]]>
+</script>
+	
 <div data-role="content" id="delivery_choose">
 	<h3  class="bg">{l s='Choose your delivery method'}</h3>
 	<fieldset data-role="controlgroup">
@@ -70,7 +98,7 @@
 									</div>
 								</div>
 							</span>
-							<span class="delivery_option_carrier ui-block-b {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
+							<span class="delivery_option_carrier_desc ui-block-b {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
 								{foreach $option.carrier_list as $carrier}
 								<tr>
 									{if !$option.unique_carrier}
