@@ -69,6 +69,7 @@
 	var errorCarrier = "{$errorCarrier}";
 	var errorTOS = "{$errorTOS}";
 	var checkedCarrier = "{if isset($checked)}{$checked}{else}0{/if}";
+	var freeShippingTranslation = "{l s='Free shipping!' js=1}";
 
 	var addresses = new Array();
 	var isLogged = {$isLogged|intval};
