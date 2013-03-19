@@ -250,11 +250,25 @@ class AdminModulesControllerCore extends AdminController
 			{
 				if (in_array($module->name, $tab_modules_list))
 				{
-					$this->fillModuleData($module, 'select', $back);
+					$perm = true;
 					if ($module->id)
-						$modules_list['installed'][] = $module;
+						$perm &= Module::getPermissionStatic($module->id, 'configure');
 					else
-						$modules_list['not_installed'][] = $module;
+					{
+						$id_admin_module = Tab::getIdFromClassName('AdminModules');
+						$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
+						if (!$access['edit'])
+							$perm &= false; 
+					}
+					if ($perm)
+					{
+						$this->fillModuleData($module, 'select', $back);
+						if ($module->id)
+							$modules_list['installed'][] = $module;
+						else
+							$modules_list['not_installed'][] = $module;
+
+					}
 				}		
 			}
 		}
@@ -781,7 +795,7 @@ class AdminModulesControllerCore extends AdminController
 		// Call appropriate module callback
 		if (!isset($ppmReturn))
 			$this->postProcessCallback();
-		
+
 		if ($back = Tools::getValue('back'))
 			Tools::redirectAdmin($back);	
 	}
