@@ -12,7 +12,6 @@
 		<h2>{l s='List of products'}</h2>
 		{if isset($products)}
 		<ul data-role="listview" data-inset="true" data-split-theme="d" data-split-icon="delete">
-			{debug}
 			{foreach $products as $product}
 				<li id="element_product_{$product.id_product}">
 					<a>
