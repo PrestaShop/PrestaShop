@@ -143,7 +143,7 @@
 											</div>
 										</div>
 									</span>
-									<span class="delivery_option_carrier ui-block-b {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
+									<span class="delivery_option_carrier_desc ui-block-b {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
 										{foreach $option.carrier_list as $carrier}
 										<tr>
 											{if !$option.unique_carrier}
