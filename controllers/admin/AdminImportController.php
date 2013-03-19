@@ -645,7 +645,7 @@ class AdminImportControllerCore extends AdminController
 		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
 		$tab = '';
-		if(!empty($uniqid_path))
+		if (!empty($uniqid_path))
 		{
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);

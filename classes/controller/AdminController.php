@@ -1514,6 +1514,7 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
+		
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			$helper = new Helper();
@@ -2214,7 +2215,18 @@ class AdminControllerCore extends Controller
 		$this->modules_list = array();
 		foreach($all_modules as $module)
 		{
-			if (in_array($module->name, $filter_modules_list))
+			$perm = true;
+			if ($module->id)
+				$perm &= Module::getPermissionStatic($module->id, 'configure');
+			else
+			{
+				$id_admin_module = Tab::getIdFromClassName('AdminModules');
+				$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
+				if (!$access['edit'])
+					$perm &= false; 
+			}
+			
+			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
 				$this->fillModuleData($module, 'select');
 				$this->modules_list[] = $module;
