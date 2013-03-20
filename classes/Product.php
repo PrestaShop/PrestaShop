@@ -3045,7 +3045,7 @@ class ProductCore extends ObjectModel
 					AND al.`id_lang` = '.(int)$id_lang.'
 					AND agl.`id_lang` = '.(int)$id_lang.'
 				GROUP BY id_attribute_group, id_product_attribute
-				ORDER BY ag.`position` ASC, a.`position` ASC';
+				ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
 		return Db::getInstance()->executeS($sql);
 	}
 
