@@ -283,7 +283,7 @@ class SearchCore
 			$alias = 'product_shop.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
-			 image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.', product_attribute_shop.`id_product_attribute`,
+			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name '.$score.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
@@ -305,8 +305,7 @@ class SearchCore
 				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE p.`id_product` '.$product_pool.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')
+				GROUP BY product_shop.id_product
 				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
 		$result = $db->executeS($sql);
@@ -319,11 +318,7 @@ class SearchCore
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE p.`id_product` '.$product_pool.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
+				WHERE p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
 		if (!$result)
@@ -633,7 +628,7 @@ class SearchCore
 		}
 
 		$sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
-					image_shop.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
+					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -663,7 +658,7 @@ class SearchCore
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+					GROUP BY product_shop.id_image
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))

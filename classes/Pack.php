@@ -124,7 +124,7 @@ class PackCore extends Product
 		if (!Pack::isFeatureActive())
 			return array();
 
-		$sql = 'SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
+		$sql = 'SELECT p.*, product_shop.*, pl.*, MAX(image_shop.`id_image`) id_image, il.`legend`, cl.`name` AS category_default, a.quantity AS pack_quantity, product_shop.`id_category_default`, a.id_product_pack
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
@@ -138,8 +138,8 @@ class PackCore extends Product
 					ON product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
-				AND a.`id_product_pack` = '.(int)$id_product;
+				AND a.`id_product_pack` = '.(int)$id_product.'
+				GROUP BY product_shop.id_product';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		foreach ($result as &$line)
@@ -169,7 +169,7 @@ class PackCore extends Product
 			return array();
 
 		$sql = '
-		SELECT p.*, product_shop.*, pl.*, image_shop.`id_image`, il.`legend`
+		SELECT p.*, product_shop.*, pl.*, MAX(image_shop.`id_image`) id_image, il.`legend`
 		FROM `'._DB_PREFIX_.'product` p
 		NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 		'.Shop::addSqlAssociation('product', 'p').'
@@ -179,7 +179,7 @@ class PackCore extends Product
 		WHERE pl.`id_lang` = '.(int)$id_lang.'
 			'.Shop::addSqlRestrictionOnLang('pl').'
 			AND p.`id_product` IN ('.$packs.')
-			AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))';
+		GROUP BY product_shop.id_product';
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
