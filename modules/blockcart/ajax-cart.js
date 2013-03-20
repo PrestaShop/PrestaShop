@@ -427,6 +427,7 @@ var ajaxCart = {
 			if (this.id != undefined)
 			{
 				//create a container for listing the products and hide the 'no product in the cart' message (only if the cart was empty)
+				
 				if ($('#cart_block dl.products').length == 0)
 				{
 					$('#cart_block_no_products').before('<dl class="products"></dl>');
@@ -434,9 +435,8 @@ var ajaxCart = {
 				}
 				//if product is not in the displayed cart, add a new product's line
 				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
-
 				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
-				if ($('#cart_block_product_'+ domIdProduct ).length == 0)
+				if ($('#cart_block_product_'+ domIdProduct).length == 0)
 				{
 					var productId = parseInt(this.id);
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
@@ -463,10 +463,9 @@ var ajaxCart = {
 				//else update the product's line
 				else
 				{
-					var jsonProduct = this;						
-					if($.trim($('#cart_block_product_' + domIdProduct + ' .quantity').text()) != jsonProduct.quantity || $.trim($('dt#cart_block_product_' + domIdProduct + ' .price').text()) != jsonProduct.priceByLine)
+					var jsonProduct = this;
+					if($.trim($('#cart_block_product_' + domIdProduct + ' .quantity').html()) != jsonProduct.quantity || $.trim($('#cart_block_product_' + domIdProduct + ' .price').html()) != jsonProduct.priceByLine)
 					{
-				
 						// Usual product
 						if (!this.is_gift)
 							$('#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
