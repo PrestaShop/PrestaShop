@@ -604,8 +604,8 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`id_product_attribute`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
-					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
+					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
@@ -633,12 +633,11 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.') 
-				AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')
 					AND cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND product_shop.`active` = 1' : '')
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
+					.' GROUP BY product_shop.id_product';
 
 		if ($random === true)
 		{
