@@ -582,7 +582,6 @@ class InstallModelInstall extends InstallAbstractModel
 				'statssearch',
 				'statsstock',
 				'statsvisits',
-				'themeinstallator',
 			);
 		}
 
@@ -592,7 +591,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function getAddonsModulesList()
 	{
 		$addons_modules = array();
-		$content = Tools::addonsRequest('install_modules');
+		$content = Tools::addonsRequest('install-modules');
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 		foreach ($xml->module as $modaddons)
 			$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
