@@ -34,8 +34,6 @@ class AdminControllerCore extends Controller
 	public $confirmations = array();
 	public $shopShareDatas = false;
 	
-	protected $addons_url = 'api.addons.prestashop.com';
-
 	public $_languages = array();
 	public $default_form_language;
 	public $allow_employee_form_lang;
@@ -2863,83 +2861,6 @@ class AdminControllerCore extends Controller
 		$content = Tools::file_get_contents($external_file);
 		if ($content)
 			return (bool)file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
-		return false;
-	}
-
-	public function addonsRequest($request, $params = array())
-	{
-		$postData = '';
-		$postDataArray = array(
-			'version' => _PS_VERSION_,
-			'iso_lang' => strtolower(Context::getContext()->language->iso_code),
-			'iso_code' => strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL'))
-		);
-		foreach ($postDataArray as $postDataKey => $postDataValue)
-			$postData .= '&'.$postDataKey.'='.$postDataValue;
-		$postData = ltrim($postData, '&');
-		
-		// Config for each request
-		if ($request == 'native')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=native';
-		}
-		if ($request == 'must-have')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=must-have';
-		}
-		if ($request == 'customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=listing&action=customer&username='.urlencode(trim($this->context->cookie->username_addons)).'&password='.urlencode(trim($this->context->cookie->password_addons));
-		}
-		if ($request == 'check_customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-		}
-		if ($request == 'module')
-		{
-			// Define protocol accepted and post data values for this request
-			if (isset($params['username_addons']) && isset($params['password_addons']))
-			{
-				$protocolsList = array('https://' => 443);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-			}
-			else
-			{
-				$protocolsList = array('https://' => 443, 'http://' => 80);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
-			}
-		}
-
-		// Make the request
-		$opts = array(
-			'http'=>array(
-				'method'=> 'POST',
-				'content' => $postData,
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'timeout' => 5,
-			)
-		);
-		$context = stream_context_create($opts);
-		foreach ($protocolsList as $protocol => $port)
-		{
-			$content = Tools::file_get_contents($protocol.$this->addons_url, false, $context);
-
-			// If content returned, we cache it
-			if ($content)
-				return $content;
-		}
-
-		// No content, return false
 		return false;
 	}
 	
