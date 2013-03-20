@@ -30,7 +30,8 @@
 		$('.action_tab_module').each( function (){
 			$(this).click(function () {
 				option = $('#'+$(this).data('option')+' :selected');
-				if ($(option).data('onclick') != '')
+
+				if (typeof($(option).data('onclick')) != 'undefined' || $(option).data('onclick') != '')
 				{
 					var f = eval("(function(){ "+$(option).data('onclick')+"})");
 					if (f.call())
