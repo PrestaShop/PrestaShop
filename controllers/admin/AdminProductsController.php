@@ -719,6 +719,8 @@ class AdminProductsControllerCore extends AdminController
 							}
 							if (!count($this->errors))
 								$success &= $product->delete();
+							else
+								$success = 0;
 						}
 					}
 					
