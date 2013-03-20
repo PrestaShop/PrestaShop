@@ -3131,7 +3131,7 @@ class ProductCore extends ObjectModel
 				'.Product::sqlStock('p', 0).'
 				WHERE `id_product_1` = '.(int)$this->id.
 				($active ? ' AND product_shop.`active` = 1' : '').'
-				GROUP BY product_shop.id_image';
+				GROUP BY product_shop.id_product';
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 		foreach ($result as &$row)
