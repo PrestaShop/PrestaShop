@@ -2388,11 +2388,11 @@ exit;
 			}
 		}
 		
-		if ($request == 'install_modules')
+		if ($request == 'install-modules')
 		{
 			// Define protocol accepted and post data values for this request
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=install_modules';
+			$postData .= '&method=listing&action=install-modules';
 			
 		}
 
