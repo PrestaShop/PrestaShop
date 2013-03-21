@@ -308,24 +308,14 @@ class InstallModelInstall extends InstallAbstractModel
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
 
 			Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_);
-
-			// Add language in database
-			$language = new Language();
-			$language->iso_code = $iso;
-			$language->active = ($iso == $this->language->getLanguageIso()) ? true : false;
-			$language->name = ($xml->name) ? (string)$xml->name : 'Unknown (Unknown)';
-			$language->language_code = ($xml->language_code) ? (string)$xml->language_code : $iso;
-			$language->date_format_lite = ($xml->date_format_lite) ? (string)$xml->date_format_lite : 'm/j/Y';
-			$language->date_format_full = ($xml->date_format_full) ? (string)$xml->date_format_full : 'm/j/Y H:i:s';
-			$language->is_rtl = ($xml->is_rtl && ($xml->is_rtl == 'true' || $xml->is_rtl == '1')) ? 1 : 0;
-			if (!$language->add())
+			if (!$id_lang = Language::getIdByIso($iso))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
-			$languages[$language->id] = $iso;
+			$languages[$id_lang] = $iso;
 
 			// Copy language flag
 			if (is_writable(_PS_IMG_DIR_.'l/'))
-				if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$language->id.'.jpg'))
-					throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$language->id.'.jpg'));
+				if (!copy(_PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg', _PS_IMG_DIR_.'l/'.$id_lang.'.jpg'))
+					throw new PrestashopInstallerException($this->language->l('Cannot copy flag language "%s"', _PS_INSTALL_LANGS_PATH_.$iso.'/flag.jpg => '._PS_IMG_DIR_.'l/'.$id_lang.'.jpg'));
 		}
 
 		return $languages;
