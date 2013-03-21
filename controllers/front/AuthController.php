@@ -387,7 +387,7 @@ class AuthControllerCore extends FrontController
 		{
 			if (Tools::isSubmit('submitGuestAccount') || !Tools::getValue('is_new_customer'))
 			{
-				if (!Tools::getValue('phone'))
+				if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 					$error_phone = true;
 			}
 			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) 
