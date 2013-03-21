@@ -642,12 +642,15 @@ class AdminImportControllerCore extends AdminController
 		if (is_null($separator) || trim($separator) == '')
 			$separator = ',';
 
+		/*
 		do $uniqid = uniqid(); while (file_exists(_PS_UPLOAD_DIR_.$uniqid));
 		$tmp_file = file_put_contents(_PS_UPLOAD_DIR_.$uniqid, $field);
 		$fd = fopen($temp, 'r');
 		$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
 		fclose($fd);
 		unlink($tmp_file);
+		*/
+		$tab = explode($separator, $field);
 
 		if (empty($tab) || (!is_array($tab)))
 			return array();
