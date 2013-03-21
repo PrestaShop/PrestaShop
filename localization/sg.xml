@@ -4,6 +4,7 @@
 		<currency name="Dollar" iso_code="SGD" iso_code_num="702" sign="$" blank="1" conversion_rate="1.79109" format="1" decimals="1" />
 	</currencies>
 	<languages>
+		<language iso_code="en" />
 		<language iso_code="tw" />
 		<language iso_code="zh" />
 	</languages>
