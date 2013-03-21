@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Fiji" version="1.0">
+	
+	 <languages>
+		 <language iso_code="en" />
+	 </languages>
+
+	
 	<currencies>
 		<currency name="Dollar" iso_code="FJD" iso_code_num="242" sign="$" blank="0" conversion_rate="2.57483" format="1" decimals="1" />
 	</currencies>
