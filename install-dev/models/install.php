@@ -176,7 +176,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// Install languages
 		try
 		{
-			$languages = $this->installLanguages();
+			$languages = $this->installLanguages(array($this->language->getLanguageIso()));
 		}
 		catch (PrestashopInstallerException $e)
 		{
@@ -197,7 +197,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function populateDatabase($entity = null)
 	{
 		$languages = array();
-		foreach (Language::getLanguages(false) as $lang)
+		foreach (Language::getLanguages(true) as $lang)
 			$languages[$lang['id_lang']] = $lang['iso_code'];
 
 		// Install XML data (data/xml/ folder)
@@ -293,10 +293,13 @@ class InstallModelInstall extends InstallAbstractModel
 	 *
 	 * @return array Association between ID and iso array(id_lang => iso, ...)
 	 */
-	public function installLanguages()
+	public function installLanguages($languages_list = null)
 	{
+		if ($languages_list == null || !is_array($languages_list) || !count($languages_list))
+			$languages_list = $this->language->getIsoList();
+
 		$languages = array();
-		foreach ($this->language->getIsoList() as $iso)
+		foreach ($languages_list as $iso)
 		{
 			if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not found for language iso "%s"', $iso));
