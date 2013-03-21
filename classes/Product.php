@@ -2039,7 +2039,7 @@ class ProductCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->select('MAX(pa.id_product_attribute) id_product_attribute');
+			$sql->select('MAX(product_attribute_shop.id_product_attribute) id_product_attribute');
 			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
 		}
