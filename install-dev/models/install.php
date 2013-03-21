@@ -393,7 +393,7 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::loadConfiguration();
 
 		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
-		if (@ini_get('safe_mode') == 1)
+		if (Tools::getSafeModeStatus())
 			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 				1);
 	
 		$id_country = Country::getByIso($data['shop_country']);
@@ -606,6 +606,9 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installModules($module = null)
 	{
+		if (Tools::getSafeModeStatus())
+			return true;
+
 		$modules = $module ? array($module) : $this->getModulesList();
 		$addons_modules = $this->getAddonsModulesList();
 
