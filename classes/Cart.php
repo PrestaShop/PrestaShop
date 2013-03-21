@@ -1140,8 +1140,8 @@ class CartCore extends ObjectModel
 				'SELECT `quantity`
 				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute
-			);
+				AND `id_cart` = '.(int)$this->id.'
+				AND `id_product_attribute` = '.(int)$id_product_attribute);
 
 			$customization_quantity = (int)Db::getInstance()->getValue('
 			SELECT `quantity`
@@ -1151,12 +1151,12 @@ class CartCore extends ObjectModel
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
 			'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
-			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, $id_address_delivery))
+			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery))
 				return false;
 
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			return ($this->deleteProduct((int)$id_product, $id_product_attribute, $id_address_delivery) && $customization_quantity == $product_total_quantity);
+			return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, (int)$id_product_attribute, null, (int)$id_address_delivery));
 		}
 
 		/* Get customization quantity */
@@ -1165,8 +1165,7 @@ class CartCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$this->id.'
 			AND `id_product` = '.(int)$id_product.'
-			AND `id_product_attribute` = '.(int)$id_product_attribute
-		);
+			AND `id_product_attribute` = '.(int)$id_product_attribute);
 
 		if ($result === false)
 			return false;
@@ -1180,7 +1179,7 @@ class CartCore extends ObjectModel
 				AND `id_product` = '.(int)$id_product.
 				($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
 			);
-
+		
 		/* Product deletion */
 		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'cart_product`
