@@ -1956,6 +1956,13 @@ exit;
 		}
 	}
 
+	public static function getSafeModeStatus()
+	{
+		if (!$safe_mode = @ini_get('safe_mode'))
+			$safe_mode = '';
+		return in_array(Tools::strtolower($safe_mode), array(1, 'on'));
+	}
+
 	/**
 	 * @desc extract a zip file to the given directory
 	 * @return bool success
