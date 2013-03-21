@@ -223,7 +223,7 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 		});
 	});
 	
-	line.attr('id', line.attr('id').replace(/_\d+$/, '_' + id_address_delivery)).removeClass('address_' + old_id_address_delivery).addClass('address_' + id_address_delivery).find('span[id^=cart_quantity_custom_], input[name^=quantity_], .cart_quantity_down, .cart_quantity_up, .cart_quantity_delete').each(function(){
+	line.attr('id', line.attr('id').replace(/_\d+$/, '_' + id_address_delivery)).removeClass('address_' + old_id_address_delivery).addClass('address_' + id_address_delivery).find('span[id^=cart_quantity_custom_], span[id^=total_product_price_], input[name^=quantity_], .cart_quantity_down, .cart_quantity_up, .cart_quantity_delete').each(function(){
 		if (typeof($(this).attr('name')) != 'undefined')
 			$(this).attr('name', $(this).attr('name').replace(/_\d+(_hidden|)$/, '_' + id_address_delivery));
 		if (typeof($(this).attr('id')) != 'undefined')
