@@ -1,7 +1,0 @@
-Nachricht von Ihrem Shop {shop_name}
- 
-E-Mail-Adresse: {email}
-
-Nachricht: {message}
- 
-{shop_name} powered with PrestaShop™
