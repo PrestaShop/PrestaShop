@@ -5,6 +5,7 @@
 	</currencies>
 	<languages>
 		<language iso_code="fr" />
+		<language iso_code="en" />
 	</languages>
 	<taxes>
 		<tax id="1" name="GST JE 3%" rate="3" />
