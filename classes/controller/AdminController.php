@@ -581,7 +581,7 @@ class AdminControllerCore extends Controller
 
 		$headers = array();
 		foreach ($this->fields_list as $datas)
-			$headers[] = $datas['title'];
+			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
 
 		$content = array();
 		foreach ($this->_list as $i => $row)
@@ -589,7 +589,7 @@ class AdminControllerCore extends Controller
 			$content[$i] = array();
 			foreach ($this->fields_list as $key => $value)
 				if (isset($row[$key]))
-					$content[$i][] = $row[$key];
+					$content[$i][] = Tools::htmlentitiesDecodeUTF8($row[$key]);
 				
 		}
 		$this->context->smarty->assign(array(
