@@ -126,6 +126,15 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Tools::getValue('reset_filter_category'))
 			$this->context->cookie->id_category_products_filter = false;
+		if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter)
+		{
+			$category = new Category((int)$this->context->cookie->id_category_products_filter);
+			if (!$category->inShop())
+			{
+				$this->context->cookie->id_category_products_filter = false;
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
+			}
+		}
 		/* Join categories table */
 		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
 		{
