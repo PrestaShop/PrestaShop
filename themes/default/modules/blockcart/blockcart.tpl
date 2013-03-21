@@ -3,10 +3,10 @@
 *
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Academic Free License (AFL 3.0)
+* This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
+* http://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -19,13 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{*************************************************************************************************************************************}
+
 {* IMPORTANT : If you change some data here, you have to report these changes in the ./blockcart-json.js (to let ajaxCart available) *}
-{*************************************************************************************************************************************}
+
 {if $ajax_allowed}
 <script type="text/javascript">
 var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
@@ -115,7 +115,7 @@ var delete_txt = '{l s='Delete' mod='blockcart' js=1}';
 		{/foreach}
 		</dl>
 	{/if}
-		<p {if $products}class="hidden"{/if} id="cart_block_no_products">{l s='No products' mod='blockcart'}</p>
+		<p class="cart_block_no_products{if $products} hidden{/if}" id="cart_block_no_products">{l s='No products' mod='blockcart'}</p>
 	{if $discounts|@count > 0}
 		<table id="vouchers">
 			<tbody>
