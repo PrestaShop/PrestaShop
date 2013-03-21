@@ -767,6 +767,48 @@ class LanguageCore extends ObjectModel
 		return self::$countActiveLanguages;
 	}
 
+	public static function downloadAndInstallLanguagePack($iso, $version)
+	{
+		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
+
+		if (!Validate::isLanguageIsoCode($iso))
+			return false;
+		
+		$lang_pack_ok = false;
+		$errors = array();
+		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$iso))
+			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
+		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
+			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
+		elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$version.'/'.$iso.'.gzip'))
+			if (!is_writable($file) || !file_put_contents($file, $content))
+				$errors[] = Tools::displayError('Server does not have permissions for writing.');
+		if (file_exists($file))
+		{
+			$gz = new Archive_Tar($file, true);
+			$files_list = $gz->listContent();
+			if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+			{
+				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+				return false;
+			}
+			else
+			{
+				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
+				AdminTranslationsController::addNewTabs($iso, $files_list);
+			}
+			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack))
+			{
+				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
+				return false;
+			}
+			@unlink($file);
+		}
+
+		return count($errors) ? $errors : true;
+	}
+
 	/**
 	 * Check if more on than one language is activated
 	 *
