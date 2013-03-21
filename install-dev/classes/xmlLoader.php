@@ -237,7 +237,7 @@ class InstallXmlLoader
 			$default_lang = null;
 			foreach ($this->languages as $id_lang => $iso)
 			{
-				if ($iso == 'en')
+				if ($iso == $this->language->getLanguageIso())
 					$default_lang = $id_lang;
 
 				try
