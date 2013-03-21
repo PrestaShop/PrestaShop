@@ -109,6 +109,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			{
 				$this->session->process_validated = array();
 				$this->session->database_clear = true;
+				if (Tools::getSafeModeStatus())
+					$this->session->safe_mode = true;
 			}
 			elseif (!Tools::getValue('submitNext'))
 			{
