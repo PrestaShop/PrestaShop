@@ -190,10 +190,13 @@ class LanguageCore extends ObjectModel
 		return $themes;
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $nullValues = false, $only_add = false)
 	{
 		if (!parent::add($autodate))
 			return false;
+
+		if ($only_add)
+			return true;
 
 		// create empty files if they not exists
 		$this->_generateFiles();
@@ -681,7 +684,7 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess();
 	}
 
-	public static function checkAndAddLanguage($iso_code, $lang_pack = false)
+	public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false)
 	{
 		if (Language::getIdByIso($iso_code))
 			return true;
@@ -703,7 +706,7 @@ class LanguageCore extends ObjectModel
 		else
 			return false;
 		
-		if (!$lang->add())
+		if (!$lang->add(true, false, $only_add))
 			return false;
 
 		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');

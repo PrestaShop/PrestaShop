@@ -53,7 +53,8 @@ class TranslateCore
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
 				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
-			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
+				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
 		if (isset($modules_tabs[strtolower($class)]))
