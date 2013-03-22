@@ -43,7 +43,12 @@
 				{if isset($product_tax_breakdown)}
 				{foreach $product_tax_breakdown as $rate => $product_tax_infos}
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-				 <td style="width: 30%">{l s='Products' pdf='true'}</td>
+				 <td style="width: 30%">
+					{if !isset($pdf_product_tax_written)}
+						{l s='Products' pdf='true'}
+						{assign var=pdf_product_tax_written value=1}
+					{/if}
+				</td>
 				 <td style="width: 20%; text-align: right;">{$rate} %</td>
 				{if !$use_one_after_another_method}
 				 <td style="width: 20%; text-align: right;">
@@ -58,7 +63,12 @@
 				{if isset($shipping_tax_breakdown)}
 				{foreach $shipping_tax_breakdown as $shipping_tax_infos}
 				<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-				 <td style="width: 30%">{l s='Shipping' pdf='true'}</td>
+				 <td style="width: 30%">
+					{if !isset($pdf_shipping_tax_written)}
+						{l s='Shipping' pdf='true'}
+						{assign var=pdf_shipping_tax_written value=1}
+					{/if}
+				 </td>
 				 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
  				{if !$use_one_after_another_method}
 					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
