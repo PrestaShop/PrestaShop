@@ -232,5 +232,6 @@ return array(
 		'Display' => 'Anzeige',
 		'PrestaShop compatibility with your system environment has been verified!' => 'Die Kompatibilität von PrestaShop mit Ihrem System wurde überprüft!',
 		'PrestaShop requires at least 32M of memory to run, please check the memory_limit directive in php.ini or contact your host provider' => 'Damit PrestaShop einwandfrei funktionieren kann, werden mindestens 32M Speicher benötigt. Bitte überprüfen Sie die  memory_limit directive in php.in oder kontaktieren Sie Ihrem Provider.',
+		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Der Speicherungsordner ist nicht beschreibbar - bitte kontaktieren Sie Ihren Provider',
 	),
 );
