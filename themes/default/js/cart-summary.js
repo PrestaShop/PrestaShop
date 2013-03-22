@@ -343,7 +343,7 @@ function deleteProductFromSummary(id)
 						if (jsonData.summary.products[i].id_product == productId
 							&& jsonData.summary.products[i].id_product_attribute == productAttributeId
 							&& jsonData.summary.products[i].id_address_delivery == id_address_delivery
-							&& (parseInt(jsonData.summary.products[i].customization_quantity) > 1))
+							&& (parseInt(jsonData.summary.products[i].customization_quantity) > 0))
 								exist = true;
 					}
 					// if all customization removed => delete product line
