@@ -2946,30 +2946,30 @@ class AdminControllerCore extends Controller
 				'text' => $this->translationsTab['Delete'],
 				'cond' => true,
 				),
-			);
-		$return = '';
-			foreach($modules_options as $option_name => $option)
-			{
-				if ($option['cond'])
-				{
-					if ($output_type == 'link')
-						$return .= '<span class="'.$option_name.'">
-							<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
-							</span>';
-					else if ($output_type == 'select')
-						$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
-				}
-			}
-			if ($output_type == 'select')
-			{
-				if (!$module->id)
-					$return = '<option data-onclick="" data-href="'.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
-				else
-					$return = '<option data-onclick=""  data-href="'.self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>'.$return;
-				$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
+		);
 
+		$return = '';
+		foreach ($modules_options as $option_name => $option)
+		{
+			if ($option['cond'])
+			{
+				if ($output_type == 'link')
+					$return .= '<span class="'.$option_name.'">
+						<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
+						</span>';
+				elseif ($output_type == 'select')
+					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
-			
+		}
+		if ($output_type == 'select')
+		{
+			if (!$module->id)
+				$return = '<option data-onclick="" data-href="'.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
+			else
+				$return .= '<option data-onclick=""  data-href="'.self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
+			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
+		}
+
 		return $return;
 	}
 }
