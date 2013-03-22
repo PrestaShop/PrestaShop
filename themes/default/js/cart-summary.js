@@ -25,17 +25,11 @@
 
 $(document).ready(function()
 {
-	// If block cart isn't used, we don't bind the handle actions
-	if (window.ajaxCart !== undefined)
-	{
-		$('.cart_quantity_up').unbind('click').live('click', function(){ upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;	});
-		$('.cart_quantity_down').unbind('click').live('click', function(){ downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false; });
-		$('.cart_quantity_delete' ).unbind('click').live('click', function(){ deleteProductFromSummary($(this).attr('id')); return false; });
-		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el); } });
-	}
-	
-	$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
-
+	$('.cart_quantity_up').unbind('click').live('click', function(){upQuantity($(this).attr('id').replace('cart_quantity_up_', '')); return false;});
+	$('.cart_quantity_down').unbind('click').live('click', function(){downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false;});
+	$('.cart_quantity_delete' ).unbind('click').live('click', function(){deleteProductFromSummary($(this).attr('id')); return false;});
+	$('.cart_quantity_input').typeWatch({highlight: true, wait: 600, captureLength: 0, callback: function(val) { updateQty(val, true, this.el);}});
+	$('.cart_address_delivery').live('change', function(){changeAddressDelivery($(this));});
 	cleanSelectAddressDelivery();
 });
 
@@ -149,9 +143,8 @@ function changeAddressDelivery(obj)
 		var id_address_delivery = 0;
 		var options = $('#select_address_delivery_'+id_product+'_'+id_product_attribute+'_'+old_id_address_delivery+' option');
 		$.each(options, function(i) {
-			if ($(options[i]).val() > 0 && $(options[i]).val() !== old_id_address_delivery
-				&& $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0 // Check the address is not already used for a similare products
-			)
+			// Check the address is not already used for a similare products
+			if ($(options[i]).val() > 0 && $(options[i]).val() !== old_id_address_delivery && $('#product_' + id_product + '_' + id_product_attribute + '_0_' + $(options[i]).val()).length == 0)
 			{
 				id_address_delivery = $(options[i]).val();
 				return false;
@@ -233,6 +226,14 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 	});
 	
 	line.find('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).attr('id', 'select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + id_address_delivery);
+
+	if (window.ajaxCart !== undefined)
+	{
+		$('#cart_block_list dd, #cart_block_list dt').each(function(){
+			if (typeof($(this).attr('id')) != 'undefined')
+				$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + id_address_delivery));
+		});
+	}
 }
 
 function updateQty(val, cart, el)
