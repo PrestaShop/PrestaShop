@@ -142,7 +142,13 @@ function updateAddressSelection()
 
 				// Update global var deliveryAddress
 				deliveryAddress = idAddress_delivery;
-
+				if (window.ajaxCart !== undefined)
+				{
+					$('#cart_block_list dd, #cart_block_list dt').each(function(){
+						if (typeof($(this).attr('id')) != 'undefined')
+							$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
+					});
+				}
 				updateCarrierList(jsonData.carrier_data);
 				updatePaymentMethods(jsonData);
 				updateCartSummary(jsonData.summary);
@@ -385,18 +391,16 @@ function updateNewAccountToAddressBlock()
 				// update block user info
 				if (json.block_user_info !== '' && $('#header_user').length == 1)
 				{
-					$('#header_user').fadeOut('slow', function() {
-						$(this).attr('id', 'header_user_old').after(json.block_user_info).fadeIn('slow');
-						$('#header_user_old').remove();
+					var elt = $(json.block_user_info).find('#header_user_info').html();					
+					$('#header_user_info').fadeOut('nortmal', function() {
+						$(this).html(elt).fadeIn();
 					});
 				}
 				$('#opc_new_account').fadeIn('fast', function() {
-					
 					//After login, the products are automatically associated to an address
 					$.each(json.summary.products, function() {
 						updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
 					});
-					
 					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
 					updateCarrierList(json.carrier_data);
@@ -610,10 +614,8 @@ $(function() {
 						
 						// It's not a new customer
 						if ($('#opc_id_customer').val() !== '0')
-						{
 							if (!saveAddress('delivery'))
 								return false;
-						}
 						
 						// update id_customer
 						$('#opc_id_customer').val(jsonData.id_customer);
