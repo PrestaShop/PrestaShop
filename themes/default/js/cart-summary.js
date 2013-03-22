@@ -346,7 +346,7 @@ function deleteProductFromSummary(id)
 								exist = true;
 					}
 					// if all customization removed => delete product line
-					if (!exist && customizationId)
+					if (!exist && customizationId && parseInt($('#cart_quantity_custom_' + productId + (productAttributeId > 0 ?  '_' + productAttributeId : '') + '_0_' + id_address_delivery).html()) == 1)
 						$('#product_' + productId + '_' + productAttributeId + '_0_' + id_address_delivery).fadeOut('slow', function() {
 							$(this).remove();
 							var line = $('#product_' + productId + '_' + productAttributeId + '_nocustom_' + id_address_delivery);
