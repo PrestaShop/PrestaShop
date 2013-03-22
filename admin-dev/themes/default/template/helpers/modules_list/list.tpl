@@ -39,7 +39,7 @@
 				{/foreach}
 			</li>
 		{else}
-			<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+			<tr><td><div style="font-weight:700;margin-top:20px">{l s='No modules available in this section.'}</b></td></tr>
 		{/if}		
 	</ul>
 </div>
