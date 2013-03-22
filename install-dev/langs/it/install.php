@@ -233,5 +233,6 @@ return array(
 		'The installation of PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 130,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'L\'installazione di PrestaShop è semplice e veloce. Tra pochi minuti, farai parte di una comunità di oltre 130.000 commercianti. Potrai creare un negozio a tua immagina e facile da gestire giorno dopo giorno.',
 		'Continue the installation in:' => 'Continua l\'installazione in:',
 		'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'La selezione della lingua si applica solo all\'Assistente di Installazione. Una volta che il negozio è installato, potrai scegliere la lingua del negozio tra le oltre %d  traduzioni disponibili gratuitamente!',
+		'Your PHP sessions path is not writable - check with your hosting provider:' => 'La cartella di backup non è accessibile per scrittura - consulta il nostro servizio di hosting',
 	),
 );
