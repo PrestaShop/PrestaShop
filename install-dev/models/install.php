@@ -307,7 +307,11 @@ class InstallModelInstall extends InstallAbstractModel
 			if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
 
-			Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_);
+			if (InstallSession::getInstance()->safe_mode)
+				Language::checkAndAddLanguage($iso, false, true);
+			else
+				Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_);
+
 			if (!$id_lang = Language::getIdByIso($iso))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
@@ -601,20 +605,19 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installModules($module = null)
 	{
-		if (InstallSession::getInstance()->safe_mode)
-			return true;
-
 		$modules = $module ? array($module) : $this->getModulesList();
-		$addons_modules = $this->getAddonsModulesList();
-
-		foreach($addons_modules as $addons_module)
-			if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
-				if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
-				{
-					$modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
-					unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
-				}
-				
+		if (!InstallSession::getInstance()->safe_mode)
+		{
+			$addons_modules = $this->getAddonsModulesList();
+		
+			foreach($addons_modules as $addons_module)
+				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
+					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
+					{
+						$modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
+						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
+					}
+		}		
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
