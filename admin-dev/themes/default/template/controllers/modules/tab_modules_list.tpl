@@ -71,7 +71,7 @@
 					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
 				{/foreach}
 			{else}
-				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+				<tr><td><div style="font-weight:700;margin-top:20px">{l s='No modules available in this section.'}</b></td></tr>
 			{/if}
 		</table>
 		<table id="tab_modules_list_not_installed" style="display:none;clear:both">
@@ -80,9 +80,9 @@
 					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
 				{/foreach}
 			{else}
-				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
+				<tr><td><div style="font-weight:700;margin-top:20px">{l s='No modules available in this section.'}</b></td></tr>
 			{/if}
 		</table>
 	</div>
 {/if}
-<p style="text-align:right;text-decoration:underline"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>
+<p style="text-align:right;text-decoration:underline;padding-right:10px"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>
