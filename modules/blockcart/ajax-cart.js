@@ -449,8 +449,8 @@ var ajaxCart = {
 						content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseUri + '?controller=cart&amp;delete=1&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
 					else
 						content += '<span class="remove_link"></span>';
-					if (typeof(freeShippingTranslation) != 'undefined')
-						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeShippingTranslation) + '</span>';
+					if (typeof(freeProductTranslation) != 'undefined')
+						content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeProductTranslation) + '</span>';
 					content += '</dt>';
 					if (this.hasAttributes)
 						  content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="hidden"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a>';
