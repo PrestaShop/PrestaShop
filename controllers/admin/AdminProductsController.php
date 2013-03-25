@@ -2206,10 +2206,6 @@ class AdminProductsControllerCore extends AdminController
 
 				foreach ($this->available_tabs as $product_tab => $value)
 				{
-					// if it's the quantities tab and stock management is disabled, continue
-					if ($stock_management_active == 0 && $product_tab == 'Quantities')
-						continue;
-
 					// if it's the warehouses tab and advanced stock management is disabled, continue
 					if ($advanced_stock_management_active == 0 && $product_tab == 'Warehouses')
 						continue;

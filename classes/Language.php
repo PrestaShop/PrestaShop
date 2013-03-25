@@ -204,8 +204,8 @@ class LanguageCore extends ObjectModel
 		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
 		$resUpdateSQL = $this->loadUpdateSQL();
 		$resUpdateSQL = true;
-
-		return $resUpdateSQL && Tools::generateHtaccess();
+		Tools::generateHtaccess();
+		return $resUpdateSQL;
 	}
 
 	public function toggleStatus()
@@ -795,20 +795,14 @@ class LanguageCore extends ObjectModel
 			$gz = new Archive_Tar($file, true);
 			$files_list = $gz->listContent();
 			if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-			{
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
-				return false;
-			}
 			else
 			{
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
 				AdminTranslationsController::addNewTabs($iso, $files_list);
 			}
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack))
-			{
 				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
-				return false;
-			}
 			@unlink($file);
 		}
 		else
