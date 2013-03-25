@@ -30,7 +30,7 @@
 			<li>
 				{counter start=1  assign="count"}
 					{foreach from=$modules_list item=module}	
-						{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
+						<div style="width:400px">{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
 						{if $count %2 == 0}
 			</li>
 			<li>
