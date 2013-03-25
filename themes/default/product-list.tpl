@@ -65,7 +65,7 @@
 						<span class="exclusive"><span></span>{l s='Add to cart'}</span><br />
 					{/if}
 				{/if}
-				<a class="button lnk_view" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>
+				<a class="button lnk_view" rel="nofollow" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{l s='View'}">{l s='View'}</a>
 			</div>
 		</li>
 	{/foreach}
