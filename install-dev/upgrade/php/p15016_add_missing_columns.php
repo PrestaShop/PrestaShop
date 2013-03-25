@@ -38,6 +38,9 @@ function p15016_add_missing_columns()
 		if (!in_array('id_shop', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_reinsurance'))
 				$errors[] = Db::getInstance()->getMsgError();
+		if (in_array('filename', $list_fields))
+			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `filename` `file_name` VARCHAR(100) NOT NULL'))
+				$errors[] = Db::getInstance()->getMsgError();				
 	}
 	
 	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blocktopmenu"');
