@@ -119,8 +119,7 @@
 				{if $table_id} id={$table_id}{/if}
 				class="table {if $table_dnd}tableDnD{/if} {$table}"
 				cellpadding="0" cellspacing="0"
-				style="width: 100%; margin-bottom:10px;"
-				>
+				style="width: 100%; margin-bottom:10px;">
 					<col width="10px" />
 					{foreach $fields_display AS $key => $params}
 						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
@@ -146,8 +145,10 @@
 									</span>
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}"><img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
-										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}"><img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
+										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+										<img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
+										<a href="{$currentIndex}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+										<img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
 									{elseif !$simple_header}
 										<br />&nbsp;
 									{/if}
