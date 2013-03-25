@@ -178,8 +178,6 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
-		
-		$this->database_version = $this->version;
 	}
 
 	/**
