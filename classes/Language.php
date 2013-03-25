@@ -204,8 +204,8 @@ class LanguageCore extends ObjectModel
 		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
 		$resUpdateSQL = $this->loadUpdateSQL();
 		$resUpdateSQL = true;
-
-		return $resUpdateSQL && Tools::generateHtaccess();
+		Tools::generateHtaccess();
+		return $resUpdateSQL;
 	}
 
 	public function toggleStatus()
