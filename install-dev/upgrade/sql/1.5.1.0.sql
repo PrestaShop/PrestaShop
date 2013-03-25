@@ -16,5 +16,5 @@ ALTER TABLE `PREFIX_order_carrier` CHANGE `weight` `weight` DECIMAL(20, 6) NOT N
 ALTER TABLE `PREFIX_attribute_impact` CHANGE `weight` `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_order_detail` CHANGE `product_weight` `product_weight` DECIMAL(20, 6) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_stock_available` DROP INDEX `product_sqlstock`;
-ALTER TABLE `PREFIX_stock_available` ADD UNIQUE (`id_product`, `id_product_attribute`, `id_shop`);
+ALTER TABLE `PREFIX_stock_available` ADD UNIQUE `product_sqlstock` (`id_product`, `id_product_attribute`, `id_shop`);
 ALTER TABLE `PREFIX_cms` ADD INDEX (`id_cms_category`);

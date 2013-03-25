@@ -26,12 +26,12 @@
 
 function update_genders_images()
 {
-	if (file_exists(_PS_IMG_DIR_.'genders/Mr.jpg'))
-		@rename(_PS_IMG_DIR_.'genders/Mr.jpg', _PS_IMG_DIR_.'genders/1.jpg');
-	if (file_exists(_PS_IMG_DIR_.'genders/Ms.jpg'))
-		@rename(_PS_IMG_DIR_.'genders/Ms.jpg', _PS_IMG_DIR_.'genders/2.jpg');
-	if (file_exists(_PS_IMG_DIR_.'genders/Miss.jpg'))
-		@rename(_PS_IMG_DIR_.'genders/Miss.jpg', _PS_IMG_DIR_.'genders/3.jpg');
-	if (file_exists(_PS_IMG_DIR_.'genders/unknown.jpg'))
-		@rename(_PS_IMG_DIR_.'unknown.jpg', _PS_IMG_DIR_.'Unknown.jpg');	
+	if (file_exists(_PS_ROOT_DIR_.'/img/genders/Mr.jpg'))
+		@rename(_PS_ROOT_DIR_.'/img/genders/Mr.jpg', _PS_ROOT_DIR_.'/img/genders/1.jpg');
+	if (file_exists(_PS_ROOT_DIR_.'/img/genders/Ms.jpg'))
+		@rename(_PS_ROOT_DIR_.'/img/genders/Ms.jpg', _PS_ROOT_DIR_.'/img/genders/2.jpg');
+	if (file_exists(_PS_ROOT_DIR_.'/img/genders/Miss.jpg'))
+		@rename(_PS_ROOT_DIR_.'/img/genders/Miss.jpg', _PS_ROOT_DIR_.'/img/genders/3.jpg');
+	if (file_exists(_PS_ROOT_DIR_.'genders/unknown.jpg'))
+		@rename(_PS_ROOT_DIR_.'/img/genders/unknown.jpg', _PS_ROOT_DIR_.'/img/genders/Unknown.jpg');	
 }
