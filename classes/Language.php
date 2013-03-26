@@ -684,7 +684,7 @@ class LanguageCore extends ObjectModel
 		return Tools::generateHtaccess();
 	}
 
-	public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false)
+	public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false, $params_lang = null)
 	{
 		if (Language::getIdByIso($iso_code))
 			return true;
@@ -702,6 +702,11 @@ class LanguageCore extends ObjectModel
 				&& isset($lang_pack->version)
 				&& isset($lang_pack->iso_code))
 					$lang->name = $lang_pack->name;
+		}
+		elseif ($params_lang !== null && is_array($params_lang))
+		{
+			foreach ($params_lang as $key => $value)
+				$lang->$key = $value;
 		}
 		else
 			return false;
@@ -770,7 +775,7 @@ class LanguageCore extends ObjectModel
 		return self::$countActiveLanguages;
 	}
 
-	public static function downloadAndInstallLanguagePack($iso, $version = null)
+	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null)
 	{
 		require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
@@ -779,7 +784,7 @@ class LanguageCore extends ObjectModel
 
 		if ($version == null)
 			$version = _PS_VERSION_;
-
+		$lang_pack = false;
 		$lang_pack_ok = false;
 		$errors = array();
 		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
@@ -801,7 +806,7 @@ class LanguageCore extends ObjectModel
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
 				AdminTranslationsController::addNewTabs($iso, $files_list);
 			}
-			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack))
+			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
 				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			@unlink($file);
 		}
