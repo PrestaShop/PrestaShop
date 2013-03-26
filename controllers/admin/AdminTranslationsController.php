@@ -687,18 +687,25 @@ class AdminTranslationsControllerCore extends AdminController
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
 							continue;
 
-					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-					$this->checkAndAddThemesFiles($files_list, $themes_selected);
-					$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-					if (count($tab_errors))
-					{
-						$this->errors += $tab_errors;
-						return false;
-					}
 					if (Validate::isLanguageFileName($filename))
 					{
 						if (!Language::checkAndAddLanguage($iso_code))
 							$conf = 20;
+						else
+						{
+							// Reset cache 
+							Language::loadLanguages();
+							
+							AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+							$this->checkAndAddThemesFiles($files_list, $themes_selected);
+							$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+							
+							if (count($tab_errors))
+							{
+								$this->errors += $tab_errors;
+								return false;
+							}
+						}
 					}
 					$this->redirect(false, (isset($conf) ? $conf : '15'));
 				}
@@ -729,14 +736,17 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
 						else
 						{
-							AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-							$tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
-							if (count($tab_errors))
-								$this->errors += $tab_errors;
+
+							if (!Language::checkAndAddLanguage($arr_import_lang[0]))
+								$conf = 20;
 							else
 							{
-								if (!Language::checkAndAddLanguage($arr_import_lang[0]))
-									$conf = 20;
+								// Reset cache 
+								Language::loadLanguages();
+
+								AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
+								if ($tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list))
+									$this->errors += $tab_errors;
 							}
 							if (!unlink($file))
 								$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
