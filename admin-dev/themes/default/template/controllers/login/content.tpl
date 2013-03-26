@@ -102,9 +102,9 @@
 			<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
 			<ul>
 				<li>{l s='deleted the /install folder'}</li>
-				<li>{l s='renamed the /admin folder (e.g. /admin123%d)' sprintf=$randomNb}</li>
+				<li>{l s='renamed the /admin folder (e.g. /admin%d)' sprintf=$randomNb}</li>
 			</ul>
-			<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin123%d)' sprintf=$randomNb}</p>
+			<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin%d)' sprintf=$randomNb}</p>
 		</div>
 	{/if}
 	</div>
