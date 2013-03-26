@@ -592,8 +592,10 @@ class InstallModelInstall extends InstallAbstractModel
 		$addons_modules = array();
 		$content = Tools::addonsRequest('install-modules');
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-		foreach ($xml->module as $modaddons)
-			$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
+			
+		if ($xml !== false and isset($xml->module))
+			foreach ($xml->module as $modaddons)
+				$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
 		
 		return $addons_modules;
 	}
