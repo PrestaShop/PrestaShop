@@ -393,7 +393,17 @@ class HookCore extends ObjectModel
 			if ($check_exceptions)
 			{
 				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
-				if (in_array(Dispatcher::getInstance()->getController(), $exceptions))
+				$controller = Dispatcher::getInstance()->getController();
+								
+				if (in_array($controller, $exceptions))
+					continue;
+				
+				//retro compat of controller names
+				$matching_name = array(
+					'authentication' => 'auth',
+					'compare' => 'products-comparison',
+					);
+				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
 				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
 					continue;
