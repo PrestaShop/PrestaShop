@@ -486,6 +486,8 @@ class AuthControllerCore extends FrontController
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
 
+			if (!($country = new Country($address->id_country)) || !Validate::isLoadedObject($country))
+				$this->errors[] = Tools::displayError('Country cannot be loaded with address->id_country');
 			$postcode = Tools::getValue('postcode');		
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
