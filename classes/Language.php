@@ -801,13 +801,16 @@ class LanguageCore extends ObjectModel
 			$files_list = $gz->listContent();
 			if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language: ').(string)$iso;
+			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
+				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			else
 			{
+				// Reset cache 
+				Language::loadLanguages();
+
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
 				AdminTranslationsController::addNewTabs($iso, $files_list);
 			}
-			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
-				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			@unlink($file);
 		}
 		else
