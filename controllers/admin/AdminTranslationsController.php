@@ -719,7 +719,7 @@ class AdminTranslationsControllerCore extends AdminController
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
-				if ((bool)file_put_contents($file, $content))
+				if ((bool)@file_put_contents($file, $content))
 				{
 					$gz = new Archive_Tar($file, true);
 					$files_list = $gz->listContent();
