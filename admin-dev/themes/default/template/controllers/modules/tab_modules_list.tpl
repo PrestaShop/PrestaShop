@@ -27,21 +27,7 @@
 {if isset($tab_modules_list) && !empty($tab_modules_list)}
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('.action_tab_module').each( function (){
-			$(this).click(function () {
-				option = $('#'+$(this).data('option')+' :selected');
-				if ($(option).data('onclick') != '')
-				{
-					var f = eval("(function(){ "+$(option).data('onclick')+"})");
-					if (f.call())
-						window.location.href = $(option).data('href');
-				}
-				else
-					window.location.href = $(option).data('href');
-				return false;
-			});			
-		});
-		
+
 		$('#nav_tabs_modules_installed').click(function () { showInstalledModules() });
 		$('#nav_tabs_modules_not_installed').click(function () { showNotInstalledModules() });
 
@@ -50,6 +36,8 @@
 		{else}
 			showNotInstalledModules();
 		{/if}
+		
+		bindTabModuleListAction();
 	});
 	
 	function showInstalledModules(element)
