@@ -1534,14 +1534,23 @@ abstract class ObjectModelCore
 			foreach($suffixs as $suffix)
 			{
 				foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
+				{
 					$this->def['fields'][$field]['validate'] = $validate;
-				
+					if ($suffix == 'Lang')
+						$this->def['fields'][$field]['lang'] = true;
+				}
 				foreach ($this->{'fieldsRequired'.$suffix} as $field)
+				{
 					$this->def['fields'][$field]['required'] = true;
-				
-				foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
+					if ($suffix == 'Lang')
+						$this->def['fields'][$field]['lang'] = true;
+				}
+				foreach ($this->{'fieldsSize'.$suffix} as $field => $size}
+				{
 					$this->def['fields'][$field]['size'] = $size;
-
+					if ($suffix == 'Lang')
+						$this->def['fields'][$field]['lang'] = true;
+				}
 			}
 		}
 	}
