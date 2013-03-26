@@ -1545,7 +1545,7 @@ abstract class ObjectModelCore
 					if ($suffix == 'Lang')
 						$this->def['fields'][$field]['lang'] = true;
 				}
-				foreach ($this->{'fieldsSize'.$suffix} as $field => $size}
+				foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
 				{
 					$this->def['fields'][$field]['size'] = $size;
 					if ($suffix == 'Lang')
