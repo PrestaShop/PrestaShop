@@ -354,40 +354,15 @@ class AdminStoresControllerCore extends AdminController
 
 			if (empty($latitude) || empty($longitude))
 			   $this->errors[] = Tools::displayError('Latitude and longitude are required.');
-
-			/* Check zip code */
-			if ($country->need_zip_code)
-			{
-				$zip_code_format = $country->zip_code_format;
-				if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-				{
-					$zip_regexp = '/^'.$zip_code_format.'$/ui';
-					$zip_regexp = str_replace(' ', '( |)', $zip_regexp);
-					$zip_regexp = str_replace('-', '(-|)', $zip_regexp);
-					$zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
-					$zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
-					$zip_regexp = str_replace('C', $country->iso_code, $zip_regexp);
-					if (!preg_match($zip_regexp, $postcode))
-						$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.
-											str_replace(
-												'C',
-												$country->iso_code,
-												str_replace(
-													'N',
-													'0',
-													str_replace(
-														'L',
-														'A',
-														$zip_code_format
-													)
-												)
-											);
-				}
-				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('A Postal / Zip Code required.');
-				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.');
-			}
+			
+			$postcode = Tools::getValue('postcode');		
+			/* Check zip code format */
+			if ($country->zip_code_format && !$country->checkZipCode($postcode))
+				$this->errors[] = Tools::displayError('Your Postal / Zip Code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+			elseif(empty($postcode) && $country->need_zip_code)
+				$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+			elseif ($postcode && !Validate::isPostCode($postcode))
+				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 
 			/* Store hours */
 			$_POST['hours'] = array();
