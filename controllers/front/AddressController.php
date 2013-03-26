@@ -145,27 +145,15 @@ class AddressControllerCore extends FrontController
 				$address->address1 = $normalize->AddressLineStandardization($address->address1);
 				$address->address2 = $normalize->AddressLineStandardization($address->address2);
 			}
-
-			// Check country zip code
-			$zip_code_format = $country->zip_code_format;
-			if ($country->need_zip_code)
-			{
-				if (($postcode = Tools::getValue('postcode')) && $zip_code_format)
-				{
-					if (!$country->checkZipCode($postcode))
-						$this->errors[] = sprintf(
-							Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'),
-							str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
-						);
-				}
-				else if ($zip_code_format)
-					$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
-				else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
-					$this->errors[] = sprintf(
-						Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'),
-						str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)))
-					);
-			}
+			
+			$postcode = Tools::getValue('postcode');		
+			/* Check zip code format */
+			if ($country->zip_code_format && !$country->checkZipCode($postcode))
+				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
+			elseif(empty($postcode) && $country->need_zip_code)
+				$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
+			elseif ($postcode && !Validate::isPostCode($postcode))
+				$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
 
 			// Check country DNI
 			if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
