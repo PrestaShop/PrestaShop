@@ -90,6 +90,41 @@ class AdminGroupsControllerCore extends AdminController
 		WHERE jc.`deleted` != 1
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 		AND jcg.`id_group` = a.`id_group`) AS nb';
+
+		$groups = Group::getGroups(Context::getContext()->language->id, true);
+		if (Shop::isFeatureActive())
+			$this->fields_options = array(
+				'general' => array(
+					'title' =>	$this->l('Default groups options'),
+					'fields' =>	array(
+						'PS_UNIDENTIFIED_GROUP' => array(
+							'title' => $this->l('Visitors group:'), 
+							'desc' => $this->l('The group defined for your un-identified visitors'), 
+							'cast' => 'intval', 
+							'type' => 'select',
+							'list' => $groups,
+							'identifier' => 'id_group'
+						),
+						'PS_GUEST_GROUP' => array(
+							'title' => $this->l('Guests group:'), 
+							'desc' => $this->l('The group defined for your identified guest customers (used in guest checkout)'), 
+							'cast' => 'intval', 
+							'type' => 'select',
+							'list' => $groups,
+							'identifier' => 'id_group'
+						),
+						'PS_CUSTOMER_GROUP' => array(
+							'title' => $this->l('Customers group:'), 
+							'desc' => $this->l('The group defined for your identified customers'), 
+							'cast' => 'intval', 
+							'type' => 'select',
+							'list' => $groups,
+							'identifier' => 'id_group'
+						),
+					),
+					'submit' => array()
+				),
+			);
 	}
 
 	public function setMedia()
