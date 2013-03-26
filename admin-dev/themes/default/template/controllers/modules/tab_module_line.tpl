@@ -68,7 +68,6 @@
 						<div class="clear">&nbsp;</div>
 						<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
 					{else}
-						
 						<a href="{$module->options.install_url}" class="button">{l s='Install'}</a>
 					{/if}
 				</td>

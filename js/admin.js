@@ -810,7 +810,30 @@ $(document).ready(function()
 		$(this).slideUp('fast');
 		clearTimeout(ajax_running_timeout);
 	});
+	
+	bindTabModuleListAction();
+	
 });
+
+
+function bindTabModuleListAction()
+{
+	$('.action_tab_module').each( function (){
+		$(this).click(function () {
+			option = $('#'+$(this).data('option')+' :selected');
+			if ($(option).data('onclick') != '')
+			{
+				
+				var f = eval("(function(){ "+$(option).data('onclick')+"})");
+				if (f.call())
+					window.location.href = $(option).data('href');
+			}
+			else
+				window.location.href = $(option).data('href');
+			return false;
+		});			
+	});
+}
 
 // Delete all tags HTML
 function stripHTML(oldString)
