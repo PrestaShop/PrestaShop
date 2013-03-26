@@ -69,7 +69,7 @@ class AdminLoginControllerCore extends AdminController
 		}
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
-			$this->context->smarty->assign('wrong_folder_name', true);
+			$this->context->smarty->assign('wrong_install_name', true);
 		if (file_exists(_PS_ADMIN_DIR_.'/../admin'))
 		{	
 			$rand = sprintf('%04d', rand(0, 9999));

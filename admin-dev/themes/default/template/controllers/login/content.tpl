@@ -48,7 +48,7 @@
 	{/if}
 	<div id="login">
 		<h1>{$shop_name}</h1>
-	{if !isset($wrong_folder_name)}
+	{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 		<form action="#" id="login_form" method="post">
 			<div class="field">
 				<label for="email">{l s='Email address:'}</label>
@@ -101,10 +101,10 @@
 		<div class="padding-30">
 			<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
 			<ul>
-				<li>{l s='deleted the /install folder'}</li>
-				<li>{l s='renamed the /admin folder (e.g. /admin%d)' sprintf=$randomNb}</li>
+				{if isset($wrong_install_name) && $wrong_install_name == true}<li>{l s='deleted the /install folder'}</li>{/if}
+				{if isset($wrong_folder_name) && $wrong_folder_name == true}<li>{l s='renamed the /admin folder (e.g. /admin%d)' sprintf=$randomNb}</li>{/if}
 			</ul>
-			<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin%d)' sprintf=$randomNb}</p>
+			{if isset($wrong_folder_name) && $wrong_folder_name == true}<p>{l s='Please then access this page by the new URL (e.g. http://www.yoursite.com/admin%d)' sprintf=$randomNb}</p>{/if}
 		</div>
 	{/if}
 	</div>
