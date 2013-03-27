@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Australia" version="1.0">
+	<languages>
+		<language iso_code="en"/>
+	</languages>
+	
 	<currencies>
 		<currency name="Dollar" iso_code="AUD" iso_code_num="036" sign="$" blank="0" conversion_rate="1.40554" format="1" decimals="1" />
 	</currencies>

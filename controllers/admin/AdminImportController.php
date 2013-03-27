@@ -645,7 +645,7 @@ class AdminImportControllerCore extends AdminController
 		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
 		$tab = '';
-		if(!empty($uniqid_path))
+		if (!empty($uniqid_path))
 		{
 			$fd = fopen($uniqid_path, 'r');
 			$tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
@@ -1261,6 +1261,9 @@ class AdminImportControllerCore extends AdminController
 			foreach (Product::$definition['fields'] as $key => $array)
 				if ($array['type'] == Product::TYPE_FLOAT)
 					$product->{$key} = str_replace(',', '.', $product->{$key});
+			
+			// Indexation is already 0 if it's a new product, but not if it's an update
+			$product->indexed = 0;
 
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);

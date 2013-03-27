@@ -312,16 +312,16 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
-		$return = true;
-		$sql = '
-			UPDATE `'._DB_PREFIX_.'feature` f LEFT JOIN
-				(SELECT @i := @i +1 AS rank, id_feature, position 
-				FROM `'._DB_PREFIX_.'feature` JOIN (SELECT @i :=1) dummy
-				ORDER by position) AS f2
-				USING(id_feature)
-				SET f.position = f2.rank-1';
-		$return = Db::getInstance()->executeS($sql);
-		return $return;
+		return Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'feature` f
+		LEFT JOIN (
+			SELECT @i := @i +1 AS rank, id_feature, position 
+			FROM `'._DB_PREFIX_.'feature`
+			JOIN (SELECT @i :=1) dummy
+			ORDER by position
+		) AS f2
+		USING (id_feature)
+		SET f.position = f2.rank - 1');
 	}
 
 	/**

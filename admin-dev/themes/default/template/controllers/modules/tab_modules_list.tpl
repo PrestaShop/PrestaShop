@@ -27,61 +27,60 @@
 {if isset($tab_modules_list) && !empty($tab_modules_list)}
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('.action_tab_module').each( function (){
-			$(this).click(function () {
-				option = $('#'+$(this).data('option')+' :selected');
-				if ($(option).data('onclick') != '')
-				{
-					var f = eval("(function(){ "+$(option).data('onclick')+"})");
-					if (f.call())
-						window.location.href = $(option).data('href');
-				}
-				else
-					window.location.href = $(option).data('href');
-				return false;
-			});			
-		});
+
+		$('#nav_tabs_modules_installed').click(function () { showInstalledModules() });
+		$('#nav_tabs_modules_not_installed').click(function () { showNotInstalledModules() });
+
+		{if count($tab_modules_list.installed)}
+			showInstalledModules();
+		{else}
+			showNotInstalledModules();
+		{/if}
 		
-		$('#nav_tabs_modules_installed').click( function () {
-			$('#tab_modules_list_not_installed').hide();
-			$('#tab_modules_list_installed').show();
-			$(this).parent('li').addClass('active');
-			$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
-			return false;
-		});
-		
-		$('#nav_tabs_modules_not_installed').click( function () {
-			$('#tab_modules_list_installed').hide();
-			$('#tab_modules_list_not_installed').show();
-			$(this).parent('li').addClass('active');
-			$('#nav_tabs_modules_installed').parent('li').removeClass('active');
-			return false;
-		});
+		bindTabModuleListAction();
 	});
+	
+	function showInstalledModules(element)
+	{
+		$('#tab_modules_list_not_installed').hide();
+		$('#tab_modules_list_installed').show();
+		$('#nav_tabs_modules_installed').parent('li').addClass('active');
+		$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
+		return false;
+	}
+	
+	function showNotInstalledModules(element)
+	{
+		$('#tab_modules_list_installed').hide();
+		$('#tab_modules_list_not_installed').show();
+		$(element).parent('li').addClass('active');
+		$('#nav_tabs_modules_not_installed').parent('li').removeClass('active');
+		return false;
+	}
 </script>
 	<ul class="nav-tabs-modules">
-	  <li class="active"><a id="nav_tabs_modules_installed" href="#" onclick="">{l s='Installed'}</a></li>
-	  <li><a href="#" id="nav_tabs_modules_not_installed" >{l s='Not Installed'}</a></li>
+	{if count($tab_modules_list.installed)}
+		<li><a id="nav_tabs_modules_installed" href="#" onclick="">{l s='Installed'}</a></li>
+	{/if}
+	{if count($tab_modules_list.not_installed)}
+		<li><a href="#" id="nav_tabs_modules_not_installed" >{l s='Not Installed'}</a></li>
+	{/if}
 	</ul>
 	<div id="modules_list_container_content" style="clear:both">
-		<table id="tab_modules_list_installed" style="clear:both">
-			{if count($tab_modules_list.installed)}
-				{foreach from=$tab_modules_list.installed item=module}
-					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-				{/foreach}
-			{else}
-				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
-			{/if}
-		</table>
-		<table id="tab_modules_list_not_installed" style="display:none;clear:both">
-			{if count($tab_modules_list.not_installed)}
-				{foreach from=$tab_modules_list.not_installed item=module}
-					{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
-				{/foreach}
-			{else}
-				<tr><td><b>{l s='No modules available in this section.'}</b></td></tr>
-			{/if}
-		</table>
+	{if count($tab_modules_list.installed)}
+	<table id="tab_modules_list_installed" style="clear:both">
+		{foreach from=$tab_modules_list.installed item=module}
+			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+		{/foreach}
+	</table>
+	{/if}
+	{if count($tab_modules_list.not_installed)}
+	<table id="tab_modules_list_not_installed" style="display:none;clear:both">
+		{foreach from=$tab_modules_list.not_installed item=module}
+			{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",rowalt"}}
+		{/foreach}
+	</table>
+	{/if}
 	</div>
 {/if}
-<p style="text-align:right;text-decoration:underline"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>
+<p style="text-align:right;text-decoration:underline;padding-right:10px"><a href="{$admin_module_favorites_view}" style="color:#666">{l s='More options'}</a></p>

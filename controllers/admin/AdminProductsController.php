@@ -126,6 +126,15 @@ class AdminProductsControllerCore extends AdminController
 
 		if (Tools::getValue('reset_filter_category'))
 			$this->context->cookie->id_category_products_filter = false;
+		if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter)
+		{
+			$category = new Category((int)$this->context->cookie->id_category_products_filter);
+			if (!$category->inShop())
+			{
+				$this->context->cookie->id_category_products_filter = false;
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
+			}
+		}
 		/* Join categories table */
 		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
 		{
@@ -162,7 +171,6 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.(int)$this->context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.(int)$this->context->shop->id.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$this->context->shop->id.')';
-				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$this->context->shop->id.')';
 			}
 			else
 			{
@@ -170,7 +178,6 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = a.id_shop_default)
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = a.id_shop_default) 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop=a.id_shop_default)';
-				$this->_where .= 'AND (i.id_image IS NULL OR image_shop.id_shop=a.id_shop_default)';
 			}
 			$this->_select .= 'shop.name as shopname, ';
 		}
@@ -181,11 +188,15 @@ class AdminProductsControllerCore extends AdminController
 			$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)';
 		}
 
+		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image,';
+		
 		$this->_join .= ($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
 		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias_image.'.`id_image`, '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`';
-			
+
+		$this->_group = 'GROUP BY '.$alias.'.id_product';
+
 		$this->fields_list = array();
 		$this->fields_list['id_product'] = array(
 			'title' => $this->l('ID'),
@@ -356,7 +367,16 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$result = parent::loadObject($opt);
 		if ($result && Validate::isLoadedObject($this->object))
+		{
+			if (Shop::getContext() == Shop::CONTEXT_SHOP && !$this->object->isAssociatedToShop())
+			{
+				$default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
+				$def = ObjectModel::getDefinition($this->object);
+				foreach ($def['fields'] as $field_name => $row)
+					$this->object->$field_name = $default_product->$field_name;
+			}
 			$this->object->loadStockData();
+		}
 		return $result;
 	}
 
@@ -710,6 +730,8 @@ class AdminProductsControllerCore extends AdminController
 							}
 							if (!count($this->errors))
 								$success &= $product->delete();
+							else
+								$success = 0;
 						}
 					}
 					
@@ -2184,10 +2206,6 @@ class AdminProductsControllerCore extends AdminController
 
 				foreach ($this->available_tabs as $product_tab => $value)
 				{
-					// if it's the quantities tab and stock management is disabled, continue
-					if ($stock_management_active == 0 && $product_tab == 'Quantities')
-						continue;
-
 					// if it's the warehouses tab and advanced stock management is disabled, continue
 					if ($advanced_stock_management_active == 0 && $product_tab == 'Warehouses')
 						continue;

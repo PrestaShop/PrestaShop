@@ -34,8 +34,6 @@ class AdminControllerCore extends Controller
 	public $confirmations = array();
 	public $shopShareDatas = false;
 	
-	protected $addons_url = 'api.addons.prestashop.com';
-
 	public $_languages = array();
 	public $default_form_language;
 	public $allow_employee_form_lang;
@@ -583,7 +581,7 @@ class AdminControllerCore extends Controller
 
 		$headers = array();
 		foreach ($this->fields_list as $datas)
-			$headers[] = $datas['title'];
+			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
 
 		$content = array();
 		foreach ($this->_list as $i => $row)
@@ -591,7 +589,7 @@ class AdminControllerCore extends Controller
 			$content[$i] = array();
 			foreach ($this->fields_list as $key => $value)
 				if (isset($row[$key]))
-					$content[$i][] = $row[$key];
+					$content[$i][] = Tools::htmlentitiesDecodeUTF8($row[$key]);
 				
 		}
 		$this->context->smarty->assign(array(
@@ -1514,6 +1512,7 @@ class AdminControllerCore extends Controller
 	
 	public function renderModulesList()
 	{
+		
 		if ($this->getModulesList($this->filter_modules_list))
 		{
 			$helper = new Helper();
@@ -2214,7 +2213,18 @@ class AdminControllerCore extends Controller
 		$this->modules_list = array();
 		foreach($all_modules as $module)
 		{
-			if (in_array($module->name, $filter_modules_list))
+			$perm = true;
+			if ($module->id)
+				$perm &= Module::getPermissionStatic($module->id, 'configure');
+			else
+			{
+				$id_admin_module = Tab::getIdFromClassName('AdminModules');
+				$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
+				if (!$access['edit'])
+					$perm &= false; 
+			}
+			
+			if (in_array($module->name, $filter_modules_list) && $perm)
 			{
 				$this->fillModuleData($module, 'select');
 				$this->modules_list[] = $module;
@@ -2853,83 +2863,6 @@ class AdminControllerCore extends Controller
 			return (bool)file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
 		return false;
 	}
-
-	public function addonsRequest($request, $params = array())
-	{
-		$postData = '';
-		$postDataArray = array(
-			'version' => _PS_VERSION_,
-			'iso_lang' => strtolower(Context::getContext()->language->iso_code),
-			'iso_code' => strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-			'shop_url' => urlencode(Tools::getShopDomain()),
-			'mail' => urlencode(Configuration::get('PS_SHOP_EMAIL'))
-		);
-		foreach ($postDataArray as $postDataKey => $postDataValue)
-			$postData .= '&'.$postDataKey.'='.$postDataValue;
-		$postData = ltrim($postData, '&');
-		
-		// Config for each request
-		if ($request == 'native')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=native';
-		}
-		if ($request == 'must-have')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443, 'http://' => 80);
-			$postData .= '&method=listing&action=must-have';
-		}
-		if ($request == 'customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=listing&action=customer&username='.urlencode(trim($this->context->cookie->username_addons)).'&password='.urlencode(trim($this->context->cookie->password_addons));
-		}
-		if ($request == 'check_customer')
-		{
-			// Define protocol accepted and post data values for this request
-			$protocolsList = array('https://' => 443);
-			$postData .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-		}
-		if ($request == 'module')
-		{
-			// Define protocol accepted and post data values for this request
-			if (isset($params['username_addons']) && isset($params['password_addons']))
-			{
-				$protocolsList = array('https://' => 443);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']).'&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-			}
-			else
-			{
-				$protocolsList = array('https://' => 443, 'http://' => 80);
-				$postData .= '&method=module&id_module='.urlencode($params['id_module']);
-			}
-		}
-
-		// Make the request
-		$opts = array(
-			'http'=>array(
-				'method'=> 'POST',
-				'content' => $postData,
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'timeout' => 5,
-			)
-		);
-		$context = stream_context_create($opts);
-		foreach ($protocolsList as $protocol => $port)
-		{
-			$content = Tools::file_get_contents($protocol.$this->addons_url, false, $context);
-
-			// If content returned, we cache it
-			if ($content)
-				return $content;
-		}
-
-		// No content, return false
-		return false;
-	}
 	
 	public function fillModuleData(&$module, $output_type = 'link', $back = null)
 	{
@@ -2943,9 +2876,11 @@ class AdminControllerCore extends Controller
 		if (file_exists('../modules/'.$module->name.'/logo.png'))
 			$module->logo = 'logo.png';
 		$module->optionsHtml = $this->displayModuleOptions($module, $output_type);
-		$module->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['update_url'] = self::$currentIndex.'&update='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-		$module->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
+		
+		$module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+		$module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+		$module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 
 		$module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
 			((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -2983,60 +2918,60 @@ class AdminControllerCore extends Controller
 			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
 		}	
-		
+		$link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 		$modules_options = array(
 			'configure-module' => array(
-				'href' => self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+				'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['configure']) ? $module->onclick_option_content['configure'] : '',
 				'title' => '',
 				'text' => $this->translationsTab['Configure'],
 				'cond' => $module->id && isset($module->is_configurable) && $module->is_configurable,
 				),
 			'desactive-module' => array(
-				'href' => self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
+				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab,
 				'onclick' => $module->active && $module->onclick_option && isset($module->onclick_option_content['desactive']) ? $module->onclick_option_content['desactive'] : '' ,
 				'title' => Shop::isFeatureActive() ? htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']) : '',
 				'text' => $module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable'],
 				'cond' => $module->id,
 				),
 			'reset-module' => array(
-				'href' => self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
+				'href' => $link_admin_modules.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab,
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['reset']) ? $module->onclick_option_content['reset'] : '',
 				'title' => '',
 				'text' => $this->translationsTab['Reset'],
 				'cond' => $module->id && $module->active,
 				),
 			'delete-module' => array(
-				'href' => self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
+				'href' => $link_admin_modules.'&delete='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
 				'onclick' => $module->onclick_option && isset($module->onclick_option_content['delete']) ? $module->onclick_option_content['delete'] : 'return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'].'\');',
 				'title' => '',
 				'text' => $this->translationsTab['Delete'],
 				'cond' => true,
 				),
-			);
-		$return = '';
-			foreach($modules_options as $option_name => $option)
-			{
-				if ($option['cond'])
-				{
-					if ($output_type == 'link')
-						$return .= '<span class="'.$option_name.'">
-							<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
-							</span>';
-					else if ($output_type == 'select')
-						$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
-				}
-			}
-			if ($output_type == 'select')
-			{
-				if (!$module->id)
-					$return = '<option data-onclick="" data-href="'.self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
-				else
-					$return = '<option data-onclick=""  data-href="'.self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>'.$return;
-				$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
+		);
 
+		$return = '';
+		foreach ($modules_options as $option_name => $option)
+		{
+			if ($option['cond'])
+			{
+				if ($output_type == 'link')
+					$return .= '<span class="'.$option_name.'">
+						<a class="action_module" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'">'.$option['text'].'</a>
+						</span>';
+				elseif ($output_type == 'select')
+					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
-			
+		}
+		if ($output_type == 'select')
+		{
+			if (!$module->id)
+				$return = '<option data-onclick="" data-href="'.$link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Install'].'</option>'.$return;
+			else
+				$return .= '<option data-onclick=""  data-href="'.$link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : '').'" >'.$this->translationsTab['Uninstall'].'</option>';
+			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
+		}
+
 		return $return;
 	}
 }

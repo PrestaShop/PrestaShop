@@ -225,5 +225,6 @@ return array(
 		'menu_process' => 'Установка магазина',
 		'menu_configure' => 'Информация о магазине',
 		'menu_welcome' => 'Выберите язык',
+		'Your PHP sessions path is not writable - check with your hosting provider:' => 'Дисковая память недоступна в письменном виде - обратитесь к Вашему хостинг-провайдеру',
 	),
 );

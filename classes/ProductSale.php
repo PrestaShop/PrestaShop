@@ -78,7 +78,7 @@ class ProductSaleCore
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					image_shop.`id_image`, il.`legend`,
+					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.$interval.' DAY)) > 0 AS new
@@ -105,7 +105,7 @@ class ProductSaleCore
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY `'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
@@ -136,7 +136,7 @@ class ProductSaleCore
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, image_shop.`id_image`, il.`legend`,
+		$sql = 'SELECT p.id_product, pl.`link_rewrite`, pl.`name`, pl.`description_short`, MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
@@ -158,7 +158,7 @@ class ProductSaleCore
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY sales DESC
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
