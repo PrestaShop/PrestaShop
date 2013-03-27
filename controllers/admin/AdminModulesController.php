@@ -1005,6 +1005,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->nb_modules_total = count($modules);
 		$module_errors = array();
 		$module_success = array();
+		$upgrade_available = array();
 
 		// Browse modules list
 		foreach ($modules as $km => $module)
@@ -1015,7 +1016,7 @@ class AdminModulesControllerCore extends AdminController
 				unset($modules[$km]);
 				continue;
 			}
-			
+
 			// Upgrade Module process, init check if a module could be upgraded
 			if (Module::initUpgradeModule($module))
 			{
@@ -1085,6 +1086,8 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
+			if (isset($module->version_addons))
+				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->displayName);;
 		}
 
 		// Don't display categories without modules
@@ -1109,6 +1112,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars = array();
 
 		$tpl_vars['token'] = $this->token;
+		$tpl_vars['upgrade_available'] = $upgrade_available;
 		$tpl_vars['currentIndex'] = self::$currentIndex;
 		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
 		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
