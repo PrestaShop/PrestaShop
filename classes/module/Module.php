@@ -178,8 +178,6 @@ abstract class ModuleCore
 			}
 			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
-		
-		$this->database_version = $this->version;
 	}
 
 	/**
@@ -187,6 +185,7 @@ abstract class ModuleCore
 	 */
 	public function install()
 	{
+		Hook::exec('actionModuleInstallBefore', array('object' => $this));
 		// Check module name validation
 		if (!Validate::isModuleName($this->name))
 		{
@@ -265,7 +264,7 @@ abstract class ModuleCore
 
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
-
+		Hook::exec('actionModuleInstallAfter', array('object' => $this));
 		return true;
 	}
 

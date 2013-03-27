@@ -249,12 +249,11 @@ a.module_toggle_all{color: #268CCD;}
 	display: block;
 	float: right;
 	height: auto;
-	width: 300px;
+	width: 500px;
 	position: absolute;
 	right: 13px;
 	top: 63px;
 	z-index: 100;
-	padding: 10px;
 	box-shadow: 1px 5px 5px #CCCCCC;
 	-moz-box-shadow: 1px 5px 10px #CCCCCC;
 	-webkit-box-shadow: 1px 5px 10px #CCCCCC;
@@ -271,7 +270,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox #modules_list_container #modules_list_container_tab {margin-top: 10px;width: auto;height: auto; }
 .toolbarBox #modules_list_container #modules_list_container_tab table {width: 100%;border-spacing: 0px;  }
 .toolbarBox #modules_list_container #modules_list_container_tab tr { height: auto}
-.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #EEE}
+.toolbarBox #modules_list_container #modules_list_container_tab tr.rowalt {background-color: #F0F7FF}
 .toolbarBox #modules_list_container #modules_list_container_tab #tab_module_switch {margin-bottom: 10px;}
 .toolbarBox #modules_list_container #modules_list_loader {margin-top: 10px}
 .toolbarBox #modules_list_container .nav-tabs-modules:after {clear: both;}
@@ -304,7 +303,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox #modules_list_container .nav-tabs-modules > .active > a:hover {
   color: #555555;
   cursor: default;
-  background-color: #EEE;
+  background-color: #F8F8F8;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
@@ -540,9 +539,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modules_list_container_tab table tr td { font-size:12px; padding: 3px 3px 3px; border-top:1px solid #ccc; border-bottom:none;}
 #modules_list_container_tab table tr td tr td {border: none}
 #modules_list_container_tab table tr:first-child {border-top:1px solid #ccc}
-#modules_list_container_tab table td.tab_modules_actions_row {border-top:1px solid #ccc}
 #modules_list_container_tab .imgm {width:32px;}
-#modules_list_container_tab .moduleDesc { font-size:12px;width: 238px;}
+#modules_list_container_tab .moduleDesc {font-size:12px}
 #modules_list_container_tab .moduleDesc h3 { color:#3A6EA7;margin: 0;font-size: 1.1em;text-align: left;white-space: normal;}
 #modules_list_container_tab .moduleDesc .metadata  { float:left; display:block; margin:5px 0;}
 #modules_list_container_tab .moduleDesc .metadata dl { float:left; margin:0; padding-right:10px;}
@@ -565,7 +563,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 .default_modules_list_display_type #modules_list_container_content li table tr td{border: none}
 .default_modules_list_display_type #modules_list_container_content li table {border: solid 1px #ccc; height: 140px;width: 100%;margin-bottom:15px}
-#modules_list_container_tab ul li {margin:5px;height:140px}
+#modules_list_container_tab ul li {height:140px}
 
 		/******** ie7 ******/
 		.ie7 #modules_list_container_tab #modules_list_container_content li{zoom:1;display:inline;}

@@ -22,7 +22,7 @@
 						<div class="fl width-20">
 							<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small_default')}" class="img_product_cart" />
 						</div>
-						<div class="fl width-70 padding-left-5px">
+						<div class="fl width-60 padding-left-5px">
 							<h3>{$product.name}</h3>
 							{if $product.reference}<p>{l s='Ref:'} {$product.reference}</p>{/if}
 							<p>{$product.description_short}</p>
@@ -59,6 +59,22 @@
 						</table>
 					</a>
 					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" data-ajax="false">{l s='Delete'}</a>
+				</li>
+			{/foreach}
+			{assign var='last_was_odd' value=$product@iteration%2}
+			{foreach $gift_products as $product}
+				<li id="element_product_{$product.id_product}">
+					<a style="padding-right:10px">
+						{assign var='productId' value=$product.id_product}
+						{assign var='productAttributeId' value=$product.id_product_attribute}
+						{assign var='quantityDisplayed' value=0}
+						{assign var='odd' value=($product@iteration+$last_was_odd)%2}
+						{assign var='ignoreProductLast' value=isset($customizedDatas.$productId.$productAttributeId)}
+						{assign var='cannotModify' value=1}
+						{* Display the gift product line *}
+						{include file="./shopping-cart-gift-line.tpl" productLast=$product@last productFirst=$product@first}
+					</a>
+					<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")}" data-ajax="false" style="display:none">{l s='Delete'}</a>
 				</li>
 			{/foreach}
 		</ul>

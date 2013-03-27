@@ -39,7 +39,36 @@ class PDFGeneratorCore extends TCPDF
 	public $content;
 	public $font;
 
-	public $font_by_lang = array('ja' => 'cid0jp', 'bg' => 'freeserif', 'ru' => 'freeserif', 'el' => 'freeserif', 'vn' => 'dejavusans', 'pl' => 'dejavusans');
+	public $font_by_lang = array(
+		'ja' => 'cid0jp', 
+		'bg' => 'freeserif', 
+		'ru' => 'freeserif', 
+		'uk' => 'freeserif', 
+		'mk' => 'freeserif', 
+		'el' => 'freeserif', 
+		'vn' => 'dejavusans', 
+		'pl' => 'dejavusans',
+		'ar' => 'dejavusans',
+		'fa' => 'dejavusans',
+		'ur' => 'dejavusans',
+		'az' => 'dejavusans',
+		'ca' => 'dejavusans',
+		'gl' => 'dejavusans',
+		'hr' => 'dejavusans',
+		'sr' => 'dejavusans',
+		'si' => 'dejavusans',
+		'cs' => 'dejavusans',
+		'sk' => 'dejavusans',
+		'ka' => 'dejavusans',
+		'he' => 'dejavusans',
+		'lo' => 'dejavusans',
+		'lv' => 'dejavusans',
+		'tr' => 'dejavusans',
+		'ko' => 'cid0kr',
+		'zh' => 'cid0cs',
+		'tw' => 'cid0cs',
+		'th' => 'freeserif'
+		);
 
 
 	public function __construct($use_cache = false)

@@ -480,10 +480,8 @@ class AdminHomeControllerCore extends AdminController
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
 
 		// SCREENCAST
-		if (@fsockopen('screencasts.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['screencast'] = 'OK';
-		else
-			$result['screencast'] = 'NOK';
+		$result['screencast'] = 'OK';
+
 
 		// PREACTIVATION
 		$result['partner_preactivation'] = $this->getBlockPartners();
@@ -491,8 +489,7 @@ class AdminHomeControllerCore extends AdminController
 		// DISCOVER PRESTASHOP
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
-		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
+		$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:300px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 
 		// SHOW TIPS OF THE DAY
 		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/tipsoftheday/?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser), false, $stream_context);
@@ -672,7 +669,7 @@ class AdminHomeControllerCore extends AdminController
 		}
 		
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
-			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, $this->addonsRequest('native'));
+			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 
 		$tpl_vars['upgrade'] = $upgrade;
 

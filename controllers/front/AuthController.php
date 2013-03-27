@@ -379,6 +379,8 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('An account using this email address has already been registered.', false);
 		// Preparing customer
 		$customer = new Customer();
+		$lastnameAddress = $_POST['lastname'];
+		$firstnameAddress = $_POST['firstname'];		
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
 		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		
@@ -387,7 +389,7 @@ class AuthControllerCore extends FrontController
 		{
 			if (Tools::isSubmit('submitGuestAccount') || !Tools::getValue('is_new_customer'))
 			{
-				if (!Tools::getValue('phone'))
+				if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 					$error_phone = true;
 			}
 			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') || Configuration::get('PS_ORDER_PROCESS_TYPE')) 
@@ -468,8 +470,6 @@ class AuthControllerCore extends FrontController
 		}
 		else // if registration type is in one step, we save the address
 		{
-			$lastnameAddress = $_POST['lastname'];
-			$firstnameAddress = $_POST['firstname'];
 			// Preparing address
 			$address = new Address();
 			$_POST['lastname'] = $lastnameAddress;

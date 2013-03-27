@@ -93,7 +93,7 @@ function ps_round(value, precision)
 	return Math.round(value * precisionFactor) / precisionFactor;
 }
 
-function	autoUrl(name, dest)
+function autoUrl(name, dest)
 {
 	var loc;
 	var id_list;
@@ -105,7 +105,7 @@ function	autoUrl(name, dest)
 	return ;
 }
 
-function	autoUrlNoList(name, dest)
+function autoUrlNoList(name, dest)
 {
 	var loc;
 
@@ -207,9 +207,11 @@ function checkCustomizations()
 
 	if (typeof customizationFields != 'undefined')
 		for (var i = 0; i < customizationFields.length; i++)
+		{								
 			/* If the field is required and empty then we abort */
-			if (parseInt(customizationFields[i][1]) == 1 && ($('#' + customizationFields[i][0]).html() == '' ||  $('#' + customizationFields[i][0]).html() != $('#' + customizationFields[i][0]).val()) && !pattern.test($('#' + customizationFields[i][0]).attr('class')))
+			if (parseInt(customizationFields[i][1]) == 1 && ($('#' + customizationFields[i][0]).html() == '' ||  $('#' + customizationFields[i][0]).text() != $('#' + customizationFields[i][0]).val()) && !pattern.test($('#' + customizationFields[i][0]).attr('class')))
 				return false;
+		}
 	return true;
 }
 

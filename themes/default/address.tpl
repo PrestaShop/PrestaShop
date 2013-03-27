@@ -86,7 +86,7 @@ $(function(){ldelim}
 
 <p class="required"><sup>*</sup> {l s='Required field'}</p>
 
-<form action="{$link->getPageLink('address', true)}" method="post" class="std" id="add_adress">
+<form action="{$link->getPageLink('address', true)}" method="post" class="std" id="add_address">
 	<fieldset>
 		<h3>{if isset($id_address)}{l s='Your address'}{else}{l s='New address'}{/if}</h3>
 		<p class="required text dni">

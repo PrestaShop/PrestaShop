@@ -156,7 +156,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, $this->addonsRequest('native')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -166,7 +166,7 @@ class AdminModulesControllerCore extends AdminController
 			
 			if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, $this->addonsRequest('must-have')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -180,7 +180,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 60))
 			{
-				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_CUSTOMER_MODULES_LIST, $this->addonsRequest('customer')))
+				if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_CUSTOMER_MODULES_LIST, Tools::addonsRequest('customer')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -198,7 +198,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function ajaxProcessLogOnAddonsWebservices()
 	{
-		$content = $this->addonsRequest('check_customer', array('username_addons' => pSQL(trim(Tools::getValue('username_addons'))), 'password_addons' => pSQL(trim(Tools::getValue('password_addons')))));
+		$content = Tools::addonsRequest('check_customer', array('username_addons' => pSQL(trim(Tools::getValue('username_addons'))), 'password_addons' => pSQL(trim(Tools::getValue('password_addons')))));
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 		if (!$xml)
 			die('KO');
@@ -250,11 +250,25 @@ class AdminModulesControllerCore extends AdminController
 			{
 				if (in_array($module->name, $tab_modules_list))
 				{
-					$this->fillModuleData($module, 'select', $back);
+					$perm = true;
 					if ($module->id)
-						$modules_list['installed'][] = $module;
+						$perm &= Module::getPermissionStatic($module->id, 'configure');
 					else
-						$modules_list['not_installed'][] = $module;
+					{
+						$id_admin_module = Tab::getIdFromClassName('AdminModules');
+						$access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
+						if (!$access['edit'])
+							$perm &= false; 
+					}
+					if ($perm)
+					{
+						$this->fillModuleData($module, 'select', $back);
+						if ($module->id)
+							$modules_list['installed'][] = $module;
+						else
+							$modules_list['not_installed'][] = $module;
+
+					}
 				}		
 			}
 		}
@@ -615,10 +629,10 @@ class AdminModulesControllerCore extends AdminController
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 									{
 										if ($f['loggedOnAddons'] == 0)
-											if (file_put_contents('../modules/'.$modaddons->name.'.zip', $this->addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
+											if (file_put_contents('../modules/'.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
 										if ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
-											if (file_put_contents('../modules/'.$modaddons->name.'.zip', $this->addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
+											if (file_put_contents('../modules/'.$modaddons->name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
 									}
 							}
@@ -781,7 +795,7 @@ class AdminModulesControllerCore extends AdminController
 		// Call appropriate module callback
 		if (!isset($ppmReturn))
 			$this->postProcessCallback();
-		
+
 		if ($back = Tools::getValue('back'))
 			Tools::redirectAdmin($back);	
 	}

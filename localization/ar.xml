@@ -5,6 +5,7 @@
 	</currencies>
 	<languages>
 		<language iso_code="ag" />
+		<language iso_code="es" />
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA AR 21%" rate="21" />
