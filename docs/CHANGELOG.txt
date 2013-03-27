@@ -24,6 +24,454 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.4.0 - (2013-03-26)  #
+####################################
+
+	Fixed bugs:
+
+	[-] INSTALLER : Last fix of bug #PSCFV-8168 loyalty ADD id_shop to layered_product_attribute
+	[-] INSTALLER : Second fix of bug #PSCFV-8168 loyalty CHANGE id_discount to id_cart_rule
+	[-] Installer : do not fail on warning when addons modules list empty
+	[-] INSTALLER : First fix of bug #PSCFV-8168 reinsurance` CHANGE `filename` to `file_name`
+	[-] INSTALLER : Fix bug #PSCFV-8167 bad drop of non-existent index and correct genders image copy
+	[-] Installer: Install only the language choosen in the installer
+	[-] INSTALLER : Update gender for default customer
+	[-] Installer: download the language pack even if this is a native language on installation
+	[-] INSTALLER : Fix crash from genders jpg copy
+	[-] INSTALLER : Using $this when not in object context
+	[-] INSTALLER: Fix syntax error, unexpected 'public' (T_PUBLIC)
+	[-] INSTALLER : TEXT field can sometimes not have a default empty value
+	[-] Installer : Fixed languages parsing
+	[-] INSTALLER : Fix bug #PSCFV-6128 do not loose custos on orders from 1.4.X
+	[-] Installer: Fix the installation when safe_mode is enabled
+	[-] Installer: Fix 2 path for the upgrader
+	[-] Installer: fix UNIQUE key on stock_available table #PSCFV-7886
+	[-] Installer: fix upgrade __PS_BASE_URI__
+	[-] Installer : Fix warning during upgrade when issues with shops tables
+	[-] Installer: check create table privileges
+	[-] Installer: force magic_quote_runtime to 0
+	[-] INSTALLER : fixed bug #PSCFV-5702 - error javascript when password have a simple quote
+	[-] Installer: clear the database when an error occured during the install
+
+	[-] FO : Fix bug #PSCFV-8415 zipcode is required without zip code format too
+	[-] FO : Customization delete when quantity custo is one, sorry about this bad commit last time
+	[-] FO : Fix bug #PSCFV-8364 block cart hidden or products are doubled
+	[-] FO : Fix bug #PSCFV-8098 inversion in customer and address name
+	[-] FO : GuestAccount required phone
+	[-] FO : update total_product_price_X when customized product after login
+	[-] FO : Fix bug #PSCFV-8202 special chars for checkCustomizations js function
+	[-] FO : Fix bug #PSCFV-8028 refactoring customization
+	[-] FO : Fix bug #PSCFV-8031 and maybe others, do not loop when calling displayNewProducts in blockcart
+	[-] FO: Fix #PSCFV-7600 display accessory in the product page even if there are no stock for the default combination (on the default theme)
+	[-] FO : fixed attributes order #PSCFV-8032
+	[-] FO : remove 404 images in Live Edit
+	[-] FO : Fix bug #PSCFV-6595, fancybox images for IE and AlphaImageLoader
+	[-] FO : Bug fix : JS Minifier replaced with Google Closure Compiler
+	[-] FO : Do no try to add empty css or js file name
+	[-] FO : Check for cart rules before diplaying shopping cart in OPC
+	[-] FO: Fix separated packages
+	[-] FO : Mobile theme updated, templates added/improved
+	[-] FO : Avoid flashing of availability_statut
+	[-] FO : Bug fix #PSCFV-7915 : Mobile theme issue, default attribute
+	[-] FO : Fixed mobile theme authentication CSS
+	[-] FO : Fix bug #PSCFV-5168, required phone in all templates
+	[-] FO : fixed bug #PSCFV-5744 - Using attribute values with decimal points numbers and its ten multiple, have the same url
+	[-] FO : minimum purchase total with wurrency
+	[-] FO : remove "Invalid address warning" when not "same"  an no invoice address
+	[-] FO : Fix bug #PSCFV-7946 delete customized product with several custos
+	[-] Fo : Fix bug #PSCFV-7956 select invoice address when adding a first new address
+	[-] FO : Fix case for some excluded searched chars
+	[-] FO : Fix bug #PSCFV-8149 Notices on undefined properties
+	[-] FO: Fix ecotax displayed on the quantity discounts tab with a change of base_price on the product page
+	[-] FO : Fix exception when PS_CART_FOLLOWING
+	[-] FO : Fix bug #PSCFV-8132 authRedirection not implemented and wrong back redirection
+	[-] FO: fixed bug Module crosselling not working properly (Scroll / JS) - #PSCFV-8080
+	[-] FO : the option that disable the tax display in the cart wasn't used anymore, I used it again #PSCFV-8033
+	[-] FO : Fix bug #PSCFV-7880 display wrapping row in cart
+	[-] FO: Fix links to products_attribute when custom url is defined with the blocklayered
+	[-] FO : Fix bug #PSCFV-7920 wrong redirection after account creation
+	[-] FO: Fix #PSCFV-8083 display of initial price with quantity discount and cart refreshment
+	[-] FO: fixed bug two little coding error - #PSCFV-7982
+	[-] FO: fixed bug Backoffice and ipad - #PSCFV-7696
+	[-] FO : Home w3c validation removed "legend" attribute and target="_blank"
+	[-] FO: Fix #PSCFV-7850 sometimes minify_html lib was returned nothing...
+	[-] FO : Back slashes for inputs that need it in authentication.tpl
+	[-] FO : Fix bug isGuest not defined, set id_carrier in base at login
+	[-] FO : cut long referrers in order to avoid a crash #PSCFV-7775
+	[-] FO : display total voucher without taxes when the customer group does not display taxes #PSCFV-7746
+	[-] FO : fixed guest saving #PSCFV-6150
+	[-] FO: Fix display specific prices for combinations in product page #PSCFV-7807
+	[-] FO : Fixed regexp for images embbed in description
+	[-] FO : Fix warning #PSCFV-7805
+	[-] FO: Fix categories and products restriction for unidentified customers after upgrade
+	[-] FO : deprecated free_shipping var set to "false"
+	[-] FO : Fix bug #PSCFV-7467 no email in post data
+	[-] FO : Fix Bug #PSCFV-7439 radio input css
+	[-] FO : Fix Bug #PSCFV-7339 available date on product page
+	[-] FO : Fix Bug PSCFI-7016 available date on product page
+	[-] FO: Fix PHP warning on update quantity in cart with customizables products
+	[-] FO: don't load medias if error on product page to avoid JS bugs
+	[-] FO: Fix Cart::getDeliveryOption() cache
+	[-] FO : Fix bug #PSCFI-6686 when url param has no value set 1 to valuePSCFI-6686
+	[-] FO: Fix product restriction by shop
+	[-] FO : Fix bug #PSCFV-7491 special characters in direct search
+	[-] FO : Fix bug #PSCFV-7562 no availability date in tempalte
+	[-] FO: Fix infinite loop on overriding Module::getPaymentModules and executing hook on it #PSCFV-7760
+	[-] FO: Fix #PSCFV-7714 quantity discounts displaying in product page for specific customer
+	[-] FO: Fix #PSCFV-7627 customer group reduction was applied on combinations for unidentified users on the product page
+	[-] FO: Fix fatal error when a customer is deleted and still logged
+	[-] FO : you need to execute CartRule::autoAddToCart() after CartRule::autoRemoveFromCart(), everytime #PSCFV-7674
+	[-] FO: fixed bug rendering Problems in IE6 with default theme - #PSCFV-7628
+	[-] FO : fixed voucher display in the customer view #PSCFV-7332
+	[-] FO : Fixed voucher value when it exceeds the product total #PSCFV-7421
+	[-] FO : fixed customer discounts #PSCFV-7479
+	[-] FO : fixed retro compatibility issue with discounts #PSCFV-7553
+	[-] FO : Fix bug #PSCFI-6864 #PSCFV-6516 Issue with deleted address blocking order process
+	[-] FO: Fix #PSCFV-7474 display taxes on order payment when the price without taxes is displayed
+	[-] FO: Fix #PSCFV-7530 bad quantity returned displayed on order detail for multiple return
+	[-] FO : Fix bug #PSCFV-7504 last category for parent and not always default one
+	[-] FO : Fix fatal error when memcache is not installed and using Memcached
+	[-] FO: Fix #PSCFV-6375 always display the vat_number field for registration even if the european vat number module is disabled
+	[-] FO: Fix Product::getProductName for multilang and multishop
+	[-] FO : 'undefined' is undefined =)
+	[-] FO: fixed bug Change a little css code of global.css to solve a little issue on authentication page - #PSCFV-7527
+	[-] FO : Fix #PSCFV-6356 recall adresses in cart after login
+	[-] FO : fixed bug #PSCFV-7508 - broken links to images in jquery.fancybox.css
+	[-] FO : Fix bug #PSCFV-6516 when not same address to process
+	[-] FO: fixed bug Block Cart in columns disappear if product is removed - #PSCFV-7495
+	[-] FO: fixed bug Blocknewsletter.css has an extra bracket on the last line and when corrected override still won't work - #PSCFV-7436
+	[-] FO: fixed bug PSCFV-6644
+	[-] FO : Fix bug #PSCFV-6655
+	[-] FO : fixed bug #PSCFV-7381 - free shipping when no carrier available
+	[-] FO: Fix #PSCFV-7322 Product::getProductProperties quantity cache
+	[-] FO: updated css product_list
+	[-] FO : No error on first consultation of shopping cart with minimum purchase
+	[-] FO: added a new line for better display on IE9 for the "new" on homefeatured and product list
+	[-] FO : Fix bug #PSCFV-7388 Guest checkout & state validation thankx to Sergio
+	[-] FO : adding values to empty parameters in ajax of cart-summary.js
+	[-] FO : Apply changes from commit 1.4.X 1d0d59845b5f9cb9333a89e60523ab41df076d89 no cache for POST queries
+	[-] FO: fixed bug css in IE
+	[-] FO: fixed Solutions for authentication.tpl and address.tpl about dni field - #PSCFV-6619
+	[-] FO : Try to fix "phone required" bug once again when only signing in
+	[-] FO : Fix bug #PSCFI-6751 for 1.5.X carriers and payments update in OPC
+	[-] FO : fixed smarty curly bracket    Signed-off-by: Marco Cervellin <marco@macodev.com>
+	[-] FO : small fix on shopping cart adresses
+	[-] FO: fixed Installer - Message d'erreur mal affiché - #PSCFV-6585
+	[-] FO: fixed IE8 Adding Address Problem + improve line-height input on IE - #PSCFV-6401
+	[-] FO: improve display voucher code
+	[-] FO : fixed bug #PSCFV-5635 - Mobile Theme tax displayed
+	[-] FO : fixed reduction display on product page #PSCFV-6308
+	[-] FO : fixed bug #PSCFV-6533 - CMS categories: This page does not exist.
+	[-] FO : fixed voucher highlighting in the cart #PSCFV-6422
+	[-] FO : fixed +/- Tx on the customer voucher page #PSCFV-6642
+	[-] FO: Fix Pack::getItemTable with some PHP versions
+	[-] FO : recycled package should be disabled by default (because the option can be deactivated) #PSCFV-6639
+	[-] FO : fixed shipping number in e-mail #PSCFV-6584
+	[-] FO: Fix #PSCFV-6456 price of default attribute with specific price on product comparison
+	[-] FO: improvement shopping cart voucher
+	[-] FO: fixed bug CSS
+	[-] FO: fixed Css issue in BO - #PSCFV-6408
+	[-] FO: Fix add to cart for product packs with no quantity and out of stock allowed #PSCFV-4788
+	[-] FO : fixed bug #PSCFV-5569 - Trying to get property of non-object in SitemapController
+	[-] FO : fixed bug #PSCFV-6529
+	[-] FO : fix #PSCFV-6165 cart update when inactive country in old address
+	[-] FO : Fix backslashes for smartyTranslate and js=1
+	[-] FO : Bad html entities for alert of order-address.js
+	[-] FO : Do not suggest states that are not active
+	[-] FO : Fix #PSCFV-5905 Fatal error: "no default carrier"
+	[-] FO : fixed bug #PSCFV-5312 - Error Uncaught TypeError: Cannot read property top of null in ajax-cart.js when Cart Block is not on product page
+	[-] FO : fix PSCFV-5934 bad redirection from https to http for CMS
+	[-] FO : Bad checkbox behavior in FF in OPC
+	[-] FO : Countries in invoice address in OPC
+	[-] FO: rtl.css was missing on default theme
+	[-] FO : Fix Exception when invoice address is empty in OPC
+	[-] FO : Fix #PSCFV-5544 same alias is no more rejected in OPC
+	[-] FO: Fix cookie domain detection for com.co tld #PSCFV-5256
+	[-] FO : small fix in front office pagination thanks to @phproberto
+	[-] FO : Fix #PSCFV-4885 for DNI field, states and postcode display
+	[-] FO: Fix #PSCFV-6493 root and home category id should be different of 1 and 2
+	[-] FO : Fix #PSCFV-6307 correct invoice address in OPC
+	[-] FO : Fix again #PSCFV-6209 #PSCFV-5686 no required phone
+	[-] FO: Fix #PSCFV-6159 order way of best sales
+	[-] FO: name of the supplier page fixed #PSCFV-5571    You do it right in 5219457 , but if you already have a old version, it's no change...
+	[-] FO: remove WAHOU
+	[-] FO : fixed bug #PSCFV-6411 Friendly URL on prices-drop for page 2 doesn't work
+
+	[-] BO : Remove warning at login template
+	[-] BO: it is now possible to change the default customer/guest/visitor group per shop
+	[-] BO : fixed Alphabetical sorting of categories
+	[-] BO: Fix #PSCFV-8422 it is now possible to manage minimal quantity even if stock management is disabled
+	[-] BO : set order payments reference to 9 chars after upgrade from 1.4.X
+	[-] BO: AdminProductControllers::bulkDelete should return error message if stock left with adv stock management like standard delete #PSCFV-8250
+	[-] BO : fixed product indexation markup in import #PSCFV-7695
+	[-] BO : Fix bug #PSCFV-8027 bad sql query on messages when private bool = true
+	[-] BO : added important check of the default language for ObjectModel multilang properties
+	[-] BO : fixed bug #PSCFV-8285 - module tab listing permission
+	[-] BO : Fix live edit link
+	[-] BO: Fix update of delivery address on backoffice orders
+	[-] BO: Fix auto-selection of default category when you have choosen one on the listing
+	[-] BO : Avoid warning if img src not defined in controller
+	[-] BO : Fix bug #PSCFV-7468 required phone in address creation
+	[-] BO : get default language when context language is empty for translation
+	[-] BO : admin language is now based directly on the employee language instead of the cookie
+	[-] BO : Rename genders images when upgrading from 1.5.0.1 to 1.5.3.1
+	[-] BO : Bug with genders icons
+	[-] BO : Bug with duplicate carts in back office due to id_guest
+	[-] BO: Auto-select the tax rules group most used on product creation
+	[-] BO: Fix SQL error on click on notification if no new notifications
+	[-] BO : Fix warning on $db_tab_module_list
+	[-] BO: Fix Currencies bulk statuses and deletion
+	[-] BO : Premium activation block & logos
+	[-] BO: Fix selected shop displayed on the shop listing after F5
+	[-] BO: fixed bad set of display status set in AdminCMS
+	[-] BO : fixed bug when save image shop association
+	[-] BO : Fix bug #PSCFV-7657 all groups checked when creating customers
+	[-] BO: Second part of #PSCFV-8067 for orderslips
+	[-] BO: Fix #PSCFV-8067 the europeean vat exempt label was not using the tax address type
+	[-] BO: fixed bug block shipping display in orders
+	[-] BO: Fix #PSCFV-8068 stock available total cache after deleting a combination
+	[-] BO: fixed bug cart rules display
+	[-] BO: fixed header display on tablet- #PSCFV-6166
+	[-] BO: Use default language for copying emails if english is deleted
+	[-] BO : fixed bug #PSCFV-7871 - bad breadcrumb when create a new CMS
+	[-] BO: don't allow bulkdelete of default language
+	[-] BO: Fix case sensitive issue on search blacklist
+	[-] BO: Fix module listing with addons module with default currency not on the xml #PSCFV-8005
+	[-] BO: Filter customers listing by shop context on AdminGroups
+	[-] BO: Fix #PSCFV-7995 countries/groups/currencies refreshment when selecting a shop in specific price form
+	[-] BO: Fix form displayed for features add after error
+	[-] BO: pagination was missing on tax rules listing
+	[-] BO: fixed lots of UI bugs in CMS:    - no more id_category (doesn't exists, it's id_cms_category)    - change category position now redirects in parent category (not at root category)    - change category status now redirects in parent category (not at root category)    - delete multiples category now redirects in parent category (not at root category)    - add form new category now auto select parent category (not root category)    - add a new category now redirects in parent category (not at root category)    - delete multiple categories now redirects in parent category (not at root category)    - now execute parent::postProcess() only if none action found (duplicate postProcess was done)    - now redirects to CMS form if found errors (not at root category)    - fixed unexists $object variable (was $cms) for saveAndStay    - delete multiple cms content now redirects in parent category (not at root category)    - change cms content position now redirects in parent category (not at root category)    - change cms content status now redirects in parent category (not at root category)
+	[-] BO: Fix PHP notice on ob_clean if no buffer to delete
+	[-] BO : automatic conversion of , into . in cart rules #PSCFV-7430
+	[-] BO : fixed payment distribution #PSCFV-7398
+	[-] BO: Fix #PSCFV-7838 deleted taxes should not appears on the listing
+	[-] BO: improve payment module page on IE
+	[-] BO: improve module payment page
+	[-] BO: improve payment module page + header
+	[-] BO: Fix #PSCFV-7851 - shop logo and name should depend of the order shop and from the context
+	[-] BO: Fix #PSCFV-7646 JS error when adding a product existing in an other shop
+	[-] BO: Fix #PSCFV-7730 update the multishop fields in adminproducts on default shop if context is all and if product is not associated to all shops
+	[-] BO: Fix #PSCFV-7734 multiple order delivery number for the same order
+	[-] BO : fixed bug #PSCFV-7551 - wrong breadcrumb when create root category
+	[-] BO: Fix #PSCFV-7462 bad sql request for ordering by price in adminproducts
+	[-] BO : fixed bug #PSCFV-7575 - BO shipping price by zones ang weigth error js
+	[-] BO: Fix #PSCFV-7427 group id used for price computation on order edition
+	[-] BO: Fix connection with Addons on AdminModules
+	[-] BO: Forbid to add a pack into a pack
+	[-] BO: Forbid to delete the defaults return statuses
+	[-] BO: Fix error message for new language creation and iso code not exists
+	[-] BO: Don't display delete icon for order carts
+	[-] BO: Not allow to give an existing email when editing an employee
+	[-] BO: Fix #PSCFV-6497 display of list when deleting customers
+	[-] BO: Fix id_shop for configuration variables in global context for orders
+	[-] BO: get the invoice prefix from the right shop
+	[-] BO: Fix live edit links on homepage
+	[-] BO: Fix #PSCFV-7576
+	[-] BO : Adresses not deduplicate in orders page
+	[-] BO : 'MCached' is 'CacheMemcache' for PS_CACHING_SYSTEM_
+	[-] BO : Fix bug #PSCFI-6902 fatal error when memcache not installed and Memcached previously activated
+	[-] BO: Fix #PSCFV-7522 update cover image after deleting it
+	[-] BO: Fix #PSCFV-7523 htaccess generation for SSL domain
+	[-] BO : Fix warnings when importing #PSCFV-6648 again
+	[-] BO : Fiw warning on $current_order_state
+	[-] Bo : Fix warnings #PSCFV-6648
+	[-] BO: Fix warning when image is uploaded with PHP < 5.3 #PSCFV-7425
+	[-] BO : reduced error catching severity in the module tab
+	[-] BO: the attached file of downloadable products duplicated should not be the same than the original #PSCFV-7460
+	[-] BO: Fix SQL request on downloadable product duplication
+	[-] BO: Fix possible PHP notice on AdminGroups #PSCFV-7412
+	[-] BO : Do not display country formatting twice, neither in FO
+	[-] BO: Fix #PSCFV-7377 second part
+	[-] BO : fix css for iframe of custom products when creating order in BO
+	[-] BO: Fix #PSCFV-7377 customizable fields on product duplication
+	[-] BO: Fix translations for overridden templates #PSCFV-7391
+	[-] BO: Allow override for emails translations on the default theme without MODE_DEV
+	[-] BO: Fix #PSCFV-6383 allow numerics chars on SQL Manager
+	[-] BO: description_short product field validation when the limit is changed #PSCFV-7383
+	[-] BO: Fix #PSCFV-6367 don't display the payment modules on BackOffice orders if they are disabled
+	[-] BO: Standard Norm
+	[-] BO : fixed bug #PSCFV-5601 - AddressFormat wrongly forbid the 'other' field from the Address to be part of the address format
+	[-] BO : fixed quick access for upgrade from 1.4 #PSCFV-6370
+	[-] BO : fixed bug #PSCFV-6381 - Customer Service mixing groups of shops (Multistore)
+	[-] BO : fixed bug #PSCFV-6623 - fixed Parse error
+	[-] BO: Fix #PSCFV-6616 id_shop should be loaded from cart when no order is created on Admin Carts
+	[-] BO : fixed bug #PSCFV-6623 - multistore edit greek encoding
+	[-] BO: Fix #PSCFV-5930 #PSCFV-5939 the filters are handled as the same between tabs which can cause sql errors
+	[-] BO : fixed bug #PSCFV-6536 indefined index in toolbar.tpl
+	[-] BO: Disallow advanced stock management if the product become a pa
+	[-] BO : fixed bug #PSCFV-4961 - Strange behavior when reordering categories
+	[-] BO : fixed bug #PSCFV-4668 - added check if module folder is writable before upgrade it
+	[-] BO : bad initialization of context due to miss define of _PS_ADMIN_DIR_ in displayImage.php
+	[-] BO : fixed bug #PSCFV-4925 - duplicate subject in SAV
+	[-] BO: Fix #PSCFV-6386 recyclable should be init to 0 on BO orders
+	[-] BO: Fix #PSCFV-6120 display of shipping price on BO order summary detail with freeshipping
+	[-] BO: override the compile check to true for smarty in the BackOffice
+	[-] BO : fixed import images
+	[-] BO: Fix #PSCFV-6118 display of product image for git on BackOffice orders
+	[-] BO : fixed bug #PSCFV-6130 - Wrong currency in product specific prices administration
+	[-] BO: Fix #PSCFV-6394 price/weight/unit_price reduction impact on combinations form
+	[-] BO: Fix #PSCFV-6415 php notice
+
+	[-] Core: clean Language:: after adding a new lang
+	[-] CORE : fixed bug #PSCFV-8035 - 'auth' hook exception is not working
+	[-] Core: delete lang files
+	[-] Core: Fix the listings in multishop context when you have at least a combination on one shop and not on the others and the same for the images
+	[-] Core: don't compute again price_wt in Product::addCustomizationPrice if already computed
+	[-] Core: Fix #PSCFV-8293 bad sql vars name on Order::getShipping() #PSCFV-8293
+	[-] Core: Fix search indexation when nb languages * nb shops > 50
+	[-] CORE : Preserve carrier reference integrity in cart rules when updating a carrier
+	[-] Core: Fix #PSCFV-8130 getTaxesAverageUsed() for delivery address used
+	[-] Core: Fix #PSCFV-8119 logos/shop_name for orders emails was not depend of the shop
+	[-] Core: Fix #PSCFV-7813 override of modules email templates not working because of directory separator
+	[-] Core: Fix TCPDF encoding for some languages like japan #PSCFV-8096
+	[-] Core: Fix Shop::addSqlRestrictionOnLang() for module installation
+	[-] Core: id_customer was missing in the SpecificPrice::getSpecificPrice() cache key #PSCFV-8086
+	[-] Core: increase size of phone field
+	[-] Core : you must always have an id_shop in a SQL query, not null
+	[-] Core: bad operator used in PaymentModule #PSCFV-8040
+	[-] Core: Fix #PSCFV-8012 attribute_url is sometimes null but also sometimes empty...
+	[-] Core: Mobile_Detect library upgrade to 2.5.5
+	[-] Core: ProductSale no more takes products with no visibility    Fixed bug that's ProductSale is taking products with no visibility, displaying them in module blockbestsellers. But as they have no visibility, we don't want to display them!
+	[-] CORE : do not verify ssl certificate when using CURL
+	[-] CORE : Fix too big query for lastNoneOrderedCart
+	[-] Core: Change cache key name of objectmodel now using classname against table name #PSCFV-7795
+	[-] CORE : fixed bug #PSCFV-6545 - ImageManager::resize() error
+	[-] CORE : Fix warning  when result from query is not a ressource
+	[-] Core: Fix rounding price computation with and without taxes #PSCFV-7796
+	[-] Core: upgrade smarty to 3.1.13
+	[-] CORe : Fix #PSCFV-7314 unregisterHook and unregisterExceptions in module::uninstall
+	[-] CORE : file_put_contents() returns the number of bytes that were written to the file, or FALSE on failure.
+	[-] CORE : Set default customer group to old default group when upgrading from 1.4.X
+	[-] CORE : order state preparation now generate delivery slip
+	[-] Core: Fix #PSCFV-6067 stock was not reserved sometimes because of time
+	[-] Core : Fixed a lot of issue with free shipping vouchers #PSCFV-7325
+	[-] Core : cart rule cache cleared on update
+	[-] CORE : FIx #PSCFV-3163 getextendedstats returning new keys
+	[-] Core : prepend/append are now a little more optionnal in the routes for the dispatcher
+	[-] Core: Fix Tools::file_get_contents for post and curl
+	[-] CORE : fixed bug #PSCFV-6238
+	[-] CORE : Bad placement of overrided Stock files
+	[-] CORE : Missing displayError for alias q
+	[-] Core: Fix #PSCFV-7484 cache in Product::priceCalculation
+	[-] Core: check the existence of the overriden emails templates before try to sending them
+	[-] CORE : email with virtual products info was not send to the customer
+	[-] Core: Store partial value in OrderCartRules #PSCFV-6566
+	[-] Core: Hook actionUpdateQuantity was not called for product without attributes which depends on the physical stock
+	[-] CORE : fixed bug #PSCFV-6555 - Custom theme not working properly with image size
+	[-] CORE : fixed bug #PSCFV-5433 - Order confirmation email doesn't report customization
+	[-] CORE : fixed bug #PSCFV-4523 - Static _PS_DEFAULT_CUSTOMER_GROUP_ is still use in code even if deprecated 1.5.0.1
+	[-] CORE : fixed bug #PSCFV-4754 field name in image_type was too short
+	[-] Core: Fix supplier_reference on cart/orders #PSCFV-6082
+	[-] Core: Fix #PSCFV-5912 price computation on cart with multiple product without combinations
+
+	[-] MO: followup - fix bug in template vars
+	[-] MO: pscleaner - fixed bugs    We need to know that 'editorial' is a module and not always install (so, table can not be there).    ps2 need to be _DB_PREFIX_ !
+	[-] MO : Fix bug #PSCFV-8160 iframe in editor
+	[-] MO : Bug fix : AdminStores, smarty escape htmlall
+	[-] MO : Bug fix : AdminHomeController, allow_url_fopen && Tools::file_get_contents()
+	[-] MO : Fix bug #PSCFV-7822 could not load tinymce in referral program
+	[-] MO : fixed double entities of meta titles in blocklayered #PSCFV-7986 #PSCFV-7985
+	[-] MO : fixed statsbestmanufacturers.php query #PSCFV-8075
+	[-] MO: Fix max lenght allowed for 3 field on homeslider configuration #PSCFV-7897
+	[-] MO: html was broken on statsdata configuration
+	[-] MO : fixed voucher currency in referral program #PSCFV-5950
+	[-] MO : you should be able to empty values in homeslider #PSCFV-7407
+	[-] MO: regenerate the class_index after adding a new override
+	[-] MO : applied unachieved patch on blockbestsellers
+	[-] MO: Clear blockcategories_footer.tpl cache
+	[-] MO: Display real price instead of Free for product which are not gifts on blockcart #PSCFV-6423
+	[-] MO : statsforecast fixed #PSCFV-7399
+	[-] MO : Fix bug #PSCFV-6364 pagination in loyalty module, thankx Matthieu@202-ecommerce.com
+	[-] MO : fixed bug #PSCFV-6407 - module follow up client
+	[-] MO : Fix warning on nbProducts
+	[-] MO : Fix bug #PNM-985 bad zone for carrier listing update
+	[-] MO : Fix bug #PNM-985 bad zone for cariier listing update
+	[-] MO : Update cart function was not functionning + optis
+	[-] MO: Fix #PSCFV-7416 product name in blocklayered listing with multishop
+	[-] MO: fix a problem with the wishlist_link    With @ArtDesign, we see that if you put the module "Block MyAccount" before the "Wishlist", the wishlist_link var is not declare yet, so the link is empty. If you put the var in the header, it can be accessed by the other tpl.    Or, we can put this in a {$link->getModuleLink(...)} in TPL
+	[-] MO : fixed phone number in mailalert #PSCFV-6667
+	[-] MO: coding standard
+	[-] MO: coding standard
+	[-] MO: Fix blockviewd for non identified customers #PSCFV-6042
+
+	[-] WS: Fix #PSCFV-6559 deletion of category images
+
+	[-] PDF : Fixed unecessary slash in manufacturer image path test    In the file_exists test of the manufacturer image path there is an unecessary slash after the constant _PS_MANU_IMG_DIR_, and then we can't display a specific manufacturer image.
+	[-] PDF : Fixed unecessary slash in overriden template path
+
+	[-] TR :  Fix #PSCFI-6818 increase input vars in french
+	[-] TR : now you can use " or ' in tpl files
+
+	Improved/changed features:
+
+	[*] Installer: check if sessions path if writable
+	[*] Installer : mbstring check added (optionnal) #PSCFV-6489
+	[*] Installer : installer improvements - Step 1
+	[*] Installer : Automatically drop the system compatibility check when everything's alright    // Fixed 'next' button when the page is refreshed
+	[*] Installer: pre-compile the smarty templates to improve the loading time of first connection
+	[*] Installer : Lower memory for update_order_messages.php
+
+	[*] FO : Fix #PSCFV-7463 No Add to favorite for Chrome
+	[*] FO : Fix #PSCFV-6122 for better adresses aliasing in shopping-cart
+	[*] FO : Possibility of hook blocknewsletter in footer    I'm added hook footer to blocknewsletter, it is great to theme developers
+	[*] FO : Possibility of hook blocknewsletter in footer
+
+	[*] BO: More detailled errors when using Archive tar tool
+	[*] BO : remove tiny_mce hard coded setup to tinymce.inc.js
+	[*] BO : Set warning when trying to activate Xcache misconfigured
+	[*] BO : file_put_contents returns length when success not true
+	[*] BO : Add default Unknown.jpg to genders
+	[*] BO: add a save and stay button in CMS edit page    This button was missing to edit easily CMS pages.
+	[*] BO: store filter by category in admin products
+	[*] BO : the option for accented URLs is now available in the backend
+	[*] BO: you can now export listing of some tabs in CSV
+	[*] BO: Add an option to htaccess generator to disable mod_security (some rules reject ajax file upload)
+	[*] BO: Improvements on customer services - you are now able to create new threads for synced emails
+	[*] BO: we don't need to clik on a line
+	[*] BO : Fix #PSCFI-6225 for 1.5.X
+	[*] BO : use the employee lang
+	[*] BO: Improve form of catalog price rules #PSCFV-6099
+
+	[*] CORE: Dissasemble CURLOPT_CONNECTTIMEOUT and CURLOPT_TIMEOUT in Tools::file_get_contents
+	[*] Core : added the possibility to disable the emails (i.e. for test purpose)
+	[*] Core : added automatic conversion of ',' into '.' for floating values
+
+	[*] MO: Add smarty cache on editorial module
+	[*] MO: Add smarty cache on blocksocial
+	[*] MO: Add smarty cache on blocksearch
+	[*] MO: Add smarty cache on blockcustomerprivacy
+	[*] MO: Add smarty cache on homeslider
+	[*] MO: Add smarty cache on some modules
+
+	[*] WS: Add contact entity
+	[*] WS: the customer services are now handled by webservices
+
+	[*] TR: Update translations for errors
+	[*] TR : update translations for FR and DE
+
+	[*] LO : Updated associations of countries and languages
+
+	Added Features:
+
+	[+] INSTALLER : added modules install from addons
+
+	[+] BO : added new marketing tab
+	[+] BO : new display of payment modules in payment tab
+	[+] BO : you can choose where you want to display modules in BO tabs
+	[+] BO : new display of module list in all BO tabs
+	[+] BO : Added customer language on the customer page
+
+	[+] CORE : added new hook actionModuleInstallBefore and actionModuleInstallAfter
+	[+] Core : added a boolean in the database (guest/cart/order) in order to know if the customer used the mobile theme for the order
+	[+] CORE : Add .txt extention to CHANGELOG
+
+	[+] MO : new module PrestaShop Cleaner: Check and fix functional integrity constraints and remove default data
+
+	[+] WS : Add product bundle retrieval from Web services
+
+
+####################################
 #   v1.5.3.1 - (2012-12-31)  #
 ####################################
 
