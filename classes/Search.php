@@ -658,7 +658,7 @@ class SearchCore
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.')').'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
-					GROUP BY product_shop.id_image
+					GROUP BY product_shop.id_product
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
