@@ -265,5 +265,11 @@
     <hook id="displayMyAccountBlock" live_edit="0">
       <name>displayMyAccountBlock</name><title>My account block</title><description>This hook displays extra information within the 'my account' block"</description>
     </hook>
+    <hook id="actionModuleInstallBefore" live_edit="0">
+      <name>actionModuleInstallBefore</name><title>actionModuleInstallBefore</title><description></description>
+    </hook>
+    <hook id="actionModuleInstallAfter" live_edit="0">
+      <name>actionModuleInstallAfter</name><title>actionModuleInstallAfter</title><description></description>
+    </hook>
   </entities>
 </entity_hook>

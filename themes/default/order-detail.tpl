@@ -326,7 +326,7 @@
 			{foreach from=$order->getShipping() item=line}
 			<tr class="item">
 				<td>{$line.date_add}</td>
-				<td>{$line.state_name}</td>
+				<td>{$line.carrier_name}</td>
 				<td>{if $line.weight > 0}{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}{else}-{/if}</td>
 				<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
 				<td>

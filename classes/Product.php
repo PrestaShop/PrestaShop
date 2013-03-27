@@ -1991,7 +1991,7 @@ class ProductCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select(
 			'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
+			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
 			DATEDIFF(
 				product_shop.`date_add`,
 				DATE_SUB(
@@ -2013,7 +2013,7 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$sql->where('product_shop.`active` = 1');
-		$sql->where('(image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1)');
+
 		if ($front)
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
 		$sql->where('
@@ -2032,16 +2032,16 @@ class ProductCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 			WHERE cg.`id_group` '.$sql_groups.')'
 		);
+		$sql->groupBy('product_shop.id_product');
 
 		$sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
 		$sql->limit($nb_products, $page_number * $nb_products);
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->select('pa.id_product_attribute');
+			$sql->select('MAX(product_attribute_shop.id_product_attribute) id_product_attribute');
 			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.default_on = 1'));
-			$sql->where('(pa.id_product_attribute IS NULL OR product_attribute_shop.id_shop='.(int)$context->shop->id.')');
 		}
 		$sql->join(Product::sqlStock('p', Combination::isFeatureActive() ? 'product_attribute_shop' : 0));
 
@@ -2111,7 +2111,7 @@ class ProductCore extends ObjectModel
 			$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
 			// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
-			$sql = 'SELECT product_shop.id_product, product_attribute_shop.id_product_attribute
+			$sql = 'SELECT product_shop.id_product, MAX(product_attribute_shop.id_product_attribute) id_product_attribute
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN  `'._DB_PREFIX_.'product_attribute` pa ON (product_shop.id_product = pa.id_product)
@@ -2125,7 +2125,6 @@ class ProductCore extends ObjectModel
 							WHERE cg.`id_group` '.$sql_groups.'
 						)
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					AND (pa.id_product_attribute IS NULL OR product_attribute_shop.default_on = 1)
 					GROUP BY product_shop.id_product
 					ORDER BY RAND()';
 
@@ -2136,7 +2135,7 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-						p.`ean13`, p.`upc`, image_shop.`id_image`, il.`legend`
+						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`
 					FROM `'._DB_PREFIX_.'product` p
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 						p.`id_product` = pl.`id_product`
@@ -2148,7 +2147,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 					'.Product::sqlStock('p', 0).'
 					WHERE p.id_product = '.(int)$id_product.'
-					AND (i.id_image IS NULL OR image_shop.id_shop='.(int)$context->shop->id.')';
+					GROUP BY product_shop.id_product';
 
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if (!$row)
@@ -2228,9 +2227,9 @@ class ProductCore extends ObjectModel
 			$order_by = explode('.', $order_by);
 			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
 		}
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, product_attribute_shop.id_product_attribute,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
-					pl.`name`, image_shop.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
+					pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -2253,7 +2252,6 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				WHERE product_shop.`active` = 1
 				AND product_shop.`show_price` = 1
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
 				'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 				'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 				AND p.`id_product` IN (
@@ -2262,7 +2260,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 					WHERE cg.`id_group` '.$sql_groups.'
 				)
-				AND (pa.id_product_attribute IS NULL OR product_attribute_shop.default_on = 1)
+				GROUP BY product_shop.id_product
 				ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
@@ -3045,7 +3043,7 @@ class ProductCore extends ObjectModel
 					AND al.`id_lang` = '.(int)$id_lang.'
 					AND agl.`id_lang` = '.(int)$id_lang.'
 				GROUP BY id_attribute_group, id_product_attribute
-				ORDER BY ag.`position` ASC, a.`position` ASC';
+				ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
 		return Db::getInstance()->executeS($sql);
 	}
 
@@ -3107,7 +3105,7 @@ class ProductCore extends ObjectModel
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`,
-					i.`id_image`, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
+					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -3131,9 +3129,9 @@ class ProductCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (p.`id_manufacturer`= m.`id_manufacturer`)
 				'.Product::sqlStock('p', 0).'
-				WHERE `id_product_1` = '.(int)$this->id.'
-				AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))'.
-				($active ? ' AND product_shop.`active` = 1' : '');
+				WHERE `id_product_1` = '.(int)$this->id.
+				($active ? ' AND product_shop.`active` = 1' : '').'
+				GROUP BY product_shop.id_product';
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 		foreach ($result as &$row)
@@ -4879,7 +4877,7 @@ class ProductCore extends ObjectModel
 					$result[] = array_merge($attribute, $group[0]);
 				}
 				$values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')

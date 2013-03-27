@@ -687,18 +687,25 @@ class AdminTranslationsControllerCore extends AdminController
 						if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
 							continue;
 
-					AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-					$this->checkAndAddThemesFiles($files_list, $themes_selected);
-					$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-					if (count($tab_errors))
-					{
-						$this->errors += $tab_errors;
-						return false;
-					}
 					if (Validate::isLanguageFileName($filename))
 					{
 						if (!Language::checkAndAddLanguage($iso_code))
 							$conf = 20;
+						else
+						{
+							// Reset cache 
+							Language::loadLanguages();
+							
+							AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+							$this->checkAndAddThemesFiles($files_list, $themes_selected);
+							$tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+							
+							if (count($tab_errors))
+							{
+								$this->errors += $tab_errors;
+								return false;
+							}
+						}
 					}
 					$this->redirect(false, (isset($conf) ? $conf : '15'));
 				}
@@ -719,32 +726,39 @@ class AdminTranslationsControllerCore extends AdminController
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
-				if (file_put_contents($file, $content))
+				if ((bool)@file_put_contents($file, $content))
 				{
 					$gz = new Archive_Tar($file, true);
 					$files_list = $gz->listContent();
-					if ($gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+					if ($error = $gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 					{
-						AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
-						$tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list);
-						if (count($tab_errors))
-							$this->errors += $tab_errors;
+						if (is_object($error) && !empty($error->message))
+							$this->errors[] = Tools::displayError('The archive cannot be extracted.'). ' '.$error->message;
 						else
 						{
+
 							if (!Language::checkAndAddLanguage($arr_import_lang[0]))
 								$conf = 20;
-						}
-						if (!unlink($file))
-							$this->errors[] = Tools::displayError('Cannot delete the archive.');
+							else
+							{
+								// Reset cache 
+								Language::loadLanguages();
 
-						$this->redirect(false, (isset($conf) ? $conf : '15'));
+								AdminTranslationsController::checkAndAddMailsFiles($arr_import_lang[0], $files_list);
+								if ($tab_errors = AdminTranslationsController::addNewTabs($arr_import_lang[0], $files_list))
+									$this->errors += $tab_errors;
+							}
+							if (!unlink($file))
+								$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
+	
+							$this->redirect(false, (isset($conf) ? $conf : '15'));
+						}
 					}
-					$this->errors[] = Tools::displayError('The archive cannot be extracted.');
-					if (!unlink($file))
-						$this->errors[] = Tools::displayError('Cannot delete the archive.');
+					elseif (!unlink($file))
+							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
 				}
 				else
-					$this->errors[] = Tools::displayError('The server does not have permissions for writing.');
+					$this->errors[] = Tools::displayError('The server does not have permissions for writing.'. ' '.sprintf(Tools::displayError('Please check rights for %s'), dirname($file)));
 			}
 			else
 				$this->errors[] = Tools::displayError('Language not found.');

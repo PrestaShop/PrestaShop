@@ -1415,13 +1415,13 @@ a.iframe {font-weight:bold}
 #address #left_column {display:none}
 #address #center_column{width:757px}
 
-form#add_adress {}
-#add_adress fieldset {
+form#add_address {}
+#add_address fieldset {
 	margin:0;
 	border:1px solid #ccc;
 	background:#F8F8F8
 }
-#add_adress h3 {
+#add_address h3 {
 	margin:0 0 15px 0;
 	padding:8px;
 	font-size:14px;
@@ -1429,24 +1429,24 @@ form#add_adress {}
 	text-transform:uppercase;
 	background:url(../img/bg_form_h3.png) repeat-x 0 0 #989898
 }
-#center_column #add_adress p {margin:0; padding:0 0 10px 0}
-#add_adress p.required {color:#222}
-#add_adress p.required  sup {color:#990000}
+#center_column #add_address p {margin:0; padding:0 0 10px 0}
+#add_address p.required {color:#222}
+#add_address p.required  sup {color:#990000}
 
-#add_adress p.text label,
-#add_adress p.password label,
-#add_adress p.select label,
-#add_adress p.select span,
-#add_adress p.textarea label {
+#add_address p.text label,
+#add_address p.password label,
+#add_address p.select label,
+#add_address p.select span,
+#add_address p.textarea label {
 	display:inline-block;
 	padding:6px 15px;
 	width:230px;/* 260 */
 	font-size:14px;
 	text-align:right
 }
-#add_adress p.text input,
-#add_adress p.password input,
-#add_adress p.select input {
+#add_address p.text input,
+#add_address p.password input,
+#add_address p.select input {
 	padding:0 5px;
 	height:22px;
 	width:360px;/* 370 */
@@ -1455,30 +1455,30 @@ form#add_adress {}
 	color:#666;
 	line-height:22px
 }
-#add_adress p.checkbox input {
+#add_address p.checkbox input {
 	margin-left:260px;
 }
-#add_adress p.select select {
+#add_address p.select select {
 	margin-right:10px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#add_adress p.textarea label {vertical-align:top}
-#add_adress p.textarea textarea {
+#add_address p.textarea label {vertical-align:top}
+#add_address p.textarea textarea {
 	height:80px;
 	width:370px;
 	border:1px solid #ccc;
 	font-size: 12px;
 	color:#666
 }
-#center_column  #add_adress p.submit2 {
+#center_column  #add_address p.submit2 {
 	margin-top:20px;
 	text-align:right
 }
 
-#add_adress span.form_info,
-#add_adress span.inline-infos {
+#add_address span.form_info,
+#add_address span.inline-infos {
 	display:block;
 	margin:5px 0 0 265px;
 	color:#666

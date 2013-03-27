@@ -28,13 +28,27 @@
 	<td>
 		<table border="0" cellpadding="0" cellspacing="5">
 			<tr>
-				<td height="60" valign="top" width="75" align="center">
+				<td valign="top" width="32" align="center">
 					<img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}">
 				</td>
-				<td height="60" width="100" valign="top">
+				<td height="60" valign="top">
 					<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
-						<h3>{$module->displayName|truncate:40:'…'} {$module->version}
-							
+						<h3>
+							{$module->displayName|truncate:40:'…'} {$module->version}
+							{if isset($module->id) && $module->id gt 0 }
+								{if $module->active}
+									<span class="setup">{l s='Enabled'}</span>
+								{else}
+									<span class="setup off">{l s='Disabled'}</span>
+								{/if}
+							{else}
+								{if isset($module->type) && $module->type == 'addonsMustHave'}
+									<span class="setup must-have">{l s='Must Have'}</span>
+								{else}
+									<span class="setup off">{l s='Not installed'}</span>
+								{/if}
+								
+							{/if}
 						</h3>
 						<p class="desc">
 							{if isset($module->description) && $module->description ne ''}
@@ -45,36 +59,17 @@
 						</p>
 					</div>
 				</td>
-			</tr>
-			<tr>
-				<td border="0" height="20" width="75" align="left" valign="bottom">
-					{if isset($module->id) && $module->id gt 0 }
-						{if $module->active}
-							<span class="setup">{l s='Enabled'}</span>
-						{else}
-							<span class="setup off">{l s='Disabled'}</span>
-						{/if}
+				<td border="0" valign="middle" align="right">
+					{if isset($module->type) && $module->type == 'addonsMustHave'}
+						<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
+						<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
+					{else if !isset($module->not_on_disk)}
+						{$module->optionsHtml}
+						<div class="clear">&nbsp;</div>
+						<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
 					{else}
-						{if isset($module->type) && $module->type == 'addonsMustHave'}
-							<span class="setup must-have">{l s='Must Have'}</span>
-						{else}
-							<span class="setup off">{l s='Not installed'}</span>
-						{/if}
-						
+						<a href="{$module->options.install_url}" class="button">{l s='Install'}</a>
 					{/if}
-				</td>
-				<td  class="tab_modules_actions_row" height="20" border="0"  valign="bottom" align="right">
-					<div class="btn_right">
-						{if isset($module->type) && $module->type == 'addonsMustHave'}
-							<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
-							<span><img src="../img/admin/cart_addons.png">&nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}</span></a>
-						{else if !isset($module->not_on_disk)}
-							{$module->optionsHtml}
-							<a href="#" class="button action_tab_module" data-option="select_{$module->name}" class="button">Valider</a>
-						{else}
-							<a href="{$module->options.install_url}" class="button action_tab_module">{l s='Install'}</a>
-						{/if}
-					</div>
 				</td>
 			</tr>
 		</table>

@@ -258,7 +258,7 @@ class SupplierCore extends ObjectModel
 					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
-					image_shop.`id_image`,
+					MAX(image_shop.`id_image`) id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
@@ -286,7 +286,7 @@ class SupplierCore extends ObjectModel
 						($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					AND ((image_shop.id_image IS NOT NULL OR i.id_image IS NULL) OR (image_shop.id_image IS NULL AND i.cover=1))
+				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
